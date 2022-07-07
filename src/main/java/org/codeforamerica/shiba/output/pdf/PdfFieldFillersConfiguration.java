@@ -125,6 +125,26 @@ public class PdfFieldFillersConfiguration {
   ) {
     return new PDFBoxFieldFiller(List.of(coverPages, certainPops,certainPopsAddIncome));
   }
+  
+  //TODO emj new 
+  @Bean
+  public PdfFieldFiller clientCertainPopsWithAdditionHHFiller(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers));
+  }
+  
+  //TODO emj new 
+  @Bean
+  public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers));
+  }
 
   @Bean
   public PdfFieldFiller uploadedDocCoverPageFilter(
@@ -170,6 +190,20 @@ public class PdfFieldFillersConfiguration {
         CLIENT, Map.of(
             CAF, clientCafWdHouseholdSuppFiller,
             CERTAIN_POPS, clientCertainPopsWdAddtlIncomeFiller )
+    );
+  }
+  
+  //TODO emj new
+  @Bean
+  public Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCertainPopsAdditionalHHFillers(
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller) {
+    return Map.of(
+        CASEWORKER, Map.of(
+            CERTAIN_POPS, caseworkerCertainPopsWithAdditionHHFiller
+        ),
+        CLIENT, Map.of(
+            CERTAIN_POPS, clientCertainPopsWithAdditionHHFiller )
     );
   }
 }
