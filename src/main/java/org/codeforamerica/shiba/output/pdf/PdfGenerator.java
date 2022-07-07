@@ -47,7 +47,7 @@ public class PdfGenerator implements FileGenerator {
   private final PdfFieldMapper pdfFieldMapper;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillerMap;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap;
-  private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCertainPopsAdditionalHHFillers;
+  private final Map<Recipient, Map<Document, Map<String, PdfFieldFiller>>> pdfFieldWithCertainPopsAdditionalHHFillers;
   private final ApplicationRepository applicationRepository;
   private final DocumentRepository documentRepository;
   private final DocumentFieldPreparers preparers;
@@ -58,7 +58,7 @@ public class PdfGenerator implements FileGenerator {
   public PdfGenerator(PdfFieldMapper pdfFieldMapper,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillers,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers,
-      Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCertainPopsAdditionalHHFillers,//TODO emj new
+      Map<Recipient, Map<Document, Map<String, PdfFieldFiller>>> pdfFieldWithCertainPopsAdditionalHHFillers,//TODO emj new
       ApplicationRepository applicationRepository,
       DocumentRepository documentRepository,
       DocumentFieldPreparers preparers,
@@ -126,7 +126,7 @@ public class PdfGenerator implements FileGenerator {
     }
     //TODO emj new
     if (document.equals(Document.CERTAIN_POPS)  && (houseHold.size() > 2)) {
-          pdfFiller = pdfFieldWithCertainPopsAdditionalHHFillers.get(recipient).get(document);
+          pdfFiller = pdfFieldWithCertainPopsAdditionalHHFillers.get(recipient).get(document).get(String.valueOf(Math.ceil(houseHold.size()/2)));
         }
 
     List<PdfField> fields = pdfFieldMapper.map(documentFields);
