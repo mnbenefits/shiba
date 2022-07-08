@@ -74,9 +74,9 @@ class PdfGeneratorTest {
         CLIENT, Map.of(Document.CAF, clientCafWdHouseholdSuppFiller)
     );
     
-    Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCertainPopsAdditionalHHFillers = Map.of(
-            CASEWORKER, Map.of(Document.CAF, caseworkerCertainPopsWithAdditionHHFiller),
-            CLIENT, Map.of(Document.CAF, clientCertainPopsWithAdditionHHFiller)
+    Map<Recipient, Map<Document, Map<String, PdfFieldFiller>>> pdfFieldWithCertainPopsAdditionalHHFillers = Map.of(
+            CASEWORKER, Map.of(Document.CAF, Map.of("1", caseworkerCertainPopsWithAdditionHHFiller)),
+            CLIENT, Map.of(Document.CAF, Map.of("1", clientCertainPopsWithAdditionHHFiller))
         );
 
     application = Application.builder()

@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Map;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.Recipient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.Resource;
 
 @Configuration
@@ -136,6 +138,16 @@ public class PdfFieldFillersConfiguration {
     return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers));
   }
   
+  @Bean
+  public PdfFieldFiller clientCertainPopsWithAdditionHHFiller1(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers, certainPopsAddHHMembers1));
+  }
+  
   //TODO emj new 
   @Bean
   public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller(
@@ -144,6 +156,16 @@ public class PdfFieldFillersConfiguration {
       @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers
   ) {
     return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers));
+  }
+  
+  @Bean
+  public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller1(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers, certainPopsAddHHMembers1));
   }
 
   @Bean
@@ -195,15 +217,19 @@ public class PdfFieldFillersConfiguration {
   
   //TODO emj new
   @Bean
-  public Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCertainPopsAdditionalHHFillers(
+  public Map<Recipient, Map<Document, Map<String, PdfFieldFiller>>> pdfFieldWithCertainPopsAdditionalHHFillers(
       PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller,
-      PdfFieldFiller clientCertainPopsWithAdditionHHFiller) {
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller,
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller1,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller1) {
     return Map.of(
         CASEWORKER, Map.of(
-            CERTAIN_POPS, caseworkerCertainPopsWithAdditionHHFiller
+            CERTAIN_POPS, Map.of("1.0",caseworkerCertainPopsWithAdditionHHFiller,
+                                 "2.0",caseworkerCertainPopsWithAdditionHHFiller1)
         ),
         CLIENT, Map.of(
-            CERTAIN_POPS, clientCertainPopsWithAdditionHHFiller )
+            CERTAIN_POPS, Map.of("1.0",clientCertainPopsWithAdditionHHFiller,
+                                 "2.0",clientCertainPopsWithAdditionHHFiller1))
     );
   }
 }
