@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Optional;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -124,9 +124,10 @@ public class PdfGenerator implements FileGenerator {
             && field.getIteration() > 1))) {
       pdfFiller = pdfFieldWithCAFHHSuppFillersMap.get(recipient).get(document);
     }
-    //TODO emj new
-    if (document.equals(Document.CERTAIN_POPS)  && (houseHold.size() > 2)) {
-          pdfFiller = pdfFieldWithCertainPopsAdditionalHHFillers.get(recipient).get(document).get(String.valueOf(Math.ceil(houseHold.size()/2)));
+    
+    var houseHoldWithoutSpouse = application.getApplicationData().getHouseholdMemberWithoutSpouse();
+    if (document.equals(Document.CERTAIN_POPS)  && houseHoldWithoutSpouse > 1 && houseHoldWithoutSpouse <= 14) {
+          pdfFiller = pdfFieldWithCertainPopsAdditionalHHFillers.get(recipient).get(document).get(String.valueOf(Math.ceil(houseHoldWithoutSpouse/2)));
         }
 
     List<PdfField> fields = pdfFieldMapper.map(documentFields);

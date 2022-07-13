@@ -147,8 +147,76 @@ public class PdfFieldFillersConfiguration {
   ) {
     return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers, certainPopsAddHHMembers1));
   }
+  @Bean
+  public PdfFieldFiller clientCertainPopsWithAdditionHHFiller2(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2));
+  }
+  @Bean
+  public PdfFieldFiller clientCertainPopsWithAdditionHHFiller3(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2, certainPopsAddHHMembers3));
+  }
+  @Bean
+  public PdfFieldFiller clientCertainPopsWithAdditionHHFiller4(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3,
+      @Value("classpath:certain-pops-additional-household-members4.pdf") Resource certainPopsAddHHMembers4
+      
+  ) {
+    return new PDFBoxFieldFiller(
+        List.of(coverPages, certainPops, certainPopsAddHHMembers, certainPopsAddHHMembers1,
+            certainPopsAddHHMembers2, certainPopsAddHHMembers3, certainPopsAddHHMembers4));
+  }
+  @Bean
+  public PdfFieldFiller clientCertainPopsWithAdditionHHFiller5(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3,
+      @Value("classpath:certain-pops-additional-household-members4.pdf") Resource certainPopsAddHHMembers4,
+      @Value("classpath:certain-pops-additional-household-members5.pdf") Resource certainPopsAddHHMembers5
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2, certainPopsAddHHMembers3,
+        certainPopsAddHHMembers4, certainPopsAddHHMembers5));
+  }
+  @Bean
+  public PdfFieldFiller clientCertainPopsWithAdditionHHFiller6(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3,
+      @Value("classpath:certain-pops-additional-household-members4.pdf") Resource certainPopsAddHHMembers4,
+      @Value("classpath:certain-pops-additional-household-members5.pdf") Resource certainPopsAddHHMembers5,
+      @Value("classpath:certain-pops-additional-household-members6.pdf") Resource certainPopsAddHHMembers6
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2, certainPopsAddHHMembers3,
+        certainPopsAddHHMembers4, certainPopsAddHHMembers5, certainPopsAddHHMembers6));
+  }
   
-  //TODO emj new 
   @Bean
   public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller(
       @Value("classpath:cover-pages.pdf") Resource coverPages,
@@ -166,6 +234,75 @@ public class PdfFieldFillersConfiguration {
       @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1
   ) {
     return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers, certainPopsAddHHMembers1));
+  }
+  @Bean
+  public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller2(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2));
+  }
+  @Bean
+  public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller3(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2, certainPopsAddHHMembers3));
+  }
+  @Bean
+  public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller4(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3,
+      @Value("classpath:certain-pops-additional-household-members4.pdf") Resource certainPopsAddHHMembers4
+      
+  ) {
+    return new PDFBoxFieldFiller(
+        List.of(coverPages, certainPops, certainPopsAddHHMembers, certainPopsAddHHMembers1,
+            certainPopsAddHHMembers2, certainPopsAddHHMembers3, certainPopsAddHHMembers4));
+  }
+  @Bean
+  public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller5(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3,
+      @Value("classpath:certain-pops-additional-household-members4.pdf") Resource certainPopsAddHHMembers4,
+      @Value("classpath:certain-pops-additional-household-members5.pdf") Resource certainPopsAddHHMembers5
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2, certainPopsAddHHMembers3,
+        certainPopsAddHHMembers4, certainPopsAddHHMembers5));
+  }
+  @Bean
+  public PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller6(
+      @Value("classpath:cover-pages.pdf") Resource coverPages,
+      @Value("classpath:certain-pops.pdf") Resource certainPops,
+      @Value("classpath:certain-pops-additional-household-members.pdf") Resource certainPopsAddHHMembers,
+      @Value("classpath:certain-pops-additional-household-members1.pdf") Resource certainPopsAddHHMembers1,
+      @Value("classpath:certain-pops-additional-household-members2.pdf") Resource certainPopsAddHHMembers2,
+      @Value("classpath:certain-pops-additional-household-members3.pdf") Resource certainPopsAddHHMembers3,
+      @Value("classpath:certain-pops-additional-household-members4.pdf") Resource certainPopsAddHHMembers4,
+      @Value("classpath:certain-pops-additional-household-members5.pdf") Resource certainPopsAddHHMembers5,
+      @Value("classpath:certain-pops-additional-household-members6.pdf") Resource certainPopsAddHHMembers6
+  ) {
+    return new PDFBoxFieldFiller(List.of(coverPages, certainPops, certainPopsAddHHMembers,
+        certainPopsAddHHMembers1, certainPopsAddHHMembers2, certainPopsAddHHMembers3,
+        certainPopsAddHHMembers4, certainPopsAddHHMembers5, certainPopsAddHHMembers6));
   }
 
   @Bean
@@ -215,21 +352,41 @@ public class PdfFieldFillersConfiguration {
     );
   }
   
-  //TODO emj new
   @Bean
   public Map<Recipient, Map<Document, Map<String, PdfFieldFiller>>> pdfFieldWithCertainPopsAdditionalHHFillers(
-      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller,
       PdfFieldFiller clientCertainPopsWithAdditionHHFiller,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller1,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller2,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller3,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller4,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller5,
+      PdfFieldFiller clientCertainPopsWithAdditionHHFiller6,
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller,
       PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller1,
-      PdfFieldFiller clientCertainPopsWithAdditionHHFiller1) {
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller2,
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller3,
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller4,
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller5,
+      PdfFieldFiller caseworkerCertainPopsWithAdditionHHFiller6
+      ) {
     return Map.of(
         CASEWORKER, Map.of(
             CERTAIN_POPS, Map.of("1.0",caseworkerCertainPopsWithAdditionHHFiller,
-                                 "2.0",caseworkerCertainPopsWithAdditionHHFiller1)
+                                 "2.0",caseworkerCertainPopsWithAdditionHHFiller1,
+                                 "3.0",caseworkerCertainPopsWithAdditionHHFiller2,
+                                 "4.0",caseworkerCertainPopsWithAdditionHHFiller3,
+                                 "5.0",caseworkerCertainPopsWithAdditionHHFiller4,
+                                 "6.0",caseworkerCertainPopsWithAdditionHHFiller5,
+                                 "7.0",caseworkerCertainPopsWithAdditionHHFiller6)
         ),
         CLIENT, Map.of(
             CERTAIN_POPS, Map.of("1.0",clientCertainPopsWithAdditionHHFiller,
-                                 "2.0",clientCertainPopsWithAdditionHHFiller1))
+                                 "2.0",clientCertainPopsWithAdditionHHFiller1,
+                                 "3.0",clientCertainPopsWithAdditionHHFiller2,
+                                 "4.0",clientCertainPopsWithAdditionHHFiller3,
+                                 "5.0",clientCertainPopsWithAdditionHHFiller4,
+                                 "6.0",clientCertainPopsWithAdditionHHFiller5,
+                                 "7.0",clientCertainPopsWithAdditionHHFiller6))
     );
   }
 }
