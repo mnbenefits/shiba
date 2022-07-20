@@ -1087,14 +1087,13 @@ pageDefinitions:
       - type: CUSTOM
         name: alienIdNumber
         customInputFragment: alienIdInput
-        promptMessage:
-         promptMessageKey: parent-not-at-home-names.what-is-the-parents-name
-        helpMessageKey: parent-not-at-home-names.what-is-the-parents-name
+        helpMessageKey: general.inputs.optional
+        placeholder: general.optional
         options:
           datasources:
             - pageName: whoIsNonCitizen
       - type: HIDDEN
-        name: childIdMap # This input is controlled by whatAreTheParentsNames
+        name: childIdMap 
   - &doYouNeedHelpImmediately
     name: doYouNeedHelpImmediately
     pageTitle: do-you-need-help-immediately.title

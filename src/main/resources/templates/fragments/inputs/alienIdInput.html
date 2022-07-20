@@ -21,13 +21,13 @@
                th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
                th:id="${childId + '-label'}">
         </label>
-        <p th:id="${childId + '-help-message'}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
         <input type="text"
                class="text-input form-width--medium"
                th:readonly="${input.readOnly}"
                th:id="|${childId}-parentname|"
                th:value="${parentName}"
                th:name="${formInputName}"
+               th:placeholder="${input.placeholder == null} ? '' : #{${input.placeholder}}"
                th:attr="aria-describedby=${hasHelpMessage ? childId + '-help-message' : ''},
                aria-invalid=${hasError},
                aria-labelledby=${childId + '-label'}"
