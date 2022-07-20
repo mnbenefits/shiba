@@ -1077,6 +1077,24 @@ pageDefinitions:
           datasources:
             - pageName: personalInfo
             - groupName: household
+  - &alienIdNumber
+    name: alienIdNumber
+    pageTitle: what-is-there-alien-id-number.title
+    headerKey: what-is-there-alien-id-number.header
+    headerHelpMessageKey: what-is-there-alien-id-number.this-will-help-caseworker
+    contextFragment: passportContextFragment
+    inputs:
+      - type: CUSTOM
+        name: alienIdNumber
+        customInputFragment: alienIdInput
+        promptMessage:
+         promptMessageKey: parent-not-at-home-names.what-is-the-parents-name
+        helpMessageKey: parent-not-at-home-names.what-is-the-parents-name
+        options:
+          datasources:
+            - pageName: whoIsNonCitizen
+      - type: HIDDEN
+        name: childIdMap # This input is controlled by whatAreTheParentsNames
   - &doYouNeedHelpImmediately
     name: doYouNeedHelpImmediately
     pageTitle: do-you-need-help-immediately.title
@@ -4095,7 +4113,7 @@ workflow:
   whoIsNonCitizen:
     pageConfiguration: *whoIsNonCitizen
     nextPages:
-      - pageName: disability
+      - pageName: alienIdNumber
     datasources:
       - pageName: addHouseholdMembers
       - pageName: usCitizen
@@ -4106,6 +4124,22 @@ workflow:
         - pageName: usCitizen
           input: isUsCitizen
           value: "true"
+  alienIdNumber:
+    pageConfiguration: *alienIdNumber
+    nextPages:
+      - pageName: disability
+    datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+      - pageName: addHouseholdMembers
+      - pageName: whoIsNonCitizen
+    skipCondition:
+     # logicalOperator: OR
+      conditions:
+      #  - *livesAlone?
+        - pageName: usCitizen
+          input: isUsCitizen
+          value: "true"    
   migrantFarmWorker:
     pageConfiguration: *migrantFarmWorker
     nextPages:
