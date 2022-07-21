@@ -1079,22 +1079,19 @@ pageDefinitions:
             - groupName: household
   - &alienIdNumber
     name: alienIdNumber
-    pageTitle: what-is-there-alien-id-number.title
-    headerKey: what-is-there-alien-id-number.header
-    headerHelpMessageKey: what-is-there-alien-id-number.this-will-help-caseworker
+    pageTitle: what-is-their-alien-id-number.title
+    headerKey: what-is-their-alien-id-number.header
+    headerHelpMessageKey: what-is-their-alien-id-number.this-will-help-caseworker
     contextFragment: passportContextFragment
     inputs:
       - type: CUSTOM
         name: alienIdNumber
         customInputFragment: alienIdInput
-        promptMessage:
-         promptMessageKey: parent-not-at-home-names.what-is-the-parents-name
-        helpMessageKey: parent-not-at-home-names.what-is-the-parents-name
         options:
           datasources:
             - pageName: whoIsNonCitizen
       - type: HIDDEN
-        name: childIdMap # This input is controlled by whatAreTheParentsNames
+        name: alienIdMap # This input is controlled by whoIsNonCitizen
   - &doYouNeedHelpImmediately
     name: doYouNeedHelpImmediately
     pageTitle: do-you-need-help-immediately.title
