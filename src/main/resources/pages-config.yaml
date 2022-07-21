@@ -1087,6 +1087,8 @@ pageDefinitions:
       - type: CUSTOM
         name: alienIdNumber
         customInputFragment: alienIdInput
+        helpMessageKey: general.inputs.optional
+        placeholder: general.optional
         options:
           datasources:
             - pageName: whoIsNonCitizen

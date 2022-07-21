@@ -27,8 +27,8 @@
                th:id="|${alienId}-personAlienId|"
                th:value="${personAlienId}"
                th:name="${formInputName}"
-               placeholder="Optional"
-               th:attr="aria-describedby=${hasHelpMessage ? alienId + '-help-message' : ''},
+               th:placeholder="${input.placeholder == null} ? '' : #{${input.placeholder}}"
+               th:attr="aria-describedby=${hasHelpMessage ? childId + '-help-message' : ''},
                aria-invalid=${hasError},
                aria-labelledby=${alienId + '-label'}"
         >
