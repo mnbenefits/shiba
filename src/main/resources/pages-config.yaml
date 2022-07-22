@@ -4128,14 +4128,15 @@ workflow:
     nextPages:
       - pageName: disability
     datasources:
+      - pageName: choosePrograms
       - groupName: household
-        pageName: householdMemberInfo
+      - pageName: householdMemberInfo
       - pageName: addHouseholdMembers
       - pageName: whoIsNonCitizen
     skipCondition:
-     # logicalOperator: OR
+      logicalOperator: OR
       conditions:
-      #  - *livesAlone?
+        - *applicantDidNotChooseCERTAINPOPS?
         - pageName: usCitizen
           input: isUsCitizen
           value: "true"    
