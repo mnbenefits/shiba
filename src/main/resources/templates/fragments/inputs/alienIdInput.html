@@ -1,13 +1,14 @@
-<!-- Custom input for displaying formatted data as well as storing additional hidden data which will be needed later for writing to the PDF -->
+<!--/* Custom input copied from parentNotAtHomeNameInput.html for displaying formatted data as well as storing additional hidden data which will be needed later for writing to the PDF */-->
 <th:block th:fragment="alienIdInput (input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
-                     hasError=${!data.isValid() && !inputData.valid(data)},
                     inputData=${data.get(input.name)},
                     alienIdMapData=${data.get('alienIdMap')},
+                    testAlien=${input.options.datasources.get('whoIsNonCitizen').get('whoIsNonCitizen') == null},
                     hasHelpMessage=${input.helpMessageKey != null},
                     needsAriaLabel=${input.needsAriaLabel()}">
   <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-    <th:block
+ <th:block th:if="${input.options.datasources.get('whoIsNonCitizen').get('whoIsNonCitizen') != null}">
+    <th:block 
         th:each="fullNameAndId, iterationStat: ${input.options.datasources.get('whoIsNonCitizen').get('whoIsNonCitizen').value}"
         th:with="alienIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
                          alienId=${alienIdArray[#arrays.length(alienIdArray)-1]},
@@ -30,18 +31,13 @@
                th:placeholder="${input.placeholder == null} ? '' : #{${input.placeholder}}"
                th:attr="aria-describedby=${hasHelpMessage ? childId + '-help-message' : ''},
                aria-invalid=${hasError},
-               aria-labelledby=${alienId + '-label'}"
-        >
+               aria-labelledby=${alienId + '-label'}">
         <input type="hidden"
                th:id="|${alienId}-id|"
                th:value="${alienId}"
                th:name="alienIdMap[]">
-
-        <p class="text--error" th:if="${fieldIsBlank}">
-          <i class="icon-warning"></i>
-          <span th:text="#{${input.validationErrorMessageKeys.get(0)}}"></span>
-        </p>
       </div>
     </th:block>
+ </th:block>
   </div>
 </th:block>
