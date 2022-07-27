@@ -126,13 +126,10 @@ public class PdfGenerator implements FileGenerator {
         field -> (field.getGroupName().contains("nonSelfEmployment_householdSelectionForIncome")
             && field.getIteration() > 1))) {
       pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addIncome"));
-      // pdfFiller = pdfFieldWithCAFHHSuppFillersMap.get(recipient).get(document);
     }
     //For household more than two
     var houseHoldWithoutSpouse = application.getApplicationData().getHouseholdMemberWithoutSpouse();
     if (houseHoldWithoutSpouse > 1 && houseHoldWithoutSpouse <= 14) {
-          //pdfFiller = pdfFieldWithCertainPopsAdditionalHHFillers.get(recipient).get(document).get(String.valueOf(Math.ceil(houseHoldWithoutSpouse/2)));
-      //pdfResource.addAll(pdfResourcesComponents.getAdditionalHouseHould(Math.ceil(houseHoldWithoutSpouse/2)));
       String name = "addHousehold"+String.valueOf(Math.ceil(houseHoldWithoutSpouse/2));
       pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get(name));
         }
@@ -141,7 +138,6 @@ public class PdfGenerator implements FileGenerator {
         field -> (field.getGroupName().contains("whoHasDisability")
             && (field.getIteration()!=null?field.getIteration():0) > 1))) {
       pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
-      // pdfFiller = pdfFieldWithCAFHHSuppFillersMap.get(recipient).get(document);
     }
       pdfFiller = new PDFBoxFieldFiller(pdfResource);
     }
