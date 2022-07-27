@@ -4156,11 +4156,7 @@ workflow:
       - pageName: alienIdNumbers
     datasources:
       - pageName: choosePrograms
-      - groupName: household
-      - pageName: householdMemberInfo
       - pageName: addHouseholdMembers
-      - pageName: whoIsNonCitizen
-      - pageName: usCitizen
     skipCondition:
       logicalOperator: OR
       conditions:
@@ -4172,11 +4168,7 @@ workflow:
       - pageName: disability
     datasources:
       - pageName: choosePrograms
-      - groupName: household
-      - pageName: householdMemberInfo
       - pageName: addHouseholdMembers
-      - pageName: whoIsNonCitizen
-      - pageName: usCitizen
     skipCondition:
       logicalOperator: OR
       conditions:
