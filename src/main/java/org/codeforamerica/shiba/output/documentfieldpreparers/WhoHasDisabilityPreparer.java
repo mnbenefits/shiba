@@ -11,6 +11,9 @@ import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
 import org.codeforamerica.shiba.output.Recipient;
 import org.springframework.stereotype.Component;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HAS_DISABILITY;
+import static org.codeforamerica.shiba.output.FullNameFormatter.getFullName;
 
 @Component
 public class WhoHasDisabilityPreparer implements DocumentFieldPreparer {
@@ -21,6 +24,12 @@ public class WhoHasDisabilityPreparer implements DocumentFieldPreparer {
 
     List<String> whoHasDisabilityHouseholdMembers =
         getListOfSelectedFullNames(application, "whoHasDisability", "whoHasDisability");
+    
+    if(getBooleanValue(application.getApplicationData().getPagesData(),HAS_DISABILITY) 
+        && (whoHasDisabilityHouseholdMembers.get(0).isEmpty())) {
+      whoHasDisabilityHouseholdMembers.clear();
+      whoHasDisabilityHouseholdMembers.add(getFullName(application));
+    }
 
     List<DocumentField> result = new ArrayList<>();
 
