@@ -1084,12 +1084,11 @@ pageDefinitions:
     name: alienIdNumber
     pageTitle: alien-id-number.title
     headerKey: what-is-your-alien-id-number.header
-    headerHelpMessageKey: what-is-your-alien-id-number.this-will-help-caseworker
+    headerHelpMessageKey: what-is-alien-id-number.this-will-help-caseworker
     contextFragment: passportContextFragment
     inputs:
       - type: TEXT
         name: alienIdNumber
-        helpMessageKey: general.inputs.optional
         placeholder: general.optional
         options:
           datasources:
@@ -1100,7 +1099,7 @@ pageDefinitions:
    name: alienIdNumbers
    pageTitle: alien-id-number.title
    headerKey: what-is-their-alien-id-number.header
-   headerHelpMessageKey: what-is-their-alien-id-number.this-will-help-caseworker
+   headerHelpMessageKey: what-is-alien-id-number.this-will-help-caseworker
    contextFragment: passportContextFragment
    inputs:
      - type: CUSTOM
