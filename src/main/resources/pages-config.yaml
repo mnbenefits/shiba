@@ -1783,6 +1783,9 @@ pageDefinitions:
       - type: CUSTOM
         name: whoHasDisability
         customInputFragment: householdOptionsCheckboxes
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           datasources:
             - pageName: personalInfo
