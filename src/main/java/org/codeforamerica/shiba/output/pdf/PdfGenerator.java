@@ -146,14 +146,14 @@ public class PdfGenerator implements FileGenerator {
     return pdfFiller.fill(fields, application.getId(), filename);
   }
 
-  public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocument, Application application,
-		  byte[] coverPage) {
-    return generateCombinedUploadedDocument(uploadedDocument, application, coverPage,
-        countyMap.get(application.getCounty()));
-  }
+//  public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocument, Application application,
+//		  byte[] coverPage) {
+//    return generateCombinedUploadedDocument(uploadedDocument, application, coverPage,
+//        countyMap.get(application.getCounty()));
+//  }
   
   public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocuments, Application application,
-		  byte[] coverPage, RoutingDestination routingDest) {
+		  byte[] coverPage) {
     
     if (uploadedDocuments.size() == 0 )
       return null;
@@ -257,6 +257,7 @@ public class PdfGenerator implements FileGenerator {
       mainPageDoc.save(outputStream);
       addPage = outputStream.toByteArray();
     } catch (IOException e) {
+      
       throw new RuntimeException(e);
     }
     return addPage;

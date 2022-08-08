@@ -111,6 +111,7 @@ public class MnitDocumentConsumer {
 
   
   public void processUploadedDocuments(Application application) {
+    
     List<ApplicationFile> combinedUploadedFiles = uploadedDocsPreparer.prepare(
 	        application.getApplicationData().getUploadedDocs(),
 	        application);
@@ -125,6 +126,7 @@ public class MnitDocumentConsumer {
 
 	    List<RoutingDestination> routingDestinations = routingDecisionService
 	        .getRoutingDestinations(application.getApplicationData(), UPLOADED_DOC);
+	    
 	    for (RoutingDestination routingDestination : routingDestinations) {
 	      
 	      boolean sendXMLToDakota = routingDestination.getName().equals(County.Dakota.name())
