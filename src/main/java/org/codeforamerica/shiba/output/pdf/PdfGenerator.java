@@ -146,6 +146,25 @@ public class PdfGenerator implements FileGenerator {
     return pdfFiller.fill(fields, application.getId(), filename);
   }
 
+  public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocument, Application application,
+		  byte[] coverPage) {
+    return generateCombinedUploadedDocument(uploadedDocument, application, coverPage,
+        countyMap.get(application.getCounty()));
+  }
+  
+  public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocuments, Application application,
+		  byte[] coverPage, RoutingDestination routingDest) {
+	  var fileBytes = documentRepository.get(uploadedDocuments.get(0).getS3Filepath());
+	  String filename = uploadedDocuments.get(0).getSysFileName();
+	  
+	  //TODO Place loop for uploaded docs here
+	  for (UploadedDocument Doc : uploadedDocuments) {
+		  
+	  }
+	  
+	  return new ApplicationFile(fileBytes, filename);
+  }
+  
   public ApplicationFile generateForUploadedDocument(UploadedDocument uploadedDocument,
       int documentIndex, Application application, byte[] coverPage,
       RoutingDestination routingDest) {
@@ -197,6 +216,21 @@ public class PdfGenerator implements FileGenerator {
       throw new RuntimeException(e);
     }
     return fileBytes;
+  }
+  
+  private byte[] addPageToPdf(byte[] mainPage, byte[] addPage) {
+    PDFMergerUtility merger = new PDFMergerUtility();
+    try (PDDocument mainPageDoc = PDDocument.load(mainPage);
+        PDDocument addedPageDoc = PDDocument.load(addPage);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+
+      merger.appendDocument(mainPageDoc, addedPageDoc);
+      mainPageDoc.save(outputStream);
+      addPage = outputStream.toByteArray();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return addPage;
   }
 
   private byte[] convertImageToPdf(byte[] imageFileBytes, String filename) throws Exception {
