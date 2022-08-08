@@ -52,11 +52,13 @@ public class UploadedDocsPreparer {
    */
   public List<ApplicationFile> prepare(List<UploadedDocument> uploadedDocs,
       Application application) {
-    byte[] coverPage = pdfGenerator.generateCoverPageForUploadedDocs(application);
-    ApplicationFile preparedDocument = pdfGenerator.generateCombinedUploadedDocument(uploadedDocs, application, coverPage);
     
     List<ApplicationFile> applicationFiles = new ArrayList<>();
     
+    byte[] coverPage = pdfGenerator.generateCoverPageForUploadedDocs(application);
+    
+    ApplicationFile preparedDocument = pdfGenerator.generateCombinedUploadedDocument(uploadedDocs, application, coverPage);
+            
     applicationFiles.add(preparedDocument);
     
 //    for (int i = 0; i < uploadedDocs.size(); i++) {

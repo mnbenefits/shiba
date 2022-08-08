@@ -109,38 +109,6 @@ public class MnitDocumentConsumer {
     return threads;
   }
 
-	/*
-	 * public void processUploadedDocuments(Application application) {
-	 * List<ApplicationFile> applicationFiles = uploadedDocsPreparer.prepare(
-	 * application.getApplicationData().getUploadedDocs(), application);
-	 * 
-	 * if (applicationFiles.isEmpty()) { log.error(
-	 * "There was an issue processing and delivering uploaded documents. Reach out to client to upload again."
-	 * ); applicationStatusRepository.createOrUpdateAllForDocumentType(application,
-	 * UNDELIVERABLE, UPLOADED_DOC); return; }
-	 * 
-	 * List<RoutingDestination> routingDestinations = routingDecisionService
-	 * .getRoutingDestinations(application.getApplicationData(), UPLOADED_DOC); for
-	 * (RoutingDestination routingDestination : routingDestinations) { boolean
-	 * sendXMLToDakota = routingDestination.getName().equals(County.Dakota.name())
-	 * && application.getFlow() == FlowType.LATER_DOCS;
-	 * 
-	 * if (sendXMLToDakota) { ApplicationFile xml =
-	 * xmlGenerator.generate(application.getId(), XML, CASEWORKER);
-	 * sendOrSetToFailed(application, routingDestination, xml, XML); }
-	 * 
-	 * log.info("Uploaded docs to submit %s".formatted(applicationFiles.size()));
-	 * for (int i = 0; i < applicationFiles.size(); i++) { ApplicationFile
-	 * uploadedDoc = applicationFiles.get(i); // rename file with filename that is
-	 * specific to this destination String extension =
-	 * Utils.getFileType(uploadedDoc.getFileName()); String newFilename =
-	 * filenameGenerator.generateUploadedDocumentName(application, i, extension,
-	 * routingDestination, applicationFiles.size()); ApplicationFile renamedFile =
-	 * new ApplicationFile(uploadedDoc.getFileBytes(), newFilename);
-	 * 
-	 * sendOrSetToFailed(application, routingDestination, renamedFile,
-	 * UPLOADED_DOC); } } }
-	 */
   
   public void processUploadedDocuments(Application application) {
     List<ApplicationFile> combinedUploadedFiles = uploadedDocsPreparer.prepare(
@@ -158,6 +126,7 @@ public class MnitDocumentConsumer {
 	    List<RoutingDestination> routingDestinations = routingDecisionService
 	        .getRoutingDestinations(application.getApplicationData(), UPLOADED_DOC);
 	    for (RoutingDestination routingDestination : routingDestinations) {
+	      
 	      boolean sendXMLToDakota = routingDestination.getName().equals(County.Dakota.name())
 	          && application.getFlow() == FlowType.LATER_DOCS;
 
@@ -173,21 +142,6 @@ public class MnitDocumentConsumer {
           sendOrSetToFailed(application, routingDestination, renamedFile, UPLOADED_DOC);
 	    }
           
-	      
-//	      
-//
-//	      log.info("Uploaded docs to submit %s".formatted(applicationFiles.size()));
-//	     for (int i = 0; i < applicationFiles.size(); i++) {
-//	        ApplicationFile uploadedDoc = applicationFiles.get(i);
-//	        // rename file with filename that is specific to this destination
-//	        String extension = Utils.getFileType(uploadedDoc.getFileName());
-//	        String newFilename = filenameGenerator.generateCombinedUploadedDocsName(application, i,
-//	            extension, routingDestination, applicationFiles.size());
-//	        ApplicationFile renamedFile = new ApplicationFile(uploadedDoc.getFileBytes(),
-//	            newFilename);
-//
-//	        sendOrSetToFailed(application, routingDestination, renamedFile, UPLOADED_DOC);
-//	      }
 	    }
 
 
