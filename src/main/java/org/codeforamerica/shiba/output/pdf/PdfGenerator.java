@@ -154,15 +154,44 @@ public class PdfGenerator implements FileGenerator {
   
   public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocuments, Application application,
 		  byte[] coverPage, RoutingDestination routingDest) {
-	  var fileBytes = documentRepository.get(uploadedDocuments.get(0).getS3Filepath());
-	  String filename = uploadedDocuments.get(0).getSysFileName();
+    
+    if (uploadedDocuments.size() == 0 )
+      return null;
+    
+     
+    byte[] combinedPDF = coverPage;
+  
+  	  for (UploadedDocument uDoc : uploadedDocuments) {
+  	    
+  	     var fileBytes = documentRepository.get(uDoc.getS3Filepath());
+  	     
+  	     if (fileBytes != null) {
+  	       var extension = Utils.getFileType(uDoc.getFilename());
+  	       
+  	       if (IMAGE_TYPES_TO_CONVERT_TO_PDF.contains(extension)) {
+  	         try {
+  	           fileBytes = convertImageToPdf(fileBytes, uDoc.getFilename());
+  	           extension = "pdf";
+  	         } catch (Exception e) {
+  	           log.warn("failed to convert document " + uDoc.getFilename()
+  	               + " to pdf. Maintaining original type");
+  	         }
+  	       } else if (!extension.equals("pdf")) {
+  	         log.warn("Unsupported file-type: " + extension);
+  	       }
+  	      	       
+  	       if (extension.equals("pdf")) {
+  	         combinedPDF = addPageToPdf(combinedPDF, fileBytes);
+  	       }
+  	       
+  	     }
+  	     
+  	  }
+	     
+	     String filename = "TaylorFooBar";
+	     
 	  
-	  //TODO Place loop for uploaded docs here
-	  for (UploadedDocument Doc : uploadedDocuments) {
-		  
-	  }
-	  
-	  return new ApplicationFile(fileBytes, filename);
+	  return new ApplicationFile(combinedPDF, filename);
   }
   
   public ApplicationFile generateForUploadedDocument(UploadedDocument uploadedDocument,

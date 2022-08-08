@@ -143,11 +143,11 @@ public class MnitDocumentConsumer {
 	 */
   
   public void processUploadedDocuments(Application application) {
-	    ApplicationFile applicationFiles = uploadedDocsPreparer.prepareCombined(
+    List<ApplicationFile> combinedUploadedFiles = uploadedDocsPreparer.prepare(
 	        application.getApplicationData().getUploadedDocs(),
 	        application);
 
-	    if (applicationFiles == null) {
+	    if (combinedUploadedFiles.isEmpty()) {
 	      log.error(
 	          "There was an issue processing and delivering uploaded documents. Reach out to client to upload again.");
 	      applicationStatusRepository.createOrUpdateAllForDocumentType(application,
@@ -165,21 +165,25 @@ public class MnitDocumentConsumer {
 	        ApplicationFile xml = xmlGenerator.generate(application.getId(), XML, CASEWORKER);
 	        sendOrSetToFailed(application, routingDestination, xml, XML);
 	      }
-
-	      log.info("Uploaded docs to submit %s".formatted(applicationFiles.size()));
-	     for (int i = 0; i < applicationFiles.size(); i++) {
-	        ApplicationFile uploadedDoc = applicationFiles.get(i);
-	        // rename file with filename that is specific to this destination
-	        String extension = Utils.getFileType(uploadedDoc.getFileName());
-	        String newFilename = filenameGenerator.generateUploadedDocumentName(application, i,
-	            extension, routingDestination, applicationFiles.size());
-	        ApplicationFile renamedFile = new ApplicationFile(uploadedDoc.getFileBytes(),
-	            newFilename);
-
-	        sendOrSetToFailed(application, routingDestination, renamedFile, UPLOADED_DOC);
+	      
+	      sendOrSetToFailed(application, routingDestination, combinedUploadedFiles.get(0), UPLOADED_DOC);
+	      
+	      
+//
+//	      log.info("Uploaded docs to submit %s".formatted(applicationFiles.size()));
+//	     for (int i = 0; i < applicationFiles.size(); i++) {
+//	        ApplicationFile uploadedDoc = applicationFiles.get(i);
+//	        // rename file with filename that is specific to this destination
+//	        String extension = Utils.getFileType(uploadedDoc.getFileName());
+//	        String newFilename = filenameGenerator.generateUploadedDocumentName(application, i,
+//	            extension, routingDestination, applicationFiles.size());
+//	        ApplicationFile renamedFile = new ApplicationFile(uploadedDoc.getFileBytes(),
+//	            newFilename);
+//
+//	        sendOrSetToFailed(application, routingDestination, renamedFile, UPLOADED_DOC);
 	      }
 	    }
-	  }
+
 
   private void sendOrSetToFailed(Application application, RoutingDestination routingDestination,
       ApplicationFile renamedFile, Document document) {

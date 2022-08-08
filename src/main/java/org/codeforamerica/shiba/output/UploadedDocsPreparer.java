@@ -50,10 +50,14 @@ public class UploadedDocsPreparer {
    * these documents will include the county dhsProviderId. Those filenames are changed later to
    * include the dhsProviderId specific to whatever RoutingDestination the file is being sent to
    */
-  public ApplicationFile prepareCombined(List<UploadedDocument> uploadedDocs,
+  public List<ApplicationFile> prepare(List<UploadedDocument> uploadedDocs,
       Application application) {
     byte[] coverPage = pdfGenerator.generateCoverPageForUploadedDocs(application);
     ApplicationFile preparedDocument = pdfGenerator.generateCombinedUploadedDocument(uploadedDocs, application, coverPage);
+    
+    List<ApplicationFile> applicationFiles = new ArrayList<>();
+    
+    applicationFiles.add(preparedDocument);
     
 //    for (int i = 0; i < uploadedDocs.size(); i++) {
 //      UploadedDocument originalDocument = uploadedDocs.get(i);
@@ -73,7 +77,7 @@ public class UploadedDocsPreparer {
 //      }
 //    }
     
-    return preparedDocument;
+    return applicationFiles;
   }
 }
 
