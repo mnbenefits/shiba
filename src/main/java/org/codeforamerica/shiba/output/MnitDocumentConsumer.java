@@ -166,22 +166,28 @@ public class MnitDocumentConsumer {
 	        sendOrSetToFailed(application, routingDestination, xml, XML);
 	      }
 	      
-	      sendOrSetToFailed(application, routingDestination, combinedUploadedFiles.get(0), UPLOADED_DOC);
+	      String newFilename = filenameGenerator.generateCombinedUploadedDocsName(application, "pdf", routingDestination);
+          ApplicationFile renamedFile = new ApplicationFile(combinedUploadedFiles.get(0).getFileBytes(),
+              newFilename);
+
+          sendOrSetToFailed(application, routingDestination, renamedFile, UPLOADED_DOC);
+	    }
+          
 	      
-	      
+//	      
 //
 //	      log.info("Uploaded docs to submit %s".formatted(applicationFiles.size()));
 //	     for (int i = 0; i < applicationFiles.size(); i++) {
 //	        ApplicationFile uploadedDoc = applicationFiles.get(i);
 //	        // rename file with filename that is specific to this destination
 //	        String extension = Utils.getFileType(uploadedDoc.getFileName());
-//	        String newFilename = filenameGenerator.generateUploadedDocumentName(application, i,
+//	        String newFilename = filenameGenerator.generateCombinedUploadedDocsName(application, i,
 //	            extension, routingDestination, applicationFiles.size());
 //	        ApplicationFile renamedFile = new ApplicationFile(uploadedDoc.getFileBytes(),
 //	            newFilename);
 //
 //	        sendOrSetToFailed(application, routingDestination, renamedFile, UPLOADED_DOC);
-	      }
+//	      }
 	    }
 
 
