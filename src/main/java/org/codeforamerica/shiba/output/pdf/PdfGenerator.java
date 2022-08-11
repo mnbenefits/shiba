@@ -146,14 +146,14 @@ public class PdfGenerator implements FileGenerator {
     return pdfFiller.fill(fields, application.getId(), filename);
   }
 
-//  public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocument, Application application,
-//		  byte[] coverPage) {
-//    return generateCombinedUploadedDocument(uploadedDocument, application, coverPage,
-//        countyMap.get(application.getCounty()));
-//  }
+  public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocument, Application application,
+		  byte[] coverPage) {
+    return generateCombinedUploadedDocument(uploadedDocument, application, coverPage,
+        countyMap.get(application.getCounty()));
+  }
   
   public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocuments, Application application,
-		  byte[] coverPage) {
+		  byte[] coverPage, RoutingDestination routingDest) {
     
     if (uploadedDocuments.size() == 0 )
       return null;
@@ -187,10 +187,8 @@ public class PdfGenerator implements FileGenerator {
   	     }
   	     
   	  }
-	     
-	     String filename = "TaylorFooBar";
-	     
-	  
+  	  String filename = fileNameGenerator.generateCombinedUploadedDocsName(application, "pdf", routingDest);
+	     	  
 	  return new ApplicationFile(combinedPDF, filename);
   }
   
