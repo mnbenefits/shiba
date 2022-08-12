@@ -1970,6 +1970,55 @@ pageDefinitions:
     inputs:
       - name: retroactiveCoverageQuestion
         type: YES_NO
+  - &retroactiveCoverageSource
+    name: retroactiveCoverageSource
+    pageTitle: retroactive-coverage-source.title
+    headerKey: retroactive-coverage-source.who-wants-help
+    headerHelpMessageKey: retroactive-coverage-source.check-all
+    contextFragment: retroactiveCoverageFragment
+    inputs:
+      - type: CUSTOM
+        name: retroactiveCoverageSourceQuestion
+        customInputFragment: householdOptionsCheckboxes
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+#  - &monthsOfRetroactiveCoverage
+#    name: alienIdNumber
+#    pageTitle: alien-id-number.title
+#    headerKey: what-is-your-alien-id-number.header
+#    headerHelpMessageKey: what-is-alien-id-number.this-will-help-caseworker
+#    contextFragment: passportContextFragment
+#    inputs:
+#      - type: TEXT
+#        name: alienIdNumber
+#        placeholder: general.optional
+#        options:
+#          datasources:
+#            - pageName: whoIsNonCitizen
+#      - type: HIDDEN
+#        name: alienIdMap # This input is controlled by whoIsNonCitizen
+#  - &alienIdNumbers
+#   name: alienIdNumbers
+#   pageTitle: alien-id-number.title
+#   headerKey: what-is-their-alien-id-number.header
+#   headerHelpMessageKey: what-is-alien-id-number.this-will-help-caseworker
+#   contextFragment: passportContextFragment
+#   inputs:
+#     - type: CUSTOM
+#       name: alienIdNumber
+#       customInputFragment: alienIdInput
+#       helpMessageKey: general.inputs.optional
+#       placeholder: general.optional
+#       options:
+#         datasources:
+#           - pageName: whoIsNonCitizen
+#     - type: HIDDEN
+#       name: alienIdMap # This input is controlled by whoIsNonCitizen
   - &medicalInOtherState
     name: medicalInOtherState
     pageTitle: medical-in-other-state.title
@@ -4409,10 +4458,25 @@ workflow:
   retroactiveCoverage:
     pageConfiguration: *retroactiveCoverage
     nextPages:
+      - pageName: retroactiveCoverageSource
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - pageName: retroactiveCoverage
+              input: retroactiveCoverageQuestion
+              value: "true"
+            - *doesNotLiveAlone?
       - pageName: medicalInOtherState
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+  retroactiveCoverageSource:
+    pageConfiguration: *retroactiveCoverageSource
+    nextPages:
+      - pageName: medicalInOtherState
   medicalInOtherState:
     pageConfiguration: *medicalInOtherState
     nextPages:
