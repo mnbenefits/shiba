@@ -1987,38 +1987,33 @@ pageDefinitions:
           datasources:
             - pageName: personalInfo
             - groupName: household
-#  - &monthsOfRetroactiveCoverage
-#    name: alienIdNumber
-#    pageTitle: alien-id-number.title
-#    headerKey: what-is-your-alien-id-number.header
-#    headerHelpMessageKey: what-is-alien-id-number.this-will-help-caseworker
-#    contextFragment: passportContextFragment
-#    inputs:
-#      - type: TEXT
-#        name: alienIdNumber
-#        placeholder: general.optional
-#        options:
-#          datasources:
-#            - pageName: whoIsNonCitizen
-#      - type: HIDDEN
-#        name: alienIdMap # This input is controlled by whoIsNonCitizen
-#  - &alienIdNumbers
-#   name: alienIdNumbers
-#   pageTitle: alien-id-number.title
-#   headerKey: what-is-their-alien-id-number.header
-#   headerHelpMessageKey: what-is-alien-id-number.this-will-help-caseworker
-#   contextFragment: passportContextFragment
-#   inputs:
-#     - type: CUSTOM
-#       name: alienIdNumber
-#       customInputFragment: alienIdInput
-#       helpMessageKey: general.inputs.optional
-#       placeholder: general.optional
-#       options:
-#         datasources:
-#           - pageName: whoIsNonCitizen
-#     - type: HIDDEN
-#       name: alienIdMap # This input is controlled by whoIsNonCitizen
+  - &retroactiveCoverageTimePeriod
+    name: retroactiveCoverageTimePeriod
+    pageTitle: retroactive-coverage-time-period.title
+    headerKey: retroactive-coverage-time-period.how-many-months
+    headerHelpMessageKey: retroactive-coverage-time-period.you-might-be
+    contextFragment: retroactiveCoverageFragment
+    inputs:
+      - type: CUSTOM
+        name: retroactiveCoverageNumberMonths
+        customInputFragment: retroactiveCoverageTimePeriod
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-answer-this-question
+        options:
+          datasources:
+            - pageName: retroactiveCoverageSource
+#          selectableOptions:
+#            - value: ''
+#              messageKey: retroactive-coverage-time-period.number-of-months
+#            - value: 1
+#              messageKey: retroactive-coverage-time-period.one-month
+#            - value: 2
+#              messageKey: retroactive-coverage-time-period.two-months
+#            - value: 3
+#              messageKey: retroactive-coverage-time-period.three-months
+      - type: HIDDEN
+        name: retroactiveCoverageMap
   - &medicalInOtherState
     name: medicalInOtherState
     pageTitle: medical-in-other-state.title
@@ -4459,13 +4454,10 @@ workflow:
     pageConfiguration: *retroactiveCoverage
     nextPages:
       - pageName: retroactiveCoverageSource
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - pageName: retroactiveCoverage
-              input: retroactiveCoverageQuestion
-              value: "true"
-            - *doesNotLiveAlone?
+        condition:
+          pageName: retroactiveCoverage
+          input: retroactiveCoverageQuestion
+          value: "true"
       - pageName: medicalInOtherState
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     datasources:
@@ -4475,6 +4467,10 @@ workflow:
         groupName: household
   retroactiveCoverageSource:
     pageConfiguration: *retroactiveCoverageSource
+    nextPages:
+      - pageName: retroactiveCoverageTimePeriod
+  retroactiveCoverageTimePeriod:
+    pageConfiguration: *retroactiveCoverageTimePeriod
     nextPages:
       - pageName: medicalInOtherState
   medicalInOtherState:

@@ -171,6 +171,9 @@ public class PagesData extends HashMap<String, PageData> {
 
   private FormInputTemplate convert(String pageName, FormInput formInput,
       ApplicationData applicationData) {
+	  System.out.println(pageName);
+	  System.out.println(formInput);
+	  System.out.println(applicationData);
     List<String> errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
         .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
         .orElse(List.of());
