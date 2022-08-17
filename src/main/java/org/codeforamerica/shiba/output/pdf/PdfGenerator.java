@@ -155,7 +155,8 @@ public class PdfGenerator implements FileGenerator {
   public ApplicationFile generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocuments, Application application,
 		  byte[] coverPage, RoutingDestination routingDest) {
     
-    if (uploadedDocuments.size() == 0 )
+    if (uploadedDocuments.size() == 0 || 
+        (uploadedDocuments.stream().allMatch(uDoc -> documentRepository.get(uDoc.getS3Filepath()) == null)))
       return null;
     
      
