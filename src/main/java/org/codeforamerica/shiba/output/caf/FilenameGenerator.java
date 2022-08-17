@@ -117,7 +117,7 @@ public class FilenameGenerator {
     String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(completedAtCentralTime);
     String time = DateTimeFormatter.ofPattern("HHmmss").format(completedAtCentralTime);
     String id = application.getId();
-    return "%s_%s_%s_%s_%s".formatted(dhsProviderId, fileSource, date, time, id);
+    return "%s_%s_%s_%s_%s_".formatted(dhsProviderId, fileSource, date, time, id);
   }
 
   private String getProgramCodes(Application application) {

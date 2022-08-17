@@ -183,14 +183,14 @@ public class PdfGenerator implements FileGenerator {
   	       if (extension.equals("pdf")) {
   	         combinedPDF = addPageToPdf(combinedPDF, fileBytes);
   	       }
-  	       
   	     }
-  	     
   	  }
+  	  
   	  String filename = fileNameGenerator.generateCombinedUploadedDocsName(application, "pdf", routingDest);
 	     	  
 	  return new ApplicationFile(combinedPDF, filename);
   }
+  
   
   public ApplicationFile generateForUploadedDocument(UploadedDocument uploadedDocument,
       int documentIndex, Application application, byte[] coverPage,
