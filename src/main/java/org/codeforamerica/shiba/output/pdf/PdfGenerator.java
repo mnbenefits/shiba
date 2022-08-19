@@ -156,7 +156,8 @@ public class PdfGenerator implements FileGenerator {
 		  byte[] coverPage, RoutingDestination routingDest) {
     
     if (uploadedDocuments.size() == 0 || 
-        (uploadedDocuments.stream().allMatch(uDoc -> documentRepository.get(uDoc.getS3Filepath()) == null)))
+        (uploadedDocuments.stream().allMatch(uDoc -> documentRepository.get(uDoc.getS3Filepath()) == null)
+        ||uploadedDocuments.stream().allMatch(uDoc -> documentRepository.get(uDoc.getS3Filepath()).length<=0)))
       return null;
     
      

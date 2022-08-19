@@ -87,21 +87,9 @@ public class ApplicationStatusRepository {
       if (uploadedDocs.size() == 0) {
         fileNames.add("");
       }
-      for (int i = 0; i < uploadedDocs.size(); i++) {
-        String fileName = uploadedDocs.get(i).getSysFileName();
-        if (fileName == null || !fileName.contains(routingDest.getDhsProviderId())) {
-          String extension = Utils.getFileType(uploadedDocs.get(i).getFilename());
-          fileName =
-              filenameGenerator.generateUploadedDocumentName(application, i, extension, routingDest);
-          ApplicationFile preparedDocument =
-              pdfGenerator.generateForUploadedDocument(uploadedDocs.get(i), i, application, null, routingDest);
-          if (preparedDocument != null && preparedDocument.getFileBytes().length > 0) {
-            fileName = preparedDocument.getFileName();
-          }
-          uploadedDocs.get(i).setSysFileName(fileName);
-        }
-        fileNames.add(fileName);
-      }
+      String fileName =
+          filenameGenerator.generateCombinedUploadedDocsName(application, "pdf", routingDest);
+      fileNames.add(fileName);
     } else {
       String fileName = filenameGenerator.generatePdfFilename(application, document, routingDest);
       fileNames.add(fileName);

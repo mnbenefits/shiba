@@ -116,7 +116,8 @@ public class MnitDocumentConsumer {
 	        application.getApplicationData().getUploadedDocs(),
 	        application);
 
-	    if (combinedUploadedFiles.isEmpty()) {
+    if (combinedUploadedFiles.isEmpty()
+        || (combinedUploadedFiles.stream().allMatch(uDoc -> uDoc.getFileBytes() == null))) {
 	      log.error(
 	          "There was an issue processing and delivering uploaded documents. Reach out to client to upload again.");
 	      applicationStatusRepository.createOrUpdateAllForDocumentType(application,
