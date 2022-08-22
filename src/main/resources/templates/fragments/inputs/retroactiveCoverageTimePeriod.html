@@ -17,7 +17,7 @@
                          indexInInputData=${retroactiveCoverageMapData.value.indexOf(retroactiveCoverage)},
                          personRetroactiveCoverage=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)},
                          fieldIsBlank=${!inputData.valid(data) && personRetroactiveCoverage.isBlank()}">
-      <div class="form-group" th:classappend="${fieldIsBlank} ? 'form-group--error' : ''">
+      <div class="form-group" th:classappend="${hasError} ? 'form-group--error' : ''">
         <label class="form-question spacing-below-5" th:for="|${retroactiveCoverage}-personRetroactiveCoverage|"
                th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
                th:id="${retroactiveCoverage + '-label'}">
@@ -26,26 +26,19 @@
 	        <select th:id="|${retroactiveCoverage}-personRetroactiveCoverage|" 
 	        class="select__element" 
 	        th:name="${formInputName}">
-	        	<option th:value="''" th:text="#{retroactive-coverage-time-period.number-of-months}"></option>
-	        	<option th:value="1" th:text="#{retroactive-coverage-time-period.one-month}"></option>
-	        	<option th:value="2" th:text="#{retroactive-coverage-time-period.two-months}"></option>
-	        	<option th:value="3" th:text="#{retroactive-coverage-time-period.three-months}"></option>
+       	   	<option th:value="''" th:text="#{retroactive-coverage-time-period.number-of-months}"></option>
+            <option th:value="1" th:text="#{retroactive-coverage-time-period.one-month}"></option>
+            <option th:value="2" th:text="#{retroactive-coverage-time-period.two-months}"></option>
+	       	<option th:value="3" th:text="#{retroactive-coverage-time-period.three-months}"></option>
 	        </select>
         </div>
-<!--/*        <input type="text"
-               class="text-input form-width--medium"
-               th:id="|${alienId}-personAlienId|"
-               th:value="${personAlienId}"
-               th:name="${formInputName}"
-               th:placeholder="${input.placeholder == null} ? '' : #{${input.placeholder}}"
-               th:attr="aria-describedby=${hasHelpMessage ? childId + '-help-message' : ''},
-               aria-invalid=${hasError},
-               aria-labelledby=${alienId + '-label'}"> */-->
+
         <input type="hidden"
                th:id="|${retroactiveCoverage}-id|"
                th:value="${retroactiveCoverage}"
                th:name="retroactiveCoverageMap[]">
       </div>
+    <div th:replace="fragments/inputErrorFragment :: validationError(${data}, ${input})"></div>
     </th:block>
  </th:block>
   </div>

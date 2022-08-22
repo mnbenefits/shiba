@@ -1998,7 +1998,7 @@ pageDefinitions:
         name: retroactiveCoverageNumberMonths
         customInputFragment: retroactiveCoverageTimePeriod
         validators:
-          - validation: NOT_BLANK
+          - validation: NONE_BLANK
             errorMessageKey: general.validation.make-sure-to-answer-this-question
         options:
           datasources:
