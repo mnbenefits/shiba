@@ -3,8 +3,8 @@
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                     inputData=${data.get(input.name)},
                     retroactiveCoverageMapData=${data.get('retroactiveCoverageMap')},
-                    testRetroactiveCoverage=${input.options.get('retroactiveCoverageSource').get('retroactiveCoverageSourceQuestion') == null},
                     hasHelpMessage=${input.helpMessageKey != null},
+                    hasError=${!data.isValid() && !inputData.valid(data)},
                     needsAriaLabel=${input.needsAriaLabel()}">
   <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
  <th:block th:if="${input.options.datasources.get('retroactiveCoverageSource').get('retroactiveCoverageSourceQuestion') != null}">
@@ -22,6 +22,16 @@
                th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
                th:id="${retroactiveCoverage + '-label'}">
         </label>
+        <div class="select">
+	        <select th:id="|${retroactiveCoverage}-personRetroactiveCoverage|" 
+	        class="select__element" 
+	        th:name="${formInputName}">
+	        	<option th:value="''" th:text="#{retroactive-coverage-time-period.number-of-months}"></option>
+	        	<option th:value="1" th:text="#{retroactive-coverage-time-period.one-month}"></option>
+	        	<option th:value="2" th:text="#{retroactive-coverage-time-period.two-months}"></option>
+	        	<option th:value="3" th:text="#{retroactive-coverage-time-period.three-months}"></option>
+	        </select>
+        </div>
 <!--/*        <input type="text"
                class="text-input form-width--medium"
                th:id="|${alienId}-personAlienId|"

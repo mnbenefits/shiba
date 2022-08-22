@@ -1990,7 +1990,7 @@ pageDefinitions:
   - &retroactiveCoverageTimePeriod
     name: retroactiveCoverageTimePeriod
     pageTitle: retroactive-coverage-time-period.title
-    headerKey: retroactive-coverage-time-period.how-many-months
+    headerKey: retroactive-coverage-time-period.how-many-months-do-they
     headerHelpMessageKey: retroactive-coverage-time-period.you-might-be
     contextFragment: retroactiveCoverageFragment
     inputs:
@@ -2003,15 +2003,30 @@ pageDefinitions:
         options:
           datasources:
             - pageName: retroactiveCoverageSource
-#          selectableOptions:
-#            - value: ''
-#              messageKey: retroactive-coverage-time-period.number-of-months
-#            - value: 1
-#              messageKey: retroactive-coverage-time-period.one-month
-#            - value: 2
-#              messageKey: retroactive-coverage-time-period.two-months
-#            - value: 3
-#              messageKey: retroactive-coverage-time-period.three-months
+      - type: HIDDEN
+        name: retroactiveCoverageMap
+  - &retroactiveCoverageTimePeriodIndividual
+    name: retroactiveCoverageTimePeriodIndividual
+    pageTitle: retroactive-coverage-time-period.title
+    headerKey: retroactive-coverage-time-period.how-many-months-do-you
+    headerHelpMessageKey: retroactive-coverage-time-period.you-might-be
+    contextFragment: retroactiveCoverageFragment
+    inputs:
+      - type: SELECT
+        name: retroactiveCoverageNumberMonths
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-answer-this-question
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: retroactive-coverage-time-period.number-of-months
+            - value: 1
+              messageKey: retroactive-coverage-time-period.one-month
+            - value: 2
+              messageKey: retroactive-coverage-time-period.two-months
+            - value: 3
+              messageKey: retroactive-coverage-time-period.three-months
       - type: HIDDEN
         name: retroactiveCoverageMap
   - &medicalInOtherState
@@ -4454,10 +4469,21 @@ workflow:
     pageConfiguration: *retroactiveCoverage
     nextPages:
       - pageName: retroactiveCoverageSource
-        condition:
-          pageName: retroactiveCoverage
-          input: retroactiveCoverageQuestion
-          value: "true"
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - pageName: retroactiveCoverage
+              input: retroactiveCoverageQuestion
+              value: "true"
+            - *doesNotLiveAlone?
+      - pageName: retroactiveCoverageTimePeriodIndividual
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - pageName: retroactiveCoverage
+              input: retroactiveCoverageQuestion
+              value: "true"
+            - *livesAlone?
       - pageName: medicalInOtherState
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     datasources:
@@ -4469,6 +4495,10 @@ workflow:
     pageConfiguration: *retroactiveCoverageSource
     nextPages:
       - pageName: retroactiveCoverageTimePeriod
+  retroactiveCoverageTimePeriodIndividual:
+    pageConfiguration: *retroactiveCoverageTimePeriodIndividual
+    nextPages:
+      - pageName: medicalInOtherState
   retroactiveCoverageTimePeriod:
     pageConfiguration: *retroactiveCoverageTimePeriod
     nextPages:
