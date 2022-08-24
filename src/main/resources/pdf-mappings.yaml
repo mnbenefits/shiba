@@ -160,6 +160,10 @@ mappings:
     retroactiveCoverageQuestion: RETROACTIVE_COVERAGE_HELP
   medicalInOtherState:
     medicalInOtherState: MEDICAL_IN_OTHER_STATE
+
+  certainPops:
+    certainPopsSupplement: CP_SUPPLEMENT
+    
   certainPopsUnearnedIncome:
     noCertainPopsUnearnedIncome: NO_CP_UNEARNED_INCOME
     certainPopsUnearnedIncomePerson1: CP_UNEARNED_INCOME_PERSON_1
@@ -403,6 +407,7 @@ mappings:
     householdPregnancy: WHO_IS_PREGNANT
   whoIsNonUsCitizen:
     nameOfApplicantOrSpouse: NAME_OF_NON_US_CITIZEN
+    alienId: ALIEN_ID
   householdSelectionForIncome:
     whoseJobIsItFormatted: EMPLOYEE_FULL_NAME
   nonSelfEmployment_householdSelectionForIncome:

@@ -813,15 +813,12 @@ public class PageController {
   private ResponseEntity<String> getErrorResponseForInvalidFile(MultipartFile file, String type,
       LocaleSpecificMessageSource lms) throws IOException
   {
-    
     log.info(type);
-    
     if (file.getSize() == 0) {
       return new ResponseEntity<>(
           lms.getMessage("upload-documents.this-file-appears-to-be-empty"),
           HttpStatus.UNPROCESSABLE_ENTITY);
     }
-    
     if (type.contains("officedocument") || type.contains("msword"))
     {
       // officedocument = docx

@@ -30,7 +30,6 @@ import org.codeforamerica.shiba.output.xml.FileGenerator;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.UploadedDocument;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,8 +39,8 @@ public class PdfGenerator implements FileGenerator {
 
   private static final List<String> IMAGE_TYPES_TO_CONVERT_TO_PDF = List
       .of("jpg", "jpeg", "png", "gif");
-  private static final List<String> DOC_TYPES_TO_CONVERT_TO_PDF = List
-      .of("doc", "docx");
+
+
   private final PdfFieldMapper pdfFieldMapper;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillerMap;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap;
@@ -138,6 +137,10 @@ public class PdfGenerator implements FileGenerator {
         field -> (field.getGroupName().contains("whoHasDisability")
             && (field.getIteration()!=null?field.getIteration():0) > 1))) {
       pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
+    }
+    // for the general supplement
+    if (documentFields.stream().anyMatch(field -> (field.getName().contains("certainPopsSupplement")))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addCertainPopsSupplement"));
     }
       pdfFiller = new PDFBoxFieldFiller(pdfResource);
     }

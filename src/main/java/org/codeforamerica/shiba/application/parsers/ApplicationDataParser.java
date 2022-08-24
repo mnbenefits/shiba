@@ -13,7 +13,9 @@ import org.codeforamerica.shiba.pages.data.Subworkflow;
 public class ApplicationDataParser {
 
   /**
-   * Mapping configurations
+   * The HashMap <i>coordinatesMap</i> is used to extract the input values from the JSON data.
+   * The {@link Field} key will be used in the Preparer classes to find the {@link ParsingCoordinate} that holds the 
+   * String pageName and String inputName as configured in pages-config.yaml.
    */
   private static final Map<Field, ParsingCoordinate> coordinatesMap = new HashMap<>();
   private static final Map<Group, String> groupCoordinatesMap = new HashMap<>();
@@ -215,7 +217,7 @@ public class ApplicationDataParser {
         new ParsingCoordinate("otherUnearnedIncomeSources", "rentalIncomeAmount"));
     coordinatesMap.put(Field.OTHER_PAYMENTS_AMOUNT,
         new ParsingCoordinate("otherUnearnedIncomeSources", "otherPaymentsAmount"));
-    
+
     coordinatesMap.put(Field.NO_CP_UNEARNED_INCOME,
             new ParsingCoordinate("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome"));
     coordinatesMap.put(Field.CP_UNEARNED_INCOME_PERSON_1,
@@ -270,6 +272,9 @@ public class ApplicationDataParser {
             new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_3"));
     coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_4,
             new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_4"));
+
+    coordinatesMap.put(Field.CP_SUPPLEMENT,
+            new ParsingCoordinate("certainPops", "certainPopsSupplement"));
     
     coordinatesMap.put(Field.HOME_EXPENSES,
         new ParsingCoordinate("homeExpenses", "homeExpenses"));
@@ -332,6 +337,12 @@ public class ApplicationDataParser {
         new ParsingCoordinate("addHouseholdMembers", "addHouseholdMembers"));
     groupCoordinatesMap.put(Group.JOBS, "jobs");
     groupCoordinatesMap.put(Group.HOUSEHOLD, "household");
+    coordinatesMap.put(Field.ALIEN_ID,
+        new ParsingCoordinate("alienIdNumber", "alienIdNumber"));
+    coordinatesMap.put(Field.ALIEN_IDS,
+        new ParsingCoordinate("alienIdNumbers", "alienIdNumber"));
+    coordinatesMap.put(Field.ALIEN_ID_MAP,
+        new ParsingCoordinate("alienIdNumbers", "alienIdMap"));
   }
 
   public static List<String> getValues(PagesData pagesData, Field field) {
@@ -368,7 +379,8 @@ public class ApplicationDataParser {
   }
 
   /**
-   * Retrievable fields
+   * Enum Field is used as a HashMap key for the ApplicationDataParser's 
+   * internal HashMap <i>coordinatesMap</i>.
    */
   public enum Field {
     WRITTEN_LANGUAGE_PREFERENCES,
@@ -385,8 +397,8 @@ public class ApplicationDataParser {
     PAY_PERIOD,
     INCOME_PER_PAY_PERIOD,
     LAST_THIRTY_DAYS_JOB_INCOME,
-    IS_SELF_EMPLOYMENT,
-    WHOSE_JOB_IS_IT,
+    IS_SELF_EMPLOYMENT(""),
+    WHOSE_JOB_IS_IT(""),
     EMPLOYERS_NAME,
     ARE_YOU_WORKING,
 
@@ -466,7 +478,9 @@ public class ApplicationDataParser {
     INTEREST_DIVIDENDS_AMOUNT,
     RENTAL_AMOUNT,
     OTHER_PAYMENTS_AMOUNT,
-    
+
+    CP_SUPPLEMENT,
+
     // Certain Pops section 11 fields
     NO_CP_UNEARNED_INCOME,
     CP_UNEARNED_INCOME_PERSON_1,
@@ -547,7 +561,10 @@ public class ApplicationDataParser {
     UNEARNED_WORKERS_COMPENSATION_AMOUNT,
     UNEARNED_RETIREMENT_AMOUNT,
     UNEARNED_CHILD_OR_SPOUSAL_SUPPORT_AMOUNT,
-    UNEARNED_TRIBAL_PAYMENTS_AMOUNT;
+    UNEARNED_TRIBAL_PAYMENTS_AMOUNT,
+    ALIEN_ID,
+    ALIEN_IDS,
+    ALIEN_ID_MAP;
     @Getter
     private final String defaultValue;
 
@@ -565,6 +582,10 @@ public class ApplicationDataParser {
     HOUSEHOLD
   }
 
+  /**
+   * Java POJO record ParsingCoordinate(String pageName, String inputName) 
+   * corresponds to pages-config.yaml pageDefinitions for pageName and inputName.
+   **/
   private record ParsingCoordinate(String pageName, String inputName) {
 
   }
