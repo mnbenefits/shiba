@@ -42,6 +42,7 @@ import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.MonitoringService;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.TribalNationRoutingDestination;
+import org.codeforamerica.shiba.Utils;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.ApplicationStatusRepository;
@@ -416,7 +417,7 @@ class MnitDocumentConsumerTest {
 
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
 
-    when(fileNameGenerator.generateUploadedDocumentName(eq(application),anyInt(),eq("pdf"),any(),anyInt())).thenReturn("combinepdf.pdf");
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application),anyInt(),eq("pdf"),any(),anyInt())).thenReturn("combined-pdf.pdf");
     documentConsumer.processUploadedDocuments(application);
 
     ArgumentCaptor<ApplicationFile> captor = ArgumentCaptor.forClass(ApplicationFile.class);
