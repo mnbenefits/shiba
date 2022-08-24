@@ -382,10 +382,11 @@ class MnitDocumentConsumerTest {
   void updatesStatusToDeliveryFailedForUploadedDocuments() throws IOException {
     mockDocUpload("shiba+file.jpg", "someS3FilePath", MediaType.IMAGE_JPEG_VALUE, "jpg");
     ApplicationFile testFile = new ApplicationFile(FILE_BYTES, "doc1of1.pdf");
+    List<ApplicationFile> testFileList = List.of(new ApplicationFile(FILE_BYTES, "doc1of1.pdf"));
     doReturn(testFile).when(pdfGenerator)
         .generate(anyString(), eq(UPLOADED_DOC), eq(CASEWORKER), any());
-    doReturn(testFile).when(pdfGenerator)
-        .generateForUploadedDocument(any(), anyInt(), eq(application), any());
+    doReturn(testFileList).when(pdfGenerator)
+        .generateCombinedUploadedDocument(any(), eq(application), any(), any());
     doThrow(new RuntimeException("Some mocked exception")).when(mnitClient)
         .send(any(), any(), any(), eq(UPLOADED_DOC), any());
 
@@ -415,7 +416,7 @@ class MnitDocumentConsumerTest {
 
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
 
-    when(fileNameGenerator.generateCombinedUploadedDocsName(eq(application),eq("pdf"),any())).thenReturn("combinepdf.pdf");
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application),anyInt(),eq("pdf"),any(),anyInt())).thenReturn("combinepdf.pdf");
     documentConsumer.processUploadedDocuments(application);
 
     ArgumentCaptor<ApplicationFile> captor = ArgumentCaptor.forClass(ApplicationFile.class);
@@ -442,7 +443,7 @@ class MnitDocumentConsumerTest {
 
     application.setFlow(LATER_DOCS);
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
-    when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(0), eq("pdf"), any()))
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(0), eq("pdf"), any(), eq(1)))
         .thenReturn("pdf1of1.pdf");
     ApplicationFile xmlApplicationFile = new ApplicationFile("my xml".getBytes(), "someFile.xml");
     when(xmlGenerator.generate(any(), any(), any())).thenReturn(xmlApplicationFile);
@@ -492,17 +493,18 @@ class MnitDocumentConsumerTest {
 
     mockDocUpload("shiba+file.jpg", "someS3FilePath", MediaType.IMAGE_JPEG_VALUE, "jpg");
     ApplicationFile testFile = new ApplicationFile(FILE_BYTES, "doc1of1.pdf");
+    List<ApplicationFile> testFileList = List.of(new ApplicationFile(FILE_BYTES, "doc1of1.pdf"));
     doReturn(testFile).when(pdfGenerator)
         .generate(anyString(), eq(UPLOADED_DOC), eq(CASEWORKER), any());
-    doReturn(testFile).when(pdfGenerator)
-        .generateForUploadedDocument(any(), anyInt(), eq(application), any());
+    doReturn(testFileList).when(pdfGenerator)
+        .generateCombinedUploadedDocument(any(), eq(application),any(), any());
     when(fileNameGenerator.generateUploadedDocumentName(application, 0, "pdf")).thenReturn(
         "pdf1of1.pdf");
     when(fileNameGenerator.generateUploadedDocumentName(
         eq(application), eq(0), eq("pdf"), eq(tribalNations.get(MilleLacsBandOfOjibwe)), eq(1))
     ).thenReturn("MILLE_LACS_pdf1of1.pdf");
-    
-    when(fileNameGenerator.generateCombinedUploadedDocsName(eq(application), eq("pdf"), eq(tribalNations.get(MilleLacsBandOfOjibwe))))
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application),anyInt(),eq("pdf"),eq(tribalNations.get(MilleLacsBandOfOjibwe)),anyInt()))
+   // when(fileNameGenerator.generateCombinedUploadedDocsName(eq(application), eq("pdf"), eq(tribalNations.get(MilleLacsBandOfOjibwe))))
     .thenReturn("MILLE_LACS_pdf.pdf");
 
     documentConsumer.processUploadedDocuments(application);
@@ -520,16 +522,16 @@ class MnitDocumentConsumerTest {
 
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
 
-    when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(0), eq("pdf"), any()))
-        .thenReturn("pdf1of2.pdf");
-    when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(1), eq("pdf"), any()))
-        .thenReturn("pdf2of2.pdf");
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(0), eq("pdf"), any(), eq(1)))
+        .thenReturn("pdf1of1.pdf");
+   /* when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(1), eq("pdf"), any(), eq(2)))
+        .thenReturn("pdf2of2.pdf");*/
 
     documentConsumer.processUploadedDocuments(application);
 
     CountyRoutingDestination routingDestination = countyMap.get(Olmsted);
     verify(applicationStatusRepository,times(1)).createOrUpdate(application.getId(),
-        UPLOADED_DOC, routingDestination.getName(), SENDING,null);
+        UPLOADED_DOC, routingDestination.getName(), SENDING, "pdf1of1.pdf");
   }
 
   @Test

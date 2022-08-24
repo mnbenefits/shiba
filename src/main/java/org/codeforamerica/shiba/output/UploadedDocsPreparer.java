@@ -33,12 +33,11 @@ public class UploadedDocsPreparer {
     
     byte[] coverPage = pdfGenerator.generateCoverPageForUploadedDocs(application);
     
-    ApplicationFile preparedDocument = pdfGenerator.generateCombinedUploadedDocument(uploadedDocs, application, coverPage);
+    List<ApplicationFile> preparedDocument = pdfGenerator.generateCombinedUploadedDocument(uploadedDocs, application, coverPage);
     
-    if (preparedDocument != null && preparedDocument.getFileBytes().length > 0) {
-      applicationFiles.add(preparedDocument);
+    if (preparedDocument != null && preparedDocument.stream().allMatch(uDoc -> uDoc.getFileBytes().length > 0)) {
+      applicationFiles = preparedDocument;
     }
-  
     return applicationFiles;
   }
 }
