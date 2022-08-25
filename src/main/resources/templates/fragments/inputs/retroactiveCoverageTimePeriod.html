@@ -22,14 +22,17 @@
                th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
                th:id="${retroactiveCoverage + '-label'}">
         </label>
+        <span th:text="${personRetroactiveCoverage}"></span>
         <div class="select">
 	        <select th:id="|${retroactiveCoverage}-personRetroactiveCoverage|" 
 	        class="select__element" 
 	        th:name="${formInputName}">
        	   	<option th:value="''" th:text="#{retroactive-coverage-time-period.number-of-months}"></option>
-            <option th:value="1" th:text="#{retroactive-coverage-time-period.one-month}"></option>
-            <option th:value="2" th:text="#{retroactive-coverage-time-period.two-months}"></option>
-	       	<option th:value="3" th:text="#{retroactive-coverage-time-period.three-months}"></option>
+            <th:block th:each="option: ${#numbers.sequence(1,3)}">
+				<option th:value="${option}"
+					th:text="#{${'retroactive-coverage-time-period.'+option}}"
+					th:selected="${option}==${!inputData.value.isEmpty()?inputData.value.get(indexInInputData):''}"></option>
+			</th:block>
 	        </select>
         </div>
 
