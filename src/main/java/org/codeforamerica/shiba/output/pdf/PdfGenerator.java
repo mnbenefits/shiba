@@ -141,7 +141,7 @@ public class PdfGenerator implements FileGenerator {
   //For section 8 Retroactive coverage
     if (documentFields.stream().anyMatch(
         field -> (field.getGroupName().contains("retroactiveCoverage")
-            && field.getIteration() > 1))) {
+            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
       pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addRetroactiveCoverageSupp"));
     }
     // for the general supplement

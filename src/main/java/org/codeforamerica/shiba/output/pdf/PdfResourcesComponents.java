@@ -108,8 +108,8 @@ public class PdfResourcesComponents {
   
   @Bean
   public List<Resource> getRetroactiveCoverageSupp(
-      @Value("classpath:certain-pops-retroactive-supp.pdf") Resource whoHasDisability) {
-    return List.of(whoHasDisability);
+      @Value("classpath:certain-pops-retroactive-supp.pdf") Resource whoHasRetroactiveCoverage) {
+    return List.of(whoHasRetroactiveCoverage);
   }
 
   @Bean
