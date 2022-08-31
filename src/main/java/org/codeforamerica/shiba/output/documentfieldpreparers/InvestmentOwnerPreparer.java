@@ -1,19 +1,27 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
-import static org.codeforamerica.shiba.output.FullNameFormatter.getFullName;
-import static org.codeforamerica.shiba.output.FullNameFormatter.getListOfSelectedFullNames;
+import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getGroup;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HAS_HOUSE_HOLD;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_FIRST_NAME;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_LAST_NAME;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.INVESTMENT_TYPE_INDIVIDUAL;
+import static org.codeforamerica.shiba.output.FullNameFormatter.getFullName;
+import static org.codeforamerica.shiba.output.FullNameFormatter.getListOfSelectedFullNames;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.codeforamerica.shiba.application.Application;
+import org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Group;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
 import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.pages.data.Iteration;
+import org.codeforamerica.shiba.pages.data.Subworkflow;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -25,44 +33,75 @@ public class InvestmentOwnerPreparer implements DocumentFieldPreparer {
       Recipient recipient) {
     List<DocumentField> results = new ArrayList<>();
     boolean hasHouseHold = getValues(application.getApplicationData().getPagesData(),HAS_HOUSE_HOLD).contains("true");
+
+    List<Investment> investmentOwners = new ArrayList<Investment>();
+    if(hasHouseHold) {
+      List<String> stockOwners = getListOfSelectedFullNames(application, "stocksHouseHoldSource", "stocksHouseHoldSource");
+      List<String> bondOwners = getListOfSelectedFullNames(application, "bondsHouseHoldSource", "bondsHouseHoldSource");
+      List<String> retirementAccountOwners = getListOfSelectedFullNames(application, "retirementAccountsHouseHoldSource", "retirementAccountsHouseHoldSource");
+     var householdSubworkflow = ofNullable(getGroup(application.getApplicationData(), Group.HOUSEHOLD));
+     List<String> allHouseholdNames = householdSubworkflow.map(subworkflow -> getApplicationInputsForSubworkflow(subworkflow, application)).orElse(emptyList());
+     
+     for(String fullName: allHouseholdNames) {
+       List<String> investmentType = new ArrayList<String>();
       
-    List<DocumentField> stockOwners = getAssetsOwnerSection(application, "stocksHouseHoldSource", "stocksHouseHoldSource","investmentOwners", hasHouseHold, "STOCKS" );
-    results.addAll(stockOwners);
-    List<DocumentField> bondOwners = getAssetsOwnerSection(application, "bondsHouseHoldSource", "bondsHouseHoldSource","investmentOwners", hasHouseHold, "BONDS" );
-    results.addAll(bondOwners);
-    List<DocumentField> retirementAccountOwners = getAssetsOwnerSection(application, "retirementAccountsHouseHoldSource", "retirementAccountsHouseHoldSource","investmentOwners", hasHouseHold, "RETIREMENT_ACCOUNTS" );
-    results.addAll(retirementAccountOwners);
+       stockOwners.stream().forEach(name ->{
+         if(name.equals(fullName))
+           investmentType.add("stocks");
+           }
+           );
+       bondOwners.stream().forEach(name ->{
+         if(name.equals(fullName))
+           investmentType.add("bonds");
+           }
+           );
+       retirementAccountOwners.stream().forEach(name ->{
+         if(name.equals(fullName))
+           investmentType.add("retirement accounts");
+           }
+           );
+       
+       investmentOwners.add(new Investment(fullName, investmentType));
+     }
+    }else {
+      List<String> investmentType = getValues(application.getApplicationData().getPagesData(),INVESTMENT_TYPE_INDIVIDUAL);
+      investmentOwners.add(new Investment(getFullName(application), investmentType));
+    }
+
+    int i = 0;
+    for(Investment inv: investmentOwners) {
+      results.add(new DocumentField("assetOwnerSource", "investmentOwners", List.of(inv.fullName), DocumentFieldType.SINGLE_VALUE, i));
+      results.add(new DocumentField("assetOwnerSource", "investmentType", 
+          inv.investmentType.stream().map(Object::toString).collect(Collectors.joining(",")), DocumentFieldType.SINGLE_VALUE, i));
+      i++;
+    }
 
     return results;
   }
   
   @NotNull
-  private static List<DocumentField> getAssetsOwnerSection(Application application, String pageName,
-      String inputName, String outputName, boolean hasHouseHold, String assetType) {
-    List<String> assetOwnersSource =  getListOfSelectedFullNames(application, pageName, inputName);
-    System.out.println("assetOwnersSource = " + assetOwnersSource); //TODO emj delete
-    List<DocumentField> fields = new ArrayList<>();
-    AtomicInteger i = new AtomicInteger(0);
-    if (hasHouseHold) {
-      fields = assetOwnersSource
-          .stream().map(fullName -> new DocumentField("assetOwnerSource", outputName, List.of(fullName), DocumentFieldType.SINGLE_VALUE, i.get()))
-          .peek(docField1 -> System.out.println("docField1 = " + docField1 ))
-          .collect(Collectors.toList());
-      fields.addAll(assetOwnersSource
-              .stream()
-              .map(fullName -> new DocumentField("assetOwnerSource", "investmentType", List.of(assetType), DocumentFieldType.SINGLE_VALUE, i.getAndIncrement()))
-              .peek(docField2 -> System.out.println("docField2 = " + docField2 ))
-              .collect(Collectors.toList()));
-    } else {
-      if (getValues(application.getApplicationData().getPagesData(),INVESTMENT_TYPE_INDIVIDUAL).contains(assetType))
-        fields.add(
-            new DocumentField("assetOwnerSource", outputName, List.of(getFullName(application)),
-                DocumentFieldType.SINGLE_VALUE, i.getAndIncrement()));
-      fields.add(
-              new DocumentField("assetOwnerSource", "investmentType", List.of(assetType),
-                  DocumentFieldType.SINGLE_VALUE, i.getAndIncrement()));
-      
+  private List<String> getApplicationInputsForSubworkflow(Subworkflow subworkflow, Application application) {
+   
+    List<String> householdFullNames = new ArrayList<>();
+    for (Iteration i : subworkflow) {
+      var pageData = i.getPagesData();
+      var pgFirstName = getFirstValue(pageData, HOUSEHOLD_INFO_FIRST_NAME);
+      var pgLastName = getFirstValue(pageData, HOUSEHOLD_INFO_LAST_NAME);
+      householdFullNames.add(pgFirstName+" "+pgLastName);
     }
-    return fields;
+    householdFullNames.add(getFullName(application));
+    
+    return householdFullNames;
   }
+  
+  public class Investment{
+    String fullName = "";
+    List<String> investmentType = List.of("");
+    
+    public Investment(String fullName, List<String> investmentType) {
+      this.fullName = fullName;
+      this.investmentType = investmentType;
+    }
+  }
+  
 }
