@@ -387,7 +387,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
     
     //Which types of investment accounts does your household have? 
-    assertThat(testPage.getTitle()).isEqualTo("Which types of investment accounts does your household have?");
+    assertThat(testPage.getTitle()).isEqualTo("Which types of investment accounts does your household have");
     driver.findElement(By.id("STOCKS")).click(); 
     testPage.clickContinue();
     

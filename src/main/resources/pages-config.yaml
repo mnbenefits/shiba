@@ -5334,10 +5334,15 @@ workflow:
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
         - *applicantDidNotChooseCERTAINPOPS?
+        - pageName: assets
+          input: assets
+          value: STOCK_BOND
+          matcher: DOES_NOT_CONTAIN 
     datasources:
       - pageName: addHouseholdMembers
       - pageName: investmentAssetType
-      - pageName: choosePrograms  
+      - pageName: choosePrograms
+      - pageName: assets
   bondsHouseHoldSource:
     pageConfiguration: *bondsHouseHoldSource
     nextPages:
@@ -5351,10 +5356,15 @@ workflow:
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
         - *applicantDidNotChooseCERTAINPOPS?
+        - pageName: assets
+          input: assets
+          value: STOCK_BOND
+          matcher: DOES_NOT_CONTAIN 
     datasources:
       - pageName: addHouseholdMembers
       - pageName: investmentAssetType
-      - pageName: choosePrograms 
+      - pageName: choosePrograms
+      - pageName: assets
   retirementAccountsHouseHoldSource:
     pageConfiguration: *retirementAccountsHouseHoldSource
     nextPages:
@@ -5368,10 +5378,15 @@ workflow:
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
         - *applicantDidNotChooseCERTAINPOPS?
+        - pageName: assets
+          input: assets
+          value: STOCK_BOND
+          matcher: DOES_NOT_CONTAIN 
     datasources:
       - pageName: addHouseholdMembers
       - pageName: investmentAssetType
-      - pageName: choosePrograms   
+      - pageName: choosePrograms
+      - pageName: assets
   lifeInsuranceAssetSource:
     pageConfiguration: *lifeInsuranceAssetSource
     nextPages:
