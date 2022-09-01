@@ -66,6 +66,7 @@ public class InvestmentOwnerPreparer implements DocumentFieldPreparer {
      }
     }else {
       List<String> investmentType = getValues(application.getApplicationData().getPagesData(),INVESTMENT_TYPE_INDIVIDUAL);
+      investmentType = investmentType.stream().map(String::toLowerCase).map(type->type.replace("_", " ")).collect(Collectors.toList());
       investmentOwners.add(new Investment(getFullName(application), investmentType));
     }
 
@@ -73,7 +74,7 @@ public class InvestmentOwnerPreparer implements DocumentFieldPreparer {
     for(Investment inv: investmentOwners) {
       results.add(new DocumentField("assetOwnerSource", "investmentOwners", List.of(inv.fullName), DocumentFieldType.SINGLE_VALUE, i));
       results.add(new DocumentField("assetOwnerSource", "investmentType", 
-          inv.investmentType.stream().map(Object::toString).collect(Collectors.joining(",")), DocumentFieldType.SINGLE_VALUE, i));
+          inv.investmentType.stream().map(Object::toString).collect(Collectors.joining(", ")), DocumentFieldType.SINGLE_VALUE, i));
       i++;
     }
 
@@ -84,14 +85,13 @@ public class InvestmentOwnerPreparer implements DocumentFieldPreparer {
   private List<String> getApplicationInputsForSubworkflow(Subworkflow subworkflow, Application application) {
    
     List<String> householdFullNames = new ArrayList<>();
+    householdFullNames.add(getFullName(application));
     for (Iteration i : subworkflow) {
       var pageData = i.getPagesData();
       var pgFirstName = getFirstValue(pageData, HOUSEHOLD_INFO_FIRST_NAME);
       var pgLastName = getFirstValue(pageData, HOUSEHOLD_INFO_LAST_NAME);
       householdFullNames.add(pgFirstName+" "+pgLastName);
     }
-    householdFullNames.add(getFullName(application));
-    
     return householdFullNames;
   }
   
