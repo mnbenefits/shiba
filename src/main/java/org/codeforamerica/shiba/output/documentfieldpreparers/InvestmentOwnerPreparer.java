@@ -41,27 +41,28 @@ public class InvestmentOwnerPreparer implements DocumentFieldPreparer {
       List<String> retirementAccountOwners = getListOfSelectedFullNames(application, "retirementAccountsHouseHoldSource", "retirementAccountsHouseHoldSource");
      var householdSubworkflow = ofNullable(getGroup(application.getApplicationData(), Group.HOUSEHOLD));
      List<String> allHouseholdNames = householdSubworkflow.map(subworkflow -> getApplicationInputsForSubworkflow(subworkflow, application)).orElse(emptyList());
-     
+    
      for(String fullName: allHouseholdNames) {
        List<String> investmentType = new ArrayList<String>();
-      
        stockOwners.stream().forEach(name ->{
-         if(name.equals(fullName))
+         if(name.equals(fullName)) {
            investmentType.add("stocks");
-           }
-           );
+         }
+       });
        bondOwners.stream().forEach(name ->{
-         if(name.equals(fullName))
+         if(name.equals(fullName)) {
            investmentType.add("bonds");
-           }
-           );
+         }
+       });
        retirementAccountOwners.stream().forEach(name ->{
-         if(name.equals(fullName))
+         if(name.equals(fullName)) {
            investmentType.add("retirement accounts");
-           }
-           );
+         }
+        });
+       if(!investmentType.isEmpty()) {
+    	   investmentOwners.add(new Investment(fullName, investmentType));
+       }
        
-       investmentOwners.add(new Investment(fullName, investmentType));
      }
     }else {
       List<String> investmentType = getValues(application.getApplicationData().getPagesData(),INVESTMENT_TYPE_INDIVIDUAL);
