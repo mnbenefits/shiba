@@ -3700,6 +3700,27 @@ pageDefinitions:
               input: programs
               matcher: CONTAINS
               value: CCAP
+          - value: CONTRACTS_NOTES_AGREEMENTS
+            messageKey: assets.ownership-in-contracts-for-deed
+            condition:
+              pageName: choosePrograms
+              input: programs
+              matcher: CONTAINS
+              value: CERTAIN_POPS
+          - value: TRUST_OR_ANNUITY
+            messageKey: assets.trust-or-annuity
+            condition:
+              pageName: choosePrograms
+              input: programs
+              matcher: CONTAINS
+              value: CERTAIN_POPS
+          - value: OTHER_ASSETS
+            messageKey: assets.other-type-of-assets
+            condition:
+              pageName: choosePrograms
+              input: programs
+              matcher: CONTAINS
+              value: CERTAIN_POPS
           - value: NONE
             messageKey: assets.none-of-the-above
             isNone: true
@@ -3809,6 +3830,54 @@ pageDefinitions:
     inputs:
       - type: CUSTOM
         name: oneMillionDollarAssetSource
+        validators:
+         - validation: NOT_BLANK
+           errorMessageKey: general.validation.make-sure-to-select-a-person
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+  - &contractsNotesAgreementsAssetSource
+    name: contractsNotesAgreementsAssetSource
+    pageTitle: contracts-notes-agreements-asset-source.title
+    headerKey: contracts-notes-agreements-asset-source.who-has
+    headerHelpMessageKey: contracts-notes-agreements-asset-source.choose-whoever-is-listed
+    inputs:
+      - type: CUSTOM
+        name: contractsNotesAgreementsAssetSource
+        validators:
+         - validation: NOT_BLANK
+           errorMessageKey: general.validation.make-sure-to-select-a-person
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+  - &trustAnnuityAssetSource
+    name: trustAnnuityAssetSource
+    pageTitle: trust-annuity-asset-source.title
+    headerKey: trust-annuity-asset-source.who-has
+    headerHelpMessageKey: trust-annuity-asset-source.choose-whoever-is-listed
+    inputs:
+      - type: CUSTOM
+        name: trustAnnuityAssetSource
+        validators:
+         - validation: NOT_BLANK
+           errorMessageKey: general.validation.make-sure-to-select-a-person
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+  - &otherAssetSource
+    name: otherAssetSource
+    pageTitle: other-asset-source.title
+    headerKey: other-asset-source.who-has
+    headerHelpMessageKey: other-asset-source.choose-whoever-is-listed
+    inputs:
+      - type: CUSTOM
+        name: otherAssetSource
         validators:
          - validation: NOT_BLANK
            errorMessageKey: general.validation.make-sure-to-select-a-person
@@ -5301,13 +5370,64 @@ workflow:
   oneMillionDollarAssetSource:
     pageConfiguration: *oneMillionDollarAssetSource
     nextPages:
-      - pageName: savings
+      - pageName: contractsNotesAgreementsAssetSource
     skipCondition:
       logicalOperator: OR
       conditions:
         - pageName: assets
           input: assets
           value: ONE_MILLION_ASSETS
+          matcher: DOES_NOT_CONTAIN
+        - *livesAlone?
+        - *applicantDidNotChooseCERTAINPOPS?
+    datasources:
+      - pageName: addHouseholdMembers
+      - pageName: assets
+      - pageName: choosePrograms
+  contractsNotesAgreementsAssetSource:
+    pageConfiguration: *contractsNotesAgreementsAssetSource
+    nextPages:
+      - pageName: trustAnnuityAssetSource
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - pageName: assets
+          input: assets
+          value: CONTRACTS_NOTES_AGREEMENTS
+          matcher: DOES_NOT_CONTAIN
+        - *livesAlone?
+        - *applicantDidNotChooseCERTAINPOPS?
+    datasources:
+      - pageName: addHouseholdMembers
+      - pageName: assets
+      - pageName: choosePrograms
+  trustAnnuityAssetSource:
+    pageConfiguration: *trustAnnuityAssetSource
+    nextPages:
+      - pageName: otherAssetSource
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - pageName: assets
+          input: assets
+          value: CONTRACTS_NOTES_AGREEMENTS
+          matcher: DOES_NOT_CONTAIN
+        - *livesAlone?
+        - *applicantDidNotChooseCERTAINPOPS?
+    datasources:
+      - pageName: addHouseholdMembers
+      - pageName: assets
+      - pageName: choosePrograms
+  otherAssetSource:
+    pageConfiguration: *otherAssetSource
+    nextPages:
+      - pageName: savings
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - pageName: assets
+          input: assets
+          value: CONTRACTS_NOTES_AGREEMENTS
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
         - *applicantDidNotChooseCERTAINPOPS?
