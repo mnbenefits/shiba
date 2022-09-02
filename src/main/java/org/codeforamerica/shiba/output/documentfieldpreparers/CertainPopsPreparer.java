@@ -24,6 +24,7 @@ import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.output.documentfieldpreparers.InvestmentOwnerPreparer.Investment;
+import org.codeforamerica.shiba.output.documentfieldpreparers.ListRetroCoveragePreparer.RetroCoverageMember;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.Iteration;
@@ -64,6 +65,8 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 		// Question 6, non-US citizens, generate the supplement if needed
 		createNonUsCitizensSupplementPage();
 		
+		//Question 8, Retroactive coverage
+		mapRetroactiveCoverage(application, document, recipient);
 		// Question 11, unearned income
 		mapUnearnedIncomeFields();
 		//Question 15
@@ -340,7 +343,7 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
         supplementPageText = String.format("%sQUESTION 15 continued:", supplementPageText);
         int i = 3;
         for (Investment inv : investmentOwnerList.subList(3, investmentOwnerList.size())) {
-          supplementPageText = String.format("%s\nPerson %d: %s, investment Type: %s",
+          supplementPageText = String.format("%s\nPerson %d: %s, Investment Type: %s",
               supplementPageText, i + 1, inv.fullName,
               inv.investmentType.stream().map(Object::toString).collect(Collectors.joining(", ")));
           i++;
@@ -348,5 +351,22 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	  }
 
 	}
+	
+	private void mapRetroactiveCoverage(Application application, Document document, Recipient recipient) {
+	  ListRetroCoveragePreparer lrcp = new ListRetroCoveragePreparer();
+      List<RetroCoverageMember> retroCoverageMemberList = lrcp.getRetroactiveMembers(application, document, recipient);
+      if(retroCoverageMemberList.size()>2) {
+        needsSupplementPage = true;
+        supplementPageText = String.format("%s\n\n", supplementPageText);
+        supplementPageText = String.format("%sQUESTION 8 continued:", supplementPageText);
+        int i = 2;
+        for (RetroCoverageMember inv : retroCoverageMemberList.subList(2, retroCoverageMemberList.size())) {
+          supplementPageText = String.format("%s\nPerson %d: %s, Month/s: %s",
+              supplementPageText, i + 1, inv.fullName, inv.month);
+          i++;
+        }
+      }
+
+    }
 
 }

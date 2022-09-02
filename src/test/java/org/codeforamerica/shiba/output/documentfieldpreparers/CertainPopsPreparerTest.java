@@ -556,8 +556,47 @@ public class CertainPopsPreparerTest {
           new DocumentField("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome", "true", DocumentFieldType.ENUMERATED_SINGLE_VALUE),
           new DocumentField("certainPops", "certainPopsSupplement",
           List.of(
-              "\n\nQUESTION 15 continued:\nPerson 4: Jack Smith, investment Type: retirement accounts"),
+              "\n\nQUESTION 15 continued:\nPerson 4: Jack Smith, Investment Type: retirement accounts"),
           DocumentFieldType.ENUMERATED_SINGLE_VALUE)));
 	}
+	
+	//QUESTION 8
+    @Test
+    public void shouldMapQuestion8SupplementText() {
+      ApplicationData applicationData = new TestApplicationDataBuilder().withPersonalInfo()
+          .withPageData("addHouseholdMembers", "addHouseholdMembers", "true")
+          .withSubworkflow("household",
+              new PagesData(Map.of("householdMemberInfo",
+                  new PageData(Map.of("firstName", new InputData(List.of("Jane")), "lastName",
+                      new InputData(List.of("Smith")))))),
+              new PagesData(Map.of("householdMemberInfo",
+                  new PageData(Map.of("firstName", new InputData(List.of("John")), "lastName",
+                      new InputData(List.of("Smith")))))),
+              new PagesData(Map.of("householdMemberInfo",
+                  new PageData(Map.of("firstName", new InputData(List.of("Jill")), "lastName",
+                      new InputData(List.of("Smith")))))),
+              new PagesData(Map.of("householdMemberInfo",
+                  new PageData(Map.of("firstName", new InputData(List.of("Jack")), "lastName",
+                      new InputData(List.of("Smith")))))))
+  
+          .withPageData("retroactiveCoverage", "retroactiveCoverageQuestion", "true")
+          .withPageData("retroactiveCoverageSource", "retroactiveCoverageSourceQuestion",
+              List.of("Jane Smith 0", "John Smith 1", "Jill Smith 2", "Jack Smith 3"))
+          .withPageData("retroactiveCoverageTimePeriod", "retroactiveCoverageNumberMonths",
+              List.of("1", "2", "3", "2"))
+          .withPageData("retroactiveCoverageTimePeriod", "retroactiveCoverageMap",
+              List.of("0", "1", "2", "3"))
+          .build();
+      List<DocumentField> result = preparer.prepareDocumentFields(
+          Application.builder().applicationData(applicationData).build(), null,
+          Recipient.CASEWORKER);
+      assertThat(result).isEqualTo(List.of(
+          new DocumentField("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome", "true", DocumentFieldType.ENUMERATED_SINGLE_VALUE),
+          new DocumentField("certainPops", "certainPopsSupplement",
+          List.of(
+              "\n\nQUESTION 8 continued:\nPerson 3: Jill Smith, Month/s: 3"
+              + "\nPerson 4: Jack Smith, Month/s: 2"),
+          DocumentFieldType.ENUMERATED_SINGLE_VALUE)));
+    }
 
 }
