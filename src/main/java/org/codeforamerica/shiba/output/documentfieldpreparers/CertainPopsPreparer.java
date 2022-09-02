@@ -23,12 +23,14 @@ import org.codeforamerica.shiba.application.parsers.ApplicationDataParser;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.output.documentfieldpreparers.InvestmentOwnerPreparer.Investment;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.Iteration;
 import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.data.Subworkflow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -52,18 +54,20 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 		needsSupplementPage = false;
 		persons = null;
 		lookup = null;
-
-		return map();
+		
+		return map(application, document, recipient);
 	}
 
 	// This method controls the mapping logic for each of the Certain Pops
 	// questions.
-	private List<DocumentField> map() {
+	private List<DocumentField> map(Application application, Document document, Recipient recipient) {
 		// Question 6, non-US citizens, generate the supplement if needed
 		createNonUsCitizensSupplementPage();
 		
 		// Question 11, unearned income
 		mapUnearnedIncomeFields();
+		//Question 15
+		mapInvestmentType(application, document, recipient);
 
 		if (needsSupplementPage) {
 			certainPopsDocumentFields.add(new DocumentField("certainPops", "certainPopsSupplement", supplementPageText,
@@ -325,6 +329,22 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 			this.type = type;
 			this.amount = amount;
 		}
+	}
+	
+	private void mapInvestmentType(Application application, Document document, Recipient recipient) {
+	  InvestmentOwnerPreparer iop = new InvestmentOwnerPreparer();
+	  List<Investment> investmentOwnerList = iop.getInvestmentOwners(application, document, recipient);
+	  needsSupplementPage = true;
+	  supplementPageText = String.format("%s\n\n", supplementPageText);
+      supplementPageText = String.format("%sQUESTION 15 continued:", supplementPageText);
+      int i = 3;
+	  for(Investment inv: investmentOwnerList.subList(3, investmentOwnerList.size())) {
+	    supplementPageText = String.format("%s\nPerson %d: %s, investment Type: %s", supplementPageText, i + 1,
+	          inv.fullName, inv.investmentType.stream().map(Object::toString).collect(Collectors.joining(", ")));
+	    i++;
+	  }
+	 
+
 	}
 
 }
