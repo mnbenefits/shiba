@@ -334,16 +334,18 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	private void mapInvestmentType(Application application, Document document, Recipient recipient) {
 	  InvestmentOwnerPreparer iop = new InvestmentOwnerPreparer();
 	  List<Investment> investmentOwnerList = iop.getInvestmentOwners(application, document, recipient);
-	  needsSupplementPage = true;
-	  supplementPageText = String.format("%s\n\n", supplementPageText);
-      supplementPageText = String.format("%sQUESTION 15 continued:", supplementPageText);
-      int i = 3;
-	  for(Investment inv: investmentOwnerList.subList(3, investmentOwnerList.size())) {
-	    supplementPageText = String.format("%s\nPerson %d: %s, investment Type: %s", supplementPageText, i + 1,
-	          inv.fullName, inv.investmentType.stream().map(Object::toString).collect(Collectors.joining(", ")));
-	    i++;
+	  if(investmentOwnerList.size()>3) {
+        needsSupplementPage = true;
+        supplementPageText = String.format("%s\n\n", supplementPageText);
+        supplementPageText = String.format("%sQUESTION 15 continued:", supplementPageText);
+        int i = 3;
+        for (Investment inv : investmentOwnerList.subList(3, investmentOwnerList.size())) {
+          supplementPageText = String.format("%s\nPerson %d: %s, investment Type: %s",
+              supplementPageText, i + 1, inv.fullName,
+              inv.investmentType.stream().map(Object::toString).collect(Collectors.joining(", ")));
+          i++;
+        }
 	  }
-	 
 
 	}
 
