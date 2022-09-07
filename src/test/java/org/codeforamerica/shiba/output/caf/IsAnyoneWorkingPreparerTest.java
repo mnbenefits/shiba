@@ -2,10 +2,10 @@ package org.codeforamerica.shiba.output.caf;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.shiba.output.DocumentFieldType.ENUMERATED_SINGLE_VALUE;
-import static org.codeforamerica.shiba.output.DocumentFieldType.SINGLE_VALUE;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.parsers.GrossMonthlyIncomeParser;
 import org.codeforamerica.shiba.output.Document;
