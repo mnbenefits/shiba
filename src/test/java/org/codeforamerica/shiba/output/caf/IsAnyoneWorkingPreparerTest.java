@@ -90,7 +90,15 @@ class IsAnyoneWorkingPreparerTest {
 		        .prepareDocumentFields(application, null, null);
 	  //false sets the radio button to No
 	  assertThat(documentFields).containsOnly(new DocumentField("employmentStatus", "isAnyoneWorking", "false", ENUMERATED_SINGLE_VALUE, null));
-	  
+  }
+  
+  @Test 
+  void shouldReturnNoWhenNobodyIsWorking() {
+	  Application application = Application.builder().applicationData(applicationData).build();
+	  List<DocumentField> documentFields = isAnyoneWorkingPreparer
+		        .prepareDocumentFields(application, null, null);
+	  //false sets the radio button to No
+	  assertThat(documentFields).containsOnly(new DocumentField("employmentStatus", "isAnyoneWorking", "false", ENUMERATED_SINGLE_VALUE, null));
   }
 
 }
