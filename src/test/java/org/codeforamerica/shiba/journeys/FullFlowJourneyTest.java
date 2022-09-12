@@ -377,6 +377,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
     // Does anyone in your household have any of these?
     testPage.enter("assets", "A vehicle");
+    testPage.enter("assets", "Stocks, bonds, retirement accounts");
     testPage.enter("assets", "Real estate (not including your own home)");
     testPage.clickContinue();
 
@@ -384,6 +385,17 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertThat(testPage.getTitle()).isEqualTo("Who has a vehicle");
     driver.findElement(By.id("householdMember-me")).click();  
     testPage.clickContinue();
+    
+    //Which types of investment accounts does your household have? 
+    assertThat(testPage.getTitle()).isEqualTo("Which types of investment accounts does your household have");
+    driver.findElement(By.id("STOCKS")).click(); 
+    testPage.clickContinue();
+    
+    //
+    assertThat(testPage.getTitle()).isEqualTo("Who has stocks");
+    driver.findElement(By.id("householdMember-me")).click(); 
+    testPage.clickContinue();
+    
     
     //Who has real estate (not including your own home)
     assertThat(testPage.getTitle()).isEqualTo("Who has real estate (not including your own home)");
@@ -393,10 +405,20 @@ public class FullFlowJourneyTest extends JourneyTest {
     // Does anyone in the household have money in a bank account or debit card?
     testPage.enter("haveSavings", YES.getDisplayValue());
 
-    // Who does the money belong to?
-    driver.findElement(By.id("householdMember-me")).click();
-    testPage.enter("liquidAssets", "1234");
+    // How much cash does your household have available?
+    testPage.enter("cashAmount", "1234");
+    testPage.clickContinue();
     
+    //Does your household have any of these accounts?
+    driver.findElement(By.id("SAVINGS")).click();
+    testPage.clickContinue();
+    
+    //who has money in a savings account?
+    driver.findElement(By.id("householdMember-me")).click();    
+    testPage.clickContinue();
+    
+    //how much money is available in these accounts?
+    testPage.enter("liquidAssets", "1234");
     testPage.clickContinue();
     
     // In the last 12 months, has anyone in the household given away or sold any assets?
@@ -544,7 +566,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCcapFieldEquals("MEDICAL_INSURANCE_PREMIUM_AMOUNT", "10.90");
     assertCcapFieldEquals("DENTAL_INSURANCE_PREMIUM_AMOUNT", "12.34");
     assertCcapFieldEquals("VISION_INSURANCE_PREMIUM_AMOUNT", "56.35");
-    assertCcapFieldEquals("IS_WORKING", "Yes");
+    assertCcapFieldEquals("IS_WORKING", "No");
     assertCcapFieldEquals("SOCIAL_SECURITY", "Yes");
     assertCcapFieldEquals("TRUST_MONEY", "Yes");
     assertCcapFieldEquals("BENEFITS", "Yes");
@@ -680,7 +702,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
     assertCafFieldEquals("IS_PREGNANT", "Yes");
     assertCafFieldEquals("IS_US_CITIZEN", "No");
-    assertCafFieldEquals("EXPEDITED_QUESTION_2", "1234.00");
+    assertCafFieldEquals("EXPEDITED_QUESTION_2", "2468.00");
     assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
     assertCafFieldEquals("HEAT", "Yes");
     assertCafFieldEquals("SUPPORT_AND_CARE", "Yes");
@@ -689,7 +711,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
     assertCafFieldEquals("HAS_DISABILITY", "Yes");
     assertCafFieldEquals("HAS_WORK_SITUATION", "No");
-    assertCafFieldEquals("IS_WORKING", "Yes");
+    assertCafFieldEquals("IS_WORKING", "No");
     assertCafFieldEquals("SOCIAL_SECURITY", "Yes");
     assertCafFieldEquals("SOCIAL_SECURITY_AMOUNT", "200.30");
     assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
@@ -699,7 +721,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MORTGAGE", "Yes");
     assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
     assertCafFieldEquals("HAVE_SAVINGS", "Yes");
-    assertCafFieldEquals("HAVE_INVESTMENTS", "No");
+    assertCafFieldEquals("HAVE_INVESTMENTS", "Yes");
     assertCafFieldEquals("HAVE_VEHICLE", "Yes");
     assertCafFieldEquals("HAVE_SOLD_ASSETS", "No");
     assertCafFieldEquals("AUTHORIZED_REP_FILL_OUT_FORM", "Yes");

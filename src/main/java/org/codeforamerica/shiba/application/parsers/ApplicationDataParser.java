@@ -120,7 +120,7 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.IDENTIFY_COUNTY, new ParsingCoordinate("identifyCounty", "county"));
 
     coordinatesMap.put(Field.APPLICANT_ASSETS, new ParsingCoordinate("liquidAssetsSingle", "liquidAssets"));
-    coordinatesMap.put(Field.HOUSEHOLD_ASSETS, new ParsingCoordinate("liquidAssets", "liquidAssets"));
+    coordinatesMap.put(Field.HOUSEHOLD_ASSETS, new ParsingCoordinate("cashAmount", "cashAmount"));
     coordinatesMap
         .put(Field.INCOME, new ParsingCoordinate("thirtyDayIncome", "moneyMadeLast30Days"));
     coordinatesMap.put(Field.MIGRANT_WORKER,
@@ -282,6 +282,8 @@ public class ApplicationDataParser {
         new ParsingCoordinate("utilityPayments", "payForUtilities"));
     coordinatesMap.put(Field.ASSETS_TYPE,
         new ParsingCoordinate("assets", "assets"));
+    coordinatesMap.put(Field.INVESTMENT_TYPE_INDIVIDUAL,
+            new ParsingCoordinate("investmentTypesIndividual", "investmentTypes"));
     coordinatesMap.put(Field.SAVINGS,
         new ParsingCoordinate("savings", "haveSavings"));
     coordinatesMap.put(Field.RECEIVES_ENERGY_ASSISTANCE,
@@ -532,6 +534,7 @@ public class ApplicationDataParser {
     HOME_EXPENSES,
     UTILITY_PAYMENTS,
     ASSETS_TYPE,
+    INVESTMENT_TYPE_INDIVIDUAL,
     SAVINGS,
 
     RECEIVES_ENERGY_ASSISTANCE,

@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.codeforamerica.shiba.Program;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
@@ -977,7 +976,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			addSelfEmployedJob(getApplicantFullNameAndId(), "My own boss");
 			postExpectingSuccess("assets", "assets", List.of("VEHICLE", "STOCK_BOND", "LIFE_INSURANCE",
 					"BURIAL_ACCOUNT", "OWNERSHIP_BUSINESS", "REAL_ESTATE"));
-			assertNavigationRedirectsToCorrectNextPage("assets", "savings");
+			assertNavigationRedirectsToCorrectNextPage("assets", "investmentTypesIndividual");
+			postExpectingSuccess("investmentAssetType", "investmentAssetType", List.of("STOCKS", "BONDS", "RETIREMENT_ACCOUNTS"));
 			completeHelperWorkflow(true);
 			submitApplication();
 
@@ -1065,7 +1065,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("VEHICLE_OWNER_FULL_NAME_0", "Dwight Schrute", pdf);
 
 			// Section 15
-			assertPdfFieldEquals("STOCK_OWNER_FULL_NAME_0", "Dwight Schrute", pdf);
+			assertPdfFieldEquals("INVESTMENT_OWNER_FULL_NAME_0", "Dwight Schrute", pdf);
 
 			// Section 20
 			assertPdfFieldEquals("LIFE_INSURANCE_OWNER_FULL_NAME_0", "Dwight Schrute", pdf);
@@ -1137,7 +1137,66 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		}
 
-		// This test just verifies that the Yes/No radio button is set
+		// This test verifies that the self-employment radio button is set to No when
+		// the applicant is not working.
+		@Test
+		void shouldMapSelfEmploymentToFalseWhenNotWorking() throws Exception {
+			fillInRequiredPages();
+			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
+			selectPrograms("CERTAIN_POPS");
+			postExpectingRedirect("basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER"),
+					"certainPopsConfirm");
+			fillInPersonalInfoAndContactInfoAndAddress();
+			postExpectingSuccess("employmentStatus", "areYouWorking", "false");
+			submitApplication();
+
+			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
+
+			// Section 9
+			assertPdfFieldEquals("SELF_EMPLOYED", "No", pdf);
+		}
+
+		// This test verifies that the self-employment radio button is set to No when
+		// the applicant is working but not self-employed.
+		@Test
+		void shouldMapSelfEmploymentToFalseWhenNotSelfEmployed() throws Exception {
+			fillInRequiredPages();
+			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
+			selectPrograms("CERTAIN_POPS");
+			postExpectingRedirect("basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER"),
+					"certainPopsConfirm");
+			fillInPersonalInfoAndContactInfoAndAddress();
+			postExpectingSuccess("employmentStatus", "areYouWorking", "true");
+			addFirstJob(getApplicantFullNameAndId(), "someEmployerName");
+			submitApplication();
+
+			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
+
+			// Section 9
+			assertPdfFieldEquals("SELF_EMPLOYED", "No", pdf);
+		}
+
+		// This test verifies that the self-employment radio button is set to Yes when
+		// the applicant is self-employed.
+		@Test
+		void shouldMapSelfEmploymentToTrueWhenSelfEmployed() throws Exception {
+			fillInRequiredPages();
+			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
+			selectPrograms("CERTAIN_POPS");
+			postExpectingRedirect("basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER"),
+					"certainPopsConfirm");
+			fillInPersonalInfoAndContactInfoAndAddress();
+			postExpectingSuccess("employmentStatus", "areYouWorking", "true");
+			addSelfEmployedJob(getApplicantFullNameAndId(), "someEmployerName");
+			submitApplication();
+
+			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
+
+			// Section 9
+			assertPdfFieldEquals("SELF_EMPLOYED", "Yes", pdf);
+		}
+
+		// This test just verifies that the unearned income Yes/No radio button is set
 		@Test
 		void shouldMapNoCpUnearnedIncomeToFalseWhenAnyUnearnedIncomeSelected() throws Exception {
 			fillInRequiredPages();
@@ -1274,8 +1333,13 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("assets", "assets", List.of("VEHICLE", "STOCK_BOND", "REAL_ESTATE"));
 			assertNavigationRedirectsToCorrectNextPage("assets", "vehicleAssetSource");
 			postExpectingRedirect("vehicleAssetSource", "vehicleAssetSource",
-					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId), "stockAssetSource");
-			postExpectingRedirect("stockAssetSource", "stockAssetSource",
+					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId), "investmentAssetType");
+			postExpectingSuccess("investmentAssetType", "investmentAssetType", List.of("STOCKS", "BONDS", "RETIREMENT_ACCOUNTS"));
+			postExpectingRedirect("stocksHouseHoldSource", "stocksHouseHoldSource",
+					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId), "bondsHouseHoldSource");
+			postExpectingRedirect("bondsHouseHoldSource", "bondsHouseHoldSource",
+					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId), "retirementAccountsHouseHoldSource");
+			postExpectingRedirect("retirementAccountsHouseHoldSource", "retirementAccountsHouseHoldSource",
 					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId), "realEstateAssetSource");
 			postExpectingRedirect("realEstateAssetSource", "realEstateAssetSource",
 					List.of("Jim Halpert " + jimHalpertId), "savings");
@@ -1301,9 +1365,11 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
             assertPdfFieldEquals("RETROACTIVE_COVERAGE_MONTH_1", "2", pdf);
 
 			// Section 15
-			assertPdfFieldEquals("STOCK_OWNER_FULL_NAME_0", "Dwight Schrute", pdf);
-			assertPdfFieldEquals("STOCK_OWNER_FULL_NAME_1", "Jim Halpert", pdf);
-
+			assertPdfFieldEquals("INVESTMENT_OWNER_FULL_NAME_0", "Dwight Schrute", pdf);
+			assertPdfFieldEquals("INVESTMENT_OWNER_FULL_NAME_1", "Jim Halpert", pdf);
+			assertPdfFieldEquals("INVESTMENT_TYPE_0", "stocks, bonds, retirement accounts", pdf);
+			assertPdfFieldEquals("INVESTMENT_TYPE_1", "stocks, bonds, retirement accounts", pdf);
+			
 			// Section 16
 			assertPdfFieldEquals("REAL_ESTATE_OWNER_FULL_NAME_0", "Jim Halpert", pdf);
 
@@ -1411,7 +1477,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("WHO_HAS_DISABILITY_2", "householdMemberFirstName2", pdf);
 
 		}
-		
+		/* /* Keep this code till supplement page display is finalized as general supp. page.
 		@Test
         void shouldMapHHMemberMoreThan2HasRetroactiveCoverage() throws Exception {
             fillInRequiredPages();
@@ -1443,5 +1509,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
             assertPdfFieldEquals("RETROACTIVE_COVERAGE_MONTH_3", "2", pdf);
 
         }
+        */
 	}
 }
