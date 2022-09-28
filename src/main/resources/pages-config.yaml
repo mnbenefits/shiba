@@ -1864,7 +1864,11 @@ pageDefinitions:
   - &tribalNationMember
     name: tribalNationMember
     pageTitle: tribal-nation-member.title
-    headerKey: tribal-nation-member.is-anyone-in-your-household-a-member-of-a-tribal-nation
+    headerKey:
+      defaultValue: tribal-nation-member.is-anyone-in-your-household-a-member-of-a-tribal-nation
+      conditionalValues:
+        - value: ##work-situation.in-the-last-2-months-did-you-do-any-of-these-things
+          condition: *livesAlone?
     hasPrimaryButton: false
     inputs:
       - name: isTribalNationMember
@@ -1872,7 +1876,11 @@ pageDefinitions:
   - &nationsBoundary
     name: nationsBoundary
     pageTitle: nations-boundary.title
-    headerKey: nations-boundary.are-any-of-the-tribal-members
+    headerKey:
+      defaultValue: nations-boundary.are-any-of-the-tribal-members
+      conditionalValues:
+        - value: ##work-situation.in-the-last-2-months-did-you-do-any-of-these-things
+          condition: *livesAlone?
     hasPrimaryButton: false
     inputs:
       - name: livingInNationBoundary
@@ -4511,7 +4519,7 @@ workflow:
         condition: *applicantChoseCERTAINPOPS?
         flag: certain-pops
       - pageName: introIncome
-    skipCondition: *livesAlone?
+    #skipCondition: *livesAlone?
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
@@ -4575,12 +4583,12 @@ workflow:
     skipCondition:
       logicalOperator: OR
       conditions:
-        - logicalOperator: OR
-          conditions:
-            - *livesAlone?
-            - pageName: tribalNationMember
-              input: isTribalNationMember
-              value: NO
+#        - logicalOperator: OR
+#          conditions:
+#            - *livesAlone?
+#            - pageName: tribalNationMember
+#              input: isTribalNationMember
+#              value: NO
         - *isUrbanTribalNationMember?
         - pageName: selectTheTribe
           input: selectedTribe
