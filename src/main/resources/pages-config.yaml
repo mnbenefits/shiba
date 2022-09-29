@@ -1867,7 +1867,7 @@ pageDefinitions:
     headerKey:
       defaultValue: tribal-nation-member.is-anyone-in-your-household-a-member-of-a-tribal-nation
       conditionalValues:
-        - value: ##work-situation.in-the-last-2-months-did-you-do-any-of-these-things
+        - value: tribal-nation-member.are-you-a-member-of-a-tribal-nation
           condition: *livesAlone?
     hasPrimaryButton: false
     inputs:
