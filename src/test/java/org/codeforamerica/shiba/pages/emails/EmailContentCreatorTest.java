@@ -16,8 +16,10 @@ import static org.mockito.Mockito.when;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -70,7 +72,7 @@ class EmailContentCreatorTest {
   
   @MockBean
   private RoutingDecisionService routingDecisionService;
-  //private List<RoutingDestination> routingDestinations;
+
   private Set<RoutingDestination> routingDestinations;
   
   @Mock
@@ -78,16 +80,14 @@ class EmailContentCreatorTest {
 
   private List<String> programs;
   private ApplicationData applicationData;
+  private ZonedDateTime submissionTime;
+  private String formattedTime;
+  private static final ZoneId CENTRAL_TIMEZONE = ZoneId.of("America/Chicago");
 
   @BeforeEach
   void setUp() {
     LocaleContextHolder.setLocale(ENGLISH);
     
-//    routingDestinations = new ArrayList<>();
-//    routingDestinations.add(
-//        new CountyRoutingDestination(Anoka, "DPI", "email", "555-5555"));
-//    routingDestinations.add(new TribalNationRoutingDestination(MilleLacsBandOfOjibwe,
-//        "someProviderId", "someEmail", "222-2222"));
     routingDestinations = new LinkedHashSet<>();
     routingDestinations.add(
     		new CountyRoutingDestination(Anoka, "DPI", "email", "555-5555"));
@@ -108,6 +108,10 @@ class EmailContentCreatorTest {
         .county(Anoka)
         .timeToComplete(null)
         .build()).when(applicationRepository).find(any());
+    
+    submissionTime = ZonedDateTime.now(CENTRAL_TIMEZONE);
+    formattedTime = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+            .format(submissionTime.withZoneSameInstant(ZoneId.of("America/Chicago")));
     
     emailContentCreator = new EmailContentCreator(messageSource, "test", nextStepsContentService,
             docRecommendationMessageService, applicationRepository, routingDecisionService, routingDestinationMessageService);
@@ -132,22 +136,44 @@ class EmailContentCreatorTest {
     assertThat(emailContent).contains("This application was submitted on behalf of a client.");
   }
 
-  @ParameterizedTest
-  @CsvSource(value = {
-      "ELIGIBLE,<html><body>We received your Minnesota Benefits application.<br><br>Your application was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (222-2222) on October 7, 2022.<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: <strong>In review</strong><br><br>Within 24 hours, <strong>expect a call</strong> from your county or tribal servicing agency about your food assistance application.<br><br>If you don't hear from your county or tribal servicing agency within 7 days or want an update on your case, please <a href=\"https://edocs.dhs.state.mn.us/lfserver/Public/DHS-5207-ENG\" target=\"_blank\" rel=\"noopener noreferrer\">call your county or tribal servicing agency.</a><br><br>You may be able to receive more support. See “What benefits programs do I qualify for” at <a href=\"https://mnbenefits.mn.gov/faq#what-benefits-programs\" target=\"_blank\" rel=\"noopener noreferrer\">MNbenefits.mn.gov/faq</a>.</body></html>",
-      "NOT_ELIGIBLE,<html><body>We received your Minnesota Benefits application.<br><br>Your application was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (222-2222) on October 7, 2022.<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: <strong>In review</strong><br><br>Within 24 hours, <strong>expect a call</strong> from your county or tribal servicing agency about your food assistance application.<br><br>If you don't hear from your county or tribal servicing agency within 7 days or want an update on your case, please <a href=\"https://edocs.dhs.state.mn.us/lfserver/Public/DHS-5207-ENG\" target=\"_blank\" rel=\"noopener noreferrer\">call your county or tribal servicing agency.</a><br><br>You may be able to receive more support. See “What benefits programs do I qualify for” at <a href=\"https://mnbenefits.mn.gov/faq#what-benefits-programs\" target=\"_blank\" rel=\"noopener noreferrer\">MNbenefits.mn.gov/faq</a>.</body></html>",
-      "UNDETERMINED,<html><body>We received your Minnesota Benefits application.<br><br>Your application was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (222-2222) on October 7, 2022.<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: <strong>In review</strong><br><br>Within 24 hours, <strong>expect a call</strong> from your county or tribal servicing agency about your food assistance application.<br><br>If you don't hear from your county or tribal servicing agency within 7 days or want an update on your case, please <a href=\"https://edocs.dhs.state.mn.us/lfserver/Public/DHS-5207-ENG\" target=\"_blank\" rel=\"noopener noreferrer\">call your county or tribal servicing agency.</a><br><br>You may be able to receive more support. See “What benefits programs do I qualify for” at <a href=\"https://mnbenefits.mn.gov/faq#what-benefits-programs\" target=\"_blank\" rel=\"noopener noreferrer\">MNbenefits.mn.gov/faq</a>.</body></html>",
-  })
-  void createContentForExpedited(SnapExpeditedEligibility snapExpeditedEligibility,
-      String expeditedEligibilityContent) {
+	
+  @Test
+  void createContentForExpeditedEligible() {
+	String eligibilityContent = "<html><body>We received your Minnesota Benefits application.<br><br>Your application was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (222-2222) on " + formattedTime + ".<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: <strong>In review</strong><br><br>Within 24 hours, <strong>expect a call</strong> from your county or tribal servicing agency about your food assistance application.<br><br>If you don't hear from your county or tribal servicing agency within 7 days or want an update on your case, please <a href=\"https://edocs.dhs.state.mn.us/lfserver/Public/DHS-5207-ENG\" target=\"_blank\" rel=\"noopener noreferrer\">call your county or tribal servicing agency.</a><br><br>You may be able to receive more support. See “What benefits programs do I qualify for” at <a href=\"https://mnbenefits.mn.gov/faq#what-benefits-programs\" target=\"_blank\" rel=\"noopener noreferrer\">MNbenefits.mn.gov/faq</a>.</body></html>";
     String emailContent = emailContentCreator.createFullClientConfirmationEmail(
     	applicationData,
         "someNumber",
         programs,
-        snapExpeditedEligibility,
+        SnapExpeditedEligibility.ELIGIBLE,
         CcapExpeditedEligibility.UNDETERMINED,
         ENGLISH);
-    assertThat(emailContent).contains(expeditedEligibilityContent);
+    assertThat(emailContent).contains(eligibilityContent);
+  }
+  
+  @Test
+  void createContentForExpeditedNotEligible() {
+    String eligibilityContent = "<html><body>We received your Minnesota Benefits application.<br><br>Your application was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (222-2222) on " + formattedTime + ".<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: <strong>In review</strong><br><br>In the next 7-10 days, <strong>expect to get a letter in the mail</strong> from your county or tribal servicing agency about your food support application. The letter will explain your next steps.<br><br><a href=\"https://edocs.dhs.state.mn.us/lfserver/Public/DHS-5207-ENG\" target=\"_blank\" rel=\"noopener noreferrer\">Call your county or tribal servicing agency</a> if you don’t hear from them in the time period we’ve noted.<br><br>You may be able to receive more support. See “What benefits programs do I qualify for” at <a href=\"https://mnbenefits.mn.gov/faq#what-benefits-programs\" target=\"_blank\" rel=\"noopener noreferrer\">MNbenefits.mn.gov/faq</a>.</body></html>";
+    String emailContent = emailContentCreator.createFullClientConfirmationEmail(
+    	applicationData,
+        "someNumber",
+        programs,
+        SnapExpeditedEligibility.NOT_ELIGIBLE,
+        CcapExpeditedEligibility.UNDETERMINED,
+        ENGLISH);
+    assertThat(emailContent).contains(eligibilityContent);
+  }
+  
+  @Test
+  void createContentForExpeditedUndetermined() {
+    String eligibilityContent = "<html><body>We received your Minnesota Benefits application.<br><br>Your application was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (222-2222) on " + formattedTime + ".<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: <strong>In review</strong><br><br>In the next 7-10 days, <strong>expect to get a letter in the mail</strong> from your county or tribal servicing agency about your food support application. The letter will explain your next steps.<br><br><a href=\"https://edocs.dhs.state.mn.us/lfserver/Public/DHS-5207-ENG\" target=\"_blank\" rel=\"noopener noreferrer\">Call your county or tribal servicing agency</a> if you don’t hear from them in the time period we’ve noted.<br><br>You may be able to receive more support. See “What benefits programs do I qualify for” at <a href=\"https://mnbenefits.mn.gov/faq#what-benefits-programs\" target=\"_blank\" rel=\"noopener noreferrer\">MNbenefits.mn.gov/faq</a>.</body></html>";
+    String emailContent = emailContentCreator.createFullClientConfirmationEmail(
+    	applicationData,
+        "someNumber",
+        programs,
+        SnapExpeditedEligibility.UNDETERMINED,
+        CcapExpeditedEligibility.UNDETERMINED,
+        ENGLISH);
+    assertThat(emailContent).contains(eligibilityContent);
   }
 
   @Test
@@ -228,7 +254,7 @@ class EmailContentCreatorTest {
         ENGLISH);
     assertThat(emailContent).contains("<html><body>We received your Minnesota Benefits application.<br><br>Your "
     		+ "application was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation "
-    		+ "Servicing Agency (222-2222) on October 7, 2022.<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: "
+    		+ "Servicing Agency (222-2222) on " + formattedTime + ".<br><br>Confirmation number: <strong>#someNumber</strong><br>Application status: "
     		+ "<strong>In review</strong><br><br>If you would like an update on your case, please call the county "
     		+ "or Tribal Nation listed above..</body></html>");
     assertThat(emailContent).doesNotContain(
@@ -287,7 +313,7 @@ class EmailContentCreatorTest {
     assertThat(confirmationEmail).contains(
         "<html><body>We received your Minnesota Benefits application.<br><br>Your application was "
         + "submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe Tribal Nation Servicing "
-        + "Agency (222-2222) on October 7, 2022.<br><br>Confirmation number: <strong>#someNumber</strong><br>Application "
+        + "Agency (222-2222) on " + formattedTime + ".<br><br>Confirmation number: <strong>#someNumber</strong><br>Application "
         + "status: <strong>In review</strong><br><br>In the next 7-10 days, <strong>expect to get a "
         + "letter in the mail</strong> from your county or tribal servicing agency about your childcare, "
         + "housing, emergency assistance, cash support and food support application. The letter will explain "
