@@ -214,6 +214,24 @@ conditionDefinitions:
     value: CCAP
     input: programs
     matcher: CONTAINS
+  - &countyNotSelected?
+    pageName: identifyCountyOrTribalNation
+    input: county
+ #   value: ''
+    matcher: EMPTY
+  - &tribalNationNotSelected?
+    pageName: identifyCountyOrTribalNation
+    input: tribalNation
+ #   value: ''
+    matcher: EMPTY
+  - &countyANDtribalNationNotSelected?
+ #   pageName: identifyCountyOrTribalNation Cannot set composite condition fields
+ #   logicalOperator: AND <-- default value
+    conditions:
+      - *countyNotSelected?
+      - *tribalNationNotSelected?
+ #   input: tribalNation Cannot set noncomposite condition fields
+ #   matcher: EMPTY
 pageDefinitions:
   - &landing
     name: landing
@@ -1703,15 +1721,31 @@ pageDefinitions:
         type: SELECT
         promptMessage:
           promptMessageFragmentName: identifyCountyOrTribalNationPrompt
-# show error message if county is blank and tribalNation is blank
+# show error message if county is blank -AND- tribalNation is blank
         validators:
           - validation: NOT_BLANK
-            condition:
-              logicalOperator: AND
-              conditions: 
-              input: tribalNation
-              matcher: NOT_BLANK
+#            condition: *countyANDtribalNationNotSelected?
+            condition: *countyNotSelected?
             errorMessageKey: general.validation.make-sure-to-make-selection
+# example -->
+#        validators:
+#          - validation: DATE
+#            errorMessageKey: general.validation.please-enter-your-birthday-in-this-format
+#            condition:
+#              input: dateOfBirth
+#              matcher: NOT_EMPTY
+#          - validation: DOB_VALID
+#            condition:
+#              input: dateOfBirth
+#              matcher: NOT_EMPTY
+#            errorMessageKey: general.validation.make-sure-to-provide-a-dob-between-1900-and-present
+
+#            validators:
+#              - validation: NOT_BLANK
+#                errorMessageKey: general.validation.make-sure-you-answer-this-question
+#                condition: *isHomeless?
+
+# <-- example
         options:
           selectableOptions:
             - value: ''
@@ -1897,6 +1931,8 @@ pageDefinitions:
 # show error message if county is blank -AND- tribalNation is blank
         validators:
           - validation: NOT_BLANK
+#            condition: *countyANDtribalNationNotSelected?
+            condition: *tribalNationNotSelected?
             errorMessageKey: general.validation.make-sure-to-make-selection
         options:
           selectableOptions:

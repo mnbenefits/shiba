@@ -54,8 +54,10 @@ public class Condition implements Serializable {
   }
 
   public boolean satisfies(PageData pageData) {
-    return pageData != null && !pageData.isEmpty() && matcher
-        .matches(pageData.get(input).getValue(), value);
+	  boolean satisfies = pageData != null && !pageData.isEmpty() && matcher
+		        .matches(pageData.get(input).getValue(), value);
+	  System.out.println("--- Condition satisfies: |" + satisfies + "| for pageName: |" + pageName + " | for input: |" + input + "| returns: " + pageData.get(input));//TODO emj delete
+    return satisfies;
   }
 
   @SuppressWarnings("unused")
