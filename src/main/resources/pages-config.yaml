@@ -1,18 +1,22 @@
 # see @ApplicationConfiguration for how to maintain this file
 conditionDefinitions:
   - &onlyApplyingForOthers?
+    name: onlyApplyingForOthers
     pageName: choosePrograms
     input: programs
     value: NONE
   - &livesAlone?
+    name: livesAlone
     pageName: addHouseholdMembers
     input: addHouseholdMembers
     value: "false"
   - &isUrbanTribalNationMember?
+    name: isUrbanTribalNationMember
     pageName: selectTheTribe
     input: selectedTribe
     matcher: IS_URBAN_TRIBAL_NATION_MEMBER
   - &doesNotLiveAlone?
+    name: 
     logicalOperator: OR
     conditions:
       - *onlyApplyingForOthers?
@@ -20,34 +24,41 @@ conditionDefinitions:
         input: addHouseholdMembers
         value: "true"
   - &isHomeless?
+    name: 
     pageName: homeAddress
     input: isHomeless
     matcher: DOES_NOT_CONTAIN
     value: "true"
   - &isApplicantsJob?
+    name: 
     pageName: householdSelectionForIncome
     input: whoseJobIsIt
     value: applicant
     matcher: CONTAINS_SUBSTRING
   - &selectedOtherUnearnedIncome?
+    name: 
     pageName: otherUnearnedIncome
     input: otherUnearnedIncome
     value: NO_OTHER_UNEARNED_INCOME_SELECTED
     matcher: DOES_NOT_CONTAIN
   - &selectedUnearnedIncome?
+    name: 
     pageName: unearnedIncome
     input: unearnedIncome
     value: NO_UNEARNED_INCOME_SELECTED
     matcher: DOES_NOT_CONTAIN
   - &noUnearnedIncomeSelected?
+    name: 
     pageName: unearnedIncome
     input: unearnedIncome
     value: NO_UNEARNED_INCOME_SELECTED
   - &noOtherUnearnedIncomeSelected?
+    name: 
     pageName: otherUnearnedIncome
     input: otherUnearnedIncome
     value: NO_OTHER_UNEARNED_INCOME_SELECTED
   - &doesNotHaveMortgage?
+    name: 
     pageName: homeExpenses
     input: homeExpenses
     value: MORTGAGE
@@ -206,6 +217,7 @@ conditionDefinitions:
       - *isApplicantsJob?
       - *livesAlone?
   - &isNoSSN?
+    name: isNoSSN
     pageName: personalInfo
     input: ssn
     matcher: NOT_EMPTY
@@ -215,23 +227,38 @@ conditionDefinitions:
     input: programs
     matcher: CONTAINS
   - &countyNotSelected?
+    name: countyNotSelected
     pageName: identifyCountyOrTribalNation
     input: county
- #   value: ''
     matcher: EMPTY
+# new conditions for tribal routing -->
   - &tribalNationNotSelected?
+    name: tribalNationNotSelected
     pageName: identifyCountyOrTribalNation
     input: tribalNation
- #   value: ''
     matcher: EMPTY
+  - &countySelected?
+    name: countySelected
+    pageName: identifyCountyOrTribalNation
+    input: county
+    matcher: NOT_EMPTY
+  - &tribalNationSelected?
+    name: tribalNationSelected
+    pageName: identifyCountyOrTribalNation
+    input: tribalNation
+    matcher: NOT_EMPTY
   - &countyANDtribalNationNotSelected?
- #   pageName: identifyCountyOrTribalNation Cannot set composite condition fields
- #   logicalOperator: AND <-- default value
+    name: countyANDtribalNationNotSelected
+    logicalOperator: AND
     conditions:
       - *countyNotSelected?
       - *tribalNationNotSelected?
- #   input: tribalNation Cannot set noncomposite condition fields
- #   matcher: EMPTY
+  - &eitherCountyOrTribalNationIsSelected?
+    name: eitherCountyOrTribalNationIsSelected
+    logicalOperator: OR
+    conditions:
+      - *countySelected?
+      - *tribalNationSelected?
 pageDefinitions:
   - &landing
     name: landing
@@ -1723,9 +1750,9 @@ pageDefinitions:
           promptMessageFragmentName: identifyCountyOrTribalNationPrompt
 # show error message if county is blank -AND- tribalNation is blank
         validators:
-          - validation: NOT_BLANK
-#            condition: *countyANDtribalNationNotSelected?
+          - validation: SELECTED
             condition: *countyNotSelected?
+#            condition: *eitherCountyOrTribalNationIsSelected?
             errorMessageKey: general.validation.make-sure-to-make-selection
 # example -->
 #        validators:
@@ -1930,9 +1957,9 @@ pageDefinitions:
           promptMessageKey: identify-county.select-a-tribal-nation
 # show error message if county is blank -AND- tribalNation is blank
         validators:
-          - validation: NOT_BLANK
-#            condition: *countyANDtribalNationNotSelected?
+          - validation: SELECTED
             condition: *tribalNationNotSelected?
+#            condition: *eitherCountyOrTribalNationIsSelected?
             errorMessageKey: general.validation.make-sure-to-make-selection
         options:
           selectableOptions:
