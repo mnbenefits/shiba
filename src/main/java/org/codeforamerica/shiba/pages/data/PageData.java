@@ -20,6 +20,10 @@ import org.codeforamerica.shiba.pages.config.PageConfiguration;
 import org.codeforamerica.shiba.pages.config.Validator;
 import org.springframework.util.MultiValueMap;
 
+/**
+ * PageData extends HashMap<String, InputData>
+ *
+ */
 @EqualsAndHashCode(callSuper = true)
 @Value
 @NoArgsConstructor
@@ -88,7 +92,11 @@ public class PageData extends HashMap<String, InputData> {
       });
     }
   }
-
+  
+  /**
+   * Collects invalid data to print to the logs.
+   * @return
+   */
   public String invalidPageDataLogText() {
 
     if (isValid()) {

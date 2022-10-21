@@ -26,7 +26,7 @@ public class DatasourcePages extends HashMap<String, PageData> {
 
   public Boolean satisfies(Condition condition) {
     if (condition.getConditions() != null) {
-      Stream<Condition> conditionStream = condition.getConditions().stream();
+      Stream<Condition> conditionStream = condition.getConditions().stream().peek(x -> System.out.println("@@@ DatasourcePages Conditions = |" + x + "|"));
       return switch (condition.getLogicalOperator()) {
         case AND -> conditionStream.allMatch(this::satisfies);
         case OR -> conditionStream.anyMatch(this::satisfies);

@@ -12,6 +12,10 @@ import lombok.EqualsAndHashCode;
 import org.codeforamerica.shiba.inputconditions.Condition;
 import org.codeforamerica.shiba.pages.config.*;
 
+/**
+ * PagesData extends HashMap<String, PageData> 
+ *
+ */
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class PagesData extends HashMap<String, PageData> {
@@ -141,6 +145,14 @@ public class PagesData extends HashMap<String, PageData> {
         .orElse(value.getDefaultValue());
   }
 
+  /**
+   * Evaluate this PagesData object for display on the web page.
+   * Inputs to be displayed are determined by any conditionals that are applied to them.
+   * @param featureFlags
+   * @param pageWorkflowConfiguration
+   * @param applicationData
+   * @return
+   */
   public PageTemplate evaluate(FeatureFlagConfiguration featureFlags,
       PageWorkflowConfiguration pageWorkflowConfiguration, ApplicationData applicationData) {
     PageConfiguration pageConfiguration = pageWorkflowConfiguration.getPageConfiguration();

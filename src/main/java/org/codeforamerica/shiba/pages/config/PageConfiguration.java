@@ -96,5 +96,7 @@ public class PageConfiguration {
   public boolean isStaticPage() {
     return usingPageTemplateFragment && this.inputs.isEmpty();
   }
+  
+  private PageValidator pageValidator;
 
 }

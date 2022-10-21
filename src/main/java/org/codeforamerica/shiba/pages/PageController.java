@@ -608,8 +608,14 @@ public class PageController {
     } else {
       pagesData = applicationData.getPagesData();
     }
-
+    
     pagesData.putPage(page.getName(), pageData);
+    
+    var pageValidator = page.getPageValidator();
+    if(pageValidator != null) {//TODO emj incorporate the page level validation somehow
+    	System.out.println("PageController postFormPage, pageValidator is not null, do something with it!");
+    	System.out.println("pageValidator = " + pageValidator.toString());
+    }
 
     Boolean pageDataIsValid = pageData.isValid();
     if (pageDataIsValid &&
@@ -623,6 +629,11 @@ public class PageController {
           .addIteration(groupName, incompleteIterations.remove(groupName));
       pageEventPublisher
           .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
+    }else {
+    	//TODO emj delete else
+    	System.out.println("PageController postFormPage, pageData is not valid:");
+    	System.out.println(pageData.invalidPageDataLogText());
+    	
     }
 
     if (pageDataIsValid) {
@@ -691,9 +702,9 @@ public class PageController {
       applicationData.setSubmitted(true);
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", submitPage));
     } else {
-      log.error("Invalid page data at submit, application Id:  " +
+      log.error("Invalid page data , application Id:  " +
               applicationData.getId() +
-              ", invalids: " +
+              ", invalid page data: " +
               pageData.invalidPageDataLogText());
 
       return new ModelAndView("redirect:/pages/" + submitPage);

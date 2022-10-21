@@ -8,7 +8,6 @@ import java.util.Map;
 import org.codeforamerica.shiba.output.LogicalOperator;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.PageData;
-import org.jetbrains.annotations.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -58,7 +57,7 @@ public class Condition implements Serializable {
   }
 
   public boolean satisfies(PageData pageData) {
-	  System.out.println("--- Condition satisfies method for name: |" + name + "|  pageName: |" + pageName + " | for input: |" + input + "| returns: " + pageData.get(input));//TODO emj delete
+	  System.out.println("--- Condition satisfies( ) method for name: |" + name + "|  pageName: |" + pageName + " | for input: |" + input + "| returns: " + pageData.get(input));//TODO emj delete
 	  InputData inputData = null;
 	  if(pageData.get(input) != null){
 		  inputData = pageData.get(input);
@@ -67,7 +66,7 @@ public class Condition implements Serializable {
 	  }
 	  List<String> pageDataValue = inputData.getValue();
 	  for(String val:pageDataValue) {
-		  System.out.println(val);
+		  System.out.println("pageDataValue= " + val);
 	  }
 	  System.out.println("matcher " + matcher + " should match value: " + value);
 	  boolean satisfies = pageData != null && !pageData.isEmpty() && matcher
