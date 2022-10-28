@@ -1771,15 +1771,22 @@ pageDefinitions:
     pageTitle: identify-county.title
     headerKey: identify-county.where-would-you-like-to-send-documents
     contextFragment: countyContextFragment
+# New page validator, checks more than one input.
     pageValidator:
-      logicalOperator: AND
+      logicalOperator: OR
       conditions:
         - *countyNotSelected?
         - *tribalNationNotSelected?
+      inputsToValidate:
+        - county
+        - tribalNation
       errorMessageKey: general.validation.make-sure-to-make-selection
     inputs:
+#        isFormScopeValidation: true
       - name: county
         type: SELECT
+        validators:
+          - validation: NOT_BLANK
         promptMessage:
           promptMessageFragmentName: identifyCountyOrTribalNationPrompt
 # show error message if county is blank -AND- tribalNation is blank
@@ -2028,6 +2035,8 @@ pageDefinitions:
               messageKey: identify-county-yellow-medicine 
       - name: tribalNation
         type: SELECT
+        validators:
+          - validation: NOT_BLANK
         promptMessage:
           promptMessageKey: identify-county.select-a-tribal-nation
 # show error message if county is blank -AND- tribalNation is blank

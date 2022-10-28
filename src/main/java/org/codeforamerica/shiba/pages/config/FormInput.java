@@ -25,4 +25,5 @@ public class FormInput {
   private String customFollowUps;
   private String inputPostfix; // for text behind the input, name is from honeycrisp css class
   private String helpMessageKeyBelow;// help message appear below inputs
+  private Boolean isFormScopeValidation;//TODO emj testing if this will allow the html fragment to have a form error message rather than individual input error messages.
 }

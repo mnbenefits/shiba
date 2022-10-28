@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <p th:fragment="validationError(data, input)" class="text--error"
-   th:with="isRadioOrCheckbox=${input.isRadioOrCheckbox()}"
+   th:with=isRadioOrCheckbox=${input.isRadioOrCheckbox()},
+   isFormScopeValidation=${input.isFormScopeValidation()}
    th:if="${!data.isValid() && !inputData.valid(data)}"
    th:aria-label="#{error.title}"
     th:id="${input.name} + '-error-p'">
+ isFormScopeValidation =    <span th:text="${isFormScopeValidation}"> test</span><br>
   <th:block th:each="option, iter: ${input.validationErrorMessageKeys}">
     <i class="icon-warning"
        th:id="${input.name + '-error-icon'} + ${iter.index + 1}"></i>

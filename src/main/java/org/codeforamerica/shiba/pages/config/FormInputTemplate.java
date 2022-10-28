@@ -25,6 +25,7 @@ public class FormInputTemplate {
   String customFollowUps;
   String inputPostfix;
   String helpMessageKeyBelow;
+  Boolean isFormScopeValidation;//TODO emj testing if this will allow the html fragment to have a form error message rather than individual input error messages.
 
   public String fragment() {
     return switch (type) {
