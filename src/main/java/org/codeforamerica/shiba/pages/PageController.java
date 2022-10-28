@@ -615,14 +615,14 @@ public class PageController {
     
     pagesData.putPage(page.getName(), pageData);
     
-//    var pageValidator = page.getPageValidator();
-//    Boolean pageValidatorIsValid = Boolean.TRUE;
-//    if(pageValidator != null) {//TODO emj incorporate the page level validation somehow, but not here.
-//    	System.out.println("$$$$ PageController postFormPage, pageValidator is not null, do something with it! $$$$");
-//    	System.out.println("pageValidator = " + pageValidator.toString());
-//    	
-//    	pageValidatorIsValid = pageValidator.isPageValid(pageData);
-//    }
+    var pageValidator = page.getPageValidator();
+    Boolean pageValidatorIsValid = Boolean.TRUE;
+    if(pageValidator != null) {//TODO emj incorporate the page level validation somehow, but not here?
+    	System.out.println("$$$$ PageController postFormPage, pageValidator is not null, do something with it! $$$$");
+    	System.out.println("pageValidator = " + pageValidator.toString());
+    	
+    	pageValidatorIsValid = pageValidator.isPageValid(pageData);
+    }
 
     Boolean pageDataIsValid = pageData.isValid();
     
@@ -630,19 +630,19 @@ public class PageController {
     		&& applicationConfiguration.getPageGroups().get(pageWorkflow.getGroupName())
             .getCompletePages()
             .contains(page.getName());
-    if(thisPageIsCompletePage) {
+    if(thisPageIsCompletePage) {//TODO emj delete
     	System.out.println(">>>>>  THIS IS A COMPLETE PAGE: " + page.getName());
     }
     //TODO emj, at first I thought this was related to validation, but it seems to be related to groups.
     // May need to revert all of this, but keep the thisPageIsCompletePage boolean to make this more understandable.
-//    if(pageValidatorIsValid != null && pageValidatorIsValid &&  thisPageIsCompletePage) {
-//        String groupName = pageWorkflow.getGroupName();
-//        applicationData.getSubworkflows()
-//            .addIteration(groupName, incompleteIterations.remove(groupName));
-//        pageEventPublisher
-//            .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
-//
-//    }else 
+    if(pageValidatorIsValid != null && pageValidatorIsValid &&  thisPageIsCompletePage) {
+        String groupName = pageWorkflow.getGroupName();
+        applicationData.getSubworkflows()
+            .addIteration(groupName, incompleteIterations.remove(groupName));
+        pageEventPublisher
+            .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
+
+    }else 
     	if (pageDataIsValid && thisPageIsCompletePage) {
       String groupName = pageWorkflow.getGroupName();
       applicationData.getSubworkflows()
@@ -650,15 +650,8 @@ public class PageController {
       pageEventPublisher
           .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
     }
-	/*
-	 * else { //TODO emj delete else
-	 * System.out.println("PageController postFormPage, pageData is not in a group:"
-	 * ); System.out.println(pageData.invalidPageDataLogText());
-	 * 
-	 * }
-	 */
 
-	if (pageDataIsValid /* && pageValidatorIsValid */) {
+	if (pageDataIsValid  && pageValidatorIsValid ) {
       if (applicationData.getId() == null) {
         applicationData.setId(applicationRepository.getNextId());
       }

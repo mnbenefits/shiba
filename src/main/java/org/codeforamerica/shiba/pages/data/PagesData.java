@@ -189,6 +189,14 @@ public class PagesData extends HashMap<String, PageData> {
     );
   }
   
+  /**
+   * Modified convert method to look for a page validator.
+   * TODO seems like this only adds the errorMessageKeys and does not do the actual validation.
+   * @param pageConfiguration
+   * @param formInput
+   * @param applicationData
+   * @return
+   */
   private FormInputTemplate convertFormInputToFormInputTemplate(PageConfiguration pageConfiguration, FormInput formInput,
 	      ApplicationData applicationData) {
 	  String pageName = pageConfiguration.getName();
