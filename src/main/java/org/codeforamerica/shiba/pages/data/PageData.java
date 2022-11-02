@@ -15,8 +15,11 @@ import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Value;
+import lombok.experimental.NonFinal;
+
 import org.codeforamerica.shiba.pages.config.FormInput;
 import org.codeforamerica.shiba.pages.config.PageConfiguration;
+import org.codeforamerica.shiba.pages.config.PageValidator;
 import org.codeforamerica.shiba.pages.config.Validator;
 import org.springframework.util.MultiValueMap;
 
@@ -28,6 +31,8 @@ import org.springframework.util.MultiValueMap;
 @Value
 @NoArgsConstructor
 public class PageData extends HashMap<String, InputData> {
+	@NonFinal
+	private int isValidCount = 0;//TODO emj delete
 
   @Serial
   private static final long serialVersionUID = -1930835377533297692L;
@@ -71,11 +76,13 @@ public class PageData extends HashMap<String, InputData> {
         validator.getCondition()).map(
         condition -> condition.satisfies(this)
     ).orElse(true);
+    
+    Predicate<PageValidator> pageValidatorForThisPageThatShouldRun;
 
     List<InputData> inputDataToValidate = values().stream().filter(
         inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun)
     ).toList();
-
+    isValidCount++;
     return inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
   }
 

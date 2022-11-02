@@ -98,5 +98,9 @@ public class PageConfiguration {
   }
   
   private PageValidator pageValidator;
+  
+  public boolean isPageScopeValidator() {
+	  return pageValidator != null;
+  }
 
 }

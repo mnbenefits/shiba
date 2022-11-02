@@ -2,7 +2,7 @@
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <p th:fragment="validationError(data, input)" class="text--error"
    th:with=isRadioOrCheckbox=${input.isRadioOrCheckbox()},
-   isFormScopeValidation=${input.isFormScopeValidation()}
+   isFormScopeValidation=${input.getIsFormScopeValidation()}
    th:if="${!data.isValid() && !inputData.valid(data)}"
    th:aria-label="#{error.title}"
     th:id="${input.name} + '-error-p'">

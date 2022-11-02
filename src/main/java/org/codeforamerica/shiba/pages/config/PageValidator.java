@@ -35,11 +35,11 @@ public class PageValidator {
 	private String errorMessageKey;
 	private List<Condition> conditions;
 
-
+//TODO emj create test for this
 	public boolean isPageValid(PageData pageData) {
 		List<Boolean> booleanArray = new ArrayList<Boolean>();
-		System.out.println("====== PageValidator isPageValid =========");
-		System.out.println(" --- logicalOperator : " + logicalOperator);
+//		System.out.println("====== PageValidator isPageValid =========");
+//		System.out.println(" --- logicalOperator : " + logicalOperator);
 
 		if(pageData == null) {
 			return true;
@@ -50,7 +50,7 @@ public class PageValidator {
 			InputData inputData = pageData.get(input);
 			Boolean isInputDataValid = inputData.valid(pageData);
 			booleanArray.add(isInputDataValid);
-			System.out.println("  --input: " + input + " isInputDataValid? " + isInputDataValid);
+	//		System.out.println("  --input: " + input + " isInputDataValid? " + isInputDataValid);
 			if(!isInputDataValid) {
 				inputData.setErrorKey(errorMessageKey);
 		    }
@@ -58,15 +58,15 @@ public class PageValidator {
 		
 		if(logicalOperator.equals(LogicalOperator.AND)) {
 			retval = booleanArray.stream().allMatch(value -> {return value.equals(Boolean.TRUE);});
-			System.out.println("   === PageValidator isPageValid AND " + retval);
+		//	System.out.println("   === PageValidator isPageValid AND " + retval);
 			
 		}
 		
 		if(logicalOperator.equals(LogicalOperator.OR)) {
 			retval = booleanArray.stream().anyMatch(value -> {return value.equals(Boolean.TRUE);});
-			System.out.println("   === PageValidator isPageValid OR " + retval);
+	//		System.out.println("   === PageValidator isPageValid OR " + retval);
 		}
-		System.out.println("====== PageValidator isPageValid returning " + retval);
+	//	System.out.println("====== PageValidator isPageValid returning " + retval);
 
 		return retval;
 	}

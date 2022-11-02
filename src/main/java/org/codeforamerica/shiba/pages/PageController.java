@@ -326,7 +326,7 @@ public class PageController {
                 .getReviewPage());
       }
     }
-
+//TODO emj, this is where page input validation occurs, need to apply pageValidation somehow
     var pageTemplate = pagesData.evaluate(featureFlags, pageWorkflowConfig, applicationData);
 
     var model = buildModelForThymeleaf(pageName, locale, landmarkPagesConfiguration,

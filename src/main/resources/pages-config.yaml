@@ -1774,9 +1774,9 @@ pageDefinitions:
 # New page validator, checks more than one input.
     pageValidator:
       logicalOperator: OR
-      conditions:
-        - *countyNotSelected?
-        - *tribalNationNotSelected?
+#      conditions:
+#        - *countyNotSelected?
+#        - *tribalNationNotSelected?
       inputsToValidate:
         - county
         - tribalNation

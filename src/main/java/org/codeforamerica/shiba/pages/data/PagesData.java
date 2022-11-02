@@ -167,11 +167,53 @@ public class PagesData extends HashMap<String, PageData> {
     DatasourcePages datasourcePages = this
         .getDatasourcePagesBy(pageWorkflowConfiguration.getDatasources());
     
-    var inputs = pageConfiguration.getInputs().stream()
-        .filter(input ->
-            Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
-        .map(formInput -> convertFormInputToFormInputTemplate(pageConfiguration, formInput, applicationData))
-        .collect(Collectors.toList());
+    boolean hasPageValidation = pageConfiguration.isPageScopeValidator();
+    System.out.println("[[[ PagesData evaluate hasPageValidation = " + hasPageValidation);
+    List<FormInputTemplate> inputs = null;
+    if(hasPageValidation) {
+    	//TODO handle this differently somehow using page validation
+    	
+    	PageValidator pageValidator = pageConfiguration.getPageValidator();
+    	boolean isPageValid = pageValidator.isPageValid(applicationData.getPageData(pageConfiguration.getName()));
+    	   System.out.println("[[[ PagesData evaluate isPageValid = " + isPageValid);
+        /*
+         * A filter processes a list in some order to produce a new list containing exactly those 
+         * elements of the original list for which a given predicate (think Boolean expression) returns true.
+    		A map applies a given function to each element of a list, 
+    		returning a list of results in the same order.
+         */
+        inputs = pageConfiguration.getInputs().stream() //list of FormInputs
+        		.peek(x -> System.out.println("x=|" + x + "|"))
+        		// filter inputs that satisfies their conditions ??? (not sure that is what is happening)
+           // .filter(input ->
+            // map in filter -> get the input condition and map (apply) the DatasourcePages satisfies method to each
+           //     Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
+            // apply the function to each formInput and return a FormInputTemplate, then collect to a list.
+            .map(formInput -> convertFormInputToFormInputTemplate(pageConfiguration, formInput, applicationData))
+            .collect(Collectors.toList());
+    	
+    }else {
+    	
+        /*
+         * A filter processes a list in some order to produce a new list containing exactly those 
+         * elements of the original list for which a given predicate (think Boolean expression) returns true.
+    		A map applies a given function to each element of a list, 
+    		returning a list of results in the same order.
+         */
+        inputs = pageConfiguration.getInputs().stream() //list of FormInputs
+        		// filter inputs that satisfies their conditions ??? (not sure that is what is happening)
+           // .filter(input ->
+            // map in filter -> get the input condition and map (apply) the DatasourcePages satisfies method to each
+            //    Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
+            // apply the function to each formInput and return a FormInputTemplate, then collect to a list.
+            .map(formInput -> convertFormInputToFormInputTemplate(pageConfiguration, formInput, applicationData))
+            .collect(Collectors.toList());
+    	
+    }
+    
+
+     
+    // evaluate method param PageConfiguration has List<FormInput>, PageTemplate constructor requires List<FormInputTemplate>   
     return new PageTemplate(
         inputs,
         pageConfiguration.getName(),
@@ -209,8 +251,10 @@ public class PagesData extends HashMap<String, PageData> {
 	    	isPageValid = pageValidator.isPageValid(getPage(pageName));
 	    	formInput.setIsFormScopeValidation(isPageValid);
 	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, isPageValid = " + isPageValid + " $$$$");
-	    	String errorMessageKey = pageValidator.getErrorMessageKey();
-	    	errorMessageKeys = Collections.singletonList(errorMessageKey) ;
+	    	if(!isPageValid) {
+		    	String errorMessageKey = pageValidator.getErrorMessageKey();
+		    	errorMessageKeys = Collections.singletonList(errorMessageKey) ;
+	    	}
 	    }else {
 	  
 	    errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
