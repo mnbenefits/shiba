@@ -31,8 +31,6 @@ import org.springframework.util.MultiValueMap;
 @Value
 @NoArgsConstructor
 public class PageData extends HashMap<String, InputData> {
-	@NonFinal
-	private int isValidCount = 0;//TODO emj delete
 
   @Serial
   private static final long serialVersionUID = -1930835377533297692L;
@@ -61,6 +59,7 @@ public class PageData extends HashMap<String, InputData> {
   }
 
   public static PageData initialize(PageConfiguration pageConfiguration) {
+	  
     return new PageData(
         pageConfiguration.getFlattenedInputs().stream()
             .collect(toMap(
@@ -70,19 +69,42 @@ public class PageData extends HashMap<String, InputData> {
                     .orElse(new InputData())
             )));
   }
+  
+  //Original method
+  public Boolean isValid() { 
+	  
+	    Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(
+	        validator.getCondition()).map(
+	        condition -> condition.satisfies(this)
+	    ).orElse(true);
+    
 
-  public Boolean isValid() {
+	    List<InputData> inputDataToValidate = values().stream().filter(
+	        inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun)
+	    ).toList();
+
+	    return inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
+	  }
+
+  //TODO emj new method with pageConfig
+  public Boolean isValid(PageConfiguration pageConfig) { 
+	  
     Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(
         validator.getCondition()).map(
         condition -> condition.satisfies(this)
     ).orElse(true);
     
-    Predicate<PageValidator> pageValidatorForThisPageThatShouldRun;
+    PageValidator pageValidator = pageConfig.getPageValidator();
+    if(pageValidator != null) {
+    	boolean isPageValid = pageValidator.isPageValid(this);
+    	System.out.println("{{{ PageData isValid pageValidator returning " + isPageValid);
+    	return isPageValid;
+    }
 
     List<InputData> inputDataToValidate = values().stream().filter(
         inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun)
     ).toList();
-    isValidCount++;
+
     return inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
   }
 
@@ -104,9 +126,9 @@ public class PageData extends HashMap<String, InputData> {
    * Collects invalid data to print to the logs.
    * @return
    */
-  public String invalidPageDataLogText() {
+  public String invalidPageDataLogText(PageConfiguration pageConfig) {
 
-    if (isValid()) {
+    if (isValid(pageConfig)) {
       return "";
     }
 

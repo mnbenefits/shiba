@@ -1,13 +1,18 @@
 package org.codeforamerica.shiba.pages.config;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
 import org.codeforamerica.shiba.inputconditions.Condition;
 
 @Data
-public class FormInput {
+public class FormInput implements Serializable {
 
+  @Serial
+  private static final long serialVersionUID = 5831139204290273630L;
+  
   private FormInputType type;
   private String name;
   private String customInputFragment; // for type=CUSTOM

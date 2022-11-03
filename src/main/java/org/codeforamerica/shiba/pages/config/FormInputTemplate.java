@@ -3,11 +3,16 @@ package org.codeforamerica.shiba.pages.config;
 import static org.codeforamerica.shiba.pages.config.FormInputType.CHECKBOX;
 import static org.codeforamerica.shiba.pages.config.FormInputType.RADIO;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import lombok.Value;
 
 @Value
-public class FormInputTemplate {
+public class FormInputTemplate implements Serializable {
+
+  @Serial
+  private static final long serialVersionUID = 5831139204790273630L;
 
   FormInputType type;
   String name;

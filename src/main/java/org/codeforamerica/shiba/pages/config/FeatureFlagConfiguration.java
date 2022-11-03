@@ -1,6 +1,7 @@
 package org.codeforamerica.shiba.pages.config;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "feature-flag")
-public class FeatureFlagConfiguration extends HashMap<String, FeatureFlag> {
+public class FeatureFlagConfiguration extends HashMap<String, FeatureFlag> implements Serializable{
 
   @Serial
   private static final long serialVersionUID = -961416391895421339L;

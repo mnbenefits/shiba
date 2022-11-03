@@ -35,6 +35,7 @@ import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.config.NextPage;
 import org.codeforamerica.shiba.pages.config.PageDatasource;
+import org.codeforamerica.shiba.pages.config.PageValidator;
 import org.codeforamerica.shiba.pages.config.PageWorkflowConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -110,6 +111,12 @@ public class ApplicationData implements Serializable {
   private boolean nextPageConditionsAreSatisfied(FeatureFlagConfiguration featureFlags,
       @NotNull PageWorkflowConfiguration currentPage, NextPage nextPage) {
     boolean satisfied = true;
+    PageValidator pageValidator = currentPage.getPageConfiguration().getPageValidator();
+    if(pageValidator != null) {
+    	System.out.println("> ApplicationData nextPageConditionsAreSatisfied pageValidator is not null");//TODO emj delete
+    	boolean isPageValid = pageValidator.isPageValid(getPageData(currentPage.getPageConfiguration().getName()));
+    	System.out.println("isPageValid = " + isPageValid);
+    }
     Condition condition = nextPage.getCondition();
     if (condition != null) {
       if (currentPage.isInAGroup()) {

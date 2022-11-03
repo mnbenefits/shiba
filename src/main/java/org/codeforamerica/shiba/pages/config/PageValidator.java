@@ -1,6 +1,7 @@
 package org.codeforamerica.shiba.pages.config;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +9,6 @@ import org.codeforamerica.shiba.inputconditions.Condition;
 import org.codeforamerica.shiba.output.LogicalOperator;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.PageData;
-import org.codeforamerica.shiba.pages.data.PagesData;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -23,7 +23,7 @@ import lombok.Data;
  *
  */
 @Data
-public class PageValidator {
+public class PageValidator implements Serializable{
 	@Serial
 	private static final long serialVersionUID = -644544878960451235L;
 	private String name;

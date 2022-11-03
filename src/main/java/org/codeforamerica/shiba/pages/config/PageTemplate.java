@@ -1,11 +1,16 @@
 package org.codeforamerica.shiba.pages.config;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import lombok.Value;
 import org.apache.commons.lang3.StringUtils;
 
 @Value
-public class PageTemplate {
+public class PageTemplate implements Serializable {
+
+  @Serial
+  private static final long serialVersionUID = 5921139204290273630L;
 
   List<FormInputTemplate> inputs;
   String name;

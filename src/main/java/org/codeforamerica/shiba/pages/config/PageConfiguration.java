@@ -1,5 +1,7 @@
 package org.codeforamerica.shiba.pages.config;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -9,7 +11,10 @@ import lombok.Data;
  * A page's PageConfiguration describes the content of the page to be rendered.
  */
 @Data
-public class PageConfiguration {
+public class PageConfiguration implements Serializable {
+	
+  @Serial
+  private static final long serialVersionUID = -1930835377536297692L;
 
   /**
    * Path of the webpage and usually where the pageData is stored in applicationData.

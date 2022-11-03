@@ -166,7 +166,7 @@ public class PagesData extends HashMap<String, PageData> {
     PageConfiguration pageConfiguration = pageWorkflowConfiguration.getPageConfiguration();
     DatasourcePages datasourcePages = this
         .getDatasourcePagesBy(pageWorkflowConfiguration.getDatasources());
-    
+    System.out.println("[[[ PagesData evaluate pageName = " + pageWorkflowConfiguration.getNextPages());
     boolean hasPageValidation = pageConfiguration.isPageScopeValidator();
     System.out.println("[[[ PagesData evaluate hasPageValidation = " + hasPageValidation);
     List<FormInputTemplate> inputs = null;
@@ -183,11 +183,12 @@ public class PagesData extends HashMap<String, PageData> {
     		returning a list of results in the same order.
          */
         inputs = pageConfiguration.getInputs().stream() //list of FormInputs
-        		.peek(x -> System.out.println("x=|" + x + "|"))
+        		//.peek(x -> System.out.println("BEFORE FILTER input=|" + x + "|"))
         		// filter inputs that satisfies their conditions ??? (not sure that is what is happening)
-           // .filter(input ->
+            .filter(input ->
             // map in filter -> get the input condition and map (apply) the DatasourcePages satisfies method to each
-           //     Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
+                Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
+            //.peek(x -> System.out.println("AFTER FILTER input=|" + x + "|"))
             // apply the function to each formInput and return a FormInputTemplate, then collect to a list.
             .map(formInput -> convertFormInputToFormInputTemplate(pageConfiguration, formInput, applicationData))
             .collect(Collectors.toList());
@@ -202,9 +203,9 @@ public class PagesData extends HashMap<String, PageData> {
          */
         inputs = pageConfiguration.getInputs().stream() //list of FormInputs
         		// filter inputs that satisfies their conditions ??? (not sure that is what is happening)
-           // .filter(input ->
+            .filter(input ->
             // map in filter -> get the input condition and map (apply) the DatasourcePages satisfies method to each
-            //    Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
+                Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
             // apply the function to each formInput and return a FormInputTemplate, then collect to a list.
             .map(formInput -> convertFormInputToFormInputTemplate(pageConfiguration, formInput, applicationData))
             .collect(Collectors.toList());
@@ -241,13 +242,13 @@ public class PagesData extends HashMap<String, PageData> {
    */
   private FormInputTemplate convertFormInputToFormInputTemplate(PageConfiguration pageConfiguration, FormInput formInput,
 	      ApplicationData applicationData) {
-	  String pageName = pageConfiguration.getName();
+	  String pageName = pageConfiguration.getName();//this is the page determined after validation
 	  boolean isPageValid = true;
 	    var pageValidator = pageConfiguration.getPageValidator();
 	    List<String> errorMessageKeys = null;
 	    if(pageValidator != null) {//TODO emj incorporate the page level validation somehow
-	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidator is not null! $$$$");
-	    	System.out.println("pageValidator = " + pageValidator.toString());
+	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidator is not null! $$$$");
+	    	//System.out.println("pageValidator = " + pageValidator.toString());
 	    	isPageValid = pageValidator.isPageValid(getPage(pageName));
 	    	formInput.setIsFormScopeValidation(isPageValid);
 	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, isPageValid = " + isPageValid + " $$$$");
