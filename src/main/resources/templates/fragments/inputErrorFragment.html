@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<!--/* TODO emj Trying to pass the pageConfig object into this template, but it keeps failing.
+The object is null when it gets passed as a parameter to the isValid(pageConfig) method.
+    pageConfig=${pageConfigObject} 
+    th:if="${!data.isValid(pageConfig)*/-->
 <p th:fragment="validationError(data, input)" class="text--error"
    th:with=isRadioOrCheckbox=${input.isRadioOrCheckbox()},
    isFormScopeValidation=${input.getIsFormScopeValidation()}

@@ -104,7 +104,7 @@ public class PageConfiguration implements Serializable {
   
   private PageValidator pageValidator;
   
-  public boolean isPageScopeValidator() {
+  public boolean isPageScopeValidation() {
 	  return pageValidator != null;
   }
 

@@ -13,7 +13,7 @@ import org.codeforamerica.shiba.inputconditions.Condition;
 import org.codeforamerica.shiba.pages.config.*;
 
 /**
- * PagesData extends HashMap<String, PageData> 
+ * PagesData extends HashMap&lt;String, PageData&gt; 
  *
  */
 @EqualsAndHashCode(callSuper = true)
@@ -167,11 +167,11 @@ public class PagesData extends HashMap<String, PageData> {
     DatasourcePages datasourcePages = this
         .getDatasourcePagesBy(pageWorkflowConfiguration.getDatasources());
     System.out.println("[[[ PagesData evaluate pageName = " + pageWorkflowConfiguration.getNextPages());
-    boolean hasPageValidation = pageConfiguration.isPageScopeValidator();
+    boolean hasPageValidation = pageConfiguration.isPageScopeValidation();
     System.out.println("[[[ PagesData evaluate hasPageValidation = " + hasPageValidation);
     List<FormInputTemplate> inputs = null;
     if(hasPageValidation) {
-    	//TODO handle this differently somehow using page validation
+    	//TODO handle this differently using page validation
     	
     	PageValidator pageValidator = pageConfiguration.getPageValidator();
     	boolean isPageValid = pageValidator.isPageValid(applicationData.getPageData(pageConfiguration.getName()));
@@ -243,26 +243,27 @@ public class PagesData extends HashMap<String, PageData> {
   private FormInputTemplate convertFormInputToFormInputTemplate(PageConfiguration pageConfiguration, FormInput formInput,
 	      ApplicationData applicationData) {
 	  String pageName = pageConfiguration.getName();//this is the page determined after validation
-	  boolean isPageValid = true;
+	  boolean pageHasValidation = false;
 	    var pageValidator = pageConfiguration.getPageValidator();
 	    List<String> errorMessageKeys = null;
 	    if(pageValidator != null) {//TODO emj incorporate the page level validation somehow
+	    	pageHasValidation = true;
 	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidator is not null! $$$$");
 	    	//System.out.println("pageValidator = " + pageValidator.toString());
-	    	isPageValid = pageValidator.isPageValid(getPage(pageName));
-	    	formInput.setIsFormScopeValidation(isPageValid);
-	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, isPageValid = " + isPageValid + " $$$$");
+	    	boolean isPageValid = pageValidator.isPageValid(getPage(pageName));
+	    	formInput.setIsFormScopeValidation(true);
+	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidation, isPageValid = " + isPageValid + " $$$$");
 	    	if(!isPageValid) {
 		    	String errorMessageKey = pageValidator.getErrorMessageKey();
 		    	errorMessageKeys = Collections.singletonList(errorMessageKey) ;
 	    	}
 	    }else {
-	  
+	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, normal validation");
 	    errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
 	        .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
 	        .orElse(List.of());
 	    }
-
+	    System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, errorMessageKeys = " + errorMessageKeys);
 	    return new FormInputTemplate(
 	        formInput.getType(),
 	        formInput.getName(),
@@ -282,7 +283,7 @@ public class PagesData extends HashMap<String, PageData> {
 	        formInput.getCustomFollowUps(),
 	        formInput.getInputPostfix(),
 	        formInput.getHelpMessageKeyBelow(),
-	        isPageValid //formInput.getIsFormScopeValidation()
+	        pageHasValidation //formInput.getIsFormScopeValidation()
 	    );
 	  }
 

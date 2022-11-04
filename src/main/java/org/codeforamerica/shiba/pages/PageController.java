@@ -255,7 +255,7 @@ public class PageController {
     PageConfiguration pageConfig = pageWorkflowConfig.getPageConfiguration();
     //TODO emj testing this to pass the pageConfig object to the thymeleaf fragments
     //httpSession.setAttribute("pageConfig", pageConfig); pageConfig is null on html template
-    System.out.println("+++ getPage pageConfig is null = " + (pageConfig == null));
+   // System.out.println("+++ getPage pageConfig is null = " + (pageConfig == null));
   	//httpSession.setAttribute("pageConfigObject", pageConfig); // the object is null when the html template gets it from the session object
     //request.setAttribute("pageConfigObject", pageConfig);
 
@@ -345,14 +345,14 @@ public class PageController {
     var model = buildModelForThymeleaf(pageName, locale, landmarkPagesConfiguration,
         pageTemplate,
         pageWorkflowConfig, pagesData, iterationIndex);
-   // model.put("pageConfigObject", pageConfig);//TODO emj put the pageConfig object into the model so it can be used in single-input.html
+    model.put("pageConfigObject", pageConfig);//TODO emj put the pageConfig object into the model so it can be used in single-input.html, does not work
     
     var view =
         pageWorkflowConfig.getPageConfiguration().isUsingPageTemplateFragment() ? "pageTemplate"
             : pageName;
     System.out.println("=== PageController getPage RETURN pageName = " + pageName + " and view = " + view);//TODO emj delete
     ModelAndView modelandView = new ModelAndView(view, model);
-    modelandView.addObject("pageConfigObject", pageConfig);
+    modelandView.addObject("pageConfigObject", pageConfig);//TODO emj this does not work
     return modelandView;
   }
 
@@ -641,16 +641,18 @@ public class PageController {
     pagesData.putPage(pageConfig.getName(), pageData);
     
     var pageValidator = pageConfig.getPageValidator();
-    Boolean pageValidatorIsValid = Boolean.TRUE;
+   // Boolean pageScopeValidationIsValid = Boolean.TRUE;
+    Boolean pageScopeValidationIsValid = Boolean.FALSE;
     if(pageValidator != null) {//TODO emj incorporate the page level validation somehow, but not here?
     	System.out.println("$$$$ PageController postFormPage, pageValidator is not null, do something with it! $$$$");
     	System.out.println("pageValidator = " + pageValidator.toString());
     	
-    	pageValidatorIsValid = pageValidator.isPageValid(pageData);
+    	pageScopeValidationIsValid = pageValidator.isPageValid(pageData);
     }
 
     Boolean pageDataIsValid = pageData.isValid(pageConfig);
     
+    //TODO explain this better, something related with pageGroups and the completePages in pages-config.yaml
     boolean thisPageIsCompletePage = pageWorkflow.getGroupName() != null 
     		&& applicationConfiguration.getPageGroups().get(pageWorkflow.getGroupName())
             .getCompletePages()
@@ -660,15 +662,15 @@ public class PageController {
     }
     //TODO emj, at first I thought this was related to validation, but it seems to be related to groups.
     // May need to revert all of this, but keep the thisPageIsCompletePage boolean to make this more understandable.
-    if(pageValidatorIsValid != null && pageValidatorIsValid &&  thisPageIsCompletePage) {
-        String groupName = pageWorkflow.getGroupName();
-        applicationData.getSubworkflows()
-            .addIteration(groupName, incompleteIterations.remove(groupName));
-        pageEventPublisher
-            .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
-
-    }else 
-    	if (pageDataIsValid && thisPageIsCompletePage) {
+//    if(pageScopeValidationIsValid &&  thisPageIsCompletePage) {
+//        String groupName = pageWorkflow.getGroupName();
+//        applicationData.getSubworkflows()
+//            .addIteration(groupName, incompleteIterations.remove(groupName));
+//        pageEventPublisher
+//            .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
+//
+//    }else 
+    	if ((pageDataIsValid || pageScopeValidationIsValid) && thisPageIsCompletePage) {
       String groupName = pageWorkflow.getGroupName();
       applicationData.getSubworkflows()
           .addIteration(groupName, incompleteIterations.remove(groupName));
@@ -676,7 +678,7 @@ public class PageController {
           .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
     }
 
-	if (pageDataIsValid  && pageValidatorIsValid ) {
+	if (pageDataIsValid  || pageScopeValidationIsValid ) {
       if (applicationData.getId() == null) {
         applicationData.setId(applicationRepository.getNextId());
       }

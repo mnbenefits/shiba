@@ -24,7 +24,7 @@ import org.codeforamerica.shiba.pages.config.Validator;
 import org.springframework.util.MultiValueMap;
 
 /**
- * PageData extends HashMap<String, InputData>
+ * PageData extends HashMap&lt;String, InputData&gt;
  *
  */
 @EqualsAndHashCode(callSuper = true)
@@ -70,43 +70,42 @@ public class PageData extends HashMap<String, InputData> {
             )));
   }
   
-  //Original method
-  public Boolean isValid() { 
-	  
-	    Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(
-	        validator.getCondition()).map(
-	        condition -> condition.satisfies(this)
-	    ).orElse(true);
-    
+  //Original method, now is only called from the html pages
+	public Boolean isValid() {
+		System.out.println(">>> PageData isValid() <<<");// TODO emj delete
 
-	    List<InputData> inputDataToValidate = values().stream().filter(
-	        inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun)
-	    ).toList();
+		Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(validator.getCondition())
+				.map(condition -> condition.satisfies(this)).orElse(true);
 
-	    return inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
-	  }
+		List<InputData> inputDataToValidate = values().stream().peek(x -> System.out.println("   > input=|" + x + "|"))
+				.filter(inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun))
+				.toList();
+		boolean isValid = inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
+		System.out.println(">>> PageData isValid() returning " + isValid + " <<<");// TODO emj delete
+		return isValid;
+	}
 
-  //TODO emj new method with pageConfig
-  public Boolean isValid(PageConfiguration pageConfig) { 
-	  
-    Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(
-        validator.getCondition()).map(
-        condition -> condition.satisfies(this)
-    ).orElse(true);
-    
-    PageValidator pageValidator = pageConfig.getPageValidator();
-    if(pageValidator != null) {
-    	boolean isPageValid = pageValidator.isPageValid(this);
-    	System.out.println("{{{ PageData isValid pageValidator returning " + isPageValid);
-    	return isPageValid;
-    }
+  //TODO emj new overloaded method with pageConfig parameter
+	public Boolean isValid(PageConfiguration pageConfig) {
+		System.out.println(">>> PageData isValid(pageConfig) " + pageConfig.getName() + " <<<");// TODO emj delete
+		
+		PageValidator pageValidator = pageConfig.getPageValidator();
+		if (pageValidator != null) {
+			boolean isPageValid = pageValidator.isPageValid(this);
+			System.out.println(">>> PageData isValid(pageConfig) pageValidator returning " + isPageValid);
+			return isPageValid;
+		}
 
-    List<InputData> inputDataToValidate = values().stream().filter(
-        inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun)
-    ).toList();
+		Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(validator.getCondition())
+				.map(condition -> condition.satisfies(this)).orElse(true);
 
-    return inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
-  }
+		List<InputData> inputDataToValidate = values().stream()
+				.filter(inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun))
+				.toList();
+		boolean isValid = inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
+		System.out.println(">>> PageData isValid(pageConfig) returning " + isValid + " <<<");// TODO emj delete
+		return isValid;
+	}
 
   /**
    * Merges the InputData values of otherPage into this PageData.
