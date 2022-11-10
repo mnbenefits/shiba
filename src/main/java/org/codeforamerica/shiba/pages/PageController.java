@@ -345,14 +345,13 @@ public class PageController {
     var model = buildModelForThymeleaf(pageName, locale, landmarkPagesConfiguration,
         pageTemplate,
         pageWorkflowConfig, pagesData, iterationIndex);
-    model.put("pageConfigObject", pageConfig);//TODO emj put the pageConfig object into the model so it can be used in single-input.html, does not work
     
     var view =
         pageWorkflowConfig.getPageConfiguration().isUsingPageTemplateFragment() ? "pageTemplate"
             : pageName;
     System.out.println("=== PageController getPage RETURN pageName = " + pageName + " and view = " + view);//TODO emj delete
     ModelAndView modelandView = new ModelAndView(view, model);
-    modelandView.addObject("pageConfigObject", pageConfig);//TODO emj this does not work
+    modelandView.addObject("pageConfigObject", pageConfig); //TODO emj put the pageConfig object into the model so it can be used in html templates
     return modelandView;
   }
 

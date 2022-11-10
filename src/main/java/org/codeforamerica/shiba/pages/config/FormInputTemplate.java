@@ -33,6 +33,7 @@ public class FormInputTemplate implements Serializable {
   Boolean isFormScopeValidation;// = Boolean.FALSE;//TODO emj testing if this will allow the html fragment to have a form error message rather than individual input error messages.
 
   public String fragment() {
+	  System.out.println("/// FormInputTemplate fragment( ) for type " + type + " isFormScopeValidation = " + isFormScopeValidation);//TODO emj delete
     return switch (type) {
       case TEXT, LONG_TEXT, NUMBER, SELECT, MONEY, TEXTAREA, HOURLY_WAGE, PHONE, SSN -> "single-input";
       case DATE -> "date-input";

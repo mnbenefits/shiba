@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--/* This page was copied from the householdDeleteWarningPage and modified. 
+TODO emj need to fix this page so that the county and tribalNation inputs get populated.
+Custom pages don't appear to have parameters passed in like other pages, so need to get them 
+from the model object.
+
+*/-->
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments/head :: head(#{${page.pageTitle}})"></div>
+<body  
+     th:with="
+     formInputTemplate=${page},
+     pageDataObject=${data},
+     inputData=${pageDataObject.get(formInputTemplate.name)},
+      pageConfigObject=${pageConfigObject},
+      hasError=${!pageDataObject.isValid(pageConfigObject) && !inputData.valid(pageDataObject)},
+      hasHelpMessage=${formInputTemplate.helpMessageKey != null},
+      needsAriaLabel=${formInputTemplate.needsAriaLabel()}">
+>
+<div class="page-wrapper">
+  <div th:replace="fragments/toolbar :: toolbar"></div>
+  <div th:replace="fragments/demoBanner :: demoBanner"></div>
+  <section class="slab slab--shiba">
+    <div class="grid">
+      <div th:replace="fragments/cardHeader :: cardHeader"></div>
+      <main id="content" role="main" class="card spacing-above-35">
+
+        <form method="post"  th:action="${pageName}">
+        <div class="form-group" 
+     th:classappend="${!pageDataObject.isValid(pageConfigObject) && !inputData.valid(pageDataObject)} ? 'form-group--error' : ''" >
+        
+              <!--/*  SELECT inputs copied from single-input.html */-->
+            <select th:id="${county}"
+                    class="select__element"
+                    th:attr="aria-describedby=${hasHelpMessage ? 'county-help-message' : ''},
+                             aria-labelledby=${needsAriaLabel ? 'page-header' : 'county-label'},
+                             aria-invalid=${hasError},
+                             aria-label=${needsAriaLabel ? 'county' : ''}"
+                    th:name="${county}"
+            >
+                <th:block th:each="option: ${county.options.selectableOptions}">
+                    <option th:value="${option.value}" th:text="#{${option.messageKey}}"
+                            th:selected="${inputData.value.contains(option.value)}"></option>
+                </th:block>
+            </select>
+            
+            
+            <select th:id="${tribalNation}"
+                    class="select__element"
+                    th:attr="aria-describedby=${hasHelpMessage ? 'tribalNation-help-message' : ''},
+                             aria-labelledby=${needsAriaLabel ? 'page-header' : 'tribalNation-label'},
+                             aria-invalid=${hasError},
+                             aria-label=${needsAriaLabel ? 'tribalNation' : ''}"
+                    th:name="${formInputName}"
+            >
+                <th:block th:each="option: ${tribalNation.options.selectableOptions}">
+                    <option th:value="${option.value}" th:text="#{${option.messageKey}}"
+                            th:selected="${inputData.value.contains(option.value)}"></option>
+                </th:block>
+            </select>          
+    
+              
+              
+              
+
+        </form>
+
+      </main>
+    </div>
+  </section>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

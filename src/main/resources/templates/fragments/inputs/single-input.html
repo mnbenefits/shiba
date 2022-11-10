@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="single-input (input, data)" class="form-group"
+<!--/* This div with the form-group class surrounds each input. */-->
+<div th:fragment="single-input (input, data)" class="form-group" 
      th:classappend="${!data.isValid() && !inputData.valid(data)} ? 'form-group--error' : ''" 
 
      th:with="inputData=${data.get(input.name)},
-     
-      hasError=${!data.isValid() && !inputData.valid(data)},
+      isFormScopeValidation=${input.getIsFormScopeValidation()},
+      pageConfigObject=${pageConfigObject},
+      hasError=${!data.isValid(pageConfigObject) && !inputData.valid(data)},
       hasHelpMessage=${input.helpMessageKey != null},
       needsAriaLabel=${input.needsAriaLabel()}">
     <div th:replace="fragments/form-question-prompt :: formQuestionPrompt(${input})"></div>

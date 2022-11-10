@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<!--/* TODO emj Trying to pass the pageConfig object into this template, but it keeps failing.
-The object is null when it gets passed as a parameter to the isValid(pageConfig) method.
-    pageConfig=${pageConfigObject} 
-    th:if="${!data.isValid(pageConfig)*/-->
-<p th:fragment="validationError(data, input)" class="text--error"
-   th:with=isRadioOrCheckbox=${input.isRadioOrCheckbox()},
-   isFormScopeValidation=${input.getIsFormScopeValidation()}
-   th:if="${!data.isValid() && !inputData.valid(data)}"
+<th:block th:fragment="validationError(data, input)" 
+   th:with="isRadioOrCheckbox=${input.isRadioOrCheckbox()},
+   isFormScopeValidation=${input.getIsFormScopeValidation()},
+   pageConfigObject=${pageConfigObject}">
+<p class="text--error"
+   th:if="${!data.isValid(pageConfigObject) && !inputData.valid(data) && !isFormScopeValidation}"
    th:aria-label="#{error.title}"
     th:id="${input.name} + '-error-p'">
   <th:block th:each="option, iter: ${input.validationErrorMessageKeys}">
@@ -19,10 +17,16 @@ The object is null when it gets passed as a parameter to the isValid(pageConfig)
             th:class="${input.name + (iter.index + 1) + '-error'}" th:text="#{${option}}"></span>
       <span th:case="'CHECKBOX'" th:id="${input.name} + '-error-message-' + ${iter.index + 1}"
             th:class="${input.name + '-error'}" th:text="#{${option}}"></span>
+      <th:block th:if="isFormScopeValidation">      
+      <span th:case="SELECT" th:id="${input.name} + '-error-message-' + ${iter.index + 1}"
+            th:class="${input.name + '-error'}" th:text="#{${option}}"></span>
+      </th:block>
       <span th:case="*" th:id="${input.name} + '-error-message-' + ${iter.index + 1}"
             th:class="${input.name + '-error'}" th:text="#{${option}}"></span>
     </th:block>
     <br>
   </th:block>
+
 </p>
+</th:block>
 </html>
