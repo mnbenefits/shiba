@@ -5,18 +5,32 @@ Custom pages don't appear to have parameters passed in like other pages, so need
 from the model object.
 
 */-->
+
+     <!-- /* TODO needs hasError for the aria
+     hasError=${!datasourcePagesHashMapObject.isValid(pageConfigObject) && !inputData.valid(datasourcePagesHashMapObject)},
+     
+           hasHelpMessage=${pageTemplateObject.helpMessageKey != null},
+      needsAriaLabel=${pageTemplateObject.needsAriaLabel()}
+     pageTemplateObject.name=identifyCountyOrTribalNation
+     datasourcePagesHashMapObject={}
+          inputData=${datasourcePagesHashMapObject.get(pageTemplateObject.name)},
+          
+          
+          input is a FormInputTemplate object in single-input.html, need to find it here and use it to populate the page.
+          PageTemplate hast a List of FormInputTemplate objects named inputs;
+     */-->
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="fragments/head :: head(#{${page.pageTitle}})"></div>
 <body  
      th:with="
-     formInputTemplate=${page},
-     pageDataObject=${data},
-     inputData=${pageDataObject.get(formInputTemplate.name)},
-      pageConfigObject=${pageConfigObject},
-      hasError=${!pageDataObject.isValid(pageConfigObject) && !inputData.valid(pageDataObject)},
-      hasHelpMessage=${formInputTemplate.helpMessageKey != null},
-      needsAriaLabel=${formInputTemplate.needsAriaLabel()}">
->
+     pageTemplateObject=${page},
+     datasourcePagesHashMapObject=${data},
+pageTemplateObjectInputs=${pageTemplateObject.inputs},
+countyInputs=${pageTemplateObjectInputs[0]},
+tribalNationInputs=${pageTemplateObjectInputs[1]},
+
+      pageConfigObject=${pageConfigObject},">
+
 <div class="page-wrapper">
   <div th:replace="fragments/toolbar :: toolbar"></div>
   <div th:replace="fragments/demoBanner :: demoBanner"></div>
@@ -25,46 +39,76 @@ from the model object.
       <div th:replace="fragments/cardHeader :: cardHeader"></div>
       <main id="content" role="main" class="card spacing-above-35">
 
-        <form method="post"  th:action="${pageName}">
+<!--*/
+countyInputs=<p th:text="${countyInputs.options.selectableOptions}"> test</p>
+th:classappend="${!datasourcePagesHashMapObject.isValid(pageConfigObject) && !inputData.valid(datasourcePagesHashMapObject)} ? 'form-group--error' : ''"
+th:if="${option ne null}" 
+In form tag, the csrf hidden input wasn't generated when using simple action attribute:
+action="pages/identifyCountyOrTribalNation" 
+
+*/ -->
+
+    <p class="text--help"
+       th:id="${pageTemplateObject.name + '-help-message'}"
+       th:utext="#{${pageTemplateObject.headerKey}}"></p>
+        <form method="post" th:action="@{${postTo}}">
         <div class="form-group" 
-     th:classappend="${!pageDataObject.isValid(pageConfigObject) && !inputData.valid(pageDataObject)} ? 'form-group--error' : ''" >
+      
+     >
         
-              <!--/*  SELECT inputs copied from single-input.html */-->
-            <select th:id="${county}"
+<div class="select">
+            <select th:id="county"
                     class="select__element"
-                    th:attr="aria-describedby=${hasHelpMessage ? 'county-help-message' : ''},
+
+                    th:name="county[]"
+            >
+                <th:block th:each="option: ${countyInputs.options.selectableOptions}">
+                    <option th:value="${option.value}" th:text="#{${option.messageKey}}"
+                            ></option>
+                </th:block>
+            </select>
+</div>
+            
+      <!--/*      
+	removed this from option because inputData is null
+	th:selected="${inputData.value.contains(option.value)}"
+	
+	                    th:attr="aria-describedby=${hasHelpMessage ? 'county-help-message' : ''},
                              aria-labelledby=${needsAriaLabel ? 'page-header' : 'county-label'},
                              aria-invalid=${hasError},
                              aria-label=${needsAriaLabel ? 'county' : ''}"
-                    th:name="${county}"
-            >
-                <th:block th:each="option: ${county.options.selectableOptions}">
-                    <option th:value="${option.value}" th:text="#{${option.messageKey}}"
-                            th:selected="${inputData.value.contains(option.value)}"></option>
-                </th:block>
-            </select>
-            
-            
-            <select th:id="${tribalNation}"
-                    class="select__element"
-                    th:attr="aria-describedby=${hasHelpMessage ? 'tribalNation-help-message' : ''},
+                             
+                                                 th:attr="aria-describedby=${hasHelpMessage ? 'tribalNation-help-message' : ''},
                              aria-labelledby=${needsAriaLabel ? 'page-header' : 'tribalNation-label'},
                              aria-invalid=${hasError},
                              aria-label=${needsAriaLabel ? 'tribalNation' : ''}"
-                    th:name="${formInputName}"
+                             
+                             th:selected="${inputData.value.contains(option.value)}"
+	*/-->
+	<div class="select">
+            <select th:id="tribalNation"
+                    class="select__element"
+
+                    th:name="tribalNation[]"
             >
-                <th:block th:each="option: ${tribalNation.options.selectableOptions}">
+                <th:block th:each="option: ${tribalNationInputs.options.selectableOptions}">
                     <option th:value="${option.value}" th:text="#{${option.messageKey}}"
-                            th:selected="${inputData.value.contains(option.value)}"></option>
+                            ></option>
                 </th:block>
             </select>          
-    
+	</div>
               
-              
-              
-
+ <div>
+            <button id="form-submit-button" 
+                    class="button button--primary"
+                    type="submit"
+                    th:text="Continue"></button>
+ </div>
         </form>
-
+          <!--/*    SELECT inputs copied from single-input.html 
+          
+          
+          */-->
       </main>
     </div>
   </section>

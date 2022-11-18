@@ -479,6 +479,7 @@ public class PageController {
     if (pageWorkflow.getPageConfiguration().isStaticPage() || !pageWorkflow
         .getPageConfiguration()
         .isUsingPageTemplateFragment()) {
+    	//"data" is a DatasourcePages object
       model.put("data", pagesData.getDatasourcePagesBy(pageWorkflow.getDatasources()));
       model.put("applicationData", applicationData);
 
@@ -497,6 +498,7 @@ public class PageController {
               .mergeDatasourcePages(
                   pagesData.getDatasourceGroupBy(pageWorkflow.getDatasources(),
                       applicationData.getSubworkflows())));
+      // "data" is a PageData object
       model.put("data", pagesData
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
     }
@@ -614,16 +616,17 @@ public class PageController {
       HttpServletRequest request,
       HttpSession httpSession
   ) {
-	  System.out.println("=== PageController ENTER postFormPage pageName = " + pageName);//TODO emj delete
+	  System.out.println("=== PageController postFormPage ENTER pageName = " + pageName);//TODO emj delete
     PageWorkflowConfiguration pageWorkflow = applicationConfiguration.getWorkflow().get(pageName);
 
     PageConfiguration pageConfig = pageWorkflow.getPageConfiguration();
     PageData pageData = PageData.fillOut(pageConfig, model);
-    //TODO emj testing this to pass the pageConfig object to the thymeleaf fragments
+    
     //httpSession.setAttribute("pageConfig", pageConfig); pageConfig is null on html template
-    System.out.println("+++ postFormPage pageConfig is null = " + (pageConfig == null));
+//    System.out.println("+++ postFormPage pageConfig is null = " + (pageConfig == null));
  //  httpSession.setAttribute("pageConfigObject", pageConfig);
-    request.setAttribute("pageConfigObject", pageConfig);
+  //TODO emj testing this to pass the pageConfig object to the thymeleaf fragments, will probably need to keep this
+  //  request.setAttribute("pageConfigObject", pageConfig);
 
     PagesData pagesData;
     Map<String, PagesData> incompleteIterations = applicationData.getIncompleteIterations();
@@ -640,25 +643,25 @@ public class PageController {
     pagesData.putPage(pageConfig.getName(), pageData);
     
     var pageValidator = pageConfig.getPageValidator();
-   // Boolean pageScopeValidationIsValid = Boolean.TRUE;
+    //Boolean pageScopeValidationIsValid = Boolean.TRUE;
     Boolean pageScopeValidationIsValid = Boolean.FALSE;
     if(pageValidator != null) {//TODO emj incorporate the page level validation somehow, but not here?
-    	System.out.println("$$$$ PageController postFormPage, pageValidator is not null, do something with it! $$$$");
-    	System.out.println("pageValidator = " + pageValidator.toString());
     	
     	pageScopeValidationIsValid = pageValidator.isPageValid(pageData);
+    	
     }
 
     Boolean pageDataIsValid = pageData.isValid(pageConfig);
-    
+    System.out.println("$$$$ PageController postFormPage, pageScopeValidationIsValid = " + pageScopeValidationIsValid + " $$$$");
+    System.out.println("$$$$ PageController postFormPage, pageDataIsValid = " + pageDataIsValid + " $$$$");
     //TODO explain this better, something related with pageGroups and the completePages in pages-config.yaml
     boolean thisPageIsCompletePage = pageWorkflow.getGroupName() != null 
     		&& applicationConfiguration.getPageGroups().get(pageWorkflow.getGroupName())
             .getCompletePages()
             .contains(pageConfig.getName());
-    if(thisPageIsCompletePage) {//TODO emj delete
-    	System.out.println(">>>>>  THIS IS A COMPLETE PAGE: " + pageConfig.getName());
-    }
+//    if(thisPageIsCompletePage) {//TODO emj delete
+//    	System.out.println(">>>>>  THIS IS A COMPLETE PAGE: " + pageConfig.getName());
+//    }
     //TODO emj, at first I thought this was related to validation, but it seems to be related to groups.
     // May need to revert all of this, but keep the thisPageIsCompletePage boolean to make this more understandable.
 //    if(pageScopeValidationIsValid &&  thisPageIsCompletePage) {
@@ -693,10 +696,10 @@ public class PageController {
 
       Application application = applicationFactory.newApplication(applicationData);
       applicationRepository.save(application);
-	  System.out.println("=== PageController RETURN nav postFormPage pageName = " + pageName);//TODO emj delete     
+	  System.out.println("=== PageController postFormPage RETURN valid  pageName = " + pageName);//TODO emj delete     
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", pageName));
     } else {
-    	System.out.println("=== PageController RETURN postFormPage pageName = " + pageName);//TODO emj delete
+    	System.out.println("=== PageController postFormPage RETURN invalid pageName = " + pageName);//TODO emj delete
       return new ModelAndView("redirect:/pages/" + pageName);
     }
   }

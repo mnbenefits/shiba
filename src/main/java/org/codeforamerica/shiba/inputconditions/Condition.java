@@ -67,7 +67,7 @@ public class Condition implements Serializable {
 	  }else {
 //		  System.out.println("---- InputData is NULL for " + input);
 	  }
-	  List<String> pageDataValue = inputData.getValue();
+//	  List<String> pageDataValue = inputData.getValue();
 //	  for(String val:pageDataValue) {
 //		  System.out.println("pageDataValue= " + val);
 //	  }

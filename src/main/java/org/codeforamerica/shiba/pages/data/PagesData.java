@@ -166,16 +166,16 @@ public class PagesData extends HashMap<String, PageData> {
     PageConfiguration pageConfiguration = pageWorkflowConfiguration.getPageConfiguration();
     DatasourcePages datasourcePages = this
         .getDatasourcePagesBy(pageWorkflowConfiguration.getDatasources());
-    System.out.println("[[[ PagesData evaluate pageName = " + pageWorkflowConfiguration.getNextPages());
+    //System.out.println("[[[ PagesData evaluate pageName = " + pageWorkflowConfiguration.getNextPages());//TODO emj remove sysouts
     boolean hasPageValidation = pageConfiguration.isPageScopeValidation();
-    System.out.println("[[[ PagesData evaluate hasPageValidation = " + hasPageValidation);
+    //System.out.println("[[[ PagesData evaluate hasPageValidation = " + hasPageValidation);
     List<FormInputTemplate> inputs = null;
     if(hasPageValidation) {
-    	//TODO handle this differently using page validation
+    	//handle this using page validation
     	
     	PageValidator pageValidator = pageConfiguration.getPageValidator();
     	boolean isPageValid = pageValidator.isPageValid(applicationData.getPageData(pageConfiguration.getName()));
-    	   System.out.println("[[[ PagesData evaluate isPageValid = " + isPageValid);
+    	  // System.out.println("[[[ PagesData evaluate isPageValid = " + isPageValid);
         /*
          * A filter processes a list in some order to produce a new list containing exactly those 
          * elements of the original list for which a given predicate (think Boolean expression) returns true.
@@ -195,7 +195,8 @@ public class PagesData extends HashMap<String, PageData> {
     	
     }else {
     	
-        /*
+        /* Use the original validation for each input?
+         * 
          * A filter processes a list in some order to produce a new list containing exactly those 
          * elements of the original list for which a given predicate (think Boolean expression) returns true.
     		A map applies a given function to each element of a list, 
@@ -246,24 +247,24 @@ public class PagesData extends HashMap<String, PageData> {
 	  boolean pageHasValidation = false;
 	    var pageValidator = pageConfiguration.getPageValidator();
 	    List<String> errorMessageKeys = null;
-	    if(pageValidator != null) {//TODO emj incorporate the page level validation somehow
+	    if(pageValidator != null) {//TODO emj incorporate the page level validation  
 	    	pageHasValidation = true;
-	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidator is not null! $$$$");
+	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidator is not null! $$$$"); TODO emj remove sysouts
 	    	//System.out.println("pageValidator = " + pageValidator.toString());
 	    	boolean isPageValid = pageValidator.isPageValid(getPage(pageName));
 	    	formInput.setIsFormScopeValidation(true);
-	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidation, isPageValid = " + isPageValid + " $$$$");
+	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidation, isPageValid = " + isPageValid + " $$$$");
 	    	if(!isPageValid) {
 		    	String errorMessageKey = pageValidator.getErrorMessageKey();
 		    	errorMessageKeys = Collections.singletonList(errorMessageKey) ;
 	    	}
 	    }else {
-	    	System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, normal validation");
+	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, normal validation");
 	    errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
 	        .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
 	        .orElse(List.of());
 	    }
-	    System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, errorMessageKeys = " + errorMessageKeys);
+	   // System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, errorMessageKeys = " + errorMessageKeys);
 	    return new FormInputTemplate(
 	        formInput.getType(),
 	        formInput.getName(),

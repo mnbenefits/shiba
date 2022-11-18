@@ -31,7 +31,8 @@ public class InputData implements Serializable {
   @NotNull 
   String errorKey;
 
-  InputData(List<String> value, @NotNull List<Validator> validators, String errorKey) {
+  //TODO emj modified this constructor to public for testing, was only package visible before
+ public InputData(List<String> value, @NotNull List<Validator> validators, String errorKey) {
     this.value = Objects.requireNonNullElseGet(value, List::of);
     this.validators = Objects.requireNonNullElseGet(validators, List::of);
     this.errorKey = errorKey;

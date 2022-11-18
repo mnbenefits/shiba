@@ -29,11 +29,11 @@ public class PageValidator implements Serializable{
 	private String name;
 	@JsonIgnore
 	private LogicalOperator logicalOperator = LogicalOperator.AND;
-	private List<FormInputTemplate> inputs;
+	//private List<FormInputTemplate> inputs;
 	private List<String> inputsToValidate;
-	private Validation validation = Validation.NONE;
+	//private Validation validation = Validation.NONE;
 	private String errorMessageKey;
-	private List<Condition> conditions;
+	//private List<Condition> conditions;
 
 //TODO emj create test for this
 	public boolean isPageValid(PageData pageData) {
@@ -41,7 +41,8 @@ public class PageValidator implements Serializable{
 //		System.out.println("====== PageValidator isPageValid =========");
 //		System.out.println(" --- logicalOperator : " + logicalOperator);
 
-		if(pageData == null) {
+		if(pageData == null) { 
+			//TODO do we want to return true or false?
 			return true;
 		}
 		boolean retval = false;
