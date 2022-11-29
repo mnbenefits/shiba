@@ -27,7 +27,7 @@ public class DatasourcePages extends HashMap<String, PageData> {
   public DatasourcePages(Map<String, PageData> pagesData) {
     super(pagesData);
   }
-//TODO emj remove peek:
+
   /**
    * DatasourcePages satisfies method checks if condition contains multiple conditions,
    * which then uses allMatch for AND logicalOperator, or anyMatch for OR logicalOperator.</br>
@@ -38,7 +38,7 @@ public class DatasourcePages extends HashMap<String, PageData> {
    */
   public Boolean satisfies(Condition condition) {
     if (condition.getConditions() != null) {
-      Stream<Condition> conditionStream = condition.getConditions().stream().peek(x -> System.out.println("@@@ DatasourcePages Conditions = |" + x + "|"));
+      Stream<Condition> conditionStream = condition.getConditions().stream();
       return switch (condition.getLogicalOperator()) {
         case AND -> conditionStream.allMatch(this::satisfies);
         case OR -> conditionStream.anyMatch(this::satisfies);

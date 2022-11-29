@@ -166,56 +166,15 @@ public class PagesData extends HashMap<String, PageData> {
     PageConfiguration pageConfiguration = pageWorkflowConfiguration.getPageConfiguration();
     DatasourcePages datasourcePages = this
         .getDatasourcePagesBy(pageWorkflowConfiguration.getDatasources());
-    //System.out.println("[[[ PagesData evaluate pageName = " + pageWorkflowConfiguration.getNextPages());//TODO emj remove sysouts
-    boolean hasPageValidation = pageConfiguration.isPageScopeValidation();
-    //System.out.println("[[[ PagesData evaluate hasPageValidation = " + hasPageValidation);
-    List<FormInputTemplate> inputs = null;
-    if(hasPageValidation) {
-    	//handle this using page validation
-    	
-    	PageValidator pageValidator = pageConfiguration.getPageValidator();
-    	boolean isPageValid = pageValidator.isPageValid(applicationData.getPageData(pageConfiguration.getName()));
-    	  // System.out.println("[[[ PagesData evaluate isPageValid = " + isPageValid);
-        /*
-         * A filter processes a list in some order to produce a new list containing exactly those 
-         * elements of the original list for which a given predicate (think Boolean expression) returns true.
-    		A map applies a given function to each element of a list, 
-    		returning a list of results in the same order.
-         */
-        inputs = pageConfiguration.getInputs().stream() //list of FormInputs
-        		//.peek(x -> System.out.println("BEFORE FILTER input=|" + x + "|"))
-        		// filter inputs that satisfies their conditions ??? (not sure that is what is happening)
-            .filter(input ->
-            // map in filter -> get the input condition and map (apply) the DatasourcePages satisfies method to each
-                Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
-            //.peek(x -> System.out.println("AFTER FILTER input=|" + x + "|"))
-            // apply the function to each formInput and return a FormInputTemplate, then collect to a list.
-            .map(formInput -> convertFormInputToFormInputTemplate(pageConfiguration, formInput, applicationData))
-            .collect(Collectors.toList());
-    	
-    }else {
-    	
-        /* Use the original validation for each input?
-         * 
-         * A filter processes a list in some order to produce a new list containing exactly those 
-         * elements of the original list for which a given predicate (think Boolean expression) returns true.
-    		A map applies a given function to each element of a list, 
-    		returning a list of results in the same order.
-         */
-        inputs = pageConfiguration.getInputs().stream() //list of FormInputs
-        		// filter inputs that satisfies their conditions ??? (not sure that is what is happening)
-            .filter(input ->
-            // map in filter -> get the input condition and map (apply) the DatasourcePages satisfies method to each
-                Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
-            // apply the function to each formInput and return a FormInputTemplate, then collect to a list.
-            .map(formInput -> convertFormInputToFormInputTemplate(pageConfiguration, formInput, applicationData))
-            .collect(Collectors.toList());
-    	
-    }
-    
 
-     
-    // evaluate method param PageConfiguration has List<FormInput>, PageTemplate constructor requires List<FormInputTemplate>   
+    List<FormInputTemplate> inputs = null;
+
+        inputs = pageConfiguration.getInputs().stream() //list of FormInputs
+            .filter(input ->
+                Optional.ofNullable(input.getCondition()).map(datasourcePages::satisfies).orElse(true))
+            .map(formInput -> convert(pageConfiguration.getName(), formInput, applicationData))
+            .collect(Collectors.toList());
+ 
     return new PageTemplate(
         inputs,
         pageConfiguration.getName(),
@@ -233,62 +192,6 @@ public class PagesData extends HashMap<String, PageData> {
     );
   }
   
-  /**
-   * Modified convert method to look for a page validator.
-   * TODO seems like this only adds the errorMessageKeys and does not do the actual validation.
-   * @param pageConfiguration
-   * @param formInput
-   * @param applicationData
-   * @return
-   */
-  private FormInputTemplate convertFormInputToFormInputTemplate(PageConfiguration pageConfiguration, FormInput formInput,
-	      ApplicationData applicationData) {
-	  String pageName = pageConfiguration.getName();//this is the page determined after validation
-	  boolean pageHasValidation = false;
-	    var pageValidator = pageConfiguration.getPageValidator();
-	    List<String> errorMessageKeys = null;
-	    if(pageValidator != null) {//TODO emj incorporate the page level validation  
-	    	pageHasValidation = true;
-	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidator is not null! $$$$"); TODO emj remove sysouts
-	    	//System.out.println("pageValidator = " + pageValidator.toString());
-	    	boolean isPageValid = pageValidator.isPageValid(getPage(pageName));
-	    	formInput.setIsFormScopeValidation(true);
-	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, pageValidation, isPageValid = " + isPageValid + " $$$$");
-	    	if(!isPageValid) {
-		    	String errorMessageKey = pageValidator.getErrorMessageKey();
-		    	errorMessageKeys = Collections.singletonList(errorMessageKey) ;
-	    	}
-	    }else {
-	    	//System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, normal validation");
-	    errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
-	        .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
-	        .orElse(List.of());
-	    }
-	   // System.out.println("$$$$ PagesData convertFormInputToFormInputTemplate, errorMessageKeys = " + errorMessageKeys);
-	    return new FormInputTemplate(
-	        formInput.getType(),
-	        formInput.getName(),
-	        formInput.getCustomInputFragment(),
-	        formInput.getPromptMessage(),
-	        formInput.getHelpMessageKey(),
-	        formInput.getPlaceholder(),
-	        errorMessageKeys,
-	        createOptionsWithDataSourceTemplate(formInput, applicationData),
-	        formInput.getFollowUps().stream()
-	            .map(followup -> convertFormInputToFormInputTemplate(pageConfiguration, followup, applicationData))
-	            .collect(Collectors.toList()),
-	        formInput.getFollowUpValues(),
-	        formInput.getReadOnly(),
-	        formInput.getDefaultValue(),
-	        formInput.getDatasources(),
-	        formInput.getCustomFollowUps(),
-	        formInput.getInputPostfix(),
-	        formInput.getHelpMessageKeyBelow(),
-	        formInput.getNoticeMessage(),
-	        formInput.getValidationIcon()
-	    );
-	  }
-
   private FormInputTemplate convert(String pageName, FormInput formInput,
       ApplicationData applicationData) {
     List<String> errorMessageKeys = Optional.ofNullable(this.getPage(pageName))

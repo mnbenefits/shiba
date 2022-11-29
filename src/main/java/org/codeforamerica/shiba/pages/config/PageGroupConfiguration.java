@@ -1,15 +1,10 @@
 package org.codeforamerica.shiba.pages.config;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 
 @Data
-public class PageGroupConfiguration implements Serializable {
-
-  @Serial
-  private static final long serialVersionUID = 5831139204710273630L;
+public class PageGroupConfiguration {
 
   private List<String> completePages;
   private List<String> startPages;

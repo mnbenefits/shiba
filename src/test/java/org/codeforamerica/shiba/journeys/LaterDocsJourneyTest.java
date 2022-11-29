@@ -60,7 +60,7 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.clickButton("Submit my documents");
     assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
     testPage.clickButton("No, add more documents"); // Go back
-    assertThat(driver.getTitle()).isEqualTo("Submit any recommended documents you have available.");
+    assertThat(driver.getTitle()).isEqualTo("Upload documents");
 
     testPage.clickButton("Submit my documents");
     testPage.clickButton("Yes, submit and finish");

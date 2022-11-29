@@ -1,15 +1,9 @@
 package org.codeforamerica.shiba.pages.config;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 import lombok.Data;
 
 @Data
-public class AlertBox implements Serializable {
-
-  @Serial
-  private static final long serialVersionUID = 5831139204290643630L;
+public class AlertBox {
 
   private AlertBoxType type;
   private String message;

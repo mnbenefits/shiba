@@ -1,17 +1,14 @@
 package org.codeforamerica.shiba.pages.config;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import lombok.Data;
+
 import org.codeforamerica.shiba.inputconditions.Condition;
 
-@Data
-public class FormInput implements Serializable {
+import lombok.Data;
 
-  @Serial
-  private static final long serialVersionUID = 5831139204290273630L;
+@Data
+public class FormInput{
   
   private FormInputType type;
   private String name;
@@ -30,7 +27,6 @@ public class FormInput implements Serializable {
   private String customFollowUps;
   private String inputPostfix; // for text behind the input, name is from honeycrisp css class
   private String helpMessageKeyBelow;// help message appear below inputs
-  private Boolean isFormScopeValidation = false;//TODO emj testing if this will allow the html fragment to have a form error message rather than individual input error messages.
   private String noticeMessage;//for NOTICE input type
   private Boolean validationIcon = true;
 }
