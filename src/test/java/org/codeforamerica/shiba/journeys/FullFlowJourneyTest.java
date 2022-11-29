@@ -43,6 +43,8 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
     // Assert that the Delayed Processing Time Notice is displayed on the landing page.
     assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
+    // Assert that the EBT Scam Alert is displayed on the landing page.
+    assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
 
     List<String> programSelections = List
         .of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH, PROGRAM_CERTAIN_POPS);

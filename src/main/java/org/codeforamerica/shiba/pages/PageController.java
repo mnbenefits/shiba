@@ -7,8 +7,10 @@ import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.application.Status.DELIVERED;
 import static org.codeforamerica.shiba.application.Status.SENDING;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOME_ZIPCODE;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLICANT_PROGRAMS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HAS_HOUSE_HOLD;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 
 import java.awt.image.BufferedImage;
@@ -693,11 +695,6 @@ public class PageController {
       applicationData.setSubmitted(true);
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", submitPage));
     } else {
-      log.error("Invalid page data at submit, application Id:  " +
-              applicationData.getId() +
-              ", invalids: " +
-              pageData.invalidPageDataLogText());
-
       return new ModelAndView("redirect:/pages/" + submitPage);
     }
   }

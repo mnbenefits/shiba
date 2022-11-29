@@ -4524,6 +4524,7 @@ workflow:
           pageName: addHouseholdMembers
           input: addHouseholdMembers
           value: "true"
+      - pageName: addHouseholdMembers
     skipCondition: *onlyApplyingForOthers?
     datasources:
       - pageName: choosePrograms
@@ -4710,6 +4711,7 @@ workflow:
           pageName: usCitizen
           input: isUsCitizen
           value: "false"
+      - pageName: usCitizen
     datasources:
       - pageName: addHouseholdMembers
   whoIsNonCitizen:
@@ -5902,6 +5904,7 @@ workflow:
           pageName: savings
           input: haveSavings
           value: "false"
+      - pageName: savings
     datasources:
       - pageName: addHouseholdMembers
   cashAmount:
