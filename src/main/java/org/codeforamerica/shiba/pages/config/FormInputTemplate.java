@@ -3,16 +3,11 @@ package org.codeforamerica.shiba.pages.config;
 import static org.codeforamerica.shiba.pages.config.FormInputType.CHECKBOX;
 import static org.codeforamerica.shiba.pages.config.FormInputType.RADIO;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.List;
 import lombok.Value;
 
 @Value
-public class FormInputTemplate implements Serializable {
-
-  @Serial
-  private static final long serialVersionUID = 5831139204790273630L;
+public class FormInputTemplate {
 
   FormInputType type;
   String name;
@@ -30,12 +25,12 @@ public class FormInputTemplate implements Serializable {
   String customFollowUps;
   String inputPostfix;
   String helpMessageKeyBelow;
-  Boolean isFormScopeValidation;// = Boolean.FALSE;//TODO emj testing if this will allow the html fragment to have a form error message rather than individual input error messages.
-
+  String noticeMessage;
+  Boolean validationIcon;
+  
   public String fragment() {
-	  System.out.println("/// FormInputTemplate fragment( ) for type " + type + " isFormScopeValidation = " + isFormScopeValidation);//TODO emj delete
     return switch (type) {
-      case TEXT, LONG_TEXT, NUMBER, SELECT, MONEY, TEXTAREA, HOURLY_WAGE, PHONE, SSN -> "single-input";
+      case TEXT, LONG_TEXT, NUMBER, SELECT, MONEY, TEXTAREA, HOURLY_WAGE, PHONE, SSN, NOTICE -> "single-input";
       case DATE -> "date-input";
       case RADIO -> "radio-input";
       case CHECKBOX -> "checkbox-input";

@@ -1,22 +1,18 @@
 # see @ApplicationConfiguration for how to maintain this file
 conditionDefinitions:
   - &onlyApplyingForOthers?
-    name: onlyApplyingForOthers
     pageName: choosePrograms
     input: programs
     value: NONE
   - &livesAlone?
-    name: livesAlone
     pageName: addHouseholdMembers
     input: addHouseholdMembers
     value: "false"
   - &isUrbanTribalNationMember?
-    name: isUrbanTribalNationMember
     pageName: selectTheTribe
     input: selectedTribe
     matcher: IS_URBAN_TRIBAL_NATION_MEMBER
   - &doesNotLiveAlone?
-    name: doesNotLiveAlone
     logicalOperator: OR
     conditions:
       - *onlyApplyingForOthers?
@@ -24,94 +20,77 @@ conditionDefinitions:
         input: addHouseholdMembers
         value: "true"
   - &isHomeless?
-    name: isHomeless
     pageName: homeAddress
     input: isHomeless
     matcher: DOES_NOT_CONTAIN
     value: "true"
   - &isApplicantsJob?
-    name: isApplicantsJob
     pageName: householdSelectionForIncome
     input: whoseJobIsIt
     value: applicant
     matcher: CONTAINS_SUBSTRING
   - &selectedOtherUnearnedIncome?
-    name: selectedOtherUnearnedIncome
     pageName: otherUnearnedIncome
     input: otherUnearnedIncome
     value: NO_OTHER_UNEARNED_INCOME_SELECTED
     matcher: DOES_NOT_CONTAIN
   - &selectedUnearnedIncome?
-    name: selectedUnearnedIncome
     pageName: unearnedIncome
     input: unearnedIncome
     value: NO_UNEARNED_INCOME_SELECTED
     matcher: DOES_NOT_CONTAIN
   - &noUnearnedIncomeSelected?
-    name: noUnearnedIncomeSelected
     pageName: unearnedIncome
     input: unearnedIncome
     value: NO_UNEARNED_INCOME_SELECTED
   - &noOtherUnearnedIncomeSelected?
-    name: noOtherUnearnedIncomeSelected
     pageName: otherUnearnedIncome
     input: otherUnearnedIncome
     value: NO_OTHER_UNEARNED_INCOME_SELECTED
   - &doesNotHaveMortgage?
-    name: doesNotHaveMortgage
     pageName: homeExpenses
     input: homeExpenses
     value: MORTGAGE
     matcher: DOES_NOT_CONTAIN
   - &doesNotHaveRent?
-    name: doesNotHaveRent
     pageName: homeExpenses
     input: homeExpenses
     value: RENT
     matcher: DOES_NOT_CONTAIN
   - &doesNotHaveRoomAndBoard?
-    name: doesNotHaveRoomAndBoard
     pageName: homeExpenses
     input: homeExpenses
     value: ROOM_AND_BOARD
     matcher: DOES_NOT_CONTAIN
   - &hasMortgage?
-    name: hasMortgage
     pageName: homeExpenses
     input: homeExpenses
     value: MORTGAGE
   - &hasRent?
-    name: hasRent
     pageName: homeExpenses
     input: homeExpenses
     value: RENT
   - &hasRoomAndBoard?
-    name: hasRoomAndBoard
     pageName: homeExpenses
     input: homeExpenses
     value: ROOM_AND_BOARD
   - &applicantChoseSNAP?
-    name: applicantChoseSNAP
     pageName: choosePrograms
     value: SNAP
     input: programs
   - &applicantChoseCASH?
-    name: applicantChoseCASH
     pageName: choosePrograms
     value: CASH
     input: programs
   - &applicantChoseGRH?
-    name: applicantChoseGRH
     pageName: choosePrograms
     value: GRH
     input: programs
   - &applicantChoseCERTAINPOPS?
-    name: applicantChoseCERTAINPOPS
     pageName: choosePrograms
     value: CERTAIN_POPS
     input: programs
   - &someoneChoseCASH?
-    name: someoneChoseCASH
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
@@ -121,7 +100,6 @@ conditionDefinitions:
         input: programs
         value: CASH
   - &someoneChoseCCAP?
-    name: someoneChoseCCAP
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
@@ -131,63 +109,51 @@ conditionDefinitions:
         input: programs
         value: CCAP
   - &applicantOnlyChoseCCAP?
-    name: applicantOnlyChoseCCAP
     pageName: choosePrograms
     value: CCAP
     input: programs
     matcher: CONTAINS_ONLY
   - &householdOnlyChoseCCAP?
-    name: householdOnlyChoseCCAP
     pageName: householdMemberInfo
     input: programs
     value: CCAP
     matcher: CONTAINS_ONLY
   - &applicantDidNotChooseProgram?
-    name: applicantDidNotChooseProgram
     pageName: choosePrograms
     input: programs
     matcher: DOES_NOT_CONTAIN
   - &applicantChoseAtLeastOneProgram?
-    name: applicantChoseAtLeastOneProgram
     pageName: choosePrograms
     value: NONE
     input: programs
     matcher: DOES_NOT_CONTAIN
   - &applicantDidNotChooseCCAPOnly?
-    name: applicantDidNotChooseCCAPOnly
     pageName: choosePrograms
     value: CCAP
     input: programs
     matcher: DOES_NOT_EQUAL
   - &applicantDidNotChooseCCAP?
-    name: applicantDidNotChooseCCAP
     <<: *applicantDidNotChooseProgram?
     value: CCAP
   - &applicantDidNotChooseGRH?
-    name: applicantDidNotChooseGRH
     <<: *applicantDidNotChooseProgram?
     value: GRH
   - &applicantDidNotChooseCERTAINPOPS?
-    name: applicantDidNotChooseCERTAINPOPS
     <<: *applicantDidNotChooseProgram?
     value: CERTAIN_POPS
   - &householdMemberDidNotChooseProgram?
-    name: householdMemberDidNotChooseProgram
     pageName: householdMemberInfo
     input: programs
     matcher: DOES_NOT_CONTAIN
   - &householdMemberChoseAtLeastOneProgram?
-    name: householdMemberChoseAtLeastOneProgram
     pageName: householdMemberInfo
     input: programs
     matcher: CONTAINS_STRING_OTHER_THAN
     value: NONE
   - &householdMemberDidNotChooseCCAP?
-    name: householdMemberDidNotChooseCCAP
     <<: *householdMemberDidNotChooseProgram?
     value: CCAP
   - &noOneChoseCCAP?
-    name: noOneChoseCCAP
     logicalOperator: AND
     conditions:
       - *applicantDidNotChooseCCAP?
@@ -196,7 +162,6 @@ conditionDefinitions:
           - *householdMemberDidNotChooseCCAP?
           - *livesAlone?
   - &noOneChoseSNAP?
-    name: noOneChoseSNAP
     logicalOperator: AND
     conditions:
       - <<: *applicantDidNotChooseProgram?
@@ -207,7 +172,6 @@ conditionDefinitions:
             value: SNAP
           - *livesAlone?
   - &noOneChoseCASH?
-    name: noOneChoseCASH
     logicalOperator: AND
     conditions:
       - <<: *applicantDidNotChooseProgram?
@@ -218,7 +182,6 @@ conditionDefinitions:
             value: CASH
           - *livesAlone?
   - &noOneChoseEA?
-    name: noOneChoseEA
     logicalOperator: AND
     conditions:
       - <<: *applicantDidNotChooseProgram?
@@ -229,7 +192,6 @@ conditionDefinitions:
             value: EA
           - *livesAlone?
   - &noOneChoseGRH?
-    name: noOneChoseGRH
     logicalOperator: AND
     conditions:
       - *applicantDidNotChooseGRH?
@@ -239,13 +201,11 @@ conditionDefinitions:
             value: GRH
           - *livesAlone?
   - &livesAloneOrIsApplicantsJob?
-    name: livesAloneOrIsApplicantsJob
     logicalOperator: OR
     conditions:
       - *isApplicantsJob?
       - *livesAlone?
   - &isNoSSN?
-    name: isNoSSN
     pageName: personalInfo
     input: ssn
     matcher: NOT_EMPTY
@@ -256,33 +216,27 @@ conditionDefinitions:
     matcher: CONTAINS
 # new conditions for tribal routing -->
   - &countyNotSelected?
-    name: countyNotSelected
     pageName: identifyCountyOrTribalNation
     input: county
     matcher: EMPTY
   - &tribalNationNotSelected?
-    name: tribalNationNotSelected
     pageName: identifyCountyOrTribalNation
     input: tribalNation
     matcher: EMPTY
   - &countySelected?
-    name: countySelected
     pageName: identifyCountyOrTribalNation
     input: county
     matcher: NOT_EMPTY
   - &tribalNationSelected?
-    name: tribalNationSelected
     pageName: identifyCountyOrTribalNation
     input: tribalNation
     matcher: NOT_EMPTY
   - &countyANDtribalNationNotSelected?
-    name: countyANDtribalNationNotSelected
     logicalOperator: AND
     conditions:
       - *countyNotSelected?
       - *tribalNationNotSelected?
   - &eitherCountyOrTribalNationIsSelected?
-    name: eitherCountyOrTribalNationIsSelected
     logicalOperator: OR
     conditions:
       - *countySelected?
@@ -1764,98 +1718,24 @@ pageDefinitions:
               messageKey: identify-county-wright
             - value: YellowMedicine
               messageKey: identify-county-yellow-medicine
-# TODO emj new page -->
   - &identifyCountyOrTribalNation
     name: identifyCountyOrTribalNation
-    usingPageTemplateFragment: false
     pageTitle: identify-county-or-tribal-nation.title
     headerKey: identify-county.where-would-you-like-to-send-documents
+    headerHelpMessageKey: identify-county.choose-a-location
     contextFragment: countyContextFragment
-#    isFormScopeValidation: true  Might want to declare this page is form scope validation???
-# New page validator, checks more than one input.
-    pageValidator:
-      logicalOperator: OR
-#      conditions:
-#        - *countyNotSelected?
-#        - *tribalNationNotSelected?
-      inputsToValidate:
-        - county
-        - tribalNation
-      errorMessageKey: general.validation.make-sure-to-make-selection
     inputs:
-#        isFormScopeValidation: true
       - name: county
         type: SELECT
+        promptMessage:
+          promptMessageKey: identify-county.select-a-county
         validators:
           - validation: NOT_BLANK
-        promptMessage:
-          promptMessageFragmentName: identifyCountyOrTribalNationPrompt
-# show error message if county is blank -AND- tribalNation is blank
-#        validators:
-#          - validation: SELECTED
-#            condition: *countySelected?
-#          - validation: SELECTED
-#            errorMessageKey: general.validation.make-sure-to-make-selection
-# The countyNotSelected works for the county input only -->
-#            condition: *countyNotSelected?
-#            condition: *tribalNationNotSelected?
-#            condition: *eitherCountyOrTribalNationIsSelected?
-# Get this error: Cannot set composite condition fields ERROR -->
-#            condition:
-#              name: countyOrTribalNation
-#              pageName: identifyCountyOrTribalNation
-#              input: county
-#              value: 
-#              matcher: EMPTY
-#              logicalOperator: OR
-#              conditions:
-#                - name: countyNotSelected
-#                  pageName: identifyCountyOrTribalNation
-#                  input: county
-#                  matcher: EMPTY
-#                - name: tribalNationNotSelected
-#                  pageName: identifyCountyOrTribalNation
-#                  input: tribalNation
-#                  matcher: EMPTY
-
-# <-- ERROR
-
-# Error Cannot invoke "org.codeforamerica.shiba.pages.data.InputData.getValue()" because "inputData" is null -->
-#            condition:
-#              name: countyOrTribalNation
-#              matcher: EMPTY
-#              logicalOperator: OR
-#              conditions:
-#                - name: countyNotSelected
-#                  pageName: identifyCountyOrTribalNation
-#                  input: county
-#                  matcher: EMPTY
-#                - name: tribalNationNotSelected
-#                  pageName: identifyCountyOrTribalNation
-# <-- Error
-# the problems seems to be the county input can't see the tribalNation input during validation
-#                  input: tribalNation
-#                  matcher: EMPTY
-
-# example -->
-#        validators:
-#          - validation: DATE
-#            errorMessageKey: general.validation.please-enter-your-birthday-in-this-format
-#            condition:
-#              input: dateOfBirth
-#              matcher: NOT_EMPTY
-#          - validation: DOB_VALID
-#            condition:
-#              input: dateOfBirth
-#              matcher: NOT_EMPTY
-#            errorMessageKey: general.validation.make-sure-to-provide-a-dob-between-1900-and-present
-
-#            validators:
-#              - validation: NOT_BLANK
-#                errorMessageKey: general.validation.make-sure-you-answer-this-question
-#                condition: *isHomeless?
-
-# <-- example
+            errorMessageKey: general.validation.blank
+            condition: 
+              input: tribalNation
+              matcher: EMPTY
+        validationIcon: false
         options:
           selectableOptions:
             - value: ''
@@ -2033,20 +1913,17 @@ pageDefinitions:
             - value: Wright
               messageKey: identify-county-wright
             - value: YellowMedicine
-              messageKey: identify-county-yellow-medicine 
+              messageKey: identify-county-yellow-medicine
       - name: tribalNation
         type: SELECT
-        validators:
-          - validation: NOT_BLANK
         promptMessage:
           promptMessageKey: identify-county.select-a-tribal-nation
-# show error message if county is blank -AND- tribalNation is blank
-#        validators:
-#          - validation: SELECTED
-#            condition: *tribalNationNotSelected?
-#            condition: *countyNotSelected?
-#            condition: *eitherCountyOrTribalNationIsSelected?
-#            errorMessageKey: general.validation.make-sure-to-make-selection
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-make-a-selection
+            condition: 
+              input: county
+              matcher: EMPTY
         options:
           selectableOptions:
             - value: ''
@@ -2057,9 +1934,9 @@ pageDefinitions:
               messageKey: select-the-tribe.red-lake
             - value: White Earth Nation
               messageKey: select-the-tribe.white-earth
-# TODO emj END OF NEW PAGE
-
-
+      - name: notice
+        type: NOTICE
+        noticeMessage: identify-county.you-can-see-where-your-application
   #    subtleLinkTextKey: identify-county.enter-my-zip-code-instead
   - &identifyZipcode
     name: identifyZipcode

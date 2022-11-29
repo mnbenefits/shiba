@@ -40,8 +40,6 @@ class HouseholdPregnancyPreparerTest {
         "pregnant",
         "applicantIsPregnant",
         List.of("Yes"),
-<<<<<<< HEAD
-=======
         DocumentFieldType.SINGLE_VALUE,
         null
     ));
@@ -69,7 +67,6 @@ class HouseholdPregnancyPreparerTest {
         "pregnant",
         "applicantIsPregnant",
         List.of("No"),
->>>>>>> refs/remotes/origin/main
         DocumentFieldType.SINGLE_VALUE,
         null
     ));

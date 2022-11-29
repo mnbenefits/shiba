@@ -37,12 +37,12 @@ public void testPageValidatorTwoValidInputsLogicalOperatorOR() {
 	List<String> values1 = Arrays.asList("value1");
 	List<String> values2 = Arrays.asList("value2");
 	
-    InputData inputData1 = new InputData(values1, validatorList1, null);
+   // InputData inputData1 = new InputData(values1, validatorList1, null);
     //inputData1.setValidators(validatorList1); 
-    InputData inputData2 = new InputData(values2, validatorList2, null);
+    //InputData inputData2 = new InputData(values2, validatorList2, null);
 	PageData pageData = new PageData();
-	pageData.put("foo", inputData1);
-	pageData.put("bar", inputData2);
+	//pageData.put("foo", inputData1);
+	//pageData.put("bar", inputData2);
 	
 
 	

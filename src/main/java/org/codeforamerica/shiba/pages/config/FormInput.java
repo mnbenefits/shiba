@@ -31,4 +31,6 @@ public class FormInput implements Serializable {
   private String inputPostfix; // for text behind the input, name is from honeycrisp css class
   private String helpMessageKeyBelow;// help message appear below inputs
   private Boolean isFormScopeValidation = false;//TODO emj testing if this will allow the html fragment to have a form error message rather than individual input error messages.
+  private String noticeMessage;//for NOTICE input type
+  private Boolean validationIcon = true;
 }

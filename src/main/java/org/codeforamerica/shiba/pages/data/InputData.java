@@ -4,16 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import lombok.Setter;
 import lombok.Value;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-
 import org.codeforamerica.shiba.pages.config.Validator;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,23 +21,18 @@ public class InputData implements Serializable {
   @NotNull
   @JsonIgnore
   List<Validator> validators;
-  @NonFinal
-  @NotNull 
-  String errorKey;
 
-  //TODO emj modified this constructor to public for testing, was only package visible before
- public InputData(List<String> value, @NotNull List<Validator> validators, String errorKey) {
+  InputData(List<String> value, @NotNull List<Validator> validators) {
     this.value = Objects.requireNonNullElseGet(value, List::of);
     this.validators = Objects.requireNonNullElseGet(validators, List::of);
-    this.errorKey = errorKey;
   }
 
   InputData() {
-    this(new ArrayList<>(), new ArrayList<>(), new String());
+    this(new ArrayList<>(), new ArrayList<>());
   }
 
   public InputData(@NotNull List<String> value) {
-    this(value, new ArrayList<>(), new String());
+    this(value, new ArrayList<>());
   }
 
   public Boolean valid(PageData pageData) {
@@ -54,20 +43,11 @@ public class InputData implements Serializable {
   }
 
   public List<String> errorMessageKeys(PageData pageData) {
-	  System.out.println("*** InputData errorMessageKeys START ***");
-	  if(errorKey != null) {
-		  System.out.println("*** returning single errorKey: " + errorKey);
-		  System.out.println("*** InputData errorMessageKeys END***");
-		  return Collections.singletonList(errorKey);
-	  }
-	  List<String> errorList = validators.stream()
-		        .filter(validator ->
-	            (validator.getCondition() == null || validator.getCondition().satisfies(pageData))
-	            && !validator.getValidation().apply(value))
-	        .map(Validator::getErrorMessageKey).collect(Collectors.toList());
-	  System.out.println("*** returning list of errorKeys: " + errorList.toString());
-	  System.out.println("*** InputData errorMessageKeys END***");
-    return errorList;
+    return validators.stream()
+        .filter(validator ->
+            (validator.getCondition() == null || validator.getCondition().satisfies(pageData))
+            && !validator.getValidation().apply(value))
+        .map(Validator::getErrorMessageKey).collect(Collectors.toList());
   }
 
   public String getValue(int i) {
@@ -76,9 +56,5 @@ public class InputData implements Serializable {
 
   public void setValue(String newValue, int i) {
     this.value.set(i, newValue);
-  }
-  
-  public void setErrorKey(String key) {
-	  this.errorKey = key;
   }
 }

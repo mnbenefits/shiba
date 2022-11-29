@@ -284,7 +284,8 @@ public class PagesData extends HashMap<String, PageData> {
 	        formInput.getCustomFollowUps(),
 	        formInput.getInputPostfix(),
 	        formInput.getHelpMessageKeyBelow(),
-	        pageHasValidation //formInput.getIsFormScopeValidation()
+	        formInput.getNoticeMessage(),
+	        formInput.getValidationIcon()
 	    );
 	  }
 
@@ -313,7 +314,8 @@ public class PagesData extends HashMap<String, PageData> {
         formInput.getCustomFollowUps(),
         formInput.getInputPostfix(),
         formInput.getHelpMessageKeyBelow(),
-        formInput.getIsFormScopeValidation()
+        formInput.getNoticeMessage(),
+        formInput.getValidationIcon()
     );
   }
 }

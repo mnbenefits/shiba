@@ -882,7 +882,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     deleteAFile();
 
     assertThat(testPage.getTitle()).isEqualTo(
-        "Submit any recommended documents you have available.");
+        "Upload documents");
     assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(0);
 
     assertStylingOfEmptyDocumentUploadPage();

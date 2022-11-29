@@ -15,18 +15,11 @@ import java.util.stream.Collectors;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-import lombok.experimental.NonFinal;
-
 import org.codeforamerica.shiba.pages.config.FormInput;
 import org.codeforamerica.shiba.pages.config.PageConfiguration;
-import org.codeforamerica.shiba.pages.config.PageValidator;
 import org.codeforamerica.shiba.pages.config.Validator;
 import org.springframework.util.MultiValueMap;
 
-/**
- * PageData extends HashMap&lt;String, InputData&gt;
- *
- */
 @EqualsAndHashCode(callSuper = true)
 @Value
 @NoArgsConstructor
@@ -51,7 +44,7 @@ public class PageData extends HashMap<String, InputData> {
           List<String> sanitizedValue = value.stream()
               .map(v -> v.replace("\u0000", ""))
               .collect(Collectors.toCollection(ArrayList::new));
-          InputData inputData = new InputData(sanitizedValue, formInput.getValidators(), null);
+          InputData inputData = new InputData(sanitizedValue, formInput.getValidators());
           return Map.entry(formInput.getName(), inputData);
         })
         .collect(toMap(Entry::getKey, Entry::getValue));
@@ -59,7 +52,6 @@ public class PageData extends HashMap<String, InputData> {
   }
 
   public static PageData initialize(PageConfiguration pageConfiguration) {
-	  
     return new PageData(
         pageConfiguration.getFlattenedInputs().stream()
             .collect(toMap(
@@ -69,43 +61,19 @@ public class PageData extends HashMap<String, InputData> {
                     .orElse(new InputData())
             )));
   }
-  
-  //Original method, now is only called from the html pages
-	public Boolean isValid() {
-		System.out.println(">>> PageData isValid() <<<");// TODO emj delete
 
-		Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(validator.getCondition())
-				.map(condition -> condition.satisfies(this)).orElse(true);
+  public Boolean isValid() {
+    Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(
+        validator.getCondition()).map(
+        condition -> condition.satisfies(this)
+    ).orElse(true);
 
-		List<InputData> inputDataToValidate = values().stream().peek(x -> System.out.println("   > input=|" + x + "|"))
-				.filter(inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun))
-				.toList();
-		boolean isValid = inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
-		System.out.println(">>> PageData isValid() returning " + isValid + " <<<");// TODO emj delete
-		return isValid;
-	}
+    List<InputData> inputDataToValidate = values().stream().filter(
+        inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun)
+    ).toList();
 
-  //TODO emj new overloaded method with pageConfig parameter
-	public Boolean isValid(PageConfiguration pageConfig) {
-		System.out.println(">>> PageData isValid(pageConfig) " + pageConfig.getName() + " <<<");// TODO emj delete
-		
-		PageValidator pageValidator = pageConfig.getPageValidator();
-		if (pageValidator != null) {
-			boolean isPageValid = pageValidator.isPageValid(this);
-			System.out.println(">>> PageData isValid(pageConfig) pageValidator returning " + isPageValid);
-			return isPageValid;
-		}
-
-		Predicate<Validator> validatorForThisInputShouldRun = validator -> ofNullable(validator.getCondition())
-				.map(condition -> condition.satisfies(this)).orElse(true);
-
-		List<InputData> inputDataToValidate = values().stream()
-				.filter(inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun))
-				.toList();
-		boolean isValid = inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
-		System.out.println(">>> PageData isValid(pageConfig) returning " + isValid + " <<<");// TODO emj delete
-		return isValid;
-	}
+    return inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
+  }
 
   /**
    * Merges the InputData values of otherPage into this PageData.
@@ -120,14 +88,10 @@ public class PageData extends HashMap<String, InputData> {
       });
     }
   }
-  
-  /**
-   * Collects invalid data to print to the logs.
-   * @return
-   */
-  public String invalidPageDataLogText(PageConfiguration pageConfig) {
 
-    if (isValid(pageConfig)) {
+  public String invalidPageDataLogText() {
+
+    if (isValid()) {
       return "";
     }
 

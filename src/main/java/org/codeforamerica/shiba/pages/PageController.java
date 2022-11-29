@@ -35,8 +35,6 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -202,7 +200,6 @@ public class PageController {
       @PathVariable String pageName,
       @RequestParam(required = false, defaultValue = "0") Integer option
   ) {
-	    System.out.println("=== PageController navigation ENTER pageName = " + pageName );//TODO emj delete
     PageWorkflowConfiguration currentPage = applicationConfiguration.getWorkflow().get(pageName);
     if (currentPage == null) {
       return new RedirectView("/error");
@@ -238,26 +235,12 @@ public class PageController {
       @PathVariable String pageName,
       @RequestParam(required = false, defaultValue = "") String iterationIndex,
       @RequestParam(name = "utm_source", defaultValue = "", required = false) String utmSource,
-      HttpServletRequest request,
       HttpServletResponse response,
       HttpSession httpSession,
       Locale locale
   ) {
-	    System.out.println("=== PageController getPage ENTER pageName = " + pageName);//TODO emj delete
+
     var landmarkPagesConfiguration = applicationConfiguration.getLandmarkPages();
-  //next page is found here
-    var pageWorkflowConfig = applicationConfiguration.getWorkflow().get(pageName);
-    if (pageWorkflowConfig == null) {
-      return new ModelAndView("redirect:/error");
-    }
-    
-    //TODO emj test to see if the pageConfig is available on the template when it is added to the session here
-    PageConfiguration pageConfig = pageWorkflowConfig.getPageConfiguration();
-    //TODO emj testing this to pass the pageConfig object to the thymeleaf fragments
-    //httpSession.setAttribute("pageConfig", pageConfig); pageConfig is null on html template
-   // System.out.println("+++ getPage pageConfig is null = " + (pageConfig == null));
-  	//httpSession.setAttribute("pageConfigObject", pageConfig); // the object is null when the html template gets it from the session object
-    //request.setAttribute("pageConfigObject", pageConfig);
 
     if (landmarkPagesConfiguration.isLandingPage(pageName)) {
       httpSession.invalidate();
@@ -269,7 +252,6 @@ public class PageController {
         applicationData.setUtmSource(utmSource);
       }
     }
-
 
     // Validations and special case redirects
     if (shouldRedirectToUploadDocumentsPage(pageName)) {
@@ -299,6 +281,11 @@ public class PageController {
       return new ModelAndView(
           String.format("redirect:/pages/%s",
               landmarkPagesConfiguration.getLandingPages().get(0)));
+    }
+
+    var pageWorkflowConfig = applicationConfiguration.getWorkflow().get(pageName);
+    if (pageWorkflowConfig == null) {
+      return new ModelAndView("redirect:/error");
     }
 
     if (missingRequiredSubworkflows(pageWorkflowConfig)) {
@@ -339,20 +326,16 @@ public class PageController {
                 .getReviewPage());
       }
     }
-//TODO emj, this is ONE PLACE where page input validation occurs, need to apply pageValidation somehow
+
     var pageTemplate = pagesData.evaluate(featureFlags, pageWorkflowConfig, applicationData);
 
     var model = buildModelForThymeleaf(pageName, locale, landmarkPagesConfiguration,
         pageTemplate,
         pageWorkflowConfig, pagesData, iterationIndex);
-    
     var view =
         pageWorkflowConfig.getPageConfiguration().isUsingPageTemplateFragment() ? "pageTemplate"
             : pageName;
-    System.out.println("=== PageController getPage RETURN pageName = " + pageName + " and view = " + view);//TODO emj delete
-    ModelAndView modelandView = new ModelAndView(view, model);
-    modelandView.addObject("pageConfigObject", pageConfig); //TODO emj put the pageConfig object into the model so it can be used in html templates
-    return modelandView;
+    return new ModelAndView(view, model);
   }
 
   private PagesData getPagesDataForGroupAndIteration(String iterationIndex,
@@ -479,7 +462,6 @@ public class PageController {
     if (pageWorkflow.getPageConfiguration().isStaticPage() || !pageWorkflow
         .getPageConfiguration()
         .isUsingPageTemplateFragment()) {
-    	//"data" is a DatasourcePages object
       model.put("data", pagesData.getDatasourcePagesBy(pageWorkflow.getDatasources()));
       model.put("applicationData", applicationData);
 
@@ -498,7 +480,6 @@ public class PageController {
               .mergeDatasourcePages(
                   pagesData.getDatasourceGroupBy(pageWorkflow.getDatasources(),
                       applicationData.getSubworkflows())));
-      // "data" is a PageData object
       model.put("data", pagesData
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
     }
@@ -613,66 +594,34 @@ public class PageController {
   ModelAndView postFormPage(
       @RequestBody(required = false) MultiValueMap<String, String> model,
       @PathVariable String pageName,
-      HttpServletRequest request,
       HttpSession httpSession
   ) {
-	  System.out.println("=== PageController postFormPage ENTER pageName = " + pageName);//TODO emj delete
     PageWorkflowConfiguration pageWorkflow = applicationConfiguration.getWorkflow().get(pageName);
 
-    PageConfiguration pageConfig = pageWorkflow.getPageConfiguration();
-    PageData pageData = PageData.fillOut(pageConfig, model);
-    
-    //httpSession.setAttribute("pageConfig", pageConfig); pageConfig is null on html template
-//    System.out.println("+++ postFormPage pageConfig is null = " + (pageConfig == null));
- //  httpSession.setAttribute("pageConfigObject", pageConfig);
-  //TODO emj testing this to pass the pageConfig object to the thymeleaf fragments, will probably need to keep this
-  //  request.setAttribute("pageConfigObject", pageConfig);
+    PageConfiguration page = pageWorkflow.getPageConfiguration();
+    PageData pageData = PageData.fillOut(page, model);
 
     PagesData pagesData;
     Map<String, PagesData> incompleteIterations = applicationData.getIncompleteIterations();
     if (pageWorkflow.getGroupName() != null) {
       String groupName = pageWorkflow.getGroupName();
-      if (isStartPageForGroup(pageConfig.getName(), groupName)) {
+      if (isStartPageForGroup(page.getName(), groupName)) {
         incompleteIterations.putIfAbsent(groupName, new PagesData());
       }
       pagesData = incompleteIterations.get(groupName);
     } else {
       pagesData = applicationData.getPagesData();
     }
-    
-    pagesData.putPage(pageConfig.getName(), pageData);
-    
-    var pageValidator = pageConfig.getPageValidator();
-    //Boolean pageScopeValidationIsValid = Boolean.TRUE;
-    Boolean pageScopeValidationIsValid = Boolean.FALSE;
-    if(pageValidator != null) {//TODO emj incorporate the page level validation somehow, but not here?
-    	
-    	pageScopeValidationIsValid = pageValidator.isPageValid(pageData);
-    	
-    }
 
-    Boolean pageDataIsValid = pageData.isValid(pageConfig);
-    System.out.println("$$$$ PageController postFormPage, pageScopeValidationIsValid = " + pageScopeValidationIsValid + " $$$$");
-    System.out.println("$$$$ PageController postFormPage, pageDataIsValid = " + pageDataIsValid + " $$$$");
-    //TODO explain this better, something related with pageGroups and the completePages in pages-config.yaml
-    boolean thisPageIsCompletePage = pageWorkflow.getGroupName() != null 
-    		&& applicationConfiguration.getPageGroups().get(pageWorkflow.getGroupName())
+    pagesData.putPage(page.getName(), pageData);
+
+    Boolean pageDataIsValid = pageData.isValid();
+    if (pageDataIsValid &&
+        pageWorkflow.getGroupName() != null &&
+        applicationConfiguration.getPageGroups().get(pageWorkflow.getGroupName())
             .getCompletePages()
-            .contains(pageConfig.getName());
-//    if(thisPageIsCompletePage) {//TODO emj delete
-//    	System.out.println(">>>>>  THIS IS A COMPLETE PAGE: " + pageConfig.getName());
-//    }
-    //TODO emj, at first I thought this was related to validation, but it seems to be related to groups.
-    // May need to revert all of this, but keep the thisPageIsCompletePage boolean to make this more understandable.
-//    if(pageScopeValidationIsValid &&  thisPageIsCompletePage) {
-//        String groupName = pageWorkflow.getGroupName();
-//        applicationData.getSubworkflows()
-//            .addIteration(groupName, incompleteIterations.remove(groupName));
-//        pageEventPublisher
-//            .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
-//
-//    }else 
-    	if ((pageDataIsValid || pageScopeValidationIsValid) && thisPageIsCompletePage) {
+            .contains(page.getName())
+    ) {
       String groupName = pageWorkflow.getGroupName();
       applicationData.getSubworkflows()
           .addIteration(groupName, incompleteIterations.remove(groupName));
@@ -680,7 +629,7 @@ public class PageController {
           .publish(new SubworkflowCompletedEvent(httpSession.getId(), groupName));
     }
 
-	if (pageDataIsValid  || pageScopeValidationIsValid ) {
+    if (pageDataIsValid) {
       if (applicationData.getId() == null) {
         applicationData.setId(applicationRepository.getNextId());
       }
@@ -696,10 +645,8 @@ public class PageController {
 
       Application application = applicationFactory.newApplication(applicationData);
       applicationRepository.save(application);
-	  System.out.println("=== PageController postFormPage RETURN valid  pageName = " + pageName);//TODO emj delete     
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", pageName));
     } else {
-    	System.out.println("=== PageController postFormPage RETURN invalid pageName = " + pageName);//TODO emj delete
       return new ModelAndView("redirect:/pages/" + pageName);
     }
   }
@@ -721,7 +668,7 @@ public class PageController {
     PagesData pagesData = applicationData.getPagesData();
     pagesData.putPage(submitPage, pageData);
 
-    if (pageData.isValid(page)) {
+    if (pageData.isValid()) {
       if (applicationData.getId() == null) {
         // only happens in framework tests now we think, left in out of an abundance of caution
         log.error("Unexpected null applicationData ID on submit");
@@ -748,10 +695,10 @@ public class PageController {
       applicationData.setSubmitted(true);
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", submitPage));
     } else {
-      log.error("Invalid page data , application Id:  " +
+      log.error("Invalid page data at submit, application Id:  " +
               applicationData.getId() +
-              ", invalid page data: " +
-              pageData.invalidPageDataLogText(page));
+              ", invalids: " +
+              pageData.invalidPageDataLogText());
 
       return new ModelAndView("redirect:/pages/" + submitPage);
     }

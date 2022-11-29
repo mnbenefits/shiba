@@ -53,7 +53,7 @@ public class PageValidator implements Serializable{
 			booleanArray.add(isInputDataValid);
 	//		System.out.println("  --input: " + input + " isInputDataValid? " + isInputDataValid);
 			if(!isInputDataValid) {
-				inputData.setErrorKey(errorMessageKey);
+			//	inputData.setErrorKey(errorMessageKey);
 		    }
 		}
 		
