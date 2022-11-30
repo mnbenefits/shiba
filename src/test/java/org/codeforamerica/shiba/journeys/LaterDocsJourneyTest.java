@@ -39,7 +39,12 @@ public class LaterDocsJourneyTest extends JourneyTest {
 //    navigateTo("identifyCounty");
 
     // should allow me to enter personal info and continue the flow if my county is supported
+    testPage.enter("county", "Select your county");
+    testPage.enter("tribalNation", "Select a Tribal Nation");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
     testPage.enter("county", "Hennepin");
+    testPage.enter("tribalNation", "Red Lake");
     testPage.clickContinue();
 
     assertThat(driver.getTitle()).isEqualTo("Match Info");
@@ -74,4 +79,5 @@ public class LaterDocsJourneyTest extends JourneyTest {
     navigateTo("documentSubmitConfirmation");
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
   }
+  
 }

@@ -86,7 +86,9 @@ public class RoutingDecisionService {
 	List<RoutingDestination> result = new ArrayList<>();
 	String countyName = getFirstValue(applicationData.getPagesData(), IDENTIFY_COUNTY_LATER_DOCS);
 	if (countyName != null && !countyName.isEmpty()) {
-		result.add(countyRoutingDestinations.get(County.getForName(countyName)));
+		County county = County.getForName(countyName);
+		RoutingDestination destination = countyRoutingDestinations.get(county);
+		result.add(destination);
 	}
 	String tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_LATER_DOCS);
 	if (tribalNationName != null && !tribalNationName.isEmpty()) {
