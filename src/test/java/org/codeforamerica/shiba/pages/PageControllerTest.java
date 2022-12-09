@@ -505,6 +505,7 @@ class PageControllerTest {
 
   @Test
   void shouldReturnErrorForFileWithVirus() throws Exception {
+	  System.out.println("======= clammitUrl = " + clammitUrl);//TODO emj delete
     applicationData.setStartTimeOnce(Instant.now());
     String applicationId = "someId";
     applicationData.setId(applicationId);

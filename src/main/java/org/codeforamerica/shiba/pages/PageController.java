@@ -843,6 +843,18 @@ public class PageController {
           lms.getMessage("upload-documents.MS-word-files-not-accepted"),
           HttpStatus.UNPROCESSABLE_ENTITY);
     }
+    //TODO emj testing clamav here, need to add try catch
+    var client = HttpClient.newHttpClient();
+    var request = HttpRequest.newBuilder(
+            URI.create(clammitUrl))
+        .POST(BodyPublishers.ofByteArray(file.getBytes()))
+        .build();
+
+    var response = client.send(request, BodyHandlers.ofString());
+    log.info("===== clammit file name: " + file.getOriginalFilename());//TODO emj delete
+    log.info("===== clammit status code: " + response.statusCode());
+    log.info("===== clammit response: " + response.body());
+    
     if (type.contains("pdf")) {
       // Return an error response if this is an pdf we can't work with
       try (var pdfFile = PDDocument.load(file.getBytes())) {
@@ -872,15 +884,15 @@ public class PageController {
       }
     }
 
-    var client = HttpClient.newHttpClient();
-    var request = HttpRequest.newBuilder(
-            URI.create(clammitUrl))
-        .POST(BodyPublishers.ofByteArray(file.getBytes()))
-        .build();
-
-    var response = client.send(request, BodyHandlers.ofString());
-    log.info("status: " + response.statusCode());
-    log.info("status: " + response.body());
+	/* TODO emj original location of clammit code, moved to top of method because test files did not reach this point
+	 * var client = HttpClient.newHttpClient(); var request =
+	 * HttpRequest.newBuilder( URI.create(clammitUrl))
+	 * .POST(BodyPublishers.ofByteArray(file.getBytes())) .build();
+	 * 
+	 * var response = client.send(request, BodyHandlers.ofString());
+	 * log.info("status: " + response.statusCode()); log.info("status: " +
+	 * response.body());
+	 */
 
     return null;
   }
