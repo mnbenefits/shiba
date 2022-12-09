@@ -2,13 +2,13 @@ package org.codeforamerica.shiba.output.pdf;
 
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
 import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 
 import java.util.List;
 import java.util.Map;
+
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.Recipient;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,22 +93,6 @@ public class PdfFieldFillersConfiguration {
   }
 
   @Bean
-  public PdfFieldFiller caseworkerCertainPopsFiller(
-      @Value("classpath:cover-pages.pdf") Resource coverPages,
-      @Value("classpath:certain-pops.pdf") Resource certainPops
-  ) {
-    return new PDFBoxFieldFiller(List.of(coverPages, certainPops));
-  }
-
-  @Bean
-  public PdfFieldFiller clientCertainPopsFiller(
-      @Value("classpath:cover-pages.pdf") Resource coverPages,
-      @Value("classpath:certain-pops.pdf") Resource certainPops
-  ) {
-    return new PDFBoxFieldFiller(List.of(coverPages, certainPops));
-  }
-
-  @Bean
   public PdfFieldFiller uploadedDocCoverPageFilter(
       @Value("classpath:uploaded-document-cover-page.pdf") Resource coverPage
   ) {
@@ -121,22 +105,16 @@ public class PdfFieldFillersConfiguration {
       PdfFieldFiller clientCafFiller,
       PdfFieldFiller caseworkerCcapFiller,
       PdfFieldFiller clientCcapFiller,
-      PdfFieldFiller caseworkerCertainPopsFiller,
-      PdfFieldFiller clientCertainPopsFiller,
-      PdfFieldFiller uploadedDocCoverPageFilter,
-      PdfFieldFiller clientCafWdHouseholdSuppFiller,
-      PdfFieldFiller caseworkerCafWdHouseholdSuppFiller) {
+      PdfFieldFiller uploadedDocCoverPageFilter) {
     return Map.of(
         CASEWORKER, Map.of(
             CAF, caseworkerCafFiller,
             CCAP, caseworkerCcapFiller,
-            UPLOADED_DOC, uploadedDocCoverPageFilter,
-            CERTAIN_POPS, caseworkerCertainPopsFiller
+            UPLOADED_DOC, uploadedDocCoverPageFilter
         ),
         CLIENT, Map.of(
             CAF, clientCafFiller,
-            CCAP, clientCcapFiller,
-            CERTAIN_POPS, clientCertainPopsFiller )
+            CCAP, clientCcapFiller)
     );
   }
   

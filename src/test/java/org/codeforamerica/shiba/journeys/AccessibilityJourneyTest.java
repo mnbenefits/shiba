@@ -74,14 +74,16 @@ public class AccessibilityJourneyTest extends JourneyTest {
   void laterDocsFlow() {
     when(featureFlagConfiguration.get("county-dakota")).thenReturn(FeatureFlag.OFF);
     when(featureFlagConfiguration.get("submit-via-api")).thenReturn(FeatureFlag.ON);
+    when(featureFlagConfiguration.get("tribal-routing")).thenReturn(FeatureFlag.ON);
 
     testPage.clickButton("Upload documents");
 
     // Enter nothing to throw error on select to check aria-properties on error
     testPage.clickContinue();
-    assertThat(testPage.selectHasInputError("county")).isTrue();
-    assertThat(testPage.getSelectAriaLabel("county")).isEqualTo("Error county");
-    assertThat(testPage.getSelectAriaDescribedBy("county")).isEqualTo("county-error-message-1");
+    //assertThat(testPage.selectHasInputError("county")).isTrue();
+    assertThat(testPage.selectHasInputError("tribalNation")).isTrue();
+    assertThat(testPage.getSelectAriaDescribedBy("tribalNation")).isEqualTo("tribalNation-error-message-1");
+   // assertThat(testPage.getSelectAriaDescribedBy("county")).isEqualTo("county-error-message-1");
 
     // should direct me to email docs to my county if my county is not supported
     navigateTo("identifyCounty");
@@ -95,7 +97,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     // Enter incorrect information to get validation errors to check against aria-properties
     assertThat(testPage.inputIsValid("firstName")).isTrue();
-    assertThat(driver.findElementById("dateOfBirth-day").getAttribute("aria-invalid")).isEqualTo(
+    assertThat(driver.findElement(By.id("dateOfBirth-day")).getAttribute("aria-invalid")).isEqualTo(
         "false");
     assertThat(testPage.inputIsValid("ssn")).isTrue();
     testPage.enter("firstName", "");
@@ -107,19 +109,19 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(testPage.hasInputError("firstName")).isTrue();
     assertThat(testPage.hasInputError("ssn")).isTrue();
     assertThat(testPage.inputIsValid("firstName")).isFalse();
-    assertThat(driver.findElementById("dateOfBirth-day").getAttribute("aria-invalid")).isEqualTo(
+    assertThat(driver.findElement(By.id("dateOfBirth-day")).getAttribute("aria-invalid")).isEqualTo(
         "true");
     assertThat(testPage.inputIsValid("ssn")).isFalse();
     assertThat(testPage.getInputAriaLabelledBy("firstName")).isEqualTo(
         "firstName-error-p firstName-label");
     assertThat(testPage.getInputAriaDescribedBy("firstName")).isEqualTo(
         "firstName-error-message-1 firstName-help-message");
-    assertThat(driver.findElementById("dateOfBirth-day").getAttribute("aria-labelledby")).isEqualTo(
+    assertThat(driver.findElement(By.id("dateOfBirth-day")).getAttribute("aria-labelledby")).isEqualTo(
         "dateOfBirth-error-p dateOfBirth-legend dateOfBirth-day-label");
     assertThat(
-        driver.findElementById("dateOfBirth-day").getAttribute("aria-describedby")).isEqualTo(
+        driver.findElement(By.id("dateOfBirth-day")).getAttribute("aria-describedby")).isEqualTo(
         "dateOfBirth-error-message-1");
-    ;
+
     assertThat(testPage.getInputAriaLabelledBy("ssn")).isEqualTo("ssn-error-p ssn-label");
     assertThat(testPage.getInputAriaDescribedBy("ssn")).isEqualTo(
         "ssn-error-message-1 ssn-help-message");
@@ -147,6 +149,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("county", "Hennepin");
     testPage.clickContinue();
 
+    testPage.clickContinue();
     testPage.clickContinue();
     testPage.enter("writtenLanguage", "English");
     testPage.enter("spokenLanguage", "English");
@@ -225,7 +228,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("hasDisability", NO.getDisplayValue());
     testPage.enter("hasWorkSituation", NO.getDisplayValue());
     testPage.enter("isTribalNationMember", YES.getDisplayValue());
-    testPage.selectFromDropdown("selectedTribe[]", "Red Lake");
+    testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
     testPage.clickContinue();
     testPage.enter("livingInNationBoundary", NO.getDisplayValue());
     testPage.clickContinue();
@@ -277,7 +280,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickButton("Continue");
     testPage.enter("unearnedIncome", "None of the above");
     testPage.clickButton("Continue");
-    testPage.enter("unearnedIncomeCcap", "None of the above");
+    testPage.enter("otherUnearnedIncome", "None of the above");
     testPage.clickButton("Continue");
     assertThat(testPage.getInputAriaLabelledBy("div", "earnLessMoneyThisMonth-div")).isEqualTo("page-header page-header-help-message");
     // now back up to jobBuilder page
@@ -305,10 +308,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     testPage.enter("socialSecurityAmount", "200");
     testPage.clickContinue();
-    testPage.enter("unearnedIncomeCcap", "Money from a Trust");
-    testPage.clickContinue();
-    testPage.enter("trustMoneyAmount", "200");
-    testPage.clickContinue();
+    driver.navigate().to(baseUrl + "/pages/futureIncome");
     testPage.enter("earnLessMoneyThisMonth", "Yes");
     testPage.clickContinue();
     testPage.clickContinue();
@@ -323,13 +323,12 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("medicalExpenses", "None of the above");
     testPage.clickContinue();
     testPage.enter("supportAndCare", YES.getDisplayValue());
-    testPage.enter("haveVehicle", YES.getDisplayValue());
-    testPage.enter("ownRealEstate", YES.getDisplayValue());
-    testPage.enter("haveInvestments", NO.getDisplayValue());
+    testPage.enter("assets", "A vehicle");
+    testPage.enter("assets", "Real estate (not including your own home)");
+    testPage.clickContinue();
     testPage.enter("haveSavings", YES.getDisplayValue());
     testPage.enter("liquidAssets", "1234");
     testPage.clickContinue();
-    testPage.enter("haveMillionDollars", NO.getDisplayValue());
     testPage.enter("haveSoldAssets", NO.getDisplayValue());
     testPage.clickContinue();
     testPage.clickButton("Yes, send me more info");

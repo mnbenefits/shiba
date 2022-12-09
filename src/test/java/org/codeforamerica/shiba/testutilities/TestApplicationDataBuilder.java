@@ -57,6 +57,18 @@ public class TestApplicationDataBuilder {
     personalInfo.put("livedInMnWholeLife", new InputData(List.of("true")));
     return this;
   }
+  
+  public TestApplicationDataBuilder withMatchInfo() {
+    PageData matchInfo = getPageData("matchInfo");
+    matchInfo.put("firstName", new InputData(List.of("Jane")));
+    matchInfo.put("lastName", new InputData(List.of("Doe")));
+    matchInfo.put("dateOfBirth", new InputData(List.of("10", "04", "2020")));
+    matchInfo.put("ssn", new InputData(List.of("123-45-6789")));
+    matchInfo.put("phoneNumber", new InputData(List.of("(603) 879-1111")));
+    matchInfo.put("email", new InputData(List.of("jane@example.com")));
+    matchInfo.put("caseNumber", new InputData(List.of("123456789")));
+    return this;
+  }
 
   public TestApplicationDataBuilder withContactInfo() {
     PageData pageData = getPageData("contactInfo");
@@ -150,20 +162,6 @@ public class TestApplicationDataBuilder {
     );
   }
 
-  public TestApplicationDataBuilder withHouseholdMember() {
-    return withSubworkflow("household", new PagesDataBuilder()
-        .withPageData("householdMemberInfo",
-            Map.of("firstName", "Daria",
-                "lastName", "Agàta",
-                "dateOfBirth", List.of("5", "6", "1978"),
-                "maritalStatus", "Never married",
-                "sex", "Female",
-                "livedInMnWholeLife", "Yes",
-                "relationship", "housemate",
-                "programs", "SNAP",
-                "ssn", "123121234")));
-  }
-
   /**
    * Gets the PageData for the given pageName - if it doesn't exist, add it and return the new
    * PageData object.
@@ -180,4 +178,50 @@ public class TestApplicationDataBuilder {
     ));
     return applicationData;
   }
+
+  public TestApplicationDataBuilder withHouseholdMember(String firstName, String lastName) {
+    return withSubworkflow("household", new PagesDataBuilder()
+        .withPageData("householdMemberInfo",
+            Map.of("firstName", firstName,
+                "lastName", lastName,
+                "dateOfBirth", List.of("5", "6", "1978"),
+                "maritalStatus", "Never married",
+                "sex", "Female",
+                "livedInMnWholeLife", "Yes",
+                "relationship", "housemate",
+                "programs", "SNAP",
+                "ssn", "123121234")));
+  }
+
+  public TestApplicationDataBuilder withMultipleHouseholdMembers() {
+    return withSubworkflow("household",
+        new PagesDataBuilder().withPageData("householdMemberInfo",
+            Map.of("firstName", "Other",
+                "lastName", "Person",
+                "dateOfBirth", List.of("5", "6", "1978"),
+                "maritalStatus", "Never married",
+                "sex", "Female",
+                "livedInMnWholeLife", "Yes",
+                "relationship", "housemate",
+                "programs", "SNAP",
+                "ssn", "123121234")),
+        new PagesDataBuilder().withPageData("householdMemberInfo",
+            Map.of("firstName", "Daria",
+                "lastName", "Agàta",
+                "dateOfBirth", List.of("5", "6", "1978"),
+                "maritalStatus", "Never married",
+                "sex", "Female",
+                "livedInMnWholeLife", "Yes",
+                "relationship", "spouse",
+                "programs", "SNAP",
+                "ssn", "123121235")));
+  }
+  
+  public TestApplicationDataBuilder withRetroCoverageForHouseHold() {
+    PageData pageData = getPageData("retroactiveCoverageTimePeriod");
+    pageData.put("retroactiveCoverageNumberMonths", new InputData(List.of("1","2","3")));
+    pageData.put("retroactiveCoverageMap", new InputData(List.of("someGuid","applicant","notSpouse")));
+    return this;
+  }
+  
 }

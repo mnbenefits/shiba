@@ -4,6 +4,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.codeforamerica.shiba.application.FlowType.FULL;
+import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEquals;
 import static org.codeforamerica.shiba.testutilities.TestUtils.getAbsoluteFilepathString;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
@@ -38,10 +39,12 @@ public class FullFlowJourneyTest extends JourneyTest {
     when(featureFlagConfiguration.get("submit-via-api")).thenReturn(FeatureFlag.ON);
 
     // Assert intercom button is present on landing page
-    await().atMost(5, SECONDS).until(() -> !driver.findElementsById("intercom-frame").isEmpty());
-    assertThat(driver.findElementById("intercom-frame")).isNotNull();
+    await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
+    assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
     // Assert that the Delayed Processing Time Notice is displayed on the landing page.
-    assertThat(driver.findElementById("delayed-processing-time-notice")).isNotNull();
+    assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
+    // Assert that the EBT Scam Alert is displayed on the landing page.
+    assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
 
     List<String> programSelections = List
         .of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH, PROGRAM_CERTAIN_POPS);
@@ -100,17 +103,18 @@ public class FullFlowJourneyTest extends JourneyTest {
     // Verify spouse option has been removed
     testPage.clickLink("Add a person");
     Select relationshipSelectWithRemovedSpouseOption = new Select(
-        driver.findElementById("relationship"));
+        driver.findElement(By.id("relationship")));
     assertThat(relationshipSelectWithRemovedSpouseOption.getOptions().stream()
         .noneMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
     testPage.goBack();
 
     // You are about to delete householdMember2 as a household member.
-    driver.findElementById("iteration1-delete").click();
+    driver.findElement(By.id("iteration1-delete")).click();
     testPage.clickButton("Yes, remove them");
     // Check that My Spouse is now an option again after deleting the spouse
     testPage.clickLink("Add a person");
-    Select relationshipSelectWithSpouseOption = new Select(driver.findElementById("relationship"));
+    Select relationshipSelectWithSpouseOption = new Select(
+        driver.findElement(By.id("relationship")));
     assertThat(relationshipSelectWithSpouseOption.getOptions().stream()
         .anyMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
     testPage.goBack();
@@ -126,7 +130,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
     // Tell us the name of any parent living outside the home.
     String parentNotAtHomeName = "My child's parent";
-    driver.findElementByName("whatAreTheParentsNames[]").sendKeys(parentNotAtHomeName);
+    driver.findElement(By.name("whatAreTheParentsNames[]")).sendKeys(parentNotAtHomeName);
     testPage.clickContinue();
 
     // Does everyone in your household buy and prepare food with you?
@@ -159,10 +163,17 @@ public class FullFlowJourneyTest extends JourneyTest {
     // Who is not a U.S Citizen?
     testPage.enter("whoIsNonCitizen", "me");
     testPage.clickContinue();
+    
+    testPage.enter("alienIdNumber", "A12345678");
+    testPage.clickContinue();
 
     // Does anyone in your household have a physical or mental disability that prevents them from working?
-    testPage.enter("hasDisability", NO.getDisplayValue());
-
+    testPage.enter("hasDisability", YES.getDisplayValue());
+    
+    //Who has Disability?
+    testPage.enter("whoHasDisability", "me");
+    testPage.clickContinue();
+    
     // In the last 2 months, did anyone in your household do any of these things?
     testPage.enter("hasWorkSituation", NO.getDisplayValue());
 
@@ -206,6 +217,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 
     //Retroactive Coverage
     testPage.enter("retroactiveCoverageQuestion", YES.getDisplayValue());
+    
+    //Retroactive Coverage Source
+    testPage.enter("retroactiveCoverageSourceQuestion", "me");
+    testPage.clickContinue();
+    
+    //Retroactive Coverage Time Period
+    testPage.selectFromDropdown("retroactiveCoverageNumberMonths[]", "1 month");
+    testPage.clickContinue();
 
     //Medical Benefits in another state
     testPage.enter("medicalInOtherState", YES.getDisplayValue());
@@ -247,7 +266,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
 
     // You are about to delete your job
-    driver.findElementById("iteration1-delete").click();
+    driver.findElement(By.id("iteration1-delete")).click();
     testPage.clickButton("Yes, remove the job");
 
     testPage.clickButton("No, that's it.");
@@ -263,24 +282,45 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
 
     // Tell us how much money is received.
+    testPage.clickElementById("householdMember-me");
     testPage.enter("socialSecurityAmount", "200.30");
     testPage.clickContinue();
 
     // Does anyone in your household get income from these other sources?
-    testPage.enter("unearnedIncomeCcap", "Benefits programs like MFIP, DWP, GA, or Tribal TANF");
-    testPage.enter("unearnedIncomeCcap", "Insurance Payments");
-    testPage.enter("unearnedIncomeCcap", "Contract for Deed");
-    testPage.enter("unearnedIncomeCcap", "Money from a Trust");
-    testPage.enter("unearnedIncomeCcap", "Health Care Reimbursement");
-    testPage.enter("unearnedIncomeCcap", "Interest/Dividends");
-    testPage.enter("unearnedIncomeCcap", "Income from Other Sources");
+    testPage.enter("otherUnearnedIncome", "Other Minnesota Benefits Programs (Benefits like GA, MFIP, Tribal TANF or others)");
+    testPage.enter("otherUnearnedIncome", "Insurance Payments");
+    testPage.enter("otherUnearnedIncome", "Contract for Deed");
+    testPage.enter("otherUnearnedIncome", "Money from a Trust");
+    testPage.enter("otherUnearnedIncome", "Rental Income"); // Only Certain Pops
+    testPage.enter("otherUnearnedIncome", "Health Care Reimbursement");
+    testPage.enter("otherUnearnedIncome", "Interest / Dividends");
+    testPage.enter("otherUnearnedIncome", "Other payments");
     testPage.clickContinue();
 
-    // Tell us how much money is received.
-    testPage.enter("benefitsAmount", "10");
-    testPage.enter("contractForDeedAmount", "20");
-    testPage.enter("interestDividendsAmount", "30");
-    testPage.enter("otherSourcesAmount", "40");
+    // Choose who receives that income (CCAP and CERTAIN_POPS only)
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("insurancePaymentsAmount", "100.00");
+    testPage.clickContinue();
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("trustMoneyAmount", "100.00");
+    testPage.clickContinue();
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("rentalIncomeAmount", "100.00");
+    testPage.clickContinue();
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("interestDividendsAmount", "100.00");
+    testPage.clickContinue();
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("healthCareReimbursementAmount", "100.00");
+    testPage.clickContinue();
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("benefitsAmount", "100.00");
+    testPage.clickContinue();
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("contractForDeedAmount", "100.00");
+    testPage.clickContinue();
+    testPage.clickElementById("householdMember-me");
+    testPage.enter("otherPaymentsAmount", "100.00");
     testPage.clickContinue();
 
     // Do you think the household will earn less money this month than last month?
@@ -338,25 +378,52 @@ public class FullFlowJourneyTest extends JourneyTest {
     // Does anyone in the household pay for court-ordered child support, spousal support, child care support or medical care?
     testPage.enter("supportAndCare", YES.getDisplayValue());
 
-    // Does anyone in the household own a vehicle?
-    testPage.enter("haveVehicle", YES.getDisplayValue());
+    // Does anyone in your household have any of these?
+    testPage.enter("assets", "A vehicle");
+    testPage.enter("assets", "Stocks, bonds, retirement accounts");
+    testPage.enter("assets", "Real estate (not including your own home)");
+    testPage.clickContinue();
 
-    // Do anyone in the household own any real estate (not including the home you currently live in)?
-    testPage.enter("ownRealEstate", YES.getDisplayValue());
-
-    // Does anyone in the household have stocks, bonds or a 401k?
-    testPage.enter("haveInvestments", NO.getDisplayValue());
-
+    // Who has a vehicle?
+    assertThat(testPage.getTitle()).isEqualTo("Who has a vehicle");
+    driver.findElement(By.id("householdMember-me")).click();  
+    testPage.clickContinue();
+    
+    //Which types of investment accounts does your household have? 
+    assertThat(testPage.getTitle()).isEqualTo("Which types of investment accounts does your household have");
+    driver.findElement(By.id("STOCKS")).click(); 
+    testPage.clickContinue();
+    
+    //
+    assertThat(testPage.getTitle()).isEqualTo("Who has stocks");
+    driver.findElement(By.id("householdMember-me")).click(); 
+    testPage.clickContinue();
+    
+    
+    //Who has real estate (not including your own home)
+    assertThat(testPage.getTitle()).isEqualTo("Who has real estate (not including your own home)");
+    driver.findElement(By.id("householdMember-me")).click();  
+    testPage.clickContinue();
+    
     // Does anyone in the household have money in a bank account or debit card?
     testPage.enter("haveSavings", YES.getDisplayValue());
 
-    // How much money is available?
+    // How much cash does your household have available?
+    testPage.enter("cashAmount", "1234");
+    testPage.clickContinue();
+    
+    //Does your household have any of these accounts?
+    driver.findElement(By.id("SAVINGS")).click();
+    testPage.clickContinue();
+    
+    //who has money in a savings account?
+    driver.findElement(By.id("householdMember-me")).click();    
+    testPage.clickContinue();
+    
+    //how much money is available in these accounts?
     testPage.enter("liquidAssets", "1234");
     testPage.clickContinue();
-
-    // Does your family have more than $1 million in assets?
-    testPage.enter("haveMillionDollars", NO.getDisplayValue());
-
+    
     // In the last 12 months, has anyone in the household given away or sold any assets?
     testPage.enter("haveSoldAssets", NO.getDisplayValue());
 
@@ -425,12 +492,12 @@ public class FullFlowJourneyTest extends JourneyTest {
     navigateTo("documentSubmitConfirmation");
     assertThat(driver.getTitle()).isEqualTo("Your next steps");
     // Assert that the Delayed Processing Time Notice is displayed on the nextSteps page.
-    assertThat(driver.findElementById("delayed-processing-time-notice")).isNotNull();
+    assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
     testPage.clickContinue();
 
     SuccessPage successPage = new SuccessPage(driver);
     assertThat(successPage.findElementById("submission-date").getText()).contains(
-        "Your application was submitted to Hennepin County (612-596-1300) and Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (320-532-7407) on January 1, 2020.");
+        "Your application was submitted to Hennepin County (612-596-1300) and Mille Lacs Band of Ojibwe (320-532-7407) on January 1, 2020.");
     applicationId = downloadPdfs();
 
     // CCAP fields
@@ -458,7 +525,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCcapFieldEquals("FULL_NAME_0", householdMemberFullName);
     assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
     assertCcapFieldEquals("PROGRAMS_0", "CCAP");
-    assertCcapFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "");
+    assertCcapFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
     assertCcapFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
     assertCcapFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
     assertCcapFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
@@ -493,48 +560,40 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCcapFieldEquals("RETIREMENT", "No");
     assertCcapFieldEquals("CHILD_OR_SPOUSAL_SUPPORT", "No");
     assertCcapFieldEquals("TRIBAL_PAYMENTS", "No");
-    assertCcapFieldEquals("BENEFITS", "Yes");
-    assertCcapFieldEquals("INSURANCE_PAYMENTS", "Yes");
-    assertCcapFieldEquals("CONTRACT_FOR_DEED", "Yes");
-    assertCcapFieldEquals("HEALTH_CARE_REIMBURSEMENT", "Yes");
-    assertCcapFieldEquals("INTEREST_DIVIDENDS", "Yes");
-    assertCcapFieldEquals("OTHER_SOURCES", "Yes");
     assertCcapFieldEquals("SELF_EMPLOYMENT_EMPLOYEE_FULL_NAME_0", householdMemberFullName);
     assertCcapFieldEquals("IS_US_CITIZEN_0", "Yes");
     assertCcapFieldEquals("SOCIAL_SECURITY_FREQUENCY", "Monthly");
-    assertCcapFieldEquals("TRUST_MONEY_FREQUENCY", "Monthly");
     assertCcapFieldEquals("MEDICAL_INSURANCE_PREMIUM_FREQUENCY", "Monthly");
     assertCcapFieldEquals("VISION_INSURANCE_PREMIUM_FREQUENCY", "Monthly");
     assertCcapFieldEquals("DENTAL_INSURANCE_PREMIUM_FREQUENCY", "Monthly");
     assertCcapFieldEquals("MEDICAL_INSURANCE_PREMIUM_AMOUNT", "10.90");
     assertCcapFieldEquals("DENTAL_INSURANCE_PREMIUM_AMOUNT", "12.34");
     assertCcapFieldEquals("VISION_INSURANCE_PREMIUM_AMOUNT", "56.35");
-    assertCcapFieldEquals("IS_WORKING", "Yes");
+    assertCcapFieldEquals("IS_WORKING", "No");
     assertCcapFieldEquals("SOCIAL_SECURITY", "Yes");
-    assertCcapFieldEquals("SOCIAL_SECURITY_AMOUNT", "200.30");
     assertCcapFieldEquals("TRUST_MONEY", "Yes");
-    assertCcapFieldEquals("TRUST_MONEY_AMOUNT", "");
     assertCcapFieldEquals("BENEFITS", "Yes");
     assertCcapFieldEquals("INSURANCE_PAYMENTS", "Yes");
     assertCcapFieldEquals("CONTRACT_FOR_DEED", "Yes");
-    assertCcapFieldEquals("TRUST_MONEY", "Yes");
     assertCcapFieldEquals("HEALTH_CARE_REIMBURSEMENT", "Yes");
     assertCcapFieldEquals("INTEREST_DIVIDENDS", "Yes");
-    assertCcapFieldEquals("OTHER_SOURCES", "Yes");
-    assertCcapFieldEquals("BENEFITS_AMOUNT", "10");
-    assertCcapFieldEquals("INSURANCE_PAYMENTS_AMOUNT", "");
-    assertCcapFieldEquals("CONTRACT_FOR_DEED_AMOUNT", "20");
-    assertCcapFieldEquals("TRUST_MONEY_AMOUNT", "");
-    assertCcapFieldEquals("HEALTH_CARE_REIMBURSEMENT_AMOUNT", "");
-    assertCcapFieldEquals("INTEREST_DIVIDENDS_AMOUNT", "30");
-    assertCcapFieldEquals("OTHER_SOURCES_AMOUNT", "40");
+    assertCcapFieldEquals("OTHER_PAYMENTS", "Yes");
+    assertCcapFieldEquals("TRUST_MONEY_AMOUNT", "100.00");
+    assertCcapFieldEquals("SOCIAL_SECURITY_AMOUNT", "200.30");
+    assertCcapFieldEquals("BENEFITS_AMOUNT", "100.00");
+    assertCcapFieldEquals("INSURANCE_PAYMENTS_AMOUNT", "100.00");
+    assertCcapFieldEquals("CONTRACT_FOR_DEED_AMOUNT", "100.00");
+    assertCcapFieldEquals("TRUST_MONEY_AMOUNT", "100.00");
+    assertCcapFieldEquals("HEALTH_CARE_REIMBURSEMENT_AMOUNT", "100.00");
+    assertCcapFieldEquals("INTEREST_DIVIDENDS_AMOUNT", "100.00");
+    assertCcapFieldEquals("OTHER_PAYMENTS_AMOUNT", "100.00");
     assertCcapFieldEquals("BENEFITS_FREQUENCY", "Monthly");
     assertCcapFieldEquals("INSURANCE_PAYMENTS_FREQUENCY", "Monthly");
     assertCcapFieldEquals("CONTRACT_FOR_DEED_FREQUENCY", "Monthly");
     assertCcapFieldEquals("TRUST_MONEY_FREQUENCY", "Monthly");
     assertCcapFieldEquals("HEALTH_CARE_REIMBURSEMENT_FREQUENCY", "Monthly");
     assertCcapFieldEquals("INTEREST_DIVIDENDS_FREQUENCY", "Monthly");
-    assertCcapFieldEquals("OTHER_SOURCES_FREQUENCY", "Monthly");
+    assertCcapFieldEquals("OTHER_PAYMENTS_FREQUENCY", "Monthly");
     assertCcapFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
     assertCcapFieldEquals("ADDITIONAL_INCOME_INFO",
         "I also make a small amount of money from my lemonade stand.");
@@ -573,14 +632,16 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("DATE_OF_BIRTH_0", "09/14/2018");
     assertCafFieldEquals("SSN_0", "XXX-XX-XXXX");
     assertCafFieldEquals("COUNTY_INSTRUCTIONS",
-        "This application was submitted to Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency and Hennepin County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.\n\n"
-            + "For more support, you can call Mille Lacs Band of Ojibwe Tribal Nation Servicing Agency (320-532-7407) and Hennepin County (612-596-1300).");
+        """
+            This application was submitted to Mille Lacs Band of Ojibwe and Hennepin County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
+
+            For more support, you can call Mille Lacs Band of Ojibwe (320-532-7407) and Hennepin County (612-596-1300).""");
     assertCafFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, TRIBAL TANF, CASH");
     assertCafFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
     assertCafFieldEquals("FULL_NAME_0", householdMemberFullName);
     assertCafFieldEquals("PROGRAMS_0", "CCAP");
-    assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "");
+    assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
     assertCafFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
     assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
     assertCafFieldEquals("CREATED_DATE", "2020-01-01");
@@ -644,16 +705,16 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
     assertCafFieldEquals("IS_PREGNANT", "Yes");
     assertCafFieldEquals("IS_US_CITIZEN", "No");
-    assertCafFieldEquals("EXPEDITED_QUESTION_2", "1234.00");
+    assertCafFieldEquals("EXPEDITED_QUESTION_2", "2468.00");
     assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
     assertCafFieldEquals("HEAT", "Yes");
     assertCafFieldEquals("SUPPORT_AND_CARE", "Yes");
     assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
     assertCafFieldEquals("DRUG_FELONY", "No");
     assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
-    assertCafFieldEquals("HAS_DISABILITY", "No");
+    assertCafFieldEquals("HAS_DISABILITY", "Yes");
     assertCafFieldEquals("HAS_WORK_SITUATION", "No");
-    assertCafFieldEquals("IS_WORKING", "Yes");
+    assertCafFieldEquals("IS_WORKING", "No");
     assertCafFieldEquals("SOCIAL_SECURITY", "Yes");
     assertCafFieldEquals("SOCIAL_SECURITY_AMOUNT", "200.30");
     assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
@@ -663,7 +724,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MORTGAGE", "Yes");
     assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
     assertCafFieldEquals("HAVE_SAVINGS", "Yes");
-    assertCafFieldEquals("HAVE_INVESTMENTS", "No");
+    assertCafFieldEquals("HAVE_INVESTMENTS", "Yes");
     assertCafFieldEquals("HAVE_VEHICLE", "Yes");
     assertCafFieldEquals("HAVE_SOLD_ASSETS", "No");
     assertCafFieldEquals("AUTHORIZED_REP_FILL_OUT_FORM", "Yes");
@@ -691,10 +752,121 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED");
     assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
     assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
-    assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "120.00");
+    assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.00");
     assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
     assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
+    
+    // CERTAIN POPS
+    assertCertainPopsFieldEquals("APPLICATION_ID", applicationId);
+    assertCertainPopsFieldEquals("SUBMISSION_DATETIME", "01/01/2020 at 04:15 AM");
+    assertCertainPopsFieldEquals("PAY_FREQUENCY_0", "Hourly");
+    assertCertainPopsFieldEquals("EMPLOYEE_FULL_NAME_0", householdMemberFullName);
+    assertCertainPopsFieldEquals("DATE_OF_BIRTH", "01/12/1928");
+    assertCertainPopsFieldEquals("APPLICANT_SSN", "XXX-XX-XXXX");
+    assertCertainPopsFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
+    assertCertainPopsFieldEquals("APPLICANT_EMAIL", "some@example.com");
+    assertCertainPopsFieldEquals("PHONE_OPTIN", "Yes");
+    assertCertainPopsFieldEquals("ADDITIONAL_INFO_CASE_NUMBER", "");
+    assertCertainPopsFieldEquals("EMPLOYERS_NAME_0", "some employer");
+    assertCertainPopsFieldEquals("INCOME_PER_PAY_PERIOD_0", "1.00");
+    assertCertainPopsFieldEquals("DATE_OF_BIRTH_0", "09/14/2018");
+    assertCertainPopsFieldEquals("SSN_0", "XXX-XX-XXXX");
+    assertCertainPopsFieldEquals("COUNTY_INSTRUCTIONS",
+            """
+                This application was submitted to Mille Lacs Band of Ojibwe and Hennepin County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
+                For more support, you can call Mille Lacs Band of Ojibwe (320-532-7407) and Hennepin County (612-596-1300).""");
+    assertCertainPopsFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, TRIBAL TANF, CASH");
+    assertCertainPopsFieldEquals("FULL_NAME", "Ahmed St. George");
+    assertCertainPopsFieldEquals("TRIBAL_NATION", "Bois Forte");
+    assertCertainPopsFieldEquals("FULL_NAME_0", householdMemberFullName);
+    assertCertainPopsFieldEquals("PROGRAMS_0", "CCAP");
+    assertCertainPopsFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
+    assertCertainPopsFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
+    assertCertainPopsFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
+    assertCertainPopsFieldEquals("APPLICANT_LAST_NAME", "St. George");
+    assertCertainPopsFieldEquals("DATE_OF_BIRTH", "01/12/1928");
+    assertCertainPopsFieldEquals("APPLICANT_SSN", "XXX-XX-XXXX");
+    assertCertainPopsFieldEquals("MARITAL_STATUS", "NEVER_MARRIED");
+    assertCertainPopsFieldEquals("APPLICANT_SEX", "FEMALE");
+    assertCertainPopsFieldEquals("BLIND", "Yes");
+    assertCertainPopsFieldEquals("APPLICANT_IS_PREGNANT", "Yes");
+    assertCertainPopsFieldEquals("HAS_PHYSICAL_MENTAL_HEALTH_CONDITION", "Yes");
+    assertCertainPopsFieldEquals("DISABILITY_DETERMINATION", "Yes");
+    assertCertainPopsFieldEquals("NEED_LONG_TERM_CARE", "Yes");
+    assertCertainPopsFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH");
+    assertCertainPopsFieldEquals("NEED_INTERPRETER", "Yes");
+    assertCertainPopsFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
+    assertCertainPopsFieldEquals("APPLICANT_HOME_CITY", "someCity");
+    assertCertainPopsFieldEquals("APPLICANT_HOME_STATE", "MN");
+    assertCertainPopsFieldEquals("APPLICANT_HOME_ZIPCODE", "12345");
+    assertCertainPopsFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
+    assertCertainPopsFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
+    assertCertainPopsFieldEquals("APPLICANT_MAILING_STATE", "CA");
+    assertCertainPopsFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+    assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "someCounty");
+    assertCertainPopsFieldEquals("MEDICAL_IN_OTHER_STATE", "Yes");
+    assertCertainPopsFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
+    assertCertainPopsFieldEquals("HH_FIRST_NAME_0", "householdMemberFirstName");
+    assertCertainPopsFieldEquals("HH_MI_0", "");
+    assertCertainPopsFieldEquals("HH_LAST_NAME_0", "householdMemberLastName");
+    assertCertainPopsFieldEquals("HH_DATE_OF_BIRTH_0", "09/14/2018");
+    assertCertainPopsFieldEquals("HH_RELATIONSHIP_0", "child");
+    assertCertainPopsFieldEquals("HH_SEX_0", "MALE");
+    assertCertainPopsFieldEquals("HH_MARITAL_STATUS_0", "NEVER_MARRIED");
+    assertCertainPopsFieldEquals("HH_SSN_YESNO_0", "Yes");
+    assertCertainPopsFieldEquals("HH_SSN_0", "XXX-XX-XXXX");
+    assertCertainPopsFieldEquals("IS_US_CITIZEN", "No");
+    assertCertainPopsFieldEquals("NAME_OF_NON_US_CITIZEN_0", "Ahmed St. George");
+    assertCertainPopsFieldEquals("ALIEN_ID_0", "A12345678");
+    assertCertainPopsFieldEquals("WANT_AUTHORIZED_REP", "Yes");
+    assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_HELP", "Yes");
+    assertCertainPopsFieldEquals("RETROACTIVE_APPLICANT_FULLNAME_0", "Ahmed St. George");
+    assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_MONTH_0", "1");
+    //assertCertainPopsFieldEquals("SELF_EMPLOYED", "Yes");
+    assertCertainPopsFieldEquals("IS_WORKING", "No");
+    //assertCertainPopsFieldEquals("NO_CP_UNEARNED_INCOME", "Yes");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_PERSON_1", "Ahmed St. George");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_1", "Social Security");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_1", "200.30");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_1", "Monthly");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_2", "Insurance payments");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_2", "100.00");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_2", "Monthly");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_3", "Trust money");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_3", "100.00");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_3", "Monthly");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_4", "Rental income");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_4", "100.00");
+    assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_4", "Monthly");
+    assertCertainPopsFieldEquals("BLIND_OR_HAS_DISABILITY", "Yes");
+    assertCertainPopsFieldEquals("WHO_HAS_DISABILITY_0", "Ahmed St. George");
+    assertCertainPopsFieldEquals("CASH_AMOUNT", "1234");
+    assertCertainPopsFieldEquals("HAVE_INVESTMENTS", "Yes");
+    assertCertainPopsFieldEquals("INVESTMENT_OWNER_FULL_NAME_0", "Ahmed St. George");
+    assertCertainPopsFieldEquals("INVESTMENT_TYPE_0", "stocks");
+    assertCertainPopsFieldEquals("HAVE_REAL_ESTATE", "Yes");
+    assertCertainPopsFieldEquals("REAL_ESTATE_OWNER_FULL_NAME_0", "Ahmed St. George");
+    assertCertainPopsFieldEquals("HAVE_CONTRACTS_NOTES_AGREEMENTS", "No");
+    assertCertainPopsFieldEquals("HAVE_VEHICLE", "Yes");
+    assertCertainPopsFieldEquals("VEHICLE_OWNER_FULL_NAME_0", "Ahmed St. George");
+    assertCertainPopsFieldEquals("HAVE_TRUST_OR_ANNUITY", "No");
+    assertCertainPopsFieldEquals("HAVE_LIFE_INSURANCE", "No");
+    assertCertainPopsFieldEquals("HAVE_BURIAL_ACCOUNT", "No");
+    assertCertainPopsFieldEquals("HAVE_OWNERSHIP_BUSINESS", "No");
+    assertCertainPopsFieldEquals("HAVE_OTHER_ASSETS", "No");
+    assertCertainPopsFieldEquals("HAD_A_PAST_ACCIDENT_OR_INJURY", "Yes");
+    assertCertainPopsFieldEquals("HAVE_HEALTHCARE_COVERAGE", "Yes");
+    assertCertainPopsFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
+    assertCertainPopsFieldEquals("CREATED_DATE", "2020-01-01");
+    assertCertainPopsFieldEquals("AUTHORIZED_REP_NAME", "defaultFirstName defaultLastName");
+    assertCertainPopsFieldEquals("AUTHORIZED_REP_ADDRESS", "someStreetAddress");
+    assertCertainPopsFieldEquals("AUTHORIZED_REP_CITY", "someCity");
+    assertCertainPopsFieldEquals("AUTHORIZED_REP_ZIP_CODE", "12345");
+    assertCertainPopsFieldEquals("AUTHORIZED_REP_PHONE_NUMBER", "(723) 456-7890");
+    assertCertainPopsFieldEquals("CP_SUPPLEMENT", "\n\nQUESTION 11 continued:\nPerson 1, Ahmed St. George:\n  5) Interest or dividends, 100.00, Monthly\n  6) Healthcare reimbursement, 100.00, Monthly\n  7) Contract for Deed, 100.00, Monthly\n  8) Benefits programs, 100.00, Monthly\n  9) Other payments, 100.00, Monthly");
+    
+    
     assertApplicationSubmittedEventWasPublished(applicationId, FULL, 8);
   }
 
@@ -711,31 +883,32 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(1);
     deleteAFile();
 
-    assertThat(testPage.getTitle()).isEqualTo("Submit any recommended documents you have available.");
+    assertThat(testPage.getTitle()).isEqualTo(
+        "Upload documents");
     assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(0);
 
     assertStylingOfEmptyDocumentUploadPage();
 
     // Uploading multiple docs should work
     uploadJpgFile();
-    assertThat(driver.findElementById("number-of-uploaded-files").getText())
+    assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
     uploadPdfFile();
-    assertThat(driver.findElementById("number-of-uploaded-files").getText())
+    assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("2 files added");
     uploadFile(getAbsoluteFilepathString(
         "pdf-without-acroform.pdf")); // Assert that we can still upload PDFs without acroforms
-    assertThat(driver.findElementById("number-of-uploaded-files").getText())
+    assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("3 files added");
     waitForDocumentUploadToComplete();
     assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(3);
 
     // After deleting a file, the order of the remaining files should be maintained
     deleteAFile();
-    assertThat(driver.findElementById("number-of-uploaded-files").getText())
+    assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("2 files added");
-    var filenameTextElements = driver.findElementsByClassName("filename-text");
-    var fileDetailsElements = driver.findElementsByClassName("file-details");
+    var filenameTextElements = driver.findElements(By.className("filename-text"));
+    var fileDetailsElements = driver.findElements(By.className("file-details"));
     assertFileDetailsAreCorrect(filenameTextElements, fileDetailsElements, 0, "test-caf", "pdf",
         "0.4", "MB");
     assertFileDetailsAreCorrect(filenameTextElements, fileDetailsElements, 1, "shiba", "jpg",
@@ -757,35 +930,36 @@ public class FullFlowJourneyTest extends JourneyTest {
   }
 
   private void assertStylingOfNonEmptyDocumentUploadPage() {
-    assertThat(driver.findElementById("drag-and-drop-box").getAttribute("class")).contains(
+    assertThat(driver.findElement(By.id("drag-and-drop-box")).getAttribute("class")).contains(
         "drag-and-drop-box-compact");
-    assertThat(driver.findElementById("upload-button")
+    assertThat(driver.findElement(By.id("upload-button"))
         .getAttribute("class")).contains("grid--item width-one-third");
-    assertThat(driver.findElementById("vertical-header-desktop").getAttribute("class"))
+    assertThat(driver.findElement(By.id("vertical-header-desktop")).getAttribute("class"))
         .contains("hidden");
-    assertThat(driver.findElementById("vertical-header-mobile").getAttribute("class"))
+    assertThat(driver.findElement(By.id("vertical-header-mobile")).getAttribute("class"))
         .contains("hidden");
-    assertThat(driver.findElementById("horizontal-header-desktop").getAttribute("class"))
+    assertThat(driver.findElement(By.id("horizontal-header-desktop")).getAttribute("class"))
         .doesNotContain("hidden");
-    assertThat(driver.findElementById("horizontal-header-mobile").getAttribute("class"))
+    assertThat(driver.findElement(By.id("horizontal-header-mobile")).getAttribute("class"))
         .doesNotContain("hidden");
-    assertThat(driver.findElementById("upload-doc-div").getAttribute("class"))
+    assertThat(driver.findElement(By.id("upload-doc-div")).getAttribute("class"))
         .doesNotContain("hidden");
   }
 
   private void assertStylingOfEmptyDocumentUploadPage() {
-    assertThat(driver.findElementById("drag-and-drop-box").getAttribute("class")).doesNotContain(
+    assertThat(driver.findElement(By.id("drag-and-drop-box")).getAttribute("class")).doesNotContain(
         "drag-and-drop-box-compact");
-    assertThat(driver.findElementById("upload-button").getAttribute("class")).doesNotContain(
+    assertThat(driver.findElement(By.id("upload-button")).getAttribute("class")).doesNotContain(
         "grid--item width-one-third");
-    assertThat(driver.findElementById("vertical-header-desktop").getAttribute("class"))
+    assertThat(driver.findElement(By.id("vertical-header-desktop")).getAttribute("class"))
         .doesNotContain("hidden");
-    assertThat(driver.findElementById("vertical-header-mobile").getAttribute("class"))
+    assertThat(driver.findElement(By.id("vertical-header-mobile")).getAttribute("class"))
         .doesNotContain("hidden");
-    assertThat(driver.findElementById("horizontal-header-desktop").getAttribute("class"))
+    assertThat(driver.findElement(By.id("horizontal-header-desktop")).getAttribute("class"))
         .contains("hidden");
-    assertThat(driver.findElementById("horizontal-header-mobile").getAttribute("class"))
+    assertThat(driver.findElement(By.id("horizontal-header-mobile")).getAttribute("class"))
         .contains("hidden");
-    assertThat(driver.findElementById("upload-doc-div").getAttribute("class")).contains("hidden");
+    assertThat(driver.findElement(By.id("upload-doc-div")).getAttribute("class")).contains(
+        "hidden");
   }
 }

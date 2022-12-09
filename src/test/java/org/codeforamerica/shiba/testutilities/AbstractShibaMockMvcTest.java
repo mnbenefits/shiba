@@ -170,15 +170,6 @@ public class AbstractShibaMockMvcTest {
         .andExpect(redirectedUrl("/pages/" + expectedRedirectPageName));
   }
 
-  protected ResultActions getPageWithAuth(String pageName) throws Exception {
-    return mockMvc.perform(
-            get(String.format("http://localhost/%s", pageName))
-                .with(oauth2Login()
-                    .attributes(attrs -> attrs.put("email", ADMIN_EMAIL)))
-                .session(session))
-        .andExpect(status().isOk());
-  }
-
   protected void getNavigationPageWithQueryParamAndExpectRedirect(String pageName,
       String queryParam, String value,
       String expectedPageName) throws Exception {
@@ -198,31 +189,19 @@ public class AbstractShibaMockMvcTest {
         expectedNextPageName);
   }
 
-  protected void addHouseholdMembersWithCCAP() throws Exception {
-    addHouseholdMembersWithProgram("CCAP");
-  }
-
-  protected void addHouseholdMembersWithEA() throws Exception {
-    addHouseholdMembersWithProgram("EA");
-  }
-
   protected void addHouseholdMembersWithProgram(String program) throws Exception {
-    // TODO - should this personalInfo be in a separate method?
-    postExpectingSuccess("personalInfo", Map.of(
-        "firstName", List.of("Dwight"),
-        "lastName", List.of("Schrute"),
-        "dateOfBirth", List.of("01", "12", "1928")
-    ));
     postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
     postExpectingSuccess("householdMemberInfo", Map.of(
         "firstName", List.of("Jim"),
         "lastName", List.of("Halpert"),
-        "programs", List.of(program)
+        "programs", List.of(program),
+        "relationship", List.of("spouse")
     ));
     postExpectingSuccess("householdMemberInfo", Map.of(
         "firstName", List.of("Pam"),
         "lastName", List.of("Beesly"),
-        "programs", List.of(program)
+        "programs", List.of(program),
+        "relationship", List.of("child")
     ));
   }
 
@@ -307,6 +286,11 @@ public class AbstractShibaMockMvcTest {
     submitApplication();
     return downloadCcapClientPDF();
   }
+  
+  protected PDAcroForm submitAndDownloadCertainPops() throws Exception {
+    submitApplication();
+    return downloadCertainPopsClientPDF();
+  }
 
   protected PDAcroForm downloadCafClientPDF() throws Exception {
     var zipBytes = mockMvc.perform(get("/download")
@@ -327,6 +311,12 @@ public class AbstractShibaMockMvcTest {
     List<File> zippedFiles = getZippedFiles();
     File ccapFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CCAP)).toList().get(0);
     return PDDocument.load(FileUtils.readFileToByteArray(ccapFile)).getDocumentCatalog().getAcroForm();
+  }
+  
+  protected PDAcroForm downloadCertainPopsClientPDF() throws Exception {
+    List<File> zippedFiles = getZippedFiles();
+    File certainPopsFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CERTAIN_POPS)).toList().get(0);
+    return PDDocument.load(FileUtils.readFileToByteArray(certainPopsFile)).getDocumentCatalog().getAcroForm();
   }
 
   private List<File> getZippedFiles() throws Exception {
@@ -383,9 +373,9 @@ public class AbstractShibaMockMvcTest {
   }
 
   protected List<File> unzip(ZipInputStream zipStream) {
-    List<File> fileList = new ArrayList<File>();
+    List<File> fileList = new ArrayList<>();
     try {
-      ZipEntry zEntry = null;
+      ZipEntry zEntry;
       Path destination = Files.createTempDirectory("");
       while ((zEntry = zipStream.getNextEntry()) != null) {
           if (!zEntry.isDirectory()) {
@@ -393,7 +383,7 @@ public class AbstractShibaMockMvcTest {
             FileOutputStream fout = new FileOutputStream(files);
             BufferedOutputStream bufout = new BufferedOutputStream(fout);
             byte[] buffer = new byte[1024];
-            int read = 0;
+            int read;
             while ((read = zipStream.read(buffer)) != -1) {
               bufout.write(buffer, 0, read);
             }
@@ -766,17 +756,22 @@ public class AbstractShibaMockMvcTest {
     assertThat(new FormPage(getPage(pageName)).getTitle()).isEqualTo(pageTitle);
   }
 
-  protected void fillAdditionalIncomeInfoToHaveVehicle() throws Exception {
-    postExpectingRedirect("additionalIncomeInfo", "additionalIncomeInfo",
+  protected void fillAdditionalIncomeInfo(String... programs) throws Exception {
+    postExpectingRedirect("futureIncome", "additionalIncomeInfo",
         "one more thing you need to know is...", "startExpenses");
-    assertNavigationRedirectsToCorrectNextPage("startExpenses", "homeExpenses");
-    postExpectingRedirect("homeExpenses", "homeExpenses", "NONE_OF_THE_ABOVE", "utilities");
-    postExpectingRedirect("utilities", "payForUtilities", "NONE_OF_THE_ABOVE", "energyAssistance");
-    postExpectingRedirect("energyAssistance", "energyAssistance", "false", "medicalExpenses");
+    
+    if (containsOnly(Arrays.asList(programs), "CCAP")) {
+    	assertNavigationRedirectsToCorrectNextPage("startExpenses", "medicalExpenses");
+    }
+    else {
+    	assertNavigationRedirectsToCorrectNextPage("startExpenses", "homeExpenses");
+	    postExpectingRedirect("homeExpenses", "homeExpenses", "NONE_OF_THE_ABOVE", "utilities");
+	    postExpectingRedirect("utilities", "payForUtilities", "NONE_OF_THE_ABOVE", "energyAssistance");
+	    postExpectingRedirect("energyAssistance", "energyAssistance", "false", "medicalExpenses");
+    }
+    
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
         "supportAndCare");
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "vehicle");
-    postExpectingSuccess("vehicle", "haveVehicle", "false");
   }
 
   protected void completeFlowFromLandingPageThroughReviewInfo(String... programSelections)
@@ -804,19 +799,20 @@ public class AbstractShibaMockMvcTest {
     
   }
 
-  protected void completeFlowFromIsPregnantThroughTribalNations(boolean hasHousehold)
+  protected void completeFlowFromIsPregnantThroughTribalNations(boolean hasHousehold, String... programs)
       throws Exception {
     postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
     postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
-    postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
-    postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
-    if (hasHousehold) {
-      postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
-      postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false",
-          "introIncome");
-    } else {
-      postExpectingRedirect("workSituation", "hasWorkSituation", "false", "introIncome");
+    
+    if (containsOnly(Arrays.asList(programs), "CCAP")) {
+    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "workSituation");
     }
+    else {
+    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+    	postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
+    }
+    postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
+    postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }
 
   protected void getToPersonalInfoScreen(String... programSelections) throws Exception {
@@ -848,7 +844,7 @@ public class AbstractShibaMockMvcTest {
     ));
   }
 
-
+ 
   protected FormPage nonExpeditedFlowToSuccessPage(boolean hasHousehold, boolean isWorking)
       throws Exception {
     return nonExpeditedFlowToSuccessPage(hasHousehold, isWorking, false, false);
@@ -899,11 +895,8 @@ public class AbstractShibaMockMvcTest {
     }
 
     postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
-    if (hasHousehold) {
-      postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
-    } else {
-      postExpectingRedirect("workSituation", "hasWorkSituation", "false", "introIncome");
-    }
+    postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
+
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     if (isWorking) {
       postExpectingRedirect("employmentStatus", "areYouWorking", "true", "incomeByJob");
@@ -943,10 +936,9 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
         "unearnedIncomeSources");
     postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
-        "unearnedIncomeCcap");
-    postExpectingRedirect("unearnedIncomeCcap", "unearnedIncomeCcap", "TRUST_MONEY",
-        "unearnedIncomeSourcesCcap");
-    postExpectingRedirect("unearnedIncomeSourcesCcap", "trustMoneyAmount", "200", "futureIncome");
+        "otherUnearnedIncome");
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
+        "futureIncome");
     postExpectingRedirect("futureIncome", "earnLessMoneyThisMonth", "true", "startExpenses");
     assertNavigationRedirectsToCorrectNextPage("startExpenses", "homeExpenses");
     postExpectingRedirect("homeExpenses", "homeExpenses", "RENT", "homeExpensesAmount");
@@ -958,14 +950,12 @@ public class AbstractShibaMockMvcTest {
         "medicalExpenses");
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
         "supportAndCare");
-    postExpectingRedirect("supportAndCare", "supportAndCare", "true", "vehicle");
-    postExpectingRedirect("vehicle", "haveVehicle", "false", "realEstate");
-    postExpectingRedirect("realEstate", "ownRealEstate", "true", "investments");
-    postExpectingRedirect("investments", "haveInvestments", "false", "savings");
-
-    postExpectingRedirect("savings", "haveSavings", "true", "savingsAmount");
-    postExpectingRedirect("savingsAmount", "liquidAssets", "1234", "millionDollar");
-    postExpectingRedirect("millionDollar", "haveMillionDollars", "false", "soldAssets");
+    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    postExpectingSuccess("assets", "assets", "REAL_ESTATE");
+    assertNavigationRedirectsToCorrectNextPage("assets", "savings");
+    
+    postExpectingRedirect("savings", "haveSavings", "true", "liquidAssetsSingle");
+    postExpectingRedirect("liquidAssetsSingle", "liquidAssets", "1234", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");
     assertNavigationRedirectsToCorrectNextPage("submittingApplication", "registerToVote");
     postExpectingRedirect("registerToVote", "registerToVote", "YES", "healthcareCoverage");
@@ -990,8 +980,8 @@ public class AbstractShibaMockMvcTest {
   protected void completeHelperWorkflow(boolean helpWithBenefits) throws Exception {
     if (helpWithBenefits) {
       postExpectingRedirect("authorizedRep", "helpWithBenefits", "true", "authorizedRepCommunicate");
-      postExpectingRedirect("authorizedRepCommunicate", "communicateOnYourBehalf", "true", "authorizedRepSpeakToCounty");
-      postExpectingRedirect("authorizedRepSpeakToCounty", "getMailNotices", "true", "authorizedRepSpendOnYourBehalf");
+      postExpectingRedirect("authorizedRepCommunicate", "communicateOnYourBehalf", "true", "authorizedRepMailNotices");
+      postExpectingRedirect("authorizedRepMailNotices", "getMailNotices", "true", "authorizedRepSpendOnYourBehalf");
       postExpectingRedirect("authorizedRepSpendOnYourBehalf", "spendOnYourBehalf", "true", "authorizedRepContactInfo");
       postExpectingRedirect("authorizedRepContactInfo", Map.of(
           "authorizedRepFullName", List.of("My Helpful Friend"),
@@ -1051,5 +1041,11 @@ public class AbstractShibaMockMvcTest {
           .getRedirectedUrl();
     }
     return nextPage;
+  }
+  
+  private static Boolean containsOnly(List<String> testValue, String targetValue) {
+		List<String> programNoneOnly = testValue.stream().filter(program -> !program.equals(targetValue)).toList();
+		List<String> programOnly = testValue.stream().filter(program -> program.equals(targetValue)).toList();
+		return (programNoneOnly.stream().allMatch(string -> string.contains("NONE")) && programOnly.stream().allMatch(string -> string.contains(targetValue)));
   }
 }

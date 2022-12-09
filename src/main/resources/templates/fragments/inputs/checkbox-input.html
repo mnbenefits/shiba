@@ -5,6 +5,7 @@
               formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
               hasError=${!data.isValid() && !inputData.valid(data)},
               hasHelpMessage=${input.helpMessageKey != null},
+              hasHelpMessageBelow=${input.helpMessageKeyBelow != null},
               needsAriaLabel=${input.needsAriaLabel()}"
      class="form-group">
     <div class="spacing-above-35 form-group" th:classappend="${!inputData.valid(data)} ? 'form-group--error' : ''">
@@ -34,13 +35,16 @@
                             <div th:replace="|fragments/icons/${option.getHelpIcon()}| :: ${option.getHelpIcon()}"></div>
                         </div>
                         <div>
-                            <span th:text="#{${option.messageKey}}"></span>
+                            <span th:utext="#{${option.messageKey}}"></span>
                             <p th:if="${option.helpMessageKey != null}" th:text="#{${option.helpMessageKey}}"
                                class="text--help with-no-padding"></p>
                         </div>
                     </label>
                 </th:block>
-            </fieldset>
+				<p class="text--help" th:id="${input.name + '-help-message'}"
+					th:if="${hasHelpMessageBelow}"
+					th:utext="#{${input.helpMessageKeyBelow}}"></p>
+			</fieldset>
         </div>
         <div th:replace="fragments/inputErrorFragment :: validationError(${data}, ${input})"></div>
     </div>

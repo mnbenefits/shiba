@@ -7,7 +7,10 @@ import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.application.Status.DELIVERED;
 import static org.codeforamerica.shiba.application.Status.SENDING;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOME_ZIPCODE;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLICANT_PROGRAMS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HAS_HOUSE_HOLD;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 
 import java.awt.image.BufferedImage;
@@ -37,6 +40,7 @@ import java.util.UUID;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Cookie;
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -100,6 +104,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -196,6 +201,15 @@ public class PageController {
   @GetMapping("/faq")
   String getFaq() {
     return "faq";
+  }
+
+  @GetMapping("/errorTimeout")
+  String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId) {
+    if (submittedAppId.length() == 0) {
+      return "errorSessionTimeout";
+    } else {
+      return "errorUploadTimeout";
+    }
   }
 
   @GetMapping("/pages/{pageName}/navigation")
@@ -386,6 +400,7 @@ public class PageController {
     model.put("cityInfo", cityInfoConfiguration.getCityToZipAndCountyMapping());
     model.put("zipCode", getFirstValue(applicationData.getPagesData(), HOME_ZIPCODE));
     model.put("featureFlags", featureFlags);
+    model.put("hasHousehold", getFirstValue(applicationData.getPagesData(), HAS_HOUSE_HOLD));
 
     var snapExpeditedEligibility = snapExpeditedEligibilityDecider.decide(applicationData);
     model.put("expeditedSnap", snapExpeditedEligibility);
@@ -428,6 +443,8 @@ public class PageController {
           .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
       boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
       model.put("doesNotHaveHealthcare", !hasHealthcare);
+      boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
+      model.put("isCertainPops", isCertainPops);
 
       // Get all routing destinations for this application
       Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
@@ -654,6 +671,7 @@ public class PageController {
   @PostMapping("/submit")
   ModelAndView submitApplication(
       @RequestBody(required = false) MultiValueMap<String, String> model,
+      HttpServletResponse httpResponse,
       HttpSession httpSession,
       Device device
   ) {
@@ -670,18 +688,27 @@ public class PageController {
     if (pageData.isValid()) {
       if (applicationData.getId() == null) {
         // only happens in framework tests now we think, left in out of an abundance of caution
+        log.error("Unexpected null applicationData ID on submit");
         applicationData.setId(applicationRepository.getNextId());
       }
       Application application = applicationFactory.newApplication(applicationData);
       application.setCompletedAtTime(clock); // how we mark that the application is complete
       recordDeviceType(device, application);
-      applicationRepository.save(application);
-      applicationStatusRepository.createOrUpdateApplicationType(application, SENDING);
-      log.info("Invoking pageEventPublisher for application submission: " + application.getId());
-      pageEventPublisher.publish(
-          new ApplicationSubmittedEvent(httpSession.getId(), application.getId(),
-              application.getFlow(), LocaleContextHolder.getLocale())
-      );
+      if(!applicationData.isSubmitted()) {
+        applicationRepository.save(application);
+        applicationStatusRepository.createOrUpdateApplicationType(application, SENDING);
+        log.info("Invoking pageEventPublisher for application submission: " + application.getId());
+        pageEventPublisher.publish(
+            new ApplicationSubmittedEvent(httpSession.getId(), application.getId(),
+                application.getFlow(), LocaleContextHolder.getLocale())
+        );
+      }
+      // Temporary cookie indicating user submitted an application
+      Cookie submitCookie = new Cookie("application_id", application.getId());
+      submitCookie.setPath("/");
+      submitCookie.setHttpOnly(true);
+      httpResponse.addCookie(submitCookie);
+
       applicationData.setSubmitted(true);
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", submitPage));
     } else {
@@ -808,6 +835,14 @@ public class PageController {
           lms.getMessage("upload-documents.this-file-appears-to-be-empty"),
           HttpStatus.UNPROCESSABLE_ENTITY);
     }
+    if (type.contains("officedocument") || type.contains("msword"))
+    {
+      // officedocument = docx
+      // msword = doc
+      return new ResponseEntity<>(
+          lms.getMessage("upload-documents.MS-word-files-not-accepted"),
+          HttpStatus.UNPROCESSABLE_ENTITY);
+    }
     if (type.contains("pdf")) {
       // Return an error response if this is an pdf we can't work with
       try (var pdfFile = PDDocument.load(file.getBytes())) {
@@ -886,6 +921,11 @@ public class PageController {
     return new ModelAndView("redirect:/pages/uploadDocuments");
   }
 
+  /*
+   * This method is used in the CCAP flow when the applicant is nudged to add
+   * a child to application if they don't choose other household members.
+   * This method sets the livesAlone input data as needed to maintain application logic.
+   */
   @PostMapping("/pages/{pageName}/{option}")
   ModelAndView livesAlone(@PathVariable String pageName, @PathVariable String option) {
     String livesAlone = "true";

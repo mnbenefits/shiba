@@ -3,17 +3,27 @@ package org.codeforamerica.shiba.pages.emails;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.codeforamerica.shiba.RoutingDestinationMessageService;
+import org.codeforamerica.shiba.application.Application;
+import org.codeforamerica.shiba.application.ApplicationRepository;
+import org.codeforamerica.shiba.application.parsers.DocumentListParser;
 import org.codeforamerica.shiba.internationalization.LocaleSpecificMessageSource;
+import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.caf.CcapExpeditedEligibility;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility;
 import org.codeforamerica.shiba.pages.DocRecommendationMessageService;
 import org.codeforamerica.shiba.pages.DocRecommendationMessageService.DocumentRecommendation;
 import org.codeforamerica.shiba.pages.NextStepsContentService;
+import org.codeforamerica.shiba.pages.RoutingDecisionService;
 import org.codeforamerica.shiba.pages.NextStepsContentService.NextStepSection;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +34,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailContentCreator {
 
+  private static final ZoneId CENTRAL_TIMEZONE = ZoneId.of("America/Chicago");
   private final static String CLIENT_BODY = "email.client-body";
   private final static String ADDITIONAL_SUPPORT = "email.you-may-be-able-to-receive-more-support";
   private final static String IF_YOU_WANT_AN_UPDATE = "email.if-you-want-an-update-call-your-county";
@@ -33,7 +44,10 @@ public class EmailContentCreator {
   private final static String NON_COUNTY_PARTNER_ALERT = "email.non-county-partner-alert";
   private final static String LATER_DOCS_CONFIRMATION_EMAIL_SUBJECT = "later-docs.confirmation-email-subject";
   private final static String LATER_DOCS_CONFIRMATION_EMAIL_BODY = "later-docs.confirmation-email-body";
-  private final static String LATER_DOCS_CONFIRMATION_EMAIL_LINK = "later-docs.confirmation-email-body-link";
+  private final static String LATER_DOCS_CONFIRMATION_EMAIL_WE_RECEIVED = "later-docs.confirmation-email-we-received";
+  private final static String LATER_DOCS_CONFIRMATION_EMAIL_NUMBER = "later-docs.confirmation-email-number";
+  private final static String LATER_DOCS_CONFIRMATION_EMAIL_LOOK_OUT_FOR = "later-docs.comfirmation-email-look-out-for";
+  private final static String LATER_DOCS_CONFIRMATION_EMAIL_UPDATE = "later-docs.comfirmation-email-update";
   private final static String RESUBMIT_EMAIL_BODY = "email.resubmit-email";
   private final static String DEMO_PURPOSES_ONLY = "email.demo-purposes-only";
   private final static String SHARE_FEEDBACK = "email.share-feedback";
@@ -41,15 +55,24 @@ public class EmailContentCreator {
   private final String activeProfile;
   private final NextStepsContentService nextStepsContentService;
   private final DocRecommendationMessageService docRecommendationMessageService;
+  private final ApplicationRepository applicationRepository;
+  private final RoutingDecisionService routingDecisionService;
+  private final RoutingDestinationMessageService routingDestinationMessageService;
 
   public EmailContentCreator(MessageSource messageSource,
       @Value("${spring.profiles.active:Unknown}") String activeProfile,
       NextStepsContentService nextStepsContentService,
-      DocRecommendationMessageService docRecommendationMessageService) {
+      DocRecommendationMessageService docRecommendationMessageService,
+      ApplicationRepository applicationRepository,
+      RoutingDecisionService routingDecisionService,
+      RoutingDestinationMessageService routingDestinationMessageService) {
     this.messageSource = messageSource;
     this.activeProfile = activeProfile;
     this.nextStepsContentService = nextStepsContentService;
     this.docRecommendationMessageService = docRecommendationMessageService;
+    this.applicationRepository = applicationRepository;
+    this.routingDecisionService = routingDecisionService;
+    this.routingDestinationMessageService = routingDestinationMessageService;
   }
 
   public String createFullClientConfirmationEmail(ApplicationData applicationData,
@@ -57,15 +80,35 @@ public class EmailContentCreator {
       List<String> programs, SnapExpeditedEligibility snapExpeditedEligibility,
       CcapExpeditedEligibility ccapExpeditedEligibility, Locale locale) {
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
-
+    
+    Application application = applicationRepository.find(applicationData.getId());
+    ZonedDateTime submissionTime = application.getCompletedAt().withZoneSameInstant(CENTRAL_TIMEZONE);
+    String formattedTime = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+            .format(submissionTime.withZoneSameInstant(ZoneId.of("America/Chicago")));
+    
+    // Get all routing destinations for this application
+    Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
+    DocumentListParser.parse(applicationData).forEach(doc -> {
+      List<RoutingDestination> routingDestinationsForThisDoc =
+          routingDecisionService.getRoutingDestinations(applicationData, doc);
+      routingDestinations.addAll(routingDestinationsForThisDoc);
+    });
+    
+    // Generate human-readable list of routing destinations for success page
+    String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
+        application.getCounty(),
+        true,
+        new ArrayList<>(routingDestinations));
+    
     String nextSteps = nextStepsContentService
         .getNextSteps(programs, snapExpeditedEligibility, ccapExpeditedEligibility, locale).stream()
         .map(NextStepSection::message)
         .collect(Collectors.joining("<br><br>"));
 
     var additionalSupport = lms.getMessage(ADDITIONAL_SUPPORT);
+    
     String content = lms.getMessage(CLIENT_BODY,
-        List.of(confirmationId, "<br><br>" + nextSteps, additionalSupport));
+        List.of(confirmationId, "<br><br>" + nextSteps, additionalSupport, finalDestinationList, formattedTime));
 
     String docRecs = getDocumentRecommendations(applicationData, locale, lms,
         CONFIRMATION_EMAIL_DOC_RECS);
@@ -104,11 +147,30 @@ public class EmailContentCreator {
     return "";
   }
 
-  public String createShortClientConfirmationEmail(String confirmationId, Locale locale) {
+  public String createShortClientConfirmationEmail(ApplicationData applicationData, String confirmationId, Locale locale) {
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
+    
+    Application application = applicationRepository.find(applicationData.getId());
+    ZonedDateTime submissionTime = application.getCompletedAt().withZoneSameInstant(CENTRAL_TIMEZONE);
+    String formattedTime = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+            .format(submissionTime.withZoneSameInstant(ZoneId.of("America/Chicago")));
+    
+    // Get all routing destinations for this application
+    Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
+    DocumentListParser.parse(applicationData).forEach(doc -> {
+      List<RoutingDestination> routingDestinationsForThisDoc =
+          routingDecisionService.getRoutingDestinations(applicationData, doc);
+      routingDestinations.addAll(routingDestinationsForThisDoc);
+    });
+    
+    // Generate human-readable list of routing destinations for success page
+    String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
+        application.getCounty(),
+        true,
+        new ArrayList<>(routingDestinations));
 
     String content = lms.getMessage(CLIENT_BODY,
-        List.of(confirmationId, "", lms.getMessage(IF_YOU_WANT_AN_UPDATE)));
+        List.of(confirmationId, "", lms.getMessage(IF_YOU_WANT_AN_UPDATE), finalDestinationList, formattedTime));
 
     content = addDemoMessage(content, lms);
     return wrapHtml(content);
@@ -134,13 +196,38 @@ public class EmailContentCreator {
     return wrapHtml(content);
   }
 
-  public String createClientLaterDocsConfirmationEmailBody(Locale locale) {
+  public String createClientLaterDocsConfirmationEmailBody(ApplicationData applicationData, String confirmationId, Locale locale) {
+	Application application = applicationRepository.find(applicationData.getId());
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
-    String clientConfirmationEmailBody = lms.getMessage(LATER_DOCS_CONFIRMATION_EMAIL_BODY);
-    String clientConfirmationEmailLink = lms.getMessage(LATER_DOCS_CONFIRMATION_EMAIL_LINK);
+    String clientConfirmationEmailDocumentsReceived= lms.getMessage(LATER_DOCS_CONFIRMATION_EMAIL_WE_RECEIVED);
+    String clientConfirmationLookOutFor = lms.getMessage(LATER_DOCS_CONFIRMATION_EMAIL_LOOK_OUT_FOR);
+    String clientConfirmationUpdate = lms.getMessage(LATER_DOCS_CONFIRMATION_EMAIL_UPDATE);
+    
+    // Get all routing destinations for this document upload
+    Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
+    DocumentListParser.parse(applicationData).forEach(doc -> {
+      List<RoutingDestination> routingDestinationsForThisDoc =
+          routingDecisionService.getRoutingDestinations(applicationData, doc);
+      routingDestinations.addAll(routingDestinationsForThisDoc);
+    });
+    ZonedDateTime submissionTime = application.getCompletedAt().withZoneSameInstant(CENTRAL_TIMEZONE);
+    String formattedTime = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+            .format(submissionTime.withZoneSameInstant(ZoneId.of("America/Chicago")));
+        
+    // Generate human-readable list of routing destinations for success page
+    String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
+    		application.getCounty(),
+        true,
+        new ArrayList<>(routingDestinations));
 
-    return wrapHtml(
-        "<p>%s</p><p>%s</p>".formatted(clientConfirmationEmailBody, clientConfirmationEmailLink));
+    String content = lms.getMessage(LATER_DOCS_CONFIRMATION_EMAIL_BODY,
+            List.of(finalDestinationList, formattedTime));
+    String confirmation = lms.getMessage(LATER_DOCS_CONFIRMATION_EMAIL_NUMBER,
+            List.of(applicationData.getId()));
+    String message = 
+            "<p>%s</p><p>%s</p><p>%s</p><p>%s</p><p>%s</p>".formatted(clientConfirmationEmailDocumentsReceived, 
+            		content, confirmation, clientConfirmationLookOutFor, clientConfirmationUpdate);
+    return wrapHtml(message);
   }
 
   public String createClientLaterDocsConfirmationEmailSubject(Locale locale) {

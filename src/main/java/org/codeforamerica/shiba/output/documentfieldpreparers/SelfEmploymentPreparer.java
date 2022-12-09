@@ -11,7 +11,6 @@ import static org.codeforamerica.shiba.output.DocumentFieldType.SINGLE_VALUE;
 import static org.codeforamerica.shiba.output.FullNameFormatter.getFullName;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -28,7 +27,7 @@ import org.springframework.stereotype.Component;
 public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
 
   @Override
-  protected ScopedParams getParams(Document _document) {
+  protected ScopedParams getParams(Document _document, Application application) {
     return new ScopedParams(
         pagesData -> getBooleanValue(pagesData, IS_SELF_EMPLOYMENT),
         JOBS,
@@ -39,13 +38,13 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
   public List<DocumentField> prepareDocumentFields(Application application, Document document,
       Recipient _recipient) {
 
-    List<String> selfEmploymentInputs = getValues(application.getApplicationData(), JOBS,
-        IS_SELF_EMPLOYMENT
-    );
+    List<String> selfEmploymentInputs = getValues(application.getApplicationData(), JOBS, IS_SELF_EMPLOYMENT);
 
     if (selfEmploymentInputs == null) {
-      return Collections.emptyList();
-    }
+        List<DocumentField> results = new ArrayList<DocumentField>();
+        results.add(createApplicationInput("selfEmployed", "false"));
+        return results;
+      }
 
     if (document == Document.CERTAIN_POPS) {
       // Is applicant self-employed?
@@ -53,10 +52,11 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
       boolean hasSelfEmployedJob = Optional.ofNullable(jobs.stream())
           .orElse(Stream.empty())
           .map(Iteration::getPagesData)
-          .anyMatch(pagesData -> getFirstValue(pagesData, WHOSE_JOB_IS_IT).contains("applicant")
+          .anyMatch(pagesData -> (getFirstValue(pagesData, WHOSE_JOB_IS_IT).contains("applicant") 
+        		  || getFirstValue(pagesData, WHOSE_JOB_IS_IT).isEmpty())
               && getFirstValue(pagesData, IS_SELF_EMPLOYMENT).equals("true"));
 
-      List<DocumentField> results = new ArrayList<>();
+      List<DocumentField> results = super.prepareDocumentFields(application, document);
       if (hasSelfEmployedJob) {
         results.add(createApplicationInput("selfEmployed", "true"));
         results.add(createApplicationInput("selfEmployedApplicantName", getFullName(application)));

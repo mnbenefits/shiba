@@ -20,7 +20,7 @@ public class DateOfBirthEnrichmentTest {
     applicationData = new TestApplicationDataBuilder()
         .withPageData("personalInfo", "dateOfBirth", List.of("01", "09", "1999"))
         .withPageData("matchInfo", "dateOfBirth", List.of("02", "10", "1999"))
-        .withHouseholdMember()
+        .withHouseholdMember("Daria", "Agàta")
         .build();
   }
 
@@ -58,10 +58,17 @@ public class DateOfBirthEnrichmentTest {
 
   @Test
   void dobAsDateIsEmptyIfDateOfBirthIsEmpty() {
-    DateOfBirthEnrichment enrichment = new PersonalInfoDateOfBirthEnrichment();
-    PageData enrichmentResult = enrichment.process(new PagesData());
+    PageData emptyEnrichmentResult = new PersonalInfoDateOfBirthEnrichment().process(
+        new PagesData());
 
-    assertNotNull(enrichmentResult.get("dobAsDate"));
-    assertEquals("", enrichmentResult.get("dobAsDate").getValue(0));
+    assertNotNull(emptyEnrichmentResult.get("dobAsDate"));
+    assertEquals("", emptyEnrichmentResult.get("dobAsDate").getValue(0));
+
+    PageData blankEnrichmentResult = new PersonalInfoDateOfBirthEnrichment().process(
+        new TestApplicationDataBuilder().withPageData(
+            "personalInfo", "dateOfBirth", List.of("", "", "")).build().getPagesData());
+
+    assertNotNull(blankEnrichmentResult.get("dobAsDate"));
+    assertEquals("", blankEnrichmentResult.get("dobAsDate").getValue(0));
   }
 }

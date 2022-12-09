@@ -25,9 +25,9 @@ public class RoutingDestinationMessageService {
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
     List<String> routingDestinationStrings = routingDestinations.stream().map(rd -> {
       if (rd instanceof TribalNationRoutingDestination) {
-        return withPhoneNumbers ? rd.getName() + " Tribal Nation Servicing Agency " + "(" + rd
+        return withPhoneNumbers ? rd.getName() + " (" + rd
             .getPhoneNumber() + ")":
-            rd.getName() + " Tribal Nation Servicing Agency";
+            rd.getName();
       }
       String clientCounty = setCountyName(county, rd);
       return withPhoneNumbers ? lms
@@ -42,7 +42,7 @@ public class RoutingDestinationMessageService {
   private String setCountyName(County county, RoutingDestination routingDestination) {
     String clientCounty = routingDestination.getName();
     if (county == County.Other) {
-      clientCounty = County.Hennepin.displayName();
+      clientCounty = County.Hennepin.toString();
     }
     return clientCounty;
   }

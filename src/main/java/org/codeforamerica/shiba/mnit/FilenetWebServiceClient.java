@@ -3,6 +3,7 @@ package org.codeforamerica.shiba.mnit;
 import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.application.Status.DELIVERED;
 import static org.codeforamerica.shiba.application.Status.DELIVERY_FAILED;
+import static org.codeforamerica.shiba.application.Status.SENDING;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
@@ -64,25 +65,24 @@ public class FilenetWebServiceClient {
   private final Clock clock;
   private final String username;
   private final String password;
-  private final String routerUrl;
+  private final String sftpUploadUrl;
   private final ApplicationStatusRepository applicationStatusRepository;
 
   @Autowired
   private RestTemplate restTemplate;
 
-  @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   public FilenetWebServiceClient(
       @Qualifier("filenetWebServiceTemplate") WebServiceTemplate webServiceTemplate,
       Clock clock,
       @Value("${mnit-filenet.username}") String username,
       @Value("${mnit-filenet.password}") String password,
-      @Value("${mnit-filenet.router-url}") String routerUrl,
+      @Value("${mnit-filenet.sftp-upload-url}") String sftpUploadUrl,
       ApplicationStatusRepository applicationStatusRepository) {
     this.filenetWebServiceTemplate = webServiceTemplate;
     this.clock = clock;
     this.username = username;
     this.password = password;
-    this.routerUrl = routerUrl;
+    this.sftpUploadUrl = sftpUploadUrl;
     this.applicationStatusRepository = applicationStatusRepository;
   }
 
@@ -100,7 +100,16 @@ public class FilenetWebServiceClient {
       RoutingDestination routingDestination,
       String applicationNumber,
       Document applicationDocument, FlowType flowType) {
-    try {
+    String filenetId;
+    filenetId = applicationStatusRepository.find(applicationNumber,
+        applicationDocument,
+        routingDestination.getName(),
+        applicationFile.getFileName()).getFilenetId();
+    if (filenetId.isEmpty()) {
+      log.info("Now sending %s to recipient %s for application %s".formatted(
+          applicationDocument.name(),
+          routingDestination.getName(),
+          applicationNumber));
       MDC.put("applicationFile", applicationFile.getFileName());
       MDC.put("applicationId", applicationNumber);
       CreateDocument createDocument = new CreateDocument();
@@ -126,7 +135,8 @@ public class FilenetWebServiceClient {
               SOAPElement timestampElement = securityElement.addChildElement(timestampQName);
               SOAPElement createdElement = timestampElement.addChildElement("Created", "wsu");
               ZonedDateTime createdTimestamp = ZonedDateTime.now(clock);
-              createdElement.setTextContent(createdTimestamp.format(DateTimeFormatter.ISO_INSTANT));
+              createdElement.setTextContent(
+                  createdTimestamp.format(DateTimeFormatter.ISO_INSTANT));
               SOAPElement expiresElement = timestampElement.addChildElement("Expires", "wsu");
               expiresElement
                   .setTextContent(
@@ -146,44 +156,48 @@ public class FilenetWebServiceClient {
               throw new IllegalStateException(e);
             }
           });
+      // Save filenetId so we can retry only sending to SFTP
+      filenetId = response.getObjectId();
+      applicationStatusRepository.updateFilenetId(applicationNumber, applicationDocument,
+          routingDestination.getName(),
+          SENDING, applicationFile.getFileName(), response.getObjectId());
+    }
 
-      // Now route a copy of the document from Filenet to SFTP
-      String idd = response.getObjectId();
-      String routerRequest = String.format("%s/%s", routerUrl, idd);
-      String routerResponse = restTemplate.getForObject(routerRequest, String.class);
+    // Now route a copy of the document from Filenet to SFTP
+    String routerRequest = String.format("%s/%s", sftpUploadUrl, filenetId);
+    log.info(String.format("Upload to SFTP request: %s", routerRequest));
+    String routerResponse = restTemplate.getForObject(routerRequest, String.class);
 
-      log.info(String.format("Response from Filenet: %s", routerResponse));
-      JsonObject jsonObject = new Gson().fromJson(routerResponse, JsonObject.class);
+    log.info(String.format("Upload to SFTP response: %s", routerResponse));
+    JsonObject jsonObject = new Gson().fromJson(routerResponse, JsonObject.class);
 
-      // Throw exception if this isnt a successful response
-      String eMessage = String
-          .format("The MNIT Router did not respond with a \"Success\" message for %s", idd);
-      if (jsonObject != null) {
-        JsonElement messageElement = jsonObject.get("message");
-        if (messageElement.isJsonNull()
-            || !messageElement.getAsString().equalsIgnoreCase("Success")) {
-          throw new IllegalStateException(eMessage);
-        }
-      } else {
+    // Throw exception if this isnt a successful response
+    String eMessage = String
+        .format("The MNIT Router did not respond with a \"Success\" message for %s",
+            filenetId);
+    if (jsonObject != null) {
+      JsonElement messageElement = jsonObject.get("message");
+      if (messageElement.isJsonNull()
+          || !messageElement.getAsString().equalsIgnoreCase("Success")) {
         throw new IllegalStateException(eMessage);
       }
-
-      applicationStatusRepository.createOrUpdate(applicationNumber, applicationDocument,
-          routingDestination.getName(),
-          DELIVERED,applicationFile.getFileName());
-    } catch (Exception e) {
-      // Retry depends on uncaught exceptions - we want more logging for retries so the exception is rethrown here
-      throw e;
+    } else {
+      throw new IllegalStateException(eMessage);
     }
+
+    applicationStatusRepository.createOrUpdate(applicationNumber, applicationDocument,
+        routingDestination.getName(),
+        DELIVERED, applicationFile.getFileName());
   }
 
+  @SuppressWarnings("unused")
   @Recover
   public void logErrorToSentry(Exception e, ApplicationFile applicationFile,
       RoutingDestination routingDestination,
       String applicationNumber, Document applicationDocument, FlowType flowType) {
     applicationStatusRepository.createOrUpdate(applicationNumber, applicationDocument,
         routingDestination.getName(),
-        DELIVERY_FAILED,applicationFile.getFileName());
+        DELIVERY_FAILED, applicationFile.getFileName());
     log.error("Application failed to send: " + applicationFile.getFileName(), e);
   }
 
@@ -194,7 +208,7 @@ public class FilenetWebServiceClient {
     CmisPropertiesType properties = new CmisPropertiesType();
     List<CmisProperty> propertiesList = properties.getProperty();
 
-    CmisPropertyBoolean read = createCmisPropertyBoolean("Read", false);
+    CmisPropertyBoolean read = createCmisPropertyBoolean();
     CmisPropertyString originalFileName = createCmisPropertyString("OriginalFileName",
         applicationFile.getFileName());
     CmisPropertyString cmisName = createCmisPropertyString("cmis:name",
@@ -207,7 +221,7 @@ public class FilenetWebServiceClient {
         generateDocumentDescription(applicationDocument, applicationNumber, flowType));
     CmisPropertyString source = createCmisPropertyString("Source", "MNITS");
     CmisPropertyString flow = createCmisPropertyString("Flow", "Inbound");
-    CmisPropertyId cmisObjectTypeId = createCmisPropertyId("cmis:objectTypeId", "MNITSMailbox");
+    CmisPropertyId cmisObjectTypeId = createCmisPropertyId();
 
     propertiesList
         .addAll(
@@ -226,19 +240,18 @@ public class FilenetWebServiceClient {
   }
 
   @NotNull
-  private CmisPropertyBoolean createCmisPropertyBoolean(String propertyDefinitionId,
-      Boolean propertyValue) {
+  private CmisPropertyBoolean createCmisPropertyBoolean() {
     CmisPropertyBoolean booleanProperty = new CmisPropertyBoolean();
-    booleanProperty.setPropertyDefinitionId(propertyDefinitionId);
-    booleanProperty.getValue().add(propertyValue);
+    booleanProperty.setPropertyDefinitionId("Read");
+    booleanProperty.getValue().add(false);
     return booleanProperty;
   }
 
   @NotNull
-  private CmisPropertyId createCmisPropertyId(String propertyDefinitionId, String propertyValue) {
+  private CmisPropertyId createCmisPropertyId() {
     CmisPropertyId idProperty = new CmisPropertyId();
-    idProperty.setPropertyDefinitionId(propertyDefinitionId);
-    idProperty.getValue().add(propertyValue);
+    idProperty.setPropertyDefinitionId("cmis:objectTypeId");
+    idProperty.getValue().add("MNITSMailbox");
     return idProperty;
   }
 
@@ -286,5 +299,4 @@ public class FilenetWebServiceClient {
     }
     return docDescription;
   }
-
 }

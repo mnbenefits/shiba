@@ -1,16 +1,17 @@
 package org.codeforamerica.shiba.pages.data;
 
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLICANT_PROGRAMS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLYING_FOR_TRIBAL_TANF;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.BASIC_CRITERIA_CERTAIN_POPS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_FIRST_NAME;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_RELATIONSHIP;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_PROGRAMS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.MEDICAL_EXPENSES;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PERSONAL_INFO_FIRST_NAME;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.WRITTEN_LANGUAGE_PREFERENCES;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Group.HOUSEHOLD;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PERSONAL_INFO_FIRST_NAME;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_FIRST_NAME;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,10 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.inputconditions.Condition;
 import org.codeforamerica.shiba.output.caf.ExpeditedEligibility;
@@ -38,6 +36,11 @@ import org.codeforamerica.shiba.pages.config.PageWorkflowConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.multipart.MultipartFile;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Slf4j
@@ -188,14 +191,28 @@ public class ApplicationData implements Serializable {
   }
   
   @NotNull
-  public Set<String> getApplicantAndHouseholdMember() {
+  public int getApplicantAndHouseholdMemberSize() {
+	int householdSize = 0;
+	// compute applicant size, some tests don't generate the applicant, just the household members
     List<String> applicantFirstName = getValues(pagesData, PERSONAL_INFO_FIRST_NAME);
-    Set<String> applicantAndHouseholdMemberNames = new HashSet<>(applicantFirstName);
+    if (applicantFirstName != null) {
+    	householdSize = householdSize + applicantFirstName.size(); // the applicant
+    }
     List<String> householdNames = getValues(this, HOUSEHOLD, HOUSEHOLD_INFO_FIRST_NAME);
     if (householdNames != null) {
-      applicantAndHouseholdMemberNames.addAll(householdNames);
+      householdSize = householdSize + householdNames.size(); // the rest of the household
     }
-    return applicantAndHouseholdMemberNames;
+    return householdSize;
+  }
+
+  @NotNull
+  public long getHouseholdMemberWithoutSpouse() {
+   
+    List<String> householdRelation = getValues(this, HOUSEHOLD, HOUSEHOLD_INFO_RELATIONSHIP);
+    if (householdRelation != null) {
+      return householdRelation.stream().filter(relation->!relation.contains("spouse")).count();
+    }
+    return 0;
   }
 
   // method that takes the set given in the method above it, and uses that to build the string we want to show on the success page

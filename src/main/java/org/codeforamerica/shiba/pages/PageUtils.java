@@ -6,8 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.apache.commons.lang3.StringUtils;
 import org.codeforamerica.shiba.pages.data.DatasourcePages;
+import org.codeforamerica.shiba.pages.data.Subworkflow;
 
 public class PageUtils {
 
@@ -49,18 +51,18 @@ public class PageUtils {
     return Stream.concat(applicant, nonApplicantHouseholdMembers).collect(Collectors.toList());
   }
 
-  public static Boolean isCCAPEligible(DatasourcePages datasourcePages) {
+  public static Boolean isProgramEligible(DatasourcePages datasourcePages, String program) {
     List<String> applicantPrograms = datasourcePages.get("choosePrograms").get("programs")
         .getValue();
-    boolean applicantHasCCAP = applicantPrograms.contains("CCAP");
+    boolean applicantHasProgram = applicantPrograms.contains(program);
     boolean hasHousehold = !datasourcePages.get("householdMemberInfo").isEmpty();
-    boolean householdHasCCAP = false;
+    boolean householdHasProgram = false;
     if (hasHousehold) {
-      householdHasCCAP = datasourcePages.get("householdMemberInfo").get("programs").getValue()
+      householdHasProgram = datasourcePages.get("householdMemberInfo").get("programs").getValue()
           .stream().anyMatch(iteration ->
-              iteration.contains("CCAP"));
+              iteration.contains(program));
     }
-    return applicantHasCCAP || householdHasCCAP;
+    return applicantHasProgram || householdHasProgram;
   }
 
   /**
@@ -80,4 +82,20 @@ public class PageUtils {
 
     return StringUtils.join(fullNameParts, " ");
   }
+  
+	/**
+	 * Tests if String name is in a list of names, of which each name contains the name plus id.
+	 * This method is different than Arraylist.contains() which simply matches each string.
+	 * @param listOfNames
+	 * @param name
+	 * @return
+	 */
+	public static boolean listOfNamesContainsName(Collection<String> listOfNames, String name) {
+		return listOfNames.stream().filter(k -> k.contains(name)).collect(Collectors.toList()).size() > 0;
+	}
+	
+	public static int findNumberOfHouseholdMembers(Subworkflow datasourcePages) {
+		return datasourcePages.size();
+	}
+  
 }

@@ -2,38 +2,48 @@ package org.codeforamerica.shiba.output.pdf;
 
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
-
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.spi.ImageWriterSpi;
+import javax.imageio.stream.ImageOutputStream;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.Utils;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.documents.DocumentRepository;
+import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
+import org.codeforamerica.shiba.output.ImageUtility;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.output.caf.FilenameGenerator;
 import org.codeforamerica.shiba.output.documentfieldpreparers.DocumentFieldPreparers;
 import org.codeforamerica.shiba.output.xml.FileGenerator;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.UploadedDocument;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-
-import com.itextpdf.pdfoffice.exceptions.PdfOfficeException;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -42,27 +52,32 @@ public class PdfGenerator implements FileGenerator {
 
   private static final List<String> IMAGE_TYPES_TO_CONVERT_TO_PDF = List
       .of("jpg", "jpeg", "png", "gif");
-  private static final List<String> DOC_TYPES_TO_CONVERT_TO_PDF = List
-	      .of("doc", "docx");
+  private static final List<String> IMAGE_TYPES_TO_COMPRESS = List
+      .of("jpg", "jpeg");
+
+
   private final PdfFieldMapper pdfFieldMapper;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillerMap;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap;
+  private final Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops;
   private final ApplicationRepository applicationRepository;
   private final DocumentRepository documentRepository;
   private final DocumentFieldPreparers preparers;
   private final FilenameGenerator fileNameGenerator;
-  private final FileToPDFConverter pdfWordConverter;
   private final FeatureFlagConfiguration featureFlags;
+  private final ServicingAgencyMap<CountyRoutingDestination> countyMap;
+  
 
   public PdfGenerator(PdfFieldMapper pdfFieldMapper,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillers,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers,
+      Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops,
       ApplicationRepository applicationRepository,
       DocumentRepository documentRepository,
       DocumentFieldPreparers preparers,
       FilenameGenerator fileNameGenerator,
-      FileToPDFConverter pdfWordConverter,
-      FeatureFlagConfiguration featureFlagConfiguration
+      FeatureFlagConfiguration featureFlagConfiguration,
+      ServicingAgencyMap<CountyRoutingDestination> countyMap
   ) {
     this.pdfFieldMapper = pdfFieldMapper;
     this.pdfFieldFillerMap = pdfFieldFillers;
@@ -70,9 +85,10 @@ public class PdfGenerator implements FileGenerator {
     this.documentRepository = documentRepository;
     this.preparers = preparers;
     this.fileNameGenerator = fileNameGenerator;
-    this.pdfWordConverter = pdfWordConverter;
     this.featureFlags = featureFlagConfiguration;
     this.pdfFieldWithCAFHHSuppFillersMap = pdfFieldWithCAFHHSuppFillers;
+    this.pdfResourcesCertainPops = pdfResourcesCertainPops;
+    this.countyMap = countyMap;
   }
 
   @Override
@@ -99,77 +115,197 @@ public class PdfGenerator implements FileGenerator {
     return generateWithFilename(application, document, recipient, filename);
   }
 
+  public ApplicationFile generate(Application application, Document document, Recipient recipient,
+      RoutingDestination routingDestination) {
+    String filename = fileNameGenerator.generatePdfFilename(application, document,
+        routingDestination);
+    return generateWithFilename(application, document, recipient, filename);
+  }
+
   private ApplicationFile generateWithFilename(Application application, Document document,
       Recipient recipient, String filename) {
     List<DocumentField> documentFields = preparers.prepareDocumentFields(application, document,
         recipient);
-    var houseHold = application.getApplicationData().getApplicantAndHouseholdMember();
+    var householdSize = application.getApplicationData().getApplicantAndHouseholdMemberSize();
     PdfFieldFiller pdfFiller = pdfFieldFillerMap.get(recipient).get(document);
-    if(document.equals(Document.CAF) && (houseHold.size() > 5 && houseHold.size() <= 10)) {
+
+    if (document.equals(Document.CAF) && (householdSize > 5 && householdSize <= 10)) {
       pdfFiller = pdfFieldWithCAFHHSuppFillersMap.get(recipient).get(document);
     }
-   
+    if(document.equals(Document.CERTAIN_POPS)) {
+    List<Resource> pdfResource = new ArrayList<Resource>(); 
+    pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("default"));
+    //For non-self employment more than two
+    if (documentFields.stream().anyMatch(
+        field -> (field.getGroupName().contains("nonSelfEmployment_householdSelectionForIncome")
+            && field.getIteration() > 1))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addIncome"));
+    }
+    //For household more than two
+    var houseHoldWithoutSpouse = application.getApplicationData().getHouseholdMemberWithoutSpouse();
+    if (houseHoldWithoutSpouse > 1 && houseHoldWithoutSpouse <= 14) {
+      String name = "addHousehold"+String.valueOf(Math.ceil(houseHoldWithoutSpouse/2));
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get(name));
+        }
+    //for Disability more than two
+    if (documentFields.stream().anyMatch(
+        field -> (field.getGroupName().contains("whoHasDisability")
+            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
+    }
+  //For section 8 Retroactive coverage
+    /* Keep this code till supplement page display is finalized as general supp. page.
+    if (documentFields.stream().anyMatch(
+        field -> (field.getGroupName().contains("retroactiveCoverage")
+            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addRetroactiveCoverageSupp"));
+    }
+    */
+    // for the general supplement
+    if (documentFields.stream().anyMatch(field -> (field.getName().contains("certainPopsSupplement")))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addCertainPopsSupplement"));
+    }
+      pdfFiller = new PDFBoxFieldFiller(pdfResource);
+    }
+
     List<PdfField> fields = pdfFieldMapper.map(documentFields);
     return pdfFiller.fill(fields, application.getId(), filename);
   }
 
-  public ApplicationFile generateForUploadedDocument(UploadedDocument uploadedDocument,
-      int documentIndex, Application application, byte[] coverPage) {
-    var fileBytes = documentRepository.get(uploadedDocument.getS3Filepath());
-    if (fileBytes != null) {
-      var extension = Utils.getFileType(uploadedDocument.getFilename());
-      boolean flagIsNotNull = featureFlags != null && featureFlags.get("word-to-pdf") != null; //need this for tests
-		if (flagIsNotNull && featureFlags.get("word-to-pdf").isOn() && DOC_TYPES_TO_CONVERT_TO_PDF.contains(extension)) {
-		  try {
-				InputStream inputStream = new ByteArrayInputStream(fileBytes);
-				fileBytes = pdfWordConverter.convertWordDocToPDFwithStreams(inputStream);
-				extension = "pdf";
-			} catch (PdfOfficeException |IOException e) {
-                log.warn("failed to convert document " + uploadedDocument.getFilename()
-                + " to pdf. Maintaining original type. " + e.getMessage());
-			}
+  public List<ApplicationFile> generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocument, Application application,
+		  byte[] coverPage) {
+    return generateCombinedUploadedDocument(uploadedDocument, application, coverPage,
+        countyMap.get(application.getCounty()));
+  }
+  
+ /**
+  * This method converts list of uploaded documents into pdf then combines it to form single pdf upload file with coverpage.
+  * It lists out the combined pdf files and the ones that can't be combined.
+  * @param uploadedDocuments
+  * @param application
+  * @param coverPage
+  * @param routingDest
+  * @return
+  */
+  public List<ApplicationFile> generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocuments, Application application,
+		  byte[] coverPage, RoutingDestination routingDest) {
+    if (uploadedDocuments.size() == 0 || (uploadedDocuments.stream()
+        .allMatch(uDoc -> documentRepository.get(uDoc.getS3Filepath()) == null)
+        || uploadedDocuments.stream()
+            .allMatch(uDoc -> documentRepository.get(uDoc.getS3Filepath()).length <= 0)))
+      return null;
 
-		} else if (IMAGE_TYPES_TO_CONVERT_TO_PDF.contains(extension)) {
+    List<ApplicationFile> applicationFiles = new ArrayList<>();
+    byte[] combinedPDF = coverPage;
+   
+    List<byte[]> combinedDocList = new ArrayList<>();
+    for (UploadedDocument uDoc : uploadedDocuments) {
+
+      var fileBytes = documentRepository.get(uDoc.getS3Filepath());
+
+      if (fileBytes != null) {
+        var extension = Utils.getFileType(uDoc.getFilename());
+
+        if (IMAGE_TYPES_TO_CONVERT_TO_PDF.contains(extension)) {
+          try {
+            fileBytes = convertImageToPdf(fileBytes, uDoc.getFilename());
+            extension = "pdf";
+          } catch (Exception e) {
+            log.warn("failed to convert document " + uDoc.getFilename()
+            + " to pdf. Maintaining original type");
+            combinedDocList.add(fileBytes);
+          }
+        } else if (!extension.equals("pdf")) {
+          log.warn("Unsupported file-type: " + extension);
+        }
+        if (extension.equals("pdf")) {
 			try {
-				fileBytes = convertImageToPdf(fileBytes, uploadedDocument.getFilename());
-				extension = "pdf";
+				fileBytes = ImageUtility.compressImagesInPDF(fileBytes);
 			} catch (Exception e) {
-				log.warn("failed to convert document " + uploadedDocument.getFilename()
-						+ " to pdf. Maintaining original type");
+				log.error("Compress images in PDF failed: " + e.getMessage());
 			}
-		} else if (!extension.equals("pdf")) {
-			log.warn("Unsupported file-type: " + extension);
-		}
-
-      if (extension.equals("pdf") && coverPage != null) {
-        fileBytes = addCoverPageToPdf(coverPage, fileBytes);
+			
+			try {
+				combinedPDF = addPageToPdf(combinedPDF, fileBytes);
+			} catch (Exception er) {
+				log.error("File not able to combine to pdf " + uDoc.getFilename());
+				combinedDocList.add(fileBytes);
+			}
+        }
       }
-
-      String filename = uploadedDocument.getSysFileName() == null
-          ? fileNameGenerator.generateUploadedDocumentName(application, documentIndex, extension)
-          : uploadedDocument.getSysFileName();
-      return new ApplicationFile(fileBytes, filename);
+     
     }
-    return null;
+    //This makes sure duplicate files are not added twice in case of merger issue
+    if(!combinedPDF.equals(coverPage)) {
+      combinedDocList.add(combinedPDF);
+    }
+    int i = 0;
+    for(byte[] combineDoc: combinedDocList) {
+      String filename =
+          fileNameGenerator.generateUploadedDocumentName(application, i, "pdf", routingDest, combinedDocList.size());
+          applicationFiles.add(new ApplicationFile(combineDoc, filename));
+          i++;
+    }
+    return applicationFiles;
+  }
+  
+  
+  public List<ApplicationFile> generateForUploadedDocument(List<UploadedDocument> uploadedDocumentList, Application application, byte[] coverPage) {
+    return generateCombinedUploadedDocument(uploadedDocumentList, application, coverPage,
+        countyMap.get(application.getCounty()));
   }
 
-  private byte[] addCoverPageToPdf(byte[] coverPage, byte[] fileBytes) {
+  /**
+   * This method combines converted pdf to single pdf file with system generated coverpage.
+   * flatten() is used to flatten acroforms only so there won't be any duplicate issues while merging acroforms
+   * @param mainPage
+   * @param addPage
+   * @return
+   */
+  public byte[] addPageToPdf(byte[] mainPage, byte[] addPage) {
     PDFMergerUtility merger = new PDFMergerUtility();
-    try (PDDocument coverPageDoc = PDDocument.load(coverPage);
-        PDDocument uploadedDoc = PDDocument.load(fileBytes);
+    try (PDDocument mainPageDoc = PDDocument.load(mainPage);
+        PDDocument addedPageDoc = PDDocument.load(addPage);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-
-      merger.appendDocument(coverPageDoc, uploadedDoc);
-      coverPageDoc.save(outputStream);
-      fileBytes = outputStream.toByteArray();
+      
+      
+      if (addedPageDoc.getDocumentCatalog().getAcroForm() != null)
+        addedPageDoc.getDocumentCatalog().getAcroForm().flatten();
+       
+      
+      merger.appendDocument(mainPageDoc, addedPageDoc);
+      mainPageDoc.save(outputStream);
+      addPage = outputStream.toByteArray();
     } catch (IOException e) {
+
       throw new RuntimeException(e);
     }
-    return fileBytes;
+    return addPage;
   }
 
-  private byte[] convertImageToPdf(byte[] imageFileBytes, String filename) throws Exception{
+  private byte[] convertImageToPdf(byte[] imageFileBytes, String filename) throws Exception {
     try (PDDocument doc = new PDDocument(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+     
+      var extension = Utils.getFileType(filename);
+      if(IMAGE_TYPES_TO_COMPRESS.contains(extension)) {
+        ByteArrayOutputStream outputFile = new ByteArrayOutputStream();
+        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageFileBytes));
+        JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
+        jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        jpegParams.setCompressionQuality(0.50f);
+        ImageWriter writer = getImageWriter();
+        try (final ImageOutputStream stream = ImageIO.createImageOutputStream(outputFile)) {
+          writer.setOutput(stream);
+          try {
+            writer.write(null, new IIOImage(img, null, null), jpegParams);
+          } finally {
+            writer.dispose();
+            stream.flush();
+          }
+        }
+        imageFileBytes = outputFile.toByteArray();
+        outputFile.close();
+      }
       var image = PDImageXObject.createFromByteArray(doc, imageFileBytes, filename);
       // Figure out page size
       var pageSize = PDRectangle.LETTER;
@@ -196,8 +332,22 @@ public class PdfGenerator implements FileGenerator {
       doc.save(outputStream);
       return outputStream.toByteArray();
     } catch (Exception e) {
-		log.error("convertImageToPdf Error for file " + filename + ". Error message: " + e.getMessage());
-		throw e;
-	}
+      log.error(
+          "convertImageToPdf Error for file " + filename + ". Error message: " + e.getMessage());
+      throw e;
+    }
   }
+  
+  private static ImageWriter getImageWriter() throws IOException {
+    IIORegistry registry = IIORegistry.getDefaultInstance();
+    Iterator<ImageWriterSpi> services = registry.getServiceProviders(ImageWriterSpi.class, (provider) -> {
+        if (provider instanceof ImageWriterSpi) {
+            return Arrays.stream(((ImageWriterSpi) provider).getFormatNames()).anyMatch(formatName -> formatName.equalsIgnoreCase("JPEG"));
+        }
+        return false;
+    }, true);
+    ImageWriterSpi writerSpi = services.next();
+    ImageWriter writer = writerSpi.createWriterInstance();
+    return writer;
+}
 }

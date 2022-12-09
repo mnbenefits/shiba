@@ -22,10 +22,15 @@ public class FormInputTemplate {
   Boolean readOnly;
   String defaultValue;
   List<PageDatasource> datasources;
-
+  String customFollowUps;
+  String inputPostfix;
+  String helpMessageKeyBelow;
+  String noticeMessage;
+  Boolean validationIcon;
+  
   public String fragment() {
     return switch (type) {
-      case TEXT, LONG_TEXT, NUMBER, SELECT, MONEY, TEXTAREA, HOURLY_WAGE, PHONE, SSN -> "single-input";
+      case TEXT, LONG_TEXT, NUMBER, SELECT, MONEY, TEXTAREA, HOURLY_WAGE, PHONE, SSN, NOTICE -> "single-input";
       case DATE -> "date-input";
       case RADIO -> "radio-input";
       case CHECKBOX -> "checkbox-input";
@@ -39,6 +44,11 @@ public class FormInputTemplate {
   @SuppressWarnings("unused")
   public boolean hasFollowUps() {
     return !followUps.isEmpty() && !followUpValues.isEmpty();
+  }
+  
+  @SuppressWarnings("unused")
+  public boolean hasCustomFollowUps() {
+    return Boolean.parseBoolean(customFollowUps);
   }
 
   public boolean needsAriaLabel() {

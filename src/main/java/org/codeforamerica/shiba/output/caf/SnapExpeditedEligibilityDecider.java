@@ -2,7 +2,8 @@ package org.codeforamerica.shiba.output.caf;
 
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLICANT_PROGRAMS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ARE_YOU_WORKING;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ASSETS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_ASSETS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLICANT_ASSETS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_PROGRAMS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSING_COSTS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.INCOME;
@@ -19,7 +20,6 @@ import static org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility.ELIGI
 import static org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility.NOT_ELIGIBLE;
 import static org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility.UNDETERMINED;
 
-import java.math.BigDecimal;
 import java.util.List;
 import org.codeforamerica.shiba.Money;
 import org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field;
@@ -74,11 +74,13 @@ public class SnapExpeditedEligibilityDecider {
     }
 
     // Assets and earned+unearned income below thresholds are eligible.
-    Money assets = parseMoney(pagesData, ASSETS);
+    Money applicantAssets = parseMoney(pagesData, APPLICANT_ASSETS);
+    Money householdAssets = parseMoney(pagesData, HOUSEHOLD_ASSETS);
+    Money assets = applicantAssets.add(householdAssets);
     Money last30DaysIncome = parseMoney(pagesData, INCOME);
     List<JobIncomeInformation> jobIncomeInformation = grossMonthlyIncomeParser
         .parse(applicationData);
-    BigDecimal unearnedIncome = unearnedIncomeCalculator.unearnedAmount(applicationData);
+    Money unearnedIncome = unearnedIncomeCalculator.unearnedAmount(applicationData);
     Money earnedIncome = totalIncomeCalculator
         .calculate(new TotalIncome(last30DaysIncome, jobIncomeInformation));
     Money income = earnedIncome.add(unearnedIncome);
@@ -124,9 +126,7 @@ public class SnapExpeditedEligibilityDecider {
     if (isMigrantWorker == null || missingUtilities) {
       return false;
     }
-    List<String> thirtyDayEstimates = getValues(applicationData, JOBS, LAST_THIRTY_DAYS_JOB_INCOME);
-    return thirtyDayEstimates == null || !thirtyDayEstimates.stream().allMatch(String::isBlank);
-
+    return true;
   }
 
 

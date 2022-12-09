@@ -19,10 +19,13 @@ import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Slf4j
@@ -52,6 +55,7 @@ public class ApplicationRepository {
     return idBuilder.toString();
   }
 
+  @Transactional(isolation = Isolation.READ_COMMITTED)
   public void save(Application application) {
     ApplicationData applicationData = application.getApplicationData();
     HashMap<String, Object> parameters = new HashMap<>(Map.of(
@@ -96,10 +100,17 @@ public class ApplicationRepository {
     Application application = jdbcTemplate.queryForObject(
         "SELECT * FROM applications WHERE id = ?",
         applicationRowMapper(), id);
-    Objects.requireNonNull(application).setApplicationStatuses(
-        jdbcTemplate.query("SELECT * FROM application_status WHERE application_id = ?",
-            new ApplicationStatusRowMapper(), id));
-    return application;
+    try {
+      Objects.requireNonNull(application).setApplicationStatuses(
+              jdbcTemplate.query("SELECT * FROM application_status WHERE application_id = ?",
+                      new ApplicationStatusRowMapper(), id));
+      return application;
+    } catch(EmptyResultDataAccessException e) {
+      log.error("Application find failed, id: " + id);
+      throw new EmptyResultDataAccessException(e.getMessage() + ", searching for application Id:" + id,
+                                               e.getExpectedSize(),
+                                               e);
+    }
   }
 
   public List<Application> findApplicationsStuckSending() {
@@ -107,7 +118,7 @@ public class ApplicationRepository {
     List<Application> applicationsStuckSending = jdbcTemplate.query(
         "SELECT * FROM applications where completed_at IS NOT NULL AND completed_at BETWEEN '2021-12-06' AND ? AND id IN ("
             + "SELECT application_id FROM application_status WHERE "
-            + "status ='sending' AND document_type != 'XML'" // TODO Do we need to exclude XMLs?
+            + "status ='sending'" 
             + ") ORDER BY completed_at LIMIT 50",
         applicationRowMapper(),
         eightHoursAgo);
@@ -135,24 +146,6 @@ public class ApplicationRepository {
             + "order by county, completed_at "
             + "LIMIT 30",
         applicationRowMapper()
-    );
-  }
-
-  public List<Application> findApplicationsWithBlankStatuses(County county) {
-    return jdbcTemplate.query(
-        "WITH no_status_apps as ( "
-            + "select id, count(status) "
-            + "from applications left join application_status on applications.id = application_status.application_id "
-            + "where completed_at is not null and "
-            + "county = ?"
-            + "group by id "
-            + "having count(status) = 0 "
-            + ") "
-            + "select * from applications inner join no_status_apps on applications.id = no_status_apps.id "
-            + "order by completed_at "
-            + "LIMIT 30",
-        applicationRowMapper(),
-        county.toString()
     );
   }
 
@@ -196,7 +189,7 @@ public class ApplicationRepository {
             .completedAt(convertToZonedDateTime(resultSet.getTimestamp("completed_at")))
             .updatedAt(convertToZonedDateTime(resultSet.getTimestamp("updated_at")))
             .applicationData(encryptor.decrypt(resultSet.getString("application_data")))
-            .county(County.getCountyForName(resultSet.getString("county")))
+            .county(County.getForName(resultSet.getString("county")))
             .timeToComplete(Duration.ofSeconds(resultSet.getLong("time_to_complete")))
             .sentiment(Optional.ofNullable(resultSet.getString("sentiment"))
                 .map(Sentiment::valueOf)

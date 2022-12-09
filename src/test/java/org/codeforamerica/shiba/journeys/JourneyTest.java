@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
+import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -39,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -81,6 +83,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     when(featureFlagConfiguration.get("submit-via-api")).thenReturn(FeatureFlag.OFF);
     caf = null;
     ccap = null;
+    certainPops = null;
   }
 
   @AfterEach
@@ -98,6 +101,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   protected void assertCcapFieldEquals(String fieldName, String expectedVal) {
     TestUtils.assertPdfFieldEquals(fieldName, expectedVal, ccap);
+  }
+  
+  protected void assertCertainPopsFieldEquals(String fieldName, String expectedVal) {
+	    TestUtils.assertPdfFieldEquals(fieldName, expectedVal, certainPops);
   }
 
   protected String signApplicationAndDownloadApplicationZipFiles(String signature) {
@@ -124,6 +131,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
      var pdfs = getAllFiles(); 
      caf = pdfs.getOrDefault(CAF, null); 
      ccap = pdfs.getOrDefault(CCAP,null);
+     certainPops = pdfs.getOrDefault(CERTAIN_POPS,null);
      
     return getApplicationId();
   }
@@ -153,6 +161,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickContinue();
 
     // Informational pages
+    testPage.clickContinue();
     testPage.clickContinue();
 
     // Language Preferences
@@ -184,7 +193,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
       testPage.enter("basicCriteria",
           "I have a disability that has been certified by the State Medical Review Team (SMRT)");
       testPage.enter("basicCriteria",
-          "I want to apply for Medical Assistance for Employed Persons with Disabilities (MA-EDP)");
+          "I want to apply for Medical Assistance for Employed Persons with Disabilities (MA-EPD)");
       testPage.enter("basicCriteria", "I have Medicare and need help with my costs");
       testPage.clickContinue();
       assertThat(testPage.getTitle()).isEqualTo("Certain Pops Confirmation");
@@ -264,7 +273,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     if (isReview)
     {
       // Let's review your info
-      assertThat(driver.findElementById("mailingAddress-address_street").getText())
+      assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
           .isEqualTo("smarty street");           
     }
     
@@ -284,7 +293,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   protected void deleteAFile() {
     await().until(
-		  () -> driver.findElementsByClassName("dz-remove").get(0).getAttribute("innerHTML")
+		  () -> driver.findElements(By.className("dz-remove")).get(0).getAttribute("innerHTML")
 		  .contains("delete"));
     testPage.clickLink("delete");
 
@@ -293,7 +302,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
   }
 
   protected void waitForErrorMessage() {
-    WebElement errorMessage = driver.findElementByClassName("text--error");
+    WebElement errorMessage = driver.findElement(By.className("text--error"));
     await().until(() -> !errorMessage.getText().isEmpty());
   }
 }

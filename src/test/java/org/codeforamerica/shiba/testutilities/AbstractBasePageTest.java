@@ -7,6 +7,7 @@ import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,7 +42,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -121,16 +122,16 @@ public abstract class AbstractBasePageTest {
     try {
       FileInputStream inputStream = new FileInputStream(file);
       ZipInputStream zipStream = new ZipInputStream(inputStream);
-      ZipEntry zEntry = null;
+      ZipEntry zEntry;
       String destination = path.toFile().getPath();
       while ((zEntry = zipStream.getNextEntry()) != null) {
-        if(zEntry.getName().contains("_CAF") || zEntry.getName().contains("_CCAP") ) {
+        if(zEntry.getName().contains("_CAF") || zEntry.getName().contains("_CCAP") || zEntry.getName().contains("_CERTAIN_POPS") ) {
           if (!zEntry.isDirectory()) {
             File files = new File(destination, zEntry.getName());
             FileOutputStream fout = new FileOutputStream(files);
             BufferedOutputStream bufout = new BufferedOutputStream(fout);
             byte[] buffer = new byte[1024];
-            int read = 0;
+            int read;
             while ((read = zipStream.read(buffer)) != -1) {
               bufout.write(buffer, 0, read);
             }
@@ -157,6 +158,8 @@ public abstract class AbstractBasePageTest {
       return Document.CAF;
     } else if (fileName.contains("_CCAP")) {
       return Document.CCAP;
+    } else if (fileName.contains("_CERTAIN_POPS")) {
+      return Document.CERTAIN_POPS;
     } else {
       return Document.CAF;
     }
@@ -164,7 +167,7 @@ public abstract class AbstractBasePageTest {
 
   protected void waitForDocumentUploadToComplete() {
     await().atMost(15, TimeUnit.SECONDS)
-        .until(() -> driver.findElementsByLinkText("cancel").isEmpty());
+    .until(() -> driver.findElements(By.linkText("cancel")).isEmpty());
   }
 
   @SuppressWarnings("unused")
@@ -247,7 +250,7 @@ public abstract class AbstractBasePageTest {
 
     testPage.clickElementById("enriched-address");
     testPage.clickContinue();
-    assertThat(driver.findElementById("mailingAddress-address_street").getText())
+    assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
         .isEqualTo("smarty street");
   }
 
@@ -336,7 +339,7 @@ public abstract class AbstractBasePageTest {
     testPage.clickContinue();
     testPage.enter("socialSecurityAmount", "200");
     testPage.clickContinue();
-    testPage.enter("unearnedIncomeCcap", "Money from a Trust");
+    testPage.enter("otherUnearnedIncome", "Money from a Trust");
     testPage.clickContinue();
     testPage.enter("trustMoneyAmount", "200");
     testPage.clickContinue();
@@ -354,13 +357,12 @@ public abstract class AbstractBasePageTest {
     testPage.enter("medicalExpenses", "None of the above");
     testPage.clickContinue();
     testPage.enter("supportAndCare", YES.getDisplayValue());
-    testPage.enter("haveVehicle", YES.getDisplayValue());
-    testPage.enter("ownRealEstate", YES.getDisplayValue());
-    testPage.enter("haveInvestments", NO.getDisplayValue());
+    testPage.enter("assets", "A vehicle");
+    testPage.enter("assets", "Real estate (not including your own home)");
+    testPage.clickContinue();
     testPage.enter("haveSavings", YES.getDisplayValue());
     testPage.enter("liquidAssets", "1234");
     testPage.clickContinue();
-    testPage.enter("haveMillionDollars", NO.getDisplayValue());
     testPage.enter("haveSoldAssets", NO.getDisplayValue());
     testPage.clickContinue();
     testPage.enter("registerToVote", "Yes, send me more info");
@@ -445,7 +447,7 @@ public abstract class AbstractBasePageTest {
     WebElement upload = driver.findElement(By.className("dz-hidden-input"));
     upload.sendKeys(filepath);
     await().until(
-        () -> !driver.findElementsByClassName("file-details").get(0).getAttribute("innerHTML")
+        () -> !driver.findElements(By.className("file-details")).get(0).getAttribute("innerHTML")
             .isBlank());
   }
 
@@ -465,10 +467,10 @@ public abstract class AbstractBasePageTest {
     testPage.clickElementById("drag-and-drop-box"); // is this needed?
     WebElement upload = driver.findElement(By.className("dz-hidden-input"));
     upload.sendKeys(TestUtils.getAbsoluteFilepathString(UPLOADED_JPG_FILE_NAME));
-    assertThat(driver.findElementById("submit-my-documents").getAttribute("class"))
+    assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
     .contains("disabled");
     await().until(
-        () -> !driver.findElementsByClassName("file-details").get(0).getAttribute("innerHTML")
+        () -> !driver.findElements(By.className("file-details")).get(0).getAttribute("innerHTML")
             .isBlank());
     assertThat(driver.findElement(By.id("document-upload")).getText())
         .contains(UPLOADED_JPG_FILE_NAME);
@@ -493,6 +495,7 @@ public abstract class AbstractBasePageTest {
   protected void getToDocumentUploadScreen() {
     testPage.clickButton("Apply now");
     testPage.enter("county", "Hennepin");
+    testPage.clickContinue();
     testPage.clickContinue();
     testPage.clickContinue();
     testPage.enter("writtenLanguage", "English");
@@ -521,7 +524,7 @@ public abstract class AbstractBasePageTest {
 
   @NotNull
   protected Callable<Boolean> uploadCompletes() {
-    return () -> !getAttributeForElementAtIndex(driver.findElementsByClassName("dz-remove"),
+    return () -> !getAttributeForElementAtIndex(driver.findElements(By.className("dz-remove")),
         0,
         "innerHTML").isBlank();
   }

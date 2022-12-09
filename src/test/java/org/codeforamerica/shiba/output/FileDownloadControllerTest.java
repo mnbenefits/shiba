@@ -8,7 +8,6 @@ import static org.codeforamerica.shiba.Program.SNAP;
 import static org.codeforamerica.shiba.application.Status.DELIVERED;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-
 import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 import static org.codeforamerica.shiba.testutilities.TestUtils.getFileContentsAsByteArray;
 import static org.mockito.ArgumentMatchers.eq;
@@ -45,12 +44,12 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 class FileDownloadControllerTest {
 
   MockMvc mockMvc;
-
   XmlGenerator xmlGenerator = mock(XmlGenerator.class);
   ApplicationData applicationData;
   Application application;
   PdfGenerator pdfGenerator = mock(PdfGenerator.class);
   ApplicationRepository applicationRepository = mock(ApplicationRepository.class);
+  UploadedDocsPreparer uploadedDocsPreparer = mock(UploadedDocsPreparer.class);
 
   @BeforeEach
   void setUp() {
@@ -62,14 +61,15 @@ class FileDownloadControllerTest {
     application = Application.builder()
         .completedAt(ZonedDateTime.now())
         .applicationData(applicationData)
-        .applicationStatuses(List.of(new ApplicationStatus("", CCAP, "", DELIVERED,"")))
+        .applicationStatuses(List.of(new ApplicationStatus("", CCAP, "", DELIVERED, "")))
         .build();
     mockMvc = MockMvcBuilders.standaloneSetup(
             new FileDownloadController(
                 xmlGenerator,
                 pdfGenerator,
                 applicationData,
-                applicationRepository))
+                applicationRepository,
+                uploadedDocsPreparer))
         .setViewResolvers(new InternalResourceViewResolver("", "suffix"))
         .build();
     when(applicationRepository.find(any())).thenReturn(application);
@@ -94,12 +94,14 @@ class FileDownloadControllerTest {
     String fileName = "filename.pdf";
     ApplicationFile applicationFile = new ApplicationFile(pdfBytes, fileName);
     when(pdfGenerator.generate(anyString(), any(), any())).thenReturn(applicationFile);
+    when(uploadedDocsPreparer.prepare(any(), any())).thenReturn(List.of(applicationFile));
 
     mockMvc.perform(get("/download"))
         .andExpect(status().is2xxSuccessful())
         .andExpect(content().contentType(APPLICATION_OCTET_STREAM_VALUE))
         .andExpect(header()
-            .string(HttpHeaders.CONTENT_DISPOSITION, String.format("filename=\"MNB_application_%s.zip\"", applicationData.getId())))
+            .string(HttpHeaders.CONTENT_DISPOSITION,
+                String.format("filename=\"MNB_application_%s.zip\"", applicationData.getId())))
         .andReturn();
   }
 
@@ -132,7 +134,8 @@ class FileDownloadControllerTest {
     ApplicationFile wordDocFile = new ApplicationFile(wordDoc, "");
     ApplicationFile coverPageFile = new ApplicationFile(coverPage, "");
     UploadedDocument uploadedDoc = new UploadedDocument("shiba+file.jpg", "", "", "", image.length);
-    UploadedDocument uploadedWordDoc = new UploadedDocument("testWord.docx", "", "", "", wordDoc.length);
+    UploadedDocument uploadedWordDoc = new UploadedDocument("testWord.docx", "", "", "",
+        wordDoc.length);
     ApplicationData applicationData = new ApplicationData();
     applicationData.setId(applicationId);
     applicationData.setUploadedDocs(List.of(uploadedDoc, uploadedWordDoc));
@@ -146,7 +149,8 @@ class FileDownloadControllerTest {
                 xmlGenerator,
                 pdfGenerator,
                 applicationData,
-                applicationRepository))
+                applicationRepository,
+                uploadedDocsPreparer))
         .setViewResolvers(new InternalResourceViewResolver("", "suffix"))
         .build();
 
@@ -154,23 +158,52 @@ class FileDownloadControllerTest {
     when(pdfGenerator.generateCoverPageForUploadedDocs(any(Application.class)))
         .thenReturn(coverPageFile.getFileBytes());
     when(pdfGenerator
-        .generateForUploadedDocument(eq(uploadedDoc), eq(0), any(Application.class), any()))
-    	.thenReturn(imageFile);
-    when(pdfGenerator
-        .generateForUploadedDocument(eq(uploadedWordDoc), eq(0), any(Application.class), any()))
-    	.thenReturn(wordDocFile);
+        .generateForUploadedDocument(eq(List.of(uploadedDoc,uploadedWordDoc)), any(Application.class), any()))
+        .thenReturn(List.of(imageFile,wordDocFile));
+
+    when(uploadedDocsPreparer.prepare(any(), any())).thenReturn(List.of(imageFile, wordDocFile));
     MvcResult result = mockMvc.perform(
             get("/download"))
-        .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "filename=\"MNB_application_9870000123.zip\""))
+        .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+            "filename=\"MNB_application_9870000123.zip\""))
         .andExpect(status().is2xxSuccessful())
         .andReturn();
 
-    verify(pdfGenerator).generateCoverPageForUploadedDocs(application);
-    verify(pdfGenerator)
-        .generateForUploadedDocument(uploadedDoc, 0, application, coverPageFile.getFileBytes());
-    verify(pdfGenerator)
-    	.generateForUploadedDocument(uploadedWordDoc, 1, application, coverPageFile.getFileBytes());
     byte[] actualBytes = result.getResponse().getContentAsByteArray();
     assertThat(actualBytes).hasSizeGreaterThan(22);
+  }
+
+  @Test
+  void shouldReturnNotFoundMessageWhenAttemptingToDownloadOldLaterDocsApp() throws Exception {
+    var applicationId = "9870000123";
+
+    ApplicationData applicationData = new ApplicationData();
+    applicationData.setId(applicationId);
+    applicationData.setUploadedDocs(List.of(
+        new UploadedDocument("shiba+file.jpg", "", "", "",
+            getFileContentsAsByteArray("shiba+file.jpg").length)));
+    applicationData.setFlow(FlowType.LATER_DOCS);
+    Application application = Application.builder()
+        .applicationData(applicationData)
+        .completedAt(ZonedDateTime.now().minusDays(60).minusSeconds(1)) // One second too old
+        .flow(FlowType.LATER_DOCS)
+        .build();
+    mockMvc = MockMvcBuilders.standaloneSetup(
+            new FileDownloadController(
+                xmlGenerator,
+                pdfGenerator,
+                applicationData,
+                applicationRepository,
+                uploadedDocsPreparer))
+        .setViewResolvers(new InternalResourceViewResolver("", "suffix"))
+        .build();
+
+    when(applicationRepository.find(applicationId)).thenReturn(application);
+    mockMvc.perform(
+            get("/download"))
+        .andExpect(content().string("Later Docs application " + applicationId
+            + " is older than 60 days, supporting documents have been deleted."))
+        .andExpect(status().is2xxSuccessful())
+        .andReturn();
   }
 }

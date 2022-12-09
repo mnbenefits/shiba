@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.codeforamerica.shiba.County;
-import org.codeforamerica.shiba.CountyMap;
+import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
@@ -31,11 +31,13 @@ public class FilenameGenerator {
       "F", Set.of("SNAP"),
       "C", Set.of("CCAP")
   );
-  private final CountyMap<CountyRoutingDestination> countyMap;
+  private final ServicingAgencyMap<CountyRoutingDestination> countyMap;
+  private final SnapExpeditedEligibilityDecider decider;
 
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-  public FilenameGenerator(CountyMap<CountyRoutingDestination> countyMap) {
+  public FilenameGenerator(ServicingAgencyMap<CountyRoutingDestination> countyMap, SnapExpeditedEligibilityDecider decider) {
     this.countyMap = countyMap;
+    this.decider = decider;
   }
 
   public String generatePdfFilename(Application application, Document document) {
@@ -49,7 +51,11 @@ public class FilenameGenerator {
     String prefix = getSharedApplicationPrefix(application, document, dhsProviderId);
     String programs = getProgramCodes(application);
     String pdfType = document.toString();
-    return "%s%s_%s.pdf".formatted(prefix, programs, pdfType);
+    String eligible = "";
+    if(decider.decide(application.getApplicationData()) == SnapExpeditedEligibility.ELIGIBLE) {
+        eligible = "_EXPEDITED";
+    }
+    return "%s%s_%s%s.pdf".formatted(prefix, programs, pdfType, eligible);
   }
 
   public String generateUploadedDocumentName(Application application, int index, String extension) {
@@ -71,24 +77,36 @@ public class FilenameGenerator {
         dhsProviderId);
     return "%sdoc%dof%d.%s".formatted(prefix, index, size, extension);
   }
+  
+  /*public String generateCombinedUploadedDocsName(Application application, String extension,
+      RoutingDestination routingDestination, int index, int size) {
+    String dhsProviderId = routingDestination.getDhsProviderId();
+    String prefix = getSharedApplicationPrefix(application, UPLOADED_DOC,
+        dhsProviderId);
+    return "%sdoc%dof%d.%s".formatted(prefix, index, size, extension);
+  }*/
 
   public String generateXmlFilename(Application application) {
     String dhsProviderId = countyMap.get(application.getCounty()).getDhsProviderId();
     String prefix = getSharedApplicationPrefix(application, CAF,
-        dhsProviderId);
+            dhsProviderId);
     String programs = getProgramCodes(application);
-    return "%s%s.xml".formatted(prefix, programs);
+    String eligible = "";
+    if(decider.decide(application.getApplicationData()) == SnapExpeditedEligibility.ELIGIBLE) {
+      eligible = "_CAF_EXPEDITED";
+    }
+    return "%s%s%s.xml".formatted(prefix, programs, eligible);
   }
 
   @NotNull
   private String getSharedApplicationPrefix(Application application, Document document,
       String dhsProviderId) {
     boolean isHennepinUploadedDoc =
-        document == UPLOADED_DOC && application.getCounty() == County.Hennepin;
+        document == UPLOADED_DOC && (application.getCounty() == County.Hennepin || application.getCounty() == County.Other);
     String fileSource = isHennepinUploadedDoc ? "DOC" : "MNB";
 
     ZonedDateTime completedAt = application.getCompletedAt();
-    ZonedDateTime completedAtCentralTime = null;
+    ZonedDateTime completedAtCentralTime;
     if(completedAt != null) {
         completedAtCentralTime = completedAt.withZoneSameInstant(ZoneId.of("America/Chicago"));
     }else {

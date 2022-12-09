@@ -13,10 +13,13 @@ import org.codeforamerica.shiba.pages.data.Subworkflow;
 public class ApplicationDataParser {
 
   /**
-   * Mapping configurations
+   * The HashMap <i>coordinatesMap</i> is used to extract the input values from the JSON data.
+   * The {@link Field} key will be used in the Preparer classes to find the {@link ParsingCoordinate} that holds the 
+   * String pageName and String inputName as configured in pages-config.yaml.
    */
   private static final Map<Field, ParsingCoordinate> coordinatesMap = new HashMap<>();
   private static final Map<Group, String> groupCoordinatesMap = new HashMap<>();
+  public static final String DOB_AS_DATE_FIELD_NAME = "dobAsDate";
 
   static {
     coordinatesMap.put(Field.WRITTEN_LANGUAGE_PREFERENCES,
@@ -115,8 +118,11 @@ public class ApplicationDataParser {
 
     coordinatesMap.put(Field.IDENTIFY_ZIPCODE, new ParsingCoordinate("identifyZipcode", "zipCode"));
     coordinatesMap.put(Field.IDENTIFY_COUNTY, new ParsingCoordinate("identifyCounty", "county"));
+    coordinatesMap.put(Field.IDENTIFY_COUNTY_LATER_DOCS, new ParsingCoordinate("identifyCountyOrTribalNation", "county"));
+    coordinatesMap.put(Field.IDENTIFY_TRIBAL_NATION_LATER_DOCS, new ParsingCoordinate("identifyCountyOrTribalNation", "tribalNation"));
 
-    coordinatesMap.put(Field.ASSETS, new ParsingCoordinate("liquidAssets", "liquidAssets"));
+    coordinatesMap.put(Field.APPLICANT_ASSETS, new ParsingCoordinate("liquidAssetsSingle", "liquidAssets"));
+    coordinatesMap.put(Field.HOUSEHOLD_ASSETS, new ParsingCoordinate("cashAmount", "cashAmount"));
     coordinatesMap
         .put(Field.INCOME, new ParsingCoordinate("thirtyDayIncome", "moneyMadeLast30Days"));
     coordinatesMap.put(Field.MIGRANT_WORKER,
@@ -135,6 +141,10 @@ public class ApplicationDataParser {
         new ParsingCoordinate("goingToSchool", "goingToSchool"));
     coordinatesMap.put(Field.WHO_IS_GOING_TO_SCHOOL,
         new ParsingCoordinate("whoIsGoingToSchool", "whoIsGoingToSchool"));
+    coordinatesMap.put(Field.IS_PREGNANT,
+            new ParsingCoordinate("pregnant", "isPregnant"));
+    coordinatesMap.put(Field.WHO_IS_PREGNANT,
+            new ParsingCoordinate("whoIsPregnant", "whoIsPregnant"));
     coordinatesMap.put(Field.IS_LOOKING_FOR_JOB,
         new ParsingCoordinate("jobSearch", "currentlyLookingForJob"));
     coordinatesMap.put(Field.WHO_IS_LOOKING_FOR_A_JOB,
@@ -142,12 +152,159 @@ public class ApplicationDataParser {
 
     coordinatesMap.put(Field.UNEARNED_INCOME,
         new ParsingCoordinate("unearnedIncome", "unearnedIncome"));
-    coordinatesMap.put(Field.UNEARNED_INCOME_CCAP,
-        new ParsingCoordinate("unearnedIncomeCcap", "unearnedIncomeCcap"));
+    coordinatesMap.put(Field.SOCIAL_SECURITY_AMOUNT,
+        new ParsingCoordinate("unearnedIncomeSources", "socialSecurityAmount"));
+    coordinatesMap.put(Field.SSI_AMOUNT, new ParsingCoordinate("unearnedIncomeSources",
+        "supplementalSecurityIncomeAmount"));
+    coordinatesMap.put(Field.VETERANS_BENEFITS_AMOUNT,
+        new ParsingCoordinate("unearnedIncomeSources", "veteransBenefitsAmount"));
+    coordinatesMap.put(Field.UNEMPLOYMENT_AMOUNT,
+        new ParsingCoordinate("unearnedIncomeSources", "unemploymentAmount"));
+    coordinatesMap.put(Field.
+            WORKERS_COMPENSATION_AMOUNT,
+        new ParsingCoordinate("unearnedIncomeSources",
+            "workersCompensationAmount"));
+    coordinatesMap.put(Field.RETIREMENT_AMOUNT,
+        new ParsingCoordinate("unearnedIncomeSources", "retirementAmount"));
+    coordinatesMap.put(Field.CHILD_OR_SPOUSAL_SUPPORT_AMOUNT,
+        new ParsingCoordinate("unearnedIncomeSources", "childOrSpousalSupportAmount"));
+    coordinatesMap.put(Field.TRIBAL_PAYMENTS_AMOUNT,
+        new ParsingCoordinate("unearnedIncomeSources", "tribalPaymentsAmount"));
+    
+    coordinatesMap.put(Field.UNEARNED_SOCIAL_SECURITY_AMOUNT,
+        new ParsingCoordinate("socialSecurityIncomeSource", "socialSecurityAmount"));
+    coordinatesMap.put(Field.UNEARNED_SSI_AMOUNT,
+        new ParsingCoordinate("supplementalSecurityIncomeSource", "supplementalSecurityIncomeAmount"));
+    coordinatesMap.put(Field.UNEARNED_VETERANS_BENEFITS_AMOUNT,
+        new ParsingCoordinate("veteransBenefitsIncomeSource", "veteransBenefitsAmount"));
+    coordinatesMap.put(Field.UNEARNED_UNEMPLOYMENT_AMOUNT,
+        new ParsingCoordinate("unemploymentIncomeSource", "unemploymentAmount"));
+    coordinatesMap.put(Field.UNEARNED_WORKERS_COMPENSATION_AMOUNT,
+        new ParsingCoordinate("workersCompIncomeSource", "workersCompensationAmount"));
+    coordinatesMap.put(Field.UNEARNED_RETIREMENT_AMOUNT,
+        new ParsingCoordinate("retirementIncomeSource", "retirementAmount"));
+    coordinatesMap.put(Field.UNEARNED_CHILD_OR_SPOUSAL_SUPPORT_AMOUNT,
+        new ParsingCoordinate("childOrSpousalSupportIncomeSource", "childOrSpousalSupportAmount"));
+    coordinatesMap.put(Field.UNEARNED_TRIBAL_PAYMENTS_AMOUNT,
+        new ParsingCoordinate("tribalPaymentIncomeSource", "tribalPaymentsAmount"));
+    
+    coordinatesMap.put(Field.UNEARNED_INCOME_OTHER,
+        new ParsingCoordinate("otherUnearnedIncome", "otherUnearnedIncome"));
+    coordinatesMap.put(Field.UNEARNED_BENEFITS_PROGRAMS_AMOUNT,
+        new ParsingCoordinate("benefitsProgramsIncomeSource", "benefitsAmount"));
+    coordinatesMap.put(Field.UNEARNED_INSURANCE_PAYMENTS_AMOUNT,
+        new ParsingCoordinate("insurancePaymentsIncomeSource", "insurancePaymentsAmount"));
+    coordinatesMap.put(Field.UNEARNED_CONTRACT_FOR_DEED_AMOUNT,
+        new ParsingCoordinate("contractForDeedIncomeSource", "contractForDeedAmount"));
+    coordinatesMap.put(Field.UNEARNED_TRUST_MONEY_AMOUNT,
+        new ParsingCoordinate("trustMoneyIncomeSource", "trustMoneyAmount"));
+    coordinatesMap.put(Field.UNEARNED_HEALTHCARE_REIMBURSEMENT_AMOUNT,
+        new ParsingCoordinate("healthcareReimbursementIncomeSource",
+            "healthCareReimbursementAmount"));
+    coordinatesMap.put(Field.UNEARNED_INTEREST_DIVIDENDS_AMOUNT,
+        new ParsingCoordinate("interestDividendsIncomeSource", "interestDividendsAmount"));
+    coordinatesMap.put(Field.UNEARNED_RENTAL_AMOUNT,
+        new ParsingCoordinate("rentalIncomeSource", "rentalIncomeAmount"));
+    coordinatesMap.put(Field.UNEARNED_OTHER_PAYMENTS_AMOUNT,
+        new ParsingCoordinate("otherPaymentsIncomeSource", "otherPaymentsAmount"));
+    coordinatesMap.put(Field.BENEFITS_PROGRAMS_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "benefitsAmount"));
+    coordinatesMap.put(Field.INSURANCE_PAYMENTS_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "insurancePaymentsAmount"));
+    coordinatesMap.put(Field.CONTRACT_FOR_DEED_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "contractForDeedAmount"));
+    coordinatesMap.put(Field.TRUST_MONEY_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "trustMoneyAmount"));
+    coordinatesMap.put(Field.HEALTHCARE_REIMBURSEMENT_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "healthCareReimbursementAmount"));
+    coordinatesMap.put(Field.INTEREST_DIVIDENDS_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "interestDividendsAmount"));
+    coordinatesMap.put(Field.RENTAL_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "rentalIncomeAmount"));
+    coordinatesMap.put(Field.OTHER_PAYMENTS_AMOUNT,
+        new ParsingCoordinate("otherUnearnedIncomeSources", "otherPaymentsAmount"));
+
+    coordinatesMap.put(Field.NO_CP_UNEARNED_INCOME,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_PERSON_1,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomePerson1"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_PERSON_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomePerson2"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_1,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_1"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_2"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_3,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_3"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_4,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_4"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_1,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_1"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_2"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_3,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_3"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_4,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_4"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_1,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_1"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_2"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_3,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_3"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_4,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_4"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_1,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_1"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_2"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_3,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_3"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_4,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_4"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_1,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_1"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_2"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_3"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_4"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_1,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_1"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_2,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_2"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_3,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_3"));
+    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_4,
+            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_4"));
+
+    coordinatesMap.put(Field.CP_HAS_BANK_ACCOUNTS,
+            new ParsingCoordinate("certainPopsBankAccounts", "hasCertainPopsBankAccounts"));
+    coordinatesMap.put(Field.CP_BANK_ACCOUNT_OWNER_LINE_1,
+            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountOwnerLine_1"));
+    coordinatesMap.put(Field.CP_BANK_ACCOUNT_OWNER_LINE_2,
+            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountOwnerLine_2"));
+    coordinatesMap.put(Field.CP_BANK_ACCOUNT_OWNER_LINE_3,
+            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountOwnerLine_3"));
+    coordinatesMap.put(Field.CP_BANK_ACCOUNT_TYPE_LINE_1,
+            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountTypeLine_1"));
+    coordinatesMap.put(Field.CP_BANK_ACCOUNT_TYPE_LINE_2,
+            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountTypeLine_2"));
+    coordinatesMap.put(Field.CP_BANK_ACCOUNT_TYPE_LINE_3,
+            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountTypeLine_3"));
+
+    coordinatesMap.put(Field.CP_SUPPLEMENT,
+            new ParsingCoordinate("certainPops", "certainPopsSupplement"));
+    
     coordinatesMap.put(Field.HOME_EXPENSES,
         new ParsingCoordinate("homeExpenses", "homeExpenses"));
     coordinatesMap.put(Field.UTILITY_PAYMENTS,
         new ParsingCoordinate("utilityPayments", "payForUtilities"));
+    coordinatesMap.put(Field.ASSETS_TYPE,
+        new ParsingCoordinate("assets", "assets"));
+    coordinatesMap.put(Field.INVESTMENT_TYPE_INDIVIDUAL,
+            new ParsingCoordinate("investmentTypesIndividual", "investmentTypes"));
     coordinatesMap.put(Field.SAVINGS,
         new ParsingCoordinate("savings", "haveSavings"));
     coordinatesMap.put(Field.RECEIVES_ENERGY_ASSISTANCE,
@@ -156,35 +313,69 @@ public class ApplicationDataParser {
         new ParsingCoordinate("energyAssistanceMoreThan20", "energyAssistanceMoreThan20"));
     coordinatesMap.put(Field.REGISTER_TO_VOTE,
         new ParsingCoordinate("registerToVote", "registerToVote"));
+    coordinatesMap.put(Field.HAVE_HEALTHCARE_COVERAGE,
+        new ParsingCoordinate("healthcareCoverage", "healthcareCoverage"));
     coordinatesMap
         .put(Field.PERSONAL_INFO_DOB, new ParsingCoordinate("personalInfo", "dateOfBirth"));
     coordinatesMap
-    	.put(Field.PERSONAL_INFO_SSN, new ParsingCoordinate("personalInfo", "ssn"));
+        .put(Field.PERSONAL_INFO_SSN, new ParsingCoordinate("personalInfo", "ssn"));
     coordinatesMap
-    	.put(Field.PERSONAL_INFO_NO_SSN, new ParsingCoordinate("personalInfo", "noSSNCheck"));
+        .put(Field.PERSONAL_INFO_NO_SSN, new ParsingCoordinate("personalInfo", "noSSNCheck"));
     coordinatesMap
         .put(Field.PERSONAL_INFO_FIRST_NAME, new ParsingCoordinate("personalInfo", "firstName"));
     coordinatesMap
         .put(Field.PERSONAL_INFO_LAST_NAME, new ParsingCoordinate("personalInfo", "lastName"));
 
-    coordinatesMap
-        .put(Field.HOUSEHOLD_INFO_DOB, new ParsingCoordinate("householdMemberInfo", "dateOfBirth"));
+    coordinatesMap.put(Field.HOUSEHOLD_INFO_DOB,
+        new ParsingCoordinate("householdMemberInfo", "dateOfBirth"));
+    coordinatesMap.put(Field.HOUSEHOLD_INFO_DOB_AS_DATE,
+        new ParsingCoordinate("householdMemberInfo", DOB_AS_DATE_FIELD_NAME));
     coordinatesMap.put(Field.HOUSEHOLD_INFO_FIRST_NAME,
         new ParsingCoordinate("householdMemberInfo", "firstName"));
     coordinatesMap.put(Field.HOUSEHOLD_INFO_LAST_NAME,
         new ParsingCoordinate("householdMemberInfo", "lastName"));
+    coordinatesMap.put(Field.HOUSEHOLD_INFO_RELATIONSHIP,
+        new ParsingCoordinate("householdMemberInfo", "relationship"));
+    coordinatesMap.put(Field.HOUSEHOLD_INFO_SEX,
+        new ParsingCoordinate("householdMemberInfo", "sex"));
+    coordinatesMap.put(Field.HOUSEHOLD_INFO_SSN,
+        new ParsingCoordinate("householdMemberInfo", "ssn"));
+    coordinatesMap.put(Field.HOUSEHOLD_INFO_MARITAL_STATUS,
+        new ParsingCoordinate("householdMemberInfo", "maritalStatus"));
 
     coordinatesMap.put(Field.MATCH_INFO_DOB, new ParsingCoordinate("matchInfo", "dateOfBirth"));
     coordinatesMap
         .put(Field.MATCH_INFO_FIRST_NAME, new ParsingCoordinate("matchInfo", "firstName"));
     coordinatesMap.put(Field.MATCH_INFO_LAST_NAME, new ParsingCoordinate("matchInfo", "lastName"));
 
+    coordinatesMap.put(Field.EVERYONE_US_CITIZENS,
+        new ParsingCoordinate("usCitizen", "isUsCitizen"));
+    coordinatesMap.put(Field.WHO_ARE_NON_US_CITIZENS,
+        new ParsingCoordinate("whoIsNonCitizen", "whoIsNonCitizen"));
+
     coordinatesMap.put(Field.RACE_AND_ETHNICITY,
         new ParsingCoordinate("raceAndEthnicity", "raceAndEthnicity"));
+
+    coordinatesMap.put(Field.HAS_HOUSE_HOLD,
+        new ParsingCoordinate("addHouseholdMembers", "addHouseholdMembers"));
     groupCoordinatesMap.put(Group.JOBS, "jobs");
     groupCoordinatesMap.put(Group.HOUSEHOLD, "household");
-
-
+    coordinatesMap.put(Field.ALIEN_ID,
+        new ParsingCoordinate("alienIdNumber", "alienIdNumber"));
+    coordinatesMap.put(Field.ALIEN_IDS,
+        new ParsingCoordinate("alienIdNumbers", "alienIdNumber"));
+    coordinatesMap.put(Field.ALIEN_ID_MAP,
+        new ParsingCoordinate("alienIdNumbers", "alienIdMap"));
+    coordinatesMap.put(Field.RETROACTIVE_COVERAGE,
+        new ParsingCoordinate("retroactiveCoverage", "retroactiveCoverageQuestion"));
+    coordinatesMap.put(Field.RETROACTIVE_COVERAGE_SOURCE,
+        new ParsingCoordinate("retroactiveCoverageSource", "retroactiveCoverageSourceQuestion"));
+    coordinatesMap.put(Field.RETROACTIVE_TIME_INDIVIDUAL,
+        new ParsingCoordinate("retroactiveCoverageTimePeriodIndividual", "retroactiveCoverageNumberMonths"));
+    coordinatesMap.put(Field.RETROACTIVE_COVERAGE_MAP,
+        new ParsingCoordinate("retroactiveCoverageTimePeriod", "retroactiveCoverageMap"));
+    coordinatesMap.put(Field.RETROACTIVE_COVERAGE_MONTH,
+        new ParsingCoordinate("retroactiveCoverageTimePeriod", "retroactiveCoverageNumberMonths"));
   }
 
   public static List<String> getValues(PagesData pagesData, Field field) {
@@ -221,7 +412,8 @@ public class ApplicationDataParser {
   }
 
   /**
-   * Retrievable fields
+   * Enum Field is used as a HashMap key for the ApplicationDataParser's 
+   * internal HashMap <i>coordinatesMap</i>.
    */
   public enum Field {
     WRITTEN_LANGUAGE_PREFERENCES,
@@ -238,8 +430,8 @@ public class ApplicationDataParser {
     PAY_PERIOD,
     INCOME_PER_PAY_PERIOD,
     LAST_THIRTY_DAYS_JOB_INCOME,
-    IS_SELF_EMPLOYMENT,
-    WHOSE_JOB_IS_IT,
+    IS_SELF_EMPLOYMENT(""),
+    WHOSE_JOB_IS_IT(""),
     EMPLOYERS_NAME,
     ARE_YOU_WORKING,
 
@@ -285,8 +477,11 @@ public class ApplicationDataParser {
 
     IDENTIFY_ZIPCODE,
     IDENTIFY_COUNTY("Other"),
+    IDENTIFY_COUNTY_LATER_DOCS("Other"),
+    IDENTIFY_TRIBAL_NATION_LATER_DOCS,
 
-    ASSETS("0"),
+    APPLICANT_ASSETS("0"),
+    HOUSEHOLD_ASSETS("0"),
     INCOME("0"),
     MIGRANT_WORKER,
     HOUSING_COSTS("0"),
@@ -296,20 +491,91 @@ public class ApplicationDataParser {
     PREPARING_MEALS_TOGETHER,
     IS_GOING_TO_SCHOOL,
     WHO_IS_GOING_TO_SCHOOL,
+    IS_PREGNANT,
+    WHO_IS_PREGNANT,
     IS_LOOKING_FOR_JOB,
     WHO_IS_LOOKING_FOR_A_JOB,
 
     UNEARNED_INCOME,
-    UNEARNED_INCOME_CCAP,
+    SOCIAL_SECURITY_AMOUNT,
+    SSI_AMOUNT,
+    VETERANS_BENEFITS_AMOUNT,
+    UNEMPLOYMENT_AMOUNT,
+    WORKERS_COMPENSATION_AMOUNT,
+    RETIREMENT_AMOUNT,
+    CHILD_OR_SPOUSAL_SUPPORT_AMOUNT,
+    TRIBAL_PAYMENTS_AMOUNT,
+
+    UNEARNED_INCOME_OTHER,
+    BENEFITS_PROGRAMS_AMOUNT,
+    INSURANCE_PAYMENTS_AMOUNT,
+    CONTRACT_FOR_DEED_AMOUNT,
+    TRUST_MONEY_AMOUNT,
+    HEALTHCARE_REIMBURSEMENT_AMOUNT,
+    INTEREST_DIVIDENDS_AMOUNT,
+    RENTAL_AMOUNT,
+    OTHER_PAYMENTS_AMOUNT,
+
+    CP_SUPPLEMENT,
+
+    // Certain Pops section 11 fields
+    NO_CP_UNEARNED_INCOME,
+    CP_UNEARNED_INCOME_PERSON_1,
+    CP_UNEARNED_INCOME_PERSON_2,
+    CP_UNEARNED_INCOME_TYPE_1_1,
+    CP_UNEARNED_INCOME_TYPE_1_2,
+    CP_UNEARNED_INCOME_TYPE_1_3,
+    CP_UNEARNED_INCOME_TYPE_1_4,
+    CP_UNEARNED_INCOME_AMOUNT_1_1,
+    CP_UNEARNED_INCOME_AMOUNT_1_2,
+    CP_UNEARNED_INCOME_AMOUNT_1_3,
+    CP_UNEARNED_INCOME_AMOUNT_1_4,
+    CP_UNEARNED_INCOME_FREQUENCY_1_1,
+    CP_UNEARNED_INCOME_FREQUENCY_1_2,
+    CP_UNEARNED_INCOME_FREQUENCY_1_3,
+    CP_UNEARNED_INCOME_FREQUENCY_1_4,
+    CP_UNEARNED_INCOME_TYPE_2_1,
+    CP_UNEARNED_INCOME_TYPE_2_2,
+    CP_UNEARNED_INCOME_TYPE_2_3,
+    CP_UNEARNED_INCOME_TYPE_2_4,
+    CP_UNEARNED_INCOME_AMOUNT_2_1,
+    CP_UNEARNED_INCOME_AMOUNT_2_2,
+    CP_UNEARNED_INCOME_AMOUNT_2_3,
+    CP_UNEARNED_INCOME_AMOUNT_2_4,
+    CP_UNEARNED_INCOME_FREQUENCY_2_1,
+    CP_UNEARNED_INCOME_FREQUENCY_2_2,
+    CP_UNEARNED_INCOME_FREQUENCY_2_3,
+    CP_UNEARNED_INCOME_FREQUENCY_2_4,
+
+    CP_HAS_BANK_ACCOUNTS,
+    CP_BANK_ACCOUNT_OWNER_LINE_1,
+    CP_BANK_ACCOUNT_OWNER_LINE_2,
+    CP_BANK_ACCOUNT_OWNER_LINE_3,
+    CP_BANK_ACCOUNT_TYPE_LINE_1,
+    CP_BANK_ACCOUNT_TYPE_LINE_2,
+    CP_BANK_ACCOUNT_TYPE_LINE_3,
+
+    UNEARNED_BENEFITS_PROGRAMS_AMOUNT,
+    UNEARNED_INSURANCE_PAYMENTS_AMOUNT,
+    UNEARNED_CONTRACT_FOR_DEED_AMOUNT,
+    UNEARNED_TRUST_MONEY_AMOUNT,
+    UNEARNED_HEALTHCARE_REIMBURSEMENT_AMOUNT,
+    UNEARNED_INTEREST_DIVIDENDS_AMOUNT,
+    UNEARNED_RENTAL_AMOUNT,
+    UNEARNED_OTHER_PAYMENTS_AMOUNT,
+
     HOME_EXPENSES,
     UTILITY_PAYMENTS,
-
+    ASSETS_TYPE,
+    INVESTMENT_TYPE_INDIVIDUAL,
     SAVINGS,
 
     RECEIVES_ENERGY_ASSISTANCE,
     ENERGY_ASSISTANCE_OVER_20,
 
     REGISTER_TO_VOTE,
+
+    HAVE_HEALTHCARE_COVERAGE,
 
     PERSONAL_INFO_DOB,
     PERSONAL_INFO_SSN,
@@ -318,14 +584,39 @@ public class ApplicationDataParser {
     PERSONAL_INFO_LAST_NAME(""),
 
     HOUSEHOLD_INFO_DOB,
+    HOUSEHOLD_INFO_DOB_AS_DATE,
     HOUSEHOLD_INFO_FIRST_NAME(""),
     HOUSEHOLD_INFO_LAST_NAME(""),
+    HOUSEHOLD_INFO_RELATIONSHIP(""),
+    HOUSEHOLD_INFO_SEX(""),
+    HOUSEHOLD_INFO_MARITAL_STATUS(""),
+    HOUSEHOLD_INFO_SSN(""),
 
     MATCH_INFO_DOB,
     MATCH_INFO_FIRST_NAME(""),
     MATCH_INFO_LAST_NAME(""),
 
-    RACE_AND_ETHNICITY;
+    EVERYONE_US_CITIZENS,
+    WHO_ARE_NON_US_CITIZENS,
+    RACE_AND_ETHNICITY,
+    HAS_HOUSE_HOLD,
+    UNEARNED_SOCIAL_SECURITY_AMOUNT,
+    UNEARNED_SSI_AMOUNT,
+    UNEARNED_VETERANS_BENEFITS_AMOUNT,
+    UNEARNED_UNEMPLOYMENT_AMOUNT,
+    UNEARNED_WORKERS_COMPENSATION_AMOUNT,
+    UNEARNED_RETIREMENT_AMOUNT,
+    UNEARNED_CHILD_OR_SPOUSAL_SUPPORT_AMOUNT,
+    UNEARNED_TRIBAL_PAYMENTS_AMOUNT,
+    ALIEN_ID,
+    ALIEN_IDS,
+    ALIEN_ID_MAP,
+    RETROACTIVE_COVERAGE,
+    RETROACTIVE_COVERAGE_SOURCE,
+    RETROACTIVE_TIME_INDIVIDUAL,
+    RETROACTIVE_COVERAGE_MAP,
+    RETROACTIVE_COVERAGE_MONTH;
+    
     @Getter
     private final String defaultValue;
 
@@ -343,6 +634,10 @@ public class ApplicationDataParser {
     HOUSEHOLD
   }
 
+  /**
+   * Java POJO record ParsingCoordinate(String pageName, String inputName) 
+   * corresponds to pages-config.yaml pageDefinitions for pageName and inputName.
+   **/
   private record ParsingCoordinate(String pageName, String inputName) {
 
   }

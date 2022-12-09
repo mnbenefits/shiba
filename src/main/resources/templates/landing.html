@@ -5,6 +5,7 @@
 <div class="page-wrapper">
   <div th:replace="fragments/toolbar :: toolbar"></div>
   <div th:replace="fragments/demoBanner :: demoBanner"></div>
+  <div th:replace="fragments/ebtScamAlert :: ebtScamAlert"></div>
   <main id="content" role="main">
     <section class="slab slab--white padding-top-1rem padding-bottom-3rem">
       <div class="grid">
@@ -20,7 +21,7 @@
           <p class="text-25 spacing-below-15" th:text="#{landing.subheader}"></p>
           <div class="spacing-above-15 spacing-below-0">
             <a href="#later-docs-upload">
-              <span th:text="#{landing.alread-applied}"></span>
+              <span th:utext="#{landing.alread-applied}"></span>
             </a>
           </div>
           <a class="button button--primary spacing-below-0 spacing-above-45"
@@ -89,10 +90,17 @@
     <section id="later-docs-upload" class="slab text--centered">
       <div th:replace="fragments/icons/icon-upload-documents :: icon-upload-documents"></div>
       <h1 class="max-width-446 h2 spacing-below-25 margin-left-right-auto spacing-above-10"
-          th:text="#{landing.submit-documents-to-county}"></h1>
+          th:utext="#{landing.submit-documents-to-county}"></h1>
+    <div th:if="${@environment.getProperty('feature-flag.tribal-routing')}">
+      <a class="button spacing-below-0" th:href="'/pages/identifyCountyOrTribalNation'">
+        <span th:text="#{landing.upload-documents}"></span>
+      </a>
+    </div>
+    <div th:if="!${@environment.getProperty('feature-flag.tribal-routing')}">
       <a class="button spacing-below-0" th:href="'/pages/identifyCounty'">
         <span th:text="#{landing.upload-documents}"></span>
       </a>
+    </div>
     </section>
   </main>
 </div>

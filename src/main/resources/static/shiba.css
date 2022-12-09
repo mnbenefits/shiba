@@ -199,6 +199,7 @@ html {
   height: 35rem;
   overflow-y: scroll;
   padding-right: calc(1.5rem + 12px);
+  border-style: none;
 }
 
 .legal-stuff-window div {
@@ -216,6 +217,11 @@ html {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 8px;
+}
+
+.legal-stuff-accordion{
+	background-color: white; 
+	border-color: black;
 }
 
 .textarea-readonly::-webkit-scrollbar {
@@ -1611,3 +1617,28 @@ legend.form-question {
 #content .reveal .reveal__link::after {
   content: "\e313" / "";
 }
+
+.alert-banner{
+	position:relative;
+	margin-left:-1.5rem;
+	margin-right:-1.5rem;
+	padding:1.5rem;
+	background-color:#FFBA26;
+	text-align:center;
+	font-size:1.6rem;
+	color:#121111;
+	}
+@media screen and (min-width: 601px){
+	.alert-banner{
+		margin-left:-3.5rem;
+		margin-right:-3.5rem;
+		padding-left:3.5rem;
+		padding-right:3.5rem}
+	}
+	
+.link--alert-banner {
+	color:#003865;
+	}
+.link--alert-banner:visited {
+	color:#5B0E5D;
+	}	

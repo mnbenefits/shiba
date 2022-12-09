@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.shiba.County.Dakota;
 import static org.codeforamerica.shiba.County.Hennepin;
 import static org.codeforamerica.shiba.County.Olmsted;
-import static org.codeforamerica.shiba.TribalNationRoutingDestination.MILLE_LACS_BAND_OF_OJIBWE;
-import static org.codeforamerica.shiba.TribalNationRoutingDestination.UPPER_SIOUX;
+import static org.codeforamerica.shiba.TribalNation.MilleLacsBandOfOjibwe;
+import static org.codeforamerica.shiba.TribalNation.UpperSioux;
 import static org.codeforamerica.shiba.application.FlowType.FULL;
 import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.application.Status.DELIVERY_FAILED;
@@ -18,13 +18,13 @@ import static org.codeforamerica.shiba.output.Document.XML;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
 import static org.codeforamerica.shiba.testutilities.TestUtils.getAbsoluteFilepath;
 import static org.codeforamerica.shiba.testutilities.TestUtils.resetApplicationData;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
@@ -32,7 +32,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
-import de.redsix.pdfcompare.PdfComparator;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -40,10 +39,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
+
 import org.codeforamerica.shiba.County;
-import org.codeforamerica.shiba.CountyMap;
 import org.codeforamerica.shiba.MonitoringService;
+import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.TribalNationRoutingDestination;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
@@ -78,6 +77,8 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 
+import de.redsix.pdfcompare.PdfComparator;
+
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = NONE)
 @ContextConfiguration(classes = {NonSessionScopedApplicationData.class})
@@ -86,14 +87,14 @@ class MnitDocumentConsumerTest {
 
   public static final byte[] FILE_BYTES = new byte[10];
 
-  @MockBean
-  private FeatureFlagConfiguration featureFlagConfig;
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
   @Autowired
-  private CountyMap<CountyRoutingDestination> countyMap;
+  private ServicingAgencyMap<CountyRoutingDestination> countyMap;
   @Autowired
-  private Map<String, TribalNationRoutingDestination> tribalNations;
+  private ServicingAgencyMap<TribalNationRoutingDestination> tribalNations;
 
+  @MockBean
+  private FeatureFlagConfiguration featureFlagConfig;
   @MockBean
   private FilenetWebServiceClient mnitClient;
   @MockBean
@@ -226,7 +227,7 @@ class MnitDocumentConsumerTest {
     documentConsumer.processCafAndCcap(application);
 
     TribalNationRoutingDestination routingDestination = tribalNations.get(
-        MILLE_LACS_BAND_OF_OJIBWE);
+        MilleLacsBandOfOjibwe);
     verify(pdfGenerator).generate(application.getId(), CAF, CASEWORKER, routingDestination);
     verify(xmlGenerator).generate(application.getId(), CAF, CASEWORKER);
     verify(mnitClient, times(2)).send(any(), any(), any(), any(), any());
@@ -245,7 +246,7 @@ class MnitDocumentConsumerTest {
 
     application.setApplicationData(new TestApplicationDataBuilder()
         .withApplicantPrograms(List.of("EA"))
-        .withPageData("selectTheTribe", "selectedTribe", List.of(UPPER_SIOUX))
+        .withPageData("selectTheTribe", "selectedTribe", List.of(UpperSioux.toString()))
         .withPageData("identifyCounty", "county", "Olmsted")
         .withPageData("homeAddress", "county", List.of("Olmsted"))
         .withPageData("homeAddress", "enrichedCounty", List.of("Olmsted"))
@@ -274,7 +275,7 @@ class MnitDocumentConsumerTest {
 
     // set up tribal nation caf mock
     TribalNationRoutingDestination nationDestination = tribalNations.get(
-        MILLE_LACS_BAND_OF_OJIBWE);
+        MilleLacsBandOfOjibwe);
     ApplicationFile nationCaf = new ApplicationFile("mycaf".getBytes(), "tribalNationCaf.pdf");
     doReturn(nationCaf).when(pdfGenerator)
         .generate(anyString(), eq(CAF), any(), eq(nationDestination));
@@ -384,10 +385,11 @@ class MnitDocumentConsumerTest {
   void updatesStatusToDeliveryFailedForUploadedDocuments() throws IOException {
     mockDocUpload("shiba+file.jpg", "someS3FilePath", MediaType.IMAGE_JPEG_VALUE, "jpg");
     ApplicationFile testFile = new ApplicationFile(FILE_BYTES, "doc1of1.pdf");
+    List<ApplicationFile> testFileList = List.of(new ApplicationFile(FILE_BYTES, "doc1of1.pdf"));
     doReturn(testFile).when(pdfGenerator)
         .generate(anyString(), eq(UPLOADED_DOC), eq(CASEWORKER), any());
-    doReturn(testFile).when(pdfGenerator)
-        .generateForUploadedDocument(any(), anyInt(), eq(application), any());
+    doReturn(testFileList).when(pdfGenerator)
+        .generateCombinedUploadedDocument(any(), eq(application), any(), any());
     doThrow(new RuntimeException("Some mocked exception")).when(mnitClient)
         .send(any(), any(), any(), eq(UPLOADED_DOC), any());
 
@@ -416,28 +418,25 @@ class MnitDocumentConsumerTest {
     mockDocUpload("shiba+file.jpg", "someS3FilePath", MediaType.IMAGE_JPEG_VALUE, "jpg");
 
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
-    when(fileNameGenerator.generateUploadedDocumentName(application, 0, "pdf"))
-        .thenReturn("pdf1of2.pdf");
-    when(fileNameGenerator.generateUploadedDocumentName(application, 1, "pdf"))
-        .thenReturn("pdf2of2.pdf");
 
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application),anyInt(),eq("pdf"),any(),anyInt())).thenReturn("combined-pdf.pdf");
     documentConsumer.processUploadedDocuments(application);
 
     ArgumentCaptor<ApplicationFile> captor = ArgumentCaptor.forClass(ApplicationFile.class);
-    verify(mnitClient, times(2))
+    verify(mnitClient, times(1))
         .send(captor.capture(), eq(countyMap.get(Olmsted)), eq(application.getId()),
             eq(UPLOADED_DOC), any());
     verify(mnitClient, times(0)).send(any(), any(),
         eq(application.getId()), eq(XML), any()); // XMLs only for Dakota
 
     // Uncomment the following lines to regenerate the test files (useful if the files or cover page have changed)
-    //    Utils.writeByteArrayToFile(captor.getAllValues().get(0).getFileBytes(), "src/test/resources/shiba+file.pdf");
-    //    Utils.writeByteArrayToFile(captor.getAllValues().get(1).getFileBytes(), "src/test/resources/test-uploaded-pdf-with-coverpage.pdf");
+//        Utils.writeByteArrayToFile(captor.getAllValues().get(0).getFileBytes(), "src/test/resources/shiba+file.pdf");
+//        
+   // Utils.writeByteArrayToFile(captor.getAllValues().get(0).getFileBytes(), "src/test/resources/combined-pdf.pdf");
+   
 
     // Assert that converted file contents are as expected
-    verifyGeneratedPdf(captor.getAllValues().get(0).getFileBytes(), "shiba+file.pdf");
-    verifyGeneratedPdf(captor.getAllValues().get(1).getFileBytes(),
-        "test-uploaded-pdf-with-coverpage.pdf");
+    verifyGeneratedPdf(captor.getAllValues().get(0).getFileBytes(), "combined-pdf.pdf");
   }
 
   @Test
@@ -447,7 +446,7 @@ class MnitDocumentConsumerTest {
 
     application.setFlow(LATER_DOCS);
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
-    when(fileNameGenerator.generateUploadedDocumentName(application, 0, "pdf"))
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(0), eq("pdf"), any(), eq(1)))
         .thenReturn("pdf1of1.pdf");
     ApplicationFile xmlApplicationFile = new ApplicationFile("my xml".getBytes(), "someFile.xml");
     when(xmlGenerator.generate(any(), any(), any())).thenReturn(xmlApplicationFile);
@@ -497,27 +496,26 @@ class MnitDocumentConsumerTest {
 
     mockDocUpload("shiba+file.jpg", "someS3FilePath", MediaType.IMAGE_JPEG_VALUE, "jpg");
     ApplicationFile testFile = new ApplicationFile(FILE_BYTES, "doc1of1.pdf");
+    List<ApplicationFile> testFileList = List.of(new ApplicationFile(FILE_BYTES, "doc1of1.pdf"));
     doReturn(testFile).when(pdfGenerator)
         .generate(anyString(), eq(UPLOADED_DOC), eq(CASEWORKER), any());
-    doReturn(testFile).when(pdfGenerator)
-        .generateForUploadedDocument(any(), anyInt(), eq(application), any());
+    doReturn(testFileList).when(pdfGenerator)
+        .generateCombinedUploadedDocument(any(), eq(application),any(), any());
     when(fileNameGenerator.generateUploadedDocumentName(application, 0, "pdf")).thenReturn(
         "pdf1of1.pdf");
     when(fileNameGenerator.generateUploadedDocumentName(
-        eq(application), eq(0), eq("pdf"), eq(tribalNations.get(MILLE_LACS_BAND_OF_OJIBWE)), eq(1))
+        eq(application), eq(0), eq("pdf"), eq(tribalNations.get(MilleLacsBandOfOjibwe)), eq(1))
     ).thenReturn("MILLE_LACS_pdf1of1.pdf");
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application),anyInt(),eq("pdf"),eq(tribalNations.get(MilleLacsBandOfOjibwe)),anyInt()))
+   // when(fileNameGenerator.generateCombinedUploadedDocsName(eq(application), eq("pdf"), eq(tribalNations.get(MilleLacsBandOfOjibwe))))
+    .thenReturn("MILLE_LACS_pdf.pdf");
 
     documentConsumer.processUploadedDocuments(application);
 
-    // Assert that only email is sent for Hennepin and api for Mille Lacs
-//    verify(mnitClient, times(1)).send(any(), any(), any(), any(), any());
-//    verify(mnitClient, never()).send(any(), eq(countyMap.get(Hennepin)),
-//        eq(application.getId()), eq(UPLOADED_DOC), eq(FULL));
-
     ArgumentCaptor<ApplicationFile> captor = ArgumentCaptor.forClass(ApplicationFile.class);
-    verify(mnitClient).send(captor.capture(), eq(tribalNations.get(MILLE_LACS_BAND_OF_OJIBWE)),
+    verify(mnitClient).send(captor.capture(), eq(tribalNations.get(MilleLacsBandOfOjibwe)),
         eq(application.getId()), eq(UPLOADED_DOC), eq(FULL));
-    assertThat(captor.getValue().getFileName()).isEqualTo("MILLE_LACS_pdf1of1.pdf");
+    assertThat(captor.getValue().getFileName()).isEqualTo("MILLE_LACS_pdf.pdf");
   }
 
   @Test
@@ -527,16 +525,16 @@ class MnitDocumentConsumerTest {
 
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
 
-    when(fileNameGenerator.generateUploadedDocumentName(application, 0, "pdf"))
-        .thenReturn("pdf1of2.pdf");
-    when(fileNameGenerator.generateUploadedDocumentName(application, 1, "pdf"))
-        .thenReturn("pdf2of2.pdf");
+    when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(0), eq("pdf"), any(), eq(1)))
+        .thenReturn("pdf1of1.pdf");
+   /* when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(1), eq("pdf"), any(), eq(2)))
+        .thenReturn("pdf2of2.pdf");*/
 
     documentConsumer.processUploadedDocuments(application);
 
     CountyRoutingDestination routingDestination = countyMap.get(Olmsted);
-    verify(applicationStatusRepository,times(2)).createOrUpdate(application.getId(),
-        UPLOADED_DOC, routingDestination.getName(), SENDING,null);
+    verify(applicationStatusRepository,times(1)).createOrUpdate(application.getId(),
+        UPLOADED_DOC, routingDestination.getName(), SENDING, "pdf1of1.pdf");
   }
 
   @Test

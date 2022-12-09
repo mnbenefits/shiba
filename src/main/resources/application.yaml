@@ -45,6 +45,7 @@ server:
       cookie:
         secure: true
       timeout: 60m
+      timeout-url : /errorTimeout
   error:
     whitelabel:
       enabled: true
@@ -58,11 +59,11 @@ client:
 mnit-filenet:
   username: ${MNIT-FILENET_USERNAME}
   password: ${MNIT-FILENET_PASSWORD}
-  url: https://test-svcs.dhs.mn.gov/WebServices/FileNet/ObjectService/SOAP
+  upload-url: https://extsvcs-stst.dhs.state.mn.us/WebServices/FileNet/ObjectService/SOAP
   # future endpoint for atompub/chemistry implementation:
   # url: https://test-svcs.dhs.mn.gov/fncmis/resources/Service
-  #  router-url: http://10.217.19.80:9083/router/api/fileNetToSftp
-  router-url: https://mn-its-stst.dhs.state.mn.us/router/api/fileNetToSftp
+  #  sftp-upload-url: http://10.217.19.80:9083/router/api/fileNetToSftp
+  sftp-upload-url: https://mn-its-stst.dhs.state.mn.us/router/api/fileNetToSftp
   jaxb-context-path: org.codeforamerica.shiba.filenetwsdl
   max-attempts: 4
   delay: 5400000 # 1.5 hours
@@ -78,20 +79,16 @@ security-email: security@mnbenefits.org
 audit-email: help+audit@mnbenefits.org
 
 mail-gun:
-  url: "https://api.mailgun.net/v3/mail.mnbenefits.org/messages"
+  url: "https://api.mailgun.net/v3/mail.mnbenefits.mn.gov/messages"
   api-key: ${MAILGUN_API_KEY}
   shouldCC: false
   max-attachment-size: 20000000 #20MB
-  
-itext: 
-  license: src/main/resources/itextLicense.json
 
 feature-flag:
+  tribal-routing: on
   certain-pops: on
   submit-via-api: on
   white-earth-and-red-lake-routing: on
-  word-to-pdf: off
-  only-submit-blank-status-apps-from-olmsted: off
   show-delayed-processing-time-notice: on
   
 document-upload:
@@ -110,8 +107,9 @@ logging:
     org.springframework.ws.server.MessageTracing.sent: DEBUG
     org.springframework.ws.client.MessageTracing.received: DEBUG
     org.springframework.ws.server.MessageTracing.received: DEBUG
+    org.springframework.web.client.RestTemplate: TRACE
     org.springframework.context.event.EventListener: TRACE
-
+    
 pagesConfig: pages-config.yaml
 
 asyncConfiguration:
@@ -146,3 +144,5 @@ no-status-applications-resubmission:
   lockAtMostFor: 20m
 
 demo: false
+
+  # added this line to test the mnbenefits/shiba repo
