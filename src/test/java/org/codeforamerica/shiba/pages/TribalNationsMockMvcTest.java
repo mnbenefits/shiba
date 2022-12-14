@@ -7,13 +7,11 @@ import static org.codeforamerica.shiba.Program.CCAP;
 import static org.codeforamerica.shiba.Program.EA;
 import static org.codeforamerica.shiba.Program.GRH;
 import static org.codeforamerica.shiba.Program.SNAP;
-import static org.codeforamerica.shiba.TribalNation.MilleLacsBandOfOjibwe;
 import static org.codeforamerica.shiba.TribalNation.OtherFederallyRecognizedTribe;
 import static org.codeforamerica.shiba.TribalNation.RedLakeNation;
 import static org.codeforamerica.shiba.TribalNation.WhiteEarthNation;
-
-import static org.codeforamerica.shiba.output.Document.*;
 import static org.codeforamerica.shiba.output.Document.CAF;
+import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,13 +20,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.TribalNation;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.FormPage;
@@ -57,9 +55,6 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingSuccess("languagePreferences",
         Map.of("writtenLanguage", List.of("ENGLISH"), "spokenLanguage", List.of("ENGLISH"))
     );
-
-    when(featureFlagConfiguration.get("white-earth-and-red-lake-routing")).thenReturn(
-        FeatureFlag.ON);
   }
 
   @ParameterizedTest
@@ -286,15 +281,12 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void clientsFromOtherFederallyRecognizedNationsShouldBeAbleToApplyForMFIPAndRouteToCounty()
       throws Exception {
-    when(featureFlagConfiguration.get("white-earth-and-red-lake-routing"))
-        .thenReturn(FeatureFlag.OFF);
-
     addHouseholdMembersWithProgram("EA");
     goThroughShortTribalTanfFlow(OtherFederallyRecognizedTribe.toString(), Beltrami.toString(),
         "true", EA);
-    assertRoutingDestinationIsCorrectForDocument(CAF, Beltrami.toString());
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, Beltrami.toString());
-    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, Beltrami.toString());
+    assertRoutingDestinationIsCorrectForDocument(CAF, RedLakeNation.toString());
+    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, RedLakeNation.toString());
+    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, RedLakeNation.toString());
   }
 
   @ParameterizedTest
@@ -430,71 +422,6 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 
     assertRoutingDestinationIsCorrectForDocument(CAF, county);
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county);
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
-  }
-
-  @Test
-  void redLakeApplicationsGetSentToCountyIfFeatureFlagIsTurnedOff() throws Exception {
-    when(featureFlagConfiguration.get("white-earth-and-red-lake-routing")).thenReturn(
-        FeatureFlag.OFF);
-    fillOutPersonalInfo();
-    addHouseholdMembersWithProgram(CCAP);
-
-    String county = "Olmsted";
-    goThroughLongTribalTanfFlow(RedLakeNation.toString(), county, "false", GRH);
-
-    assertRoutingDestinationIsCorrectForDocument(CAF, county);
-    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county);
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
-  }
-
-  @Test
-  void whiteEarthApplicationsGetSentToCountyAndMilleLacsIfFeatureFlagIsTurnedOff()
-      throws Exception {
-    when(featureFlagConfiguration.get("white-earth-and-red-lake-routing")).thenReturn(
-        FeatureFlag.OFF);
-
-    addHouseholdMembersWithProgram("EA");
-    String county = "Becker";
-    goThroughShortMfipFlow(county, WhiteEarthNation, new String[]{EA, CCAP, GRH, SNAP});
-
-    assertRoutingDestinationIsCorrectForDocument(CAF, MilleLacsBandOfOjibwe.toString(),
-        county);
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
-
-    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC,
-        MilleLacsBandOfOjibwe.toString(),
-        county);
-  }
-
-  @Test
-  void whiteEarthApplicationsGetSentToCountyOnlyIfFeatureFlagIsTurnedOff() throws Exception {
-    when(featureFlagConfiguration.get("white-earth-and-red-lake-routing")).thenReturn(
-        FeatureFlag.OFF);
-
-    addHouseholdMembersWithProgram("CCAP");
-    String county = "Becker";
-    goThroughShortMfipFlow(county, WhiteEarthNation, new String[]{CCAP});
-
-    assertRoutingDestinationIsCorrectForDocument(CAF, county);
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
-    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county);
-  }
-
-  @Test
-  void whiteEarthApplicationsGetSentToMilleLacsAndCountyIfFeatureFlagIsTurnedOff()
-      throws Exception {
-    when(featureFlagConfiguration.get("white-earth-and-red-lake-routing")).thenReturn(
-        FeatureFlag.OFF);
-
-    String county = "Hennepin";
-    addHouseholdMembersWithProgram("EA");
-    goThroughShortTribalTanfFlow(WhiteEarthNation.toString(), county, "true", EA, CCAP, GRH, SNAP);
-    assertRoutingDestinationIsCorrectForDocument(CAF, MilleLacsBandOfOjibwe.toString(),
-        county);
-    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC,
-        MilleLacsBandOfOjibwe.toString(),
-        county);
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
   }
 

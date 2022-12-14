@@ -29,7 +29,6 @@ mail-gun:
 
 feature-flag:
   clamav: on
-  submit-docs-via-email-for-hennepin: on
   county-ottertail: on
   show-delayed-processing-time-notice: on
 
