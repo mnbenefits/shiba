@@ -117,6 +117,7 @@ public class PageController {
 
   private static final ZoneId CENTRAL_TIMEZONE = ZoneId.of("America/Chicago");
   private static final int MAX_FILES_UPLOADED = 20;
+  private static final String VIRUS_STATUS_CODE = "418";
   private final ApplicationData applicationData;
   private final ApplicationConfiguration applicationConfiguration;
   private final Clock clock;
@@ -843,17 +844,36 @@ public class PageController {
           lms.getMessage("upload-documents.MS-word-files-not-accepted"),
           HttpStatus.UNPROCESSABLE_ENTITY);
     }
-    //TODO emj testing clamav here, need to add try catch
-    var client = HttpClient.newHttpClient();
-    var request = HttpRequest.newBuilder(
-            URI.create(clammitUrl))
-        .POST(BodyPublishers.ofByteArray(file.getBytes()))
-        .build();
+	if (featureFlags.get("clamav").isOn()) {
+		try {
+			var client = HttpClient.newHttpClient();
+			var request = HttpRequest.newBuilder(URI.create(clammitUrl))
+					.header("Content-Type", "text/plain; charset=UTF-8")
+					.POST(BodyPublishers.ofByteArray(file.getBytes())).build();
 
-    var response = client.send(request, BodyHandlers.ofString());
-    log.info("===== clammit file name: " + file.getOriginalFilename());//TODO emj delete
-    log.info("===== clammit status code: " + response.statusCode());
-    log.info("===== clammit response: " + response.body());
+			var response = client.send(request, BodyHandlers.ofString());
+			log.info("===== clammit file name: " + file.getOriginalFilename());// TODO emj delete
+			log.info("===== clammit status code: " + response.statusCode());
+			log.info("===== clammit response: " + response.body());
+			if (VIRUS_STATUS_CODE.equalsIgnoreCase(Integer.toString(response.statusCode()))) {
+				return new ResponseEntity<>(lms.getMessage("upload-documents.virus-detected"),
+						HttpStatus.UNPROCESSABLE_ENTITY);
+			}
+
+		} catch (java.net.ConnectException ce) {
+			// Use this log info string to search in DataDog and create an alert for the
+			// service being down.
+			log.info("Clammit server connection exception: " + ce.getLocalizedMessage());
+			return new ResponseEntity<>(lms.getMessage("upload-documents.clammit-server-error"),
+					HttpStatus.SERVICE_UNAVAILABLE);
+		} catch (Exception e) {
+			// Catch any other exceptions as a precaution
+			log.info("Clammit exception: " + e.getLocalizedMessage());
+			return new ResponseEntity<>(lms.getMessage("upload-documents.clammit-server-error"),
+					HttpStatus.SERVICE_UNAVAILABLE);
+		}
+
+	}
     
     if (type.contains("pdf")) {
       // Return an error response if this is an pdf we can't work with
@@ -883,17 +903,6 @@ public class PageController {
             HttpStatus.UNPROCESSABLE_ENTITY);
       }
     }
-
-	/* TODO emj original location of clammit code, moved to top of method because test files did not reach this point
-	 * var client = HttpClient.newHttpClient(); var request =
-	 * HttpRequest.newBuilder( URI.create(clammitUrl))
-	 * .POST(BodyPublishers.ofByteArray(file.getBytes())) .build();
-	 * 
-	 * var response = client.send(request, BodyHandlers.ofString());
-	 * log.info("status: " + response.statusCode()); log.info("status: " +
-	 * response.body());
-	 */
-
     return null;
   }
 
