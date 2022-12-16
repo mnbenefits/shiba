@@ -850,6 +850,7 @@ public class PageController {
 			log.info("===== clammit status code: " + response.statusCode());
 			log.info("===== clammit response: " + response.body());
 			if (VIRUS_STATUS_CODE.equalsIgnoreCase(Integer.toString(response.statusCode()))) {
+				log.info("Virus detected in file " + file.getOriginalFilename() + ". File size: " + file.getSize() + " bytes.");
 				return new ResponseEntity<>(lms.getMessage("upload-documents.virus-detected"),
 						HttpStatus.UNPROCESSABLE_ENTITY);
 			}
