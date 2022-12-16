@@ -132,7 +132,6 @@ public class PageController {
   private final RoutingDestinationMessageService routingDestinationMessageService;
   private final ApplicationStatusRepository applicationStatusRepository;
   private final EligibilityListBuilder listBuilder;
-  private final RestTemplate restTemplate;
   private final String clammitUrl;
 
   public PageController(
@@ -155,7 +154,7 @@ public class PageController {
       ApplicationRepository applicationRepository,
       RoutingDestinationMessageService routingDestinationMessageService,
       ApplicationStatusRepository applicationStatusRepository,
-      EligibilityListBuilder listBuilder, RestTemplateBuilder restTemplateBuilder,
+      EligibilityListBuilder listBuilder, 
       @Value("${mnit-clammit.url}") String clammitUrl) {
     this.applicationData = applicationData;
     this.applicationConfiguration = applicationConfiguration;
@@ -177,7 +176,6 @@ public class PageController {
     this.routingDestinationMessageService = routingDestinationMessageService;
     this.applicationStatusRepository = applicationStatusRepository;
     this.listBuilder = listBuilder;
-    this.restTemplate = restTemplateBuilder.build();
     this.clammitUrl = clammitUrl;
   }
 
@@ -846,9 +844,6 @@ public class PageController {
 					.POST(BodyPublishers.ofByteArray(file.getBytes())).build();
 
 			var response = client.send(request, BodyHandlers.ofString());
-			log.info("===== clammit file name: " + file.getOriginalFilename());// TODO emj delete
-			log.info("===== clammit status code: " + response.statusCode());
-			log.info("===== clammit response: " + response.body());
 			if (VIRUS_STATUS_CODE.equalsIgnoreCase(Integer.toString(response.statusCode()))) {
 				log.info("Virus detected in file " + file.getOriginalFilename() + ". File size: " + file.getSize() + " bytes.");
 				return new ResponseEntity<>(lms.getMessage("upload-documents.virus-detected"),

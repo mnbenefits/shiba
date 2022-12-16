@@ -501,7 +501,6 @@ class PageControllerTest {
 
   @Test
   void shouldReturnErrorForFileWithVirus() throws Exception {
-	  System.out.println("======= clammitUrl = " + clammitUrl);//TODO emj delete
     applicationData.setStartTimeOnce(Instant.now());
     String applicationId = "someId";
     applicationData.setId(applicationId);
@@ -513,12 +512,11 @@ class PageControllerTest {
     when(applicationFactory.newApplication(applicationData)).thenReturn(application);
     mockWebServiceServer.expect(connectionTo(clammitUrl))
         .andRespond(
-            ResponseCreators.withPayload(new StringSource("{status: 500, message: 'Oh shit'}")));
+            ResponseCreators.withPayload(new StringSource("{status: 500, message: 'Oh no'}")));
 
     mockMvc.perform(MockMvcRequestBuilders.multipart("/document-upload")
             .file("file", new byte[]{}).param("data", "virusValue"))
-        .andExpect(status().is5xxServerError());
-        //.andExpect(withPayload(new StringSource("oh no"))); TODO emj fix this error
+        .andExpect(status().is4xxClientError());
   }
 
   @Test
