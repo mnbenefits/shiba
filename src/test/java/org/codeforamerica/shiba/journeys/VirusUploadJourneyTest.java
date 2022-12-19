@@ -22,7 +22,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
     uploadGIFVirusFile();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "virus");  //update with virus error message
+        "Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
@@ -32,7 +32,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
     uploadJPGVirusFile();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "virus");  //update with virus error message
+        "Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
@@ -42,7 +42,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
     uploadPNGVirusFile();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "virus");  //update with virus error message
+        "Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
@@ -52,7 +52,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
     uploadPDFVirusFile1();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "virus");  //update with virus error message
+        "Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
@@ -62,7 +62,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
     uploadPDFVirusFile2();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "virus");  //update with virus error message
+        "Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
@@ -72,7 +72,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
     uploadPDFVirusFile3();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "virus");  //update with virus error message
+        "Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
