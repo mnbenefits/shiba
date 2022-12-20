@@ -42,7 +42,6 @@ public class RoutingDecisionService {
       OtherFederallyRecognizedTribe).map(Enum::toString).toList();
   private final ServicingAgencyMap<TribalNationRoutingDestination> tribalNations;
   private final ServicingAgencyMap<CountyRoutingDestination> countyRoutingDestinations;
-
   public RoutingDecisionService(ServicingAgencyMap<TribalNationRoutingDestination> tribalNations,
       @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection") ServicingAgencyMap<CountyRoutingDestination> countyRoutingDestinations,
       FeatureFlagConfiguration featureFlagConfiguration) {
@@ -78,20 +77,17 @@ public class RoutingDecisionService {
     return List.of(countyRoutingDestinations.get(county));
   }
 
-  private List<RoutingDestination> getLaterDocsRoutingDestinations(ApplicationData applicationData,
-	      Document document) {
-	List<RoutingDestination> result = new ArrayList<>();
-	String countyName = getFirstValue(applicationData.getPagesData(), IDENTIFY_COUNTY_LATER_DOCS);
-	if (countyName != null && !countyName.isEmpty()) {
-		County county = County.getForName(countyName);
-		RoutingDestination destination = countyRoutingDestinations.get(county);
-		result.add(destination);
-	}
-	String tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_LATER_DOCS);
-	if (tribalNationName != null && !tribalNationName.isEmpty()) {
-		result.add(tribalNations.get(TribalNation.getFromName(tribalNationName)));
-	}
-	return result;
+  private List<RoutingDestination> getLaterDocsRoutingDestinations(ApplicationData applicationData, Document document) {
+    List<RoutingDestination> result = new ArrayList<>();
+    County county = CountyParser.parse(applicationData);
+    RoutingDestination destination = countyRoutingDestinations.get(county);
+    result.add(destination);
+    String tribalNationName =
+        getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_LATER_DOCS);
+    if (tribalNationName != null && !tribalNationName.isEmpty()) {
+      result.add(tribalNations.get(TribalNation.getFromName(tribalNationName)));
+    }
+    return result;
   }
 
   public RoutingDestination getRoutingDestinationByName(String name) {

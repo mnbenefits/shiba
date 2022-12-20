@@ -1,17 +1,12 @@
 package org.codeforamerica.shiba.journeys;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.springframework.web.multipart.MultipartFile;
 
 @Tag("documentUploadJourney")
 public class VirusUploadJourneyTest extends JourneyTest {
