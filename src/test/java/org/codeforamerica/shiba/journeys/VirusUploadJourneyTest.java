@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-@Tag("documentUploadJourney")
+@Tag("virusUploadJourney")
 public class VirusUploadJourneyTest extends JourneyTest {
 
   @Test
