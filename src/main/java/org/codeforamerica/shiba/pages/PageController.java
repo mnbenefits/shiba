@@ -854,12 +854,12 @@ public class PageController {
 		} catch (java.net.ConnectException ce) {
 			// Use this log info string to search in DataDog and create an alert for the
 			// service being down.
-			log.info("Clammit server connection exception: " + ce.getLocalizedMessage());
+			log.info("Clammit server exception connection error: " + ce.getLocalizedMessage());
 			return new ResponseEntity<>(lms.getMessage("upload-documents.clammit-server-error"),
 					HttpStatus.SERVICE_UNAVAILABLE);
 		} catch (Exception e) {
 			// Catch any other exceptions as a precaution
-			log.info("Clammit exception: " + e.getLocalizedMessage());
+			log.info("Clammit server exception type: " + e.getClass().getName() + " message: " +   e.getLocalizedMessage());
 			return new ResponseEntity<>(lms.getMessage("upload-documents.clammit-server-error"),
 					HttpStatus.SERVICE_UNAVAILABLE);
 		}

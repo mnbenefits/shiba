@@ -142,7 +142,7 @@ class PageControllerTest {
     when(messageSource.getMessage(eq("success.feedback-failure"), any(), eq(Locale.ENGLISH)))
         .thenReturn("default failure message");
     mockWebServiceServer = MockWebServiceServer.createServer(new WebServiceTemplate());
-    mockWebServiceServer.expect(connectionTo(clammitUrl))
+        mockWebServiceServer.expect(connectionTo(clammitUrl))
         .andRespond(ResponseCreators.withPayload(new StringSource("200")));
   }
 
@@ -500,25 +500,17 @@ class PageControllerTest {
   }
 
   @Test
-  void shouldReturnErrorForFileWithVirus() throws Exception {
-    applicationData.setStartTimeOnce(Instant.now());
-    String applicationId = "someId";
-    applicationData.setId(applicationId);
-    Application application = Application.builder()
-        .id(applicationId)
-        .applicationData(applicationData)
-        .build();
-    when(applicationRepository.find("someId")).thenReturn(application);
-    when(applicationFactory.newApplication(applicationData)).thenReturn(application);
-    mockWebServiceServer.expect(connectionTo(clammitUrl))
-        .andRespond(
-            ResponseCreators.withPayload(new StringSource("{status: 500, message: 'Oh no'}")));
+	void shouldReturnErrorForFileWithVirus() throws Exception {
+		mockWebServiceServer = MockWebServiceServer.createServer(new WebServiceTemplate());
+		mockWebServiceServer.expect(connectionTo(clammitUrl))
+				.andRespond(ResponseCreators.withPayload(new StringSource("418")));
 
-    mockMvc.perform(MockMvcRequestBuilders.multipart("/document-upload")
-            .file("file", new byte[]{}).param("data", "virusValue"))
-        .andExpect(status().is4xxClientError());
-  }
-
+		mockMvc.perform(MockMvcRequestBuilders.multipart("/document-upload").file("file", new byte[] {}).param("data",
+				"X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*"))
+				.andExpect(status().is4xxClientError());
+		mockWebServiceServer.reset();
+	}
+  
   @Test
   void shouldHandleMissingThumbnails() throws Exception {
     applicationData.setStartTimeOnce(Instant.now());
