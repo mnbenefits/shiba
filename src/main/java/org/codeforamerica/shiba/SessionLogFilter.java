@@ -55,7 +55,11 @@ public class SessionLogFilter implements Filter {
 
     MDC.put("url", String.valueOf(httpReq.getRequestURL()));
     MDC.put("sessionId", sessionId);
-    MDC.put("ip", createRequestIp(httpReq));
+    clientIP = createRequestIp(httpReq);
+    if (applicationData != null && applicationData.getClientIP() == null) {
+    	applicationData.setClientIP(clientIP);
+    }
+    MDC.put("ip", clientIP);
     if (applicationData != null && applicationData.getId() != null) {
       monitoringService.setApplicationId(applicationData.getId());
       MDC.put("applicationId", applicationData.getId());
