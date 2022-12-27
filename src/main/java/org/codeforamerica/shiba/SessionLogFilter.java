@@ -29,6 +29,7 @@ public class SessionLogFilter implements Filter {
   // we do not want to use in the rest of the app
   private final ObjectMapper objectMapper = new ObjectMapper();
   private ApplicationData applicationData;
+  private String clientIP;
 
   public SessionLogFilter(MonitoringService monitoringService) {
     this.monitoringService = monitoringService;
