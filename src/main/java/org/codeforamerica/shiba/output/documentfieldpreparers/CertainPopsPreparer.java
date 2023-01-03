@@ -70,6 +70,10 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 		
 		//Question 8, Retroactive coverage
 		mapRetroactiveCoverage(application, document, recipient);
+		
+		//Question 9, Self-employment
+		mapSelfEmployment(application, document, recipient);
+		
 		// Question 11, unearned income
 		mapUnearnedIncomeFields();
 		// Question 14, accounts
@@ -468,4 +472,23 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 
     }
 
+
+	private void mapSelfEmployment(Application application, Document document, Recipient recipient) {
+		  SelfEmploymentPreparer sep = new SelfEmploymentPreparer();
+		  List<DocumentField>  docFields =sep.prepareDocumentFields(application, document);
+//	      List<RetroCoverageMember> retroCoverageMemberList = lrcp.getRetroactiveMembers(application, document, recipient);
+//	      if(retroCoverageMemberList.size()>2) {
+//	        needsSupplementPage = true;
+//	        supplementPageText = String.format("%s\n\n", supplementPageText);
+//	        supplementPageText = String.format("%sQUESTION 8 continued:", supplementPageText);
+//	        int i = 2;
+//	        for (RetroCoverageMember inv : retroCoverageMemberList.subList(2, retroCoverageMemberList.size())) {
+//	          supplementPageText = String.format("%s\nPerson %d: %s, Month/s: %s",
+//	              supplementPageText, i + 1, inv.fullName, inv.month);
+//	          i++;
+//	        }
+//	      }
+
+	    }
+	
 }
