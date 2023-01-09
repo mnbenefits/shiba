@@ -18,10 +18,12 @@ import java.util.stream.Stream;
 
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.parsers.ApplicationDataParser;
+import org.codeforamerica.shiba.application.parsers.GrossMonthlyIncomeParser;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.FullNameFormatter;
 import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.output.caf.JobIncomeInformation;
 import org.codeforamerica.shiba.output.documentfieldpreparers.InvestmentOwnerPreparer.Investment;
 import org.codeforamerica.shiba.output.documentfieldpreparers.ListNonUSCitizenPreparer.NonUSCitizen;
 import org.codeforamerica.shiba.output.documentfieldpreparers.ListRetroCoveragePreparer.RetroCoverageMember;
@@ -50,6 +52,9 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 
 	@Override
 	public List<DocumentField> prepareDocumentFields(Application application, Document document, Recipient recipient) {
+		// No need to prepare fields if the document isn't Certain Pops.
+		//if (document != Document.CERTAIN_POPS) return new ArrayList<DocumentField>();
+		
 		cpAccountTypes = Stream.of("SAVINGS", "CHECKING", "MONEY_MARKET", "CERTIFICATE_OF_DEPOSIT").collect(Collectors.toCollection(HashSet::new));
 		applicationData = application.getApplicationData();
 		pagesData = applicationData.getPagesData();
@@ -72,7 +77,7 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 		mapRetroactiveCoverage(application, document, recipient);
 		
 		//Question 9, Self-employment
-		mapSelfEmployment(application, document, recipient);
+		mapSelfEmployment();
 		
 		// Question 11, unearned income
 		mapUnearnedIncomeFields();
@@ -106,27 +111,38 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	}
   
 	// Question 9 Self Employment
-	private void mapSelfEmployment(Application application, Document document, Recipient recipient) {
-		  SelfEmploymentPreparer sep = new SelfEmploymentPreparer();
-		  List<DocumentField>  selfEmployedDocFields =sep.prepareDocumentFields(application, document);
-		  // 
-		  
+	// The SelfEmploymentPreparer will generate the DocumentFields for question #9 but if there
+	// are more than two self-employment jobs we need to generate a supplement for the remainder.
+	private void mapSelfEmployment() {
+		Subworkflow jobs = getGroup(applicationData, ApplicationDataParser.Group.JOBS);
+		SelfEmploymentPreparer selfEmploymentPreparer = new SelfEmploymentPreparer();
+		List<Iteration> selfEmploymentJobs = selfEmploymentPreparer.getSelfEmploymentJobs(applicationData);
+		for (int i = 2; i < selfEmploymentJobs.size(); i++) {
+			Iteration job = selfEmploymentJobs.get(i);
+			int jobNo = i+1;
+			PagesData pagesData = job.getPagesData();
+			PageData pageData = pagesData.getPage("householdSelectionForIncome");
+			String employee = "";
+			if (pageData != null) {
+				employee = pageData.get("whoseJobIsItFormatted").getValue(0);
+			} else { // no whoseJobIsItFormatted then its the applicant's job
+				PageData personalInfoPage = applicationData.getPagesData().getPage("personalInfo");
+				employee = personalInfoPage.get("firstName").getValue(0) + " " + personalInfoPage.get("lastName").getValue(0);
+			}
+			GrossMonthlyIncomeParser grossMonthlyIncomeParser = new GrossMonthlyIncomeParser();
+			JobIncomeInformation jobIncomeInformation = grossMonthlyIncomeParser.parse(jobs, job);
+			String grossMonthly = jobIncomeInformation.grossMonthlyIncome().toPlainString();
 
-		  
-//	      List<RetroCoverageMember> retroCoverageMemberList = lrcp.getRetroactiveMembers(application, document, recipient);
-//	      if(retroCoverageMemberList.size()>2) {
-//	        needsSupplementPage = true;
-//	        supplementPageText = String.format("%s\n\n", supplementPageText);
-//	        supplementPageText = String.format("%sQUESTION 8 continued:", supplementPageText);
-//	        int i = 2;
-//	        for (RetroCoverageMember inv : retroCoverageMemberList.subList(2, retroCoverageMemberList.size())) {
-//	          supplementPageText = String.format("%s\nPerson %d: %s, Month/s: %s",
-//	              supplementPageText, i + 1, inv.fullName, inv.month);
-//	          i++;
-//	        }
-//	      }
-
-	    }
+			if (jobNo == 3) {
+				needsSupplementPage = true;
+				supplementPageText = String.format("%s\n\n", supplementPageText);
+				supplementPageText = String.format("%sQUESTION 9 continued:", supplementPageText);
+			}
+			if (jobNo > 2) {
+				supplementPageText = String.format("%s\n%d) Name: %s, Monthly Income: %s", supplementPageText, jobNo, employee, grossMonthly);
+			}
+		}
+	}
 
 	// Question 11, unearned income
 	private void mapUnearnedIncomeFields() {
