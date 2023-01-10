@@ -48,7 +48,7 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
 		results.add(new DocumentField("employee", "selfEmployed", "true", SINGLE_VALUE));
 	}
  
-    // generate remaining self-employment DocumentFields for Certain Pops document.
+    // generate self-employment DocumentFields for the Certain Pops document.
     if (document == Document.CERTAIN_POPS) {
     	Subworkflow jobsWorkflow = getGroup(applicationData, ApplicationDataParser.Group.JOBS);
 
@@ -60,9 +60,8 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
 			String employee = "";
 			if (pageData != null) {
 				employee = pageData.get("whoseJobIsItFormatted").getValue(0);
-			} else { // no whoseJobIsItFormatted then its the applicant's job
-				PageData personalInfoPage = applicationData.getPagesData().getPage("personalInfo");
-				employee = personalInfoPage.get("firstName").getValue(0) + " " + personalInfoPage.get("lastName").getValue(0);
+			} else { // when there is no whoseJobIsItFormatted then it has to be the applicant's job
+				employee = applicantName(applicationData);
 			}
 			GrossMonthlyIncomeParser grossMonthlyIncomeParser = new GrossMonthlyIncomeParser();
 			JobIncomeInformation jobIncomeInformation = grossMonthlyIncomeParser.parse(jobsWorkflow, job);
@@ -96,4 +95,10 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
 	}
 	return selfEmploymentJobs;
   }
+  
+  public String applicantName(ApplicationData applicationData) {
+		PageData personalInfoPage = applicationData.getPagesData().getPage("personalInfo");
+		return personalInfoPage.get("firstName").getValue(0) + " " + personalInfoPage.get("lastName").getValue(0);
+  }
+  
 }

@@ -106,7 +106,6 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
               i + 1, nuc.fullName, nuc.alienId);
           i++;
         }
-        supplementPageText = String.format("%s\n\n", supplementPageText);
       }
 	}
   
@@ -125,9 +124,8 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 			String employee = "";
 			if (pageData != null) {
 				employee = pageData.get("whoseJobIsItFormatted").getValue(0);
-			} else { // no whoseJobIsItFormatted then its the applicant's job
-				PageData personalInfoPage = applicationData.getPagesData().getPage("personalInfo");
-				employee = personalInfoPage.get("firstName").getValue(0) + " " + personalInfoPage.get("lastName").getValue(0);
+			} else { // when there is no whoseJobIsItFormatted then it has to be the applicant's job
+				employee = selfEmploymentPreparer.applicantName(applicationData);
 			}
 			GrossMonthlyIncomeParser grossMonthlyIncomeParser = new GrossMonthlyIncomeParser();
 			JobIncomeInformation jobIncomeInformation = grossMonthlyIncomeParser.parse(jobs, job);
