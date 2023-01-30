@@ -4535,6 +4535,7 @@ workflow:
       - pageName: addHouseholdMembers
         flow: FULL
     datasources:
+      - pageName: identifyCounty
       - pageName: personalInfo
       - pageName: homeAddress
       - pageName: homeAddressValidation
