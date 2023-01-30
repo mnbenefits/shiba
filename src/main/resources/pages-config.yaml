@@ -3843,6 +3843,20 @@ pageDefinitions:
               messageKey: address-validation.suggested-address
             - value: "false"
               messageKey: address-validation.address-you-entered
+  - &homeCountyValidation
+    name: homeCountyValidation
+    pageTitle: address-validation.title
+    hasPrimaryButton: false
+    inputs:
+      - name: useEnrichedCounty
+        type: CUSTOM
+        customInputFragment: countyValidationInput
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: county-validation.suggested-county
+            - value: "false"
+              messageKey: county-validation.county-you-entered
   - &registerToVote
     name: registerToVote
     headerKey: register-to-vote.do-you-want-to-register-to-vote
@@ -4503,6 +4517,14 @@ workflow:
     nextPages:
       - pageName: contactInfo
       - pageName: mailingAddress
+  verifyHomeCounty:
+    pageConfiguration: *homeCountyValidation
+    datasources:
+      - pageName: homeAddress
+      - pageName: mailingAddress
+    nextPages:
+      - pageName: verifyMailingAddress
+      - pageName: homeAddress
   reviewInfo:
     subtleLinkTargetPage: doYouNeedHelpImmediately
     pageConfiguration: *reviewInfo
