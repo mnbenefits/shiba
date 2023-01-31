@@ -2,7 +2,11 @@
 <th:block th:fragment="addressValidationInput (input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                    addressData=${page.name.contains('home') ? pageDatasources.get('homeAddress') : pageDatasources.get('mailingAddress')},
-                   foundEnrichedAddress=${addressData.containsKey('enrichedStreetAddress')}"
+                   foundEnrichedAddress=${addressData.containsKey('enrichedStreetAddress')},
+                   selectedCounty=${pageDatasources.get('identifyCounty').get('county').value[0]},
+                   enrichedCountyExists=${addressData.get('enrichedCounty') ne null},
+                   enrichedCountyName=${enrichedCountyExists ? addressData.get('enrichedCounty').value[0] : ''},
+                   enrichedCountyDifferentFromSelected=${selectedCounty ne enrichedCountyName}"
 >
   <div class="grid__item spacing-above-35 spacing-below-35">
     <h1 class="h2" th:if="${foundEnrichedAddress}"
@@ -29,6 +33,12 @@
       <input type="radio" th:name="${formInputName}" id="enriched-address"
              th:value="true"
              th:checked="true">
+            Selected County: <span th:text="${selectedCounty}"> test</span><br>
+             Enriched County: <span th:text="${enrichedCountyName}"> test</span><br>
+              Different: <span th:text="${enrichedCountyDifferentFromSelected}"> test</span>
+        <input type="hidden"
+               th:value="${enrichedCountyDifferentFromSelected}"
+               th:name="enrichedCountyDifferentFromSelected">
     </label>
     <label th:for="original-address" class="radio-button"
            th:classappend="${foundEnrichedAddress} ? '' : 'is-selected left-aligned'">
@@ -44,6 +54,7 @@
              th:name="${formInputName}" id="original-address"
              th:value="false"
              th:checked="${foundEnrichedAddress} ? false : true">
+             Enriched County Exists: <span th:text="${enrichedCountyExists}"> test</span><br>
     </label>
   </div>
   <button th:if="${foundEnrichedAddress}" id="form-submit-button" class="button button--primary"

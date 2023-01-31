@@ -24,6 +24,11 @@ conditionDefinitions:
     input: isHomeless
     matcher: DOES_NOT_CONTAIN
     value: "true"
+  - &selectedCountyDoesNotMatchEnrichedCounty?
+    pageName: homeAddressValidation
+    input: enrichedCountyDifferentFromSelected
+    matcher: CONTAINS
+    value: "true"
   - &isApplicantsJob?
     pageName: householdSelectionForIncome
     input: whoseJobIsIt
@@ -3829,6 +3834,8 @@ pageDefinitions:
               messageKey: address-validation.suggested-address
             - value: "false"
               messageKey: address-validation.address-you-entered
+      - name: enrichedCountyNotSame
+        type: HIDDEN
   - &mailingAddressValidation
     name: mailingAddressValidation
     pageTitle: address-validation.title
@@ -4501,6 +4508,7 @@ workflow:
     datasources:
       - pageName: homeAddress
       - pageName: mailingAddress
+      - pageName: identifyCounty
     nextPages:
       - pageName: verifyMailingAddress
       - pageName: homeAddress
@@ -4515,14 +4523,17 @@ workflow:
       - pageName: mailingAddress
       - pageName: homeAddress
     nextPages:
+      - pageName: verifyCounty
       - pageName: contactInfo
       - pageName: mailingAddress
   verifyCounty:
     pageConfiguration: *countyValidation
+    skipCondition: *selectedCountyDoesNotMatchEnrichedCounty?
     datasources:
       - pageName: homeAddress
       - pageName: mailingAddress
       - pageName: identifyCounty
+      - pageName: verifyHomeAddress
     nextPages:
       - pageName: verifyMailingAddress
       - pageName: homeAddress
