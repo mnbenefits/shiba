@@ -3843,8 +3843,8 @@ pageDefinitions:
               messageKey: address-validation.suggested-address
             - value: "false"
               messageKey: address-validation.address-you-entered
-  - &homeCountyValidation
-    name: homeCountyValidation
+  - &countyValidation
+    name: countyValidation
     pageTitle: county-validation.title
     hasPrimaryButton: false
     inputs:
@@ -4517,8 +4517,8 @@ workflow:
     nextPages:
       - pageName: contactInfo
       - pageName: mailingAddress
-  verifyHomeCounty:
-    pageConfiguration: *homeCountyValidation
+  verifyCounty:
+    pageConfiguration: *countyValidation
     datasources:
       - pageName: homeAddress
       - pageName: mailingAddress
