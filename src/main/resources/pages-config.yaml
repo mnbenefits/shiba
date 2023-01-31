@@ -3845,7 +3845,7 @@ pageDefinitions:
               messageKey: address-validation.address-you-entered
   - &homeCountyValidation
     name: homeCountyValidation
-    pageTitle: address-validation.title
+    pageTitle: county-validation.title
     hasPrimaryButton: false
     inputs:
       - name: useEnrichedCounty
@@ -4522,6 +4522,7 @@ workflow:
     datasources:
       - pageName: homeAddress
       - pageName: mailingAddress
+      - pageName: identifyCounty
     nextPages:
       - pageName: verifyMailingAddress
       - pageName: homeAddress
