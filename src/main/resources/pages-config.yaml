@@ -28,7 +28,7 @@ conditionDefinitions:
     pageName: homeAddressValidation
     input: enrichedCountyDifferentFromSelected
     matcher: CONTAINS
-    value: "true"
+    value: "false"
   - &isApplicantsJob?
     pageName: householdSelectionForIncome
     input: whoseJobIsIt
@@ -3834,7 +3834,7 @@ pageDefinitions:
               messageKey: address-validation.suggested-address
             - value: "false"
               messageKey: address-validation.address-you-entered
-      - name: enrichedCountyNotSame
+      - name: enrichedCountyDifferentFromSelected
         type: HIDDEN
   - &mailingAddressValidation
     name: mailingAddressValidation
@@ -4534,9 +4534,14 @@ workflow:
       - pageName: mailingAddress
       - pageName: identifyCounty
       - pageName: verifyHomeAddress
+      - pageName: homeAddressValidation
     nextPages:
-      - pageName: verifyMailingAddress
-      - pageName: homeAddress
+      - pageName: contactInfo
+      - pageName: identifyCountyAgain
+  identifyCountyAgain:
+    pageConfiguration: *identifyCounty
+    nextPages:
+      - pageName: contactInfo
   reviewInfo:
     subtleLinkTargetPage: doYouNeedHelpImmediately
     pageConfiguration: *reviewInfo

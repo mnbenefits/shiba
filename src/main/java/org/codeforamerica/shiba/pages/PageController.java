@@ -650,6 +650,10 @@ public class PageController {
       if (pageName != null && !pageName.isEmpty()) {
         applicationData.setLastPageViewed(pageName);
       }
+      
+      if(applicationData.getPagesData().getPage("identifyCounty").get("county").getValue(0)!=null) {
+        applicationData.setOriginalCounty(applicationData.getPagesData().getPage("identifyCounty").get("county").getValue(0));
+      }
 
       ofNullable(pageWorkflow.getEnrichment())
           .map(applicationEnrichment::getEnrichment)
