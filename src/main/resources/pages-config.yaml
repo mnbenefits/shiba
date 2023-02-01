@@ -4561,6 +4561,7 @@ workflow:
       - pageName: cityForGeneralDelivery
       - pageName: contactInfo
       - pageName: choosePrograms
+      - pageName: countyValidation
   addHouseholdMembers:
     pageConfiguration: *addHouseholdMembers
     nextPages:

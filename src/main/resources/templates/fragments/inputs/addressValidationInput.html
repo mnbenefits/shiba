@@ -6,7 +6,7 @@
                    selectedCounty=${pageDatasources.get('identifyCounty').get('county').value[0]},
                    enrichedCountyExists=${addressData.get('enrichedCounty') ne null},
                    enrichedCountyName=${enrichedCountyExists ? addressData.get('enrichedCounty').value[0] : ''},
-                   enrichedCountyDifferentFromSelected=${selectedCounty ne enrichedCountyName}"
+                   enrichedCountyDifferentFromSelected=${selectedCounty.replaceAll('[^A-Za-z0-9]','') ne enrichedCountyName.replaceAll('[^A-Za-z0-9]','')}"
 >
   <div class="grid__item spacing-above-35 spacing-below-35">
     <h1 class="h2" th:if="${foundEnrichedAddress}"

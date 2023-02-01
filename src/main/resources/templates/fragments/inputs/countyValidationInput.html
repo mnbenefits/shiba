@@ -30,7 +30,7 @@
            th:classappend="${foundEnrichedCounty} ? '' : 'is-selected left-aligned'">
       <p class="spacing-below-15"
          th:text="#{${input.options.selectableOptions.get(1).messageKey}}"></p>
-      <div th:text="${identifyCountyData.get('county').value[0]}"></div>
+      <div th:text="${T(org.codeforamerica.shiba.County).getForName(identifyCountyData.get('county').value[0])}"></div>
       <input type="radio" th:classappend="${foundEnrichedCounty} ? '' : 'hide-radio-circle'"
              th:name="${formInputName}" id="original-address"
              th:value="false"
