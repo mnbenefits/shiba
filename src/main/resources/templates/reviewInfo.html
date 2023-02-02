@@ -79,7 +79,7 @@
     <p class="spacing-below-0" th:if="${!useEnrichedCounty}"
        th:text="|${T(org.codeforamerica.shiba.County).getForName(data.get('identifyCounty').get('county').value[0])}|"></p>    
     <p class="spacing-below-0" th:if="${useEnrichedCounty}"
-       th:text="|${T(org.codeforamerica.shiba.County).getForName(data.get('homeAddress').get('enrichedCounty'))}|"></p>
+       th:text="|${T(org.codeforamerica.shiba.County).getForName(data.get('homeAddress').get('enrichedCounty').value[0])}|"></p>
     </th:block>
   </div>
   <div class="bottom-horizontal-line spacing-below-60 review-info-section">
