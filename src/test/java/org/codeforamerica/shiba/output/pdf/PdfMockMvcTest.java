@@ -1610,13 +1610,13 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			submitApplication();
 			// var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
 			var pdf = downloadCertainPopsClientPDF();
-			assertPdfFieldEquals("HH_FIRST_NAME_4", "householdMemberFirstName4", pdf);
-			assertPdfFieldEquals("HH_LAST_NAME_4", "householdMemberLastName4", pdf);
-			assertPdfFieldEquals("HH_RELATIONSHIP_4", "housemate", pdf);
-			assertPdfFieldEquals("HH_DATE_OF_BIRTH_4", "09/14/1950", pdf);
-			assertPdfFieldEquals("HH_SSN_4", "XXX-XX-XXXX", pdf);
-			assertPdfFieldEquals("HH_MARITAL_STATUS_4", "NEVER_MARRIED", pdf);
-			assertPdfFieldEquals("HH_SEX_4", "MALE", pdf);
+			assertPdfFieldEquals("FIRST_NAME_4", "householdMemberFirstName4", pdf);
+			assertPdfFieldEquals("LAST_NAME_4", "householdMemberLastName4", pdf);
+			assertPdfFieldEquals("RELATIONSHIP_4", "housemate", pdf);
+			assertPdfFieldEquals("DATE_OF_BIRTH_4", "09/14/1950", pdf);
+			assertPdfFieldEquals("SSN_4", "XXX-XX-XXXX", pdf);
+			assertPdfFieldEquals("MARITAL_STATUS_4", "NEVER_MARRIED", pdf);
+			assertPdfFieldEquals("SEX_4", "MALE", pdf);
 		}
 
 		@Test
