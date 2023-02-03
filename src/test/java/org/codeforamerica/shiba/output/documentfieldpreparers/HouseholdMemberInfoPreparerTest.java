@@ -11,9 +11,9 @@ import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.Test;
 
-class HouseholdSpousePreparerTest {
+class HouseholdMemberInfoPreparerTest {
 
-  HouseholdSpousePreparer preparer = new HouseholdSpousePreparer(null);
+  HouseholdMemberInfoPreparer preparer = new HouseholdMemberInfoPreparer(null);
   TestApplicationDataBuilder applicationDataTest = new TestApplicationDataBuilder();
 
   @Test
