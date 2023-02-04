@@ -48,6 +48,7 @@ mappings:
       CCAP: CCAP
       NONE: PROGRAM_NONE
     programList: PROGRAMS
+    healthcareCoverage: HH_HEALTHCARE_COVERAGE
   basicCriteria:
     BLIND: BLIND
     HELP_WITH_MEDICARE: HELP_WITH_MEDICARE

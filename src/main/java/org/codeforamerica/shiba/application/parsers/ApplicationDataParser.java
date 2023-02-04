@@ -342,6 +342,8 @@ public class ApplicationDataParser {
         new ParsingCoordinate("householdMemberInfo", "ssn"));
     coordinatesMap.put(Field.HOUSEHOLD_INFO_MARITAL_STATUS,
         new ParsingCoordinate("householdMemberInfo", "maritalStatus"));
+    coordinatesMap.put(Field.HH_HEALTHCARE_COVERAGE,
+            new ParsingCoordinate("householdMemberInfo", "healthcareCoverage"));
 
     coordinatesMap.put(Field.MATCH_INFO_DOB, new ParsingCoordinate("matchInfo", "dateOfBirth"));
     coordinatesMap
@@ -591,6 +593,7 @@ public class ApplicationDataParser {
     HOUSEHOLD_INFO_SEX(""),
     HOUSEHOLD_INFO_MARITAL_STATUS(""),
     HOUSEHOLD_INFO_SSN(""),
+    HH_HEALTHCARE_COVERAGE,
 
     MATCH_INFO_DOB,
     MATCH_INFO_FIRST_NAME(""),
