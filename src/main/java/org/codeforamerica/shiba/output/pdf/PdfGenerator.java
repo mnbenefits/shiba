@@ -168,7 +168,16 @@ public class PdfGenerator implements FileGenerator {
       pdfFiller = new PDFBoxFieldFiller(pdfResource);
     }
 
+    System.out.print("\nDocument Fields:");
+    for (DocumentField d : documentFields) {
+    	System.out.println("Name: " + d.getName() + "  Value: " + d.getValue());
+    }
     List<PdfField> fields = pdfFieldMapper.map(documentFields);
+    System.out.println("\nPDF Fields:");
+    for (PdfField p : fields) {
+    	System.out.println("Name: " + p.getName() + "  Value: " + p.getValue());
+    }
+
     return pdfFiller.fill(fields, application.getId(), filename);
   }
 

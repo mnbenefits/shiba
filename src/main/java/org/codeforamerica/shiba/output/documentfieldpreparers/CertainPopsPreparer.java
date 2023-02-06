@@ -107,9 +107,9 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	    		PagesData pagesData = iteration.getPagesData();
 	    		PageData householdMemberInfo = pagesData.getPage("householdMemberInfo");
 	    		InputData programs = householdMemberInfo.get("programs");
-	            certainPopsDocumentFields.add(new DocumentField("householdMemberInfo", "healthcareCoverage",
+	            certainPopsDocumentFields.add(new DocumentField("certainPopsHouseholdMemberInfo", "choseHealthcareCoverage",
 	                programs.getValue().contains("CERTAIN_POPS")? "true" : "false",
-	                DocumentFieldType.SINGLE_VALUE, i));
+	                DocumentFieldType.ENUMERATED_SINGLE_VALUE, i));
 	          }
 	        }
 	}
