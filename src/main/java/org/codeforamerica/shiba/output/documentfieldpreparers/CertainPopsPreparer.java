@@ -99,19 +99,19 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	
 	// Question 4, household healthcare coverage
 	private void mapHouseholdHealthCareCoverage(Application application, Document document, Recipient recipient) {
-	    Subworkflow householdMemberSubworkflow = application.getApplicationData().getSubworkflows().get("household");
+		Subworkflow householdMemberSubworkflow = application.getApplicationData().getSubworkflows().get("household");
 
-	    if (householdMemberSubworkflow != null) {
-	    	for (int i = 0; i < householdMemberSubworkflow.size(); i++) {
-	    		Iteration iteration =householdMemberSubworkflow.get(i);
-	    		PagesData pagesData = iteration.getPagesData();
-	    		PageData householdMemberInfo = pagesData.getPage("householdMemberInfo");
-	    		InputData programs = householdMemberInfo.get("programs");
-	            certainPopsDocumentFields.add(new DocumentField("certainPopsHouseholdMemberInfo", "choseHealthcareCoverage",
-	                programs.getValue().contains("CERTAIN_POPS")? "true" : "false",
-	                DocumentFieldType.ENUMERATED_SINGLE_VALUE, i));
-	          }
-	        }
+		if (householdMemberSubworkflow != null) {
+			for (int i = 0; i < householdMemberSubworkflow.size(); i++) {
+				Iteration iteration = householdMemberSubworkflow.get(i);
+				PagesData pagesData = iteration.getPagesData();
+				PageData householdMemberInfo = pagesData.getPage("householdMemberInfo");
+				InputData programs = householdMemberInfo.get("programs");
+				certainPopsDocumentFields.add(new DocumentField("certainPopsHouseholdMemberInfo",
+						"choseHealthcareCoverage", programs.getValue().contains("CERTAIN_POPS") ? "true" : "false",
+						DocumentFieldType.ENUMERATED_SINGLE_VALUE, i));
+			}
+		}
 	}
 
 	// Question 6, non-US citizens
