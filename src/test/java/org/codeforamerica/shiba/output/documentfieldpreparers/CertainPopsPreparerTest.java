@@ -2,6 +2,7 @@ package org.codeforamerica.shiba.output.documentfieldpreparers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.shiba.testutilities.TestUtils.createApplicationInput;
+import static org.codeforamerica.shiba.testutilities.TestUtils.createApplicationInputEnumeratedSingleValue;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -473,6 +474,46 @@ public class CertainPopsPreparerTest {
 				"QUESTION 14 continued:\n4) Owner name: Jane Smith, Type of account: Certificate of deposit");
 	}
 
+	// There are 4 household members with different program selections. Those that include "CERTAIN_POPS" will
+	// map a choseHealthcareCoverage DocumentField =  true.
+	@Test
+	public void shouldMapHouseholdMemberHealthcareCoverageFields() {
+		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("personalInfo", "firstName", List.of("David"))
+				.withPageData("personalInfo", "lastName", List.of("Smith"))
+				.withSubworkflow("household",
+						new PagesData(Map.of("householdMemberInfo",
+								new PageData(Map.of("firstName", new InputData(List.of("Jane")), "lastName",
+										new InputData(List.of("Smith")), "programs", new InputData(List.of("NONE")))))),
+						new PagesData(Map.of("householdMemberInfo",
+								new PageData(Map.of("firstName", new InputData(List.of("John")), "lastName",
+										new InputData(List.of("Smith")), "programs", new InputData(List.of("CERTAIN_POPS")))))),
+						new PagesData(Map.of("householdMemberInfo",
+								new PageData(Map.of("firstName", new InputData(List.of("Ann")), "lastName",
+										new InputData(List.of("Smith")), "programs", new InputData(List.of("SNAP")))))),
+						new PagesData(Map.of("householdMemberInfo",
+								new PageData(Map.of("firstName", new InputData(List.of("Jim")), "lastName",
+										new InputData(List.of("Smith")), "programs", new InputData(List.of("SNAP","CERTAIN_POPS")))))))
+				.build();
+		applicationData.getSubworkflows().get("household").get(0)
+				.setId(UUID.fromString("12345678-1234-1234-1234-123456789012"));
+
+		List<DocumentField> result = preparer
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+		DocumentField documentField = createApplicationInputEnumeratedSingleValue("certainPopsHouseholdMemberInfo", "choseHealthcareCoverage",
+				"false", 0);
+		assertThat(result).contains(documentField);
+		documentField = createApplicationInputEnumeratedSingleValue("certainPopsHouseholdMemberInfo", "choseHealthcareCoverage",
+				"true", 1);
+		assertThat(result).contains(documentField);
+		documentField = createApplicationInputEnumeratedSingleValue("certainPopsHouseholdMemberInfo", "choseHealthcareCoverage",
+				"false", 2);
+		assertThat(result).contains(documentField);
+		documentField = createApplicationInputEnumeratedSingleValue("certainPopsHouseholdMemberInfo", "choseHealthcareCoverage",
+				"true", 3);
+		assertThat(result).contains(documentField);
+	}
+	
 
 	// Question 11 supplement text is generated when more than 2 people have unearned income or
 	// when a person has more than 4 unearned income types.
