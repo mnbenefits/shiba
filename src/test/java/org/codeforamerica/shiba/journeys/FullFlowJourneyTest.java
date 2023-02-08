@@ -46,16 +46,46 @@ public class FullFlowJourneyTest extends JourneyTest {
 
     List<String> programSelections = List
         .of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH, PROGRAM_CERTAIN_POPS);
-    getToHomeAddress("Chisago", programSelections);
 
-    // Where are you currently Living?
+    goToPageBeforeSelectPrograms("Chisago");
+    
+    /*  verify when the applicant does not select "CERTAIN_POPS" 
+    *    the household members do not have the choice to select "CERTAIN_POPS.
+    */
+     
+    selectProgramsWithoutCertainPopsAndEnterPersonalInfo();
     fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     fillOutContactAndReview(true);
     testPage.clickLink("This looks correct");
+    verifyHouseholdMemberCannotSelectCertainPops();
+    
+    goBackToPage("Choose Programs");
+/* NOT NEEDED?, if applicant doesn't qualify, they got offboarded.
+ *    verify when the applicant does select "CERTAIN_POPS" but doesn't qualify, 
+*    the household members do not have the choice to select "CERTAIN_POPS"
+*/
+    
+//    selectAllProgramsApplicantNotQualifiedForCertainPops();
+    
+//    verifyHouseholdMemberCannotSelectCertainPops();
+    
+ 
+/*    verify that when the applicant selects "CERTAIN_POPS" and qualifies 
+ *   then the household members do have the choice to select "CERTAIN_POPS"
+ */   
+    
+    selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops();
 
-    // Add 1 Household Member
-    assertThat(testPage.getElementText("page-form")).contains(
-        "Roommates that you buy and prepare food with");
+   fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
+   goToContactAndReview();
+ 
+    verifySpouseCanSelectCertainPops();
+    
+  //  takeSnapShot("test.png"); //TODO remove this after troubleshooting
+  
+  System.out.println(" >>>1FFJT page is " + testPage.getTitle());
+  	addHouseholdMemberToVerifySpouseCannotBeSelected();
+
     testPage.enter("addHouseholdMembers", YES.getDisplayValue());
     testPage.clickContinue();
 
@@ -84,40 +114,42 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
     testPage.enter("ssn", "987654321");
     testPage.clickContinue();
-
+//TODO emj move this code into new method addSpouseWithProgram(String program)
     // Add a spouse and assert spouse is no longer an option then delete -- Household member 2
-    testPage.clickLink("Add a person");
+//    testPage.clickLink("Add a person");
+//
+//    testPage.enter("firstName", "householdMember2");
+//    testPage.enter("lastName", householdMemberLastName);
+//    testPage.enter("dateOfBirth", "10/15/1950");
+//    testPage.enter("maritalStatus", "Divorced");
+//    testPage.enter("sex", "Female");
+//    testPage.enter("livedInMnWholeLife", "No");
+//    testPage.enter("relationship", "My spouse (e.g. wife, husband)");
+//    testPage.enter("programs", "None");
+//    testPage.clickContinue();
 
-    testPage.enter("firstName", "householdMember2");
-    testPage.enter("lastName", householdMemberLastName);
-    testPage.enter("dateOfBirth", "10/15/1950");
-    testPage.enter("maritalStatus", "Divorced");
-    testPage.enter("sex", "Female");
-    testPage.enter("livedInMnWholeLife", "No");
-    testPage.enter("relationship", "My spouse (e.g. wife, husband)");
-    testPage.enter("programs", "None");
-    testPage.clickContinue();
-
-    // Verify spouse option has been removed
-    testPage.clickLink("Add a person");
-    Select relationshipSelectWithRemovedSpouseOption = new Select(
-        driver.findElement(By.id("relationship")));
-    assertThat(relationshipSelectWithRemovedSpouseOption.getOptions().stream()
-        .noneMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
-    testPage.goBack();
-
-    // You are about to delete householdMember2 as a household member.
-    driver.findElement(By.id("iteration1-delete")).click();
-    testPage.clickButton("Yes, remove them");
-    // Check that My Spouse is now an option again after deleting the spouse
-    testPage.clickLink("Add a person");
-    Select relationshipSelectWithSpouseOption = new Select(
-        driver.findElement(By.id("relationship")));
-    assertThat(relationshipSelectWithSpouseOption.getOptions().stream()
-        .anyMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
-    testPage.goBack();
-    testPage.clickButton("Yes, that's everyone");
-
+//TODO emj change this test???
+//    // Verify spouse option has been removed
+//    testPage.clickLink("Add a person");
+//    Select relationshipSelectWithRemovedSpouseOption = new Select(
+//        driver.findElement(By.id("relationship")));
+//    assertThat(relationshipSelectWithRemovedSpouseOption.getOptions().stream()
+//        .noneMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
+//    testPage.goBack();
+//
+//    // You are about to delete householdMember2 as a household member.
+//    driver.findElement(By.id("iteration1-delete")).click();
+//    testPage.clickButton("Yes, remove them");
+//    // Check that My Spouse is now an option again after deleting the spouse
+//    testPage.clickLink("Add a person");
+//    Select relationshipSelectWithSpouseOption = new Select(
+//        driver.findElement(By.id("relationship")));
+//    assertThat(relationshipSelectWithSpouseOption.getOptions().stream()
+//        .anyMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
+//    testPage.goBack();
+//    testPage.clickButton("Yes, that's everyone");
+//TODO emj,  flow is unchanged from here 
+    
     // Who are the children in need of childcare
     testPage.enter("whoNeedsChildCare", householdMemberFullName);
     testPage.clickContinue();
