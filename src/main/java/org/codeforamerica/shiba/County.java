@@ -27,7 +27,7 @@ public enum County implements ServicingAgency {
   Redwood("Redwood"), Renville("Renville"), Rice("Rice"),
   Rock("Rock"), Roseau("Roseau"), Scott("Scott"),
   Sherburne("Sherburne"), Sibley("Sibley"), Stearns("Stearns"),
-  Steele("Steele"), Stevens("Stevens"), StLouis("St. Louis"),
+  Steele("Steele"), Stevens("Stevens"), StLouis("Saint Louis"),
   Swift("Swift"), Todd("Todd"), Traverse("Traverse"),
   Wabasha("Wabasha"), Wadena("Wadena"), Waseca("Waseca"),
   Washington("Washington"), Watonwan("Watonwan"), Wilkin("Wilkin"),
