@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.codeforamerica.shiba.Program;
+import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.junit.jupiter.api.BeforeEach;
@@ -1476,9 +1477,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
 
 			// Section 4
-			assertPdfFieldEquals("SPOUSE_FIRST_NAME", "Jim", pdf);
-			assertPdfFieldEquals("SPOUSE_LAST_NAME", "Halpert", pdf);
-			assertPdfFieldEquals("SPOUSE_RELATIONSHIP", "spouse", pdf);
+			assertPdfFieldEquals("FIRST_NAME_0", "Jim", pdf);
+			assertPdfFieldEquals("LAST_NAME_0", "Halpert", pdf);
+			assertPdfFieldEquals("RELATIONSHIP_0", "spouse", pdf);
 
 			// Section 6
 			assertPdfFieldEquals("IS_US_CITIZEN", "No", pdf);
@@ -1610,13 +1611,13 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			submitApplication();
 			// var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
 			var pdf = downloadCertainPopsClientPDF();
-			assertPdfFieldEquals("HH_FIRST_NAME_4", "householdMemberFirstName4", pdf);
-			assertPdfFieldEquals("HH_LAST_NAME_4", "householdMemberLastName4", pdf);
-			assertPdfFieldEquals("HH_RELATIONSHIP_4", "housemate", pdf);
-			assertPdfFieldEquals("HH_DATE_OF_BIRTH_4", "09/14/1950", pdf);
-			assertPdfFieldEquals("HH_SSN_4", "XXX-XX-XXXX", pdf);
-			assertPdfFieldEquals("HH_MARITAL_STATUS_4", "NEVER_MARRIED", pdf);
-			assertPdfFieldEquals("HH_SEX_4", "MALE", pdf);
+			assertPdfFieldEquals("FIRST_NAME_4", "householdMemberFirstName4", pdf);
+			assertPdfFieldEquals("LAST_NAME_4", "householdMemberLastName4", pdf);
+			assertPdfFieldEquals("RELATIONSHIP_4", "housemate", pdf);
+			assertPdfFieldEquals("DATE_OF_BIRTH_4", "09/14/1950", pdf);
+			assertPdfFieldEquals("SSN_4", "XXX-XX-XXXX", pdf);
+			assertPdfFieldEquals("MARITAL_STATUS_4", "NEVER_MARRIED", pdf);
+			assertPdfFieldEquals("SEX_4", "MALE", pdf);
 		}
 
 		@Test
@@ -1643,6 +1644,35 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("WHO_HAS_DISABILITY_2", "householdMemberFirstName2", pdf);
 
 		}
+
+		@Test
+		void shouldMapHHMemberHealthcareCoverageChoice() throws Exception {
+			fillInRequiredPages();
+			selectPrograms("CERTAIN_POPS");
+			postExpectingRedirect(
+					"basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER", "BLIND", "HAVE_DISABILITY_SSA",
+							"HAVE_DISABILITY_SMRT", "MEDICAL_ASSISTANCE", "SSI_OR_RSDI", "HELP_WITH_MEDICARE"),
+					"certainPopsConfirm");
+
+			fillOutHousemateInfoMoreThanFiveLessThanTen(4);
+			// Modify the selected programs for these household members
+			applicationData.getSubworkflows().get("household").get(0).getPagesData().getPage("householdMemberInfo")
+					.replace("programs", new InputData(List.of("NONE")));
+			applicationData.getSubworkflows().get("household").get(1).getPagesData().getPage("householdMemberInfo")
+					.replace("programs", new InputData(List.of("CERTAIN_POPS")));
+			applicationData.getSubworkflows().get("household").get(2).getPagesData().getPage("householdMemberInfo")
+					.replace("programs", new InputData(List.of("SNAP")));
+			applicationData.getSubworkflows().get("household").get(3).getPagesData().getPage("householdMemberInfo")
+					.replace("programs", new InputData(List.of("SNAP", "CERTAIN_POPS")));
+
+			submitApplication();
+			var pdf = downloadCertainPopsClientPDF();
+			assertPdfFieldEquals("HH_HEALTHCARE_COVERAGE_0", "No", pdf);
+			assertPdfFieldEquals("HH_HEALTHCARE_COVERAGE_1", "Yes", pdf);
+			assertPdfFieldEquals("HH_HEALTHCARE_COVERAGE_2", "No", pdf);
+			assertPdfFieldEquals("HH_HEALTHCARE_COVERAGE_3", "Yes", pdf);
+		}
+		
 		/* /* Keep this code till supplement page display is finalized as general supp. page.
 		@Test
         void shouldMapHHMemberMoreThan2HasRetroactiveCoverage() throws Exception {

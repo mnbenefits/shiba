@@ -962,6 +962,7 @@ pageDefinitions:
           - CASH
           - EA
           - CCAP
+          - CERTAIN_POPS
         followUps:
           - name: ssn
             type: SSN
@@ -987,9 +988,14 @@ pageDefinitions:
               messageKey: choose-programs.emergency-assistance
             - value: CCAP
               messageKey: choose-programs.child-care-assistance
+            - value: CERTAIN_POPS
+              messageKey: choose-programs.certain-pops
+              condition: *applicantChoseCERTAINPOPS?
             - value: NONE
               messageKey: general.inputs.none-of-the-above
               isNone: true
+          datasources:
+            - pageName: choosePrograms
   - &householdList
     name: householdList
     pageTitle: household-list.title
