@@ -239,6 +239,9 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("apartmentNumber", homeApartmentNumber);
+    when(smartyStreetClient.validateAddress(any())).thenReturn(
+        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+    );
     testPage.clickContinue();
 
     // Where can the county send your mail? (accept the smarty streets enriched address)
@@ -250,8 +253,13 @@ abstract class JourneyTest extends AbstractBasePageTest {
     when(smartyStreetClient.validateAddress(any())).thenReturn(
         Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
     );
+    
     testPage.clickContinue();
+    
     testPage.clickElementById("enriched-address");
+    testPage.clickContinue();
+    takeSnapShot("county.png");
+    testPage.clickElementById("enriched-county");
     testPage.clickContinue();
   }
   
@@ -269,12 +277,14 @@ abstract class JourneyTest extends AbstractBasePageTest {
     assertThat(testPage.getCheckboxValues("phoneOrEmail")).contains("It's okay to text me",
         "It's okay to email me");
     testPage.clickContinue();
-    
+    takeSnapShot("before.png");
     if (isReview)
     {
       // Let's review your info
       assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
-          .isEqualTo("smarty street");           
+          .isEqualTo("smarty street");  
+      assertThat(driver.findElement(By.id("mailing-address_county")).getText())
+      .isEqualTo("someCounty"); 
     }
     
   }

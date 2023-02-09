@@ -32,7 +32,9 @@ public enum County implements ServicingAgency {
   Wabasha("Wabasha"), Wadena("Wadena"), Waseca("Waseca"),
   Washington("Washington"), Watonwan("Watonwan"), Wilkin("Wilkin"),
   Winona("Winona"), Wright("Wright"), YellowMedicine("Yellow Medicine"),
-  Other("Other");
+  Other("Other"),
+  //for testing only
+  someCounty("someCounty");
 
   private final String displayName;
 
