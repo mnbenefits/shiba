@@ -44,9 +44,6 @@ public class FullFlowJourneyTest extends JourneyTest {
     // Assert that the EBT Scam Alert is displayed on the landing page.
     assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
 
-    List<String> programSelections = List
-        .of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH, PROGRAM_CERTAIN_POPS);
-
     goToPageBeforeSelectPrograms("Chisago");
     
     /*  verify when the applicant does not select "CERTAIN_POPS" 
@@ -58,9 +55,8 @@ public class FullFlowJourneyTest extends JourneyTest {
     fillOutContactAndReview(true);
     testPage.clickLink("This looks correct");
     verifyHouseholdMemberCannotSelectCertainPops();
-    
     goBackToPage("Choose Programs");
-/* NOT NEEDED?, if applicant doesn't qualify, they got offboarded.
+/* TODO NOT NEEDED?, if applicant doesn't qualify, they got offboarded.
  *    verify when the applicant does select "CERTAIN_POPS" but doesn't qualify, 
 *    the household members do not have the choice to select "CERTAIN_POPS"
 */
@@ -76,79 +72,19 @@ public class FullFlowJourneyTest extends JourneyTest {
     
     selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops();
 
-   fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
-   goToContactAndReview();
+    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
+    goToContactAndReview();
  
-    verifySpouseCanSelectCertainPops();
-    
-  //  takeSnapShot("test.png"); //TODO remove this after troubleshooting
-  
-  System.out.println(" >>>1FFJT page is " + testPage.getTitle());
+    addSpouseAndVerifySpouseCanSelectCertainPops();
+
   	addHouseholdMemberToVerifySpouseCannotBeSelected();
-
-    testPage.enter("addHouseholdMembers", YES.getDisplayValue());
-    testPage.clickContinue();
-
+    removeSpouseAndVerifySpouseCanBeSelectedForNewHouseholdMember();
+ 
     String householdMemberFirstName = "householdMemberFirstName";
     String householdMemberLastName = "householdMemberLastName";
     String householdMemberFullName = householdMemberFirstName + " " + householdMemberLastName;
-    testPage.enter("firstName", householdMemberFirstName);
-    testPage.enter("lastName", householdMemberLastName);
-    testPage.enter("otherName", "houseHoldyMcMemberson");
-    testPage.enter("dateOfBirth", "09/14/2018");
-    testPage.enter("maritalStatus", "Never married");
-    testPage.enter("sex", "Male");
-    testPage.enter("livedInMnWholeLife", "Yes"); // actually means they MOVED HERE
-    testPage.enter("moveToMnDate", "02/18/1950");
-    testPage.enter("moveToMnPreviousState", "Illinois");
-    testPage.enter("relationship", "My child");
-    testPage.enter("programs", PROGRAM_CCAP);
-    // Assert that the programs follow up questions are shown when a program is selected
-    WebElement programsFollowUp = testPage.findElementById("programs-follow-up");
-    assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
-    // Assert that the programs follow up is hidden when none is selected
-    testPage.enter("programs", PROGRAM_NONE);
-    assertThat(programsFollowUp.getCssValue("display")).isEqualTo("none");
-    testPage.enter("programs", PROGRAM_CCAP);
-    // Assert that the programs follow up shows again when a program is selected after having selected none
-    assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
-    testPage.enter("ssn", "987654321");
-    testPage.clickContinue();
-//TODO emj move this code into new method addSpouseWithProgram(String program)
-    // Add a spouse and assert spouse is no longer an option then delete -- Household member 2
-//    testPage.clickLink("Add a person");
-//
-//    testPage.enter("firstName", "householdMember2");
-//    testPage.enter("lastName", householdMemberLastName);
-//    testPage.enter("dateOfBirth", "10/15/1950");
-//    testPage.enter("maritalStatus", "Divorced");
-//    testPage.enter("sex", "Female");
-//    testPage.enter("livedInMnWholeLife", "No");
-//    testPage.enter("relationship", "My spouse (e.g. wife, husband)");
-//    testPage.enter("programs", "None");
-//    testPage.clickContinue();
-
-//TODO emj change this test???
-//    // Verify spouse option has been removed
-//    testPage.clickLink("Add a person");
-//    Select relationshipSelectWithRemovedSpouseOption = new Select(
-//        driver.findElement(By.id("relationship")));
-//    assertThat(relationshipSelectWithRemovedSpouseOption.getOptions().stream()
-//        .noneMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
-//    testPage.goBack();
-//
-//    // You are about to delete householdMember2 as a household member.
-//    driver.findElement(By.id("iteration1-delete")).click();
-//    testPage.clickButton("Yes, remove them");
-//    // Check that My Spouse is now an option again after deleting the spouse
-//    testPage.clickLink("Add a person");
-//    Select relationshipSelectWithSpouseOption = new Select(
-//        driver.findElement(By.id("relationship")));
-//    assertThat(relationshipSelectWithSpouseOption.getOptions().stream()
-//        .anyMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
-//    testPage.goBack();
-//    testPage.clickButton("Yes, that's everyone");
-//TODO emj,  flow is unchanged from here 
+    
+    testPage.clickButton("Yes, that's everyone");
     
     // Who are the children in need of childcare
     testPage.enter("whoNeedsChildCare", householdMemberFullName);
@@ -899,6 +835,173 @@ public class FullFlowJourneyTest extends JourneyTest {
     
     assertApplicationSubmittedEventWasPublished(applicationId, FULL, 8);
   }
+  
+
+	private void selectProgramsWithoutCertainPopsAndEnterPersonalInfo() {
+		List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH);
+		// Program Selection
+		programSelections.forEach(program -> testPage.enter("programs", program));
+		testPage.clickContinue();
+		// Getting to know you (Personal Info intro page)
+		testPage.clickContinue();
+		testPage.clickContinue();
+		// Personal Info
+		testPage.enter("firstName", "Ahmed");
+		testPage.enter("lastName", "St. George");
+		testPage.enter("otherName", "defaultOtherName");
+		// DOB is optional
+		testPage.enter("maritalStatus", "Never married");
+		testPage.enter("sex", "Female");
+		testPage.enter("livedInMnWholeLife", "Yes");
+		testPage.enter("moveToMnDate", "10/20/1993");
+		testPage.enter("moveToMnPreviousCity", "Chicago");
+		testPage.clickContinue();
+		assertThat(testPage.getTitle()).isEqualTo("Home Address");
+		testPage.goBack();
+		testPage.enter("dateOfBirth", "01/12/1928");
+		testPage.clickContinue();
+	}
+
+	protected void verifyHouseholdMemberCannotSelectCertainPops() {
+		// Add 1 Household Member
+		assertThat(testPage.getElementText("page-form")).contains("Roommates that you buy and prepare food with");
+		testPage.enter("addHouseholdMembers", YES.getDisplayValue());
+		testPage.clickContinue();
+		assertThat(!(testPage.getElementText("page-form")).contains("Healthcare for Seniors and People with Disabilities"));
+	}
+  
+	private void selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops() {
+		List<String> programSelectionsWithCP = List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH,
+				PROGRAM_CERTAIN_POPS);
+		testPage.enter("programs", PROGRAM_NONE);// reset programs
+		// Program Selection
+		programSelectionsWithCP.forEach(program -> testPage.enter("programs", program));
+		testPage.clickContinue();
+
+		// Test Certain pops offboarding flow first by selecting None of the above
+		testPage.enter("basicCriteria", "None of the above");
+		testPage.clickContinue();
+		assertThat(testPage.getTitle()).isEqualTo("Certain Pops Offboarding");
+		testPage.clickContinue();
+		assertThat(testPage.getTitle()).isEqualTo("Add other programs");
+		testPage.goBack();
+		testPage.goBack();
+
+		// Basic Criteria:
+		testPage.enter("basicCriteria", "I am 65 years old or older");
+		testPage.enter("basicCriteria", "I am blind");
+		testPage.enter("basicCriteria", "I currently receive SSI or RSDI for a disability");
+		testPage.enter("basicCriteria",	"I have a disability that has been certified by the Social Security Administration (SSA)");
+		testPage.enter("basicCriteria",	"I have a disability that has been certified by the State Medical Review Team (SMRT)");
+		testPage.enter("basicCriteria",	"I want to apply for Medical Assistance for Employed Persons with Disabilities (MA-EPD)");
+		testPage.enter("basicCriteria", "I have Medicare and need help with my costs");
+		testPage.clickContinue();
+		assertThat(testPage.getTitle()).isEqualTo("Certain Pops Confirmation");
+		testPage.clickContinue();
+		assertThat(testPage.getTitle()).isEqualTo("Expedited Notice");
+		testPage.clickContinue();
+
+		// Getting to know you (Personal Info intro page)
+		testPage.clickContinue();
+		// Personal Info
+		testPage.enter("firstName", "Ahmed");
+		testPage.enter("lastName", "St. George");
+		testPage.enter("otherName", "defaultOtherName");
+		// DOB is optional
+		testPage.enter("ssn", "123456789");
+		// CP SSN check
+		testPage.enter("noSSNCheck", "I don't have a social security number.");
+		assertThat(testPage.getCheckboxValues("noSSNCheck")).contains("I don't have a social security number.",
+				"I don't have a social security number.");
+		testPage.enter("appliedForSSN", "Yes");
+		testPage.clickContinue();
+		// SSN textbox is filled and Checkbox is checked, so page won't advance and error shows
+		assertThat(testPage.getTitle()).contains("Personal Info");
+		testPage.enter("noSSNCheck", "I don't have a social security number.");// deselect the SSN checkbox
+		testPage.enter("maritalStatus", "Never married");
+		testPage.enter("sex", "Female");
+		testPage.enter("livedInMnWholeLife", "Yes");
+		testPage.enter("moveToMnDate", "10/20/1993");
+		testPage.enter("moveToMnPreviousCity", "Chicago");
+		testPage.clickContinue();
+		assertThat(testPage.getTitle()).isEqualTo("Home Address");
+		testPage.goBack();
+		testPage.enter("dateOfBirth", "01/12/1928");
+		testPage.clickContinue();
+
+	}
+
+  private void addSpouseAndVerifySpouseCanSelectCertainPops() {
+		testPage.enter("addHouseholdMembers", YES.getDisplayValue());
+		testPage.clickContinue();
+	    assertThat(testPage.getElementText("page-form")).contains("Healthcare for Seniors and People with Disabilities");
+	    testPage.enter("firstName", "Celia");
+	    testPage.enter("lastName", "St. George");
+	    testPage.enter("dateOfBirth", "10/15/1950");
+	    testPage.enter("maritalStatus", "Married, living with spouse");
+	    testPage.enter("sex", "Female");
+	    testPage.enter("livedInMnWholeLife", "No");
+	    testPage.enter("relationship", "My spouse (e.g. wife, husband)");
+	    testPage.enter("programs", "None");
+	    testPage.clickContinue();
+  }
+  
+	private void addHouseholdMemberToVerifySpouseCannotBeSelected() {
+		testPage.clickLink("Add a person");
+		String householdMemberFirstName = "householdMemberFirstName";
+		String householdMemberLastName = "householdMemberLastName";
+		testPage.enter("firstName", householdMemberFirstName);
+		testPage.enter("lastName", householdMemberLastName);
+		testPage.enter("otherName", "houseHoldyMcMemberson");
+		testPage.enter("dateOfBirth", "09/14/2018");
+		testPage.enter("maritalStatus", "Never married");
+		testPage.enter("sex", "Male");
+		testPage.enter("livedInMnWholeLife", "Yes"); // actually means they MOVED HERE
+		testPage.enter("moveToMnDate", "02/18/1950");
+		testPage.enter("moveToMnPreviousState", "Illinois");
+		Select relationshipSelectWithRemovedSpouseOption = new Select(driver.findElement(By.id("relationship")));
+		assertThat(relationshipSelectWithRemovedSpouseOption.getOptions().stream()
+				.noneMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
+		testPage.enter("relationship", "My child");
+		testPage.enter("programs", PROGRAM_CCAP);
+		// Assert that the programs follow up questions are shown when a program is selected
+		WebElement programsFollowUp = testPage.findElementById("programs-follow-up");
+		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
+		// Assert that the programs follow up is hidden when none is selected
+		testPage.enter("programs", PROGRAM_NONE);
+		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("none");
+		testPage.enter("programs", PROGRAM_CCAP);
+		//testPage.enter("programs", PROGRAM_CERTAIN_POPS); //TODO emj test CP PDF
+		// Assert that the programs follow up shows again when a program is selected after having selected none
+		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
+		testPage.enter("ssn", "987654321");
+		testPage.clickContinue();
+	}
+  
+	protected void removeSpouseAndVerifySpouseCanBeSelectedForNewHouseholdMember() {
+		// You are about to delete householdMember0 as a household member.
+		driver.findElement(By.id("iteration0-delete")).click();
+		testPage.clickButton("Yes, remove them");
+		// Check that My Spouse is now an option again after deleting the spouse
+		testPage.clickLink("Add a person");
+		Select relationshipSelectWithSpouseOption = new Select(driver.findElement(By.id("relationship")));
+		assertThat(relationshipSelectWithSpouseOption.getOptions().stream()
+				.anyMatch(option -> option.getText().equals("My spouse (e.g. wife, husband)"))).isTrue();
+		testPage.goBack();
+	}
+
+  
+  /**
+   * Call this only if phone and email have already been entered and tested before.
+   */
+  private void goToContactAndReview() {   
+    // How can we get in touch with you?
+    testPage.enter("phoneNumber", "7234567890");
+    testPage.enter("email", "some@example.com");
+    testPage.clickContinue();
+    testPage.clickLink("This looks correct");
+  }
+
 
   private void testDocumentUploads() {
     // Uploading a file should change the page styling
