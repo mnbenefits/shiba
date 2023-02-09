@@ -45,10 +45,6 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
 
     goToPageBeforeSelectPrograms("Chisago");
-    
-    /*  verify when the applicant does not select "CERTAIN_POPS" 
-    *    the household members do not have the choice to select "CERTAIN_POPS.
-    */
      
     selectProgramsWithoutCertainPopsAndEnterPersonalInfo();
     fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
@@ -56,19 +52,6 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickLink("This looks correct");
     verifyHouseholdMemberCannotSelectCertainPops();
     goBackToPage("Choose Programs");
-/* TODO NOT NEEDED?, if applicant doesn't qualify, they got offboarded.
- *    verify when the applicant does select "CERTAIN_POPS" but doesn't qualify, 
-*    the household members do not have the choice to select "CERTAIN_POPS"
-*/
-    
-//    selectAllProgramsApplicantNotQualifiedForCertainPops();
-    
-//    verifyHouseholdMemberCannotSelectCertainPops();
-    
- 
-/*    verify that when the applicant selects "CERTAIN_POPS" and qualifies 
- *   then the household members do have the choice to select "CERTAIN_POPS"
- */   
     
     selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops();
 
@@ -490,7 +473,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCcapFieldEquals("UTM_SOURCE", "");
     assertCcapFieldEquals("FULL_NAME_0", householdMemberFullName);
     assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
-    assertCcapFieldEquals("PROGRAMS_0", "CCAP");
+    assertCcapFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
     assertCcapFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
     assertCcapFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
     assertCcapFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
@@ -606,7 +589,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
     assertCafFieldEquals("FULL_NAME_0", householdMemberFullName);
-    assertCafFieldEquals("PROGRAMS_0", "CCAP");
+    assertCafFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
     assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
     assertCafFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
     assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
@@ -746,7 +729,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCertainPopsFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCertainPopsFieldEquals("TRIBAL_NATION", "Bois Forte");
     assertCertainPopsFieldEquals("FULL_NAME_0", householdMemberFullName);
-    assertCertainPopsFieldEquals("PROGRAMS_0", "CCAP");
+    assertCertainPopsFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
     assertCertainPopsFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
     assertCertainPopsFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
     assertCertainPopsFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
@@ -773,6 +756,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "someCounty");
     assertCertainPopsFieldEquals("MEDICAL_IN_OTHER_STATE", "Yes");
     assertCertainPopsFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
+    assertCertainPopsFieldEquals("HH_HEALTHCARE_COVERAGE_0", "Yes");
     assertCertainPopsFieldEquals("FIRST_NAME_0", "householdMemberFirstName");
     assertCertainPopsFieldEquals("MI_0", "");
     assertCertainPopsFieldEquals("LAST_NAME_0", "householdMemberLastName");
@@ -971,7 +955,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("programs", PROGRAM_NONE);
 		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("none");
 		testPage.enter("programs", PROGRAM_CCAP);
-		//testPage.enter("programs", PROGRAM_CERTAIN_POPS); //TODO emj test CP PDF
+		testPage.enter("programs", PROGRAM_CERTAIN_POPS);
 		// Assert that the programs follow up shows again when a program is selected after having selected none
 		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
 		testPage.enter("ssn", "987654321");
