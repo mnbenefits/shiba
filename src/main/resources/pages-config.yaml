@@ -24,13 +24,8 @@ conditionDefinitions:
     input: isHomeless
     matcher: DOES_NOT_CONTAIN
     value: "true"
-  - &selectedCountyDoesNotMatchEnrichedCountyHome?
+  - &selectedCountyDoesNotMatchEnrichedCounty?
     pageName: homeAddressValidation
-    input: enrichedCountyDifferentFromSelected
-    matcher: CONTAINS
-    value: "false"
-  - &selectedCountyDoesNotMatchEnrichedCountyMailing?
-    pageName: mailingAddressValidation
     input: enrichedCountyDifferentFromSelected
     matcher: CONTAINS
     value: "false"
@@ -3863,22 +3858,8 @@ pageDefinitions:
               messageKey: address-validation.address-you-entered
       - name: enrichedCountyDifferentFromSelected
         type: HIDDEN
-  - &homeCountyValidation
-    name: homeCountyValidation
-    pageTitle: county-validation.title
-    hasPrimaryButton: false
-    inputs:
-      - name: useEnrichedCounty
-        type: CUSTOM
-        customInputFragment: countyValidationInput
-        options:
-          selectableOptions:
-            - value: "true"
-              messageKey: county-validation.suggested-county
-            - value: "false"
-              messageKey: county-validation.county-you-entered
-  - &mailingCountyValidation
-    name: mailingCountyValidation
+  - &countyValidation
+    name: countyValidation
     pageTitle: county-validation.title
     hasPrimaryButton: false
     inputs:
@@ -4551,39 +4532,17 @@ workflow:
       - pageName: homeAddress
       - pageName: identifyCounty
     nextPages:
-      - pageName: verifyHomeCounty
+      - pageName: verifyCounty
       - pageName: contactInfo
       - pageName: mailingAddress
-  verifyHomeCounty:
-    pageConfiguration: *homeCountyValidation
+  verifyCounty:
+    pageConfiguration: *countyValidation
     skipCondition: 
       logicalOperator: OR
       conditions:
-        - *selectedCountyDoesNotMatchEnrichedCountyHome?
-        - pageName: mailingAddress
-          input: sameMailingAddress
-          matcher: DOES_NOT_CONTAIN
-          value: "true"
-    datasources:
-      - pageName: homeAddress
-      - pageName: mailingAddress
-      - pageName: identifyCounty
-      - pageName: verifyHomeAddress
-      - pageName: homeAddressValidation
-    nextPages:
-      - pageName: verifyMailingCounty
-      - pageName: contactInfo
-      - pageName: identifyCountyAgain
-  verifyMailingCounty:
-    pageConfiguration: *mailingCountyValidation
-    skipCondition: 
-      logicalOperator: OR
-      conditions:
-        - *selectedCountyDoesNotMatchEnrichedCountyMailing?
-        - pageName: mailingAddress
-          input: sameMailingAddress
+        - *selectedCountyDoesNotMatchEnrichedCounty?
+        - <<: *isHomeless?
           matcher: CONTAINS
-          value: "true"
     datasources:
       - pageName: homeAddress
       - pageName: mailingAddress
@@ -4616,8 +4575,7 @@ workflow:
       - pageName: cityForGeneralDelivery
       - pageName: contactInfo
       - pageName: choosePrograms
-      - pageName: homeCountyValidation
-      - pageName: mailingCountyValidation
+      - pageName: countyValidation
   addHouseholdMembers:
     pageConfiguration: *addHouseholdMembers
     nextPages:

@@ -285,13 +285,36 @@ abstract class JourneyTest extends AbstractBasePageTest {
     
     testPage.clickElementById("enriched-address");
     testPage.clickContinue();
-    takeSnapShot("county.png");
-    testPage.clickElementById("enriched-county");
+    testPage.clickElementById("original-county");
     testPage.clickContinue();
   }
   
+  protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,
+      String homeStreetAddress, String homeApartmentNumber) {
+    testPage.enter("zipCode", homeZip);
+    testPage.enter("city", homeCity);
+    testPage.enter("streetAddress", homeStreetAddress);
+    testPage.enter("apartmentNumber", homeApartmentNumber);
+    testPage.clickContinue();
+    testPage.enter("zipCode", "23456");
+    testPage.enter("city", "someCity");
+    testPage.enter("streetAddress", "someStreetAddress");
+    testPage.enter("state", "IL");
+    testPage.enter("apartmentNumber", "someApartmentNumber");
+    testPage.clickContinue();
+    testPage.clickButton("Use this address");
+    testPage.clickButton("Edit my county");
+    testPage.enter("county", "Chisago");
+    testPage.clickContinue();
+    testPage.goBack();
+    testPage.goBack();
+    testPage.goBack();
+    testPage.goBack();
+    testPage.goBack();
+  }
   
-  protected void fillOutContactAndReview(boolean isReview) {   
+  
+  protected void fillOutContactAndReview(boolean isReview, String county) {   
     // Check that we get the no phone number confirmation screen if no phone number is entered
     testPage.enter("email", "some@example.com");
     testPage.clickContinue();
@@ -304,14 +327,14 @@ abstract class JourneyTest extends AbstractBasePageTest {
     assertThat(testPage.getCheckboxValues("phoneOrEmail")).contains("It's okay to text me",
         "It's okay to email me");
     testPage.clickContinue();
-    takeSnapShot("before.png");
+    takeSnapShot("here.png");
     if (isReview)
     {
       // Let's review your info
       assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
           .isEqualTo("smarty street");  
-      assertThat(driver.findElement(By.id("mailing-address_county")).getText())
-      .isEqualTo("someCounty"); 
+      assertThat(driver.findElement(By.id("home-address_county")).getText())
+      .isEqualTo(county); 
     }
     
   }

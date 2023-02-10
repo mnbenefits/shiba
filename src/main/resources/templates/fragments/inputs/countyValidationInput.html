@@ -1,10 +1,10 @@
 <!-- This is a custom input for the county validation screen to select the enriched or non-enriched county (if smarty-streets was able to find it) -->
 <th:block th:fragment="countyValidationInput (input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
-                   homeAddressData=${page.name.contains('home') ? pageDatasources.get('homeAddress') : pageDatasources.get('mailingAddress')},
+                   homeAddressData=${pageDatasources.get('homeAddress')},
                    identifyCountyData=${pageDatasources.get('identifyCounty')},
                    foundEnrichedCounty=${homeAddressData.containsKey('enrichedCounty')}"
-><p th:text="${page.name}"/>
+>
   <div class="grid__item spacing-above-35 spacing-below-35">
     <h1 class="h2" th:if="${foundEnrichedCounty}"
         th:text="#{county-validation.check-your-county}"></h1>

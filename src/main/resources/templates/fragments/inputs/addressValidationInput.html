@@ -33,9 +33,6 @@
       <input type="radio" th:name="${formInputName}" id="enriched-address"
              th:value="true"
              th:checked="true">
-            Selected County: <span th:text="${selectedCounty}"> test</span><br>
-             Enriched County: <span th:text="${enrichedCountyName}"> test</span><br>
-              Different: <span th:text="${enrichedCountyDifferentFromSelected}"> test</span>
     </label>
      <input type="hidden"
                th:id="|${enrichedCountyDifferentFromSelected}-id|"  
@@ -55,7 +52,6 @@
              th:name="${formInputName}" id="original-address"
              th:value="false"
              th:checked="${foundEnrichedAddress} ? false : true">
-             Enriched County Exists: <span th:text="${enrichedCountyExists}"> test</span><br>
     </label>
   </div>
   <button th:if="${foundEnrichedAddress}" id="form-submit-button" class="button button--primary"
