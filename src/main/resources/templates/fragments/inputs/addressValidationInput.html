@@ -4,8 +4,9 @@
                    addressData=${page.name.contains('home') ? pageDatasources.get('homeAddress') : pageDatasources.get('mailingAddress')},
                    foundEnrichedAddress=${addressData.containsKey('enrichedStreetAddress')},
                    selectedCounty=${pageDatasources.get('identifyCounty').get('county').value[0]},
-                   enrichedCountyExists=${addressData.get('enrichedCounty') ne null},
-                   enrichedCountyName=${enrichedCountyExists ? addressData.get('enrichedCounty').value[0] : ''},
+                   countyData=${pageDatasources.get('homeAddress')},
+                   enrichedCountyExists=${countyData.get('enrichedCounty') ne null},
+                   enrichedCountyName=${enrichedCountyExists ? countyData.get('enrichedCounty').value[0] : ''},
                    enrichedCountyDifferentFromSelected=${selectedCounty.replaceAll('[^A-Za-z0-9]','').toLowerCase() ne enrichedCountyName.replaceAll('[^A-Za-z0-9]','').toLowerCase()}"
 >
   <div class="grid__item spacing-above-35 spacing-below-35">

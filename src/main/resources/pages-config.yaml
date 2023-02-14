@@ -24,8 +24,13 @@ conditionDefinitions:
     input: isHomeless
     matcher: DOES_NOT_CONTAIN
     value: "true"
-  - &selectedCountyDoesNotMatchEnrichedCounty?
+  - &selectedCountyDoesNotMatchEnrichedCountyHome?
     pageName: homeAddressValidation
+    input: enrichedCountyDifferentFromSelected
+    matcher: CONTAINS
+    value: "false"
+  - &selectedCountyDoesNotMatchEnrichedCountyMailing?
+    pageName: mailingAddressValidation
     input: enrichedCountyDifferentFromSelected
     matcher: CONTAINS
     value: "false"
@@ -4540,7 +4545,8 @@ workflow:
     skipCondition: 
       logicalOperator: OR
       conditions:
-        - *selectedCountyDoesNotMatchEnrichedCounty?
+        - *selectedCountyDoesNotMatchEnrichedCountyHome?
+        - *selectedCountyDoesNotMatchEnrichedCountyMailing?
         - <<: *isHomeless?
           matcher: CONTAINS
     datasources:
@@ -4549,6 +4555,7 @@ workflow:
       - pageName: identifyCounty
       - pageName: verifyHomeAddress
       - pageName: homeAddressValidation
+      - pageName: mailingAddressValidation
     nextPages:
       - pageName: contactInfo
       - pageName: identifyCountyAgain

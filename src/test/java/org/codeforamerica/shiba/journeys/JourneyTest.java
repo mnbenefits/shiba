@@ -327,7 +327,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     assertThat(testPage.getCheckboxValues("phoneOrEmail")).contains("It's okay to text me",
         "It's okay to email me");
     testPage.clickContinue();
-    takeSnapShot("here.png");
+    
     if (isReview)
     {
       // Let's review your info
