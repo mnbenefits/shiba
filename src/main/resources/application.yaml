@@ -51,8 +51,8 @@ sentry:
   send-default-pii: true
 
 client:
-  keystore: src/main/resources/shiba-keystore.jks
-  truststore: src/main/resources/shiba-truststore.jks
+  keystore: src/main/resources/keystore-non-prod.jks
+  truststore: src/main/resources/truststore-non-prod.jks
 
 mnit-filenet:
   username: ${MNIT-FILENET_USERNAME}
