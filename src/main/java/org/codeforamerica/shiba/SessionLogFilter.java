@@ -70,8 +70,6 @@ public class SessionLogFilter implements Filter {
     		System.out.println("Header name: " + headerName + "  Header: " + header);
     	}
     }
-    applicationData.setDevicePlatform("");
-    applicationData.setDeviceType("");
     
     clientIP = createRequestIp(httpReq);
     if (applicationData != null && applicationData.getClientIP() == null) {
