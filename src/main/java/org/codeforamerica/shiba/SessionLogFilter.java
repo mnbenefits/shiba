@@ -3,6 +3,7 @@ package org.codeforamerica.shiba;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Optional;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -59,6 +60,19 @@ public class SessionLogFilter implements Filter {
 	}
     
     MDC.put("sessionId", sessionId);
+    
+    Enumeration<String> headerNames = httpReq.getHeaderNames();
+    while (headerNames.hasMoreElements()) {
+    	String headerName = headerNames.nextElement();
+    	Enumeration<String> headers = httpReq.getHeaders(headerName);
+    	while (headers.hasMoreElements()) {
+    		String header = headers.nextElement();
+    		System.out.println("Header name: " + headerName + "  Header: " + header);
+    	}
+    }
+    applicationData.setDevicePlatform("");
+    applicationData.setDeviceType("");
+    
     clientIP = createRequestIp(httpReq);
     if (applicationData != null && applicationData.getClientIP() == null) {
     	applicationData.setClientIP(clientIP);
