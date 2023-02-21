@@ -67,7 +67,7 @@ public class SessionLogFilter implements Filter {
     	Enumeration<String> headers = httpReq.getHeaders(headerName);
     	while (headers.hasMoreElements()) {
     		String header = headers.nextElement();
-    		log.info("Header name: " + headerName + "  Header: " + header);
+    		MDC.put("headers", "Header name: " + headerName + "  Header: " + header);
     	}
     }
     
