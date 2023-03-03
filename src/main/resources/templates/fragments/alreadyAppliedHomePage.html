@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="alreadyAppliedHomePage">
+
+	<div id="already-applied-home-page" class="grid">
+
+		<h1 class="h2 spacing-below-60 text--centered"
+			th:utext="#{landing.alread-applied}"></h1>
+
+		<div class="grid__item width-five-twelfths shift-one-twelfth">
+			<div class="grid__item spacing-below-35">
+				<div th:replace="fragments/icons/icon-check :: icon-check"></div>
+				<h1
+					class="max-width-446 h2 spacing-below-25 margin-left-right-auto spacing-above-10"
+					th:utext="#{landing.upload-documents-caps}"></h1>
+				<p class="form-card__body-text spacing-below-35"
+					th:text="#{landing.send-documents-to-your-county-tribal-nation}"></p>
+				<div
+					th:if="${@environment.getProperty('feature-flag.tribal-routing')}">
+					<a class="button spacing-below-0"
+						th:href="'/pages/identifyCountyOrTribalNation'"> <span
+						th:text="#{landing.upload-documents}"></span>
+					</a>
+				</div>
+				<div
+					th:if="!${@environment.getProperty('feature-flag.tribal-routing')}">
+					<a class="button spacing-below-0" th:href="'/pages/identifyCounty'">
+						<span th:text="#{landing.upload-documents}"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<div class="vertical-line grid-ignore-mobile"></div>
+
+		<div class="grid__item width-five-twelfths shift-one-twelfth">
+			<div class="grid__item spacing-below-35">
+					<div th:replace="fragments/icons/icon-check :: icon-check"></div>
+				<h1
+					class="max-width-446 h2 spacing-below-25 margin-left-right-auto spacing-above-10"
+					th:utext="#{landing.application-status}"></h1>
+				<p class="form-card__body-text spacing-below-35"
+					th:text="#{landing.waiting-to-here-back}"></p>
+				<div>
+					<a href="#already-applied" lang="en"> <span lang="en"
+						th:text="#{landing.learn-how-you-can-follow-up-on-your-application}"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

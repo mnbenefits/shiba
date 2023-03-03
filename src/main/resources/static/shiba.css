@@ -146,6 +146,15 @@
   background-color: #E9F6FF;
 }
 
+.slab--minnesota-green {
+  background-color: #7AC943;
+}
+
+.slab--minnesota-light-green {
+  background-color: #D7EDC6;
+}
+
+
 .footer-minnesota-blue {
   color: #FFF;
   background-color: #003865;
@@ -1459,6 +1468,13 @@ legend.form-question {
 	width: 25%;
 	min-width: 100px;
   }
+   .width-one-twelfths {
+    float: left;
+    display: block;
+    margin-right: 2%;
+    width: 10%;
+    min-width: 10px;
+  }
   
   .shift-content-right {
 	margin-left: auto;
@@ -1692,4 +1708,10 @@ legend.form-question {
 	}	
 .text--small--footer{
 	font-size: 1.5rem;
+}
+.vertical-line{
+	border-left: 6px solid #AAAAAA;
+    height: 200px;
+    position:absolute;
+    left: 50%;
 }
