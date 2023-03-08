@@ -17,14 +17,9 @@
           <div class="spacing-above-35">
             <img src="/images/mn-logo-horizontal-rgb.png" alt="" class="mn-logo">
           </div>
-          <h1 class="spacing-below-35" th:text="#{landing.header}"></h1>
+          <h1 class="spacing-below-25" th:text="#{landing.header}"></h1>
           <p class="text-25 spacing-below-15" th:text="#{landing.subheader}"></p>
-          <div class="spacing-above-15 spacing-below-0">
-            <a href="#later-docs-upload">
-              <span th:utext="#{landing.alread-applied}"></span>
-            </a>
-          </div>
-          <a class="button button--primary spacing-below-0 spacing-above-45"
+          <a class="button button--primary spacing-below-0 spacing-above-25"
              th:href="'/pages/'+${pageName}+'/navigation?lang=' + ${#locale.language}" lang="en">
             <span lang="en" th:text="#{landing.apply-now}"></span>
             <div th:replace="fragments/icons/icon-arrow :: icon-arrow"></div>
@@ -45,7 +40,7 @@
         </div>
       </div>
     </section>
-    <section class="slab padding-bottom-3rem">
+    <section class="slab padding-bottom-3rem slab--minnesota-light-blue">
         <div th:replace="fragments/alreadyAppliedHomePage :: alreadyAppliedHomePage"></div>
     </section>
 	<section class="slab slab--white">
@@ -151,9 +146,6 @@
           </div>
         </div>
       </div>
-    </section>
-    <section id="already-applied" class="slab">
-        <div th:replace="fragments/alreadyAppliedDetails :: alreadyAppliedDetails"></div>
     </section>
   </main>
 </div>
