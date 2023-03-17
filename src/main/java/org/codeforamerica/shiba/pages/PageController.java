@@ -725,11 +725,11 @@ public class PageController {
 
 	if (device != null) {
 		String isDesktop = device.getProperty("is_desktop");
-		if (isDesktop != null && Boolean.getBoolean(isDesktop)) {
+		if (isDesktop != null && Boolean.parseBoolean(isDesktop)) {
 			deviceType = "desktop";
 		} else {
 			String isTablet = device.getProperty("is_tablet");
-			if (isTablet != null && Boolean.getBoolean(isTablet)) {
+			if (isTablet != null && Boolean.parseBoolean(isTablet)) {
 				deviceType = "tablet";
 			} else {
 				String id = device.getId();
