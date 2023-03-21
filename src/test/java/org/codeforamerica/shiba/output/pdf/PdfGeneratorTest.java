@@ -5,12 +5,16 @@ import static org.codeforamerica.shiba.County.Anoka;
 import static org.codeforamerica.shiba.TribalNation.UpperSioux;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
 import static org.codeforamerica.shiba.output.Recipient.CLIENT;
+import static org.codeforamerica.shiba.testutilities.TestUtils.getFileContentsAsByteArray;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,16 +22,21 @@ import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.TribalNationRoutingDestination;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
+import org.codeforamerica.shiba.output.FileDownloadController;
 import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.output.UploadedDocsPreparer;
 import org.codeforamerica.shiba.output.caf.FilenameGenerator;
 import org.codeforamerica.shiba.output.documentfieldpreparers.DocumentFieldPreparers;
+import org.codeforamerica.shiba.output.xml.XmlGenerator;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.UploadedDocument;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,6 +45,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 class PdfGeneratorTest {
 
@@ -47,6 +61,10 @@ class PdfGeneratorTest {
   private DocumentFieldPreparers preparers;
   private FilenameGenerator fileNameGenerator;
   private Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillers;
+  MockMvc mockMvc;
+  XmlGenerator xmlGenerator = mock(XmlGenerator.class);
+  ApplicationRepository applicationRepository = mock(ApplicationRepository.class);
+  UploadedDocsPreparer uploadedDocsPreparer = mock(UploadedDocsPreparer.class);
 
   @Autowired
   ResourceLoader resourceLoader;
@@ -178,6 +196,46 @@ class PdfGeneratorTest {
     pdfGenerator.generate(applicationId, Document.CAF, recipient);
     verify(pdfFieldFillers.get(recipient).get(Document.CAF)).fill(any(), any(), any());
   }
+  
+  @Test
+  void shouldAddScannedDate() throws Exception {
+    var image = getFileContentsAsByteArray("shiba+file.jpg");
+    var applicationId = "9870000123";
+   
+    ApplicationFile imageFile = new ApplicationFile(image, "");
+   
+    UploadedDocument uploadedDoc = new UploadedDocument("shiba+file.jpg", "", "", "", image.length);
+    ApplicationData applicationData = new ApplicationData();
+    applicationData.setId(applicationId);
+    applicationData.setUploadedDocs(List.of(uploadedDoc));
+    applicationData.setFlow(FlowType.LATER_DOCS);
+    Application application = Application.builder()
+        .applicationData(applicationData)
+        .flow(FlowType.LATER_DOCS)
+        .build();
+    mockMvc = MockMvcBuilders.standaloneSetup(
+        new FileDownloadController(
+            xmlGenerator,
+            pdfGenerator,
+            applicationData,
+            applicationRepository,
+            uploadedDocsPreparer))
+    .setViewResolvers(new InternalResourceViewResolver("", "suffix"))
+    .build();
+    when(applicationRepository.find(applicationId)).thenReturn(application);
+   
+    when(pdfGenerator
+        .generateForUploadedDocument(eq(List.of(uploadedDoc)), any(Application.class), any()))
+        .thenReturn(List.of(imageFile));
+    when(uploadedDocsPreparer.prepare(any(), any())).thenReturn(List.of(imageFile));
+    MvcResult result = mockMvc.perform(
+        get("/download"))
+    .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+        "filename=\"MNB_application_9870000123.zip\""))
+    .andExpect(status().is2xxSuccessful())
+    .andReturn();
+  }
+  
   
  
 }
