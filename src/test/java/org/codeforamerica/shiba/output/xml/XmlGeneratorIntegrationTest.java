@@ -129,7 +129,7 @@ public class XmlGeneratorIntegrationTest {
         .newSchema(onlineApplicationSchema.getFile())
         .newValidator();
     assertThatCode(() -> schemaValidator.validate(new DOMSource(document)))
-        .doesNotThrowAnyException();
+        .doesNotThrowAnyException();   
   }
 
   @Test
@@ -168,7 +168,7 @@ public class XmlGeneratorIntegrationTest {
                         <ns4:Relationship>Self</ns4:Relationship>
         """);
     assertThat(xmlFile).containsIgnoringWhitespaces("""
-        <io4:CaseNumber>123456</io4:CaseNumber>
+        <ns4:CaseNumber>123456</ns4:CaseNumber>
         """);
   }
 
@@ -208,7 +208,7 @@ public class XmlGeneratorIntegrationTest {
                         <ns4:Relationship>Self</ns4:Relationship>
         """);
     assertThat(xmlFile).containsIgnoringWhitespaces("""
-        <io4:CaseNumber>123456</io4:CaseNumber>
+        <ns4:CaseNumber>123456</ns4:CaseNumber>
         """);
   }
 
