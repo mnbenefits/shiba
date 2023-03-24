@@ -67,7 +67,7 @@ task genJaxbFilenet {
 
 dependencyManagement {
     imports {
-        mavenBom("org.springframework.session:spring-session-bom:2021.2.0")
+        mavenBom("org.springframework.session:spring-session-bom:2021.2.1")
     }
 }
 
@@ -93,9 +93,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-	implementation("org.springframework.mobile:spring-mobile-starter:2.0.0.M3")
     implementation("org.springframework.session:spring-session-jdbc")
-    implementation("io.sentry:sentry-spring-boot-starter:6.15.0")
+    implementation("io.sentry:sentry-spring-boot-starter:6.16.0")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.apache.logging.log4j:log4j-api:2.20.0")
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.20.0")
@@ -104,7 +103,7 @@ dependencies {
         exclude(group: "org.springframework.boot", module: "spring-boot-starter-tomcat")
     }
 
-    implementation("com.azure:azure-storage-blob:12.21.0")
+    implementation("com.azure:azure-storage-blob:12.21.1")
     implementation("org.postgresql:postgresql")
     implementation("org.glassfish.jaxb:jaxb-runtime")
     implementation("org.apache.pdfbox:pdfbox:2.0.27")
@@ -114,11 +113,11 @@ dependencies {
     implementation("commons-validator:commons-validator:1.7")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.apache.httpcomponents:httpclient")
-    implementation("io.sentry:sentry-logback:6.15.0")
+    implementation("io.sentry:sentry-logback:6.16.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
     implementation("com.google.crypto.tink:tink:1.7.0")
-    implementation("org.flywaydb:flyway-core:9.16.0")
+    implementation("org.flywaydb:flyway-core:9.16.1")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.mixpanel:mixpanel-java:1.5.1")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -139,6 +138,8 @@ dependencies {
     implementation("org.apache.chemistry.opencmis:chemistry-opencmis-client-api:1.1.0")
     implementation("org.apache.chemistry.opencmis:chemistry-opencmis-client-impl:1.1.0")
     implementation("net.coobird:thumbnailator:0.4.19")
+    implementation("mobi.openddr.client:openddr-classifier-client:1.4.1")
+    implementation("mobi.openddr:openddr-data:1.34")
     
     implementation("org.springframework.ws:spring-ws-core")
     jaxb(

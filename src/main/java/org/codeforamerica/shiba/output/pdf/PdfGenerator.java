@@ -29,12 +29,10 @@ import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.PDPageTree;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.Utils;
 import org.codeforamerica.shiba.application.Application;
@@ -60,14 +58,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PdfGenerator implements FileGenerator {
 
-  private static final List<String> IMAGE_TYPES_TO_CONVERT_TO_PDF =
-      List.of("jpg", "jpeg", "png", "gif");
-  private static final List<String> IMAGE_TYPES_TO_COMPRESS = List.of("jpg", "jpeg");
+  private static final List<String> IMAGE_TYPES_TO_CONVERT_TO_PDF = List
+      .of("jpg", "jpeg", "png", "gif");
+  private static final List<String> IMAGE_TYPES_TO_COMPRESS = List
+      .of("jpg", "jpeg");
 
 
   private final PdfFieldMapper pdfFieldMapper;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillerMap;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap;
+  private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap2;
   private final Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops;
   private final ApplicationRepository applicationRepository;
   private final DocumentRepository documentRepository;
@@ -75,16 +75,20 @@ public class PdfGenerator implements FileGenerator {
   private final FilenameGenerator fileNameGenerator;
   private final FeatureFlagConfiguration featureFlags;
   private final ServicingAgencyMap<CountyRoutingDestination> countyMap;
-
+  
 
   public PdfGenerator(PdfFieldMapper pdfFieldMapper,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillers,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers,
+      Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers2,
       Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops,
-      ApplicationRepository applicationRepository, DocumentRepository documentRepository,
-      DocumentFieldPreparers preparers, FilenameGenerator fileNameGenerator,
+      ApplicationRepository applicationRepository,
+      DocumentRepository documentRepository,
+      DocumentFieldPreparers preparers,
+      FilenameGenerator fileNameGenerator,
       FeatureFlagConfiguration featureFlagConfiguration,
-      ServicingAgencyMap<CountyRoutingDestination> countyMap) {
+      ServicingAgencyMap<CountyRoutingDestination> countyMap
+  ) {
     this.pdfFieldMapper = pdfFieldMapper;
     this.pdfFieldFillerMap = pdfFieldFillers;
     this.applicationRepository = applicationRepository;
@@ -93,6 +97,7 @@ public class PdfGenerator implements FileGenerator {
     this.fileNameGenerator = fileNameGenerator;
     this.featureFlags = featureFlagConfiguration;
     this.pdfFieldWithCAFHHSuppFillersMap = pdfFieldWithCAFHHSuppFillers;
+    this.pdfFieldWithCAFHHSuppFillersMap2 = pdfFieldWithCAFHHSuppFillers2;
     this.pdfResourcesCertainPops = pdfResourcesCertainPops;
     this.countyMap = countyMap;
   }
@@ -107,8 +112,8 @@ public class PdfGenerator implements FileGenerator {
   public ApplicationFile generate(String applicationId, Document document, Recipient recipient,
       RoutingDestination routingDestination) {
     Application application = applicationRepository.find(applicationId);
-    String filename =
-        fileNameGenerator.generatePdfFilename(application, document, routingDestination);
+    String filename = fileNameGenerator.generatePdfFilename(application,
+        document, routingDestination);
     return generateWithFilename(application, document, recipient, filename);
   }
 
@@ -123,63 +128,61 @@ public class PdfGenerator implements FileGenerator {
 
   public ApplicationFile generate(Application application, Document document, Recipient recipient,
       RoutingDestination routingDestination) {
-    String filename =
-        fileNameGenerator.generatePdfFilename(application, document, routingDestination);
+    String filename = fileNameGenerator.generatePdfFilename(application, document,
+        routingDestination);
     return generateWithFilename(application, document, recipient, filename);
   }
 
   private ApplicationFile generateWithFilename(Application application, Document document,
       Recipient recipient, String filename) {
-    List<DocumentField> documentFields =
-        preparers.prepareDocumentFields(application, document, recipient);
+    List<DocumentField> documentFields = preparers.prepareDocumentFields(application, document,
+        recipient);
     var householdSize = application.getApplicationData().getApplicantAndHouseholdMemberSize();
     PdfFieldFiller pdfFiller = pdfFieldFillerMap.get(recipient).get(document);
 
     if (document.equals(Document.CAF) && (householdSize > 5 && householdSize <= 10)) {
       pdfFiller = pdfFieldWithCAFHHSuppFillersMap.get(recipient).get(document);
     }
-    if (document.equals(Document.CERTAIN_POPS)) {
-      List<Resource> pdfResource = new ArrayList<Resource>();
-      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("default"));
-      // For non-self employment more than two
-      if (documentFields.stream().anyMatch(
-          field -> (field.getGroupName().contains("nonSelfEmployment_householdSelectionForIncome")
-              && field.getIteration() > 1))) {
-        pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addIncome"));
-      }
-      // Compute the number of household members that will need to be accounted for on supplemental
-      // pages. The first two are recorded on the Certain Pops PDF, the remainder (a max of 14) are
-      // handled on
-      // supplemental pages. (Note: The -3 accounts for the applicant and the first two household
-      // members)
-      var householdSupplementCount =
-          Math.min(application.getApplicationData().getApplicantAndHouseholdMemberSize() - 3, 14);
-      if (householdSupplementCount > 0) {
-        String name =
-            "addHousehold" + String.valueOf(Math.ceil((householdSupplementCount + 1) / 2)); // round
-                                                                                            // up
-        pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get(name));
-      }
-      // for Disability more than two
-      if (documentFields.stream()
-          .anyMatch(field -> (field.getGroupName().contains("whoHasDisability")
-              && (field.getIteration() != null ? field.getIteration() : 0) > 1))) {
-        pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
-      }
-      // For section 8 Retroactive coverage
-      /*
-       * Keep this code till supplement page display is finalized as general supp. page. if
-       * (documentFields.stream().anyMatch( field ->
-       * (field.getGroupName().contains("retroactiveCoverage") &&
-       * (field.getIteration()!=null?field.getIteration():0) > 1))) {
-       * pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addRetroactiveCoverageSupp")
-       * ); }
-       */
-      // for the general supplement
-      if (documentFields.stream()
-          .anyMatch(field -> (field.getName().contains("certainPopsSupplement")))) {
-        pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addCertainPopsSupplement"));
-      }
+    
+    if (document.equals(Document.CAF) && householdSize > 10) {
+      pdfFiller = pdfFieldWithCAFHHSuppFillersMap2.get(recipient).get(document);
+    }    
+    
+    if(document.equals(Document.CERTAIN_POPS)) {
+    List<Resource> pdfResource = new ArrayList<Resource>(); 
+    pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("default"));
+    //For non-self employment more than two
+    if (documentFields.stream().anyMatch(
+        field -> (field.getGroupName().contains("nonSelfEmployment_householdSelectionForIncome")
+            && field.getIteration() > 1))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addIncome"));
+    }
+    // Compute the number of household members that will need to be accounted for on supplemental
+    // pages. The first two are recorded on the Certain Pops PDF, the remainder (a max of 14) are handled on
+    // supplemental pages. (Note: The -3 accounts for the applicant and the first two household members)
+    var householdSupplementCount = Math.min(application.getApplicationData().getApplicantAndHouseholdMemberSize()-3, 14);
+    if (householdSupplementCount > 0) {
+      String name = "addHousehold"+String.valueOf(Math.ceil((householdSupplementCount+1)/2)); // round up
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get(name));
+    }
+    //for Disability more than two
+    if (documentFields.stream().anyMatch(
+        field -> (field.getGroupName().contains("whoHasDisability")
+            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
+    }
+  //For section 8 Retroactive coverage
+    /* Keep this code till supplement page display is finalized as general supp. page.
+    if (documentFields.stream().anyMatch(
+        field -> (field.getGroupName().contains("retroactiveCoverage")
+            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addRetroactiveCoverageSupp"));
+    }
+    */
+    // for the general supplement
+    if (documentFields.stream().anyMatch(field -> (field.getName().contains("certainPopsSupplement")))) {
+      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addCertainPopsSupplement"));
+    }
       pdfFiller = new PDFBoxFieldFiller(pdfResource);
     }
 
@@ -187,26 +190,23 @@ public class PdfGenerator implements FileGenerator {
     return pdfFiller.fill(fields, application.getId(), filename);
   }
 
-  public List<ApplicationFile> generateCombinedUploadedDocument(
-      List<UploadedDocument> uploadedDocument, Application application, byte[] coverPage) {
+  public List<ApplicationFile> generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocument, Application application,
+		  byte[] coverPage) {
     return generateCombinedUploadedDocument(uploadedDocument, application, coverPage,
         countyMap.get(application.getCounty()));
   }
-
-  /**
-   * This method converts list of uploaded documents into pdf then combines it to form single pdf
-   * upload file with coverpage. It lists out the combined pdf files and the ones that can't be
-   * combined.
-   * 
-   * @param uploadedDocuments
-   * @param application
-   * @param coverPage
-   * @param routingDest
-   * @return
-   */
-  public List<ApplicationFile> generateCombinedUploadedDocument(
-      List<UploadedDocument> uploadedDocuments, Application application, byte[] coverPage,
-      RoutingDestination routingDest) {
+  
+ /**
+  * This method converts list of uploaded documents into pdf then combines it to form single pdf upload file with coverpage.
+  * It lists out the combined pdf files and the ones that can't be combined.
+  * @param uploadedDocuments
+  * @param application
+  * @param coverPage
+  * @param routingDest
+  * @return
+  */
+  public List<ApplicationFile> generateCombinedUploadedDocument(List<UploadedDocument> uploadedDocuments, Application application,
+		  byte[] coverPage, RoutingDestination routingDest) {
     if (uploadedDocuments.size() == 0 || (uploadedDocuments.stream()
         .allMatch(uDoc -> documentRepository.get(uDoc.getS3Filepath()) == null)
         || uploadedDocuments.stream()
@@ -231,7 +231,7 @@ public class PdfGenerator implements FileGenerator {
             extension = "pdf";
           } catch (Exception e) {
             log.warn("failed to convert document " + uDoc.getFilename()
-                + " to pdf. Maintaining original type");
+            + " to pdf. Maintaining original type");
             combinedDocList.add(fileBytes);
           }
         } else if (!extension.equals("pdf")) {
@@ -262,16 +262,16 @@ public class PdfGenerator implements FileGenerator {
     } catch (IOException e) {
       log.error("Adding scanned date failed for application id = "+ application.getId());
     }
-    // This makes sure duplicate files are not added twice in case of merger issue
-    if (!combinedPDF.equals(coverPage)) {
+    //This makes sure duplicate files are not added twice in case of merger issue
+    if(!combinedPDF.equals(coverPage)) {
       combinedDocList.add(combinedPDF);
     }
     int i = 0;
-    for (byte[] combineDoc : combinedDocList) {
-      String filename = fileNameGenerator.generateUploadedDocumentName(application, i, "pdf",
-          routingDest, combinedDocList.size());
-      applicationFiles.add(new ApplicationFile(combineDoc, filename));
-      i++;
+    for(byte[] combineDoc: combinedDocList) {
+      String filename =
+          fileNameGenerator.generateUploadedDocumentName(application, i, "pdf", routingDest, combinedDocList.size());
+          applicationFiles.add(new ApplicationFile(combineDoc, filename));
+          i++;
     }
     return applicationFiles;
   }
@@ -324,9 +324,7 @@ public class PdfGenerator implements FileGenerator {
 
   /**
    * This method combines converted pdf to single pdf file with system generated coverpage.
-   * flatten() is used to flatten acroforms only so there won't be any duplicate issues while
-   * merging acroforms
-   * 
+   * flatten() is used to flatten acroforms only so there won't be any duplicate issues while merging acroforms
    * @param mainPage
    * @param addPage
    * @return
@@ -336,12 +334,12 @@ public class PdfGenerator implements FileGenerator {
     try (PDDocument mainPageDoc = PDDocument.load(mainPage);
         PDDocument addedPageDoc = PDDocument.load(addPage);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-
-      mainPageDoc.getDocumentCatalog().setDocumentOutline(null);
+      
+        mainPageDoc.getDocumentCatalog().setDocumentOutline(null);
       if (addedPageDoc.getDocumentCatalog().getAcroForm() != null)
         addedPageDoc.getDocumentCatalog().getAcroForm().flatten();
-      addedPageDoc.getDocumentCatalog().setDocumentOutline(null);
-
+        addedPageDoc.getDocumentCatalog().setDocumentOutline(null);
+      
       merger.appendDocument(mainPageDoc, addedPageDoc);
       mainPageDoc.save(outputStream);
       addPage = outputStream.toByteArray();
@@ -353,11 +351,10 @@ public class PdfGenerator implements FileGenerator {
   }
 
   private byte[] convertImageToPdf(byte[] imageFileBytes, String filename) throws Exception {
-    try (PDDocument doc = new PDDocument();
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-
+    try (PDDocument doc = new PDDocument(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+     
       var extension = Utils.getFileType(filename);
-      if (IMAGE_TYPES_TO_COMPRESS.contains(extension)) {
+      if(IMAGE_TYPES_TO_COMPRESS.contains(extension)) {
         ByteArrayOutputStream outputFile = new ByteArrayOutputStream();
         BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageFileBytes));
         JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
@@ -407,19 +404,17 @@ public class PdfGenerator implements FileGenerator {
       throw e;
     }
   }
-
+  
   private static ImageWriter getImageWriter() throws IOException {
     IIORegistry registry = IIORegistry.getDefaultInstance();
-    Iterator<ImageWriterSpi> services =
-        registry.getServiceProviders(ImageWriterSpi.class, (provider) -> {
-          if (provider instanceof ImageWriterSpi) {
-            return Arrays.stream(((ImageWriterSpi) provider).getFormatNames())
-                .anyMatch(formatName -> formatName.equalsIgnoreCase("JPEG"));
-          }
-          return false;
-        }, true);
+    Iterator<ImageWriterSpi> services = registry.getServiceProviders(ImageWriterSpi.class, (provider) -> {
+        if (provider instanceof ImageWriterSpi) {
+            return Arrays.stream(((ImageWriterSpi) provider).getFormatNames()).anyMatch(formatName -> formatName.equalsIgnoreCase("JPEG"));
+        }
+        return false;
+    }, true);
     ImageWriterSpi writerSpi = services.next();
     ImageWriter writer = writerSpi.createWriterInstance();
     return writer;
-  }
+}
 }
