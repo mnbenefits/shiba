@@ -261,7 +261,6 @@ public class PdfGenerator implements FileGenerator {
       overlay.close();
     } catch (IOException e) {
       log.error("Adding scanned date failed for application id = "+ application.getId());
-      e.printStackTrace();
     }
     // This makes sure duplicate files are not added twice in case of merger issue
     if (!combinedPDF.equals(coverPage)) {
