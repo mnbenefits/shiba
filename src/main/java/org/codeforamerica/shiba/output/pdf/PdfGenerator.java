@@ -308,7 +308,7 @@ public class PdfGenerator implements FileGenerator {
        contentStream.setFont(font, 12); 
        contentStream.newLineAtOffset(150, 785);
        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
-       contentStream.showText("Scanned: "+application.getCompletedAt().withZoneSameInstant(ZoneId.of("America/Chicago")).format(formatter)); 
+       contentStream.showText("MNbenefits: "+application.getCompletedAt().withZoneSameInstant(ZoneId.of("America/Chicago")).format(formatter)); 
        contentStream.endText(); 
        contentStream.close();
     }catch(Exception er) {

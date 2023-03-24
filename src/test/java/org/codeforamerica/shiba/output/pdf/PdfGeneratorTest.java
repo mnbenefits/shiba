@@ -12,23 +12,23 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.TribalNationRoutingDestination;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.FlowType;
+import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
-import org.codeforamerica.shiba.output.FileDownloadController;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.output.UploadedDocsPreparer;
 import org.codeforamerica.shiba.output.caf.FilenameGenerator;
@@ -45,11 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 class PdfGeneratorTest {
 
@@ -65,6 +61,7 @@ class PdfGeneratorTest {
   XmlGenerator xmlGenerator = mock(XmlGenerator.class);
   ApplicationRepository applicationRepository = mock(ApplicationRepository.class);
   UploadedDocsPreparer uploadedDocsPreparer = mock(UploadedDocsPreparer.class);
+  DocumentRepository documentRepository;
 
   @Autowired
   ResourceLoader resourceLoader;
@@ -78,7 +75,7 @@ class PdfGeneratorTest {
     PdfFieldFiller clientFiller = mock(PdfFieldFiller.class);
     PdfFieldFiller ccapFiller = mock(PdfFieldFiller.class);
     resourceLoader = mock(ResourceLoader.class);
-    
+    documentRepository = mock(DocumentRepository.class);
     preparers = mock(DocumentFieldPreparers.class);
     ApplicationRepository applicationRepository = mock(ApplicationRepository.class);
     fileNameGenerator = mock(FilenameGenerator.class);
@@ -122,7 +119,7 @@ class PdfGeneratorTest {
         pdfFieldWithCAFHHSuppFillers,
         pdfResourcesCertainPops,
         applicationRepository,
-        null,
+        documentRepository,
         preparers,
         fileNameGenerator,
         featureFlags,
@@ -198,13 +195,14 @@ class PdfGeneratorTest {
   }
   
   @Test
-  void shouldAddScannedDate() throws Exception {
+  void shouldAddMNbenefitsSubmissionDate() throws Exception {
     var image = getFileContentsAsByteArray("shiba+file.jpg");
+    var coverPage = getFileContentsAsByteArray("test-cover-pages.pdf");
     var applicationId = "9870000123";
    
-    ApplicationFile imageFile = new ApplicationFile(image, "");
-   
+    ApplicationFile coverPageFile = new ApplicationFile(coverPage, "");
     UploadedDocument uploadedDoc = new UploadedDocument("shiba+file.jpg", "", "", "", image.length);
+
     ApplicationData applicationData = new ApplicationData();
     applicationData.setId(applicationId);
     applicationData.setUploadedDocs(List.of(uploadedDoc));
@@ -212,28 +210,18 @@ class PdfGeneratorTest {
     Application application = Application.builder()
         .applicationData(applicationData)
         .flow(FlowType.LATER_DOCS)
+        .completedAt(ZonedDateTime.parse("2023-03-22T13:48:39.213+00:00[America/Chicago]"))
         .build();
-    mockMvc = MockMvcBuilders.standaloneSetup(
-        new FileDownloadController(
-            xmlGenerator,
-            pdfGenerator,
-            applicationData,
-            applicationRepository,
-            uploadedDocsPreparer))
-    .setViewResolvers(new InternalResourceViewResolver("", "suffix"))
-    .build();
-    when(applicationRepository.find(applicationId)).thenReturn(application);
-   
-    when(pdfGenerator
-        .generateForUploadedDocument(eq(List.of(uploadedDoc)), any(Application.class), any()))
-        .thenReturn(List.of(imageFile));
-    when(uploadedDocsPreparer.prepare(any(), any())).thenReturn(List.of(imageFile));
-    MvcResult result = mockMvc.perform(
-        get("/download"))
-    .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
-        "filename=\"MNB_application_9870000123.zip\""))
-    .andExpect(status().is2xxSuccessful())
-    .andReturn();
+    List<UploadedDocument> uploadedDocumentList = List.of(uploadedDoc);
+    when(documentRepository.get(any())).thenReturn(image);
+    List<ApplicationFile> applicationFileList = pdfGenerator.generateCombinedUploadedDocument(uploadedDocumentList, application, coverPageFile.getFileBytes());
+    String text = null;
+    for(ApplicationFile af:applicationFileList) {
+     PDDocument doc = PDDocument.load(af.getFileBytes());
+     PDFTextStripper findPhrase = new PDFTextStripper();
+     text = findPhrase.getText(doc);
+    }
+    assertThat(text).contains("MNbenefits: 03/22/2023 08:48:39 AM");
   }
   
   
