@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
+import static org.codeforamerica.shiba.application.FlowType.HEALTHCARE_RENEWAL;
 import static org.codeforamerica.shiba.application.Status.DELIVERED;
 import static org.codeforamerica.shiba.application.Status.SENDING;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
@@ -90,10 +91,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -289,6 +292,12 @@ public class PageController {
       return new ModelAndView(
           String.format("redirect:/pages/%s",
               landmarkPagesConfiguration.getLaterDocsTerminalPage()));
+    }
+    
+    if (shouldRedirectToHealthcareRenewalTerminalPage(pageName)) {
+      return new ModelAndView(
+          String.format("redirect:/pages/%s",
+              landmarkPagesConfiguration.getHealthcareRenewalTerminalPage()));
     }
 
     if (shouldRedirectToLandingPage(pageName)) {
@@ -554,6 +563,16 @@ public class PageController {
     return !landmarkPagesConfiguration.isLaterDocsTerminalPage(pageName)
         && landmarkPagesConfiguration.isPostSubmitPage(pageName)
         && applicationData.getFlow() == LATER_DOCS
+        && hasSubmittedDocuments();
+  }
+  
+  private boolean shouldRedirectToHealthcareRenewalTerminalPage(String pageName) {
+    LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
+        .getLandmarkPages();
+    // Documents have been submitted in later docs flow and applicant is attempting to navigate back to a previous page in this flow
+    return !landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)
+        && landmarkPagesConfiguration.isPostSubmitPage(pageName)
+        && applicationData.getFlow() == HEALTHCARE_RENEWAL
         && hasSubmittedDocuments();
   }
 
@@ -923,7 +942,8 @@ public class PageController {
   ModelAndView submitDocuments(HttpSession httpSession) {
     Application application = applicationRepository.find(applicationData.getId());
     application.getApplicationData().setUploadedDocs(applicationData.getUploadedDocs());
-    if (applicationData.getFlow() == LATER_DOCS) {
+    
+    if (applicationData.getFlow() == LATER_DOCS || applicationData.getFlow() == HEALTHCARE_RENEWAL ) {
       application.setCompletedAtTime(clock);
     }
     applicationStatusRepository.getAndSetFileNames(application, UPLOADED_DOC);
@@ -953,6 +973,19 @@ public class PageController {
     applicationData.removeUploadedDoc(filename);
 
     return new ModelAndView("redirect:/pages/uploadDocuments");
+  }
+  
+  @SuppressWarnings("SpringMVCViewInspection")
+  @PostMapping("/healthcare-renewal-remove-upload/{filename}")
+  ModelAndView healthcareRenewalRemoveUpload(@PathVariable String filename) {
+    applicationData.getUploadedDocs().stream()
+        .filter(uploadedDocument -> uploadedDocument.getFilename().equals(filename))
+        .map(UploadedDocument::getS3Filepath)
+        .findFirst()
+        .ifPresent(documentRepository::delete);
+    applicationData.removeUploadedDoc(filename);
+
+    return new ModelAndView("redirect:/pages/healthcareRenewalUploadDocuments");
   }
 
   /*

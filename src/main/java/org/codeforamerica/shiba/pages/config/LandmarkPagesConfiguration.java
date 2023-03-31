@@ -13,9 +13,10 @@ public class LandmarkPagesConfiguration {
   private String nextStepsPage;
   private String terminalPage;
   private String submitPage;
-  private String uploadDocumentsPage;
-  private String submitUploadedDocumentsPage;
+  private List<String> uploadDocumentsPage;
+  private List<String>  submitUploadedDocumentsPage;
   private String laterDocsTerminalPage;
+  private String healthcareRenewalTerminalPage;
 
   public boolean isLandingPage(String pageName) {
     return landingPages.contains(pageName);
@@ -40,17 +41,21 @@ public class LandmarkPagesConfiguration {
   public boolean isLaterDocsTerminalPage(String pageName) {
     return pageName.equals(laterDocsTerminalPage);
   }
+  
+  public boolean isHealthcareRenewalTerminalPage(String pageName) {
+    return pageName.equals(healthcareRenewalTerminalPage);
+  }
 
   public boolean isUploadDocumentsPage(String pageName) {
-    return pageName.equals(uploadDocumentsPage);
+    return uploadDocumentsPage.contains(pageName);
   }
 
   public boolean isSubmitUploadedDocumentsPage(String pageName) {
-    return pageName.equals(submitUploadedDocumentsPage);
+    return submitUploadedDocumentsPage.contains(pageName);
   }
 
   public boolean isNextStepsPage(String pageName) {
-    return pageName.equals(nextStepsPage);
+    return nextStepsPage.equals(pageName);
   }
 
 }
