@@ -4556,10 +4556,6 @@ pageDefinitions:
           selectableOptions:
             - value: ''
               messageKey: select-the-tribe.select-the-tribe
-            - value: Mille Lacs Band of Ojibwe
-              messageKey: select-the-tribe.mille-lacs
-            - value: Red Lake Nation
-              messageKey: select-the-tribe.red-lake
             - value: White Earth Nation
               messageKey: select-the-tribe.white-earth
       - name: notice
