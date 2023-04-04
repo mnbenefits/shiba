@@ -44,7 +44,7 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     testPage.clickContinue();
     assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
     testPage.enter("county", "Hennepin");
-    testPage.enter("tribalNation", "Red Lake Nation");
+    testPage.enter("tribalNation", "White Earth Nation");
     testPage.clickContinue();
 
     assertThat(driver.getTitle()).isEqualTo("Match Info");
