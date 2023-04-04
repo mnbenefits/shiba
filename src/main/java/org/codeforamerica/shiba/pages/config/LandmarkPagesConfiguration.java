@@ -13,8 +13,8 @@ public class LandmarkPagesConfiguration {
   private String nextStepsPage;
   private String terminalPage;
   private String submitPage;
-  private List<String> uploadDocumentsPage;
-  private List<String>  submitUploadedDocumentsPage;
+  private List<String> uploadDocumentsPage = new ArrayList<>();
+  private List<String> submitUploadedDocumentsPage = new ArrayList<>();
   private String laterDocsTerminalPage;
   private String healthcareRenewalTerminalPage;
 
@@ -55,7 +55,7 @@ public class LandmarkPagesConfiguration {
   }
 
   public boolean isNextStepsPage(String pageName) {
-    return nextStepsPage.equals(pageName);
+    return pageName.equals(nextStepsPage);
   }
 
 }
