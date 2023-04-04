@@ -1,6 +1,7 @@
 package org.codeforamerica.shiba.pages.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import lombok.Data;
 
@@ -52,6 +53,14 @@ public class LandmarkPagesConfiguration {
 
   public boolean isSubmitUploadedDocumentsPage(String pageName) {
     return submitUploadedDocumentsPage.contains(pageName);
+  }
+  
+  public String getCorrectUploadDocumentPage(String pageName) {
+	HashMap<String, String> map = new HashMap<>();
+	for(int i=0; i< submitUploadedDocumentsPage.size();i++) {
+		map.put(submitUploadedDocumentsPage.get(i), uploadDocumentsPage.get(i) );
+	}
+	return map.get(pageName);
   }
 
   public boolean isNextStepsPage(String pageName) {

@@ -275,7 +275,7 @@ public class PageController {
       log.info(
           "documentSubmitConfirmation redirect back to uploadDocuments, no documents in uploadDocs list");
       return new ModelAndView(
-          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getUploadDocumentsPage()));
+          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getCorrectUploadDocumentPage(pageName)));
     }
 
     if (shouldRedirectToTerminalPage(pageName)) {
