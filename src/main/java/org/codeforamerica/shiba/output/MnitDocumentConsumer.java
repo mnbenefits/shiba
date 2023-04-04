@@ -170,8 +170,7 @@ public class MnitDocumentConsumer {
       applicationStatusRepository.createOrUpdate(application.getId(), document,
           routingDestination.getName(),
           SENDING, renamedFile.getFileName());
-      mnitClient.send(renamedFile, routingDestination, application.getId(), document,
-          application.getFlow());
+      mnitClient.send(application, renamedFile, routingDestination, document);
     } catch (Exception e) {
       applicationStatusRepository.createOrUpdate(application.getId(), document,
           routingDestination.getName(),
