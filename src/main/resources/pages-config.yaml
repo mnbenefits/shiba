@@ -4347,7 +4347,7 @@ pageDefinitions:
             - groupName: household
 #HC renewal pages
   - &healthcareRenewalUpload
-    name: identifyCountyOrTribalNationHC
+    name: healthcareRenewalUpload
     pageTitle: identify-county-or-tribal-nation.title
     headerKey: identify-county.where-would-you-like-to-send-documents
     headerHelpMessageKey: identify-county.choose-a-location
@@ -4562,7 +4562,7 @@ pageDefinitions:
         type: NOTICE
         noticeMessage: identify-county.you-can-see-where-your-application
   - &healthcareRenewalMatchInfo
-    name: matchInfoHC
+    name: healthcareRenewalMatchInfo
     headerKey: match-info.match-docs-to-app
     headerHelpMessageKey: match-info.fill-in-as-much-as-you-can
     pageTitle: match-info.title
