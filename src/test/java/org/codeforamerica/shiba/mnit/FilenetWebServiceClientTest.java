@@ -29,7 +29,6 @@ import javax.xml.transform.dom.DOMResult;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationStatus;
 import org.codeforamerica.shiba.application.ApplicationStatusRepository;
-import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.hamcrest.MatcherAssert;

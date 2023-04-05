@@ -261,7 +261,7 @@ public class FilenetWebServiceClient {
 		CmisPropertyString fileType = createCmisPropertyString("CTYMBDocumentType", "RENEWAL");
 		CmisPropertyDateTime dateTime = createCmisPropertyDateTime("DocumentDate", application.getCompletedAt());
 		String caseNumber = "";
-		InputData inputData = application.getApplicationData().getPageData("matchInfo").get("caseNumber");
+		InputData inputData = application.getApplicationData().getPageData("healthcareRenewalMatchInfo").get("caseNumber");
 		if (inputData != null) {
 			caseNumber = inputData.getValue(0);
 		}

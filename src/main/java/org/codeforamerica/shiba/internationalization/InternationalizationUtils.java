@@ -19,6 +19,11 @@ public class InternationalizationUtils {
    * updated.
    */
   public static String listToString(List<String> list, LocaleSpecificMessageSource lms) {
+	for (String item : list) {
+		if (item.isBlank()) {
+			list.remove(item);
+		}
+	}
     if (list.isEmpty()) {
       return "";
     }
