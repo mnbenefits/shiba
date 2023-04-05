@@ -204,11 +204,15 @@ public class PageController {
   }
 
   @GetMapping("/errorTimeout")
-  String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId) {
-    if (submittedAppId.length() == 0) {
+  String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId, @CookieValue(value = "page_name", defaultValue = "") String pageName) {
+    if (submittedAppId.length() == 0 && !pageName.contains("healthcareRenewal")) {
       return "errorSessionTimeout";
-    } else {
-      return "errorUploadTimeout";
+    }else if(submittedAppId.length() == 0 && pageName.contains("healthcareRenewal")) {
+    	return "healthcareRenewalErrorSessionTimeout";
+    }else if(pageName.contains("healthcareRenewal")) {
+      return "healthcareRenewalErrorUploadTimeout";
+    }else {
+    	 return "errorUploadTimeout";
     }
   }
 
@@ -256,6 +260,11 @@ public class PageController {
       HttpSession httpSession,
       Locale locale
   ) {
+	  // Temporary cookie indicating user page
+      Cookie pageNameCookie = new Cookie("page_name", pageName);
+      pageNameCookie.setPath("/");
+      pageNameCookie.setHttpOnly(true);
+      response.addCookie(pageNameCookie);
 
     var landmarkPagesConfiguration = applicationConfiguration.getLandmarkPages();
 
