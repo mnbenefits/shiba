@@ -4348,9 +4348,9 @@ pageDefinitions:
 #HC renewal pages
   - &healthcareRenewalUpload
     name: healthcareRenewalUpload
-    pageTitle: identify-county-or-tribal-nation.title
-    headerKey: identify-county.where-would-you-like-to-send-documents
-    headerHelpMessageKey: identify-county.choose-a-location
+    pageTitle: healthcare-Renewal-Upload.title
+    headerKey: healthcare-Renewal-Upload.where-would-you-like-to-send-documents
+    headerHelpMessageKey: healthcare-Renewal-Upload.choose-a-location
     contextFragment: countyContextFragment
     inputs:
       - name: county
@@ -4560,7 +4560,7 @@ pageDefinitions:
               messageKey: select-the-tribe.white-earth
       - name: notice
         type: NOTICE
-        noticeMessage: identify-county.you-can-see-where-your-application
+        noticeMessage: healthcare-Renewal-Upload.you-can-see-where-your-application
   - &healthcareRenewalMatchInfo
     name: healthcareRenewalMatchInfo
     headerKey: match-info.match-docs-to-app
