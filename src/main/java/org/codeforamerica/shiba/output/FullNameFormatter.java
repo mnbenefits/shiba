@@ -51,7 +51,11 @@ public class FullNameFormatter {
 
 
   public static String getFullName(Application application) {
-    var pageName = (application.getFlow() == LATER_DOCS || application.getFlow() == HEALTHCARE_RENEWAL) ? "matchInfo" : "personalInfo";
+    var pageName = (application.getFlow() == LATER_DOCS) ? "matchInfo" : "personalInfo";
+    
+    if (application.getFlow() == HEALTHCARE_RENEWAL) {
+      pageName = "healthcareRenewalMatchInfo";
+    }
     return ofNullable(application.getApplicationData().getPagesData().getPage(pageName))
         .map(FullNameFormatter::getFullNameString)
         .orElse(null);

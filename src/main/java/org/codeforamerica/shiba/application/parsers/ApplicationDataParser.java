@@ -351,6 +351,11 @@ public class ApplicationDataParser {
     coordinatesMap
         .put(Field.MATCH_INFO_FIRST_NAME, new ParsingCoordinate("matchInfo", "firstName"));
     coordinatesMap.put(Field.MATCH_INFO_LAST_NAME, new ParsingCoordinate("matchInfo", "lastName"));
+    
+    coordinatesMap.put(Field.MATCH_INFO_DOB, new ParsingCoordinate("healthcareRenewalMatchInfo", "dateOfBirth"));
+    coordinatesMap
+        .put(Field.MATCH_INFO_FIRST_NAME, new ParsingCoordinate("healthcareRenewalMatchInfo", "firstName"));
+    coordinatesMap.put(Field.MATCH_INFO_LAST_NAME, new ParsingCoordinate("healthcareRenewalMatchInfo", "lastName"));
 
     coordinatesMap.put(Field.EVERYONE_US_CITIZENS,
         new ParsingCoordinate("usCitizen", "isUsCitizen"));
