@@ -4640,8 +4640,8 @@ pageDefinitions:
       - name: caseNumber
         type: TEXT
         validators:
-          - validation: CASE_NUMBER
-            errorMessageKey: general.validation.make-sure-your-case-number-has-4-to-7-digits
+          - validation: CASE_NUMBER_HC
+            errorMessageKey: general.validation.make-sure-your-case-number-has-4-to-8-digits
             condition:
               input: caseNumber
               matcher: NOT_EMPTY
