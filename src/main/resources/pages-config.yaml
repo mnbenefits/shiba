@@ -4663,7 +4663,7 @@ pageDefinitions:
   - &healthcareRenewalDocumentSubmitConfirmation
     name: healthcareRenewalDocumentSubmitConfirmation
     pageTitle: document-submit-confirmation.title
-    headerKey: document-submit-confirmation.ready-to-submit-your-documents
+    headerKey: healthcare-Renewal-Document-Submit-Confirmation.ready-to-submit
     contextFragment: documentsSuccessContextFragment
     hasPrimaryButton: false
   - &healthcareRenewalDocumentsSent
