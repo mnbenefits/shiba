@@ -53,6 +53,7 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     testPage.enter("ssn", "123456789");
     testPage.enter("caseNumber", "1234567");
     testPage.enter("phoneNumber", "7041234567");
+    assertThat(testPage.getHeader()).isEqualTo("Before you start, we need to match your documents to your health care case");
     testPage.clickContinue();
     testPage.clickContinue();
 

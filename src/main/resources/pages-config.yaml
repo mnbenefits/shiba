@@ -4563,8 +4563,8 @@ pageDefinitions:
         noticeMessage: healthcare-Renewal-Upload.you-can-see-where-your-application
   - &healthcareRenewalMatchInfo
     name: healthcareRenewalMatchInfo
-    headerKey: match-info.match-docs-to-app
-    headerHelpMessageKey: match-info.fill-in-as-much-as-you-can
+    headerKey: match-info-hc.match-docs-to-case
+    headerHelpMessageKey: match-info-hc.fill-in-as-much-as-you-can
     pageTitle: match-info.title
     contextFragment: matchInfoContextFragment
     inputs:
