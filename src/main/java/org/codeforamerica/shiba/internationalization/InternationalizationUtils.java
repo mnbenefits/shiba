@@ -20,7 +20,7 @@ public class InternationalizationUtils {
    */
   public static String listToString(List<String> list, LocaleSpecificMessageSource lms) {
 	for (String item : list) {
-		if (item.isBlank()) {
+		if (item==null || item.isBlank()) {
 			list.remove(item);
 		}
 	}
