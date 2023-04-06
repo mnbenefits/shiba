@@ -20,7 +20,7 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     when(featureFlagConfiguration.get("tribal-routing")).thenReturn(FeatureFlag.ON);
      //testPage.clickButton("Upload documents");
     navigateTo("healthcareRenewalUpload");
-    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    assertThat(driver.getTitle()).isEqualTo("Health Care Renewal Document Upload");
 //    testPage.clickLink("Enter my zip code instead.");
 //    assertThat(driver.getTitle()).isEqualTo("Identify zip");
 //
@@ -42,7 +42,7 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     testPage.enter("county", "Select your county");
     testPage.enter("tribalNation", "Select a Tribal Nation");
     testPage.clickContinue();
-    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    assertThat(driver.getTitle()).isEqualTo("Health Care Renewal Document Upload");
     testPage.enter("county", "Hennepin");
     testPage.enter("tribalNation", "White Earth Nation");
     testPage.clickContinue();
