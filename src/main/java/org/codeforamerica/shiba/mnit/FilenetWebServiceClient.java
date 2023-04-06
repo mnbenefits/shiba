@@ -313,7 +313,7 @@ public class FilenetWebServiceClient {
             .newInstance()
             .newXMLGregorianCalendar(gregorianCalendar);
     } catch(Exception e) {
-    	
+    	log.error(String.format("Failed to convert ZonedDateTime %s to XMLGregorianCalendar", value.toString()), e);
     }
     datetime.add(xmlGregorianCalendar);
     return datetimeProperty;
