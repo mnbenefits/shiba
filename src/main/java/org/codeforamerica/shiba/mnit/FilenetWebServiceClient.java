@@ -197,10 +197,9 @@ public class FilenetWebServiceClient {
 
   @SuppressWarnings("unused")
   @Recover
-  public void logErrorToSentry(Exception e, ApplicationFile applicationFile,
-      RoutingDestination routingDestination,
-      String applicationNumber, Document applicationDocument, FlowType flowType) {
-    applicationStatusRepository.createOrUpdate(applicationNumber, applicationDocument,
+  public void logErrorToSentry(Exception e, Application application, ApplicationFile applicationFile,
+	      RoutingDestination routingDestination, Document applicationDocument) {
+    applicationStatusRepository.createOrUpdate(application.getId(), applicationDocument,
         routingDestination.getName(),
         DELIVERY_FAILED, applicationFile.getFileName());
     log.error("Application failed to send: " + applicationFile.getFileName(), e);
