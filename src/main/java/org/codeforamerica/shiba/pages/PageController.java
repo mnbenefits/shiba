@@ -4,8 +4,8 @@ import static java.lang.Boolean.parseBoolean;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.application.FlowType.HEALTHCARE_RENEWAL;
+import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.application.Status.DELIVERED;
 import static org.codeforamerica.shiba.application.Status.SENDING;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
@@ -53,6 +53,7 @@ import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationFactory;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.ApplicationStatusRepository;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.application.parsers.CountyParser;
 import org.codeforamerica.shiba.application.parsers.DocumentListParser;
 import org.codeforamerica.shiba.configurations.CityInfoConfiguration;
@@ -91,12 +92,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -204,13 +203,14 @@ public class PageController {
   }
 
   @GetMapping("/errorTimeout")
-  String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId, @CookieValue(value = "page_name", defaultValue = "") String pageName) {
-    if (submittedAppId.length() == 0 && !pageName.contains("healthcareRenewal")) {
+  String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId,
+		  @CookieValue(value = "flow_type", defaultValue = "") String flowType, 
+		  @CookieValue(value = "page_name", defaultValue = "") String pageName) {
+    if(pageName.equals("healthcareRenewalUpload") || flowType.equals(FlowType.HEALTHCARE_RENEWAL.toString())) {
+    	return "healthcareRenewalErrorUploadTimeout";
+    }
+    else if (submittedAppId.length() == 0) {
       return "errorSessionTimeout";
-    }else if(submittedAppId.length() == 0 && pageName.contains("healthcareRenewal")) {
-    	return "healthcareRenewalErrorSessionTimeout";
-    }else if(pageName.contains("healthcareRenewal")) {
-      return "healthcareRenewalErrorUploadTimeout";
     }else {
     	 return "errorUploadTimeout";
     }
@@ -265,6 +265,12 @@ public class PageController {
       pageNameCookie.setPath("/");
       pageNameCookie.setHttpOnly(true);
       response.addCookie(pageNameCookie);
+      //to set flow on cookie
+      Cookie flowCookie = new Cookie("flow_type", applicationData.getFlow().toString());
+      flowCookie.setPath("/");
+      flowCookie.setHttpOnly(true);
+      response.addCookie(flowCookie);
+      
 
     var landmarkPagesConfiguration = applicationConfiguration.getLandmarkPages();
 
