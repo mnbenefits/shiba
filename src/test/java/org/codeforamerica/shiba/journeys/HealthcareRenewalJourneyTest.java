@@ -51,9 +51,15 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     testPage.enter("firstName", "defaultFirstName");
     testPage.enter("lastName", "defaultLastName");
     testPage.enter("ssn", "123456789");
-    testPage.enter("caseNumber", "1234567");
+    testPage.enter("caseNumber", "123456789");//9 digits will cause error
     testPage.enter("phoneNumber", "7041234567");
     assertThat(testPage.getHeader()).isEqualTo("Before you start, we need to match your documents to your health care case");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Match Info");//stays on match info page
+    testPage.enter("caseNumber", "123");//too short
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Match Info");//stays on match info page
+    testPage.enter("caseNumber", "12345678");
     testPage.clickContinue();
     testPage.clickContinue();
 
