@@ -15,7 +15,7 @@
       <span th:case="'CHECKBOX'" th:id="${input.name} + '-error-message-' + ${iter.index + 1}"
             th:class="${input.name + '-error'}" th:text="#{${option}}"></span>
       <span th:case="*" th:id="${input.name} + '-error-message-' + ${iter.index + 1}"
-            th:class="${input.name + '-error'}" th:text="#{${option}}"></span>
+            th:class="${input.name + '-error'}" th:utext="#{${option}}"></span>
     </th:block>
     <br>
   </th:block>
