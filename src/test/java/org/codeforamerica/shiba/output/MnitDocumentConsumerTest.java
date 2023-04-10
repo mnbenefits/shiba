@@ -47,6 +47,7 @@ import org.codeforamerica.shiba.TribalNationRoutingDestination;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.ApplicationStatusRepository;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.FilenetWebServiceClient;
@@ -430,12 +431,25 @@ class MnitDocumentConsumerTest {
     verifyGeneratedPdf(captor.getAllValues().get(0).getFileBytes(), "combined-pdf.pdf");
   }
 
-  @Test
-  void sendsXMLAndDocumentUploadsToDakota() throws IOException {
+  // There are two flows to consider in regards to sending XML for uploaded docs to Dakota County.
+  @ParameterizedTest
+  @CsvSource({
+      "identifyCountyOrTribalNation,LATER_DOCS",
+      "healthcareRenewalUpload,HEALTHCARE_RENEWAL"})
+  void sendsXMLAndDocumentUploadsToDakota(String pageName, String flowName) throws IOException {
+	// set the application-level attributes
+	FlowType flowType = FlowType.valueOf(flowName);
+	application.setFlow(flowType);
+	County county = County.Dakota;
+	application.setCounty(county);
+	
+	// set the applicationData-level attributes
+	// first, remove the "identifyCounty" page that is automatically created in the setup.
+	applicationData.getPagesData().remove("identifyCounty");
     new TestApplicationDataBuilder(applicationData)
-        .withPageData("identifyCounty", "county", "Dakota");
+        .withPageData(pageName, "county", "Dakota");
+    applicationData.setFlow(flowType);	
 
-    application.setFlow(LATER_DOCS);
     mockDocUpload("test-uploaded-pdf.pdf", "pdfS3FilePath", MediaType.APPLICATION_PDF_VALUE, "pdf");
     when(fileNameGenerator.generateUploadedDocumentName(eq(application), eq(0), eq("pdf"), any(), eq(1)))
         .thenReturn("pdf1of1.pdf");
