@@ -4547,6 +4547,9 @@ pageDefinitions:
               messageKey: identify-county-wright
             - value: YellowMedicine
               messageKey: identify-county-yellow-medicine
+      - name: OR
+        type: CUSTOM
+        customInputFragment: orLabelFragment
       - name: tribalNation
         type: SELECT
         promptMessage:
