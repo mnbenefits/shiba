@@ -41,7 +41,7 @@ jobs:
         with:
           github-token: ${{ github.token }} # this will use the runner's token.
           ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          notification-summary: Deploy to MNbenefits DEV succeeded, status - ${{ job.status }}
+          notification-summary: Accessibility check, status - ${{ job.status }}
           # color is green
           notification-color: 008000
           timezone: America/Chicago          
@@ -51,7 +51,7 @@ jobs:
         with:
           github-token: ${{ github.token }} # this will use the runner's token.
           ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          notification-summary: Deploy to MNbenefits DEV failed, status - ${{ job.status }}
+          notification-summary: Accessibility check, status - ${{ job.status }}
           # color is red
           notification-color: ff0000
           timezone: America/Chicago          
