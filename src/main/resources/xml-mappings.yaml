@@ -5,6 +5,10 @@ xml:
       lastName: PERSONALINFO_LASTNAME
       dateOfBirth: PERSONALINFO_DATE_OF_BIRTH
       caseNumber: CASE_NUMBER
+    healthcareRenewalMatchInfo:
+      firstName: PERSONALINFO_FIRSTNAME
+      lastName: PERSONALINFO_LASTNAME
+      dateOfBirth: PERSONALINFO_DATE_OF_BIRTH
     languagePreferences:
       spokenLanguage: LANGUAGEPREFERENCES_SPOKENLANGUAGE
       writtenLanguage: LANGUAGEPREFERENCES_WRITTENLANGUAGE

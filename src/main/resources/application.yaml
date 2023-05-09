@@ -90,7 +90,7 @@ feature-flag:
   show-delayed-processing-time-notice: on
   
 document-upload:
-  max-files-uploaded: 20
+  max-files-uploaded: 50
 
 smarty-street-url: "https://us-street.api.smartystreets.com/street-address"
 
@@ -124,6 +124,7 @@ failed-resubmission:
     milliseconds: 0 # Run the process as soon the app first starts up
   lockAtLeastFor: 15m
   lockAtMostFor: 30m
+  isEnable: true
 
 in-progress-resubmission:
   interval:
@@ -132,6 +133,7 @@ in-progress-resubmission:
     milliseconds: 0 # Run the process as soon the app first starts up
   lockAtLeastFor: 15m
   lockAtMostFor: 30m
+  isEnable: true
 
 no-status-applications-resubmission:
   interval:
@@ -140,7 +142,12 @@ no-status-applications-resubmission:
     milliseconds: 0 # Run the process as soon the app first starts up
   lockAtLeastFor: 9m
   lockAtMostFor: 20m
+  isEnable: true
 
 demo: false
+
+image:
+  quality: 0.25f
+
 
   # added this line to test the mnbenefits/shiba repo

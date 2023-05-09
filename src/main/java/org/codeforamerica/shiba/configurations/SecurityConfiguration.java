@@ -41,7 +41,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
       "ramesh.shakya@state.mn.us",
       "marlene.merwarth@state.mn.us",
       "ryan.b.smith@state.mn.us",
-      "michael.hauck@state.mn.us"
+      "michael.hauck@state.mn.us",
+      "bernadette.shearer@state.mn.us"
   );
 
   @Override
@@ -106,7 +107,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      log.info("User session timed out on page: " + request.getRequestURL());
+      log.info("User session invalid on page: " + request.getRequestURL());
       errorRedirectInvalidSessionStrategy.onInvalidSessionDetected(request, response);
     }
 

@@ -43,6 +43,15 @@ pageDefinitions:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: error-message-key
+  - &shouldbeBlankPage
+    name: shouldbeBlankPage
+    pageTitle: should-be-blank-page-title
+    inputs:
+      - name: shouldbeBlankInput
+        type: TEXT
+        validators:
+          - validation: SHOULD_BE_BLANK
+            errorMessageKey: error-message-key
   - &zipcodePage
     name: zipcodePage
     pageTitle: zip-code-page-title
@@ -208,6 +217,18 @@ pageDefinitions:
             condition:
               input: caseNumberInput
               matcher: NOT_EMPTY
+  - &healthCareCaseNumberPage
+    name: healthCareCaseNumberPage
+    pageTitle: case-number-page-title
+    inputs:
+      - name: caseNumberInput
+        type: TEXT
+        validators:
+          - validation: CASE_NUMBER_HC
+            errorMessageKey: error-message-key
+            condition:
+              input: caseNumberInput
+              matcher: NOT_EMPTY
   - &lastPage
     name: lastPage
     pageTitle: last-page-title
@@ -227,12 +248,20 @@ workflow:
     pageConfiguration: *notBlankPage
     nextPages:
       - pageName: lastPage
+  shouldbeBlankPage:
+    pageConfiguration: *shouldbeBlankPage
+    nextPages:
+      - pageName: lastPage
   zipcodePage:
     pageConfiguration: *zipcodePage
     nextPages:
       - pageName: lastPage
   caseNumberPage:
     pageConfiguration: *caseNumberPage
+    nextPages:
+      - pageName: lastPage
+  healthCareCaseNumberPage:
+    pageConfiguration: *healthCareCaseNumberPage
     nextPages:
       - pageName: lastPage
   statePage:
@@ -291,3 +320,4 @@ workflow:
     pageConfiguration: *lastPage
 landmarkPages:
   terminalPage:
+  healthcareRenewalLandingPage: healthcareRenewalUpload

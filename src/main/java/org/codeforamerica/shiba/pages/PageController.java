@@ -4,6 +4,7 @@ import static java.lang.Boolean.parseBoolean;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.codeforamerica.shiba.application.FlowType.HEALTHCARE_RENEWAL;
 import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.application.Status.DELIVERED;
 import static org.codeforamerica.shiba.application.Status.SENDING;
@@ -11,10 +12,11 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HAS_HOUSE_HOLD;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOME_ZIPCODE;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.USE_ENRICHED_HOME_COUNTY;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,8 +31,10 @@ import java.nio.file.Path;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -38,7 +42,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.spi.ImageWriterSpi;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -49,10 +60,12 @@ import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.codeforamerica.shiba.Program;
 import org.codeforamerica.shiba.RoutingDestinationMessageService;
 import org.codeforamerica.shiba.UploadDocumentConfiguration;
+import org.codeforamerica.shiba.Utils;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationFactory;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.ApplicationStatusRepository;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.application.parsers.CountyParser;
 import org.codeforamerica.shiba.application.parsers.DocumentListParser;
 import org.codeforamerica.shiba.configurations.CityInfoConfiguration;
@@ -60,6 +73,7 @@ import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.inputconditions.Condition;
 import org.codeforamerica.shiba.internationalization.LocaleSpecificMessageSource;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
+import org.codeforamerica.shiba.output.CustomMultipartFile;
 import org.codeforamerica.shiba.output.caf.CcapExpeditedEligibilityDecider;
 import org.codeforamerica.shiba.output.caf.Eligibility;
 import org.codeforamerica.shiba.output.caf.EligibilityListBuilder;
@@ -91,23 +105,23 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mobile.device.Device;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import lombok.extern.slf4j.Slf4j;
+import mobi.openddr.classifier.model.Device;
 import net.coobird.thumbnailator.Thumbnails;
 
 @Controller
@@ -115,7 +129,7 @@ import net.coobird.thumbnailator.Thumbnails;
 public class PageController {
 
   private static final ZoneId CENTRAL_TIMEZONE = ZoneId.of("America/Chicago");
-  private static final int MAX_FILES_UPLOADED = 20;
+  private static final int MAX_FILES_UPLOADED = 50;
   private static final String VIRUS_STATUS_CODE = "418";
   private final ApplicationData applicationData;
   private final ApplicationConfiguration applicationConfiguration;
@@ -138,6 +152,10 @@ public class PageController {
   private final ApplicationStatusRepository applicationStatusRepository;
   private final EligibilityListBuilder listBuilder;
   private final String clammitUrl;
+  private static final List<String> IMAGE_TYPES_TO_COMPRESS = List
+	      .of("jpg", "jpeg");
+  private static float imageQuality;
+
 
   public PageController(
       ApplicationConfiguration applicationConfiguration,
@@ -202,11 +220,16 @@ public class PageController {
   }
 
   @GetMapping("/errorTimeout")
-  String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId) {
-    if (submittedAppId.length() == 0) {
+  String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId,
+		  @CookieValue(value = "flow_type", defaultValue = "") String flowType, 
+		  @CookieValue(value = "page_name", defaultValue = "") String pageName) {
+    if(pageName.equals("healthcareRenewalUpload") || flowType.equals(FlowType.HEALTHCARE_RENEWAL.toString())) {
+    	return "healthcareRenewalErrorUploadTimeout";
+    }
+    else if (submittedAppId.length() == 0) {
       return "errorSessionTimeout";
-    } else {
-      return "errorUploadTimeout";
+    }else {
+    	 return "errorUploadTimeout";
     }
   }
 
@@ -254,13 +277,24 @@ public class PageController {
       HttpSession httpSession,
       Locale locale
   ) {
+	  // Temporary cookie indicating user page
+      Cookie pageNameCookie = new Cookie("page_name", pageName);
+      pageNameCookie.setPath("/");
+      pageNameCookie.setHttpOnly(true);
+      response.addCookie(pageNameCookie);
+      //to set flow on cookie
+      Cookie flowCookie = new Cookie("flow_type", applicationData.getFlow().toString());
+      flowCookie.setPath("/");
+      flowCookie.setHttpOnly(true);
+      response.addCookie(flowCookie);
+      
 
     var landmarkPagesConfiguration = applicationConfiguration.getLandmarkPages();
 
     if (landmarkPagesConfiguration.isLandingPage(pageName)) {
       httpSession.invalidate();
     }
-
+   
     if (landmarkPagesConfiguration.isStartTimerPage(pageName)) {
       applicationData.setStartTimeOnce(clock.instant());
       if (!utmSource.isEmpty()) {
@@ -273,7 +307,7 @@ public class PageController {
       log.info(
           "documentSubmitConfirmation redirect back to uploadDocuments, no documents in uploadDocs list");
       return new ModelAndView(
-          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getUploadDocumentsPage()));
+          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getCorrectUploadDocumentPage(pageName)));
     }
 
     if (shouldRedirectToTerminalPage(pageName)) {
@@ -285,11 +319,24 @@ public class PageController {
       return new ModelAndView(
           String.format("redirect:/pages/%s", landmarkPagesConfiguration.getNextStepsPage()));
     }
-
-    if (shouldRedirectToLaterDocsTerminalPage(pageName)) {
+    
+   if (shouldRedirectToLaterDocsTerminalPage(pageName)) {
       return new ModelAndView(
           String.format("redirect:/pages/%s",
               landmarkPagesConfiguration.getLaterDocsTerminalPage()));
+    }
+   
+   if (shouldRedirectToHealthcareRenewalLandingPage(pageName)) {
+       httpSession.invalidate();
+       return new ModelAndView(
+               String.format("redirect:/pages/%s",
+                   landmarkPagesConfiguration.getHealthcareRenewalLandingPage()));
+     }
+   
+    if (shouldRedirectToHealthcareRenewalTerminalPage(pageName)) {
+      return new ModelAndView(
+          String.format("redirect:/pages/%s",
+              landmarkPagesConfiguration.getHealthcareRenewalTerminalPage()));
     }
 
     if (shouldRedirectToLandingPage(pageName)) {
@@ -428,7 +475,7 @@ public class PageController {
               ccapExpeditedEligibility, locale));
     }
 
-    if (landmarkPagesConfiguration.isTerminalPage(pageName)) {
+    if (landmarkPagesConfiguration.isTerminalPage(pageName) || landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)) {
       Application application = applicationRepository.find(applicationData.getId());
       model.put("documents", DocumentListParser.parse(application.getApplicationData()));
       model.put("hasUploadDocuments", !applicationData.getUploadedDocs().isEmpty());
@@ -557,6 +604,24 @@ public class PageController {
         && applicationData.getFlow() == LATER_DOCS
         && hasSubmittedDocuments();
   }
+  
+  private boolean shouldRedirectToHealthcareRenewalTerminalPage(String pageName) {
+    LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
+        .getLandmarkPages();
+    // Documents have been submitted in later docs flow and applicant is attempting to navigate back to a previous page in this flow
+    return !landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)
+        && landmarkPagesConfiguration.isPostSubmitPage(pageName)
+        && applicationData.getFlow() == HEALTHCARE_RENEWAL
+        && hasSubmittedDocuments();
+  }
+  
+  private boolean shouldRedirectToHealthcareRenewalLandingPage(String pageName) {
+	    LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
+	        .getLandmarkPages();
+	    return landmarkPagesConfiguration.isHealthcareRenewalLandingPage(pageName)
+	        && applicationData.getFlow() == HEALTHCARE_RENEWAL
+	        && hasSubmittedDocuments();
+	  }
 
   @PostMapping("/groups/{groupName}/delete")
   RedirectView deleteGroup(@PathVariable String groupName, HttpSession httpSession) {
@@ -671,7 +736,7 @@ public class PageController {
       @RequestBody(required = false) MultiValueMap<String, String> model,
       HttpServletResponse httpResponse,
       HttpSession httpSession,
-      Device device
+      @RequestAttribute("currentDevice") Device device
   ) {
     LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
         .getLandmarkPages();
@@ -721,20 +786,33 @@ public class PageController {
   }
 
   private void recordDeviceType(Device device, Application application) {
-    String deviceType = "unknown";
-    String platform = "unknown";
-    if (device != null) {
-      if (device.isNormal()) {
-        deviceType = "desktop";
-      } else if (device.isMobile()) {
-        deviceType = "mobile";
-      } else if (device.isTablet()) {
-        deviceType = "tablet";
-      }
-      platform = device.getDevicePlatform().name();
-    }
-    application.getApplicationData().setDevicePlatform(platform);
-    application.getApplicationData().setDeviceType(deviceType);
+  	String deviceType = "unknown";
+	String platform = "unknown";
+
+	if (device != null) {
+		String isDesktop = device.getProperty("is_desktop");
+		if (isDesktop != null && Boolean.parseBoolean(isDesktop)) {
+			deviceType = "desktop";
+		} else {
+			String isTablet = device.getProperty("is_tablet");
+			if (isTablet != null && Boolean.parseBoolean(isTablet)) {
+				deviceType = "tablet";
+			} else {
+				String id = device.getId();
+				if (id != null && !id.equalsIgnoreCase("unknown")) {
+					deviceType = "mobile";
+				}
+			}
+		}
+
+		String devicePlatform = device.getProperty("device_os");
+		if (devicePlatform != null) {
+			platform = devicePlatform;
+		}
+	}
+
+	application.getApplicationData().setDevicePlatform(platform);
+	application.getApplicationData().setDeviceType(deviceType);
   }
 
   @PostMapping("/submit-feedback")
@@ -794,6 +872,8 @@ public class PageController {
           outputImage.flush();
           thumbFile.delete();
           Files.delete(paths);
+          byte[] compressedImage = compressImage(file.getBytes(), file.getOriginalFilename());
+          file = new CustomMultipartFile(compressedImage, file.getName(), file.getOriginalFilename(), file.getContentType());
         }
         documentRepository.upload(filePath, file);
         documentRepository.upload(thumbnailFilePath, dataURL);
@@ -809,6 +889,52 @@ public class PageController {
           HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  
+  @Value("${image.quality}")
+  private void setIsEnableEmailResubmissionTask(float imgQuality) {
+	  imageQuality = imgQuality;
+  }
+  
+  private byte[] compressImage(byte[] imageFileBytes, String filename) throws IOException {
+	  var extension = Utils.getFileType(filename);
+	  if(IMAGE_TYPES_TO_COMPRESS.contains(extension)) {
+		  ByteArrayOutputStream outputFile = new ByteArrayOutputStream();
+	      BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageFileBytes));
+	      JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
+	        BufferedImage img = new BufferedImage(image.getWidth(), image.getHeight(),
+	            BufferedImage.TYPE_3BYTE_BGR);
+	            ColorConvertOp op = new ColorConvertOp(null);
+	            op.filter(image, img);
+	      jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+	      jpegParams.setCompressionQuality(imageQuality);        
+	      ImageWriter writer = getImageWriter();
+	      try (final ImageOutputStream stream = ImageIO.createImageOutputStream(outputFile)) {
+	        writer.setOutput(stream);
+	        try {
+	          writer.write(null, new IIOImage(img, null, null), jpegParams);
+	        } finally {
+	          writer.dispose();
+	          stream.flush();
+	        }
+	      }
+	      imageFileBytes = outputFile.toByteArray();
+	      outputFile.close();
+	  }
+      return imageFileBytes;
+  }
+  
+  private static ImageWriter getImageWriter() throws IOException {
+	    IIORegistry registry = IIORegistry.getDefaultInstance();
+	    Iterator<ImageWriterSpi> services = registry.getServiceProviders(ImageWriterSpi.class, (provider) -> {
+	        if (provider instanceof ImageWriterSpi) {
+	            return Arrays.stream(((ImageWriterSpi) provider).getFormatNames()).anyMatch(formatName -> formatName.equalsIgnoreCase("JPEG"));
+	        }
+	        return false;
+	    }, true);
+	    ImageWriterSpi writerSpi = services.next();
+	    ImageWriter writer = writerSpi.createWriterInstance();
+	    return writer;
+	}
 
   private boolean hasSubmittedDocuments() {
     Application application;
@@ -911,7 +1037,8 @@ public class PageController {
   ModelAndView submitDocuments(HttpSession httpSession) {
     Application application = applicationRepository.find(applicationData.getId());
     application.getApplicationData().setUploadedDocs(applicationData.getUploadedDocs());
-    if (applicationData.getFlow() == LATER_DOCS) {
+    
+    if (applicationData.getFlow() == LATER_DOCS || applicationData.getFlow() == HEALTHCARE_RENEWAL ) {
       application.setCompletedAtTime(clock);
     }
     applicationStatusRepository.getAndSetFileNames(application, UPLOADED_DOC);
@@ -941,6 +1068,19 @@ public class PageController {
     applicationData.removeUploadedDoc(filename);
 
     return new ModelAndView("redirect:/pages/uploadDocuments");
+  }
+  
+  @SuppressWarnings("SpringMVCViewInspection")
+  @PostMapping("/healthcare-renewal-remove-upload/{filename}")
+  ModelAndView healthcareRenewalRemoveUpload(@PathVariable String filename) {
+    applicationData.getUploadedDocs().stream()
+        .filter(uploadedDocument -> uploadedDocument.getFilename().equals(filename))
+        .map(UploadedDocument::getS3Filepath)
+        .findFirst()
+        .ifPresent(documentRepository::delete);
+    applicationData.removeUploadedDoc(filename);
+
+    return new ModelAndView("redirect:/pages/healthcareRenewalUploadDocuments");
   }
 
   /*

@@ -1,41 +1,38 @@
 package org.codeforamerica.shiba.output.pdf;
 
+import static org.codeforamerica.shiba.output.Document.HEALTHCARE_RENEWAL;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
-import javax.imageio.spi.IIORegistry;
-import javax.imageio.spi.ImageWriterSpi;
-import javax.imageio.stream.ImageOutputStream;
+
+import org.apache.pdfbox.multipdf.Overlay;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.Utils;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
-import org.codeforamerica.shiba.output.ImageUtility;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.output.caf.FilenameGenerator;
 import org.codeforamerica.shiba.output.documentfieldpreparers.DocumentFieldPreparers;
@@ -44,6 +41,7 @@ import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.UploadedDocument;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -52,13 +50,11 @@ public class PdfGenerator implements FileGenerator {
 
   private static final List<String> IMAGE_TYPES_TO_CONVERT_TO_PDF = List
       .of("jpg", "jpeg", "png", "gif");
-  private static final List<String> IMAGE_TYPES_TO_COMPRESS = List
-      .of("jpg", "jpeg");
-
 
   private final PdfFieldMapper pdfFieldMapper;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillerMap;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap;
+  private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap2;
   private final Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops;
   private final ApplicationRepository applicationRepository;
   private final DocumentRepository documentRepository;
@@ -71,6 +67,7 @@ public class PdfGenerator implements FileGenerator {
   public PdfGenerator(PdfFieldMapper pdfFieldMapper,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillers,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers,
+      Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers2,
       Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops,
       ApplicationRepository applicationRepository,
       DocumentRepository documentRepository,
@@ -87,6 +84,7 @@ public class PdfGenerator implements FileGenerator {
     this.fileNameGenerator = fileNameGenerator;
     this.featureFlags = featureFlagConfiguration;
     this.pdfFieldWithCAFHHSuppFillersMap = pdfFieldWithCAFHHSuppFillers;
+    this.pdfFieldWithCAFHHSuppFillersMap2 = pdfFieldWithCAFHHSuppFillers2;
     this.pdfResourcesCertainPops = pdfResourcesCertainPops;
     this.countyMap = countyMap;
   }
@@ -107,6 +105,9 @@ public class PdfGenerator implements FileGenerator {
   }
 
   public byte[] generateCoverPageForUploadedDocs(Application application) {
+	if (application.getFlow() == FlowType.HEALTHCARE_RENEWAL) {
+		return generate(application, HEALTHCARE_RENEWAL, CASEWORKER).getFileBytes();
+	}
     return generate(application, UPLOADED_DOC, CASEWORKER).getFileBytes();
   }
 
@@ -132,6 +133,11 @@ public class PdfGenerator implements FileGenerator {
     if (document.equals(Document.CAF) && (householdSize > 5 && householdSize <= 10)) {
       pdfFiller = pdfFieldWithCAFHHSuppFillersMap.get(recipient).get(document);
     }
+    
+    if (document.equals(Document.CAF) && householdSize > 10) {
+      pdfFiller = pdfFieldWithCAFHHSuppFillersMap2.get(recipient).get(document);
+    }    
+    
     if(document.equals(Document.CERTAIN_POPS)) {
     List<Resource> pdfResource = new ArrayList<Resource>(); 
     pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("default"));
@@ -199,7 +205,8 @@ public class PdfGenerator implements FileGenerator {
 
     List<ApplicationFile> applicationFiles = new ArrayList<>();
     byte[] combinedPDF = coverPage;
-   
+    PDDocument overlayDoc = createDatePdfOverlay(application);
+    Overlay overlay = new Overlay();
     List<byte[]> combinedDocList = new ArrayList<>();
     for (UploadedDocument uDoc : uploadedDocuments) {
 
@@ -221,21 +228,24 @@ public class PdfGenerator implements FileGenerator {
           log.warn("Unsupported file-type: " + extension);
         }
         if (extension.equals("pdf")) {
-			try {
-				fileBytes = ImageUtility.compressImagesInPDF(fileBytes);
-			} catch (Exception e) {
-				log.error("Compress images in PDF failed: " + e.getMessage());
-			}
-			
-			try {
-				combinedPDF = addPageToPdf(combinedPDF, fileBytes);
-			} catch (Exception er) {
-				log.error("File not able to combine to pdf " + uDoc.getFilename());
-				combinedDocList.add(fileBytes);
-			}
+          var fileBytesWithDate = addScannedDate(fileBytes, overlayDoc, uDoc, overlay);
+          try { 
+            
+            combinedPDF = addPageToPdf(combinedPDF, fileBytesWithDate);
+
+          } catch (Exception er) {
+            log.error("File not able to combine to pdf " + uDoc.getFilename());
+            combinedDocList.add(fileBytesWithDate);
+          }
         }
       }
-     
+
+    }
+    try {
+      overlayDoc.close();
+      overlay.close();
+    } catch (IOException e) {
+      log.error("Adding scanned date failed for application id = "+ application.getId());
     }
     //This makes sure duplicate files are not added twice in case of merger issue
     if(!combinedPDF.equals(coverPage)) {
@@ -251,8 +261,51 @@ public class PdfGenerator implements FileGenerator {
     return applicationFiles;
   }
   
-  
-  public List<ApplicationFile> generateForUploadedDocument(List<UploadedDocument> uploadedDocumentList, Application application, byte[] coverPage) {
+  private byte[] addScannedDate(byte[] fileBytes, PDDocument overlayDoc, UploadedDocument uDoc, Overlay overlay) {
+    try (PDDocument origDoc = PDDocument.load(fileBytes);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) { 
+      if (origDoc.getDocumentCatalog().getAcroForm() != null) {
+          origDoc.getDocumentCatalog().getAcroForm().flatten();
+      }
+      if(origDoc.isEncrypted()) {
+    	  origDoc.setAllSecurityToBeRemoved(true);
+      }
+      HashMap<Integer, String> overlayGuide = new HashMap<Integer, String>();
+      
+      overlay.setOverlayPosition(Overlay.Position.FOREGROUND);
+      overlay.setInputPDF(origDoc);
+      overlay.setAllPagesOverlayPDF(overlayDoc);
+      overlay.overlay(overlayGuide).save(outputStream);
+      origDoc.close();
+      fileBytes = outputStream.toByteArray();
+    }catch(Exception e) {
+      log.error(e.getMessage()+". Could not add date to uploaded pdf = "+uDoc.getFilename());
+    }
+    return fileBytes;
+  }
+
+  private PDDocument createDatePdfOverlay(Application application) {
+    PDDocument overlayDoc = new PDDocument();
+    try {
+       PDPage page = new PDPage(PDRectangle.A4); 
+       overlayDoc.addPage(page); 
+       PDFont font = PDType1Font.COURIER_OBLIQUE;
+       PDPageContentStream contentStream = new PDPageContentStream(overlayDoc, page);
+       contentStream.beginText();
+       contentStream.setFont(font, 12); 
+       contentStream.newLineAtOffset(150, 785);
+       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy hh:mm:ss a");
+       contentStream.showText("MNbenefits: "+application.getCompletedAt().withZoneSameInstant(ZoneId.of("America/Chicago")).format(formatter)); 
+       contentStream.endText(); 
+       contentStream.close();
+    }catch(Exception er) {
+      log.error("Not able to create overlay pdf" + application.getId());
+    }
+     return overlayDoc;
+  }
+
+  public List<ApplicationFile> generateForUploadedDocument(
+      List<UploadedDocument> uploadedDocumentList, Application application, byte[] coverPage) {
     return generateCombinedUploadedDocument(uploadedDocumentList, application, coverPage,
         countyMap.get(application.getCounty()));
   }
@@ -288,26 +341,6 @@ public class PdfGenerator implements FileGenerator {
   private byte[] convertImageToPdf(byte[] imageFileBytes, String filename) throws Exception {
     try (PDDocument doc = new PDDocument(); ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
      
-      var extension = Utils.getFileType(filename);
-      if(IMAGE_TYPES_TO_COMPRESS.contains(extension)) {
-        ByteArrayOutputStream outputFile = new ByteArrayOutputStream();
-        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imageFileBytes));
-        JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
-        jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        jpegParams.setCompressionQuality(0.50f);
-        ImageWriter writer = getImageWriter();
-        try (final ImageOutputStream stream = ImageIO.createImageOutputStream(outputFile)) {
-          writer.setOutput(stream);
-          try {
-            writer.write(null, new IIOImage(img, null, null), jpegParams);
-          } finally {
-            writer.dispose();
-            stream.flush();
-          }
-        }
-        imageFileBytes = outputFile.toByteArray();
-        outputFile.close();
-      }
       var image = PDImageXObject.createFromByteArray(doc, imageFileBytes, filename);
       // Figure out page size
       var pageSize = PDRectangle.LETTER;
@@ -339,17 +372,4 @@ public class PdfGenerator implements FileGenerator {
       throw e;
     }
   }
-  
-  private static ImageWriter getImageWriter() throws IOException {
-    IIORegistry registry = IIORegistry.getDefaultInstance();
-    Iterator<ImageWriterSpi> services = registry.getServiceProviders(ImageWriterSpi.class, (provider) -> {
-        if (provider instanceof ImageWriterSpi) {
-            return Arrays.stream(((ImageWriterSpi) provider).getFormatNames()).anyMatch(formatName -> formatName.equalsIgnoreCase("JPEG"));
-        }
-        return false;
-    }, true);
-    ImageWriterSpi writerSpi = services.next();
-    ImageWriter writer = writerSpi.createWriterInstance();
-    return writer;
-}
 }

@@ -48,6 +48,9 @@ public class UploadedDocumentsSubmittedListener extends ApplicationEventListener
     if (application.getFlow() == FlowType.LATER_DOCS) {
       sendLaterDocsConfirmationEmail(application, event.getLocale());
     }
+    if (application.getFlow() == FlowType.HEALTHCARE_RENEWAL) {
+      sendHealthcareRenewalConfirmationEmail(application, event.getLocale());
+    }
     MDC.clear();
   }
 
@@ -56,5 +59,12 @@ public class UploadedDocumentsSubmittedListener extends ApplicationEventListener
 
     EmailParser.parse(applicationData)
         .ifPresent(email -> emailClient.sendLaterDocsConfirmationEmail(application,  application.getId(), email, locale));
+  }
+  
+  private void sendHealthcareRenewalConfirmationEmail(Application application, Locale locale) {
+    ApplicationData applicationData = application.getApplicationData();
+
+    EmailParser.parse(applicationData)
+        .ifPresent(email -> emailClient.sendHealthcareRenewalConfirmationEmail(application,  application.getId(), email, locale));
   }
 }

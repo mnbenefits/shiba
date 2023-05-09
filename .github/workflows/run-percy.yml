@@ -27,9 +27,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Set up ChromeDriver
-        uses: nanasess/setup-chromedriver@v1.1.0
+        uses: nanasess/setup-chromedriver@v2.0.0
       - name: Set up JDK
-        uses: actions/setup-java@v3.10.0
+        uses: actions/setup-java@v3.11.0
         with:
           distribution: 'adopt'
           java-version: '17'
@@ -44,6 +44,10 @@ jobs:
         run: chmod +x gradlew
       - name: Run journey test and send to Percy
         run: percy exec -- ./gradlew clean test --tests org.codeforamerica.shiba.journeys.FullFlowJourneyTest.fullApplicationWithDocumentUploads
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      - name: Run healthcare renewal test and send to Percy
+        run: percy exec -- ./gradlew clean test --tests org.codeforamerica.shiba.journeys.HealthcareRenewalJourneyTest.healthcareRenewalFlow
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
       - name: Announce on Slack

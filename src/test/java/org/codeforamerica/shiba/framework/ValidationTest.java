@@ -206,6 +206,17 @@ public class ValidationTest extends AbstractFrameworkTest {
       postExpectingFailureAndAssertErrorDisplaysForThatInput("notBlankPage", "notBlankInput",
           textInputValue);
     }
+    
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "value1",
+        "value2   ","  value3"
+    })
+    void shouldFailValidationForSHOULD_BE_BLANKWhenThereIsnotEmptyOrBlankInput(String textInputValue)
+        throws Exception {
+      postExpectingFailureAndAssertErrorDisplaysForThatInput("shouldbeBlankPage", "shouldbeBlankInput",
+          textInputValue);
+    }
 
     @Test
     void shouldPassValidationForNOT_BLANKWhenThereIsAtLeast1CharacterInput() throws Exception {
@@ -243,6 +254,19 @@ public class ValidationTest extends AbstractFrameworkTest {
         throws Exception {
       postExpectingFailureAndAssertErrorDisplaysForThatInput("caseNumberPage", "caseNumberInput",
           input);
+    }
+    
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "123",
+        "123456789",
+        "abcdefg",
+        "1234-56",
+        "1234e67"
+    })
+    void shouldFailValidationForHealthCareUploadCaseNumberWhenValueIsNotFourToEightDigits(String input)
+        throws Exception {
+      postExpectingFailureAndAssertErrorDisplaysForThatInput("healthCareCaseNumberPage", "caseNumberInput", input);
     }
 
     @Test
