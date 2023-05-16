@@ -131,7 +131,7 @@ dependencies {
     implementation("ch.qos.logback:logback-parent:1.4.7"){
          exclude group: "ch.qos.logback", module: "logback-classic"
     }
-    implementation("ch.qos.logback:logback-classic:1.2.10")
+    implementation("ch.qos.logback:logback-classic:1.4.7")
     implementation("net.logstash.logback:logstash-logback-encoder:7.3")
     implementation("net.javacrumbs.shedlock:shedlock-spring:5.3.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.3.0")
