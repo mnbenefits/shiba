@@ -1994,16 +1994,17 @@ pageDefinitions:
         type: NOTICE
         noticeMessage: identify-county.you-can-see-where-your-application
   #    subtleLinkTextKey: identify-county.enter-my-zip-code-instead
-  - &countyAndWenSelected
-    name: countyAndWenSelected
-    pageTitle: identify-county-or-tribal-nation.title
-    headerKey: identify-county.where-would-you-like-to-send-documents
-    headerHelpMessageKey: identify-county.choose-a-location
-    contextFragment: countyContextFragment
+  - &selectionAssist_WEN
+    name: selectionAssist_WEN
+    pageTitle: selection-assist-WEN.title
+    contextFragment: selectionAssist_WENContextFragment
+    headerKey: selection-assist-WEN.you-selected-WEN-header
+    headerHelpMessageKey: selection-assist-WEN.to-continue
+    primaryButtonTextKey: selection-assist-WEN.edit-my-selection
     inputs:
       - name: notice
         type: NOTICE
-        noticeMessage: identify-county.you-can-see-where-your-application
+        noticeMessage: selection-assist-WEN.you-selected-WEN-warning
   - &identifyZipcode
     name: identifyZipcode
     headerKey: identify-zipcode.what-is-your-zip-code
@@ -4714,7 +4715,7 @@ workflow:
   identifyCountyOrTribalNation:
     pageConfiguration: *identifyCountyOrTribalNation
     nextPages:
-      - pageName: countyAndWenSelected
+      - pageName: selectionAssist_WEN
         flow: LATER_DOCS
         condition:
           logicalOperator: AND
@@ -4728,8 +4729,8 @@ workflow:
               value: "White Earth Nation"
       - pageName: matchInfo
         flow: LATER_DOCS
-  countyAndWenSelected:
-    pageConfiguration: *countyAndWenSelected
+  selectionAssist_WEN:
+    pageConfiguration: *selectionAssist_WEN
     nextPages:
       - pageName: identifyCountyOrTribalNation
         flow: LATER_DOCS
