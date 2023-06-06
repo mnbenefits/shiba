@@ -1999,12 +1999,8 @@ pageDefinitions:
     pageTitle: selection-assist-WEN.title
     contextFragment: selectionAssist_WENContextFragment
     headerKey: selection-assist-WEN.you-selected-WEN-header
-    headerHelpMessageKey: selection-assist-WEN.to-continue
+    cardFooterTextKey: selection-assist-WEN.to-continue
     primaryButtonTextKey: selection-assist-WEN.edit-my-selection
-    inputs:
-      - name: notice
-        type: NOTICE
-        noticeMessage: selection-assist-WEN.you-selected-WEN-warning
   - &identifyZipcode
     name: identifyZipcode
     headerKey: identify-zipcode.what-is-your-zip-code
