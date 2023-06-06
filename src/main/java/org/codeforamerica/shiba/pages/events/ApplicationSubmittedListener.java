@@ -23,9 +23,16 @@ import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.emails.EmailClient;
 import org.slf4j.MDC;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 @Slf4j
 @Component
@@ -99,4 +106,46 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     });
     MDC.clear();
   }
+  
+  @Async
+  @EventListener
+  public void notifyApplicationSubmission(ApplicationSubmittedEvent event) {
+      Application application = getApplicationFromEvent(event);
+      ApplicationData applicationData = application.getApplicationData();
+      
+      //String url = "http://survey-tool.mn-benefits-non-prod.svc.cluster.local:8080/mnb-confirmation";
+      
+      String url = "https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation";
+
+      RestTemplate rt = new RestTemplate();
+      
+      JSONObject personJsonObject = new JSONObject();
+      
+      
+      try {
+        personJsonObject.put("name", "John");
+        personJsonObject.put("phone", "11234568790");
+        personJsonObject.put("county", "Ramsey");
+        personJsonObject.put("appId", "911234568790");
+      } catch (JSONException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      
+      HttpEntity<String> entity = 
+            new HttpEntity<String>(personJsonObject.toString(), headers);
+      
+      ResponseEntity<String> responseEntityStr = rt.
+            postForEntity(url, entity, String.class);
+      
+      // retries TODO:
+      
+      log.info("Result={}", responseEntityStr);
+      
+      
+  }
+  
 }
