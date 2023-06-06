@@ -1994,6 +1994,16 @@ pageDefinitions:
         type: NOTICE
         noticeMessage: identify-county.you-can-see-where-your-application
   #    subtleLinkTextKey: identify-county.enter-my-zip-code-instead
+  - &countyAndWenSelected
+    name: countyAndWenSelected
+    pageTitle: identify-county-or-tribal-nation.title
+    headerKey: identify-county.where-would-you-like-to-send-documents
+    headerHelpMessageKey: identify-county.choose-a-location
+    contextFragment: countyContextFragment
+    inputs:
+      - name: notice
+        type: NOTICE
+        noticeMessage: identify-county.you-can-see-where-your-application
   - &identifyZipcode
     name: identifyZipcode
     headerKey: identify-zipcode.what-is-your-zip-code
@@ -4704,7 +4714,24 @@ workflow:
   identifyCountyOrTribalNation:
     pageConfiguration: *identifyCountyOrTribalNation
     nextPages:
+      - pageName: countyAndWenSelected
+        flow: LATER_DOCS
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: identifyCountyOrTribalNation
+              input: county
+              matcher: NOT_EMPTY
+            - pageName: identifyCountyOrTribalNation
+              input: tribalNation
+              matcher: CONTAINS
+              value: "White Earth Nation"
       - pageName: matchInfo
+        flow: LATER_DOCS
+  countyAndWenSelected:
+    pageConfiguration: *countyAndWenSelected
+    nextPages:
+      - pageName: identifyCountyOrTribalNation
         flow: LATER_DOCS
   identifyCounty:
     pageConfiguration: *identifyCounty
