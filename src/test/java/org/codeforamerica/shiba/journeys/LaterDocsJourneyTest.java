@@ -47,17 +47,56 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.enter("tribalNation", "Select a Tribal Nation");
     testPage.clickContinue();
     assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+
+    // select any county but no Tribal Nation, navigate from identifyCountyOrTribalNation to matchInfo
+    testPage.enter("county", "Hennepin");
+    testPage.enter("tribalNation", "Select a Tribal Nation");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Match Info");
+    testPage.goBack();
+    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    
+    // select no county and White Earth Nation, navigate from identifyCountyOrTribalNation to matchInfo
+    testPage.enter("county", "Select your county");
+    testPage.enter("tribalNation", "White Earth Nation");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Match Info");
+    testPage.goBack();
+    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    
+    // select any county and White Earth Nation, navigate from identifyCountyOrTribalNation to selectionAssistWEN
+    // click the "back" button on the selectionAssistWEN page and navigate back identifyCountyOrTribalNation
+    testPage.enter("county", "Hennepin");
+    testPage.enter("tribalNation", "White Earth Nation");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Selection Follow Up");
+    testPage.goBack();
+    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    
+    // click the Edit my selection button on the selectionAssistWEN page and navigate to identifyCountyOrTribalNation
+    testPage.enter("county", "Hennepin");
+    testPage.enter("tribalNation", "White Earth Nation");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Selection Follow Up");
+    testPage.clickButton("Edit my selection");
+    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    
+    // select any county and Red Lake Nation, navigate from identifyCountyOrTribalNation to matchInfo
     testPage.enter("county", "Hennepin");
     testPage.enter("tribalNation", "Red Lake Nation");
     testPage.clickContinue();
-
     assertThat(driver.getTitle()).isEqualTo("Match Info");
+    // from the matchInfo page click the "back" button and navigate to the identifyCountyOrTribalNation page    
+    testPage.goBack();
+    assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    testPage.clickContinue();    
     // verify that the header & footer are the MNbenefits header & footer
     assertNotNull(testPage.findElementById("headerMNbenefits"));
     assertNotNull(testPage.findElementById("footerMNbenefits"));
     // verify that the chat feature does exist on the MNbenefits header
     assertFalse(testPage.elementDoesNotExistById("intercom_custom_launcher"));
 
+    
     testPage.enter("firstName", "defaultFirstName");
     testPage.enter("lastName", "defaultLastName");
     testPage.enter("ssn", "123456789");
