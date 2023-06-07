@@ -21,6 +21,11 @@ public class ContactInfoParser {
         .getPageInputFirstValue("contactInfo", "phoneNumber");
   }
   
+  public static String optedIntoEmail(ApplicationData applicationData) {
+    return applicationData.getPagesData()
+        .getPageInputFirstValue("contactInfo", "email");
+  }
+  
   public static String firstName(ApplicationData applicationData) {
         return applicationData.getPagesData()
             .getPageInputFirstValue("personalInfo", "firstName");

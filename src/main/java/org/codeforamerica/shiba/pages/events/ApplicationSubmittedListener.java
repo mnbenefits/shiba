@@ -137,7 +137,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
         appJsonObject.put("appId", applicationData.getId());
         appJsonObject.put("firstName", ContactInfoParser.firstName(applicationData));
         appJsonObject.put("phoneNumber", ContactInfoParser.optedIntophoneNumber(applicationData).replaceAll("[^0-9]", ""));
-        appJsonObject.put("email", "11234568790");
+        appJsonObject.put("email",  ContactInfoParser.optedIntoEmail(applicationData));
         appJsonObject.put("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
         appJsonObject.put("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
         appJsonObject.put("completed-dt", completedAtTime);
