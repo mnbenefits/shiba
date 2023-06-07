@@ -1,16 +1,20 @@
 package org.codeforamerica.shiba.pages.events;
 
 import static org.codeforamerica.shiba.output.Recipient.CLIENT;
-
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import lombok.extern.slf4j.Slf4j;
+import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.MonitoringService;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.parsers.ContactInfoParser;
 import org.codeforamerica.shiba.application.parsers.DocumentListParser;
 import org.codeforamerica.shiba.application.parsers.EmailParser;
+import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.MnitDocumentConsumer;
@@ -110,6 +114,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
   @Async
   @EventListener
   public void notifyApplicationSubmission(ApplicationSubmittedEvent event) {
+    
       Application application = getApplicationFromEvent(event);
       ApplicationData applicationData = application.getApplicationData();
       
@@ -119,32 +124,43 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 
       RestTemplate rt = new RestTemplate();
       
-      JSONObject personJsonObject = new JSONObject();
+      ZonedDateTime completedAt = application.getCompletedAt();
+      String completedAtTime = completedAt.format(DateTimeFormatter.ofPattern("MMM d uuuu", Locale.US));
       
-      
+      //County county = application.getCounty();
+      //RoutingDestination countyRoutingDestination = routingDecisionService.getRoutingDestinationByName(county.name());
+
+
+      JSONObject appJsonObject = new JSONObject();
+
       try {
-        personJsonObject.put("name", "John");
-        personJsonObject.put("phone", "11234568790");
-        personJsonObject.put("county", "Ramsey");
-        personJsonObject.put("appId", "911234568790");
+        appJsonObject.put("appId", applicationData.getId());
+        appJsonObject.put("firstName", ContactInfoParser.firstName(applicationData));
+        appJsonObject.put("phoneNumber", ContactInfoParser.optedIntophoneNumber(applicationData).replaceAll("[^0-9]", ""));
+        appJsonObject.put("email", "11234568790");
+        appJsonObject.put("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
+        appJsonObject.put("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
+        appJsonObject.put("completed-dt", completedAtTime);
+        //appJsonObject.put("county", countyRoutingDestination.getName());        
+        //appJsonObject.put("countyPhoneNumber", countyRoutingDestination.getPhoneNumber());
+                
       } catch (JSONException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
-      
+
       HttpHeaders headers = new HttpHeaders();
       headers.setContentType(MediaType.APPLICATION_JSON);
       
       HttpEntity<String> entity = 
-            new HttpEntity<String>(personJsonObject.toString(), headers);
+            new HttpEntity<String>(appJsonObject.toString(), headers);
+      
       
       ResponseEntity<String> responseEntityStr = rt.
-            postForEntity(url, entity, String.class);
+            postForEntity(url, entity, String.class);      
+      // TODO: retry?
       
-      // retries TODO:
-      
-      log.info("Result={}", responseEntityStr);
-      
+      log.info("Result={}", responseEntityStr);      
       
   }
   
