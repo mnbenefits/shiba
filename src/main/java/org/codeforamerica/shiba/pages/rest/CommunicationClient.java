@@ -1,0 +1,61 @@
+package org.codeforamerica.shiba.pages.rest;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.JsonObject;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+public class CommunicationClient implements RestClient {
+	
+	private Boolean enabled;
+	private String comHubURL;
+	
+	public CommunicationClient(
+			@Value("${iscommhub}") String enabled,
+			@Value("${commhuburl}") String comHubURL) {
+		this.enabled = Boolean.valueOf(enabled);
+		this.comHubURL = comHubURL;		
+	}
+
+	@Override
+	public void send(JsonObject appJsonObject) {
+		
+		if (!isEnabled()) {
+			log.info("SMS Confirmation Text Disabled");
+			return;
+		}
+
+	      RestTemplate rt = new RestTemplate();
+	      
+	      HttpHeaders headers = new HttpHeaders();
+	      headers.setContentType(MediaType.APPLICATION_JSON);
+	      
+	      HttpEntity<String> entity = 
+	            new HttpEntity<String>(appJsonObject.toString(), headers);
+	      
+	      ResponseEntity<String> responseEntityStr = rt.
+	            postForEntity(comHubURL, entity, String.class);
+	      
+	      // TODO retry if result is not 200
+	      
+	      log.info("Result = {}", responseEntityStr);
+
+	}
+
+	@Override
+	public Boolean isEnabled() {
+		return enabled;
+	}
+	
+
+
+}

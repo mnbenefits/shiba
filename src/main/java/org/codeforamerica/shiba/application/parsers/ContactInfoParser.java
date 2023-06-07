@@ -16,12 +16,12 @@ public class ContactInfoParser {
         .contains("TEXT");
   }
   
-  public static String optedIntophoneNumber(ApplicationData applicationData) {
+  public static String phoneNumber(ApplicationData applicationData) {
     return applicationData.getPagesData()
         .getPageInputFirstValue("contactInfo", "phoneNumber");
   }
   
-  public static String optedIntoEmail(ApplicationData applicationData) {
+  public static String email(ApplicationData applicationData) {
     return applicationData.getPagesData()
         .getPageInputFirstValue("contactInfo", "email");
   }

@@ -23,11 +23,13 @@ import org.codeforamerica.shiba.output.caf.CcapExpeditedEligibilityDecider;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibilityDecider;
 import org.codeforamerica.shiba.output.pdf.PdfGenerator;
+import org.codeforamerica.shiba.pages.RoutingDecisionService;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.emails.EmailClient;
+import org.codeforamerica.shiba.pages.rest.CommunicationClient;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -49,6 +51,8 @@ class ApplicationSubmittedListenerTest {
   FeatureFlagConfiguration featureFlagConfiguration = mock(FeatureFlagConfiguration.class);
   MonitoringService monitoringService = mock(MonitoringService.class);
   ApplicationSubmittedListener applicationSubmittedListener;
+  RoutingDecisionService routingDecisionService = mock(RoutingDecisionService.class);
+  CommunicationClient communicationClient = mock(CommunicationClient.class);
 
   @BeforeEach
   void setUp() {
@@ -62,7 +66,10 @@ class ApplicationSubmittedListenerTest {
         ccapExpeditedEligibilityDecider,
         pdfGenerator,
         featureFlagConfiguration,
-        monitoringService);
+        monitoringService, 
+        routingDecisionService, 
+        communicationClient
+        );
   }
 
   @Nested
