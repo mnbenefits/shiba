@@ -30,7 +30,7 @@ public class CommunicationClient implements RestClient {
 	public void send(JsonObject appJsonObject) {
 		
 		if (!isEnabled()) {
-			log.info("SMS Confirmation Text Disabled");
+			log.info("broadcast to comm-hubb is disabled");
 			return;
 		}
 
