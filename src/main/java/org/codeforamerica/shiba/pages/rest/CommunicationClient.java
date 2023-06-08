@@ -20,8 +20,8 @@ public class CommunicationClient implements RestClient {
 	private String comHubURL;
 	
 	public CommunicationClient(
-			@Value("${iscommhub}") String enabled,
-			@Value("${commhuburl}") String comHubURL) {
+			@Value("${comm-hub.enabled}") String enabled,
+			@Value("${comm-hub.url}") String comHubURL) {
 		this.enabled = Boolean.valueOf(enabled);
 		this.comHubURL = comHubURL;		
 	}
