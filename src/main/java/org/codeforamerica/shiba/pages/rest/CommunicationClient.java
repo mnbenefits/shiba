@@ -30,7 +30,7 @@ public class CommunicationClient implements RestClient {
 	public void send(JsonObject appJsonObject) {
 		
 		if (!isEnabled()) {
-			log.info("broadcast to comm-hubb is disabled");
+			log.info("Post requests to comm-hub is disabled.");
 			return;
 		}
 
