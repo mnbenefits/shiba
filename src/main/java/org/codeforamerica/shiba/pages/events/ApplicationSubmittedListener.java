@@ -125,7 +125,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		ApplicationData applicationData = application.getApplicationData();
 
 		ZonedDateTime completedAt = application.getCompletedAt();
-		String completedAtTime = completedAt.format(DateTimeFormatter.ofPattern("MMM d uuuu hh:mm:ss", Locale.US));
+		String completedAtTime = completedAt.format(DateTimeFormatter.ofPattern("MMM d uuuu, hh:mm:ss", Locale.US));
 
 		County county = application.getCounty();
 		RoutingDestination countyRoutingDestination = routingDecisionService.getRoutingDestinationByName(county.name());

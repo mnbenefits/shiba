@@ -131,7 +131,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("email", ContactInfoParser.email(applicationData));
 			jsonObject.addProperty("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
 			jsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
-			jsonObject.addProperty("completed-dt", dateTime.format( DateTimeFormatter.ofPattern("MMM d uuuu hh:mm:ss", Locale.US))); 
+			jsonObject.addProperty("completed-dt", dateTime.format( DateTimeFormatter.ofPattern("MMM d uuuu, hh:mm:ss", Locale.US))); 
 			jsonObject.addProperty("county", "Ramsey");
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
 			when(communicationClient.isEnabled()).thenReturn(true);
