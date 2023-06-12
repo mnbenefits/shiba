@@ -119,10 +119,17 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
   
 	@Async
 	@EventListener
+	/**
+	 * The method consumes the ApplicationSubmittedEvent and makes a REST call to comm-hub endpoint. 
+	 * The method offloads communication responsibility to the comm-hub. 
+	 * @param event
+	 */
 	public void notifyApplicationSubmission(ApplicationSubmittedEvent event) {
 
 		Application application = getApplicationFromEvent(event);
 		ApplicationData applicationData = application.getApplicationData();
+		
+		MDC.put("applicationId", application.getId());
 
 		ZonedDateTime completedAt = application.getCompletedAt();
 		String completedAtTime = completedAt.format(DateTimeFormatter.ofPattern("MMM d uuuu, hh:mm:ss", Locale.US));
@@ -142,6 +149,9 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		appJsonObject.addProperty("countyPhoneNumber", countyRoutingDestination.getPhoneNumber());
 
 		communicationClient.send(appJsonObject);
+		
+		MDC.clear();
+		
 	}
   
 }

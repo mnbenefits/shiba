@@ -27,6 +27,9 @@ public class CommunicationClient implements RestClient {
 	}
 
 	@Override
+	/**
+	 * The method composes the REST request with the given Json object and post to comm-hub
+	 */
 	public void send(JsonObject appJsonObject) {
 		
 		if (!isEnabled()) {
@@ -47,7 +50,7 @@ public class CommunicationClient implements RestClient {
 	      
 	      // TODO retry if result is not 200
 	      
-	      log.info("Result = {}", responseEntityStr);
+	      log.info("responseEntityStr Result = {}", responseEntityStr);
 
 	}
 
