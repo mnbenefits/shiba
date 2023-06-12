@@ -56,7 +56,7 @@ client:
   
 comm-hub:
   url: ${COMM_HUB_URL}
-  enabled: ${COMM_HUB_ENABLED}
+  enabled: false
    
 
 mnit-filenet:
