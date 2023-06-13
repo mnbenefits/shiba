@@ -1,0 +1,20 @@
+<!-- A custom input that conditionally displays a warning message when both a county and a Tribal Nation are selected.
+     Note: The conditional logic is included in this fragment.
+     This input needs to be a custom input because:
+       - using validation would block the ability to navigate forward
+       - there are no other good input types that could be used to display this warning message
+-->       
+<th:block th:fragment="identifyCountyOrTribalNationWarning (input, data)">
+    <!-- Case: any county and White Earth Nation are selected. -->
+    <div th:if="${data.get(input.name).valid(data) && data.get('county').value.size>0 && data.get('tribalNation').value.size>0 }">
+	    <div th:with="county=${data.get('county').value[0]},
+	                  tribalNation=${data.get('tribalNation').value[0]}">
+			<div th:if="${county != '' AND tribalNation == 'White Earth Nation'}">
+				<div class="text--error less-spacing-above-45 spacing-below-60">
+					<i class="icon-warning"></i>
+					<span th:text="#{identify-county-or-tribal-nation.do-not-select-county-and-wen}"></span>
+				</div>
+			</div>
+    	</div>
+    </div>
+</th:block>
