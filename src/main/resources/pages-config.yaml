@@ -1990,6 +1990,9 @@ pageDefinitions:
               messageKey: select-the-tribe.red-lake
             - value: White Earth Nation
               messageKey: select-the-tribe.white-earth
+      - type: CUSTOM
+        name: bothWenAndCountySelectedWarning
+        customInputFragment: bothWenAndCountySelectedWarning
       - name: notice
         type: NOTICE
         noticeMessage: identify-county.you-can-see-where-your-application
