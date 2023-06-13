@@ -64,8 +64,8 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.goBack();
     assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
     
-    // select any county and White Earth Nation, navigate from identifyCountyOrTribalNation to selectionAssistWEN
-    // click the "back" button on the selectionAssistWEN page and navigate back identifyCountyOrTribalNation
+    // select any county and White Earth Nation, navigate from identifyCountyOrTribalNation to selectionFollowUpWEN
+    // click the "back" button on the selectionFollowUpWEN page and navigate back identifyCountyOrTribalNation
     testPage.enter("county", "Hennepin");
     testPage.enter("tribalNation", "White Earth Nation");
     testPage.clickContinue();
@@ -73,13 +73,14 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.goBack();
     assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
     
-    // click the Edit my selection button on the selectionAssistWEN page and navigate to identifyCountyOrTribalNation
+    // click the Edit my selection button on the selectionFollowUpWEN page and navigate to identifyCountyOrTribalNation
     testPage.enter("county", "Hennepin");
     testPage.enter("tribalNation", "White Earth Nation");
     testPage.clickContinue();
     assertThat(driver.getTitle()).isEqualTo("Selection Follow Up");
     testPage.clickButton("Edit my selection");
     assertThat(driver.getTitle()).isEqualTo("Identify county or Tribal Nation");
+    assertNotNull(testPage.findElementById("identify-county-or-tribal-nation-warning"));
     
     // select any county and Red Lake Nation, navigate from identifyCountyOrTribalNation to matchInfo
     testPage.enter("county", "Hennepin");

@@ -10,7 +10,7 @@
 	    <div th:with="county=${data.get('county').value[0]},
 	                  tribalNation=${data.get('tribalNation').value[0]}">
 			<div th:if="${county != '' AND tribalNation == 'White Earth Nation'}">
-				<div class="text--error less-spacing-above-45 spacing-below-60">
+				<div id="identify-county-or-tribal-nation-warning" class="text--error less-spacing-above-45 spacing-below-60">
 					<i class="icon-warning"></i>
 					<span th:text="#{identify-county-or-tribal-nation.do-not-select-county-and-wen}"></span>
 				</div>
