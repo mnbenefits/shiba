@@ -137,7 +137,7 @@ dependencies {
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.5.0")
     implementation("org.apache.chemistry.opencmis:chemistry-opencmis-client-api:1.1.0")
     implementation("org.apache.chemistry.opencmis:chemistry-opencmis-client-impl:1.1.0")
-    implementation("net.coobird:thumbnailator:0.4.19")
+    implementation("net.coobird:thumbnailator:0.4.20")
     implementation("mobi.openddr.client:openddr-classifier-client:1.4.1")
     implementation("mobi.openddr:openddr-data:1.34")
     
