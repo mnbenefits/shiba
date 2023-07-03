@@ -10,7 +10,7 @@
   
   <div class="grid__item width-one-whole spacing-below-25 text--small">
     <!-- original nextSteps content -->
-    <div class="next-steps"
+    <div class="next-steps" id="original-next-steps"
          th:if="${not @environment.getProperty('feature-flag.enhanced-next-steps') and nextStepSections.size() > 0}">
  
       <th:block th:each="msg: ${nextStepSections}">
