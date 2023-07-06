@@ -242,11 +242,13 @@ html {
 .next-steps-accordion{
 	background-color: #E9F6FF; 
 	border-color: #003964;
+	font-size: 1.9rem;
 }
 
 .next-steps-alt-accordion{
 	background-color: #EEFFE6; 
 	border-color: #008060;
+	font-size: 1.9rem;
 }
 
 .textarea-readonly::-webkit-scrollbar {
