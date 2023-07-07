@@ -1677,6 +1677,9 @@ legend.form-question {
 .accordion--is-closed .accordion__button:after{
     background-image: url(/images/icon_accordion_open.svg);
 }
+.hidden-accordion .hidden-accordion__button:after{
+    background-image: url(/images/icon_accordion_hidden.svg);
+}
 
 .feedback-sentiment-group {
   position: relative;
