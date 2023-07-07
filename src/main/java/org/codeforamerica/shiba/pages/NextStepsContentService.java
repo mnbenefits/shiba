@@ -76,6 +76,29 @@ public class NextStepsContentService {
 
     return messages;
   }
+  
+  public List<NextStepSection> getNextStepsForDocumentUpload(boolean isDocumentUploaded,
+	      Locale locale) {
+	   
+	    LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
+	    List<NextStepSection> messages = new ArrayList<>();
+
+	    // No document uploaded
+	    if (!isDocumentUploaded) {
+	      messages.add(new NextStepSection(PHONE_ICON,
+	          lms.getMessage("success.no-document-upload-message"),
+	          lms.getMessage("success.no-document-upload-title"))
+	      );
+	    }
+	    // Document uploaded
+	    if (isDocumentUploaded) {
+		      messages.add(new NextStepSection(PHONE_ICON,
+		          lms.getMessage("success.document-upload-message"),
+		          lms.getMessage("success.document-upload-title"))
+		      );
+		    }
+	    return messages;
+	  }
 
   private List<String> getNonExpeditedPrograms(
       List<String> programAcronyms,
