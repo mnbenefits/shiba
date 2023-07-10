@@ -61,16 +61,7 @@
 			</button>
 			<th:block th:each="msg: ${nextStepDocumentUpload}">
 				<div class="accordion__content" id="a2">
-					<div class="success-icons grid__item width-one-sixth">
-					<div th:replace="__${msg.icon()}__"
-                 			class="success-icons text--centered width-one-whole"></div>
-                 			</div>
-						<p class="text-25 spacing-below-15">
-							<span th:utext="${msg.title()}"></span>
-						</p>
-						<p class="text-25 spacing-below-15">
-							<span th:utext="${msg.message()}"></span>
-						</p>
+					<span th:utext="${msg.message()}"></span>
 				</div>
 			</th:block>
 		</div>
