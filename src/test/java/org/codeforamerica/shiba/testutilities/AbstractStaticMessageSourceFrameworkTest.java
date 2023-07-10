@@ -43,10 +43,8 @@ public class AbstractStaticMessageSourceFrameworkTest extends AbstractShibaMockM
 		staticMessageSource.addMessage("success.food-support", Locale.ENGLISH, "");
 		staticMessageSource.addMessage("success.contact-promise", Locale.ENGLISH, "");
 		staticMessageSource.addMessage("success.contact-promise-header", Locale.ENGLISH, "");
-		staticMessageSource.addMessage("success.no-document-upload-message", Locale.ENGLISH, "some message");
-		staticMessageSource.addMessage("success.no-document-upload-title", Locale.ENGLISH, "some title");
-		staticMessageSource.addMessage("success.document-upload-message", Locale.ENGLISH, "some message");
-		staticMessageSource.addMessage("success.document-upload-title", Locale.ENGLISH, "some title");
+		staticMessageSource.addMessage("next-steps.no-document-upload-message", Locale.ENGLISH, "some message");
+		staticMessageSource.addMessage("next-steps.document-upload-message", Locale.ENGLISH, "some message");
 		staticMessageSource.addMessage("next-steps.allow-time-for-review", Locale.ENGLISH, "some message");
 		staticMessageSource.addMessage("next-steps.allow-time-for-review-expedited-snap", Locale.ENGLISH, "some message");
 		staticMessageSource.addMessage("next-steps.allow-time-for-review-expedited-ccap", Locale.ENGLISH, "some message");

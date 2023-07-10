@@ -59,11 +59,9 @@
 					</div>
 				</div>
 			</button>
-			<th:block th:each="msg: ${nextStepDocumentUpload}">
 				<div class="accordion__content" id="a2">
-					<span th:utext="${msg.message()}"></span>
+					<span th:utext="${nextStepDocumentUpload}"></span>
 				</div>
-			</th:block>
 		</div>
 	
 		<div class="accordion next-steps-accordion spacing-below-20">
