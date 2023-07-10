@@ -474,6 +474,9 @@ public class PageController {
           .getNextSteps(new ArrayList<>(programs), snapExpeditedEligibility,
               ccapExpeditedEligibility, locale));
       model.put("nextStepDocumentUpload", nextStepsContentService.getNextStepsForDocumentUpload(!applicationData.getUploadedDocs().isEmpty(), locale));
+      model.put("nextStepsAllowTimeForReview", nextStepsContentService
+              .getNextStepsAllowTimeForReview(new ArrayList<>(programs), snapExpeditedEligibility,
+                  ccapExpeditedEligibility, locale));
       }
 
     if (landmarkPagesConfiguration.isTerminalPage(pageName) || landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)) {
