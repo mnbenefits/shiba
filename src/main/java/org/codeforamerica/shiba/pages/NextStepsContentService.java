@@ -114,9 +114,9 @@ public class NextStepsContentService {
 	  	LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
 	  	String allowTimeForReviewMessage = "<p>default getNextStepsAllowTimeForReview message</p>";
 
-	  	if (snapExpeditedEligibility.equals(SnapExpeditedEligibility.ELIGIBLE)) { // case #1 has expedited SNAP
+	  	if (snapExpeditedEligibility!=null && snapExpeditedEligibility.equals(SnapExpeditedEligibility.ELIGIBLE)) { // case #1 has expedited SNAP
 	  	  allowTimeForReviewMessage = lms.getMessage("next-steps.allow-time-for-review-expedited-snap");
-	  	} else if (ccapExpeditedEligibility.equals(CcapExpeditedEligibility.ELIGIBLE)) { // case #2 has expedited CCAP
+	  	} else if (ccapExpeditedEligibility!=null && ccapExpeditedEligibility.equals(CcapExpeditedEligibility.ELIGIBLE)) { // case #2 has expedited CCAP
 	  	  allowTimeForReviewMessage = lms.getMessage("next-steps.allow-time-for-review-expedited-ccap");
 	  	} else { // case #3 has no expedited programs
 	  	  allowTimeForReviewMessage = lms.getMessage("next-steps.allow-time-for-review-not-expedited");
