@@ -1,7 +1,6 @@
 package org.codeforamerica.shiba.pages;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,17 +26,15 @@ import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.ResultActions;
 
 public class NextStepsContentServiceTest extends AbstractPageControllerTest {
-  @Value("${feature-flag.enhanced-next-steps}")
-  private String enhancedNextSteps;
   
   @SuppressWarnings("unused")
   private static Stream<Arguments> successMessageTestCases() {
@@ -172,11 +169,11 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
   @SuppressWarnings("unused")
   @ParameterizedTest(name = "{0}")
   @MethodSource("org.codeforamerica.shiba.pages.NextStepsContentServiceTest#successMessageTestCases")
+  @Disabled("This test is disabled because it requires feature-flag.enhanced-next-steps: off. Remove test in final implementation.")
   void displaysCorrectSuccessMessageForApplicantPrograms(String testName, List<String> programs,
       SnapExpeditedEligibility snapExpeditedEligibility,
       CcapExpeditedEligibility ccapExpeditedEligibility, List<String> expectedMessages)
       throws Exception {
-	assumeTrue(isEnhancedNextSteps());
     setPrograms(programs);
 
     setSubworkflows(new Subworkflows());
@@ -185,8 +182,8 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
   }
 
   @Test
+  @Disabled("This test is disabled because it requires feature-flag.enhanced-next-steps: off. Remove test in final implementation.")
   void displaysCorrectSuccessMessageForHouseholdMemberPrograms() throws Exception {
-	assumeTrue(isEnhancedNextSteps());
     new TestApplicationDataBuilder(applicationData)
         .withApplicantPrograms(List.of("SNAP"))
         .withHouseholdMemberPrograms(List.of("GRH", "EA"));
@@ -206,7 +203,6 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
    * @throws Exception
    */
   void displaysCorrectUploadDocumentsAccordionMessageWhenNoDocumentsUploaded() throws Exception {
-	assumeTrue(isEnhancedNextSteps()); 
 	new TestApplicationDataBuilder(applicationData).withApplicantPrograms(List.of("SNAP"));
 
 	applicationData.setUploadedDocs(Collections.emptyList());
@@ -223,7 +219,6 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
    * @throws Exception
    */
   void displaysCorrectUploadDocumentsAccordionMessageWhenADocumentIsUploaded() throws Exception {
-	assumeTrue(isEnhancedNextSteps());
 	new TestApplicationDataBuilder(applicationData).withApplicantPrograms(List.of("SNAP"));
 
 	UploadedDocument uploadedDocument = new UploadedDocument("paystub.pdf", "1000000001/aaaaaaaa-1111-2222-bbbb-cccccccccccc",
@@ -271,9 +266,4 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
 
     assertThat(nextStepSections).containsExactly(expectedMessages.toArray(new String[0]));
   }
-  
-  private boolean isEnhancedNextSteps() {
-	return false;
-  }
-  
 }
