@@ -253,6 +253,15 @@ html {
 	padding-left: 10px;
 }
 
+.next-steps-text{
+	font-size: 1.9rem;
+	line-height: 2.5rem;
+}
+
+.margin-bottom-0{
+	margin-bottom: 0;
+}
+
 .textarea-readonly::-webkit-scrollbar {
   -webkit-appearance: none;
 }
