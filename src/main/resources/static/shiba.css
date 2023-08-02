@@ -243,7 +243,7 @@ html {
 	background-color: #E9F6FF; 
 	border-color: #003964;
 	font-size: 1.9rem;
-	padding-left: 10px;
+	padding-left: 15px;
 }
 
 .next-steps-alt-accordion{
@@ -1523,7 +1523,7 @@ legend.form-question {
     display: block;
 	margin-right: 2%;
 	width: 25%;
-	min-width: 100px;
+	min-width: 65px;
   }
    .width-one-twelfths {
     float: left;
