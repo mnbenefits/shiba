@@ -40,8 +40,12 @@
 						</div>
 					</div>
 					<div class="grid__item width-seven-twelfths spacing-above-0">
-						<p class="form-card__body-text margin-bottom-0" th:utext="#{next-steps.step-1}"></p>
-					</div>
+						<div class="margin-bottom-0">
+							<div th:utext="#{next-steps.step-1}"></div>
+							<div th:utext="#{next-steps.step-1-apply-once}"></div>
+							<div class="text-normal" th:utext="#{next-steps.step-1-completed}"></div>
+						</div>
+					</div> 
 				</div>
 			</button>
 		</div>
@@ -54,8 +58,11 @@
 							<div th:replace="fragments/icons/icon-next-steps-upload-documents :: icon-next-steps-upload-documents"></div>
 						</div>
 					</div>
-					<div class="grid__item width-seven-twelfths spacing-above-0">
-						<p class="form-card__body-text margin-bottom-0" th:utext="#{next-steps.step-2}"></p>
+					<div class="grid__item width-nine-twelfths spacing-above-0">
+						<div class="margin-bottom-0" >
+							<div th:utext="#{next-steps.step-2}"></div>
+							<div th:utext="#{next-steps.step-2-upload-your-documents}"></div>
+						</div>
 					</div>
 				</div>
 			</button>
@@ -73,7 +80,7 @@
 						</div>
 					</div>
 					<div class="grid__item width-seven-twelfths spacing-above-0">
-						<p class="form-card__body-text margin-bottom-0" th:utext="#{next-steps.allow-time-for-review}"></p>
+						<p class="margin-bottom-0" th:utext="#{next-steps.allow-time-for-review}"></p>
 					</div>
 				</div>
 			</button>
@@ -99,7 +106,7 @@
 						</div>
 					</div>
 					<div class="grid__item width-seven-twelfths spacing-above-0">
-						<p class="form-card__body-text margin-bottom-0" th:utext="#{next-steps.step-4}"></p>
+						<p class="margin-bottom-0" th:utext="#{next-steps.step-4}"></p>
 					</div>
 				</div>
 			</button>

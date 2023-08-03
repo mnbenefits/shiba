@@ -1714,9 +1714,20 @@ legend.form-question {
   opacity: 0;
 }
 
+.text-normal {
+	font-weight: normal;
+}
+
 .text-bold {
 	font-weight: bold;
 }
+
+.width-nine-twelfths{
+	float:left;
+	display:block;
+	/*margin-right:2.3576520234%;*/
+	width:75%
+} 
 
 .delayed-processing-time-notice-box {
   width: 100%;
