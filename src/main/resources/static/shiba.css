@@ -258,6 +258,14 @@ html {
 	line-height: 2.5rem;
 }
 
+.grid .width-twenty-percent{
+	float:left;
+	display:block;
+	margin-right:2.3576520234%;
+	min-width: 65px;
+	width: 20%;
+}
+
 .margin-bottom-0{
 	margin-bottom: 0;
 }
