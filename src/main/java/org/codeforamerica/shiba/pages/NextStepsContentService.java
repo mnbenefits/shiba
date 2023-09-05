@@ -8,8 +8,11 @@ import static org.codeforamerica.shiba.Program.SNAP;
 import static org.codeforamerica.shiba.internationalization.InternationalizationUtils.listToString;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import org.codeforamerica.shiba.RoutingDestinationMessageService;
 import org.codeforamerica.shiba.internationalization.LocaleSpecificMessageSource;
 import org.codeforamerica.shiba.output.caf.CcapExpeditedEligibility;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility;
@@ -32,7 +35,9 @@ public class NextStepsContentService {
   public List<NextStepSection> getNextSteps(List<String> programs,
       SnapExpeditedEligibility snapExpeditedEligibility,
       CcapExpeditedEligibility ccapExpeditedEligibility,
-      Locale locale) {
+      Locale locale,
+      String routingDestinationWithPhone,
+      String routingDestinationNoPhone) {
     boolean isSnapExpeditedEligible = snapExpeditedEligibility == SnapExpeditedEligibility.ELIGIBLE;
     boolean isCcapExpeditedEligible = ccapExpeditedEligibility == CcapExpeditedEligibility.ELIGIBLE;
 
@@ -40,18 +45,19 @@ public class NextStepsContentService {
     List<NextStepSection> messages = new ArrayList<>();
 
     // Expedited Snap timing
-    if (isSnapExpeditedEligible) {
+    // Default to SNAP expedited if both are true
+    if (isSnapExpeditedEligible) {      
       messages.add(new NextStepSection(PHONE_ICON,
-          lms.getMessage("success.expedited-snap-timing"),
-          lms.getMessage("success.expedited-snap-timing-header"))
+          lms.getMessage("email.SNAP-expedited", Arrays.asList(routingDestinationNoPhone, routingDestinationWithPhone)),
+          lms.getMessage("email.allow-time-for-a-worker"))
       );
     }
 
     // Expedited Ccap timing
-    if (isCcapExpeditedEligible) {
+    if (isCcapExpeditedEligible && !isSnapExpeditedEligible) {
       messages.add(new NextStepSection(LETTER_ICON,
-          lms.getMessage("success.expedited-ccap-timing"),
-          lms.getMessage("success.expedited-ccap-timing-header"))
+          lms.getMessage("email.CCAP-expedited", Arrays.asList(routingDestinationNoPhone, routingDestinationWithPhone)),
+          lms.getMessage("email.allow-time-for-a-worker"))
       );
     }
 
@@ -59,10 +65,9 @@ public class NextStepsContentService {
     List<String> nonExpeditedPrograms =
         getNonExpeditedPrograms(programs, isSnapExpeditedEligible, isCcapExpeditedEligible, lms);
     if (!nonExpeditedPrograms.isEmpty()) {
-      String humanReadableProgramList = listToString(nonExpeditedPrograms, lms);
       messages.add(new NextStepSection(LETTER_ICON,
-          lms.getMessage("success.contact-promise", List.of(humanReadableProgramList)),
-          lms.getMessage("success.contact-promise-header")));
+          lms.getMessage("email.not-expedited", Arrays.asList(routingDestinationNoPhone, routingDestinationWithPhone)),
+          lms.getMessage("email.allow-time-for-a-worker")));
     }
 
     // Suggested Action

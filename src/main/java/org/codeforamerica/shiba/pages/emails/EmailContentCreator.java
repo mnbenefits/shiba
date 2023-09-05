@@ -99,21 +99,27 @@ public class EmailContentCreator {
       routingDestinations.addAll(routingDestinationsForThisDoc);
     });
     
-    // Generate human-readable list of routing destinations for success page
-    String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
+    // Generate human-readable list of routing destinations with phone numbers for success page
+    String finalDestinationListPhone = routingDestinationMessageService.generatePhrase(locale,
         application.getCounty(),
         true,
         new ArrayList<>(routingDestinations));
     
+    // Generate human-readable list of routing destinations with phone numbers for success page
+    String finalDestinationListNoPhone = routingDestinationMessageService.generatePhrase(locale,
+        application.getCounty(),
+        false,
+        new ArrayList<>(routingDestinations));
+    
     String nextSteps = nextStepsContentService
-        .getNextSteps(programs, snapExpeditedEligibility, ccapExpeditedEligibility, locale).stream()
+        .getNextSteps(programs, snapExpeditedEligibility, ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone).stream()
         .map(NextStepSection::message)
         .collect(Collectors.joining("<br><br>"));
 
     var additionalSupport = lms.getMessage(ADDITIONAL_SUPPORT);
     
     String content = lms.getMessage(CLIENT_BODY,
-        List.of(confirmationId, "<br><br>" + nextSteps, additionalSupport, finalDestinationList, formattedTime));
+        List.of(confirmationId, "<br><br>" + nextSteps, additionalSupport, finalDestinationListPhone, formattedTime));
 
     String docRecs = getDocumentRecommendations(applicationData, locale, lms,
         CONFIRMATION_EMAIL_DOC_RECS);
@@ -179,10 +185,34 @@ public class EmailContentCreator {
 
   public String createNextStepsEmail(List<String> programs,
       SnapExpeditedEligibility snapExpeditedEligibility,
-      CcapExpeditedEligibility ccapExpeditedEligibility, Locale locale) {
+      CcapExpeditedEligibility ccapExpeditedEligibility, Locale locale,
+      String applicationID) {
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
+    Application application = applicationRepository.find(applicationID);
+    ApplicationData applicationData = application.getApplicationData();
+    
+    // Get all routing destinations for this application
+    Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
+    DocumentListParser.parse(applicationData).forEach(doc -> {
+      List<RoutingDestination> routingDestinationsForThisDoc =
+          routingDecisionService.getRoutingDestinations(applicationData, doc);
+      routingDestinations.addAll(routingDestinationsForThisDoc);
+    });
+    
+    // Generate human-readable list of routing destinations with phone numbers for success page
+    String finalDestinationListPhone = routingDestinationMessageService.generatePhrase(locale,
+        application.getCounty(),
+        true,
+        new ArrayList<>(routingDestinations));
+    
+    // Generate human-readable list of routing destinations with phone numbers for success page
+    String finalDestinationListNoPhone = routingDestinationMessageService.generatePhrase(locale,
+        application.getCounty(),
+        false,
+        new ArrayList<>(routingDestinations));
+    
     var sections = nextStepsContentService.getNextSteps(programs, snapExpeditedEligibility,
-        ccapExpeditedEligibility, locale);
+        ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone);
 
     sections.add(new NextStepSection("", lms.getMessage(ADDITIONAL_SUPPORT),
         lms.getMessage("email.you-may-be-able-to-receive-more-support-header")));

@@ -479,11 +479,33 @@ public class PageController {
     model.put("totalMilestones", programs.contains(Program.CERTAIN_POPS) ? "7" : "6");
 
     if (landmarkPagesConfiguration.isPostSubmitPage(pageName)) {
+		Application application = applicationRepository.find(applicationData.getId());
+		// Get all routing destinations for this application
+	    Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
+	    DocumentListParser.parse(applicationData).forEach(doc -> {
+	      List<RoutingDestination> routingDestinationsForThisDoc =
+	          routingDecisionService.getRoutingDestinations(applicationData, doc);
+	      routingDestinations.addAll(routingDestinationsForThisDoc);
+	    });
+	
+	    // Generate human-readable list of routing destinations for success page
+	    String finalDestinationListWithPhone = routingDestinationMessageService.generatePhrase(locale,
+	        application.getCounty(),
+	        true,
+	        new ArrayList<>(routingDestinations));
+	    
+	    // Generate human-readable list of routing destinations for success page
+	    String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
+	        application.getCounty(),
+	        false,
+	        new ArrayList<>(routingDestinations));
+    	
+    	
       model.put("docRecommendations", docRecommendationMessageService
           .getPageSpecificRecommendationsMessage(applicationData, locale));
       model.put("nextStepSections", nextStepsContentService
           .getNextSteps(new ArrayList<>(programs), snapExpeditedEligibility,
-              ccapExpeditedEligibility, locale));
+              ccapExpeditedEligibility, locale, finalDestinationListWithPhone, finalDestinationList));
       model.put("nextStepsDocumentUpload", nextStepsContentService
               .getNextStepsForDocumentUpload(!applicationData.getUploadedDocs().isEmpty(), locale));
       model.put("nextStepsAllowTimeForReview", nextStepsContentService

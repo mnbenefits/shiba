@@ -113,7 +113,8 @@ public class MailGunEmailClient implements EmailClient {
         programs,
         snapExpeditedEligibility,
         ccapExpeditedEligibility,
-        locale);
+        locale,
+        applicationId);
     sendEmail(subject, senderEmail, recipientEmail, emailContent, emptyList());
     log.info("Next steps email sent for " + applicationId);
   }
