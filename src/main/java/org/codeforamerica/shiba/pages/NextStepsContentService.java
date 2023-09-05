@@ -44,6 +44,18 @@ public class NextStepsContentService {
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
     List<NextStepSection> messages = new ArrayList<>();
 
+    messages.add(new NextStepSection("",
+    	lms.getMessage("email.you-submitted", Arrays.asList(routingDestinationNoPhone)),
+        ""));
+    
+    messages.add(new NextStepSection("",
+    	lms.getMessage("email.your-next-steps"),
+    	lms.getMessage("email.whats-next")));
+    
+    messages.add(new NextStepSection("",
+    	lms.getMessage("email.do-you-want-to-send-in-documents"),
+    	lms.getMessage("email.upload-your-documents")));
+    
     // Expedited Snap timing
     // Default to SNAP expedited if both are true
     if (isSnapExpeditedEligible) {      
@@ -70,14 +82,13 @@ public class NextStepsContentService {
           lms.getMessage("email.allow-time-for-a-worker")));
     }
 
-    // Suggested Action
-    String suggestedAction = lms.getMessage("success.standard-suggested-action");
-    if (isSnapExpeditedEligible && !programs.contains(CCAP)) {
-      suggestedAction = lms.getMessage("success.expedited-snap-suggested-action");
-    }
     messages.add(new NextStepSection(COMMUNICATE_ICON,
-        suggestedAction,
-        lms.getMessage("success.suggested-action-header")));
+    	lms.getMessage("email.mental-health-crisis"),
+        lms.getMessage("email.need-help-now")));
+    
+    messages.add(new NextStepSection(COMMUNICATE_ICON,
+    	lms.getMessage("email.visit-faqs"),
+        lms.getMessage("email.have-other-questions")));
 
     return messages;
   }
