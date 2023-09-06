@@ -160,11 +160,12 @@ class MailGunEmailClientTest {
     var applicationData = new ApplicationData();
     String recipientEmail = "someRecipient";
     String emailContent = "content";
+    String applicationId = "applicationId";
     SnapExpeditedEligibility snapExpeditedEligibility = ELIGIBLE;
     CcapExpeditedEligibility ccapExpeditedEligibility = CcapExpeditedEligibility.ELIGIBLE;
     String confirmationId = "someConfirmationId";
     when(emailContentCreator.createNextStepsEmail(programs,
-        snapExpeditedEligibility, ccapExpeditedEligibility, ENGLISH)).thenReturn(emailContent);
+        snapExpeditedEligibility, ccapExpeditedEligibility, ENGLISH, applicationId)).thenReturn(emailContent);
 
     wireMockServer.stubFor(post(anyUrl())
         .willReturn(aResponse().withStatus(200)));

@@ -214,11 +214,11 @@ public class EmailContentCreator {
     var sections = nextStepsContentService.getNextSteps(programs, snapExpeditedEligibility,
         ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone);
 
-    sections.add(new NextStepSection("", lms.getMessage(ADDITIONAL_SUPPORT),
-        lms.getMessage("email.you-may-be-able-to-receive-more-support-header")));
+//    sections.add(new NextStepSection("", lms.getMessage(ADDITIONAL_SUPPORT),
+//        lms.getMessage("email.you-may-be-able-to-receive-more-support-header")));TODO emj delete?
 
     String content = sections.stream()
-        .map(nextStepSection -> "<strong>" + nextStepSection.title() + ":</strong><br>"
+        .map(nextStepSection -> "<strong>" + nextStepSection.title() + "</strong><br>"
             + nextStepSection.message())
         .collect(Collectors.joining("<br><br>"));
 

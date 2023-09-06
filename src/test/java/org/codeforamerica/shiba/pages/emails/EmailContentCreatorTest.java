@@ -275,11 +275,13 @@ class EmailContentCreatorTest {
   @Test
   void shouldCreateNextStepsEmail() {
     programs = List.of(CCAP, EA, SNAP);
+    String applicationId = "applicationId";
     String emailContent = emailContentCreator.createNextStepsEmail(
         programs,
         SnapExpeditedEligibility.ELIGIBLE,
         CcapExpeditedEligibility.ELIGIBLE,
-        ENGLISH);
+        ENGLISH,
+        applicationId);
     assertThat(emailContent).contains(
         "<html><body><strong>You May Be Eligible for Expedited SNAP:</strong><br>Within 24 hours, <strong>expect "
         + "a call</strong> from your county or Tribal Nation about your food assistance application.<br><br>"
