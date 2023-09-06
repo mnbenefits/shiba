@@ -76,7 +76,7 @@ public class NextStepsContentService {
     // Contact Promise for all programs they are not expedited for
     List<String> nonExpeditedPrograms =
         getNonExpeditedPrograms(programs, isSnapExpeditedEligible, isCcapExpeditedEligible, lms);
-    if (!nonExpeditedPrograms.isEmpty()) {
+    if (!nonExpeditedPrograms.isEmpty() && !isSnapExpeditedEligible && !isCcapExpeditedEligible) {
       messages.add(new NextStepSection(LETTER_ICON,
           lms.getMessage("email.not-expedited", Arrays.asList(routingDestinationNoPhone, routingDestinationWithPhone)),
           lms.getMessage("email.allow-time-for-a-worker")));

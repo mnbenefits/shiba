@@ -218,7 +218,7 @@ public class EmailContentCreator {
 //        lms.getMessage("email.you-may-be-able-to-receive-more-support-header")));TODO emj delete?
 
     String content = sections.stream()
-        .map(nextStepSection -> "<strong>" + nextStepSection.title() + "</strong><br>"
+        .map(nextStepSection -> nextStepSection.title() + "<br>"
             + nextStepSection.message())
         .collect(Collectors.joining("<br><br>"));
 

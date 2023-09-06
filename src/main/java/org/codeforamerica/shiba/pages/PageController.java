@@ -488,18 +488,23 @@ public class PageController {
 	      routingDestinations.addAll(routingDestinationsForThisDoc);
 	    });
 	
+	    String finalDestinationListWithPhone = null;
+	    String finalDestinationList = null;
+	    if(!application.getCounty().name().equalsIgnoreCase("Other")) {
+	    	//TODO emj do this differently? On select county page this will fail because
+	    	//county hasn't been selected yet.
 	    // Generate human-readable list of routing destinations for success page
-	    String finalDestinationListWithPhone = routingDestinationMessageService.generatePhrase(locale,
+	    finalDestinationListWithPhone = routingDestinationMessageService.generatePhrase(locale,
 	        application.getCounty(),
 	        true,
 	        new ArrayList<>(routingDestinations));
 	    
 	    // Generate human-readable list of routing destinations for success page
-	    String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
+	     finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
 	        application.getCounty(),
 	        false,
 	        new ArrayList<>(routingDestinations));
-    	
+	    }
     	
       model.put("docRecommendations", docRecommendationMessageService
           .getPageSpecificRecommendationsMessage(applicationData, locale));
