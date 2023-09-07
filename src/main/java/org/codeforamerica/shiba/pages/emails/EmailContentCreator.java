@@ -112,7 +112,7 @@ public class EmailContentCreator {
         new ArrayList<>(routingDestinations));
     
     String nextSteps = nextStepsContentService
-        .getNextSteps(programs, snapExpeditedEligibility, ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone).stream()
+        .createNextStepsForEmail(programs, snapExpeditedEligibility, ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone).stream()
         .map(NextStepSection::message)
         .collect(Collectors.joining("<br><br>"));
 
@@ -187,7 +187,7 @@ public class EmailContentCreator {
       SnapExpeditedEligibility snapExpeditedEligibility,
       CcapExpeditedEligibility ccapExpeditedEligibility, Locale locale,
       String applicationID) {
-    LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
+ //   LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
     Application application = applicationRepository.find(applicationID);
     ApplicationData applicationData = application.getApplicationData();
     
@@ -211,7 +211,7 @@ public class EmailContentCreator {
         false,
         new ArrayList<>(routingDestinations));
     
-    var sections = nextStepsContentService.getNextSteps(programs, snapExpeditedEligibility,
+    var sections = nextStepsContentService.createNextStepsForEmail(programs, snapExpeditedEligibility,
         ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone);
 
 //    sections.add(new NextStepSection("", lms.getMessage(ADDITIONAL_SUPPORT),

@@ -32,7 +32,7 @@ public class NextStepsContentService {
     this.messageSource = messageSource;
   }
 
-  public List<NextStepSection> getNextSteps(List<String> programs,
+  public List<NextStepSection> createNextStepsForEmail(List<String> programs,
       SnapExpeditedEligibility snapExpeditedEligibility,
       CcapExpeditedEligibility ccapExpeditedEligibility,
       Locale locale,
@@ -92,6 +92,54 @@ public class NextStepsContentService {
 
     return messages;
   }
+  
+  public List<NextStepSection> createSectionsForNextStepsPage(List<String> programs,
+	      SnapExpeditedEligibility snapExpeditedEligibility,
+	      CcapExpeditedEligibility ccapExpeditedEligibility,
+	      Locale locale) {
+	    boolean isSnapExpeditedEligible = snapExpeditedEligibility == SnapExpeditedEligibility.ELIGIBLE;
+	    boolean isCcapExpeditedEligible = ccapExpeditedEligibility == CcapExpeditedEligibility.ELIGIBLE;
+
+	    LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
+	    List<NextStepSection> messages = new ArrayList<>();
+
+	    // Expedited Snap timing
+	    if (isSnapExpeditedEligible) {
+	      messages.add(new NextStepSection(PHONE_ICON,
+	          lms.getMessage("success.expedited-snap-timing"),
+	          lms.getMessage("success.expedited-snap-timing-header"))
+	      );
+	    }
+
+	    // Expedited Ccap timing
+	    if (isCcapExpeditedEligible) {
+	      messages.add(new NextStepSection(LETTER_ICON,
+	          lms.getMessage("success.expedited-ccap-timing"),
+	          lms.getMessage("success.expedited-ccap-timing-header"))
+	      );
+	    }
+
+	    // Contact Promise for all programs they are not expedited for
+	    List<String> nonExpeditedPrograms =
+	        getNonExpeditedPrograms(programs, isSnapExpeditedEligible, isCcapExpeditedEligible, lms);
+	    if (!nonExpeditedPrograms.isEmpty()) {
+	      String humanReadableProgramList = listToString(nonExpeditedPrograms, lms);
+	      messages.add(new NextStepSection(LETTER_ICON,
+	          lms.getMessage("success.contact-promise", List.of(humanReadableProgramList)),
+	          lms.getMessage("success.contact-promise-header")));
+	    }
+
+	    // Suggested Action
+	    String suggestedAction = lms.getMessage("success.standard-suggested-action");
+	    if (isSnapExpeditedEligible && !programs.contains(CCAP)) {
+	      suggestedAction = lms.getMessage("success.expedited-snap-suggested-action");
+	    }
+	    messages.add(new NextStepSection(COMMUNICATE_ICON,
+	        suggestedAction,
+	        lms.getMessage("success.suggested-action-header")));
+
+	    return messages;
+	  }
   
   public List<NextStepSection> getNextStepsForDocumentUpload(boolean isDocumentUploaded,
 	      Locale locale) {
