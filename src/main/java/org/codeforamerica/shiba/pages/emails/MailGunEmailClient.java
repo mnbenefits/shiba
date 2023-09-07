@@ -119,12 +119,6 @@ public class MailGunEmailClient implements EmailClient {
     log.info("Next steps email sent for " + applicationId);
   }
 
-  @Override
-  public void sendDownloadCafAlertEmail(String confirmationId, String ip, Locale locale) {
-    var emailBody = emailContentCreator.createDownloadCafAlertContent(confirmationId, ip, locale);
-    sendEmailFromFormData("Caseworker CAF downloaded", securityEmail, auditEmail, emailBody);
-    log.info("Download CAF Alert Email sent for " + confirmationId);
-  }
 
   @Override
   public void sendLaterDocsConfirmationEmail(Application application, String confirmationId, String recipientEmail, Locale locale) {

@@ -190,28 +190,6 @@ class MailGunEmailClientTest {
   }
 
   @Test
-  void sendsDownloadCafAlertEmail() {
-    String emailContent = "content";
-    String confirmationId = "confirmation id";
-    String ip = "some ip";
-
-    when(emailContentCreator.createDownloadCafAlertContent(confirmationId, ip, ENGLISH))
-        .thenReturn(emailContent);
-
-    wireMockServer.stubFor(post(anyUrl()).willReturn(aResponse().withStatus(200)));
-
-    mailGunEmailClient.sendDownloadCafAlertEmail(confirmationId, ip, ENGLISH);
-
-    wireMockServer.verify(postToMailgun()
-        .withBasicAuth(credentials)
-        .withRequestBody(containing(String.format("from=%s", securityEmail)))
-        .withRequestBody(containing(String.format("to=%s", auditEmail)))
-        .withRequestBody(containing(String.format("subject=%s", "Caseworker+CAF+downloaded")))
-        .withRequestBody(containing(String.format("html=%s", emailContent)))
-    );
-  }
-
-  @Test
   void sendResubmitEmail() {
     wireMockServer.stubFor(post(anyUrl()).willReturn(aResponse().withStatus(200)));
 

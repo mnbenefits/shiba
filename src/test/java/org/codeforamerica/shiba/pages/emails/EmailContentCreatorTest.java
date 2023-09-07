@@ -177,29 +177,6 @@ class EmailContentCreatorTest {
     assertThat(emailContent).contains(eligibilityContent);
   }
 
-  @Test
-  void shouldIncludeConfirmationIdAndIpWhenSendingDownloadAlert() {
-    String confirmationId = "confirmation ID";
-    String ip = "123.123.123.123";
-    String content = emailContentCreator
-        .createDownloadCafAlertContent(confirmationId, ip, ENGLISH);
-
-    assertThat(content).isEqualTo(
-        "The CAF with confirmation number confirmation ID was downloaded from IP address 123.123.123.123.");
-  }
-
-  @Test
-  void shouldCreateNonCountyPartnerAlertEmail() {
-    String confirmationId = "confirm Id";
-    ZonedDateTime submissionTime = ZonedDateTime
-        .of(LocalDateTime.of(2020, 1, 1, 11, 10), ZoneOffset.UTC);
-    String nonCountyPartnerAlertEmailContent = emailContentCreator
-        .createNonCountyPartnerAlert(confirmationId, submissionTime, ENGLISH);
-
-    assertThat(nonCountyPartnerAlertEmailContent).isEqualTo(
-        "Application confirm Id was submitted at 01/01/2020 05:10."
-    );
-  }
 
   @Test
   void shouldCreateLaterDocsConfirmationEmail() {
