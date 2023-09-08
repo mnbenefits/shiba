@@ -93,6 +93,63 @@ public class NextStepsContentService {
     return messages;
   }
   
+  public List<NextStepSection> createNextStepsForFullConfirmationEmail(List<String> programs,
+      SnapExpeditedEligibility snapExpeditedEligibility,
+      CcapExpeditedEligibility ccapExpeditedEligibility,
+      Locale locale,
+      String routingDestinationWithPhone,
+      String routingDestinationNoPhone) {
+    boolean isSnapExpeditedEligible = snapExpeditedEligibility == SnapExpeditedEligibility.ELIGIBLE;
+    boolean isCcapExpeditedEligible = ccapExpeditedEligibility == CcapExpeditedEligibility.ELIGIBLE;
+
+    LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
+    List<NextStepSection> messages = new ArrayList<>();
+    
+    messages.add(new NextStepSection("",
+    	lms.getMessage("email.your-next-steps"),
+    	lms.getMessage("email.whats-next")));
+    
+    messages.add(new NextStepSection("",
+    	lms.getMessage("email.do-you-want-to-send-in-documents"),
+    	lms.getMessage("email.upload-your-documents")));
+    
+    // Expedited Snap timing
+    // Default to SNAP expedited if both are true
+    if (isSnapExpeditedEligible) {      
+      messages.add(new NextStepSection(PHONE_ICON,
+          lms.getMessage("email.SNAP-expedited", Arrays.asList(routingDestinationNoPhone, routingDestinationWithPhone)),
+          lms.getMessage("email.allow-time-for-a-worker"))
+      );
+    }
+
+    // Expedited Ccap timing
+    if (isCcapExpeditedEligible && !isSnapExpeditedEligible) {
+      messages.add(new NextStepSection(LETTER_ICON,
+          lms.getMessage("email.CCAP-expedited", Arrays.asList(routingDestinationNoPhone, routingDestinationWithPhone)),
+          lms.getMessage("email.allow-time-for-a-worker"))
+      );
+    }
+
+    // Contact Promise for all programs they are not expedited for
+    List<String> nonExpeditedPrograms =
+        getNonExpeditedPrograms(programs, isSnapExpeditedEligible, isCcapExpeditedEligible, lms);
+    if (!nonExpeditedPrograms.isEmpty() && !isSnapExpeditedEligible && !isCcapExpeditedEligible) {
+      messages.add(new NextStepSection(LETTER_ICON,
+          lms.getMessage("email.not-expedited", Arrays.asList(routingDestinationNoPhone, routingDestinationWithPhone)),
+          lms.getMessage("email.allow-time-for-a-worker")));
+    }
+
+    messages.add(new NextStepSection(COMMUNICATE_ICON,
+    	lms.getMessage("email.mental-health-crisis"),
+        lms.getMessage("email.need-help-now")));
+    
+    messages.add(new NextStepSection(COMMUNICATE_ICON,
+    	lms.getMessage("email.visit-faqs"),
+        lms.getMessage("email.have-other-questions")));
+
+    return messages;
+  }
+  
   public List<NextStepSection> createSectionsForNextStepsPage(List<String> programs,
 	      SnapExpeditedEligibility snapExpeditedEligibility,
 	      CcapExpeditedEligibility ccapExpeditedEligibility,

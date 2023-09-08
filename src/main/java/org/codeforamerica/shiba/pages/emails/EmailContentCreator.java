@@ -111,15 +111,16 @@ public class EmailContentCreator {
         false,
         new ArrayList<>(routingDestinations));
     
-    String nextSteps = nextStepsContentService
-        .createNextStepsForEmail(programs, snapExpeditedEligibility, ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone).stream()
-        .map(NextStepSection::message)
-        .collect(Collectors.joining("<br><br>"));
-
-    var additionalSupport = lms.getMessage(ADDITIONAL_SUPPORT);
+    var sections = nextStepsContentService.createNextStepsForFullConfirmationEmail(programs, snapExpeditedEligibility,
+            ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone);
+    
+    String nextStepsContent = sections.stream()
+            .map(nextStepSection -> nextStepSection.title() + "<br>"
+                + nextStepSection.message())
+            .collect(Collectors.joining("<br><br>"));
     
     String content = lms.getMessage(CLIENT_BODY,
-        List.of(confirmationId, "<br><br>" + nextSteps, additionalSupport, finalDestinationListPhone, formattedTime));
+        List.of(confirmationId, "<br><br>" + nextStepsContent, "", finalDestinationListPhone, formattedTime));
 
     String docRecs = getDocumentRecommendations(applicationData, locale, lms,
         CONFIRMATION_EMAIL_DOC_RECS);
