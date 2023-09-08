@@ -13,8 +13,6 @@ import static java.util.Locale.ENGLISH;
 import static org.codeforamerica.shiba.County.Hennepin;
 import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
-import static org.codeforamerica.shiba.output.caf.CcapExpeditedEligibility.UNDETERMINED;
-import static org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility.ELIGIBLE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -83,7 +81,6 @@ class MailGunEmailClientTest {
   int port;
   BasicCredentials credentials;
   List<String> programs;
-  CcapExpeditedEligibility ccapExpeditedEligibility = UNDETERMINED;
   @Autowired
   private MessageSource messageSource;
   @Value("${spring.profiles.active}")
@@ -91,6 +88,7 @@ class MailGunEmailClientTest {
 
   @BeforeEach
   void setUp() {
+	programs = List.of(Program.SNAP);
     emailContentCreator = mock(EmailContentCreator.class);
 
     WireMockConfiguration options = WireMockConfiguration.wireMockConfig().dynamicPort();
@@ -101,14 +99,12 @@ class MailGunEmailClientTest {
     WireMock.configureFor(port);
     mailGunEmailClient = new MailGunEmailClient(
         senderEmail,
-        securityEmail,
-        auditEmail,
         "http://localhost:" + port,
         mailGunApiKey,
         emailContentCreator,
         activeProfile,
         messageSource);
-    programs = List.of(Program.SNAP);
+    
     credentials = new BasicCredentials("api", mailGunApiKey);
   }
 
@@ -122,7 +118,7 @@ class MailGunEmailClientTest {
     var applicationData = new ApplicationData();
     String recipientEmail = "someRecipient";
     String emailContent = "content";
-    SnapExpeditedEligibility snapExpeditedEligibility = ELIGIBLE;
+    SnapExpeditedEligibility snapExpeditedEligibility = SnapExpeditedEligibility.ELIGIBLE;
     CcapExpeditedEligibility ccapExpeditedEligibility = CcapExpeditedEligibility.ELIGIBLE;
     String confirmationId = "someConfirmationId";
     when(emailContentCreator.createFullClientConfirmationEmail(applicationData,
@@ -158,14 +154,15 @@ class MailGunEmailClientTest {
   @Test
   void sendsNextStepsEmail() {
     var applicationData = new ApplicationData();
+    applicationData.setId(activeProfile);
     String recipientEmail = "someRecipient";
     String emailContent = "content";
+    List<String> program = List.of(Program.SNAP);
     String applicationId = "applicationId";
-    SnapExpeditedEligibility snapExpeditedEligibility = ELIGIBLE;
+    SnapExpeditedEligibility snapExpeditedEligibility = SnapExpeditedEligibility.ELIGIBLE;
     CcapExpeditedEligibility ccapExpeditedEligibility = CcapExpeditedEligibility.ELIGIBLE;
-    String confirmationId = "someConfirmationId";
-    when(emailContentCreator.createNextStepsEmail(programs,
-        snapExpeditedEligibility, ccapExpeditedEligibility, ENGLISH, applicationId)).thenReturn(emailContent);
+    when(emailContentCreator.createNextStepsEmail(program,
+            snapExpeditedEligibility, ccapExpeditedEligibility, ENGLISH, applicationId)).thenReturn(emailContent);
 
     wireMockServer.stubFor(post(anyUrl())
         .willReturn(aResponse().withStatus(200)));
@@ -174,7 +171,7 @@ class MailGunEmailClientTest {
     String fileName = "someFileName";
     mailGunEmailClient.sendNextStepsEmail(applicationData,
         recipientEmail,
-        confirmationId,
+        applicationId,
         List.of(Program.SNAP),
         snapExpeditedEligibility,
         ccapExpeditedEligibility,
@@ -184,7 +181,7 @@ class MailGunEmailClientTest {
         .withBasicAuth(credentials)
         .withRequestBodyPart(requestBodyPart("from", senderEmail))
         .withRequestBodyPart(requestBodyPart("to", recipientEmail))
-        .withRequestBodyPart(requestBodyPart("subject", "Next Steps: Your MNBenefits Application"))
+        .withRequestBodyPart(requestBodyPart("subject", "Next Steps: Your MNbenefits Application"))
         .withRequestBodyPart(requestBodyPart("html", emailContent))
     );
   }
@@ -285,8 +282,6 @@ class MailGunEmailClientTest {
       WireMock.configureFor(port);
       mailGunEmailClient = new MailGunEmailClient(
           senderEmail,
-          securityEmail,
-          auditEmail,
           "http://localhost:" + port,
           mailGunApiKey,
           emailContentCreator,
@@ -299,7 +294,8 @@ class MailGunEmailClientTest {
       var applicationData = new ApplicationData();
       String recipientEmail = "someRecipient";
       String emailContent = "content";
-      SnapExpeditedEligibility snapExpeditedEligibility = ELIGIBLE;
+      SnapExpeditedEligibility snapExpeditedEligibility = SnapExpeditedEligibility.ELIGIBLE;
+      CcapExpeditedEligibility ccapExpeditedEligibility = CcapExpeditedEligibility.ELIGIBLE;
       String confirmationId = "someConfirmationId";
       when(emailContentCreator.createFullClientConfirmationEmail(applicationData,
           confirmationId,

@@ -33,8 +33,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class MailGunEmailClient implements EmailClient {
 
   private final String senderEmail;
-  private final String securityEmail;
-  private final String auditEmail;
   private final String mailGunApiKey;
   private final EmailContentCreator emailContentCreator;
   private final WebClient webClient;
@@ -42,8 +40,6 @@ public class MailGunEmailClient implements EmailClient {
   private final MessageSource messageSource;
 
   public MailGunEmailClient(@Value("${sender-email}") String senderEmail,
-      @Value("${security-email}") String securityEmail,
-      @Value("${audit-email}") String auditEmail,
       @Value("${mail-gun.url}") String mailGunUrl,
       @Value("${mail-gun.api-key}") String mailGunApiKey,
       EmailContentCreator emailContentCreator,
@@ -51,8 +47,6 @@ public class MailGunEmailClient implements EmailClient {
       MessageSource messageSource
   ) {
     this.senderEmail = senderEmail;
-    this.securityEmail = securityEmail;
-    this.auditEmail = auditEmail;
     this.mailGunApiKey = mailGunApiKey;
     this.emailContentCreator = emailContentCreator;
     this.webClient = WebClient.builder().baseUrl(mailGunUrl).build();

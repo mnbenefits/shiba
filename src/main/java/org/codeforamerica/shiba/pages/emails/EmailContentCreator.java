@@ -187,7 +187,6 @@ public class EmailContentCreator {
       SnapExpeditedEligibility snapExpeditedEligibility,
       CcapExpeditedEligibility ccapExpeditedEligibility, Locale locale,
       String applicationID) {
- //   LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
     Application application = applicationRepository.find(applicationID);
     ApplicationData applicationData = application.getApplicationData();
     
@@ -213,9 +212,6 @@ public class EmailContentCreator {
     
     var sections = nextStepsContentService.createNextStepsForEmail(programs, snapExpeditedEligibility,
         ccapExpeditedEligibility, locale, finalDestinationListPhone, finalDestinationListNoPhone);
-
-//    sections.add(new NextStepSection("", lms.getMessage(ADDITIONAL_SUPPORT),
-//        lms.getMessage("email.you-may-be-able-to-receive-more-support-header")));TODO emj delete?
 
     String content = sections.stream()
         .map(nextStepSection -> nextStepSection.title() + "<br>"
