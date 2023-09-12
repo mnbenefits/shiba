@@ -172,7 +172,6 @@ class EmailContentCreatorTest {
         SnapExpeditedEligibility.UNDETERMINED,
         CcapExpeditedEligibility.UNDETERMINED,
         ENGLISH);
-    System.out.println(emailContent);//TODO emj delete
     assertThat(emailContent).contains(eligibilityContent);
   }
 
@@ -340,7 +339,6 @@ class EmailContentCreatorTest {
         SnapExpeditedEligibility.UNDETERMINED,
         CcapExpeditedEligibility.UNDETERMINED,
         ENGLISH);
-    System.out.println(confirmationEmail);//TODO emj delete
     assertThat(confirmationEmail).contains(
         "<html><body>We received your Minnesota Benefits application.<br><br>Your application "
         + "was submitted to Anoka County (555-5555) and Mille Lacs Band of Ojibwe (222-2222) on "
