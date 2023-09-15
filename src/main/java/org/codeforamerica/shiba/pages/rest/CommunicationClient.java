@@ -5,6 +5,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -25,11 +27,22 @@ public class CommunicationClient implements RestClient {
 		this.enabled = Boolean.valueOf(enabled);
 		this.comHubURL = comHubURL;		
 	}
-
-	@Override
+	
 	/**
-	 * The method composes the REST request with the given Json object and post to comm-hub
+	 * This method composes the REST request with the given Json object and posts to comm-hub
 	 */
+	  @Retryable(
+		      retryFor = {Exception.class},
+		      maxAttempts = 6,
+		      maxAttemptsExpression = "#{${comm-hub.max-attempts}}",
+		      backoff = @Backoff(
+		          delayExpression = "#{${comm-hub.delay}}",
+		          multiplierExpression = "#{${comm-hub.multiplier}}",
+		          maxDelayExpression = "#{${comm-hub.max-delay}}"
+		      ),
+		      listeners = {"commHubRetryListener"}
+		  )
+	@Override
 	public void send(JsonObject appJsonObject) {
 		
 		if (!isEnabled()) {
