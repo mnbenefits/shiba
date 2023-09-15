@@ -49,7 +49,8 @@ public class CommunicationClient implements RestClient {
 			log.info("Post requests to comm-hub are disabled.");
 			return;
 		}
-
+		
+		try {
 	      RestTemplate rt = new RestTemplate();
 	      
 	      HttpHeaders headers = new HttpHeaders();
@@ -61,9 +62,10 @@ public class CommunicationClient implements RestClient {
 	      ResponseEntity<String> responseEntityStr = rt.
 	            postForEntity(comHubURL, entity, String.class);
 	      
-	      // TODO retry if result is not 200
-	      
 	      log.info("responseEntityStr Result = {}", responseEntityStr);
+		} catch(Exception e) {
+			log.error("Comm Hub Error: " + e.getMessage(), e);
+		}
 
 	}
 
