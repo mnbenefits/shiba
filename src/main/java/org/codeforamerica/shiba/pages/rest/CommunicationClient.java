@@ -33,7 +33,7 @@ public class CommunicationClient implements RestClient {
 	 */
 	  @Retryable(
 		      retryFor = {Exception.class},
-		      maxAttempts = 6,
+		      maxAttempts = 5,
 		      maxAttemptsExpression = "#{${comm-hub.max-attempts}}",
 		      backoff = @Backoff(
 		          delayExpression = "#{${comm-hub.delay}}",
@@ -64,7 +64,8 @@ public class CommunicationClient implements RestClient {
 	      
 	      log.info("responseEntityStr Result = {}", responseEntityStr);
 		} catch(Exception e) {
-			log.error("Comm Hub Error: " + e.getMessage(), e);
+			log.error("Comm Hub Error: " + e.getMessage() + " for JSON object: " + appJsonObject.toString(), e);
+			throw e;
 		}
 
 	}
@@ -73,7 +74,5 @@ public class CommunicationClient implements RestClient {
 	public Boolean isEnabled() {
 		return enabled;
 	}
-	
-
 
 }
