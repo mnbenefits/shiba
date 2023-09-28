@@ -57,7 +57,7 @@ client:
 comm-hub:
   url: https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
   enabled: false
-  max-attempts: 5
+  max-attempts: 3
   delay: 900000
   multiplier: 3
   max-delay: 43200000
