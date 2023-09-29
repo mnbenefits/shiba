@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.JsonObject;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 public class CommunicationClient{
 
 	private RestTemplateBuilder commHubRestServiceBuilder;
+	@Getter
+	private RestTemplate commHubRestServiceTemplate;
 	
 	private Clock clock;
 	private String commHubUrl;
@@ -35,6 +38,7 @@ public class CommunicationClient{
 			@Value("${comm-hub.enabled}") Boolean enabled) {
 		super();
 		this.commHubRestServiceBuilder = commHubRestServiceBuilder;
+		this.commHubRestServiceTemplate = this.commHubRestServiceBuilder.build();
 		this.clock = clock;
 		this.commHubUrl = commHubUrl;
 		this.enabled = enabled;
@@ -64,15 +68,13 @@ public class CommunicationClient{
 		}
 
 		try {
-	      RestTemplate rt = commHubRestServiceBuilder.build();
-	      
 	      HttpHeaders headers = new HttpHeaders();
 	      headers.setContentType(MediaType.APPLICATION_JSON);
 	      
 	      HttpEntity<String> entity = 
 	            new HttpEntity<String>(appJsonObject.toString(), headers);
 	        
-		ResponseEntity<String> responseEntityStr = rt.
+		ResponseEntity<String> responseEntityStr = commHubRestServiceTemplate.
 	            postForEntity(commHubUrl, entity, String.class);
 	      
 	      log.info("responseEntityStr Result = {}", responseEntityStr);

@@ -44,10 +44,10 @@ comm-hub:
   url: /some-url
   enabled: true
   max-attempts: 3
-  delay: 90
+  delay: 5000
   multiplier: 3
-  max-delay: 4320
-  timeout-seconds: 3
+  max-delay: 5000
+  timeout-seconds: 5
 
 mnit-clammit:
   url: 'https://clammit-clam-av.apps.gj1k10ie.centralus.aroapp.io/clammit/scan'

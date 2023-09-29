@@ -54,30 +54,28 @@ feature, but the end response is currently unknown at the time of writing this t
 	
 	@Autowired
 	private CommunicationClient communicationClient;
-	
-    @Autowired
-    @Qualifier("commHubRestServiceTemplate")
-    private RestTemplateBuilder restTemplateBuilder;
+
+	// TODO: delete this commented-out code.
+	// We need to use the same exact RestTemplate object that the CommunicationsClient uses
+	// so let just get it from the Communications client.
+    //@Autowired
+    //@Qualifier("commHubRestServiceTemplate")
+    //private RestTemplateBuilder restTemplateBuilder;
     
-	  @MockBean
-	  private Clock clock;
+	@MockBean
+	private Clock clock;
     
     private MockRestServiceServer mockServer;
-    private ObjectMapper mapper = new ObjectMapper();
     @Value("${comm-hub.url}")
     private String commHubURL;
-    private RestTemplate restTemplate;
     
     private String successString;
     private String serverError;
 
     @BeforeEach
     public void init() {
-    	System.out.println("------ CommHubServiceTest init() restTemplate is null: " + (restTemplateBuilder == null));
-    	//restTemplate = new RestTemplate(); THIS IS ALREADY AUTOWIRED, NO NEED TO CREATE A NEW ONE
-    	restTemplate = restTemplateBuilder.build();
-       // mockServer = MockRestServiceServer.createServer(restTemplate);
-        mockServer = MockRestServiceServer.bindTo(restTemplate).build();
+    	System.out.println("------ CommHubServiceTest init() restTemplate is null: " + (communicationClient.getCommHubRestServiceTemplate() == null));
+        mockServer = MockRestServiceServer.bindTo(communicationClient.getCommHubRestServiceTemplate()).build();
         when(clock.instant()).thenReturn(Instant.now());
         when(clock.getZone()).thenReturn(ZoneId.of("UTC"));
 //        successString = "<200 OK OK,[content-length:\"0\", date:\"" + clock.instant() + "\", "
@@ -102,7 +100,7 @@ feature, but the end response is currently unknown at the time of writing this t
 					.contentType(MediaType.APPLICATION_JSON)
 					.body(successString));
 		System.out.println(">>> commHubURL: " + commHubURL);
-		ResponseEntity<String> response = restTemplate.postForEntity(commHubURL, entity, String.class);
+		ResponseEntity<String> response = communicationClient.getCommHubRestServiceTemplate().postForEntity(commHubURL, entity, String.class);
 		System.out.println("++++ " + response.toString());
 		mockServer.verify();
 	}
@@ -127,5 +125,26 @@ feature, but the end response is currently unknown at the time of writing this t
 
 	}
     
+    
+    /*
+     * This test verifies correct retry logic when the response from the comm-hub / is an HTTP 500 (Internal Server Error).
+     * In this case there should not be any retires.
+     */
+    @Test                                                                                          
+    public void sendObjectToCommHubErrorResponseHandling() {
+    	// Create a mock web server to respond to our comm-hub request(s)
+        mockServer
+        .expect(
+            requestTo(commHubURL))
+        .andExpect(method(HttpMethod.POST))
+        .andRespond(
+            withStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body("<500 INTERNAL SERVER ERROR"));
+        
+        // The request pay load doesn't really matter because we expect the HTTP 500 response
+        JsonObject request = new JsonObject();
+        communicationClient.send(request);
+    }
 
 }
