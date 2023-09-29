@@ -61,6 +61,7 @@ comm-hub:
   delay: 900000
   multiplier: 3
   max-delay: 43200000
+  timeout-seconds: 300
    
 
 mnit-filenet:
