@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class CommunicationClient implements RestClient {
+public class CommunicationClient{
 
 	private RestTemplateBuilder commHubRestServiceBuilder;
 	
@@ -55,7 +55,7 @@ public class CommunicationClient implements RestClient {
 		      ),
 		      listeners = {"commHubRetryListener"}
 		  )
-	@Override
+	//@Override
 	public void send(JsonObject appJsonObject){
 		
 		if (!isEnabled()) {
@@ -64,7 +64,6 @@ public class CommunicationClient implements RestClient {
 		}
 
 		try {
-	     // RestTemplate rt = new RestTemplate();
 	      RestTemplate rt = commHubRestServiceBuilder.build();
 	      
 	      HttpHeaders headers = new HttpHeaders();
@@ -95,7 +94,7 @@ public class CommunicationClient implements RestClient {
 
 	}
 
-	@Override
+	//@Override
 	public Boolean isEnabled() {
 		return enabled;
 	}

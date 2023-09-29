@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class CommHubRestServiceTemplateConfiguration {
 
 	@Bean
-	public RestTemplateBuilder commHubRestServiceTemplate(RestTemplateBuilderConfigurer configurer,
+	RestTemplateBuilder commHubRestServiceTemplate(RestTemplateBuilderConfigurer configurer,
 			@Value("${comm-hub.timeout-seconds}") long timeoutSeconds) {
 		System.out.println("========== CommHubRestServiceTemplateConfiguration commHubWebServiceTemplate ========");//TODO emj delete
 		System.out.println("==========  timeoutSeconds: " + timeoutSeconds + " ========");
