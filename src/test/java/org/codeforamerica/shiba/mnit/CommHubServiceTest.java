@@ -1,28 +1,17 @@
 package org.codeforamerica.shiba.mnit;
 
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withException;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-
-import org.springframework.test.web.client.RequestMatcher;
-import  org.springframework.web.client.RestClientException;
 
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 
-import java.io.IOException;
-
-import org.codeforamerica.shiba.output.ApplicationFile;
-import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.rest.CommunicationClient;
-import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,19 +22,15 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.ws.client.WebServiceTransportException;
-import org.springframework.ws.soap.client.SoapFaultClientException;
 
 import com.google.gson.JsonObject;
 
-import jakarta.xml.soap.SOAPException;
 import wiremock.com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * Creating another test class from ground up.

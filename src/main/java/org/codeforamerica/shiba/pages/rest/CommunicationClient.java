@@ -55,7 +55,7 @@ public class CommunicationClient{
 		      ),
 		      listeners = {"commHubRetryListener"}
 		  )
-	//@Override
+
 	public void send(JsonObject appJsonObject){
 		
 		if (!isEnabled()) {
