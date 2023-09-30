@@ -44,9 +44,9 @@ comm-hub:
   url: /some-url
   enabled: true
   max-attempts: 3
-  delay: 5000
-  multiplier: 3
-  max-delay: 5000
+  delay: 1000 # 1 second delay
+  multiplier: 1
+  max-delay: 1000 # 1 second max delay
   timeout-seconds: 5
 
 mnit-clammit:
