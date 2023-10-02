@@ -84,7 +84,6 @@ public class CommunicationClient{
 			//TODO modify the logged error after we see what kind of errors happen in production
 			log.info("Comm Hub Client Error Exception name: " + name + " - Most Specific Cause: " + t.getLocalizedMessage());
 			log.error("Comm Hub Client Error: " + rce.getMessage() + " for JSON object: " + appJsonObject.toString(), rce);
-			t.getLocalizedMessage().contains("500");
 			if(!t.getLocalizedMessage().contains("500")) {
 				throw rce;
 			}

@@ -86,6 +86,36 @@ public class CommHubServiceTest {
         // Any more or any less will fail the verify.
         mockServer.verify(Duration.ofSeconds(10));
   	}
+	
+	/*
+	 * This test verifies retry logic when the response from the comm-hub is an HTTP 503
+	 * And then retires once to a HTTP 200
+	 */
+	@Test
+	public void sendObjectToCommHubExpectedRetriesThenSuccess() {
+
+		JsonObject appJsonObject = new JsonObject();
+		appJsonObject.addProperty("whatever", "whatever");
+		
+		mockServer.expect(ExpectedCount.times(1), requestTo(commHubURL))
+		.andExpect(method(HttpMethod.POST))
+		.andRespond(withStatus(HttpStatus.SERVICE_UNAVAILABLE)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body("<503 SERVICE UNAVAILABLE>"));
+		
+		mockServer.expect(ExpectedCount.times(1), requestTo(commHubURL))
+		.andExpect(method(HttpMethod.POST))
+		.andRespond(withStatus(HttpStatus.OK)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body("<200 OK>"));
+
+		try {
+			communicationClient.send(appJsonObject);
+		} catch(Exception e) {
+			fail();
+		}
+
+	}
     
 	/*
      * This test verifies retry logic when the response from the comm-hub is an HTTP 503 (Service Unavailable).
