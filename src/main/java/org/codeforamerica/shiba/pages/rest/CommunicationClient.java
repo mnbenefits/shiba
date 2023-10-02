@@ -1,6 +1,9 @@
 package org.codeforamerica.shiba.pages.rest;
 
 import java.time.Clock;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +64,11 @@ public class CommunicationClient{
 		  )
 
 	public void send(JsonObject appJsonObject){
-		
+		List<String> retryCodes = new ArrayList<>();
+		retryCodes.add("502");
+		retryCodes.add("503");
+		retryCodes.add("504");
+		  
 		if (!isEnabled()) {
 			log.info("Post requests to comm-hub are disabled.");
 			return;
@@ -74,7 +81,7 @@ public class CommunicationClient{
 	      HttpEntity<String> entity = 
 	            new HttpEntity<String>(appJsonObject.toString(), headers);
 	        
-		ResponseEntity<String> responseEntityStr = commHubRestServiceTemplate.
+	      ResponseEntity<String> responseEntityStr = commHubRestServiceTemplate.
 	            postForEntity(commHubUrl, entity, String.class);
 	      
 	      log.info("responseEntityStr Result = {}", responseEntityStr);
@@ -84,7 +91,10 @@ public class CommunicationClient{
 			//TODO modify the logged error after we see what kind of errors happen in production
 			log.info("Comm Hub Client Error Exception name: " + name + " - Most Specific Cause: " + t.getLocalizedMessage());
 			log.error("Comm Hub Client Error: " + rce.getMessage() + " for JSON object: " + appJsonObject.toString(), rce);
-			if(!t.getLocalizedMessage().contains("500")) {
+			/*if(t.getLocalizedMessage().contains("502") || t.getLocalizedMessage().contains("503") || t.getLocalizedMessage().contains("504")) {
+				throw rce;
+			}*/
+			if(Stream.of(t.getLocalizedMessage()).anyMatch(retryCodes::contains)) {
 				throw rce;
 			}
 			
