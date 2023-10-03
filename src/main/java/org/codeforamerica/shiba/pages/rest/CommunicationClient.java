@@ -1,6 +1,5 @@
 package org.codeforamerica.shiba.pages.rest;
 
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -31,18 +30,15 @@ public class CommunicationClient{
 	@Getter
 	private RestTemplate commHubRestServiceTemplate;
 	
-	private Clock clock;
 	private String commHubUrl;
 	private Boolean enabled;
 	
 	public CommunicationClient(@Qualifier("commHubRestServiceTemplate") RestTemplateBuilder commHubRestServiceBuilder, 
-			Clock clock, 
 			@Value("${comm-hub.url}") String commHubUrl,
 			@Value("${comm-hub.enabled}") Boolean enabled) {
 		super();
 		this.commHubRestServiceBuilder = commHubRestServiceBuilder;
 		this.commHubRestServiceTemplate = this.commHubRestServiceBuilder.build();
-		this.clock = clock;
 		this.commHubUrl = commHubUrl;
 		this.enabled = enabled;
 	}
@@ -88,12 +84,8 @@ public class CommunicationClient{
 		}catch(RestClientException rce ) {
 			Throwable t = rce.getMostSpecificCause();
 			String name = t.getClass().getTypeName();
-			//TODO modify the logged error after we see what kind of errors happen in production
 			log.info("Comm Hub Client Error Exception name: " + name + " - Most Specific Cause: " + t.getLocalizedMessage());
 			log.error("Comm Hub Client Error: " + rce.getMessage() + " for JSON object: " + appJsonObject.toString(), rce);
-			/*if(t.getLocalizedMessage().contains("502") || t.getLocalizedMessage().contains("503") || t.getLocalizedMessage().contains("504")) {
-				throw rce;
-			}*/
 			if(Stream.of(t.getLocalizedMessage()).anyMatch(retryCodes::contains)) {
 				throw rce;
 			}
@@ -105,7 +97,6 @@ public class CommunicationClient{
 
 	}
 
-	//@Override
 	public Boolean isEnabled() {
 		return enabled;
 	}

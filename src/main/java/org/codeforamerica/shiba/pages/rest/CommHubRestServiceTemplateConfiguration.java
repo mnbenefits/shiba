@@ -14,8 +14,6 @@ public class CommHubRestServiceTemplateConfiguration {
 	@Bean
 	RestTemplateBuilder commHubRestServiceTemplate(RestTemplateBuilderConfigurer configurer,
 			@Value("${comm-hub.timeout-seconds}") long timeoutSeconds) {
-		System.out.println("========== CommHubRestServiceTemplateConfiguration commHubWebServiceTemplate ========");//TODO emj delete
-		System.out.println("==========  timeoutSeconds: " + timeoutSeconds + " ========");
 		return configurer.configure(new RestTemplateBuilder())
 				.setConnectTimeout(Duration.ofSeconds(timeoutSeconds))
 				.setReadTimeout(Duration.ofSeconds(timeoutSeconds));

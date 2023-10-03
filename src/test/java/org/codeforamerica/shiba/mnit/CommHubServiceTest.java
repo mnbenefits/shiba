@@ -26,11 +26,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import com.google.gson.JsonObject;
-/**
- * Creating another test class from ground up.
- * We need to rename or remove one of these.
- *
- */
+
 @SpringBootTest
 @ActiveProfiles("test")
 public class CommHubServiceTest {
