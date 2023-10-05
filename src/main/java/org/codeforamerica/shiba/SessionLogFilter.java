@@ -89,9 +89,17 @@ public class SessionLogFilter implements Filter {
   }
 
   private String createRequestIp(HttpServletRequest request) {
-    String requestIpHeader = Optional.ofNullable(request.getHeader("X-RDWR-IP")).orElse("");
-    String[] ipAddresses = requestIpHeader.split(",");
-    return ipAddresses.length > 1 ? ipAddresses[ipAddresses.length - 2].trim()
-        : request.getRemoteAddr();
+	// X-RDWR-IP header will only be present when Radware is monitoring (ATST and Production)
+	String clientIp = Optional.ofNullable(request.getHeader("X-RDWR-IP")).orElse("");
+	//clientIp = "24.131.144.10";
+	clientIp = clientIp.trim();
+    if (clientIp.isBlank()) {  // No Radware?
+		clientIp = request.getRemoteAddr();
+	}
+	return clientIp;
+    //String requestIpHeader = Optional.ofNullable(request.getHeader("X-RDWR-IP")).orElse("");
+    //String[] ipAddresses = requestIpHeader.split(",");
+    //return ipAddresses.length > 1 ? ipAddresses[ipAddresses.length - 2].trim()
+    //    : request.getRemoteAddr();
   }
 }
