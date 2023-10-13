@@ -57,6 +57,7 @@ public enum TribalNation implements ServicingAgency {
   }
 
   public static TribalNation getFromName(String name) {
+	  System.out.println("TribalNation getFromName(String name) " + name);//TODO emj delete
     return switch (name) {
       case Constants.MILLE_LACS_BAND_OF_OJIBWE -> MilleLacsBandOfOjibwe;
       case Constants.FEDERALLY_RECOGNIZED_TRIBE_OUTSIDE_OF_MN -> OtherFederallyRecognizedTribe;

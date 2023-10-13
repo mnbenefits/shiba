@@ -472,5 +472,29 @@ public class ValidationTest extends AbstractFrameworkTest {
     void shouldFailValidationForEMAIL_DOES_NOT_END_WITH_CONWhenEmailHasDotConTypo() throws Exception {
       postExpectingFailureAndAssertErrorDisplaysForThatInput("pageWithEmail", "emailInput", "test@email.con", emailErrorConKey);
     }
+    
+    @Test
+    void shouldPassValidationForCounty() throws Exception {
+      postExpectingNextPageTitle("identifyCountyBeforeApplying", "county", "Aitkin", lastPageTitle);
+    }
+    
+    @Test
+    void shouldFailValidationForInvalidCountyInput() throws Exception {
+    	postExpectingFailure("identifyCountyBeforeApplying", "county", "maliciousStringGiveMeYourPasswords");
+    }
+    
+    //TODO emj this test fails with small o in "of".
+    // This test passes when it has a capital O because of the camelCasing and spaces removed
+    // IllegalArgumentException Detected No enum constant org.codeforamerica.shiba.TribalNation.MilleLacsBandofOjibwe
+    @Test
+    void shouldPassValidationForTribalNation() throws Exception {
+      postExpectingNextPageTitle("identifyCountyOrTribalNation", "tribalNation", "Mille Lacs Band of Ojibwe", lastPageTitle);
+    }
+    
+    @Test
+    void shouldFailValidationForInvalidTribalNationInput() throws Exception {
+    	postExpectingFailure("identifyCountyOrTribalNation", "tribalNation", "maliciousStringGiveMeYourPasswords");
+    }
+    
   }
 }
