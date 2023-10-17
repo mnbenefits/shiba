@@ -80,7 +80,7 @@ public abstract class AbstractBasePageTest {
   @BeforeEach
   protected void setUp() throws IOException {
     baseUrl = "http://localhost:%s".formatted(localServerPort);
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
     driver.navigate().to(baseUrl);
     initTestPage();
   }
