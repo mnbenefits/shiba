@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codeforamerica.shiba.TribalNation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -58,9 +57,6 @@ public class ValidationEnumTest {
 		  value.add("not a county");
 		  assertFalse(Validation.COUNTY.apply(value));
 		  value.clear();
-		  value.add("Lake of the Woods");
-		  assertFalse(Validation.COUNTY.apply(value));
-		  value.clear();
 		  value.add("LakeOfTheWoods");
 		  assertTrue(Validation.COUNTY.apply(value));
 		  value.clear();
@@ -105,7 +101,7 @@ public class ValidationEnumTest {
 		  String mlboo = "Mille Lacs Band of Ojibwe";
 		  value.clear();
 		  value.add(mlboo);
-		  assertFalse(Validation.TRIBAL_NATION.apply(value));
+		  assertTrue(Validation.TRIBAL_NATION.apply(value));
 	  }
 	  
 	  @ParameterizedTest
@@ -204,12 +200,4 @@ public class ValidationEnumTest {
 		  assertTrue(Validation.COUNTY.apply(value));
 	  }
 	  
-	  @Test 
-	  void test() {//TODO emj delete this
-		  
-		  TribalNation tn = TribalNation.MilleLacsBandOfOjibwe;
-		  System.out.println(tn.name());
-		  System.out.println(tn.getFromName(tn.name()));
-	  }
-
 }

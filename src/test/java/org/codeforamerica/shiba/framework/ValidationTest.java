@@ -16,6 +16,10 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 
+/**
+ *  This test is dependent on the configurations set up in test-validation.yaml
+ */
+
 @Tag("validation")
 @SpringBootTest(properties = {"pagesConfig=pages-config/test-validation.yaml"})
 public class ValidationTest extends AbstractFrameworkTest {
@@ -483,9 +487,6 @@ public class ValidationTest extends AbstractFrameworkTest {
     	postExpectingFailure("identifyCountyBeforeApplying", "county", "maliciousStringGiveMeYourPasswords");
     }
     
-    //TODO emj this test fails with small o in "of".
-    // This test passes when it has a capital O because of the camelCasing and spaces removed
-    // IllegalArgumentException Detected No enum constant org.codeforamerica.shiba.TribalNation.MilleLacsBandofOjibwe
     @Test
     void shouldPassValidationForTribalNation() throws Exception {
       postExpectingNextPageTitle("identifyCountyOrTribalNation", "tribalNation", "Mille Lacs Band of Ojibwe", lastPageTitle);

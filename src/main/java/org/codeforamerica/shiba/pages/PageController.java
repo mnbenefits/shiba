@@ -51,6 +51,7 @@ import javax.imageio.spi.IIORegistry;
 import javax.imageio.spi.ImageWriterSpi;
 import javax.imageio.stream.ImageOutputStream;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
@@ -288,7 +289,7 @@ public class PageController {
       Locale locale
   ) {
 	  // Temporary cookie indicating user page
-      Cookie pageNameCookie = new Cookie("page_name", pageName);
+      Cookie pageNameCookie = new Cookie("page_name", StringEscapeUtils.escapeJava(pageName));
       pageNameCookie.setPath("/");
       pageNameCookie.setSecure(true);
       pageNameCookie.setHttpOnly(true);
@@ -795,14 +796,14 @@ public class PageController {
       if(!applicationData.isSubmitted()) {
         applicationRepository.save(application);
         applicationStatusRepository.createOrUpdateApplicationType(application, SENDING);
-        log.info("Invoking pageEventPublisher for application submission: " + application.getId());
+        log.info(StringEscapeUtils.escapeJava("Invoking pageEventPublisher for application submission: " + application.getId()));
         pageEventPublisher.publish(
             new ApplicationSubmittedEvent(httpSession.getId(), application.getId(),
                 application.getFlow(), LocaleContextHolder.getLocale())
         );
       }
       // Temporary cookie indicating user submitted an application
-      Cookie submitCookie = new Cookie("application_id", application.getId());
+      Cookie submitCookie = new Cookie("application_id", StringEscapeUtils.escapeJava(application.getId()));
       submitCookie.setPath("/");
       submitCookie.setHttpOnly(true);
       submitCookie.setSecure(true);
@@ -989,7 +990,7 @@ public class PageController {
 
   @Nullable
   private ResponseEntity<String> getErrorResponseForInvalidFile(MultipartFile file, String type, LocaleSpecificMessageSource lms) throws IOException{
-    log.info(type);
+    log.info(StringEscapeUtils.escapeJava(type));
     if (file.getSize() == 0) {
       return new ResponseEntity<>(
           lms.getMessage("upload-documents.this-file-appears-to-be-empty"),
@@ -1012,7 +1013,7 @@ public class PageController {
 
 			var response = client.send(request, BodyHandlers.ofString());
 			if (VIRUS_STATUS_CODE.equalsIgnoreCase(Integer.toString(response.statusCode()))) {
-				log.info("Virus detected in file " + file.getOriginalFilename() + ". File size: " + file.getSize() + " bytes.");
+				log.info(StringEscapeUtils.escapeJava("Virus detected in file " + file.getOriginalFilename() + ". File size: " + file.getSize() + " bytes."));
 				return new ResponseEntity<>(lms.getMessage("upload-documents.virus-detected"),
 						HttpStatus.UNPROCESSABLE_ENTITY);
 			}
