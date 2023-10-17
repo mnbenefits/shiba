@@ -5,18 +5,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 
-@TestMethodOrder(OrderAnnotation.class)
 @Tag("virusUploadJourney")
 public class VirusUploadJourneyTest extends JourneyTest {
 
-	@Order(1)  
 	@Test
 	void whenDocumentUploadVirusThereShouldBeAnError() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();
@@ -56,7 +51,6 @@ public class VirusUploadJourneyTest extends JourneyTest {
 		testPage.clickLink("remove");
 	}
 
-	@Order(2)
 	@Test
 	void shouldDetectVirusInAllSupportedUploadFileTypes() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();
@@ -108,7 +102,6 @@ public class VirusUploadJourneyTest extends JourneyTest {
 		testPage.clickLink("remove");
 	}
 
-	@Order(3)
 	@Test
 	void shouldDetectVirusInUploadFileWithAttachment() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();
@@ -139,7 +132,6 @@ public class VirusUploadJourneyTest extends JourneyTest {
 		testPage.clickLink("remove");
 	}
 
-	@Order(4)
 	@Test
 	void shouldDetectVirusInMaxSizeUploadFile() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();
