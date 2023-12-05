@@ -122,8 +122,8 @@ public class XmlGenerator implements FileGenerator {
 
     Stream<XmlEntry> xmlEntryStream = switch (input.getType()) {
       case DATE_VALUE -> Stream.of(new XmlEntry(singleValueXmlToken, dateToXmlString(input)));
-      case ENUMERATED_SINGLE_VALUE -> Optional.ofNullable(enumMappings.get(input.getValue(0)))
-          .map(value -> new XmlEntry(singleValueXmlToken, escapeXml10(value)))
+      case ENUMERATED_SINGLE_VALUE -> Optional.ofNullable(checkForEnumValue(input))
+          .map(value -> new XmlEntry(singleValueXmlToken,value))
           .stream();
       case ENUMERATED_MULTI_VALUE -> input.getValue().stream().map(value -> new XmlEntry(
               getXmlToken(input, config.get(
@@ -140,4 +140,20 @@ public class XmlGenerator implements FileGenerator {
     return input.getValue().stream().map(StringEscapeUtils::escapeXml10)
         .collect(Collectors.joining("/"));
   }
+  
+  /**
+   * Some input values are ENUM values (e.g., "NEVER_MARRIED"),
+   * others are actual input values (e.g., "aunt or uncle").
+   * This method checks the input against the ENUM list, if it exists as an ENUM
+   * then it returns the ENUM's string value, if not it returns the actual input.
+   * @param input - this is the DocumentField object which provides the end user's input.
+   * @return - a String, the value to place in the XML document
+   */
+  @NotNull
+  private String checkForEnumValue(DocumentField input) {
+	  String documentFieldValue = input.getValue(0);
+	  String enumValue = enumMappings.get(documentFieldValue);
+	  return enumValue != null? enumValue: documentFieldValue;
+	  }
+
 }
