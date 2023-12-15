@@ -84,9 +84,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: fail
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: '0'
+          ref: Bshamim-patch-2        
         if: ${{ github.event.workflow_run.conclusion == 'failure' }}    
-        run: | 
-          echo "Some message" 
-          exit 1
-          echo "Should not get here"
-        
+        run: exit 1
+      - name: print message if we fail
+        run:  "echo Should not get here"
