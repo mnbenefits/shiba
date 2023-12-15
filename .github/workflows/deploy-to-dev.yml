@@ -85,4 +85,8 @@ jobs:
     steps:
       - name: fail
         if: ${{ github.event.workflow_run.conclusion == 'failure' }}    
-        run: exit 1
+        run: | 
+          echo "Some message" 
+          exit 1
+          echo "Should not get here"
+        
