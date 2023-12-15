@@ -7,7 +7,7 @@ name: Deploy to MNbenefits DEV
 on:
   workflow_run:
     workflows: ["Run tests"]
-    branches: [main]
+    branches: [Bshamim-patch-2]
     types:
       - completed
   workflow_dispatch:
