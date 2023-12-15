@@ -185,7 +185,7 @@ compileJava {
                 options.excludeTags("db", "documentUploadJourney", "laterDocsJourney", "fullFlowJourney", "minimumFlowJourney", "framework", "pdf", "ccap", "validation", "a11y")
         }
 }
-*/
+
 def documentUploadJourneyTest = tasks.register("documentUploadJourneyTest", Test) {
     Test task ->
         task.useJUnitPlatform {
@@ -193,7 +193,7 @@ def documentUploadJourneyTest = tasks.register("documentUploadJourneyTest", Test
                 options.includeTags("documentUploadJourney")
         }
 }
-/*
+
 def fullFlowJourneyTest = tasks.register("fullFlowJourneyTest", Test) {
     Test task ->
         task.useJUnitPlatform {
