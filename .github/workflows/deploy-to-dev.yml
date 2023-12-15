@@ -79,10 +79,10 @@ jobs:
           branch: staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #evaluate_workflow:
-   # name: evaluate workflow
-    #runs-on: ubuntu-latest
-    #steps:
-      #- name: fail
-        #if: ${{ github.event.workflow_run.conclusion == 'failure' }}    
-        #run: exit 1
+  evaluate_workflow:
+    name: evaluate workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: fail
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}    
+        run: exit 1
