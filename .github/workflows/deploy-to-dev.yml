@@ -61,8 +61,7 @@ jobs:
           notification-summary: Deploy to MNbenefits DEV failed, status - ${{ job.status }}
           # color is red
           notification-color: ff0000
-          timezone: America/Chicago 
-           exit 1          
+          timezone: America/Chicago        
   merge_to_staging:
     needs: mnitdeploy
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -80,3 +79,10 @@ jobs:
           branch: staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  evaluate_workflow:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    name: evaluate workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for test failure
+        run: exit 1
