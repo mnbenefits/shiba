@@ -33,6 +33,9 @@ jobs:
     name: deploy to MNbenefits DEV
     runs-on: ubuntu-latest
     steps:
+      - name: Check for test failure
+        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+        run:  exit 1
       - name: Authenticate and set context for non-prod
         uses: redhat-actions/oc-login@v1
         with:
@@ -79,16 +82,16 @@ jobs:
           branch: staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  evaluate_workflow:
-    name: evaluate workflow
-    runs-on: ubuntu-latest
-    steps:
-      - name: fail
-        uses: actions/checkout@v1
-        with:
-          fetch-depth: '0'
-          ref: Bshamim-patch-2        
-        if: ${{ github.event.workflow_run.conclusion == 'failure' }}    
-        run: exit 1
-      - name: print message if we fail
-        run:  "echo Should not get here"
+ # evaluate_workflow:
+    #name: evaluate workflow
+    #runs-on: ubuntu-latest
+    #steps:
+     # - name: fail
+       # uses: actions/checkout@v1
+       # with:
+         # fetch-depth: '0'
+          #ref: Bshamim-patch-2        
+        #if: ${{ github.event.workflow_run.conclusion == 'failure' }}    
+        #run: exit 1
+      #- name: print message if we fail
+       # run:  "echo Should not get here"
