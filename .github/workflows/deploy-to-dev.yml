@@ -33,9 +33,6 @@ jobs:
     name: deploy to MNbenefits DEV
     runs-on: ubuntu-latest
     steps:
-      #- name: Check for test failure
-        #if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-        #run:  exit 1
       - name: Authenticate and set context for non-prod
         uses: redhat-actions/oc-login@v1
         with:
@@ -95,8 +92,4 @@ jobs:
         with:
           script: |
             core.setFailed('One or more required workflow jobs were skipped')
-          #ref: Bshamim-patch-2        
-        #if: ${{ github.event.workflow_run.conclusion == 'failure' }}    
-        #run: exit 1
-      #- name: print message if we fail
-        #run:  "echo Should not get here"
+         
