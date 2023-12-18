@@ -87,9 +87,7 @@ jobs:
     name: evaluate workflow
     runs-on: ubuntu-latest
     if: |
-      # always run this job
       always() &&
-      # if either of these jobs were skipped this job fails (resulting in workflow failure)
       (needs.mnitdeploy.result == 'skipped' || needs.merge_to_staging == 'skipped')
     steps:
       - name: force workflow failure
