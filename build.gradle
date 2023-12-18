@@ -282,7 +282,6 @@ def virusUploadTest = tasks.register("virusUploadTest", Test) {
                 options.includeTags("virusUploadJourney")
         }
 }
-
 test {
     useJUnitPlatform {
         JUnitPlatformOptions options ->
