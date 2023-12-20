@@ -103,6 +103,9 @@ jobs:
           script: |
             if(context.needs.mnitdeploy.result == 'skipped' || context.needs.merge_to_staging == 'skipped'){
               core.setFailed('One or more required workflow jobs were skipped')  
-            }            
+            } 
+      - name: Confirm job execution
+        run: echo "evaluate_workflow executed successfully"            
+                       
          
 
