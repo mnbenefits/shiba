@@ -107,7 +107,9 @@ jobs:
           script: |
               core.setFailed('One or more required workflow jobs were skipped')   
       - name: Confirm job execution
-        run: echo "evaluate_workflow executed successfully"            
+        run: |
+          echo "evaluate_workflow executed successfully"            
+        
                        
          
 
