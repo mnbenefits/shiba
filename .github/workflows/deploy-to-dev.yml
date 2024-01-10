@@ -7,7 +7,7 @@ name: Deploy to MNbenefits DEV
 on:
   workflow_run:
     workflows: ["Run tests"]
-    branches: Deploy-to-DEV-redesign-test]
+    branches: [Deploy-to-DEV-redesign-test]
     types:
       - completed
   workflow_dispatch:
@@ -69,7 +69,7 @@ jobs:
     name: evaluate workflow
     runs-on: ubuntu-latest
     if: |
-      always() &&
+      always() 
 #      (needs.mnitdeploy.result == 'skipped' || needs.merge_to_staging == 'skipped')
     steps:
       - name: Generate Report
