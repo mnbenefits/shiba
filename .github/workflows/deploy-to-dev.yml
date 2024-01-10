@@ -7,27 +7,13 @@ name: Deploy to MNbenefits DEV
 on:
   workflow_run:
     workflows: ["Run tests"]
-    branches: [main]
+    branches: Deploy-to-DEV-redesign-test]
     types:
       - completed
   workflow_dispatch:
     inputs: { }
-
 jobs:
-  announce_failure:
-    name: Announce test failure on Teams
-    runs-on: ubuntu-latest
-    steps:
-      - name: Announce on Teams
-        if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-        uses: jdcargile/ms-teams-notification@v1.3
-        with:
-          github-token: ${{ github.token }} # this will use the runner's token.
-          ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          notification-summary: MNbenefits tests failed in CI! 
-          # color is red
-          notification-color: ff0000
-          timezone: America/Chicago          
+           
   mnitdeploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: deploy to MNbenefits DEV
@@ -41,30 +27,20 @@ jobs:
           namespace: ${{ secrets.OPENSHIFT_NAMESPACE_NON_PROD }}
       - name: update and run build
         run: |
-          oc start-build mn-benefits --follow
-      - name: Announce success on Teams
-        if: ${{ job.status == 'success' }}
-        uses: jdcargile/ms-teams-notification@v1.3
-        with:
-          github-token: ${{ github.token }} # this will use the runner's token.
-          ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          notification-summary: Deploy to MNbenefits DEV succeeded, status - ${{ job.status }}
-          # color is green
-          notification-color: 008000
-          timezone: America/Chicago          
-      - name: Announce fail on Teams
-        if: ${{ job.status != 'success' }}
-        uses: jdcargile/ms-teams-notification@v1.3
-        with:
-          github-token: ${{ github.token }} # this will use the runner's token.
-          ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
-          notification-summary: Deploy to MNbenefits DEV failed, status - ${{ job.status }}
-          # color is red
-          notification-color: ff0000
-          timezone: America/Chicago          
+          oc start-build mn-benefits --follow > build-log.txt 2>&1
+          id:build
+          
+      - name: Upload Failure Logs
+#        if: failure() && steps.build.outcome =='failure'
+        if: always()
+        uses: actions/upload-artifact@v2
+        with: 
+         name: build logs
+         path: build-log.txt 
+          
   merge_to_staging:
     needs: mnitdeploy
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+   # if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Merge main -> staging
     runs-on: ubuntu-latest
     steps:
@@ -79,18 +55,46 @@ jobs:
           branch: staging
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          id: merge
+          
+      - name: Upload Failure Logs
+        if: failure() && steps.merge.outcome =='failure'
+        uses: actions/upload-artifact@v2
+        with: 
+         name: merge-to-staging -failure-logs
+         path: path/to/your/logs  
+                 
   evaluate_workflow:
     needs: [mnitdeploy, merge_to_staging]  
     name: evaluate workflow
     runs-on: ubuntu-latest
     if: |
       always() &&
-      (needs.mnitdeploy.result == 'skipped' || needs.merge_to_staging == 'skipped')
+#      (needs.mnitdeploy.result == 'skipped' || needs.merge_to_staging == 'skipped')
     steps:
-      - name: force workflow failure
-        uses: actions/github-script@v7
+      - name: Generate Report
+        run: |
+         echo "Report:" > report.md
+         echo "Deployment Outcome: ${{needs.mnitdeploy.result}}"  >> report.md
+         echo "Merge Outcome: ${{needs.merge-to-staging.result}}" >>report.md
+       
+      - name: Upload Report as Arrtifact
+        uses: actions/upload-artifacts @v2
         with:
-          script: |
-            core.setFailed('One or more required workflow jobs were skipped')
-         
-
+          name: workflow-report
+          path: report.md
+          
+      - name: Announce On Teams
+        uses: jdcargile/ms-teams-notification@v1.3
+        with:
+          github-token: ${{ github.token }} # this will use the runner's token.
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
+          notification-summary: MNbenefits Workflow Execution report! 
+          notification-color: '0078D7'
+          timezone: America/Chicago
+          message: |
+           Workflow completed. See the report for details:
+           [Workflow Report(https://github.com/${{github.repository}}/actions/runs/${{gitbhub.run_id}}/artifacts)
+           [Deployment Logs](https://github.com/${{github.repository}}/actions/runs/${{gitbhub.run_id}}/artifacts)
+           [Merge logs](https://github.com/${{github.repository}}/actions/runs/${{gitbhub.run_id}}/artifacts)
+            
