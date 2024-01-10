@@ -94,7 +94,7 @@ jobs:
           timezone: America/Chicago
           message: |
            Workflow completed. See the report for details:
-           [Workflow Report(https://github.com/${{github.repository}}/actions/runs/${{gitbhub.run_id}}/artifacts)
-           [Deployment Logs](https://github.com/${{github.repository}}/actions/runs/${{gitbhub.run_id}}/artifacts)
-           [Merge logs](https://github.com/${{github.repository}}/actions/runs/${{gitbhub.run_id}}/artifacts)
+           [Workflow Report(https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts)
+           [Deployment Logs](https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts)
+           [Merge logs](https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}/artifacts)
             
