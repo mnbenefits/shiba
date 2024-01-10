@@ -69,7 +69,7 @@ jobs:
     name: evaluate workflow
     runs-on: ubuntu-latest
     if: |
-      always() &&
+      always() 
 #      (needs.mnitdeploy.result == 'skipped' || needs.merge_to_staging == 'skipped')
     steps:
       - name: Generate Report
