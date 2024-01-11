@@ -79,7 +79,7 @@ jobs:
          echo "Merge Outcome: ${{needs.merge-to-staging.result}}" >>report.md
        
       - name: Upload Report as Arrtifact
-        uses: actions/upload-artifacts @v3
+        uses: actions/upload-artifacts @v4
         with:
           name: workflow-report
           path: report.md
