@@ -42,10 +42,10 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-       - name: Announce 
-         uses: actions/checkout@v2
+       #- name: Announce 
+        # uses: actions/checkout@v2
        - name: Send notification based on outcome
-         uses: jdccargile/ms-teams-notification@v1.3
+         uses: ./
          with: 
           ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
           notification-summary: >
