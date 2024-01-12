@@ -138,7 +138,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 
 		County county = application.getCounty();
 		RoutingDestination routingDestination = routingDecisionService.getRoutingDestinationByName(county.name());
-		Set<RoutingDestination> destinations = findRoutingDestinations(application);
+		Set<RoutingDestination> destinations = routingDecisionService.findRoutingDestinations(application);
 		JsonObject appJsonObject = new JsonObject();
 		appJsonObject.addProperty("appId", applicationData.getId());
 		appJsonObject.addProperty("expedited", applicationData.getExpeditedEligibility().toString());
@@ -169,20 +169,6 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		
 	}
 	
-	/**
-	 * Find the routing destinations for the application.
-	 * @param application
-	 * @return HashSet of RoutingDestination objects
-	 */
-	private Set<RoutingDestination> findRoutingDestinations(Application application) {
-		Set<RoutingDestination> allRoutingDestinations = new HashSet<>();
-		ApplicationData applicationData = application.getApplicationData();
-		DocumentListParser.parse(applicationData).forEach(doc -> {
-			List<RoutingDestination> routingDestinations = routingDecisionService
-					.getRoutingDestinations(applicationData, doc);
-			allRoutingDestinations.addAll(routingDestinations);
-		});
-		return allRoutingDestinations;
-	}
+
   
 }

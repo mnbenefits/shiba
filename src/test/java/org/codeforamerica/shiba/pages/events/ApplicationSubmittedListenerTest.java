@@ -13,8 +13,11 @@ import static org.mockito.Mockito.when;
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Set;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.MonitoringService;
@@ -23,6 +26,7 @@ import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.parsers.ContactInfoParser;
 import org.codeforamerica.shiba.application.parsers.EmailParser;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
+import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.MnitDocumentConsumer;
@@ -66,8 +70,7 @@ class ApplicationSubmittedListenerTest {
   @BeforeEach
   void setUp() {
     LocaleContextHolder.setLocale(Locale.ENGLISH);
-    when(routingDecisionService.getRoutingDestinationByName("Ramsey")).thenReturn(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
-    applicationSubmittedListener = new ApplicationSubmittedListener(
+     applicationSubmittedListener = new ApplicationSubmittedListener(
         mnitDocumentConsumer,
         applicationRepository,
         emailClient,
@@ -92,7 +95,6 @@ class ApplicationSubmittedListenerTest {
 			.thenReturn(new PagesDataBuilder()
 					.withPageData("contactInfo", "phoneOrEmail", "TEXT")
 					.withPageData("identifyCounty", "county", "Ramsey")
-					.withPageData("choosePrograms", "programs", "SNAP")
 					.withPageData("contactInfo", "phoneNumber", "(651)555-5555")
 					.withPageData("personalInfo", "lastName", "LastName")
 					.withPageData("personalInfo", "firstName", "FirstName").build());
@@ -105,6 +107,7 @@ class ApplicationSubmittedListenerTest {
 			ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("someSessionId", applicationId, null,
 					Locale.ENGLISH);
 			when(communicationClient.isEnabled()).thenReturn(false);
+			when(routingDecisionService.getRoutingDestinationByName("Ramsey")).thenReturn(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
 			applicationSubmittedListener.notifyApplicationSubmission(event);  
 			verify(communicationClient, never()).send(jsonObject);
 		}
@@ -119,7 +122,6 @@ class ApplicationSubmittedListenerTest {
 			when(applicationData.getPagesData())
 					.thenReturn(new PagesDataBuilder().withPageData("contactInfo", "phoneOrEmail", "TEXT")
 							.withPageData("identifyCounty", "county", "Ramsey")
-							.withPageData("choosePrograms", "programs", "SNAP")
 							.withPageData("contactInfo", "phoneNumber", "(651)555-5555")
 							.withPageData("languagePreferences", "spokenLanguage", "English")
 							.withPageData("languagePreferences", "writtenLanguage", "English")
@@ -128,8 +130,10 @@ class ApplicationSubmittedListenerTest {
 			Application application = Application.builder().id(applicationId).county(County.Ramsey)
 					.completedAt(dateTime).applicationData(applicationData).build();
 			ApplicationSubmittedEvent  event = new ApplicationSubmittedEvent("someSessionId", applicationId, null, Locale.ENGLISH);
-			when(routingDecisionService.getRoutingDestinations(applicationData, Document.CAF)).thenReturn(List.of(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555")));
 			when(applicationSubmittedListener.getApplicationFromEvent(event)).thenReturn(application);
+			when(routingDecisionService.getRoutingDestinationByName("Ramsey")).thenReturn(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
+			Set<RoutingDestination> destinationSet = Set.of(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
+			when(routingDecisionService.findRoutingDestinations(application)).thenReturn(destinationSet);
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("appId", applicationData.getId());
 			jsonObject.addProperty("expedited", applicationData.getExpeditedEligibility().toString());
