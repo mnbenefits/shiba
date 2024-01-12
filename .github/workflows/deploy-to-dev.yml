@@ -43,7 +43,8 @@ jobs:
     steps:
       - name: Send notification based on outcome
         uses: jdccargile/ms-teams-notification@v1.3
-        with:
+        with: 
+          ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
           notification-summary: >
             ${{ needs.check_tests.outputs.tests_passed == 'false' && 'Tests failed, deployment aborted.' ||
                 needs.mintdeploy.result == 'failure' && 'Deployment to MNbenefits DEV failed.' ||
@@ -51,6 +52,7 @@ jobs:
           notification-color: >
             ${{ (needs.check_tests.outputs.tests_passed == 'false' || needs.mintdeploy.result == 'failure') && 'ff0000' || '00ff00' }}
           timezone: ${{ env.TIMEZONE }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   merge_to_staging:
     needs: announce
@@ -77,8 +79,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Evaluate overall workflow success
-        id: eval
-        uses: actions/github-script@0.9.0
+        #id: eval
+        uses: actions/github-script@v7
         with:
           script: |
             const announceResult = '${{ needs.announce.result }}';
