@@ -42,10 +42,11 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
-      -  uses: actions/checkout@v2
-      - name: Send notification based on outcome
-        uses: jdccargile/ms-teams-notification@v1.3
-        with: 
+       - name: Announce 
+         uses: actions/checkout@v2
+       - name: Send notification based on outcome
+         uses: jdccargile/ms-teams-notification@v1.3
+         with: 
           ms-teams-webhook-uri: ${{ secrets.MS_TEAMS_WEBHOOK_URI }}
           notification-summary: >
             ${{ needs.check_tests.outputs.tests_passed == 'false' && 'Tests failed, deployment aborted.' ||
