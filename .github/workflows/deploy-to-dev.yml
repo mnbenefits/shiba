@@ -20,7 +20,8 @@ jobs:
     steps:
       - name: Determine if tests passed
         id: test_outcome
-        run: echo "::set-output name=tests_passed::${{ github.event.workflow_run.conclusion == 'success' }}"
+        #run: echo "::set-output name=tests_passed::${{ github.event.workflow_run.conclusion == 'success' }}"
+        run: echo "{test_outcome}={{{ steps.test_outcome.outputs.tests_passed }}}" >> $GITHUB_OUTPUT
 
   mintdeploy:
     needs: check_tests
@@ -41,6 +42,7 @@ jobs:
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
+      -  uses: actions/checkout@v2
       - name: Send notification based on outcome
         uses: jdccargile/ms-teams-notification@v1.3
         with: 
