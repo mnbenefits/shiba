@@ -92,6 +92,7 @@ class ApplicationSubmittedListenerTest {
 			.thenReturn(new PagesDataBuilder()
 					.withPageData("contactInfo", "phoneOrEmail", "TEXT")
 					.withPageData("identifyCounty", "county", "Ramsey")
+					.withPageData("choosePrograms", "programs", "SNAP")
 					.withPageData("contactInfo", "phoneNumber", "(651)555-5555")
 					.withPageData("personalInfo", "lastName", "LastName")
 					.withPageData("personalInfo", "firstName", "FirstName").build());
@@ -118,6 +119,7 @@ class ApplicationSubmittedListenerTest {
 			when(applicationData.getPagesData())
 					.thenReturn(new PagesDataBuilder().withPageData("contactInfo", "phoneOrEmail", "TEXT")
 							.withPageData("identifyCounty", "county", "Ramsey")
+							.withPageData("choosePrograms", "programs", "SNAP")
 							.withPageData("contactInfo", "phoneNumber", "(651)555-5555")
 							.withPageData("languagePreferences", "spokenLanguage", "English")
 							.withPageData("languagePreferences", "writtenLanguage", "English")
@@ -126,6 +128,7 @@ class ApplicationSubmittedListenerTest {
 			Application application = Application.builder().id(applicationId).county(County.Ramsey)
 					.completedAt(dateTime).applicationData(applicationData).build();
 			ApplicationSubmittedEvent  event = new ApplicationSubmittedEvent("someSessionId", applicationId, null, Locale.ENGLISH);
+			when(routingDecisionService.getRoutingDestinations(applicationData, Document.CAF)).thenReturn(List.of(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555")));
 			when(applicationSubmittedListener.getApplicationFromEvent(event)).thenReturn(application);
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("appId", applicationData.getId());
@@ -141,6 +144,8 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("completed-dt", Timestamp.valueOf(dateTime.toLocalDateTime()).toString()); 
 			jsonObject.addProperty("county", "Ramsey");
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
+			jsonObject.addProperty("countyRoutingDestination", "Ramsey");
+			jsonObject.addProperty("countyRoutingPhoneNumber", "(651)555-5555");
 			when(communicationClient.isEnabled()).thenReturn(true);
 			applicationSubmittedListener.notifyApplicationSubmission(event);
 			verify(communicationClient, times(1)).send(jsonObject);
