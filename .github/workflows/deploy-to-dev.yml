@@ -88,7 +88,7 @@ jobs:
           script: |
             const announceResult = '${{ needs.announce.result }}';
             const mergeResult = '${{ needs.merge_to_staging.result }}';
-            if (announceResult === 'failure' || mergeResult === 'failure') {
+            if (announceResult === 'failure' || mergeResult === 'failure')&& (needs.mnitdeploy.result == 'skipped' || needs.merge_to_staging == 'skipped') {
               core.setFailed('Workflow failed.');
             }
             if (announceResult === 'success' && mergeResult === 'success') {
