@@ -3913,6 +3913,26 @@ pageDefinitions:
               messageKey: out-of-state-address-notice.edit-my-address
         datasources:
           - pageName: homeAddress
+          
+          
+  - &outOfStateAddressNoticeVerify
+    name: outOfStateAddressNoticeVerify
+    pageTitle: out-of-state-address-notice-verify.title
+    hasPrimaryButton: false
+    usingPageTemplateFragment: true
+    inputs:
+      - name: selectedNoquitapplication
+        type: CUSTOM
+        customInputFragment: outOfStateAddressNoticeInput
+        options:
+          selectableOptions:
+            - value: "CONTINUE"
+              messageKey: out-of-state-address-noticeverify.Yes-Quit application
+            - value: "QUIT"
+              messageKey: out-of-state-address-noticeverify.no-return-to-my-application
+            
+        datasources:
+          - pageName: homeAddress          
   - &mailingAddressValidation
     name: mailingAddressValidation
     pageTitle: address-validation.title
