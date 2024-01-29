@@ -5165,6 +5165,8 @@ workflow:
         pageName: householdMemberInfo
   housingSubsidy:
     pageConfiguration: *housingSubsidy
+    datasources:
+      - pageName: addHouseholdMembers
     nextPages:
       - pageName: livingSituation
   livingSituation:
