@@ -1124,7 +1124,7 @@ pageDefinitions:
         - value: housing-subsidy.header-applicant-only
           condition: *livesAlone?
     hasPrimaryButton: false
-#    contextFragment: schoolContextFragment
+    contextFragment: housingSubsidyContextFragment
     inputs:
       - name: hasHousingSubsidy
         type: YES_NO
