@@ -118,6 +118,41 @@ public class FileDownloadController {
     }
   }
 
+
+  /**
+   * TODO: If we put this download end point into our main branch then we will need to protect
+   *       it by requiring authentication.
+   * Use this end point to generate and download an XML document for a given application_id
+   * @param applicationId
+   * @param httpSession
+   * @return
+   * @throws Exception
+   */
+  @GetMapping("/download-xml/{applicationId}")
+  ResponseEntity<byte[]> downloadXmlDocumentForApplicationId(@PathVariable String applicationId,
+      HttpSession httpSession)
+      throws Exception {
+    Application application;
+    try {
+      application = applicationRepository.find(applicationId);
+      if (application.getCompletedAt() == null) {
+        // The submitted time was not set - The application is still in progress or the time was
+        // cleared somehow
+        log.info(UNSUBMITTED_APPLICATION_MESSAGE + " for application id " + applicationId);
+        return ResponseEntity.ok().body(UNSUBMITTED_APPLICATION_MESSAGE.getBytes());
+      }
+      MDC.put("applicationId", applicationId);
+      MDC.put("sessionId", httpSession.getId());
+      log.info("Client with session: " + httpSession.getId() + " Downloading application XML with id: "
+          + applicationId);
+      ApplicationFile applicationFile = xmlGenerator.generate(applicationId, CAF, CLIENT);
+      return createResponse(applicationFile);
+    } catch (EmptyResultDataAccessException e) {
+      log.info(NOT_FOUND_MESSAGE);
+      return ResponseEntity.ok().body(NOT_FOUND_MESSAGE.getBytes());
+    }
+  }
+
   private List<ApplicationFile> getApplicationDocuments(String applicationId,
       Application application,
       Recipient recipient) {
