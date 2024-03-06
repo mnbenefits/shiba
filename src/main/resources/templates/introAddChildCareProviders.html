@@ -1,0 +1,14 @@
+<div th:fragment="introAddChildCareProviders">
+	<div>
+        <p th:text="#{child-care-intro.lets-add-all-the-providers}"></p>
+    </div>
+    <div>
+        <p th:text="#{child-care-intro.help-text-goes-here}"></p>
+    </div>
+    <div class="spacing-below-35 spacing-above-35">
+        <a class="button button--primary spacing-below-35" th:href="'/pages/'+${pageName}+'/navigation?option=0'">
+            <i class="icon-add"></i>
+            <span th:text="#{child-care-intro.add-a-provider}"></span>
+        </a>
+    </div>
+</div>
