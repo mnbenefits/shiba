@@ -48,6 +48,9 @@ public class PageData extends HashMap<String, InputData> {
           List<String> sanitizedValue = value.stream()
               .map(v -> v.replace("\u0000", ""))
               .collect(Collectors.toCollection(ArrayList::new));
+          sanitizedValue = sanitizedValue.stream()
+    		  .map(v -> v.replaceAll("[^\\p{L}\\p{N}\\p{P}\\p{Z}]", ""))
+    		  .collect(Collectors.toCollection(ArrayList::new));
           InputData inputData = new InputData(sanitizedValue, formInput.getValidators());
           return Map.entry(formInput.getName(), inputData);
         })
