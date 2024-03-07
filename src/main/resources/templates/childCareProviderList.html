@@ -1,14 +1,14 @@
 <div th:fragment="childCareProviderList">
     <div class="grid__item spacing-above-35">
         <h1 class="h2 spacing-above-0"
-            th:text="#{household-list.is-this-everyone-that-lives-with-you}"></h1>
+            th:text="#{child-care-provider-list.would-you-like-to-add}"></h1>
         <p class="text--help spacing-below-10"
-           th:text="#{household-list.include-children-and-everyone-who-lives-with-you}"></p>
+           th:text="#{child-care-provider-list.help-text}"></p>
     </div>
     <div class="grid__item boxed-content spacing-below-60">
-        <h2 class="h3 text--centered intro-box__title" th:text="#{household-list.your-household}"></h2>
+        <h2 class="h3 text--centered intro-box__title" th:text="#{child-care-provider-list.your-providers}"></h2>
         <ul class="list--bulleted spacing-above-10 spacing-below-60 builder-list">
-            <li class="word-wrap-break-word" th:text="|${data.get('personalInfo').get('firstName').value[0]}&nbsp;${data.get('personalInfo').get('lastName').value[0]} #{household-list.thats-you}|"></li>
+            <!-- li class="word-wrap-break-word" th:text="|${data.get('personalInfo').get('firstName').value[0]}&nbsp;${data.get('personalInfo').get('lastName').value[0]} #{household-list.thats-you}|"></li-->
             <th:block th:each="subworkflow: ${subworkflows}">
                 <th:block th:each="iteration, iterationStat: ${subworkflow.value}">
                     <li th:id="|iteration${iterationStat.index}|">
@@ -30,7 +30,7 @@
         <div class="text--centered">
             <a class="button button--secondary" th:href="'/pages/'+${pageName}+'/navigation?option=1'">
                 <i class="icon-add"></i>
-                <span th:text="#{household-list.add-a-person}"></span>
+                <span th:text="#{child-care-provider-list.add-a-provider}"></span>
             </a>
         </div>
     </div>
