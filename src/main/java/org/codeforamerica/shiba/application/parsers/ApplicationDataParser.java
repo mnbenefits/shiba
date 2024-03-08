@@ -115,10 +115,9 @@ public class ApplicationDataParser {
 
     coordinatesMap.put(Field.TRIBAL_NATION_BOUNDARY,
         new ParsingCoordinate("nationsBoundary", "selectedTribe"));
-    
+        
     coordinatesMap.put(Field.LIVING_IN_TRIBAL_NATION_BOUNDARY,
             new ParsingCoordinate("nationsBoundary", "livingInNationBoundary"));
-    
 
     coordinatesMap.put(Field.APPLYING_FOR_TRIBAL_TANF,
         new ParsingCoordinate("applyForTribalTANF", "applyForTribalTANF"));
