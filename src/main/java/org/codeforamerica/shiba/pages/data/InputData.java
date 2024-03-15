@@ -57,4 +57,9 @@ public class InputData implements Serializable {
   public void setValue(String newValue, int i) {
     this.value.set(i, newValue);
   }
+
+	@Override
+	public String toString() {
+		return "InputData [value=" + value + ", validators=" + validators + "]";
+	}
 }

@@ -1,37 +1,111 @@
-<div th:fragment="childCareProviderList">
-    <div class="grid__item spacing-above-35">
-        <h1 class="h2 spacing-above-0"
-            th:text="#{child-care-provider-list.would-you-like-to-add}"></h1>
-        <p class="text--help spacing-below-10"
-           th:text="#{child-care-provider-list.help-text}"></p>
-    </div>
-    <div class="grid__item boxed-content spacing-below-60">
-        <h2 class="h3 text--centered intro-box__title" th:text="#{child-care-provider-list.your-providers}"></h2>
-        <ul class="list--bulleted spacing-above-10 spacing-below-60 builder-list">
-            <!-- li class="word-wrap-break-word" th:text="|${data.get('personalInfo').get('firstName').value[0]}&nbsp;${data.get('personalInfo').get('lastName').value[0]} #{household-list.thats-you}|"></li-->
-            <th:block th:each="subworkflow: ${subworkflows}">
-                <th:block th:each="iteration, iterationStat: ${subworkflow.value}">
-                    <li th:id="|iteration${iterationStat.index}|">
-                        <form method="post"
-                              th:action="@{|/groups/${subworkflow.key}/${iterationStat.index}/deleteWarning|}">
-                            <span class="word-wrap-break-word" 
-                            		th:id="|iteration${iterationStat.index}-person|"
-                            		th:text="|${iteration.getPagesData().get('householdMemberInfo').get('firstName').value[0]}&nbsp;${iteration.getPagesData().get('householdMemberInfo').get('lastName').value[0]}|"></span>
-                            <button class="button--link right"
-                                    th:id="|iteration${iterationStat.index}-delete|"
-                                    th:aria-describedby="|iteration${iterationStat.index}-person|"
-                                    type="submit"
-                                    th:text="#{job-builder.delete}"></button>
-                        </form>
-                    </li>
-                </th:block>
-            </th:block>
-        </ul>
-        <div class="text--centered">
-            <a class="button button--secondary" th:href="'/pages/'+${pageName}+'/navigation?option=1'">
-                <i class="icon-add"></i>
-                <span th:text="#{child-care-provider-list.add-a-provider}"></span>
-            </a>
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/head :: head(#{${page.pageTitle}})}"></div>
+<body>
+<div class="page-wrapper">
+  <div th:replace="~{fragments/toolbar :: toolbar}"></div>
+  <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
+  <section class="slab slab--shiba">
+    <div class="grid">
+      <div th:replace="~{fragments/cardHeader :: cardHeader}"></div>
+      <main id="content" role="main" class="card spacing-above-35">
+        <div class="grid__item spacing-above-35">
+          <h1 class="h2 spacing-above-0"
+              th:text="#{child-care-provider-list.would-you-like-to-add}"></h1>
         </div>
+<!--/* TODO emj delete*/-->
+<!--/*
+     subworkflows:   <span th:text="${subworkflows}"> test</span></br>
+     subworkflows size:   <span th:text="${subworkflows.size()}"> test</span>
+</br>
+     subworkflows get0 is null:   <span th:text="${subworkflows.get(0)}"> test</span>
+*/-->
+        <div class="grid__item boxed-content spacing-below-60">
+          <h2 class="h3 text--centered intro-box__title" th:text="#{${page.headerKey}}"></h2>
+          <th:block th:each="subworkflow: ${subworkflows}">
+			       subworkflow value:   <span th:text="${subworkflow.value}"> test</span></br>
+            <th:block th:with="
+                                fakeApplicantNameAndId='x y applicant',
+                                childrenSet=${#sets.toSet({})}">
+--- Providers outer loop start ---
+              <th:block
+                  th:each="childcareProviderIteration, childcareProviderIterationStat: ${subworkflow.value}">
+                  <!--/*
+      childcareProviderIteration class name:      <span th:text="${childcareProviderIteration.getClass().getTypeName()}"> test</span></br>
+             childcareProviderIteration:      <span th:text="${childcareProviderIteration.getPagesData().get('childcareProviders')}"> test</span></br>
+             */-->
+                <th:block th:with="
+                                        childcareProviderPageData=${childcareProviderIteration.getPagesData().get('childCareProviderInfo')}">
+                  <th:block th:if="${childcareProviderPageData == null}">
+                    <th:block th:with="unused=${childrenSet.add(fakeApplicantNameAndId)}">
+						
+					</th:block>
+                  </th:block>
+                  <th:block th:unless="${childcareProviderPageData == null}">
+                    <th:block th:with="childcareProviderNameAndId=${childcareProviderIteration.getPagesData().get('childCareProviderInfo').get('childCareProviderName').value[0]},
+                                                unused=${childrenSet.add(childcareProviderNameAndId)}">
+                     childcareProviderNameAndId:      <span th:text="${childcareProviderNameAndId}"> test</span></br>     
+                     unused:      <span th:text="${unused}"> test</span></br>                       
+                    </th:block>
+                  </th:block>
+                </th:block>
+              </th:block>
+--- Providers outer loop end ---
+              <th:block
+                  th:with="sortedchildrenSet=${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberSort(childrenSet)}">
+                  sortedchildrenSet:      <span th:text="${sortedchildrenSet}"> test</span></br>
+                <th:block
+                    th:each="childcareProviderNameAndId, childcareProviderStat: ${sortedchildrenSet}">
+                    childcareProviderNameAndId:      <span th:text="${childcareProviderNameAndId}"> test</span></br>
+                  <th:block th:with="childcareProviderNameAndIdTokens=${childcareProviderNameAndId.split(' ')},
+                                        childNameTokens=${#lists.toList(childcareProviderNameAndIdTokens).subList(0, childcareProviderNameAndIdTokens.length - 1)},
+                                        childName=${#strings.listJoin(childNameTokens, ' ')},
+                                        householdMemberId=${childcareProviderNameAndIdTokens[childcareProviderNameAndIdTokens.length - 1]}">
+                    <h2 class="h3 list-header spacing-below-10"
+                        th:text="${childName}"></h2>
+                    <ul class="list--bulleted spacing-above-10 spacing-below-35 builder-list">
+                      <th:block th:each="providerIteration, providerIterationStat: ${subworkflow.value}">
+                        <th:block
+                            th:with="providerIterationPageData=${providerIteration.getPagesData().get('childCareProviderInfo')}">
+                          <th:block
+                              th:with="childcareProvideName=${providerIterationPageData == null ? fakeApplicantNameAndId : providerIterationPageData.get('childCareProviderName').value[0]}">
+                               childcareProvideName:      <span th:text="${childcareProvideName}"> test</span></br>
+                                
+                            <th:block
+                                th:if="${childNameAndId == childcareProviderNameAndId}">
+                                
+                                <!--/*
+                                providerIteration pages data keyset:      <span th:text="${providerIteration.getPagesData().keySet()}"> test</span></br>
+                                providerIteration pages childrenAtThisProvider:      <span th:text="${providerIteration.getPagesData().get('childrenAtThisProvider')}"> test</span></br>
+                               providerIteration  childrenNames:      <span th:text="${providerIteration.getPagesData().get('childrenAtThisProvider').get('childrenNames')}"> test</span></br>
+                                providerIteration value :      <span th:text="${providerIteration.getPagesData().get('childrenAtThisProvider').get('childrenNames').getValue()}"> test</span></br>
+                                */-->
+                              <div
+                                  th:replace="~{fragments/childcareListElement :: childcareProvider(${providerIteration.getPagesData().get('childrenAtThisProvider').get('childrenNames').getValue()}, ${subworkflow.key}, ${providerIterationStat.index})}"></div>
+                            </th:block>
+                          </th:block>
+                        </th:block>
+                      </th:block>
+                    </ul>
+                  </th:block>
+                </th:block>
+              </th:block>
+            </th:block>
+          </th:block>
+          <div class="text--centered">
+            <a class="button button--secondary"
+               th:href="'/pages/'+${pageName}+'/navigation?option=0'">
+              <i class="icon-add"></i>
+              <span th:text="#{child-care-provider-list.add-a-provider}"></span>
+            </a>
+          </div>
+        </div>
+        <a class="button button--primary" th:href="'/pages/'+${pageName}+'/navigation?option=1'"
+           th:text="#{child-care-provider-list.no-thats-it}"></a>
+      </main>
     </div>
+  </section>
 </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

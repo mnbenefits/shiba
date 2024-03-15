@@ -35,6 +35,7 @@ public class FormInputTemplate {
       case RADIO -> "radio-input";
       case CHECKBOX -> "checkbox-input";
       case PEOPLE_CHECKBOX -> "people-checkbox-input";
+      case PEOPLE_CHECKBOX_WITH_NONE -> "people-checkbox-with-none-input";
       case YES_NO -> "yes-no-input";
       case HIDDEN -> "hidden-input";
       case CUSTOM -> customInputFragment;
@@ -55,7 +56,8 @@ public class FormInputTemplate {
     return promptMessage == null &&
         type != CHECKBOX &&
         type != RADIO &&
-        type != FormInputType.PEOPLE_CHECKBOX;
+        type != FormInputType.PEOPLE_CHECKBOX &&
+        type != FormInputType.PEOPLE_CHECKBOX_WITH_NONE;
   }
 
   public boolean hasPromptMessageKey() {

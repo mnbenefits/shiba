@@ -14,7 +14,7 @@ import org.codeforamerica.shiba.pages.config.*;
 
 /**
  * PagesData extends HashMap&lt;String, PageData&gt; 
- *
+ * TODO emj rename this to PagesDataMap
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -195,9 +195,43 @@ public class PagesData extends HashMap<String, PageData> {
   
   private FormInputTemplate convert(String pageName, FormInput formInput,
       ApplicationData applicationData) {
-    List<String> errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
-        .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
-        .orElse(List.of());
+
+		System.out.println("===== PageData convert for pageName: " + pageName); //TODO emj delete
+		  System.out.println("formInput name: " + formInput.getName());
+		  List<PageDatasource> pageDataSources = formInput.getDatasources();
+		  
+		  if(pageDataSources != null) {
+		  System.out.println("pageDataSources: " + pageDataSources.toString());
+		  }
+		  OptionsWithDataSource owds = formInput.getOptions();
+		  if(owds != null) {
+			  List<PageDatasource> opds =  owds.getDatasources();
+			  System.out.println("OptionsWithDataSource: " + opds);
+			//  opds.
+		  }
+		  List<String> inputDataList = null;
+		  PageData pd = this.getPage(pageName);
+		  if(pd != null) {
+			  InputData inputdata = pd.get(formInput.getName());
+			  
+			  if(inputdata != null) {
+				  inputDataList = inputdata.getValue();
+			  }
+		  }
+		  
+
+		  List<String> errorMessageKeys = null;
+	 
+	try {
+		
+
+		errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
+		    .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
+		    .orElse(List.of());
+	} catch (Exception e) {
+		System.out.println(" Exception for pageName: " + pageName + " formInput: " + formInput.getName() + " inputData: " + inputDataList);
+		e.printStackTrace();
+	}
 
     return new FormInputTemplate(
         formInput.getType(),

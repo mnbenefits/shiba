@@ -1062,7 +1062,7 @@ pageDefinitions:
     pageTitle: parent-not-at-home.title
     headerKey: parent-not-at-home.who-are-the-children-that-have-a-parent-not-living-at-home
     inputs:
-      - type: PEOPLE_CHECKBOX
+      - type: PEOPLE_CHECKBOX_WITH_NONE
         name: whoHasAParentNotLivingAtHome
         validators:
           - validation: SELECT_AT_LEAST_ONE
@@ -1088,14 +1088,18 @@ pageDefinitions:
         name: childIdMap # This input is controlled by whatAreTheParentsNames
   - &introAddChildCareProviders
     name: introAddChildCareProviders
+    headerKey: child-care-intro.do-you-have-provider
     pageTitle: child-intro.title
     hasPrimaryButton: false
+    inputs:
+      - name: addChildCareProvider
+        type: YES_NO
   - &childCareProviderInfo
     name: childCareProviderInfo
     headerKey: child-care-info.header
     pageTitle: child-care-info.title
     contextFragment: addressContextFragment
-    usingPageTemplateFragment: true
+#    usingPageTemplateFragment: true
     inputs:
       - name: childCareProviderName
         type: TEXT
@@ -1149,35 +1153,79 @@ pageDefinitions:
  #         - validation: ZIPCODE
  #           errorMessageKey: general.validation.make-sure-to-enter-a-zip-code-with-5-digits 
    #TODO add list of HH members
-      - name: childrenAtThisProvider
-        type: CUSTOM
-        customInputFragment: childrenAtThisProvider
+#      - name: childrenAtThisProvider
+#        type: PEOPLE_CHECKBOX
+#        validators:
+#          - validation: SELECT_AT_LEAST_ONE
+#            errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
+#        datasources:
+#          - pageName: childrenInNeedOfCare
+#            inputName: whoNeedsChildCare
+#         - pageName: choosePrograms
+#          - groupName: childcareProviders
+#            pageName: childCareProviderInfo
+#        customInputFragment: childrenAtThisProvider
 #        customFollowUps: 'true'
 #        validators:
 #          - validation: NOT_BLANK
 #            errorMessageKey: general.validation.make-sure-to-select-a-person
-        options:
-          datasources:
-            - pageName: personalInfo
-            - groupName: household
-        followUps:
-          - name: startDate
-            type: DATE
-            validators:
-              - validation: DATE
-                errorMessageKey: general.validation.please-enter-the-date-in-this-format
-                condition:
-                  input: startDate
-                  matcher: NOT_EMPTY
-            promptMessage:
-              promptMessageKey: child-care-info.start-date
-            helpMessageKey: general.if-you-dont-have
+#        options:
+#          datasources:
+#            - pageName: personalInfo
+#            - groupName: household
+#        followUps:
+#          - name: startDate
+#            type: DATE
+#            validators:
+#              - validation: DATE
+#                errorMessageKey: general.validation.please-enter-the-date-in-this-format
+#                condition:
+#                  input: startDate
+#                  matcher: NOT_EMPTY
+#            promptMessage:
+#              promptMessageKey: child-care-info.start-date
+#            helpMessageKey: general.if-you-dont-have
+  - &childrenAtThisProvider
+    name: childrenAtThisProvider
+    pageTitle: child-care-who-uses.title
+    headerKey: child-care-who-uses.header
+    inputs:
+      - name: childrenNames
+        type: PEOPLE_CHECKBOX
+#        customInputFragment: householdOptionsCheckboxes
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
+        datasources:
+          - pageName: childrenInNeedOfCare
+            inputName: whoNeedsChildCare
+          - pageName: choosePrograms
+  - &childcareProviderStartDate
+    name: childcareProviderStartDate
+    pageTitle: child-care-start-date.title
+    headerKey: child-care-start-date.what-is-start-date
+    inputs:
+      - type: CUSTOM
+        name: startDate
+        customInputFragment: childcareProviderStartDateInput
+        promptMessage:
+          promptMessageKey: child-care-start-date.this-child-start-date
+        helpMessageKey: child-care-start-date.this-child-start-date
+#        options:
+#        datasources:
+#            - pageName: childCareProviderInfo
+#          - pageName: childrenAtThisProvider
+ #             inputName: childrenNames
+ #           - groupName: childcareProviders
+      - type: HIDDEN
+        name: childIdMap # This input is controlled by startDate
   - &childCareProviderList
     name: childCareProviderList
     pageTitle: child-care-provider-list.title
     primaryButtonTextKey: child-care-provider-list.no-thats-it
     contextFragment: householdContextFragment 
- 
+    headerKey: child-care-provider-list.your-providers
+    usingPageTemplateFragment: false 
  
  
   - &householdDeleteWarningPage
@@ -5293,22 +5341,69 @@ workflow:
           value: NONE_OF_THE_ABOVE
   introAddChildCareProviders:
     pageConfiguration: *introAddChildCareProviders
+    skipCondition: *noOneChoseCCAP?
     nextPages:
       - pageName: childCareProviderInfo
+        condition: 
+          pageName: introAddChildCareProviders
+          input: addChildCareProvider
+          value: "true"
+      - pageName: introPersonalDetails
+        condition:
+            pageName: introAddChildCareProviders
+            input: addChildCareProvider
+            value: "false"
+    datasources:
+      - pageName: introAddChildCareProviders
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo
   childCareProviderInfo:
     pageConfiguration: *childCareProviderInfo
+    skipCondition: *noOneChoseCCAP?
+    groupName: childcareProviders
+    nextPages:
+      - pageName: childrenAtThisProvider
+    datasources:
+      - pageName: childrenInNeedOfCare
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo
+  childrenAtThisProvider:
+    pageConfiguration: *childrenAtThisProvider
+    skipCondition: *noOneChoseCCAP?
+    groupName: childcareProviders
+    datasources:
+      - pageName: childrenInNeedOfCare
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo
+    nextPages:
+      - pageName: childcareProviderStartDate  
+  childcareProviderStartDate:
+    pageConfiguration: *childcareProviderStartDate
+    skipCondition: *noOneChoseCCAP?
     groupName: childcareProviders
     nextPages:
       - pageName: childCareProviderList
+    datasources:
+      - pageName: choosePrograms
+      - groupName: childcareProviders
+        pageName: childrenAtThisProvider
   childCareProviderList:
     pageConfiguration: *childCareProviderList
+    skipCondition: *noOneChoseCCAP?
+    dataMissingRedirect: introAddChildCareProviders
     nextPages:
       - pageName: housingSubsidy
         condition: *noOneChoseSNAP?
       - pageName: livingSituation
+#TODO emj the following "datasources" are used to map data to the page in PageController where the "pageDatasources" object is created
     datasources:
-      - groupName: household
-      - pageName: personalInfo
+#      - pageName: choosePrograms
+      - groupName: childcareProviders
+      - pageName: childCareProviderInfo
+#      - pageName: personalInfo
   householdDeleteWarningPage:
     pageConfiguration: *householdDeleteWarningPage
     appliesToGroup: household
@@ -7190,8 +7285,12 @@ pageGroups:
   childcareProviders:
     startPages:
       - childCareProviderInfo
+      - childrenAtThisProvider
+      - childcareProviderStartDate
     completePages:
       - childCareProviderInfo
+      - childrenAtThisProvider
+      - childcareProviderStartDate
     reviewPage: childCareProviderList
     deleteWarningPage: childcareProviderDeleteWarningPage
     restartPage: introAddChildCareProviders

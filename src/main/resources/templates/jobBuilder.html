@@ -21,6 +21,11 @@
             <th:block th:with="
                                 fakeApplicantNameAndId='x y applicant',
                                 householdMembers=${#sets.toSet({})}">
+                                <!--/* TODO emj delete*/-->
+     subworkflows:   <span th:text="${subworkflows}"> test</span></br>
+     subworkflows size:   <span th:text="${subworkflows.size()}"> test</span>
+</br>
+     subworkflows get0 is null:   <span th:text="${subworkflows.get(0)}"> test</span>
               <th:block
                   th:each="householdMemberIteration, householdMemberIterationStat: ${subworkflow.value}">
                 <th:block th:with="

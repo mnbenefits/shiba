@@ -589,11 +589,14 @@ public class PageController {
         }
       }
     } else {
+    	// The pageDatasources Map is available for every page that isn't static. 
+    	// This contains the data that was previously entered by the client
       model.put("pageDatasources",
           pagesData.getDatasourcePagesBy(pageWorkflow.getDatasources())
               .mergeDatasourcePages(
                   pagesData.getDatasourceGroupBy(pageWorkflow.getDatasources(),
                       applicationData.getSubworkflows())));
+      //TODO emj rename "data" to something more descriptive. 
       model.put("data", pagesData
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
     }

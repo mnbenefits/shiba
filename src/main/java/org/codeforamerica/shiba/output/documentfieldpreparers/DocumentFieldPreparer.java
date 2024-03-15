@@ -12,7 +12,7 @@ public interface DocumentFieldPreparer {
 
   static DocumentFieldType formInputTypeToApplicationInputType(FormInputType type) {
     return switch (type) {
-      case CHECKBOX, PEOPLE_CHECKBOX -> DocumentFieldType.ENUMERATED_MULTI_VALUE;
+      case CHECKBOX, PEOPLE_CHECKBOX, PEOPLE_CHECKBOX_WITH_NONE -> DocumentFieldType.ENUMERATED_MULTI_VALUE;
       case RADIO, SELECT -> DocumentFieldType.ENUMERATED_SINGLE_VALUE;
       case DATE -> DocumentFieldType.DATE_VALUE;
       case TEXT, LONG_TEXT, HOURLY_WAGE, NUMBER, YES_NO, MONEY, TEXTAREA, PHONE, SSN, CUSTOM, NOTICE -> DocumentFieldType.SINGLE_VALUE;

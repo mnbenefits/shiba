@@ -17,7 +17,7 @@ public class PageWorkflowConfiguration {
 
   private List<NextPage> nextPages;
   private Condition skipCondition;
-  private List<PageDatasource> datasources = new ArrayList<>();
+  private List<PageDatasource> datasources = new ArrayList<>(); //TODO emj rename this to pageDataSourceNamesList ???
   private PageConfiguration pageConfiguration;
   private String groupName;
   private String appliesToGroup;

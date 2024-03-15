@@ -17,5 +17,6 @@ public enum FormInputType {
   CUSTOM,
   HIDDEN,
   PEOPLE_CHECKBOX,
+  PEOPLE_CHECKBOX_WITH_NONE,
   NOTICE
 }
