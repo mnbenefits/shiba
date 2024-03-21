@@ -7,38 +7,34 @@
                     hasHelpMessage=${input.helpMessageKey != null},
                     needsAriaLabel=${input.needsAriaLabel()}">
   <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
- <!--/* 	input:  <p th:text="${input}"> test</p>
+ <!--/* 	
+  	  children: <p th:text="${input.options.subworkflows.get('childcareProviders').get(0).getPagesData().get('childrenAtThisProvider').get('childrenNames').value}"> test</p>
+ input:  <p th:text="${input}"> test</p>
 	inputData:  <p th:text="${inputData}"> test</p>
 	data:  <p th:text="${data.toString()}"> test</p>
 	childIdMapData:  <p th:text="${childIdMapData.toString()}"> test</p>
 	input.datasources size:  <p th:text="${input.datasources.size()}"> test</p>
+input:  <p th:text="${input}"> test</p>
+input.options: <p th:text="${input.options.datasources.get('childrenAtThisProvider')}"> test</p>
+subworkflows: <p th:text="${input.options.subworkflows.get('childcareProviders').get(0).getPagesData().get('childrenAtThisProvider')}"> test</p>
+	 th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
 
-	 datasources 0: <p th:text="${input.datasources.get(0)}"> test</p>
-	 		pageDatasources: <p th:text="${pageDatasources}"> test</p> TODO emj delete
-	 This code will be removed at thymeleaf parsing time! inputName
-	  .get('childrenNames')
-	  empty: ${input.options.datasources.get('childCareProviderInfo').keySet()}
-	  
-	  This works, shows true: <p th:text="${input.options.datasources.get('childrenAtThisProvider').isValid()}"> test</p>
-	  This works, shows 0: <p th:text="${input.options.datasources.get('childrenAtThisProvider').size()}"> test</p>
-	          fullNameAndId: <span th:text="${fullNameAndId}"> test</span>
-	  null: datasources.get('childCareProviderInfo').get('childrenAtThisProvider').value
-	  	subworkflow size:  <p th:text="${input.options.subworkflows.get('childcareProviders').size()}"> test</p>
-	subworkflow class type:  <p th:text="${input.options.subworkflows.get('childcareProviders').getClass().getName()}"> test</p>
 	  */-->
     <th:block
-        th:each="fullNameAndId, iterationStat: ${pageDatasources.get('childrenAtThisProvider').get('childrenNames').value}"
+        th:each="fullNameAndId, iterationStat: ${input.options.subworkflows.get('childcareProviders').get(0).getPagesData().get('childrenAtThisProvider').get('childrenNames').value}"
         th:with="childArray=${#strings.arraySplit(fullNameAndId, ' ')},
                          childId=${childArray[#arrays.length(childArray)-1]},
                          childName=${#strings.substringBefore(fullNameAndId, ' ' + childId)},
                          hasHelpMessage=${input.helpMessageKey != null},
                          indexInInputData=${childIdMapData.value.indexOf(childId)},
+                         you=#{general.you},
                          parentName=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)},
                          fieldIsBlank=${!inputData.valid(data) && parentName.isBlank()}">
+      
       <div class="form-group" th:classappend="${fieldIsBlank} ? 'form-group--error' : ''">
 		  <!--/*  you=#{general.you}, */-->
         <label class="form-question spacing-below-5" th:for="|${childId}-parentname|"
-               th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
+               th:text="${childName}"
                th:id="${childId + '-label'}">
         </label>
 

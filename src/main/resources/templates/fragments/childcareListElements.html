@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+<!--/* Copied from jobListElement.html */-->
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <body>
-	childcareListElement
-<li class="grid" th:fragment="childcareProvider(childCareProviderName, subworkflowKey, index)" th:id="|iteration${index}|">
+	-- childcareListElement --
+<li class="grid" th:fragment="childcareListElement(childCareProviderName, subworkflowKey, index)" th:id="|iteration${index}|">
     <form method="post" th:action="@{|/groups/${subworkflowKey}/${index}/deleteWarning|}" class="display-flex">
         <span class="grid__item width-five-sixths word-wrap-break-word" th:text="|${childCareProviderName}|"></span>
         <button class="grid__item width-one-sixth button--link right align-self-end"

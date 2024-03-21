@@ -256,4 +256,19 @@ public class PagesData extends HashMap<String, PageData> {
         formInput.getValidationIcon()
     );
   }
+  
+  /**
+   * Override toString method.
+   */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PagesData [ ");
+		for (var entry : this.entrySet()) {
+		    sb.append(entry.getKey() + "/" + entry.getValue());
+		    sb.append("\n");		
+		 }
+		sb.append(" ]");
+		return sb.toString();
+	}
 }

@@ -397,9 +397,13 @@ public class PageController {
     // Update pagesData with data for incomplete subworkflows
     var pagesData = applicationData.getPagesData();
     if (pageWorkflowConfig.getGroupName() != null) { // If page is part of a group
-      var dataForIncompleteIteration = getIncompleteIterationPagesData(pageName,
-          pageWorkflowConfig);
-
+    	System.out.println("========== PageController getPage pagesData: " + pagesData.toString());//TODO emj delete
+      var dataForIncompleteIteration = getIncompleteIterationPagesData(pageName, pageWorkflowConfig);
+      if(dataForIncompleteIteration != null) {
+    	  System.out.println("========== PageController getPage dataForIncompleteIteration: " + dataForIncompleteIteration.toString());//TODO emj delete
+      }else{
+    	  System.out.println("========== PageController getPage dataForIncompleteIteration is NULL");
+      }
       if (dataForIncompleteIteration == null) {
         String redirectPageForGroup = applicationConfiguration.getPageGroups()
             .get(pageWorkflowConfig.getGroupName()).getRedirectPage();

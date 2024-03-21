@@ -18,6 +18,10 @@
         <div class="grid__item boxed-content spacing-below-60">
           <h2 class="h3 text--centered intro-box__title" th:text="#{${page.headerKey}}"></h2>
           <th:block th:each="subworkflow: ${subworkflows}">
+			  <!--/* Iterate through each subworkflow.
+			  Create a fake name for later in the iteration.
+			  Create a Set for HH members.
+			  */-->
             <th:block th:with="
                                 fakeApplicantNameAndId='x y applicant',
                                 householdMembers=${#sets.toSet({})}">
@@ -31,10 +35,12 @@
                 <th:block th:with="
                                         householdSelectionPageData=${householdMemberIteration.getPagesData().get('householdSelectionForIncome')}">
                   <th:block th:if="${householdSelectionPageData == null}">
+					  <!--/* Add the fake name to the Set if there is no HH selection in this iteration. */-->
                     <th:block th:with="
                                                 unused=${householdMembers.add(fakeApplicantNameAndId)}"></th:block>
                   </th:block>
                   <th:block th:unless="${householdSelectionPageData == null}">
+					  <!--/* Get the HH member with the job and add to the Set. */-->
                     <th:block th:with="
                                                 householdMemberNameAndId=${householdMemberIteration.getPagesData().get('householdSelectionForIncome').get('whoseJobIsIt').value[0]},
                                                 unused=${householdMembers.add(householdMemberNameAndId)}"></th:block>
@@ -46,20 +52,36 @@
                   th:with="sortedHouseholdMembers=${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberSort(householdMembers)}">
                 <th:block
                     th:each="householdMemberNameAndId, householdMemberStat: ${sortedHouseholdMembers}">
+                    <!--/* Iterate through the sorted Set. 
+                    
+                    */-->
                   <th:block th:with="
                                         householdMemberNameAndIdTokens=${householdMemberNameAndId.split(' ')},
                                         householdMemberNameTokens=${#lists.toList(householdMemberNameAndIdTokens).subList(0, householdMemberNameAndIdTokens.length - 1)},
                                         householdMemberName=${#strings.listJoin(householdMemberNameTokens, ' ')},
                                         householdMemberId=${householdMemberNameAndIdTokens[householdMemberNameAndIdTokens.length - 1]}">
+             <!--/* programs is an element in the model that contains applicant and household programs. 
+             If applicant or HH member selected NONE (not sure why that is relevant for this page)
+             	OR if HH members were added, then include this section.
+             */-->
                     <h2 class="h3 list-header spacing-below-10"
                         th:if="${programs.contains('NONE') || data.getPageInputFirstValue('addHouseholdMembers','addHouseholdMembers').equals('true')}"
                         th:text="${householdMemberId == 'applicant' ? householdMemberName+' (you)' : householdMemberName}"></h2>
                     <ul class="list--bulleted spacing-above-10 spacing-below-35 builder-list">
+				householdMemberNameAndIdTokens:		<span th:text="${householdMemberNameAndIdTokens}"> test</span></br>
+				householdMemberNameTokens:		<span th:text="${householdMemberNameTokens}"> test</span></br>
+					householdMemberName:	  <span th:text="${householdMemberName}"> test</span></br>
+					householdMemberId: 	<span th:text="${householdMemberId}"> test</span></br>
                       <th:block th:each="jobIteration, jobIterationStat: ${subworkflow.value}">
                         <th:block
                             th:with="jobIterationPageData=${jobIteration.getPagesData().get('householdSelectionForIncome')}">
                           <th:block
                               th:with="jobHouseholdMemberNameAndId=${jobIterationPageData == null ? fakeApplicantNameAndId : jobIterationPageData.get('whoseJobIsIt').value[0]}">
+                              <!--/* Iterate through the job subworkflow.
+								If jobIterationPageData is null, set the jobHouseholdMemberNameAndId to the fake one. If jobIterationPageData is not null, get whoseJobIsIt value.
+								If they match, send the employers name to the jobListElement.html fragment.
+								*/-->
+							jobHouseholdMemberNameAndId:	<span th:text="${jobHouseholdMemberNameAndId}"> test</span></br>
                             <th:block
                                 th:if="${jobHouseholdMemberNameAndId == householdMemberNameAndId}">
                               <div
