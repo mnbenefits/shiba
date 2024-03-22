@@ -1185,9 +1185,9 @@ pageDefinitions:
         options:
 # This is a PageDatasource object, not a hashmap
           datasources:
-            - groupName: childcareProviders
-              pageName: childrenAtThisProvider
-              inputName: childrenNames
+#            - groupName: childcareProviders TODO emj this caused errors in the ApplicationData class, getSubworkflowsForPageDatasources method
+             - pageName: childrenAtThisProvider
+               inputName: childrenNames
       - type: HIDDEN
         name: childIdMap # This input is controlled by startDate
   - &childCareProviderList
@@ -5359,18 +5359,19 @@ workflow:
     datasources:
       - pageName: childrenInNeedOfCare
       - pageName: choosePrograms
-      - groupName: household
-        pageName: householdMemberInfo
+#      - groupName: household
+#        pageName: householdMemberInfo
   childcareProviderStartDate:
     pageConfiguration: *childcareProviderStartDate
     skipCondition: *noOneChoseCCAP?
     groupName: childcareProviders
     nextPages:
       - pageName: childCareAdditionalInfo
+# datasources is a List of PageDatasource objects that refer to the JSON data
     datasources:
       - pageName: choosePrograms
 #      - groupName: childcareProviders
-#        pageName: childrenAtThisProvider
+      - pageName: childrenAtThisProvider
 #        inputName: childrenNames
   childCareAdditionalInfo:
     pageConfiguration: *childCareAdditionalInfo

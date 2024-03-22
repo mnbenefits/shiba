@@ -12,7 +12,7 @@ import org.codeforamerica.shiba.pages.data.Subworkflows;
 
 /**
  * Trying to document what this interface does.
- * This is not a functional interface because there is no unimplented method.
+ * This is not a functional interface because there is no unimplemented method.
  * Java allows interfaces such as this to have static implemented methods.
  *
  */

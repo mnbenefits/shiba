@@ -593,6 +593,9 @@ public class PageController {
         }
       }
     } else {
+    	//TODO emj do we want to remove the pageDatasources element before adding it again? 
+    	// When the page is reloaded in the browser, another instance is added.
+    	//model.remove("pageDatasources");
     	// The pageDatasources Map is available for every page that isn't static. 
     	// This contains the data that was previously entered by the client
       model.put("pageDatasources",

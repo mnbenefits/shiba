@@ -7,21 +7,16 @@
                     hasHelpMessage=${input.helpMessageKey != null},
                     needsAriaLabel=${input.needsAriaLabel()}">
   <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+
  <!--/* 	
-  	  children: <p th:text="${input.options.subworkflows.get('childcareProviders').get(0).getPagesData().get('childrenAtThisProvider').get('childrenNames').value}"> test</p>
- input:  <p th:text="${input}"> test</p>
-	inputData:  <p th:text="${inputData}"> test</p>
-	data:  <p th:text="${data.toString()}"> test</p>
-	childIdMapData:  <p th:text="${childIdMapData.toString()}"> test</p>
-	input.datasources size:  <p th:text="${input.datasources.size()}"> test</p>
-input:  <p th:text="${input}"> test</p>
-input.options: <p th:text="${input.options.datasources.get('childrenAtThisProvider')}"> test</p>
-subworkflows: <p th:text="${input.options.subworkflows.get('childcareProviders').get(0).getPagesData().get('childrenAtThisProvider')}"> test</p>
-	 th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
+These work, or at least dont crash:
+	   input:  <p th:text="${input}"> test</p>
+	input options datasources:  <p th:text="${input.options.datasources.get('childrenAtThisProvider').get('childrenNames')}"> test</p>
+pageDatasources:  <p th:text="${pageDatasources.get('childrenAtThisProvider').get('childrenNames').value}"> test</p>
 
 	  */-->
     <th:block
-        th:each="fullNameAndId, iterationStat: ${input.options.subworkflows.get('childcareProviders').get(0).getPagesData().get('childrenAtThisProvider').get('childrenNames').value}"
+        th:each="fullNameAndId, iterationStat: ${pageDatasources.get('childrenAtThisProvider').get('childrenNames').value}"
         th:with="childArray=${#strings.arraySplit(fullNameAndId, ' ')},
                          childId=${childArray[#arrays.length(childArray)-1]},
                          childName=${#strings.substringBefore(fullNameAndId, ' ' + childId)},

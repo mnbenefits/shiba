@@ -34,6 +34,7 @@ public class PageData extends HashMap<String, InputData> {
 
   public PageData(Map<String, InputData> inputDataMap) {
     super(inputDataMap);
+    System.out.println("######### PageData constructor InputData: " + inputDataMap);//TODO emj delete
   }
 
   public static PageData fillOut(PageConfiguration page, MultiValueMap<String, String> model) {
