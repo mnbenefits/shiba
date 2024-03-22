@@ -22,7 +22,6 @@ public class DatasourcePages extends HashMap<String, PageData> {
 
   public DatasourcePages(PagesData pagesData) {
     super(pagesData);
-	  System.out.println(">>>>>> DatasourcePages constructor for " + pagesData.toString()+ "\n");
   }
 
   public DatasourcePages(Map<String, PageData> pagesData) {

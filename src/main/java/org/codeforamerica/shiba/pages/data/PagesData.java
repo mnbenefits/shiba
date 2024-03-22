@@ -49,7 +49,7 @@ public class PagesData extends HashMap<String, PageData> {
    * PagesData satisfies method checks if condition contains multiple conditions,
    * which then uses allMatch for AND logicalOperator, or anyMatch for OR logicalOperator.</br>
    * If there are no multiple conditions, it checks if the single condition matches the pageData.</br>
-   * This method recursivly calls itself.
+   * This method recursively calls itself.
    * @param condition
    * @return Boolean
    */
@@ -194,68 +194,34 @@ public class PagesData extends HashMap<String, PageData> {
   }
   
   private FormInputTemplate convert(String pageName, FormInput formInput,
-      ApplicationData applicationData) {
+	      ApplicationData applicationData) {
+	    List<String> errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
+	        .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
+	        .orElse(List.of());
 
-		System.out.println("===== PageData convert for pageName: " + pageName); //TODO emj delete
-		  System.out.println("formInput name: " + formInput.getName());
-		  List<PageDatasource> pageDataSources = formInput.getDatasources();
-		  
-		  if(pageDataSources != null) {
-		  System.out.println("pageDataSources: " + pageDataSources.toString());
-		  }
-		  OptionsWithDataSource owds = formInput.getOptions();
-		  if(owds != null) {
-			  List<PageDatasource> opds =  owds.getDatasources();
-			  System.out.println("OptionsWithDataSource: " + opds);
-			//  opds.
-		  }
-		  List<String> inputDataList = null;
-		  PageData pd = this.getPage(pageName);
-		  if(pd != null) {
-			  InputData inputdata = pd.get(formInput.getName());
-			  
-			  if(inputdata != null) {
-				  inputDataList = inputdata.getValue();
-			  }
-		  }
-		  
-
-		  List<String> errorMessageKeys = null;
-	 
-	try {
-		
-
-		errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
-		    .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
-		    .orElse(List.of());
-	} catch (Exception e) {
-		System.out.println(" Exception for pageName: " + pageName + " formInput: " + formInput.getName() + " inputData: " + inputDataList);
-		e.printStackTrace();
-	}
-
-    return new FormInputTemplate(
-        formInput.getType(),
-        formInput.getName(),
-        formInput.getCustomInputFragment(),
-        formInput.getPromptMessage(),
-        formInput.getHelpMessageKey(),
-        formInput.getPlaceholder(),
-        errorMessageKeys,
-        createOptionsWithDataSourceTemplate(formInput, applicationData),
-        formInput.getFollowUps().stream()
-            .map(followup -> convert(pageName, followup, applicationData))
-            .collect(Collectors.toList()),
-        formInput.getFollowUpValues(),
-        formInput.getReadOnly(),
-        formInput.getDefaultValue(),
-        formInput.getDatasources(),
-        formInput.getCustomFollowUps(),
-        formInput.getInputPostfix(),
-        formInput.getHelpMessageKeyBelow(),
-        formInput.getNoticeMessage(),
-        formInput.getValidationIcon()
-    );
-  }
+	    return new FormInputTemplate(
+	        formInput.getType(),
+	        formInput.getName(),
+	        formInput.getCustomInputFragment(),
+	        formInput.getPromptMessage(),
+	        formInput.getHelpMessageKey(),
+	        formInput.getPlaceholder(),
+	        errorMessageKeys,
+	        createOptionsWithDataSourceTemplate(formInput, applicationData),
+	        formInput.getFollowUps().stream()
+	            .map(followup -> convert(pageName, followup, applicationData))
+	            .collect(Collectors.toList()),
+	        formInput.getFollowUpValues(),
+	        formInput.getReadOnly(),
+	        formInput.getDefaultValue(),
+	        formInput.getDatasources(),
+	        formInput.getCustomFollowUps(),
+	        formInput.getInputPostfix(),
+	        formInput.getHelpMessageKeyBelow(),
+	        formInput.getNoticeMessage(),
+	        formInput.getValidationIcon()
+	    );
+	  }
   
   /**
    * Override toString method.
