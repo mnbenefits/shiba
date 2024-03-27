@@ -1,5 +1,5 @@
 <!--/* Custom input for attaching start date to child for providers. Copied from parentNotAtHomeNameInput.html because it is similar. */-->
-<th:block th:fragment="childcareProviderStartDateInput(input, data)"
+<th:block th:fragment="childCareProviderStartDateInput(input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                      hasError=${!data.isValid() && !inputData.valid(data)},
                     inputData=${data.get(input.name)},

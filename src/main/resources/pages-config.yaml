@@ -1133,7 +1133,7 @@ pageDefinitions:
 #          - pageName: childrenInNeedOfCare
 #            inputName: whoNeedsChildCare
 #         - pageName: choosePrograms
-#          - groupName: childcareProviders
+#          - groupName: childCareProviders
 #            pageName: childCareProviderInfo
 #        customInputFragment: childrenAtThisProvider
 #        customFollowUps: 'true'
@@ -1171,32 +1171,25 @@ pageDefinitions:
           - pageName: childrenInNeedOfCare
             inputName: whoNeedsChildCare
           - pageName: choosePrograms
-  - &childcareProviderStartDate
-    name: childcareProviderStartDate
+  - &childCareProviderStartDate
+    name: childCareProviderStartDate
     pageTitle: child-care-start-date.title
     headerKey: child-care-start-date.what-is-start-date
     inputs:
       - type: CUSTOM
         name: startDate
-        customInputFragment: childcareProviderStartDateInput
+        customInputFragment: childCareProviderStartDateInput
         promptMessage:
           promptMessageKey: child-care-start-date.this-child-start-date
         helpMessageKey: child-care-start-date.this-child-start-date
         options:
 # This is a PageDatasource object, not a hashmap
           datasources:
-#            - groupName: childcareProviders TODO emj this caused errors in the ApplicationData class, getSubworkflowsForPageDatasources method
+#            - groupName: childCareProviders TODO emj this caused errors in the ApplicationData class, getSubworkflowsForPageDatasources method
              - pageName: childrenAtThisProvider
                inputName: childrenNames
       - type: HIDDEN
         name: childIdMap # This input is controlled by startDate
-  - &childCareProviderList
-    name: childCareProviderList
-    pageTitle: child-care-provider-list.title
-    primaryButtonTextKey: child-care-provider-list.no-thats-it
-    contextFragment: householdContextFragment 
-    headerKey: child-care-provider-list.your-providers
-    usingPageTemplateFragment: false 
   - &childCareAdditionalInfo
 # TODO emj create messages for this page
     name: childCareAdditionalInfo
@@ -1205,7 +1198,18 @@ pageDefinitions:
     headerHelpMessageKey: additional-info.this-is-optional
     inputs:
       - name: childCareAdditionalInfo
-        type: TEXTAREA
+        type: TEXTAREA        
+  - &childCareProviderList
+    name: childCareProviderList
+    pageTitle: child-care-provider-list.title
+    primaryButtonTextKey: child-care-provider-list.no-thats-it
+    contextFragment: householdContextFragment 
+    headerKey: child-care-provider-list.your-providers
+    usingPageTemplateFragment: false
+  - &childCareProviderDeleteWarningPage
+    name: childCareProviderDeleteWarningPage
+    pageTitle: child-care-provider-delete.title
+    usingPageTemplateFragment: false
   - &noChildCareAdditionalInfo
 # TODO emj create messages for this page
     name: noChildCareAdditionalInfo
@@ -5297,6 +5301,14 @@ workflow:
     datasources:
       - groupName: household
       - pageName: personalInfo
+  householdDeleteWarningPage:
+    pageConfiguration: *householdDeleteWarningPage
+    appliesToGroup: household
+    dataMissingRedirect: reviewInfo
+    nextPages:
+      - pageName: householdList
+    datasources:
+      - groupName: household
   noProgramsSelected:
     pageConfiguration: *noProgramsSelected
     nextPages:
@@ -5319,7 +5331,6 @@ workflow:
       - groupName: household
         pageName: householdMemberInfo
     skipCondition: *noOneChoseCCAP?
-#moved pages to here
   doYouHaveChildCareProvider:
     pageConfiguration: *doYouHaveChildCareProvider
     skipCondition: *noOneChoseCCAP?
@@ -5342,7 +5353,7 @@ workflow:
   childCareProviderInfo:
     pageConfiguration: *childCareProviderInfo
     skipCondition: *noOneChoseCCAP?
-    groupName: childcareProviders
+    groupName: childCareProviders
     nextPages:
       - pageName: childrenAtThisProvider
     datasources:
@@ -5353,30 +5364,30 @@ workflow:
   childrenAtThisProvider:
     pageConfiguration: *childrenAtThisProvider
     skipCondition: *noOneChoseCCAP?
-    groupName: childcareProviders
+    groupName: childCareProviders
     nextPages:
-      - pageName: childcareProviderStartDate  
+      - pageName: childCareProviderStartDate  
     datasources:
       - pageName: childrenInNeedOfCare
       - pageName: choosePrograms
 #      - groupName: household
 #        pageName: householdMemberInfo
-  childcareProviderStartDate:
-    pageConfiguration: *childcareProviderStartDate
+  childCareProviderStartDate:
+    pageConfiguration: *childCareProviderStartDate
     skipCondition: *noOneChoseCCAP?
-    groupName: childcareProviders
+    groupName: childCareProviders
     nextPages:
       - pageName: childCareAdditionalInfo
 # datasources is a List of PageDatasource objects that refer to the JSON data
     datasources:
       - pageName: choosePrograms
-#      - groupName: childcareProviders
+#      - groupName: childCareProviders
       - pageName: childrenAtThisProvider
 #        inputName: childrenNames
   childCareAdditionalInfo:
     pageConfiguration: *childCareAdditionalInfo
     skipCondition: *noOneChoseCCAP?
-    groupName: childcareProviders
+    groupName: childCareProviders
     nextPages:
       - pageName: childCareProviderList
   childCareProviderList:
@@ -5390,7 +5401,7 @@ workflow:
 #TODO emj the following "datasources" are used to map data to the page in PageController where the "pageDatasources" object is created
     datasources:
 #      - pageName: choosePrograms
-      - groupName: childcareProviders
+      - groupName: childCareProviders
       - pageName: childCareProviderInfo
 #      - pageName: personalInfo
   noChildCareAdditionalInfo:
@@ -5398,14 +5409,14 @@ workflow:
     skipCondition: *noOneChoseCCAP?
     nextPages:
       - pageName: whoHasParentNotAtHome
-  householdDeleteWarningPage:
-    pageConfiguration: *householdDeleteWarningPage
-    appliesToGroup: household
-    dataMissingRedirect: reviewInfo
+  childCareProviderDeleteWarningPage:
+    pageConfiguration: *childCareProviderDeleteWarningPage
+    appliesToGroup: childCareProviders
+    dataMissingRedirect: childCareProviderList
     nextPages:
-      - pageName: householdList
+      - pageName: childCareProviderList
     datasources:
-      - groupName: household
+      - groupName: childCareProviders
   whoHasParentNotAtHome:
     pageConfiguration: *whoHasParentNotAtHome
     nextPages:
@@ -7312,20 +7323,20 @@ pageGroups:
     deleteWarningPage: householdDeleteWarningPage
     restartPage: addHouseholdMembers
     startingCount: 1
-  childcareProviders:
+  childCareProviders:
     startPages:
       - childCareProviderInfo
       - childrenAtThisProvider
-      - childcareProviderStartDate
+      - childCareProviderStartDate
       - childCareAdditionalInfo
     completePages:
 #      - childCareProviderInfo
 #      - childrenAtThisProvider
-#      - childcareProviderStartDate
+#      - childCareProviderStartDate
       - childCareAdditionalInfo
     reviewPage: childCareProviderList
-    deleteWarningPage: childcareProviderDeleteWarningPage
-    restartPage: doYouHaveChildCareProvider
+    deleteWarningPage: childCareProviderDeleteWarningPage
+    restartPage: childCareProviderList
   unearnedIncomeGroup:
     startPages:
       - unearnedIncome
