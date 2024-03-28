@@ -25,11 +25,6 @@
             <th:block th:with="
                                 fakeApplicantNameAndId='x y applicant',
                                 householdMembers=${#sets.toSet({})}">
-                                <!--/* TODO emj delete*/-->
-     subworkflows:   <span th:text="${subworkflows}"> test</span></br>
-     subworkflows size:   <span th:text="${subworkflows.size()}"> test</span>
-</br>
-     subworkflows get0 is null:   <span th:text="${subworkflows.get(0)}"> test</span>
               <th:block
                   th:each="householdMemberIteration, householdMemberIterationStat: ${subworkflow.value}">
                 <th:block th:with="
@@ -68,10 +63,6 @@
                         th:if="${programs.contains('NONE') || data.getPageInputFirstValue('addHouseholdMembers','addHouseholdMembers').equals('true')}"
                         th:text="${householdMemberId == 'applicant' ? householdMemberName+' (you)' : householdMemberName}"></h2>
                     <ul class="list--bulleted spacing-above-10 spacing-below-35 builder-list">
-				householdMemberNameAndIdTokens:		<span th:text="${householdMemberNameAndIdTokens}"> test</span></br>
-				householdMemberNameTokens:		<span th:text="${householdMemberNameTokens}"> test</span></br>
-					householdMemberName:	  <span th:text="${householdMemberName}"> test</span></br>
-					householdMemberId: 	<span th:text="${householdMemberId}"> test</span></br>
                       <th:block th:each="jobIteration, jobIterationStat: ${subworkflow.value}">
                         <th:block
                             th:with="jobIterationPageData=${jobIteration.getPagesData().get('householdSelectionForIncome')}">
@@ -81,7 +72,6 @@
 								If jobIterationPageData is null, set the jobHouseholdMemberNameAndId to the fake one. If jobIterationPageData is not null, get whoseJobIsIt value.
 								If they match, send the employers name to the jobListElement.html fragment.
 								*/-->
-							jobHouseholdMemberNameAndId:	<span th:text="${jobHouseholdMemberNameAndId}"> test</span></br>
                             <th:block
                                 th:if="${jobHouseholdMemberNameAndId == householdMemberNameAndId}">
                               <div

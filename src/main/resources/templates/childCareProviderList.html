@@ -13,54 +13,28 @@
 					<div class="grid__item spacing-above-35">
 						<h1 class="h2 spacing-above-0" th:text="#{child-care-provider-list.would-you-like-to-add}"></h1>
 					</div>
-					<!--/* TODO emj delete*/-->
-					<!--/*
-     subworkflows:   <span th:text="${subworkflows}"> test</span></br>
-     subworkflows size:   <span th:text="${subworkflows.size()}"> test</span>
-</br>
-     subworkflows get0 is null:   <span th:text="${subworkflows.get(0)}"> test</span>
-*/-->
+					<!--/* TODO emj delete
+					
+					
+					*/-->
+
 					<div class="grid__item boxed-content spacing-below-60">
 
 						<h2 class="h3 text--centered intro-box__title" th:text="#{${page.headerKey}}"></h2>
-						<!--/*	--- OUTER LOOP OF PROVIDERS START --- </br>  */-->
+
 						<th:block th:each="subworkflow: ${subworkflows}">
 
-							<th:block
-								th:each="childcareProviderIteration, childcareProviderIterationStat: ${subworkflow.value}">
-								<!--/*	 +++ inner loop of children start +++ </br> */-->
+							<th:block th:each="childcareProviderIteration, childcareProviderIterationStat: ${subworkflow.value}">
 
 								<th:block th:with="childcareProviderName=${childcareProviderIteration.getPagesData().get('childCareProviderInfo').get('childCareProviderName').value[0]},
-										childrenAtThisProvider=${childcareProviderIteration.getPagesData().get('childrenAtThisProvider')},
-										fakeApplicantNameAndId='x y applicant',
+										childrenAtThisProvider=${childcareProviderIteration.getPagesData().get('childrenAtThisProvider')}
                                         ">
-
-											
 										<form method="post" th:action="@{|/groups/${subworkflow.key}/${childcareProviderIterationStat.index}/deleteWarning|}" class="display-flex">
-									
 											<span class="h3 list-header grid__item width-five-sixths word-wrap-break-word" th:text="${childcareProviderName}"></span>
 											<button class="grid__item width-one-sixth button--link right align-self-end" th:id="|iteration${childcareProviderIterationStat.index}-delete|"
 												type="submit" th:text="#{job-builder.delete}"></button>
 										</form>
-									<!--*/
-									<h2 class="h3 list-header spacing-below-10" th:text="${childcareProviderName}"></h2>
-									<span class="grid__item width-five-sixths word-wrap-break-word" th:text="|${childCareProviderName}|"></span>
-                              childcareProviderName:     <span th:text="${childcareProviderName}"> test</span></br>
-                                
- childcareProviderIteration: <span th:text="${childcareProviderIteration}"> test</span></br>
-                                        childNameTokens=${#lists.toList(childcareProviderNameAndIdTokens).subList(0, childcareProviderNameAndIdTokens.length - 1)},
-                                        childName=${#strings.listJoin(childNameTokens, ' ')},
-                                        householdMemberId=${childcareProviderNameAndIdTokens[childcareProviderNameAndIdTokens.length - 1]}
-childcareProviderNameAndIdTokens: <span th:text="${childcareProviderNameAndIdTokens}"> test</span></br>
-childNameTokens: <span th:text="${childNameTokens}"> test</span></br>
-childName: <span th:text="${childName}"> test</span></br>
-householdMemberId: <span th:text="${householdMemberId}"> test</span></br>
-
-providerIteration: <span th:text="${providerIteration}"> test</span></br>
-providerIterationPageData: <span th:text="${providerIterationPageData}"> test</span></br>
-*/-->
 									<ul class="list--bulleted spacing-above-10 spacing-below-35 builder-list">
-										<!--*/		-- inner loop of providers start --- </br>*/-->
 										<th:block
 											th:each="childrenAtThisProviderIteration, childrenAtThisProviderIterationStat: ${childrenAtThisProvider.get('childrenNames').value}">
 
@@ -72,36 +46,10 @@ providerIterationPageData: <span th:text="${providerIterationPageData}"> test</s
 												<li class="grid">
 													<span class="grid__item width-five-sixths word-wrap-break-word"	th:text="|${childName}|"></span>
 												</li>
-
-
-												<th:block th:if="${childAtThisProvider == null}">
-
-												</th:block>
-												<th:block th:unless="${childAtThisProvider == null}">
-
-												</th:block>
-
-												<th:block th:if="${childNameAndId == childcareProviderName}">
-
-													<!--/*
-		childAtThisProvider: <span th:text="${childAtThisProvider}"> test</span></br>
-																
-                                providerIteration pages data keyset:      <span th:text="${providerIteration.getPagesData().keySet()}"> test</span></br>
-                                providerIteration pages childrenAtThisProvider:      <span th:text="${providerIteration.getPagesData().get('childrenAtThisProvider')}"> test</span></br>
-                               providerIteration  childrenNames:      <span th:text="${providerIteration.getPagesData().get('childrenAtThisProvider').get('childrenNames')}"> test</span></br>
-                                providerIteration value :      <span th:text="${providerIteration.getPagesData().get('childrenAtThisProvider').get('childrenNames').getValue()}"> test</span></br>
-                                */-->
-													<div
-														th:replace="~{fragments/childcareListElement :: childcareProvider(${providerIteration.getPagesData().get('childrenAtThisProvider').get('childrenNames').getValue()}, ${subworkflow.key}, ${providerIterationStat.index})}">
-													</div>
-												</th:block>
 											</th:block>
-
 										</th:block>
-										<!--/*		-- inner loop of providers end --- </br>*/-->
 									</ul>
 								</th:block>
-								<!--/*	+++ inner loop children end +++ </br>*/-->
 							</th:block>
 						</th:block>
 
@@ -112,7 +60,6 @@ providerIterationPageData: <span th:text="${providerIterationPageData}"> test</s
 								<span th:text="#{child-care-provider-list.add-a-provider}"></span>
 							</a>
 						</div>
-						<!--/*			--- OUTER LOOP OF PROVIDERS END --- </br>*/-->
 					</div>
 					<a class="button button--primary" th:href="'/pages/'+${pageName}+'/navigation?option=1'"
 						th:text="#{child-care-provider-list.no-thats-it}"></a>

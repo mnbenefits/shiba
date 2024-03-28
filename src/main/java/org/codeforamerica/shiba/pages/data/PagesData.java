@@ -14,7 +14,7 @@ import org.codeforamerica.shiba.pages.config.*;
 
 /**
  * PagesData extends HashMap&lt;String, PageData&gt; 
- * TODO emj rename this to PagesDataMap
+ *
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -49,7 +49,7 @@ public class PagesData extends HashMap<String, PageData> {
    * PagesData satisfies method checks if condition contains multiple conditions,
    * which then uses allMatch for AND logicalOperator, or anyMatch for OR logicalOperator.</br>
    * If there are no multiple conditions, it checks if the single condition matches the pageData.</br>
-   * This method recursively calls itself.
+   * This method recursivly calls itself.
    * @param condition
    * @return Boolean
    */
@@ -194,47 +194,32 @@ public class PagesData extends HashMap<String, PageData> {
   }
   
   private FormInputTemplate convert(String pageName, FormInput formInput,
-	      ApplicationData applicationData) {
-	    List<String> errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
-	        .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
-	        .orElse(List.of());
+      ApplicationData applicationData) {
+    List<String> errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
+        .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
+        .orElse(List.of());
 
-	    return new FormInputTemplate(
-	        formInput.getType(),
-	        formInput.getName(),
-	        formInput.getCustomInputFragment(),
-	        formInput.getPromptMessage(),
-	        formInput.getHelpMessageKey(),
-	        formInput.getPlaceholder(),
-	        errorMessageKeys,
-	        createOptionsWithDataSourceTemplate(formInput, applicationData),
-	        formInput.getFollowUps().stream()
-	            .map(followup -> convert(pageName, followup, applicationData))
-	            .collect(Collectors.toList()),
-	        formInput.getFollowUpValues(),
-	        formInput.getReadOnly(),
-	        formInput.getDefaultValue(),
-	        formInput.getDatasources(),
-	        formInput.getCustomFollowUps(),
-	        formInput.getInputPostfix(),
-	        formInput.getHelpMessageKeyBelow(),
-	        formInput.getNoticeMessage(),
-	        formInput.getValidationIcon()
-	    );
-	  }
-  
-  /**
-   * Override toString method.
-   */
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("PagesData [ ");
-		for (var entry : this.entrySet()) {
-		    sb.append(entry.getKey() + "/" + entry.getValue());
-		    sb.append("\n");		
-		 }
-		sb.append(" ]");
-		return sb.toString();
-	}
+    return new FormInputTemplate(
+        formInput.getType(),
+        formInput.getName(),
+        formInput.getCustomInputFragment(),
+        formInput.getPromptMessage(),
+        formInput.getHelpMessageKey(),
+        formInput.getPlaceholder(),
+        errorMessageKeys,
+        createOptionsWithDataSourceTemplate(formInput, applicationData),
+        formInput.getFollowUps().stream()
+            .map(followup -> convert(pageName, followup, applicationData))
+            .collect(Collectors.toList()),
+        formInput.getFollowUpValues(),
+        formInput.getReadOnly(),
+        formInput.getDefaultValue(),
+        formInput.getDatasources(),
+        formInput.getCustomFollowUps(),
+        formInput.getInputPostfix(),
+        formInput.getHelpMessageKeyBelow(),
+        formInput.getNoticeMessage(),
+        formInput.getValidationIcon()
+    );
+  }
 }

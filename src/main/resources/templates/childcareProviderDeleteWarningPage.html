@@ -3,16 +3,9 @@
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="~{fragments/head :: head(#{${page.pageTitle}})}"></div>
 <body
-   
-    th:with="childCareProviderName='Day Care Inc'"
-    
+    th:with="childCareProviderName=${iterationData.getPagesData().get('childCareProviderInfo').get('childCareProviderName').value[0]}"
     >
-    
-    <!--*/  
-    
-     th:with="childCareProviderName=${iterationData.getPagesData().get('householdMemberInfo').get('firstName').value[0] + ' ' + iterationData.getPagesData().get('householdMemberInfo').get('lastName').value[0]}"
-    
-    */ -->
+
 <div class="page-wrapper">
   <div th:replace="~{fragments/toolbar :: toolbar}"></div>
   <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
@@ -24,7 +17,7 @@
         <div class="grid__item spacing-above-35 spacing-below-60">
           <div th:replace="~{fragments/icons/icon-delete-document :: icon-delete-document}"></div>
           <h1 class="h2"
-              th:text="#{warning-page.you-are-about-to-delete-household-member(${childCareProviderName})}"></h1>
+              th:text="#{child-care-provider-delete.warning(${childCareProviderName})}"></h1>
           <h2 th:text="#{warning-page.is-that-ok}"></h2>
         </div>
         <form method="post"
