@@ -39,7 +39,7 @@ jobs:
      #   repository: ''
         
     - name: build with gradle
-      working-directory: shiba/
+      working-directory: .
       run: ./gradlew assemble
 
     - run: zip -r veracode-scan-target.zip ./
