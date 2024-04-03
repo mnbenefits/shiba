@@ -30,18 +30,33 @@ jobs:
       actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
     runs-on: ubuntu-latest
     steps:
-
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it and copies all sources into ZIP file for submitting for analysis. Replace this section with your applications build steps
-   
-
     - uses: actions/checkout@v3
       with:
         repository: ''
-        
+    - uses: actions/checkout@v4
+    - name: Set up ChromeDriver
+      uses: nanasess/setup-chromedriver@v2.2.2
+    - name: Set up JDK
+      uses: actions/setup-java@v4.2.1
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+        cache: 'gradle'
+    - name: Cache Gradle packages
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew    
     - name: build with gradle
       run: ./gradlew assemble
 
-   #  - run: zip -r veracode-scan-target.zip ./
+    - run: zip -r veracode-scan-target.zip ./
 
     # download the Veracode Static Analysis Pipeline scan jar
     - run: curl --silent --show-error --fail -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
