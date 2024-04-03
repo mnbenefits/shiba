@@ -36,12 +36,12 @@ jobs:
 
     - uses: actions/checkout@v3
       with:
-        repository: mnbenefits/shiba
+        repository: ''
         
     - name: build with gradle
       run: ./gradlew assemble
 
-    - run: zip -r veracode-scan-target.zip ./
+   #  - run: zip -r veracode-scan-target.zip ./
 
     # download the Veracode Static Analysis Pipeline scan jar
     - run: curl --silent --show-error --fail -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
