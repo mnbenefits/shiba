@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -73,9 +74,9 @@ public class SecurityConfiguration {
 						mvc.pattern("/resend-confirmation-email/??????????"))
 				.access(eam)
 				.anyRequest()
-				.permitAll()
-				.and()
-				.oauth2Login();
+				.permitAll();
+
+		        http.oauth2Login(Customizer.withDefaults());
 			} catch (Exception e) {
 				log.error("OAuth2 Error", e);
 			}
@@ -83,12 +84,12 @@ public class SecurityConfiguration {
 		});
 
 		http
-		.headers()
-		.httpStrictTransportSecurity()
-		.requestMatcher(AnyRequestMatcher.INSTANCE)
-		.includeSubDomains(true)
-		.maxAgeInSeconds(31536000)
-		.preload(true);
+		.headers(headersConfigurer -> headersConfigurer
+			.httpStrictTransportSecurity(hstsConfig -> hstsConfig
+				.requestMatcher(AnyRequestMatcher.INSTANCE)
+				.includeSubDomains(true)
+				.maxAgeInSeconds(31536000)
+				.preload(true)));
 
 		http.sessionManagement(session -> session.invalidSessionStrategy(this.shibaInvalidSessionStrategy));
 		http.sessionManagement(management -> management.sessionConcurrency(
