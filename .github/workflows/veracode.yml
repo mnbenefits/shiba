@@ -8,13 +8,21 @@
 name: Veracode Static Analysis Pipeline Scan
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Target branch to be released'
+        required: true
+        default: staging
+
+#on:
+ # push:
+ #   branches: [ "main" ]
+  #pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ "main" ]
-  schedule:
-    - cron: '15 6 * * 4'
+   # branches: [ "main" ]
+  #schedule:
+  #  - cron: '15 6 * * 4'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 permissions:
