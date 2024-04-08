@@ -54,6 +54,9 @@
                   </div>
                 </div>
               </div>
+              <div id="current-size-div" class="spacing-below-25">
+                <p id="current-size-text">0 MB / 250 MB</p>
+              </div>
               <div id="upload-doc-div" class="spacing-below-25 hidden">
                 <p id="upload-doc-text">Uploaded documents</p>
               </div>
@@ -89,6 +92,7 @@
   var dataURL = "";
   var isUploadComplete = true;
   var totalFileSize = 0;
+  var totalFileSizeText = document.getElementById("current-size-text");
   var fileTooBigMsg = [[#{upload-documents.this-file-is-too-large(${uploadDocMaxFileSize})}]];
   var heicFilesNotAccepted = [[#{upload-documents.heic-files-not-accepted}]];
   var docxFilesNotAccepted = [[#{upload-documents.MS-word-files-not-accepted}]];
@@ -141,6 +145,13 @@
     var maxFilesReached = document.getElementById("total-max-file-size");
     maxFilesReached.style.display = "flex";
     $('#submit-my-documents').addClass("disabled");
+  }
+  
+  function hideTotalMaxFileSizeMessage() {
+	var dragBox = document.getElementById("drag-and-drop-box");
+    dragBox.style.display = "";
+    var maxFilesReached = document.getElementById("total-max-file-size");
+    maxFilesReached.style.display = "none";
   }
 
   $('.text--error').hide();
@@ -220,7 +231,7 @@
     parallelUploads: 1,
     timeout: 0,
     maxFilesize: [[${uploadDocMaxFileSize}]],
-    totalMaxFileSize: 295000000, //bytes
+    totalMaxFileSize: 250000000, //bytes
     dictFileTooBig: fileTooBigMsg,
     acceptedFiles: ".jpeg,.jpg,.png,.gif,.pdf",
     clickable: ".drag-and-drop-box",
@@ -248,15 +259,6 @@
       if (documents.length >= this.options.maxFiles) {
         showMaxFileMessage();
       }
-      
-      for (var i = 0; i < myDropZone.files.length; i++) {
-        if (myDropZone.files[i] === file) {
-	      totalFileSize += myDropZone.files[i].size;
-        }
-      }
-      if (totalFileSize > this.options.totalMaxFileSize) {
-		showTotalMaxFileSizeMessage();
-	  }
 
       this.on('addedfile', function (file) {
         if (myDropZone.files.length >= myDropZone.options.maxFiles) {
@@ -267,6 +269,7 @@
         if (myDropZone.files[i] === file) {
 	      totalFileSize += myDropZone.files[i].size;
         }
+        totalFileSizeText.textContent = (Math.round(totalFileSize/10000) / 100) + " MB / 250 MB"
 	    }
 	    if (totalFileSize > this.options.totalMaxFileSize) {
 		  showTotalMaxFileSizeMessage();
@@ -319,6 +322,7 @@
         if (myDropZone.files[i] === file) {
 	      totalFileSize += myDropZone.files[i].size;
         }
+        totalFileSizeText.textContent = (Math.round(totalFileSize/10000) / 100) + " MB / 250 MB"
 	    }
 	    if (totalFileSize > this.options.totalMaxFileSize) {
 		  showTotalMaxFileSizeMessage();
@@ -357,10 +361,17 @@
 
       // `destroy` is a custom event that we have defined, not something built into dropzone.
       // This event is emitted when the client clicks cancel on a file that has not finished uploading.
+      // This event is also emitted when the client clicks remove on a file that has an error
       this.on('destroy', function (file) {
         myDropZone.removeFile(file);
         showNumberOfAddedFiles()
+        totalFileSize -= file.size;
+	    totalFileSizeText.textContent = (Math.round(totalFileSize/10000) / 100) + " MB / 250 MB"
+	    if (totalFileSize > this.options.totalMaxFileSize) {
+		  showTotalMaxFileSizeMessage();
+		}
         if (!doesAnyFileHaveError()) {
+		  hideTotalMaxFileSizeMessage();
 		  $('#submit-my-documents').removeClass("disabled");
 	    }
       });

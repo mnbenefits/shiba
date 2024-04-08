@@ -102,12 +102,14 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("max-files")).getText()).contains(
         "You have uploaded the maximum number of files (20). You will have the opportunity to share more with a caseworker later.");
     
- // should show total max filesize error message when uploading more than 295 MB of files
+    // should show total max filesize error message when uploading more than 250 MB of files
     largeFilesize = 20000000L;
     //20 MB
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "21.03 MB / 250 MB");
     //40 MB
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
@@ -156,16 +158,11 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    //280 MB
-    driver.executeScript(
-        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
-        + largeFilesize + ", type: 'not-an-image'})");
-    //300 MB
-    driver.executeScript(
-        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
-        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "261.03 MB / 250 MB");
+
     assertThat(driver.findElement(By.id("total-max-file-size")).getText()).contains(
-            "You have uploaded the total maximum file size (295MB). Please remove files until you no longer see this error. You will have the opportunity to share more with a caseworker later.");
+            "Your total uploaded documents have exceeded the maximum file size limit (250MB). You will be able to share more documents with a worker later.");
   }
   
   @Test
@@ -251,12 +248,14 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("max-files")).getText()).contains(
         "You have uploaded the maximum number of files (20). You will have the opportunity to share more with a caseworker later.");
     
- // should show total max filesize error message when uploading more than 295 MB of files
+    // should show total max filesize error message when uploading more than 250 MB of files
     largeFilesize = 20000000L;
     //20 MB
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "21.03 MB / 250 MB");
     //40 MB
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
@@ -305,16 +304,11 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    //280 MB
-    driver.executeScript(
-        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
-        + largeFilesize + ", type: 'not-an-image'})");
-    //300 MB
-    driver.executeScript(
-        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
-        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "261.03 MB / 250 MB");
+
     assertThat(driver.findElement(By.id("total-max-file-size")).getText()).contains(
-            "You have uploaded the total maximum file size (295MB). Please remove files until you no longer see this error. You will have the opportunity to share more with a caseworker later.");
+            "Your total uploaded documents have exceeded the maximum file size limit (250MB). You will be able to share more documents with a worker later.");
   }
   
   @Test
@@ -402,12 +396,14 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("max-files")).getText()).contains(
         "You have uploaded the maximum number of files (50). You will have the opportunity to share more with a caseworker later.");
     
- // should show total max filesize error message when uploading more than 295 MB of files
+    // should show total max filesize error message when uploading more than 250 MB of files
     largeFilesize = 20000000L;
     //20 MB
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "22.58 MB / 250 MB");
     //40 MB
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
@@ -456,16 +452,11 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    //280 MB
-    driver.executeScript(
-        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
-        + largeFilesize + ", type: 'not-an-image'})");
-    //300 MB
-    driver.executeScript(
-        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
-        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "262.58 MB / 250 MB");
+
     assertThat(driver.findElement(By.id("total-max-file-size")).getText()).contains(
-            "You have uploaded the total maximum file size (295MB). Please remove files until you no longer see this error. You will have the opportunity to share more with a caseworker later.");
+            "Your total uploaded documents have exceeded the maximum file size limit (250MB). You will be able to share more documents with a worker later.");
   }
   
 	/**
