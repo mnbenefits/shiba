@@ -408,7 +408,7 @@
 	    if (totalFileSize > this.options.totalMaxFileSize) {
 		  showTotalMaxFileSizeMessage();
 		}
-		if (!doesAnyFileHaveError()) {
+		if (!doesAnyFileHaveError() && documents.length < this.options.maxFiles) {
 	      hideTotalMaxFileSizeMessage();
 		  $('#submit-my-documents').removeClass("disabled");
 	    }
