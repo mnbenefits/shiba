@@ -19,6 +19,10 @@
                 <div class='max-files spacing-below-35' id="max-files"
                      th:text='#{upload-documents.maximum-number-of-files-fifty}'></div>
               </div>
+              <div id="total-max-file-size-reached">
+                <div class='max-files spacing-below-35' id="total-max-file-size"
+                     th:text='#{upload-documents.maximum-total-file-size}'></div>
+              </div>
               <div id="drag-and-drop-box"
                    class="drag-and-drop-box spacing-below-35 spacing-above-35 grid"
                    ondragenter="addDragBorder()" ondrop="removeDragBorder()"
@@ -49,6 +53,9 @@
                   <div id="number-of-uploaded-files" class="body-gray">
                   </div>
                 </div>
+              </div>
+              <div id="current-size-div" class="spacing-below-25">
+                <p id="current-size-text">0 MB / 250 MB</p>
               </div>
               <div id="upload-doc-div" class="spacing-below-25 hidden">
                 <p id="upload-doc-text">Uploaded documents</p>
@@ -84,6 +91,8 @@
   var documentIcon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABGCAYAAACE0Gk0AAAFK0lEQVR4Xu2caVcTSRSG314SyEJQPIAsMucoihDmzJE1BBhnEZ35xzPjmU9ABAR/AThnFBBQQciedLrn3Epaw6Z9OxsTqr7kQ25XVz31VtWt5baSTiYsyOSIgCJhOeIkjCQs56wkLAYrCasusFKpFF5vbmJ/7x1My4KmqZz3VmRr5A3oHh3DI6Po6e2tKC/Ow67GrJOTE7xaX8PB/gG8Xi8URYFl1XNStZDNZtF+4yamIzO42dHBqbNrWzasbDaDtZUV7GxvIxgMNgAUTUsALCCRSKCzsxMzc3Pw+wOuITh9kA3r9dYmNtZforW1FaqiflEUVaDWqUy8pGbTMpGIx3Fn4DtEorPQdb2mJWDDii0t4mB/Dx6Pt85dj8RkQRGyKiYCZhQMpJJJDN5/gPHJKahq7cZONqznf/6BZCLxuRXtAmfS6RK8WknMgq57hKLLk6KqyGbSSKfTGJuYxPBIuGbqqggWtbRlWtB0HT6fT7RqoVCAUgNeiqLCMPLIZDJFVdkKUyDeSw1Ik8zM7JzolrVIbFh/P/8L8ZMTMXWbBRPpdAq9fX2YikTR0tKCXC5X1lGqV2RN17C3t4dX6y9Fg2iq9iVzhbqkKsrl8/sQnZ1HZ1dX9V5ud3vu2vAsrFQqKVoyOjcvxpBapg8f3mM1FoNhGNC0Mlil8YuUTgN+e/sNROfnxW81U0XKskwTyWRRWSR/j8dTzbKdy+vd7i421tdQMArnYJX6JqhMx8fH6OnpxeyPj8+NcZUUsCqw+vr7EIleAVglheXzOcTjcTwYeojpmWglfE5PJpV0Q1tZVwmWGPxphsxmQDP0D4/GEB79virAmk5ZdncUM2QyiVw2i8npiFBZpak5YRV9C+FSHH/6JFyK+cc/487AQEW8mhdWGbCjw0PhB/70yxN03LrlGlhzwyqNX+TRHH78KECRwtra2lwBa3pYREXViisL6pL9dwYQmYmi1edjA7sWsGxg+XweiXgC94eG8GhsnO0XXhtYtkuRz+VAftjDkTBGwqMXO7eXaO5awRLAFEXAorXkcDjMcimuHSzbDyP/K9TejidPf3M8dv2vYO3u7mBjbRXGZWvDr1T77KYgLcYDwQAWnv3enLBo33/1xTILFjmk1PW8Xg9UVfu8u0uw2kIh/LrwtDlhHR0d4p+tLZimKdZ/ThJt5ZDb8P5gX6wVaaOSNg6bHlY5HKdHb+JgwyxgeXFRnEgFAn4Bms4em1pZTpR0kQ2paCW2jO23b8SRGTmpEtYlNMkZXYktYWd7RyrrW4qTsL5FqOx/CUvCYhBgmEplSVgMAgxTqSwJi0GAYSqVJWExCDBMpbIkLAYBhqlUloTFIMAwlcqSsBgEGKZSWRIWgwDDVCpLwmIQYJhKZUlYDAIMU6ksCYtBgGF6pZRVrwgLBp9TpgTrxfISdncaeMhKgU71jN1xC4vuRVCc5Ns3/zbu+L6eUWFuQFHgK8VwUzz12kpMKMvn89fvrkN5cGY94w1dwbIg7ozSFSUK3iwYBhSVLhwVrxwFgkEsPKvhzb/GRbK6wUXPFC+z0VVuXdNPXWarOaxGxki7xXX2OfsSblf3bREn6TSx75Q2NPreaa0usitF7ttR+xQ+PD4xibv3Bh3nyoZ1Jb7r4Lh6pw3tj3XQ9yD6+vsxFYmgpeV0gPrXsmbDoswa/8UQPi0bFMVwd3V3YWxiCqFQiJWRK1j0hkZ+i4ZVw5JxoWBCVRR03+7B3cFB+P1+djauYbHf1AQPSFiMRpSwJCwGAYbpf7oLq5uJEmkZAAAAAElFTkSuQmCC";
   var dataURL = "";
   var isUploadComplete = true;
+  var totalFileSize = 0;
+  var totalFileSizeText = document.getElementById("current-size-text");
   var fileTooBigMsg = [[#{upload-documents.this-file-is-too-large(${uploadDocMaxFileSize})}]];
   var heicFilesNotAccepted = [[#{upload-documents.heic-files-not-accepted}]];
   var docxFilesNotAccepted = [[#{upload-documents.MS-word-files-not-accepted}]];
@@ -128,6 +137,21 @@
     dragBox.style.display = "none";
     var maxFilesReached = document.getElementById("max-files");
     maxFilesReached.style.display = "flex";
+  }
+  
+  function showTotalMaxFileSizeMessage() {
+    var dragBox = document.getElementById("drag-and-drop-box");
+    dragBox.style.display = "none";
+    var maxFilesReached = document.getElementById("total-max-file-size");
+    maxFilesReached.style.display = "flex";
+    $('#submit-my-documents').addClass("disabled");
+  }
+  
+  function hideTotalMaxFileSizeMessage() {
+	var dragBox = document.getElementById("drag-and-drop-box");
+    dragBox.style.display = "";
+    var maxFilesReached = document.getElementById("total-max-file-size");
+    maxFilesReached.style.display = "none";
   }
 
   $('.text--error').hide();
@@ -207,6 +231,7 @@
     parallelUploads: 1,
     timeout: 0,
     maxFilesize: [[${uploadDocMaxFileSize}]],
+    totalMaxFileSize: 250000000, //bytes
     dictFileTooBig: fileTooBigMsg,
     acceptedFiles: ".jpeg,.jpg,.png,.gif,.pdf",
     clickable: ".drag-and-drop-box",
@@ -239,6 +264,17 @@
         if (myDropZone.files.length >= myDropZone.options.maxFiles) {
           showMaxFileMessage();
         }
+        
+        for (var i = 0; i < myDropZone.files.length; i++) {
+        if (myDropZone.files[i] === file) {
+	      totalFileSize += myDropZone.files[i].size;
+        }
+        totalFileSizeText.textContent = (Math.round(totalFileSize/10000) / 100) + " MB / 250 MB"
+	    }
+	    if (totalFileSize > this.options.totalMaxFileSize) {
+		  showTotalMaxFileSizeMessage();
+		}
+        
         var fileNameSpan = file.previewElement.getElementsByClassName('filename-text')[0];
         var fileNameComponents = getFilenameComponents(fileNameSpan);
         var removeLink = file.previewElement.getElementsByClassName("dz-remove")[0];
@@ -282,6 +318,15 @@
 
       this.on('queuecomplete', function () {
         isUploadComplete = true;
+        for (var i = 0; i < myDropZone.files.length; i++) {
+        if (myDropZone.files[i] === file) {
+	      totalFileSize += myDropZone.files[i].size;
+        }
+        totalFileSizeText.textContent = (Math.round(totalFileSize/10000) / 100) + " MB / 250 MB"
+	    }
+	    if (totalFileSize > this.options.totalMaxFileSize) {
+		  showTotalMaxFileSizeMessage();
+		}
         if (documents.length >= this.options.maxFiles) {
           showMaxFileMessage();
         }
@@ -316,10 +361,17 @@
 
       // `destroy` is a custom event that we have defined, not something built into dropzone.
       // This event is emitted when the client clicks cancel on a file that has not finished uploading.
+      // This event is also emitted when the client clicks remove on a file that has an error
       this.on('destroy', function (file) {
         myDropZone.removeFile(file);
         showNumberOfAddedFiles()
+        totalFileSize -= file.size;
+	    totalFileSizeText.textContent = (Math.round(totalFileSize/10000) / 100) + " MB / 250 MB"
+	    if (totalFileSize > this.options.totalMaxFileSize) {
+		  showTotalMaxFileSizeMessage();
+		}
         if (!doesAnyFileHaveError()) {
+		  hideTotalMaxFileSizeMessage();
 		  $('#submit-my-documents').removeClass("disabled");
 	    }
       });
