@@ -398,7 +398,9 @@ public class PageController {
     // Update pagesData with data for incomplete subworkflows
     var pagesData = applicationData.getPagesData();
     if (pageWorkflowConfig.getGroupName() != null) { // If page is part of a group
-      var dataForIncompleteIteration = getIncompleteIterationPagesData(pageName, pageWorkflowConfig);
+      var dataForIncompleteIteration = getIncompleteIterationPagesData(pageName,
+          pageWorkflowConfig);
+
       if (dataForIncompleteIteration == null) {
         String redirectPageForGroup = applicationConfiguration.getPageGroups()
             .get(pageWorkflowConfig.getGroupName()).getRedirectPage();
@@ -588,17 +590,11 @@ public class PageController {
         }
       }
     } else {
-    	//TODO emj do we want to remove the pageDatasources element before adding it again? 
-    	// When the page is reloaded in the browser, another instance is added.
-    	//model.remove("pageDatasources");
-    	// The pageDatasources Map is available for every page that isn't static. 
-    	// This contains the data that was previously entered by the client
       model.put("pageDatasources",
           pagesData.getDatasourcePagesBy(pageWorkflow.getDatasources())
               .mergeDatasourcePages(
                   pagesData.getDatasourceGroupBy(pageWorkflow.getDatasources(),
                       applicationData.getSubworkflows())));
-      //TODO emj rename "data" to something more descriptive. 
       model.put("data", pagesData
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
     }
