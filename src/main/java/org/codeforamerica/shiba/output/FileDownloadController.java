@@ -106,7 +106,7 @@ public class FileDownloadController {
       MDC.put("applicationId", application.getApplicationData().getId());
       MDC.put("sessionId", httpSession.getId());
       log.info("Client with session: " + httpSession.getId() + " Downloading application with id: "
-          + applicationData.getId());
+          + applicationId);
 
       List<ApplicationFile> applicationFiles = getApplicationDocuments(applicationId,
           application, CASEWORKER);

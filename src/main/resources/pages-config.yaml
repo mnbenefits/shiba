@@ -1123,39 +1123,6 @@ pageDefinitions:
  #       validators:
  #         - validation: ZIPCODE
  #           errorMessageKey: general.validation.make-sure-to-enter-a-zip-code-with-5-digits 
-   #TODO add list of HH members
-#      - name: childrenAtThisProvider
-#        type: PEOPLE_CHECKBOX
-#        validators:
-#          - validation: SELECT_AT_LEAST_ONE
-#            errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
-#        datasources:
-#          - pageName: childrenInNeedOfCare
-#            inputName: whoNeedsChildCare
-#         - pageName: choosePrograms
-#          - groupName: childCareProviders
-#            pageName: childCareProviderInfo
-#        customInputFragment: childrenAtThisProvider
-#        customFollowUps: 'true'
-#        validators:
-#          - validation: NOT_BLANK
-#            errorMessageKey: general.validation.make-sure-to-select-a-person
-#        options:
-#          datasources:
-#            - pageName: personalInfo
-#            - groupName: household
-#        followUps:
-#          - name: startDate
-#            type: DATE
-#            validators:
-#              - validation: DATE
-#                errorMessageKey: general.validation.please-enter-the-date-in-this-format
-#                condition:
-#                  input: startDate
-#                  matcher: NOT_EMPTY
-#            promptMessage:
-#              promptMessageKey: child-care-info.start-date
-#            helpMessageKey: general.if-you-dont-have
   - &childrenAtThisProvider
     name: childrenAtThisProvider
     pageTitle: child-care-who-uses.title
@@ -1163,7 +1130,6 @@ pageDefinitions:
     inputs:
       - name: childrenNames
         type: PEOPLE_CHECKBOX
-#        customInputFragment: householdOptionsCheckboxes
         validators:
           - validation: SELECT_AT_LEAST_ONE
             errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
@@ -1773,8 +1739,7 @@ pageDefinitions:
           selectableOptions:
             - value: "CONTINUE_TO_SECOND_SIGNATURE"
               messageKey: general.continue
-            - value: "CONTINUE_WITHOUT_SECOND_SIGNATURE"
-              messageKey: legal-stuff-second-signature.continue-without-another-signature
+    subtleLinkTextKey: legal-stuff-second-signature.continue-without-another-signature
   - &signThisApplication
     name: signThisApplication
     pageTitle: sign-this-application.title
@@ -1811,8 +1776,7 @@ pageDefinitions:
           selectableOptions:
             - value: "CONTINUE_TO_SECOND_SIGNATURE"
               messageKey: general.continue
-            - value: "CONTINUE_WITHOUT_SECOND_SIGNATURE"
-              messageKey: legal-stuff-second-signature.continue-without-another-signature
+    subtleLinkTextKey: legal-stuff-second-signature.continue-without-another-signature
   - &submit
     name: submit
     pageTitle: submit.submit
@@ -7097,6 +7061,7 @@ workflow:
         groupName: household
   secondSignatureLegalStuff:
     pageConfiguration: *secondSignatureLegalStuff
+    subtleLinkTargetPage: submit
     nextPages:
       - pageName: secondSignature
     datasources:
@@ -7134,6 +7099,7 @@ workflow:
       - pageName: doYouNeedHelpImmediately
   secondSignature:
     pageConfiguration: *secondSignature
+    subtleLinkTargetPage: submit
     skipCondition:
       logicalOperator: OR
       conditions: 

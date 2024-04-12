@@ -115,6 +115,7 @@ mappings:
     applicantIsPregnant: APPLICANT_IS_PREGNANT
   usCitizen:
     isUsCitizen: IS_US_CITIZEN
+    applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:
@@ -122,7 +123,8 @@ mappings:
   workSituation:
     hasWorkSituation: HAS_WORK_SITUATION
   nationsBoundary:
-    livingInNationBoundary: IS_TRIBAL_NATION_MEMBER
+    selectedNationBoundaryTribe: TRIBAL_NATION_BOUNDARY
+    boundaryMember: BOUNDARY_MEMBER
   selectTheTribe:
     selectedTribe: WHICH_TRIBAL_NATION
   snapExpeditedEligibility:

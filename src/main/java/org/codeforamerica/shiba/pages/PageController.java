@@ -136,6 +136,7 @@ public class PageController {
 
   private static final ZoneId CENTRAL_TIMEZONE = ZoneId.of("America/Chicago");
   private static final int MAX_FILES_UPLOADED = 50;
+  private static final int TOTAL_MAX_FILE_SIZE = 250000000; //bytes
   private static final String VIRUS_STATUS_CODE = "418";
   private final ApplicationData applicationData;
   private final ApplicationConfiguration applicationConfiguration;
@@ -934,6 +935,12 @@ public class PageController {
       if (applicationData.getUploadedDocs().size() <= MAX_FILES_UPLOADED &&
           file.getSize() <= uploadDocumentConfiguration.getMaxFilesizeInBytes()) {
         ResponseEntity<String> errorResponse = getErrorResponseForInvalidFile(file, type, lms);
+        Double totalFileSize = applicationData.getUploadedDocs().stream().filter(i -> i.getSize()> 0).mapToDouble(i -> i.getSize()).sum() + file.getSize();
+        if (totalFileSize >= TOTAL_MAX_FILE_SIZE) {
+        	return new ResponseEntity<>(
+        	          lms.getMessage("upload-documents.maximum-total-file-size-error"),
+        	          HttpStatus.UNPROCESSABLE_ENTITY);
+        }
         if (errorResponse != null) {
           return errorResponse;
         }

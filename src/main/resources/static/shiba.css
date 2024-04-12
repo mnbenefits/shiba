@@ -523,6 +523,15 @@ form .drag-and-drop-box-compact {
   font-style: normal;
   font-weight: bold;
 }
+.text-with-line {
+  line-height: 2.5rem;   
+  font-size: 1.9rem;
+  color: #5F5854;
+  border-bottom: 2px solid #AAAAAA;
+  padding-bottom: 0.5rem;
+  font-style: normal;
+  font-weight: bold;
+}
 
 #upload-doc-text {
   color: #5F5854;
@@ -861,6 +870,7 @@ input[type=number] {
   url(/fonts/MaterialIcons-Regular.svg?ia7soh#MaterialIcons-Regular) format("svg");
   font-weight: normal;
   font-style: normal;
+  
 }
 
 .select:after,
@@ -875,6 +885,12 @@ input[type=number] {
 
 .emoji--checkmark {
   background-image: url(images/checkmark.png);
+}
+
+.material-icons{
+    display: inline-flex;
+    vertical-align: middle;
+    font-size: 19px;
 }
 
 .emoji--crossmark {

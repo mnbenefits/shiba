@@ -113,8 +113,11 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.LINEAL_DESCENDANT_WEN,
             new ParsingCoordinate("linealDescendantWhiteEarthNation", "linealDescendantWEN"));
 
+    coordinatesMap.put(Field.TRIBAL_NATION_BOUNDARY,
+        new ParsingCoordinate("nationsBoundary", "selectedTribe"));
+        
     coordinatesMap.put(Field.LIVING_IN_TRIBAL_NATION_BOUNDARY,
-        new ParsingCoordinate("nationsBoundary", "livingInNationBoundary"));
+            new ParsingCoordinate("nationsBoundary", "livingInNationBoundary"));
 
     coordinatesMap.put(Field.APPLYING_FOR_TRIBAL_TANF,
         new ParsingCoordinate("applyForTribalTANF", "applyForTribalTANF"));
@@ -363,6 +366,8 @@ public class ApplicationDataParser {
         .put(Field.MATCH_INFO_FIRST_NAME, new ParsingCoordinate("healthcareRenewalMatchInfo", "firstName"));
     coordinatesMap.put(Field.MATCH_INFO_LAST_NAME, new ParsingCoordinate("healthcareRenewalMatchInfo", "lastName"));
 
+    coordinatesMap.put(Field.IS_US_CITIZEN,
+            new ParsingCoordinate("usCitizen", "isUsCitizen")); 
     coordinatesMap.put(Field.EVERYONE_US_CITIZENS,
         new ParsingCoordinate("usCitizen", "isUsCitizen"));
     coordinatesMap.put(Field.WHO_ARE_NON_US_CITIZENS,
@@ -494,6 +499,7 @@ public class ApplicationDataParser {
     GENERAL_DELIVERY_ZIPCODE,
 
     TRIBAL_NATION,
+    TRIBAL_NATION_BOUNDARY,
     SELECTED_TRIBAL_NATION,
     LINEAL_DESCENDANT_WEN,
     LIVING_IN_TRIBAL_NATION_BOUNDARY,
@@ -518,6 +524,7 @@ public class ApplicationDataParser {
     IS_GOING_TO_SCHOOL,
     WHO_IS_GOING_TO_SCHOOL,
     IS_PREGNANT,
+    IS_US_CITIZEN,
     WHO_IS_PREGNANT,
     IS_LOOKING_FOR_JOB,
     WHO_IS_LOOKING_FOR_A_JOB,

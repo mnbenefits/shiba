@@ -671,7 +671,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "ONE_SELECTED");
     assertCafFieldEquals("EMPLOYEE_FULL_NAME_0", householdMemberFullName);
     assertCafFieldEquals("WHO_IS_PREGNANT", "Ahmed St. George");
-    assertCafFieldEquals("IS_US_CITIZEN", "No");
+    assertCafFieldEquals("APPLICANT_IS_US_CITIZEN", "No");
     assertCafFieldEquals("IS_US_CITIZEN_0", "Yes");
     assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH");
     assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH");
@@ -695,7 +695,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("PREPARING_MEALS_TOGETHER", "Yes");
     assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
     assertCafFieldEquals("IS_PREGNANT", "Yes");
-    assertCafFieldEquals("IS_US_CITIZEN", "No");
+    assertCafFieldEquals("APPLICANT_IS_US_CITIZEN", "No");
     assertCafFieldEquals("EXPEDITED_QUESTION_2", "2468.00");
     assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
     assertCafFieldEquals("HEAT", "Yes");
@@ -1013,24 +1013,26 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
     
     // Second signature notification
-    testPage.clickButton("Continue without signature");
+    testPage.clickButton("Continue without it");
     // Ready to submit, but just go back
     testPage.goBack();
     // Back to second signature notification page
     testPage.clickButton("Add another signature");
 
     // The legal stuff (for second signature)
-    testPage.enter("agreeToTerms", "I agree");
-    testPage.clickButtonLink("Continue without another signature");
+    testPage.clickLink("Continue without another signature");
 
     // Ready to submit
     testPage.goBack();
     // Back on the legal stuff (for second signature)
+    testPage.enter("agreeToTerms", "I agree");
     testPage.clickContinue();
     
     // Sign this application (second signature)
-    testPage.clickButtonLink("Continue without another signature");
+    testPage.clickLink("Continue without another signature");
+    // Submit
     testPage.goBack();
+    // Sign this application (second signature)
     testPage.enter("secondSignature", "second person signature");
     testPage.clickContinue();
     

@@ -97,12 +97,72 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
-
-
     // should alert the user when they have uploaded the maximum number of files
     IntStream.range(0, 19).forEach(c -> uploadJpgFile());
     assertThat(driver.findElement(By.id("max-files")).getText()).contains(
         "You have uploaded the maximum number of files (20). You will have the opportunity to share more with a caseworker later.");
+    
+    // should show total max filesize error message when uploading more than 250 MB of files
+    largeFilesize = 20000000L;
+    //20 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "21.03 MB / 250 MB");
+    //40 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //60 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //80 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //100 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //120 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //140 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //160 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //180 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //200 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //220 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //240 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //260 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "261.03 MB / 250 MB");
+
+    assertThat(driver.findElement(By.id("total-max-file-size")).getText()).contains(
+            "Your total uploaded documents have exceeded the maximum file size limit (250MB). You will be able to share more documents with a worker later.");
   }
   
   @Test
@@ -183,12 +243,72 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
-
-
     // should alert the user when they have uploaded the maximum number of files
     IntStream.range(0, 19).forEach(c -> uploadJpgFile());
     assertThat(driver.findElement(By.id("max-files")).getText()).contains(
         "You have uploaded the maximum number of files (20). You will have the opportunity to share more with a caseworker later.");
+    
+    // should show total max filesize error message when uploading more than 250 MB of files
+    largeFilesize = 20000000L;
+    //20 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "21.03 MB / 250 MB");
+    //40 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //60 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //80 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //100 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //120 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //140 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //160 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //180 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //200 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //220 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //240 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //260 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "261.03 MB / 250 MB");
+
+    assertThat(driver.findElement(By.id("total-max-file-size")).getText()).contains(
+            "Your total uploaded documents have exceeded the maximum file size limit (250MB). You will be able to share more documents with a worker later.");
   }
   
   @Test
@@ -275,6 +395,68 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     IntStream.range(0, 49).forEach(c -> uploadJpgFile());
     assertThat(driver.findElement(By.id("max-files")).getText()).contains(
         "You have uploaded the maximum number of files (50). You will have the opportunity to share more with a caseworker later.");
+    
+    // should show total max filesize error message when uploading more than 250 MB of files
+    largeFilesize = 20000000L;
+    //20 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "22.58 MB / 250 MB");
+    //40 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //60 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //80 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //100 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //120 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //140 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //160 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //180 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //200 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //220 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //240 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    //260 MB
+    driver.executeScript(
+        "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
+        + largeFilesize + ", type: 'not-an-image'})");
+    assertThat(driver.findElement(By.id("current-size-text")).getText()).contains(
+        "262.58 MB / 250 MB");
+
+    assertThat(driver.findElement(By.id("total-max-file-size")).getText()).contains(
+            "Your total uploaded documents have exceeded the maximum file size limit (250MB). You will be able to share more documents with a worker later.");
   }
   
 	/**
