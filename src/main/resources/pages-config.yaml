@@ -5284,6 +5284,8 @@ workflow:
     pageConfiguration: *childrenInNeedOfCare
     nextPages:
       - pageName: doYouHaveChildCareProvider
+        flag: child-care
+      - pageName: whoHasParentNotAtHome
     datasources:
       - pageName: choosePrograms
       - groupName: household
