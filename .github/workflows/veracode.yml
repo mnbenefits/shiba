@@ -8,12 +8,13 @@
 name: Veracode Static Analysis Pipeline Scan
 
 on:
+  workflow_run:
+    workflows: ["Deploy to MNbenefits ATST"]
+    branches: [main]
+    types:
+      - completed
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Target branch to be released'
-        required: true
-        default: staging
+    inputs: { }
 
 #on:
  # push:
