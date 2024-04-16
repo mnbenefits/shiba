@@ -1185,6 +1185,12 @@ pageDefinitions:
     inputs:
       - name: noChildCareAdditionalInfo
         type: TEXTAREA
+  - &childCareProviderRedirectPage
+# TODO add messages customized for this page
+    name: childCareProviderRedirectPage
+    headerKey: warning-page.going-back-will-take-you-to-the-beginning-of-the-jobs-section-where-you-will-start-over
+    pageTitle: warning-page.go-back-title
+    usingPageTemplateFragment: false
   - &whoHasParentNotAtHome
     name: whoHasParentNotAtHome
     pageTitle: parent-not-at-home.title
@@ -5378,6 +5384,13 @@ workflow:
       - pageName: childCareProviderList
     datasources:
       - groupName: childCareProviders
+  childCareProviderRedirectPage:
+    pageConfiguration: *childCareProviderRedirectPage
+    dataMissingRedirect: doYouHaveChildCareProvider
+    nextPages:
+      - pageName: childCareProviderList
+    datasources:
+      - groupName: childCareProviders
   whoHasParentNotAtHome:
     pageConfiguration: *whoHasParentNotAtHome
     nextPages:
@@ -7289,7 +7302,7 @@ pageGroups:
   childCareProviders:
     startPages:
       - childCareProviderInfo
-      - childrenAtThisProvider
+#      - childrenAtThisProvider
 #      - childCareProviderStartDate
 #      - childCareAdditionalInfo
     completePages:
@@ -7298,8 +7311,9 @@ pageGroups:
 #      - childCareProviderStartDate
 #      - childCareAdditionalInfo
     reviewPage: childCareProviderList
+    redirectPage: childCareProviderRedirectPage
     deleteWarningPage: childCareProviderDeleteWarningPage
-    restartPage: childCareProviderList
+    restartPage: doYouHaveChildCareProvider
   unearnedIncomeGroup:
     startPages:
       - unearnedIncome
