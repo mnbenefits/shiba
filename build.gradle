@@ -2,7 +2,7 @@ plugins {
     id("org.springframework.boot") version "3.2.4"
     id("io.spring.dependency-management") version "1.1.4"
     id("java")
-    id("com.github.jk1.dependency-license-report") version "2.6"
+    id("com.github.jk1.dependency-license-report") version "2.7"
     id("com.gorylenko.gradle-git-properties") version "2.4.1"
 }
 
@@ -127,15 +127,15 @@ dependencies {
     }
     
      //logging -->
-    implementation("org.slf4j:slf4j-api:2.0.12")
+    implementation("org.slf4j:slf4j-api:2.0.13")
     implementation("io.sentry:sentry-spring-boot-starter-jakarta:7.8.0")
     implementation("io.sentry:sentry-logback:7.8.0")
     implementation("net.logstash.logback:logstash-logback-encoder:7.4")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
-    implementation("ch.qos.logback:logback-classic:1.5.4")
-    implementation("ch.qos.logback:logback-core:1.5.4")
-    implementation("ch.qos.logback:logback-parent:1.5.4")
+    implementation("ch.qos.logback:logback-classic:1.5.5")
+    implementation("ch.qos.logback:logback-core:1.5.5")
+    implementation("ch.qos.logback:logback-parent:1.5.5")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.13.0")
     implementation("com.azure:azure-storage-blob:12.25.3")
