@@ -18,7 +18,7 @@ pageDefinitions:
     name: secondPage
     inputs:
       - name: option1Text
-        type: PEOPLE_CHECKBOX
+        type: PEOPLE_CHECKBOX_WITH_NONE
         datasources:
           - pageName: firstPage
             inputName: peopleSelect

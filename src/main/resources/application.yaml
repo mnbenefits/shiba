@@ -97,6 +97,7 @@ feature-flag:
   certain-pops: on
   enhanced-next-steps: on
   second-signature: on
+  child-care: on
   
 document-upload:
   max-files-uploaded: 50

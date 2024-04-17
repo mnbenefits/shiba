@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/head :: head(#{${page.pageTitle}})}"></div>
+
+<body>
+	<div class="page-wrapper">
+		<div th:replace="~{fragments/toolbar :: toolbar}"></div>
+		<div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
+		<section class="slab slab--shiba">
+			<div class="grid">
+				<div th:replace="~{fragments/cardHeader :: cardHeader}"></div>
+				<main id="content" role="main" class="card spacing-above-35">
+					<div class="grid__item spacing-above-35">
+						<h1 class="h2 spacing-above-0" th:text="#{child-care-provider-list.would-you-like-to-add}"></h1>
+					</div>
+					<!--/* TODO emj delete
+					
+					
+					*/-->
+
+					<div class="grid__item boxed-content spacing-below-60">
+
+						<h2 class="h3 text--centered intro-box__title" th:text="#{${page.headerKey}}"></h2>
+
+						<th:block th:each="subworkflow: ${subworkflows}">
+
+							<th:block th:each="childcareProviderIteration, childcareProviderIterationStat: ${subworkflow.value}">
+
+								<th:block th:with="childcareProviderName=${childcareProviderIteration.getPagesData().get('childCareProviderInfo').get('childCareProviderName').value[0]},
+										childrenAtThisProvider=${childcareProviderIteration.getPagesData().get('childrenAtThisProvider')}
+                                        ">
+										<form method="post" th:action="@{|/groups/${subworkflow.key}/${childcareProviderIterationStat.index}/deleteWarning|}" class="display-flex">
+											<span class="h3 list-header grid__item width-five-sixths word-wrap-break-word" th:text="${childcareProviderName}"></span>
+											<button class="grid__item width-one-sixth button--link right align-self-end" th:id="|iteration${childcareProviderIterationStat.index}-delete|"
+												type="submit" th:text="#{job-builder.delete}"></button>
+										</form>
+									<ul class="list--bulleted spacing-above-10 spacing-below-35 builder-list">
+										<th:block
+											th:each="childrenAtThisProviderIteration, childrenAtThisProviderIterationStat: ${childrenAtThisProvider.get('childrenNames').value}">
+
+											<th:block th:with="childAtThisProvider=${childrenAtThisProviderIteration},
+                                        					childNameAndIdTokens=${childAtThisProvider.split(' ')},
+                                        					childNameTokens=${#lists.toList(childNameAndIdTokens).subList(0, childNameAndIdTokens.length - 1)},
+                                        					childName=${#strings.listJoin(childNameTokens, ' ')}
+															">
+												<li class="grid">
+													<span class="grid__item width-five-sixths word-wrap-break-word"	th:text="|${childName}|"></span>
+												</li>
+											</th:block>
+										</th:block>
+									</ul>
+								</th:block>
+							</th:block>
+						</th:block>
+
+						</th:block>
+						<div class="text--centered">
+							<a class="button button--secondary" th:href="'/pages/'+${pageName}+'/navigation?option=0'">
+								<i class="icon-add"></i>
+								<span th:text="#{child-care-provider-list.add-a-provider}"></span>
+							</a>
+						</div>
+					</div>
+					<a class="button button--primary" th:href="'/pages/'+${pageName}+'/navigation?option=1'"
+						th:text="#{child-care-provider-list.no-thats-it}"></a>
+				</main>
+			</div>
+		</section>
+	</div>
+	<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+
+</html>

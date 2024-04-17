@@ -1,6 +1,7 @@
 <!DOCTYPE>
+<!--/* This fragment includes the "None of the children have parents living outside home" checkbox */-->
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="people-checkbox-input(input, data)"
+<div th:fragment="people-checkbox-with-none-input(input, data)"
      th:with="inputData=${data.get(input.name)},formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)}"
      class="form-group">
     <div class="spacing-above-35 form-group" th:classappend="${!inputData.valid(data)} ? 'form-group--error' : ''">
@@ -22,6 +23,14 @@
                     <span th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"></span>
                 </label>
             </th:block>
+            <label th:for="none__checkbox" class="checkbox">
+                <input type="checkbox"
+                       th:id="none__checkbox"
+                       th:value="NONE_OF_THE_ABOVE"
+                       th:name="${formInputName}"
+                       th:checked="${inputData.value.contains('NONE_OF_THE_ABOVE')}">
+                <span th:text="#{parent-not-at-home.none-of-the-children-have-parents-living-outside-the-home}"></span>
+            </label>
             <div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
         </div>
     </div>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--/*  Copied from householdDeleteWarningPage.html */-->
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{fragments/head :: head(#{${page.pageTitle}})}"></div>
+<body
+    th:with="childCareProviderName=${iterationData.getPagesData().get('childCareProviderInfo').get('childCareProviderName').value[0]}"
+    >
+
+<div class="page-wrapper">
+  <div th:replace="~{fragments/toolbar :: toolbar}"></div>
+  <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
+  <section class="slab slab--shiba">
+    <div class="grid">
+      <div th:replace="~{fragments/cardHeader :: cardHeader}"></div>
+      <main id="content" role="main" class="card spacing-above-35">
+		  
+        <div class="grid__item spacing-above-35 spacing-below-60">
+          <div th:replace="~{fragments/icons/icon-delete-document :: icon-delete-document}"></div>
+          <h1 class="h2"
+              th:text="#{child-care-provider-delete.warning(${childCareProviderName})}"></h1>
+          <h2 th:text="#{warning-page.is-that-ok}"></h2>
+        </div>
+        <form method="post"
+              th:action="'/groups/'+${subworkflowsNext}+'/'+${param.iterationIndex}+'/delete'">
+          <button id="form-submit-button" class="button button--primary" type="submit"
+                  th:text="#{warning-page.yes-remove-them}"></button>
+        </form>
+        <a class="button spacing-below-60" th:href="'/pages/'+${pageName}+'/navigation?option=0'"
+           th:text="#{warning-page.nevermind-lets-keep-them}">
+        </a>
+      </main>
+    </div>
+  </section>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

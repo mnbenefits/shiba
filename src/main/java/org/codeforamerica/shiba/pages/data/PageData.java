@@ -129,4 +129,15 @@ public class PageData extends HashMap<String, InputData> {
 
     return buffer.toString();
   }
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PageData [ ");
+		for (var entry : this.entrySet()) {
+		    sb.append(entry.getKey() + "/" + entry.getValue());
+		}
+		sb.append(" ]");
+		return sb.toString();
+	}
 }
