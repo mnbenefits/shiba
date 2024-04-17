@@ -1060,7 +1060,8 @@ pageDefinitions:
   - &doYouHaveChildCareProvider
     name: doYouHaveChildCareProvider
     headerKey: child-care-intro.do-you-have-provider
-    pageTitle: child-intro.title
+    headerHelpMessageKey: child-care-intro.this-may-include
+    pageTitle: child-care-intro.title
     hasPrimaryButton: false
     inputs:
       - name: hasChildCareProvider
@@ -1070,7 +1071,7 @@ pageDefinitions:
     name: childCareProviderInfo
     headerKey: child-care-info.header
     pageTitle: child-care-info.title
-    contextFragment: addressContextFragment
+#    contextFragment: addressContextFragment
 #    usingPageTemplateFragment: true
     inputs:
       - name: childCareProviderName
@@ -1170,7 +1171,7 @@ pageDefinitions:
     pageTitle: child-care-provider-list.title
     primaryButtonTextKey: child-care-provider-list.no-thats-it
     contextFragment: householdContextFragment 
-    headerKey: child-care-provider-list.your-providers
+    headerKey: child-care-provider-list.our-households-providers
     usingPageTemplateFragment: false
   - &childCareProviderDeleteWarningPage
     name: childCareProviderDeleteWarningPage

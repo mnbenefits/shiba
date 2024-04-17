@@ -11,16 +11,9 @@
 				<div th:replace="~{fragments/cardHeader :: cardHeader}"></div>
 				<main id="content" role="main" class="card spacing-above-35">
 					<div class="grid__item spacing-above-35">
-						<h1 class="h2 spacing-above-0" th:text="#{child-care-provider-list.would-you-like-to-add}"></h1>
+						<h1 class="h2 spacing-above-0" th:text="#{child-care-provider-list.our-households-providers}"></h1>
 					</div>
-					<!--/* TODO emj delete
-					
-					
-					*/-->
-
 					<div class="grid__item boxed-content spacing-below-60">
-
-						<h2 class="h3 text--centered intro-box__title" th:text="#{${page.headerKey}}"></h2>
 
 						<th:block th:each="subworkflow: ${subworkflows}">
 
