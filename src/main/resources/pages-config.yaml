@@ -1188,7 +1188,7 @@ pageDefinitions:
   - &childCareProviderRedirectPage
 # TODO add messages customized for this page
     name: childCareProviderRedirectPage
-    headerKey: warning-page.going-back-will-take-you-to-the-beginning-of-the-jobs-section-where-you-will-start-over
+    headerKey: child-care-provider-redirect.going-back-will-take-you-to-the-beginning-of-the-provider-section-where-you-will-start-over
     pageTitle: warning-page.go-back-title
     usingPageTemplateFragment: false
   - &whoHasParentNotAtHome
@@ -5410,7 +5410,9 @@ workflow:
   parentNotAtHomeNames:
     pageConfiguration: *parentNotAtHomeNames
     nextPages:
-      - pageName: introPersonalDetails
+      - pageName: housingSubsidy
+        condition: *noOneChoseSNAP?
+      - pageName: preparingMealsTogether
     datasources:
       - pageName: choosePrograms
       - groupName: household
