@@ -23,9 +23,13 @@
 										childrenAtThisProvider=${childcareProviderIteration.getPagesData().get('childrenAtThisProvider')}
                                         ">
 										<form method="post" th:action="@{|/groups/${subworkflow.key}/${childcareProviderIterationStat.index}/deleteWarning|}" class="display-flex">
-											<span class="h3 list-header grid__item width-five-sixths word-wrap-break-word" th:text="${childcareProviderName}"></span>
-											<button class="grid__item width-one-sixth button--link right align-self-end" th:id="|iteration${childcareProviderIterationStat.index}-delete|"
-												type="submit" th:text="#{job-builder.delete}"></button>
+											<table width = "100%">
+												<tr>
+													<td><span class=" h3 word-wrap-break-word" th:text="${childcareProviderName}"></span></td>
+											
+													<td><button class=" button--link right align-self-end" th:id="|iteration${childcareProviderIterationStat.index}-delete|"
+												type="submit" th:text="#{job-builder.delete}"></button></td>
+													</tr></table>
 										</form>
 									<ul class="list--bulleted spacing-above-10 spacing-below-35 builder-list">
 										<th:block

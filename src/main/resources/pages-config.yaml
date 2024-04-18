@@ -1067,39 +1067,39 @@ pageDefinitions:
       - name: hasChildCareProvider
         type: YES_NO
   - &childCareProviderInfo
-#TODO add validators
     name: childCareProviderInfo
     headerKey: child-care-info.header
     pageTitle: child-care-info.title
-#    contextFragment: addressContextFragment
-#    usingPageTemplateFragment: true
     inputs:
       - name: childCareProviderName
         type: TEXT
         promptMessage:
           promptMessageKey: child-care-info.provider-name
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question          
       - name: phoneNumber
         type: PHONE
         promptMessage:
           promptMessageKey: child-care-info.phone-number
-#        validators:
-#          - validation: PHONE_STARTS_WITH_ONE
-#            errorMessageKey: general.validation.area-codes-can-not-begin-with-1
-#            condition:
-#              input: phoneNumber
-#              matcher: NOT_EMPTY
-#          - validation: PHONE
-#            errorMessageKey: general.validation.make-sure-to-enter-a-phone-number-with-10-digits
-#            condition:
-#              input: phoneNumber
-#              matcher: NOT_EMPTY
+        validators:
+          - validation: PHONE_STARTS_WITH_ONE
+            errorMessageKey: general.validation.area-codes-can-not-begin-with-1
+            condition:
+              input: phoneNumber
+              matcher: NOT_EMPTY
+          - validation: PHONE
+            errorMessageKey: general.validation.make-sure-to-enter-a-phone-number-with-10-digits
+            condition:
+              input: phoneNumber
+              matcher: NOT_EMPTY
       - name: streetAddress
         type: TEXT
         promptMessage:
           promptMessageKey: child-care-info.street-address
-#        validators:
-#          - validation: NOT_BLANK
-#            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
       - name: suiteNumber
         type: TEXT
         promptMessage:
@@ -1108,23 +1108,23 @@ pageDefinitions:
         type: TEXT
         promptMessage:
           promptMessageKey: child-care-info.city
- #       validators:
- #         - validation: NOT_BLANK
- #           errorMessageKey: general.validation.make-sure-you-answer-this-question
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
       - name: state
         type: TEXT
         promptMessage:
           promptMessageKey: child-care-info.state
- #       validators:
- #         - validation: STATE
- #           errorMessageKey: general.validation.make-sure-to-provide-a-valid-2-letter-state-code
+        validators:
+          - validation: STATE
+            errorMessageKey: general.validation.make-sure-to-provide-a-valid-2-letter-state-code
       - name: zipCode
-        type: TEXT
+        type: NUMBER
         promptMessage:
           promptMessageKey: child-care-info.zip
- #       validators:
- #         - validation: ZIPCODE
- #           errorMessageKey: general.validation.make-sure-to-enter-a-zip-code-with-5-digits 
+        validators:
+          - validation: ZIPCODE
+            errorMessageKey: general.validation.make-sure-to-enter-a-zip-code-with-5-digits 
   - &childrenAtThisProvider
     name: childrenAtThisProvider
     pageTitle: child-care-who-uses.title
