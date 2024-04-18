@@ -27,7 +27,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     when(clock.instant()).thenReturn(
         LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
         LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
-    when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
+    when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON);
 
     List<String> programSelections = List.of(PROGRAM_CCAP);
     getToHomeAddress("Hennepin", programSelections);
@@ -72,6 +72,9 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     // Who are the children in need of childcare
     testPage.enter("whoNeedsChildCare", householdMemberFullName);
     testPage.clickContinue();
+    
+    // Do you have a child care provider?
+    testPage.enter("hasChildCareProvider", NO.getDisplayValue());
 
     // Who are the children that have a parent not living at home?
     testPage.enter("whoHasAParentNotLivingAtHome", householdMemberFullName);
