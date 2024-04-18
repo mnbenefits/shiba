@@ -146,12 +146,20 @@
     maxFilesReached.style.display = "flex";
     $('#submit-my-documents').addClass("disabled");
   }
-  
+    
   function hideTotalMaxFileSizeMessage() {
-	var dragBox = document.getElementById("drag-and-drop-box");
-    dragBox.style.display = "";
     var maxFilesReached = document.getElementById("total-max-file-size");
     maxFilesReached.style.display = "none";
+  }
+  
+  function hideMaxFilesMessage() {
+    var maxFilesReached = document.getElementById("max-files");
+    maxFilesReached.style.display = "none";
+  }
+  
+  function displayDragAndDrop() {
+	var dragBox = document.getElementById("drag-and-drop-box");
+    dragBox.style.display = "";
   }
 
   $('.text--error').hide();
@@ -370,9 +378,13 @@
 	    if (totalFileSize > this.options.totalMaxFileSize) {
 		  showTotalMaxFileSizeMessage();
 		}
-        if (!doesAnyFileHaveError() && documents.length < this.options.maxFiles) {
+        if (!doesAnyFileHaveError() && myDropZone.files.length < this.options.maxFiles) {
 		  hideTotalMaxFileSizeMessage();
-		  $('#submit-my-documents').removeClass("disabled");
+	      $('#submit-my-documents').removeClass("disabled");
+	      if (myDropZone.files.length < this.options.maxFiles) {
+			  hideMaxFilesMessage();
+			  displayDragAndDrop();
+		  }
 	    }
       });
       

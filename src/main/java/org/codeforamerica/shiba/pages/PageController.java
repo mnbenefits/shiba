@@ -934,8 +934,14 @@ public class PageController {
         Double totalFileSize = applicationData.getUploadedDocs().stream().filter(i -> i.getSize()> 0).mapToDouble(i -> i.getSize()).sum() + file.getSize();
         if (totalFileSize >= TOTAL_MAX_FILE_SIZE) {
         	return new ResponseEntity<>(
-        	          lms.getMessage("upload-documents.maximum-total-file-size-error"),
-        	          HttpStatus.UNPROCESSABLE_ENTITY);
+		          lms.getMessage("upload-documents.maximum-total-file-size-error"),
+		          HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        int maxFiles = (applicationData.getFlow() == FlowType.HEALTHCARE_RENEWAL)? 50: 20;
+        if (applicationData.getUploadedDocs().size() + 1 > maxFiles) {
+	    	return new ResponseEntity<>(
+	  	          lms.getMessage("upload-documents.maximum-total-file-size-error"),
+	  	          HttpStatus.UNPROCESSABLE_ENTITY);
         }
         if (errorResponse != null) {
           return errorResponse;
