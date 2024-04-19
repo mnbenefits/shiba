@@ -92,8 +92,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				"childIdMap", List.of("applicant", jimHalpertId)));
 
 		var ccap = submitAndDownloadCcap();
-		assertPdfFieldEquals("CHILD_NEEDS_CHILDCARE_FULL_NAME_0", "Dwight Schrute", ccap);
-		assertPdfFieldEquals("CHILD_NEEDS_CHILDCARE_FULL_NAME_1", "Jim Halpert", ccap);
+		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_0", "Dwight Schrute", ccap);
+		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_1", "Jim Halpert", ccap);
 		assertPdfFieldEquals("CHILD_FULL_NAME_0", "Dwight Schrute", ccap);
 		assertPdfFieldIsEmpty("PARENT_NOT_LIVING_AT_HOME_0", ccap);
 		assertPdfFieldEquals("CHILD_FULL_NAME_1", "Jim Halpert", ccap);
@@ -114,8 +114,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", "NONE_OF_THE_ABOVE");
 
 		var ccap = submitAndDownloadCcap();
-		assertPdfFieldEquals("CHILD_NEEDS_CHILDCARE_FULL_NAME_0", "Dwight Schrute", ccap);
-		assertPdfFieldEquals("CHILD_NEEDS_CHILDCARE_FULL_NAME_1", "Jim Halpert", ccap);
+		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_0", "Dwight Schrute", ccap);
+		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_1", "Jim Halpert", ccap);
 		assertPdfFieldIsEmpty("CHILD_FULL_NAME_0", ccap);
 		assertPdfFieldIsEmpty("PARENT_NOT_LIVING_AT_HOME_0", ccap);
 		assertPdfFieldIsEmpty("CHILD_FULL_NAME_1", ccap);

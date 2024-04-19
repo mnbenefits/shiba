@@ -309,6 +309,33 @@ public class ApplicationDataParser {
 
     coordinatesMap.put(Field.CP_SUPPLEMENT,
             new ParsingCoordinate("certainPops", "certainPopsSupplement"));
+
+    coordinatesMap.put(Field.CHILDCARE_CHILD_NAME,
+    		new ParsingCoordinate("childNeedsChildcare", "childName"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER1_NAME,
+    		new ParsingCoordinate("childNeedsChildcare", "provider1Name"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER1_PHONE,
+    		new ParsingCoordinate("childNeedsChildcare", "provider1Phone"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER1_ADDRESS,
+    		new ParsingCoordinate("childNeedsChildcare", "provider1Street"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER1_CITY,
+    		new ParsingCoordinate("childNeedsChildcare", "provider1City"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER1_STATE,
+    		new ParsingCoordinate("childNeedsChildcare", "provider1State"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER1_ZIP,
+    		new ParsingCoordinate("childNeedsChildcare", "provider1ZipCode"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER2_NAME,
+    		new ParsingCoordinate("childNeedsChildcare", "provider2Name"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER2_PHONE,
+    		new ParsingCoordinate("childNeedsChildcare", "provider2Phone"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER2_ADDRESS,
+    		new ParsingCoordinate("childNeedsChildcare", "provider2Street"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER2_CITY,
+    		new ParsingCoordinate("childNeedsChildcare", "provider2City"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER2_STATE,
+    		new ParsingCoordinate("childNeedsChildcare", "provider2State"));
+    coordinatesMap.put(Field.CHILDCARE_PROVIDER2_ZIP,
+    		new ParsingCoordinate("childNeedsChildcare", "provider2ZipCode"));
     
     coordinatesMap.put(Field.HOME_EXPENSES,
         new ParsingCoordinate("homeExpenses", "homeExpenses"));
@@ -588,6 +615,21 @@ public class ApplicationDataParser {
     CP_BANK_ACCOUNT_TYPE_LINE_2,
     CP_BANK_ACCOUNT_TYPE_LINE_3,
 
+    // CCAP #9, Child care needs fields
+    CHILDCARE_CHILD_NAME,
+    CHILDCARE_PROVIDER1_NAME,
+    CHILDCARE_PROVIDER1_PHONE,
+    CHILDCARE_PROVIDER1_ADDRESS,
+    CHILDCARE_PROVIDER1_CITY,
+    CHILDCARE_PROVIDER1_STATE,
+    CHILDCARE_PROVIDER1_ZIP,
+    CHILDCARE_PROVIDER2_NAME,
+    CHILDCARE_PROVIDER2_PHONE,
+    CHILDCARE_PROVIDER2_ADDRESS,
+    CHILDCARE_PROVIDER2_CITY,
+    CHILDCARE_PROVIDER2_STATE,
+    CHILDCARE_PROVIDER2_ZIP,
+    
     UNEARNED_BENEFITS_PROGRAMS_AMOUNT,
     UNEARNED_INSURANCE_PAYMENTS_AMOUNT,
     UNEARNED_CONTRACT_FOR_DEED_AMOUNT,
