@@ -3,7 +3,9 @@ package org.codeforamerica.shiba.pages.data;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLICANT_PROGRAMS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.TRIBAL_NATION;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLYING_FOR_TRIBAL_TANF;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLYING_FOR_MFIP;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.BASIC_CRITERIA_CERTAIN_POPS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_FIRST_NAME;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_RELATIONSHIP;
@@ -134,9 +136,13 @@ public class ApplicationData implements Serializable {
     return isApplicationWith(List.of("CCAP"));
   }
 
+  
   public boolean isCAFApplication() {
-    return isApplicationWith(List.of("SNAP", "CASH", "GRH", "EA")) ||
-        getBooleanValue(pagesData, APPLYING_FOR_TRIBAL_TANF);
+	return isApplicationWith(List.of("SNAP", "CASH", "GRH", "EA"))
+      // OR is Tribal Nation member AND applying for Tribal TANF OR MFIP
+      || (getBooleanValue(pagesData, TRIBAL_NATION) && 
+           (getBooleanValue(pagesData, APPLYING_FOR_TRIBAL_TANF)
+             || getBooleanValue(pagesData, APPLYING_FOR_MFIP)));
   }
 
   public boolean isCertainPopsApplication() {

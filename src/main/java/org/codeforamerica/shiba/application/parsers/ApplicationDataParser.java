@@ -121,6 +121,8 @@ public class ApplicationDataParser {
 
     coordinatesMap.put(Field.APPLYING_FOR_TRIBAL_TANF,
         new ParsingCoordinate("applyForTribalTANF", "applyForTribalTANF"));
+    coordinatesMap.put(Field.APPLYING_FOR_MFIP,
+            new ParsingCoordinate("applyForMFIP", "applyForMFIP"));
 
     coordinatesMap.put(Field.NO_PERMANENT_ADDRESS,
         new ParsingCoordinate("homeAddress", "isHomeless"));
@@ -531,6 +533,7 @@ public class ApplicationDataParser {
     LINEAL_DESCENDANT_WEN,
     LIVING_IN_TRIBAL_NATION_BOUNDARY,
     APPLYING_FOR_TRIBAL_TANF,
+    APPLYING_FOR_MFIP,
 
     IDENTIFY_ZIPCODE,
     IDENTIFY_COUNTY("Other"),
