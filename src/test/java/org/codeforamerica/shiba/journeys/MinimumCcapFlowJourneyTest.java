@@ -69,7 +69,12 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
     testPage.clickButton("Yes, that's everyone");
 
-    // Who are the children in need of childcare
+    // Who are the children in need of child care
+    // First, verify proper navigation when no children are selected
+    testPage.clickContinue();
+    assertThat(testPage.getTitle()).contains("Housing subsidy");
+    testPage.goBack();
+    // Now pick the household member (i.e., child) from the childrenWhoNeedCare page.
     testPage.enter("whoNeedsChildCare", householdMemberFullName);
     testPage.clickContinue();
     

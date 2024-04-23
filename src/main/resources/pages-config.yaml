@@ -5292,6 +5292,10 @@ workflow:
     pageConfiguration: *childrenInNeedOfCare
     nextPages:
       - pageName: doYouHaveChildCareProvider
+        condition:
+          pageName: childrenInNeedOfCare
+          input: whoNeedsChildCare
+          matcher: NOT_EMPTY
         flag: child-care
       - pageName: whoHasParentNotAtHome
     datasources:
