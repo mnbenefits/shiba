@@ -47,4 +47,28 @@ class DocumentListParserTest {
 
     assertThat(DocumentListParser.parse(applicationData)).containsExactlyInAnyOrder(CAF);
   }
+
+  @Test
+  void parseShouldIncludeCAFWhenOnlyCCAPAndMfipAreSelected() {
+    ApplicationData applicationData = new TestApplicationDataBuilder()
+    	.withApplicantPrograms(List.of("CCAP"))
+        .withHouseholdMemberPrograms(List.of("CCAP"))
+        .withPageData("applyForMFIP", "applyForMFIP", "true")
+        .withPageData("tribalNationMember", "isTribalNationMember", "true")
+        .build();
+
+    assertThat(DocumentListParser.parse(applicationData)).containsExactlyInAnyOrder(CAF, CCAP);
+  }
+
+  @Test
+  void parseShouldIncludeCAFWhenOnlyCCAPAndTANFAreSelected() {
+    ApplicationData applicationData = new TestApplicationDataBuilder()
+    	.withApplicantPrograms(List.of("CCAP"))
+        .withHouseholdMemberPrograms(List.of("CCAP"))
+        .withPageData("applyForTribalTANF", "applyForTribalTANF", "true")
+        .withPageData("tribalNationMember", "isTribalNationMember", "true")
+        .build();
+
+    assertThat(DocumentListParser.parse(applicationData)).containsExactlyInAnyOrder(CAF, CCAP);
+  }
 }

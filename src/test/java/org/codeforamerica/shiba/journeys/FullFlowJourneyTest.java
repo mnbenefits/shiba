@@ -541,7 +541,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME_0", "");
     assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_GOING_TO_SCHOOL_FULL_NAME_0", "");
     assertCcapFieldEquals("STUDENT_FULL_NAME_0", householdMemberFullName);
-    assertCcapFieldEquals("CHILD_NEEDS_CHILDCARE_FULL_NAME_0", householdMemberFullName);
+    assertCcapFieldEquals("CHILDCARE_CHILD_NAME_0", householdMemberFullName);
     assertCcapFieldEquals("SSI", "No");
     assertCcapFieldEquals("VETERANS_BENEFITS", "No");
     assertCcapFieldEquals("UNEMPLOYMENT", "No");

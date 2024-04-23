@@ -116,25 +116,26 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 
   @Test
   void verifyFlowWhenApplicantSelectedCCAPAndHouseholdMemberDidNot() throws Exception {
-    // Applicant selected CCAP for themselves and did not choose CCAP for household member
+    // Applicant selected CCAP for themselves and did not choose any program (i.e., None) for the household member
 	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
-    fillOutHousemateInfo("EA");
+    fillOutHousemateInfo("NONE");
     finishAddingHouseholdMembers("childrenInNeedOfCare");
     assertCorrectPageTitle("childrenInNeedOfCare", "Who are the children in need of care?");
-    postExpectingRedirect("childrenInNeedOfCare", "doYouHaveChildCareProvider");
-    postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "housingSubsidy");
+    postExpectingRedirect("childrenInNeedOfCare", "whoNeedsChildCare", List.of("child name"), "doYouHaveChildCareProvider");
+    postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
+    postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", List.of("NONE_OF_THE_ABOVE"), "housingSubsidy");
     postExpectingRedirect("housingSubsidy", "livingSituation");
     postExpectingRedirect("livingSituation", "goingToSchool");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
-    completeFlowFromIsPregnantThroughTribalNations(true, "CCAP", "EA");
+    completeFlowFromIsPregnantThroughTribalNations(true, "CCAP", "NONE");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Job Search");
     postExpectingNextPageTitle("jobSearch", "currentlyLookingForJob", "true",
         "Who is looking for a job");
-    fillUnearnedIncomeToLegalStuffCCAP("CCAP", "EA");
+    fillUnearnedIncomeToLegalStuffCCAP("CCAP", "NONE");
   }
   
 
@@ -147,7 +148,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillOutHousemateInfo("EA");
     finishAddingHouseholdMembers("childrenInNeedOfCare");
     assertCorrectPageTitle("childrenInNeedOfCare", "Who are the children in need of care?");
-    postExpectingRedirect("childrenInNeedOfCare", "doYouHaveChildCareProvider");
+    postExpectingRedirect("childrenInNeedOfCare", "whoNeedsChildCare", List.of("child name"), "doYouHaveChildCareProvider");
     postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "true", "childCareProviderInfo");
     fillOutProviderInformation();
     String householdMemberId = getFirstHouseholdMemberId();

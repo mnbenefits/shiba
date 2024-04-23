@@ -1129,6 +1129,7 @@ pageDefinitions:
     name: childrenAtThisProvider
     pageTitle: child-care-who-uses.title
     headerKey: child-care-who-uses.header
+    headerHelpMessageKey: child-care-who-uses.help-text
     inputs:
       - name: childrenNames
         type: PEOPLE_CHECKBOX
@@ -1171,7 +1172,7 @@ pageDefinitions:
     pageTitle: child-care-provider-list.title
     primaryButtonTextKey: child-care-provider-list.no-thats-it
     contextFragment: householdContextFragment 
-    headerKey: child-care-provider-list.our-households-providers
+    headerKey: child-care-provider-list.would-you-like-to-add
     usingPageTemplateFragment: false
   - &childCareProviderDeleteWarningPage
     name: childCareProviderDeleteWarningPage
@@ -5291,6 +5292,10 @@ workflow:
     pageConfiguration: *childrenInNeedOfCare
     nextPages:
       - pageName: doYouHaveChildCareProvider
+        condition:
+          pageName: childrenInNeedOfCare
+          input: whoNeedsChildCare
+          matcher: NOT_EMPTY
         flag: child-care
       - pageName: whoHasParentNotAtHome
     datasources:

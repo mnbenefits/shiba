@@ -11,10 +11,11 @@
 				<div th:replace="~{fragments/cardHeader :: cardHeader}"></div>
 				<main id="content" role="main" class="card spacing-above-35">
 					<div class="grid__item spacing-above-35">
-						<h1 class="h2 spacing-above-0" th:text="#{child-care-provider-list.our-households-providers}"></h1>
+						<h1 class="h2 spacing-above-0" th:text="#{child-care-provider-list.would-you-like-to-add}"></h1>
+						<p id="page-header-help-message" th:text="#{child-care-provider-list.include-all-providers}"></p>
 					</div>
 					<div class="grid__item boxed-content spacing-below-60">
-
+						<h2 class="h3 text--centered intro-box__title" th:text="#{child-care-provider-list.your-providers}"></h2>
 						<th:block th:each="subworkflow: ${subworkflows}">
 
 							<th:block th:each="childcareProviderIteration, childcareProviderIterationStat: ${subworkflow.value}">
