@@ -4,13 +4,11 @@
 <div th:fragment="cardHeader" id="cardHeader" class="toolbar">
   <div class="stack-vertical">
     <!-- some pages may not have a pageTitle property -->
-     <!-- 
-    <div th:if="${page_pagetitle == 'Your next steps'}">
+    <div th:if="${page.pageTitle} != '' and #{${page.pageTitle}} == ${#messages.msg('next-steps.title')}">
       <div class="reduce-spacing-above-35 spacing-below-15"
-        th:if="${@environment.getProperty('mnb-notice-displayed')}">
-        <div th:replace="~{fragments/generalNotice :: generalNotice}"></div>
+        th:if="${@environment.getProperty('show-delayed-processing-time-notice')}">
+        <div th:replace="~{fragments/delayedProcessingTimeNotice :: delayedProcessingTimeNotice}"></div>
       </div>
-       -->
     </div>
     <th:block th:if="not ${page.excludeGoBack}">
     	<div th:replace="~{fragments/goBack :: goBackLink}"></div>
