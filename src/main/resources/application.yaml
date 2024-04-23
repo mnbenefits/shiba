@@ -83,8 +83,17 @@ mnit-clammit:
 
 sender-email: help@mnbenefits.org
 
-show-delayed-processing-time-notice: true
+
 show-healthcare-renewal-chat: true
+
+mnb-notice-displayed: true
+
+general:
+  notice:
+    title-en: 'Important Update:'
+    message-en: 'Please be aware of the recent changes to our service on MNBenefits.'
+    title-es: 'Actualización importante:'
+    message-es: 'Tenga en cuenta los cambios recientes en nuestro servicio on MNBenefitos.'
 
 mail-gun:
   url: "https://api.mailgun.net/v3/mail.mnbenefits.mn.gov/messages"
@@ -97,7 +106,6 @@ feature-flag:
   certain-pops: on
   enhanced-next-steps: on
   second-signature: on
-  child-care: on
   
 document-upload:
   max-files-uploaded: 50
@@ -141,6 +149,7 @@ in-progress-resubmission:
   lockAtLeastFor: 15m
   lockAtMostFor: 30m
   isEnable: true
+  
 
 no-status-applications-resubmission:
   interval:
