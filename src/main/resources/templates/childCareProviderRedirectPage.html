@@ -11,16 +11,16 @@
       <main id="content" role="main" class="card spacing-above-35">
         <div class="grid__item spacing-above-35 spacing-below-60">
           <h1 class="h2" th:text="#{${page.headerKey}}"></h1>
-          <h2 th:text="#{warning-page.is-that-ok}"></h2>
+          <p th:utext="#{${page.headerHelpMessageKey}}"></p>
         </div>
         <div class="spacing-below-15 spacing-above-35">
           <a class="button button--primary" th:href="'/pages/'+${pageName}+'/navigation?option=0'"
-             th:text="#{warning-page.no-keep-id-rather-keep-going}"></a>
+             th:text="#{child-care-provider-redirect.no-button}"></a>
         </div>
         <form id="page-form" method="post"
               th:action="'/groups/'+${subworkflowsNext}+'/delete'">
           <button id="form-submit-button" class="button spacing-below-60" type="submit"
-                  th:text="#{warning-page.yes-go-back-to-the-start}"></button>
+                  th:text="#{child-care-provider-redirect.yes-button}"></button>
         </form>
       </main>
     </div>

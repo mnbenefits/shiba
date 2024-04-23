@@ -1097,9 +1097,6 @@ pageDefinitions:
         type: TEXT
         promptMessage:
           promptMessageKey: child-care-info.street-address
-        validators:
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-you-answer-this-question
       - name: suiteNumber
         type: TEXT
         promptMessage:
@@ -1115,16 +1112,10 @@ pageDefinitions:
         type: TEXT
         promptMessage:
           promptMessageKey: child-care-info.state
-        validators:
-          - validation: STATE
-            errorMessageKey: general.validation.make-sure-to-provide-a-valid-2-letter-state-code
       - name: zipCode
         type: NUMBER
         promptMessage:
           promptMessageKey: child-care-info.zip
-        validators:
-          - validation: ZIPCODE
-            errorMessageKey: general.validation.make-sure-to-enter-a-zip-code-with-5-digits 
   - &childrenAtThisProvider
     name: childrenAtThisProvider
     pageTitle: child-care-who-uses.title
@@ -1135,7 +1126,7 @@ pageDefinitions:
         type: PEOPLE_CHECKBOX
         validators:
           - validation: SELECT_AT_LEAST_ONE
-            errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
+            errorMessageKey: child-care-who-uses.select-at-least-one-child
         datasources:
           - pageName: childrenInNeedOfCare
             inputName: whoNeedsChildCare
@@ -1190,7 +1181,8 @@ pageDefinitions:
   - &childCareProviderRedirectPage
 # TODO add messages customized for this page
     name: childCareProviderRedirectPage
-    headerKey: child-care-provider-redirect.going-back-will-take-you-to-the-beginning-of-the-provider-section-where-you-will-start-over
+    headerKey: child-care-provider-redirect.header
+    headerHelpMessageKey: child-care-provider-redirect.helper
     pageTitle: warning-page.go-back-title
     usingPageTemplateFragment: false
   - &whoHasParentNotAtHome
