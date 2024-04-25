@@ -268,7 +268,8 @@ public class PageController {
   ) {
     PageWorkflowConfiguration currentPage = applicationConfiguration.getWorkflow().get(pageName);
     if (currentPage == null) {
-      return new RedirectView("/error");
+    	log.error("navigation error for pageName " + pageName);
+    	return new RedirectView("/error");
     }
 
     PagesData pagesData = applicationData.getPagesData();
@@ -387,6 +388,7 @@ public class PageController {
 
     var pageWorkflowConfig = applicationConfiguration.getWorkflow().get(pageName);
     if (pageWorkflowConfig == null) {
+    	log.error("getPage error for pageName " + pageName);
       return new ModelAndView("redirect:/error");
     }
 
