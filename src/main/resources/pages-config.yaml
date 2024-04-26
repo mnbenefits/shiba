@@ -1112,10 +1112,22 @@ pageDefinitions:
         type: TEXT
         promptMessage:
           promptMessageKey: child-care-info.state
+        validators:
+          - validation: STATE
+            errorMessageKey: general.validation.make-sure-to-provide-a-valid-2-letter-state-code
+            condition:
+              input: state
+              matcher: NOT_EMPTY
       - name: zipCode
         type: NUMBER
         promptMessage:
           promptMessageKey: child-care-info.zip
+        validators:
+          - validation: ZIPCODE
+            errorMessageKey: general.validation.make-sure-to-enter-a-zip-code-with-5-digits
+            condition:
+              input: zipCode
+              matcher: NOT_EMPTY
   - &childrenAtThisProvider
     name: childrenAtThisProvider
     pageTitle: child-care-who-uses.title
