@@ -94,13 +94,14 @@ jobs:
     uses: veracode/veracode-uploadandscan-action@0.2.6
       with:
     # appname
-      appname: # default is ${{ github.repository }}
+      appname: ${{ github.repository }} # default is ${{ github.repository }}
     # createprofile
-      createprofile: # default is true
+      createprofile: true # default is true
     # filepath
       filepath: veracode-scan-target.zip
     # version
-      version: # default is Scan from Github job: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+      version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }} # default is Scan from Github job: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+      
     # vid
       vid: ${{secrets.VERACODE_API_ID}}
     # vkey
