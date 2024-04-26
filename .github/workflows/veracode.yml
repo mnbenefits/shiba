@@ -79,6 +79,7 @@ jobs:
     # vid
         vid: ${{secrets.VERACODE_API_ID}}
     # vkey
+        vkey: ${{secrets.VERACODE_API_KEY}}
     # download the Veracode Static Analysis Pipeline scan jar
     - run: curl --silent --show-error --fail -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
     - run: unzip -o pipeline-scan-LATEST.zip
@@ -100,5 +101,5 @@ jobs:
         sarif_file: veracode-results.sarif
 
 
-        vkey: ${{secrets.VERACODE_API_KEY}}
+
     
