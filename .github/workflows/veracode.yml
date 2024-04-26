@@ -88,21 +88,21 @@ jobs:
         # Path to SARIF file relative to the root of the repository
         sarif_file: veracode-results.sarif
   
-    - name: Veracode Upload And Scan
+name: Veracode Upload And Scan
   # You may pin to the exact commit or the version.
   # uses: veracode/veracode-uploadandscan-action@98e2a2941b985e55bfe469ebcb970b2e686625e4
-      uses: veracode/veracode-uploadandscan-action@0.2.6
-      with:
+  - uses: veracode/veracode-uploadandscan-action@0.2.6
+    with:
     # appname
-      appname: # default is ${{ github.repository }}
+    appname: # default is ${{ github.repository }}
     # createprofile
-      createprofile: # default is true
+    createprofile: # default is true
     # filepath
-     filepath: veracode-scan-target.zip
+    filepath: veracode-scan-target.zip
     # version
-      version: # default is Scan from Github job: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
+    version: # default is Scan from Github job: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
     # vid
-      vid: ${{secrets.VERACODE_API_ID}}
+    vid: ${{secrets.VERACODE_API_ID}}
     # vkey
-      vkey: ${{secrets.VERACODE_API_KEY}}
+    vkey: ${{secrets.VERACODE_API_KEY}}
     
