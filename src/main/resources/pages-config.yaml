@@ -628,6 +628,11 @@ pageDefinitions:
           promptMessageKey: contact-info.whats-your-phone-number
         helpMessageKey: contact-info.phone-number-helper
         validators:
+          - validation: PHONE_STARTS_WITH_ZERO
+            errorMessageKey: general.validation.area-codes-can-not-begin-with-0
+            condition:
+              input: phoneNumber
+              matcher: NOT_EMPTY
           - validation: PHONE_STARTS_WITH_ONE
             errorMessageKey: general.validation.area-codes-can-not-begin-with-1
             condition:
@@ -1083,6 +1088,11 @@ pageDefinitions:
         promptMessage:
           promptMessageKey: child-care-info.phone-number
         validators:
+          - validation: PHONE_STARTS_WITH_ZERO
+            errorMessageKey: general.validation.area-codes-can-not-begin-with-0
+            condition:
+              input: phoneNumber
+              matcher: NOT_EMPTY
           - validation: PHONE_STARTS_WITH_ONE
             errorMessageKey: general.validation.area-codes-can-not-begin-with-1
             condition:
@@ -2320,6 +2330,11 @@ pageDefinitions:
         promptMessage:
           promptMessageKey: contact-info.whats-your-phone-number
         validators:
+          - validation: PHONE_STARTS_WITH_ZERO
+            errorMessageKey: general.validation.area-codes-can-not-begin-with-0
+            condition:
+              input: phoneNumber
+              matcher: NOT_EMPTY
           - validation: PHONE_STARTS_WITH_ONE
             errorMessageKey: general.validation.area-codes-can-not-begin-with-1
             condition:
@@ -4259,6 +4274,8 @@ pageDefinitions:
         promptMessage:
           promptMessageKey: authorized-rep-contact-info.what-is-their-phone-number
         validators:
+          - validation: PHONE_STARTS_WITH_ZERO
+            errorMessageKey: general.validation.area-codes-can-not-begin-with-0
           - validation: PHONE_STARTS_WITH_ONE
             errorMessageKey: general.validation.area-codes-can-not-begin-with-1
           - validation: PHONE
@@ -4892,6 +4909,11 @@ pageDefinitions:
         promptMessage:
           promptMessageKey: contact-info.whats-your-phone-number
         validators:
+          - validation: PHONE_STARTS_WITH_ZERO
+            errorMessageKey: general.validation.area-codes-can-not-begin-with-0
+            condition:
+              input: phoneNumber
+              matcher: NOT_EMPTY
           - validation: PHONE_STARTS_WITH_ONE
             errorMessageKey: general.validation.area-codes-can-not-begin-with-1
             condition:

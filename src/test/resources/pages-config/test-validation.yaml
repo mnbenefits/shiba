@@ -144,6 +144,10 @@ pageDefinitions:
         validators:
           - validation: PHONE
             errorMessageKey: error-message-key
+          - validation: PHONE_STARTS_WITH_ZERO
+            errorMessageKey: error-message-key
+          - validation: PHONE_STARTS_WITH_ONE
+            errorMessageKey: error-message-key
   - &moneyPage
     name: moneyPage
     pageTitle: money-page-title

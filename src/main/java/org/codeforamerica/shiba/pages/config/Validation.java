@@ -59,9 +59,11 @@ public enum Validation {
           "VA", "WA", "WV", "WI", "WY", "AS", "DC", "FM", "GU", "MH", "MP", "PR", "VI", "AB", "BC",
           "MB", "NB", "NF", "NS", "ON", "PE", "PQ", "SK")
       .contains(strings.get(0).toUpperCase())),
-  PHONE(strings -> String.join("", strings).replaceAll("[^\\d]", "").matches("[2-9]\\d{9}")),
+  PHONE(strings -> String.join("", strings).replaceAll("[^\\d]", "").matches("\\d{10}")),
   PHONE_STARTS_WITH_ONE(
       strings -> !String.join("", strings).replaceAll("[^\\d]", "").startsWith("1")),
+  PHONE_STARTS_WITH_ZERO(
+	      strings -> !String.join("", strings).replaceAll("[^\\d]", "").startsWith("0")),
   MONEY(strings -> String.join("", strings)
       .matches("^(\\d{1,3},(\\d{3},)*\\d{3}|\\d+)(\\.\\d{1,2})?")),
   NUMBER(strings -> strings.get(0).trim().matches("\\d*")),
