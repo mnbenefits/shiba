@@ -74,7 +74,8 @@ jobs:
         createprofile: true # default is true
     # filepath
         filepath: veracode-scan-target.zip
-        scanallnonfataltoplevelmodules: truej
+        scanallnonfataltoplevelmodules: true
+        toplevel: true
 
     # version
         version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }} # default is Scan from Github job: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
