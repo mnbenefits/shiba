@@ -69,11 +69,13 @@ jobs:
     - name: Veracode Upload And Scan
       uses: veracode/veracode-uploadandscan-action@0.2.6
       with:
-        appname: ${{ github.repository }} # default is ${{ github.repository }}
+        appname: DHS - MNbenefits # default is ${{ github.repository }}
     # createprofile
         createprofile: true # default is true
     # filepath
         filepath: veracode-scan-target.zip
+        scanallnonfataltoplevelmodules: truej
+
     # version
         version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }} # default is Scan from Github job: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}
     # vid
