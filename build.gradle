@@ -3,7 +3,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.4"
     id("java")
     id("com.github.jk1.dependency-license-report") version "2.7"
-    id("com.gorylenko.gradle-git-properties") version "2.4.1"
+    id("com.gorylenko.gradle-git-properties") version "2.4.2"
 }
 
 group = "org.codeforamerica"
@@ -142,8 +142,8 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:24.1.0")
     implementation("commons-validator:commons-validator:1.8.0")
-    implementation("org.flywaydb:flyway-core:10.11.1")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.11.1")
+    implementation("org.flywaydb:flyway-core:10.12.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.12.0")
     implementation("com.mixpanel:mixpanel-java:1.5.2")
     implementation("net.javacrumbs.shedlock:shedlock-spring:5.13.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.13.0")
