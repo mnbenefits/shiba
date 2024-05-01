@@ -24,6 +24,8 @@ smarty-street-url: someUrl
 mail-gun:
   url: mailgun-url
   max-attachment-size: 1000000 # 1MB
+  
+mnb-notice-displayed: true
 
 feature-flag:
   show-delayed-processing-time-notice: on

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
+ <div>
+  <div th:if="${@environment.getProperty('mnb-notice-displayed')}">
+	  <div th:fragment="generalNotice" id="generalNotice" class="general-notice-box">
+
+      <span id="generalNoticeTitle" th:text="${#locale.language == 'en' ?
+                    @environment.getProperty('general.notice.title-en') : 
+                    @environment.getProperty('general.notice.title-es')}"></span>
+      <span id="generalNoticeMessage" th:text="${#locale.language == 'en' ? 
+                    @environment.getProperty('general.notice.message-en') : 
+                    @environment.getProperty('general.notice.message-es')}"></span>
+    </div>
+  </div>
+ </div>
+</body>
+</html>

@@ -10,8 +10,8 @@
     <section class="slab slab--white padding-top-1rem padding-bottom-3rem">
       <div class="grid">
         <div class="grid__item width-one-whole spacing-above-15"
-            th:if="${@environment.getProperty('show-delayed-processing-time-notice')}">
-            <div th:replace="~{fragments/delayedProcessingTimeNotice :: delayedProcessingTimeNotice}"></div>
+            th:if="${@environment.getProperty('mnb-notice-displayed')}">
+            <div th:replace="~{fragments/generalNotice :: generalNotice}"></div>
         </div>
         <div class="grid__item width-one-half">
             <div class="spacing-above-35">

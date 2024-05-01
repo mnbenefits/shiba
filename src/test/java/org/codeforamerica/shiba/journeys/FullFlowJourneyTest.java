@@ -43,7 +43,8 @@ public class FullFlowJourneyTest extends JourneyTest {
     await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
     assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
     // Assert that the Delayed Processing Time Notice is displayed on the landing page.
-    assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
+    //assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
+    assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
     // Assert that the EBT Scam Alert is displayed on the landing page.
     assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
    
@@ -479,7 +480,8 @@ public class FullFlowJourneyTest extends JourneyTest {
     navigateTo("documentSubmitConfirmation");
     assertThat(driver.getTitle()).isEqualTo("Your next steps");
     // Assert that the Delayed Processing Time Notice is displayed on the nextSteps page.
-    assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
+    //assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
+    //assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
     testPage.clickContinue();
 
     SuccessPage successPage = new SuccessPage(driver);

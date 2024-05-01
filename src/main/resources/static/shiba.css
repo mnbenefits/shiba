@@ -1790,12 +1790,13 @@ legend.form-question {
 	width:75%
 } 
 
-.delayed-processing-time-notice-box {
+.general-notice-box {
   width: 100%;
   padding: 17px;
   border: 2px solid #ffae00;
   background-color: #FFF2D1;
 }
+
 
 .stack-vertical {
     flex-direction: column;
