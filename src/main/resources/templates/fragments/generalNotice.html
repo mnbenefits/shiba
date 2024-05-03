@@ -5,10 +5,10 @@
   <div th:if="${@environment.getProperty('mnb-notice-displayed')}">
 	  <div th:fragment="generalNotice" id="generalNotice" class="general-notice-box">
 
-      <span id="generalNoticeTitle" th:text="${#locale.language == 'en' ?
+      <span id="generalNoticeTitle" th:utext="${#locale.language == 'en' ?
                     @environment.getProperty('general.notice.title-en') : 
                     @environment.getProperty('general.notice.title-es')}"></span>
-      <span id="generalNoticeMessage" th:text="${#locale.language == 'en' ? 
+      <span id="generalNoticeMessage" th:utext="${#locale.language == 'en' ? 
                     @environment.getProperty('general.notice.message-en') : 
                     @environment.getProperty('general.notice.message-es')}"></span>
     </div>
