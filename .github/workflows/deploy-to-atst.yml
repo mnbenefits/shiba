@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Create tag name
         id: create-tagname
-        run: echo "{name}=TAG_NAME::$(date +'%Y-%m-%d-%H%M')"
+        run: echo "TAG_NAME=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_OUTPUT
       - name: Draft Release
         id: create_release
         uses: actions/create-release@v1
