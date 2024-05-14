@@ -12,6 +12,7 @@ jobs:
   draft-release:
     name: Draft a new release
     runs-on: ubuntu-latest
+    permissions: write-all
     outputs:
       tag_name: release-${{ steps.create-tagname.outputs.TAG_NAME }}
     steps:
