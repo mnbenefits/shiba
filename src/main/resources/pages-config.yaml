@@ -1287,20 +1287,18 @@ pageDefinitions:
     headerKey: school-details.header
     headerHelpMessageKey: school-details.If-you-dont-have-all-this-information-right-now
     contextFragment: schoolContextFragment
-    #usingPageTemplateFragment: false
     inputs:
       - type: CUSTOM
-        name: childrenNames
+        name: schoolName
         customInputFragment: schoolDetailsNameInput
         promptMessage:
           promptMessageKey: school-details.school-name
-        #helpMessageKey: school-details.school-name
         options:
           datasources:
             - pageName: whoIsGoingToSchool
             - pageName: childrenInNeedOfCare
       - type: HIDDEN
-        name: childIdMap # This input is controlled by whatAreTheParentsNames          
+        name: schoolNameIdMap         
   - &housingSubsidy
     name: housingSubsidy
     pageTitle: housing-subsidy.title
