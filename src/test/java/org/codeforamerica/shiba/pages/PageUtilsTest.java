@@ -50,5 +50,25 @@ class PageUtilsTest {
 		Boolean isPresent = PageUtils.listOfNamesContainsName(namesList, "Peter Graves");
 		assertFalse(isPresent);
 	}
+	
+	
+	@Test
+	void shouldFindMemberInBothLists() {
+		String[] childrenInNeedOfCare = { "Julian Doyle applicant", "Aquila Graves d259c623-395e-4f7a-ba19-56b43447354b",
+				"Jayme Lamb 00942599-a681-41d2-8625-8a6538f560f7" };
+		String[] childrenInSchool = { "Julian Doyle applicant", "Aquila Graves d259c623-395e-4f7a-ba19-56b43447354b",
+		"Jayme Lamb 00942599-a681-41d2-8625-8a6538f560f7" };
+		List<String> result = Arrays.asList(childrenInNeedOfCare);
+		List<String> result2 = Arrays.asList(childrenInSchool);
+		List<String>result3= PageUtils.getEligibleSchoolAndChildCareMembers(result, result2);
+		Boolean isPresent = PageUtils.listOfNamesContainsName(result3, "Julian Doyle");
+		assertTrue(isPresent);
+		 isPresent = PageUtils.listOfNamesContainsName(result3, "Aquila Graves");
+		assertTrue(isPresent);
+		 isPresent = PageUtils.listOfNamesContainsName(result3, "Jayme Lamb ");
+		assertTrue(isPresent);
+	}
+	
+	
     
 }
