@@ -58,6 +58,13 @@ public class Page {
             () -> new RuntimeException("No button link found containing text: " + buttonLinkText));
     buttonToClick.click();
   }
+  
+	public void clickAccordianButton(String buttonattributeText) {
+		checkForBadMessageKeys();
+		WebElement buttonToClick = driver
+				.findElement(By.xpath("//button[@aria-controls=\"" + buttonattributeText + "\"]"));
+		buttonToClick.click();
+	}
 
   public void clickContinue() {
     clickButton("Continue");

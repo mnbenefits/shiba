@@ -189,7 +189,8 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     testPage.enter("agreeToTerms", "I agree");
     // for CCAP only this should not be displayed
     assertTrue(testPage.elementDoesNotExistById("drugFelony1"));
-
+    testPage.clickAccordianButton("a1");
+   // takeSnapShot("legalPageWithTextAccordianClosed.png");
     testPage.clickContinue();
 
     // Upload documents
