@@ -1298,7 +1298,7 @@ pageDefinitions:
             - pageName: whoIsGoingToSchool
             - pageName: childrenInNeedOfCare
       - type: HIDDEN
-        name: schoolNameIdMap         
+        name: childIdMap         
   - &housingSubsidy
     name: housingSubsidy
     pageTitle: housing-subsidy.title

@@ -2,7 +2,7 @@
 <th:block th:fragment="schoolDetailsNameInput (input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                     inputData=${data.get(input.name)},
-                    schoolNameIdMapData=${data.get('schoolNameIdMap')},
+                    childIdMapData=${data.get('childIdMap')},
                     hasHelpMessage=${input.helpMessageKey != null},
                     needsAriaLabel=${input.needsAriaLabel()},
                     whoIsGoingToSchool=${input.options.datasources.get('whoIsGoingToSchool').get('whoIsGoingToSchool').value},
@@ -10,19 +10,13 @@
                     childrenInSchool=${T(org.codeforamerica.shiba.pages.PageUtils).getEligibleSchoolAndChildCareMembers(childrenInNeedOfCare, whoIsGoingToSchool)}">
                     
   <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-
-whoIsGoingToSchool:	  <p th:text="${whoIsGoingToSchool}"> test</p>
-
-childrenInNeedOfCare: <p th:text="${childrenInNeedOfCare}"> test</p>
-
-
     <th:block
         th:each="fullNameAndId, iterationStat: ${childrenInSchool}"
         th:with="fullNameAndIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
                          NameId=${fullNameAndIdArray[#arrays.length(fullNameAndIdArray)-1]},
                          childName=${#strings.substringBefore(fullNameAndId, ' ' + NameId)},
                          you=#{general.you},
-                         indexInInputData=${schoolNameIdMapData.value.indexOf(NameId)},
+                         indexInInputData=${childIdMapData.value.indexOf(NameId)},
                          schoolName=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">
                          
                          
@@ -44,8 +38,7 @@ childrenInNeedOfCare: <p th:text="${childrenInNeedOfCare}"> test</p>
         <input type="hidden"
                th:id="|${NameId}-id|"
                th:value="${NameId}"
-               th:name="schoolNameIdMap[]">
-
+               th:name="childIdMap[]">
       </div>
     </th:block>
   </div>
