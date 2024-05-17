@@ -2,7 +2,7 @@
 <th:block th:fragment="schoolDetailsNameInput (input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                     inputData=${data.get(input.name)},
-                    childIdMapData=${data.get('childIdMap')},
+                    childIdMapData=${data.get('personIdMap')},
                     hasHelpMessage=${input.helpMessageKey != null},
                     needsAriaLabel=${input.needsAriaLabel()},
                     whoIsGoingToSchool=${input.options.datasources.get('whoIsGoingToSchool').get('whoIsGoingToSchool').value},
@@ -38,7 +38,7 @@
         <input type="hidden"
                th:id="|${NameId}-id|"
                th:value="${NameId}"
-               th:name="childIdMap[]">
+               th:name="personIdMap[]">
       </div>
     </th:block>
   </div>
