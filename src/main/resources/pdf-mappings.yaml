@@ -429,7 +429,9 @@ mappings:
     childFullName: CHILD_FULL_NAME
     parentNotAtHomeName: PARENT_NOT_LIVING_AT_HOME
   whoIsGoingToSchool:
-    fullName: STUDENT_FULL_NAME
+    fullName: STUDENT_FULL_NAME 
+  schoolDetails:
+     schoolName: SCHOOL_NAME
   adultRequestingChildcareLookingForJob:
     fullName: ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME
   adultRequestingChildcareGoingToSchool:
