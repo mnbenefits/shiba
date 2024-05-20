@@ -44,7 +44,12 @@ public class DatasourcePages extends HashMap<String, PageData> {
         case OR -> conditionStream.anyMatch(this::satisfies);
       };
     }
-
+    
+    String customCondition = condition.getCustomCondition();
+    if (customCondition != null) {
+    	return condition.satisfiesCustomCondition(customCondition);
+    }
+    
     PageData pageData = this.get(condition.getPageName());
     if (pageData == null || !pageData.containsKey(condition.getInput())) {
       return false; // The client didn't provide an answer, so this condition can't be satisfied.

@@ -26,6 +26,7 @@ public class Condition implements Serializable {
   String pageName;
   String input;
   String value;
+  String customCondition;
   @JsonIgnore
   ValueMatcher matcher = ValueMatcher.CONTAINS;
   @JsonIgnore
@@ -45,6 +46,12 @@ public class Condition implements Serializable {
     this.matcher = matcher;
   }
 
+  // Constructor for a "customCondition"
+  // Takes one parameter, a string that identifies the custome condition.
+  public Condition(String customCondition) {
+    this.customCondition = customCondition;
+  }
+
   public boolean matches(PageData pageData, Map<String, PageData> pagesData) {
     if (pageName != null) {
       return satisfies(pagesData.get(pageName));
@@ -56,6 +63,21 @@ public class Condition implements Serializable {
   public boolean satisfies(PageData pageData) {
     return pageData != null && !pageData.isEmpty() && matcher
         .matches(pageData.get(input).getValue(), value);
+  }
+ 
+  /**
+   * This method evaluates a "customCondition" condition as specified in pages-config.yaml. 
+   * @param customCondition - A String that identifies the custom condition to be evaluated.
+   * @return 
+   */
+  public boolean satisfiesCustomCondition(String customCondition) {
+	  switch(customCondition) {
+	  	case "SKIP_SCHOOL_DETAILS": {
+	  		// TODO: add logic for the "SKIP_SCHOOL_DETAILS" custom condition
+	  		return true;
+	  	}
+	    default: return false;
+	}
   }
 
   @SuppressWarnings("unused")
@@ -85,6 +107,11 @@ public class Condition implements Serializable {
     this.value = value;
   }
 
+  public void setCustomConditionName(String customCondition) {
+	    assertNotCompositeCondition();
+	    this.customCondition = customCondition;
+  }
+  
   private void assertCompositeCondition() {
     if (pageName != null || input != null) {
       throw new IllegalStateException("Cannot set composite condition fields");

@@ -5576,6 +5576,7 @@ workflow:
         - pageName: goingToSchool
           value: "false"
           input: goingToSchool
+        - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
       - pageName: pregnant            
   pregnant:
