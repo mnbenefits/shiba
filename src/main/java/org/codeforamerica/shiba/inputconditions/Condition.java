@@ -81,28 +81,29 @@ public class Condition implements Serializable {
 		if (childrenInNeedOfCarePage == null || whoIsGoingToSchoolPage == null) {
 			return true;
 		}
-		// Retrieve the list of children in need of care and those going to school from PageData
-				Collection<InputData> childrenInNeedOfCare = childrenInNeedOfCarePage.values();
-				Collection<InputData> childrenGoingToSchool = whoIsGoingToSchoolPage.values();
-				if (childrenInNeedOfCare.isEmpty() || childrenGoingToSchool.isEmpty()) {
-					return true;
-				}
-				// Check for any common elements between the two lists
-				for (InputData child : childrenInNeedOfCare) {
-					List<String> childrenInNeedOfCareNames = child.getValue();
-					for (String name : childrenInNeedOfCareNames) {
-						for (InputData schoolChild : childrenGoingToSchool) {
-							List<String> childrenGoingToSchoolNames = schoolChild.getValue();
-							if (childrenGoingToSchoolNames.contains(name)) {
-								return false;
-							}
-						}
-
+		// Retrieve the list of children in need of care and those going to school from
+		// PageData
+		Collection<InputData> childrenInNeedOfCare = childrenInNeedOfCarePage.values();
+		Collection<InputData> childrenGoingToSchool = whoIsGoingToSchoolPage.values();
+		if (childrenInNeedOfCare.isEmpty() || childrenGoingToSchool.isEmpty()) {
+			return true;
+		}
+		// Check for any common elements between the two lists
+		for (InputData child : childrenInNeedOfCare) {
+			List<String> childrenInNeedOfCareNames = child.getValue();
+			for (String name : childrenInNeedOfCareNames) {
+				for (InputData schoolChild : childrenGoingToSchool) {
+					List<String> childrenGoingToSchoolNames = schoolChild.getValue();
+					if (childrenGoingToSchoolNames.contains(name)) {
+						return false;
 					}
-
 				}
-				return true;
+
 			}
+
+		}
+		return true;
+	}
 
   @SuppressWarnings("unused")
   public void setConditions(List<Condition> conditions) {

@@ -28,8 +28,6 @@ public class DatasourcePages extends HashMap<String, PageData> {
     super(pagesData);
   }
   
-  
-
   /**
    * DatasourcePages satisfies method checks if condition contains multiple conditions,
    * which then uses allMatch for AND logicalOperator, or anyMatch for OR logicalOperator.</br>

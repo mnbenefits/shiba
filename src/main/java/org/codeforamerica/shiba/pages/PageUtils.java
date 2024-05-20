@@ -55,7 +55,6 @@ public class PageUtils {
   public static List<String> getEligibleSchoolAndChildCareMembers(Collection<String> childrenInNeedOfCare , Collection<String> childrenGoingToSchool) {
 	    return childrenInNeedOfCare.stream()
 	    		.filter(childrenGoingToSchool::contains)
-	    		/*.filter(s -> childrenGoingToSchool.contains(s) )*/
 	    		.collect(Collectors.toList());
 	  }
  
