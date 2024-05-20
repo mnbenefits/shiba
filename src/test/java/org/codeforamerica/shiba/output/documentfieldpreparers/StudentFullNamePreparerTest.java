@@ -15,13 +15,21 @@ public class StudentFullNamePreparerTest {
   StudentFullNamePreparer mapper = new StudentFullNamePreparer();
 
   @Test
-  void shouldCreateListOfStudentFullNames() {
+  void shouldCreateListOfStudentFullNamesAndSchoolNames() {
     ApplicationData applicationData = new TestApplicationDataBuilder()
         .withPageData("whoIsGoingToSchool", "whoIsGoingToSchool",
             List.of("studentAFirstName studentALastName 939dc33-d13a-4cf0-9093-309293k3",
-                "studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d"))
+                "studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d",
+                "studentCFirstName studentCLastName b9tmgf7e-d13a-6mf0-9093-calkjasdfiv4d",
+                "studentDFirstName studentDLastName y77f3f7e-b63a-4cf0-9089-asdfsafdba2a6"))
         .withPageData("childrenInNeedOfCare", "whoNeedsChildCare",
-            List.of("studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d"))
+            List.of("studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d",
+            		"studentCFirstName studentCLastName b9tmgf7e-d13a-6mf0-9093-calkjasdfiv4d",
+                    "studentDFirstName studentDLastName y77f3f7e-b63a-4cf0-9089-asdfsafdba2a6"))
+        .withPageData("schoolDetails", "schoolName",
+        	List.of("test school name A",
+        			"test school name B",
+        			"test school name C"))
         .build();
 
     List<DocumentField> result = mapper.prepareDocumentFields(Application.builder()
@@ -35,6 +43,41 @@ public class StudentFullNamePreparerTest {
             List.of("studentBFirstName studentBLastName"),
             DocumentFieldType.SINGLE_VALUE,
             0
+        ),
+        new DocumentField(
+            "whoIsGoingToSchool",
+            "fullName",
+            List.of("studentCFirstName studentCLastName"),
+            DocumentFieldType.SINGLE_VALUE,
+            1
+        ),
+        new DocumentField(
+            "whoIsGoingToSchool",
+            "fullName",
+            List.of("studentDFirstName studentDLastName"),
+            DocumentFieldType.SINGLE_VALUE,
+            2
+        ),
+        new DocumentField(
+            "schoolDetails",
+            "schoolName",
+            List.of("test school name A"),
+            DocumentFieldType.SINGLE_VALUE,
+            0
+        ),
+        new DocumentField(
+            "schoolDetails",
+            "schoolName",
+            List.of("test school name B"),
+            DocumentFieldType.SINGLE_VALUE,
+            1
+        ),
+        new DocumentField(
+            "schoolDetails",
+            "schoolName",
+            List.of("test school name C"),
+            DocumentFieldType.SINGLE_VALUE,
+            2
         ));
   }
 }
