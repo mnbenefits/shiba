@@ -50,7 +50,14 @@ public class PageUtils {
 
     return Stream.concat(applicant, nonApplicantHouseholdMembers).collect(Collectors.toList());
   }
-
+  
+ 
+  public static List<String> getEligibleSchoolAndChildCareMembers(Collection<String> childrenInNeedOfCare , Collection<String> childrenGoingToSchool) {
+	    return childrenInNeedOfCare.stream()
+	    		.filter(childrenGoingToSchool::contains)
+	    		.collect(Collectors.toList());
+	  }
+ 
   public static Boolean isProgramEligible(DatasourcePages datasourcePages, String program) {
     List<String> applicantPrograms = datasourcePages.get("choosePrograms").get("programs")
         .getValue();

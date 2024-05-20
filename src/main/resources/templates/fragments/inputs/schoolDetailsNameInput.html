@@ -1,0 +1,45 @@
+<!-- Custom input for displaying formatted data as well as storing additional hidden data which will be needed later for writing to the PDF -->
+<th:block th:fragment="schoolDetailsNameInput (input, data)"
+          th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
+                    inputData=${data.get(input.name)},
+                    childIdMapData=${data.get('personIdMap')},
+                    hasHelpMessage=${input.helpMessageKey != null},
+                    needsAriaLabel=${input.needsAriaLabel()},
+                    whoIsGoingToSchool=${input.options.datasources.get('whoIsGoingToSchool').get('whoIsGoingToSchool').value},
+                    childrenInNeedOfCare=${input.options.datasources.get('childrenInNeedOfCare').get('whoNeedsChildCare').value},
+                    childrenInSchool=${T(org.codeforamerica.shiba.pages.PageUtils).getEligibleSchoolAndChildCareMembers(childrenInNeedOfCare, whoIsGoingToSchool)}">
+                    
+  <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+    <th:block
+        th:each="fullNameAndId, iterationStat: ${childrenInSchool}"
+        th:with="fullNameAndIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
+                         NameId=${fullNameAndIdArray[#arrays.length(fullNameAndIdArray)-1]},
+                         childName=${#strings.substringBefore(fullNameAndId, ' ' + NameId)},
+                         you=#{general.you},
+                         indexInInputData=${childIdMapData.value.indexOf(NameId)},
+                         schoolName=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">
+                         
+                         
+      <div class="form-group">
+        <label class="form-question spacing-below-5" th:for="|${NameId}-schoolname|"
+               th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
+               th:id="${NameId + '-label'}">
+        </label>
+        <p th:id="${NameId + '-help-message'}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
+        <input type="text"
+               class="text-input form-width--medium"
+               th:readonly="${input.readOnly}"
+               th:id="|${NameId}-schoolname|"
+               th:value="${schoolName}"
+               th:name="${formInputName}"
+               th:attr="aria-describedby=${hasHelpMessage ? NameId + '-help-message' : ''},
+               aria-labelledby=${NameId + '-label'}"
+        >
+        <input type="hidden"
+               th:id="|${NameId}-id|"
+               th:value="${NameId}"
+               th:name="personIdMap[]">
+      </div>
+    </th:block>
+  </div>
+</th:block>

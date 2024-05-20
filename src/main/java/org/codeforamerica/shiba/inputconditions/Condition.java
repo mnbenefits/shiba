@@ -2,10 +2,15 @@ package org.codeforamerica.shiba.inputconditions;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.output.LogicalOperator;
+import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.PageData;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,6 +31,7 @@ public class Condition implements Serializable {
   String pageName;
   String input;
   String value;
+  String customCondition;
   @JsonIgnore
   ValueMatcher matcher = ValueMatcher.CONTAINS;
   @JsonIgnore
@@ -45,6 +51,12 @@ public class Condition implements Serializable {
     this.matcher = matcher;
   }
 
+  // Constructor for a "customCondition"
+  // Takes one parameter, a string that identifies the custome condition.
+  public Condition(String customCondition) {
+    this.customCondition = customCondition;
+  }
+
   public boolean matches(PageData pageData, Map<String, PageData> pagesData) {
     if (pageName != null) {
       return satisfies(pagesData.get(pageName));
@@ -57,6 +69,41 @@ public class Condition implements Serializable {
     return pageData != null && !pageData.isEmpty() && matcher
         .matches(pageData.get(input).getValue(), value);
   }
+ 
+  /**
+   * This method evaluates the SKIP_SCHOOL_DETAILS custom condition as specified in pages-config.yaml. 
+   * @param childrenInNeedOfCarePage  
+   * @param whoIsGoingToSchoolPage
+   * @return 
+   */
+	public boolean satisfiesSkipSchoolDetailsCondition(PageData childrenInNeedOfCarePage,
+			PageData whoIsGoingToSchoolPage) {
+		if (childrenInNeedOfCarePage == null || whoIsGoingToSchoolPage == null) {
+			return true;
+		}
+		// Retrieve the list of children in need of care and those going to school from
+		// PageData
+		Collection<InputData> childrenInNeedOfCare = childrenInNeedOfCarePage.values();
+		Collection<InputData> childrenGoingToSchool = whoIsGoingToSchoolPage.values();
+		if (childrenInNeedOfCare.isEmpty() || childrenGoingToSchool.isEmpty()) {
+			return true;
+		}
+		// Check for any common elements between the two lists
+		for (InputData child : childrenInNeedOfCare) {
+			List<String> childrenInNeedOfCareNames = child.getValue();
+			for (String name : childrenInNeedOfCareNames) {
+				for (InputData schoolChild : childrenGoingToSchool) {
+					List<String> childrenGoingToSchoolNames = schoolChild.getValue();
+					if (childrenGoingToSchoolNames.contains(name)) {
+						return false;
+					}
+				}
+
+			}
+
+		}
+		return true;
+	}
 
   @SuppressWarnings("unused")
   public void setConditions(List<Condition> conditions) {
@@ -85,6 +132,11 @@ public class Condition implements Serializable {
     this.value = value;
   }
 
+  public void setCustomConditionName(String customCondition) {
+	    assertNotCompositeCondition();
+	    this.customCondition = customCondition;
+  }
+  
   private void assertCompositeCondition() {
     if (pageName != null || input != null) {
       throw new IllegalStateException("Cannot set composite condition fields");

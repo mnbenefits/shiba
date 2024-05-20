@@ -1272,6 +1272,7 @@ pageDefinitions:
     pageTitle: who-is-going-to-school.title
     headerKey: who-is-going-to-school.who-is-going-to-school
     contextFragment: schoolContextFragment
+    headerHelpMessageKey: who-is-going-to-school.check-all-that-apply
     inputs:
       - type: CUSTOM
         name: whoIsGoingToSchool
@@ -1280,6 +1281,24 @@ pageDefinitions:
           datasources:
             - pageName: personalInfo
             - groupName: household
+  - &schoolDetails
+    name: schoolDetails
+    pageTitle: school-details.title
+    headerKey: school-details.header
+    headerHelpMessageKey: school-details.If-you-dont-have-all-this-information-right-now
+    contextFragment: schoolContextFragment
+    inputs:
+      - type: CUSTOM
+        name: schoolName
+        customInputFragment: schoolDetailsNameInput
+        promptMessage:
+          promptMessageKey: school-details.school-name
+        options:
+          datasources:
+            - pageName: whoIsGoingToSchool
+            - pageName: childrenInNeedOfCare
+      - type: HIDDEN
+        name: personIdMap         
   - &housingSubsidy
     name: housingSubsidy
     pageTitle: housing-subsidy.title
@@ -5538,7 +5557,28 @@ workflow:
           value: "false"
           input: goingToSchool
     nextPages:
-      - pageName: pregnant
+      - pageName: schoolDetails
+  schoolDetails:
+    pageConfiguration: *schoolDetails
+    datasources:
+      - pageName: choosePrograms
+      - pageName: childrenInNeedOfCare
+      - pageName: goingToSchool
+      - pageName: whoIsGoingToSchool
+      - groupName: household
+        pageName: householdMemberInfo
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - conditions:
+            - *applicantDidNotChooseCCAP?
+            - *householdMemberDidNotChooseCCAP?
+        - pageName: goingToSchool
+          value: "false"
+          input: goingToSchool
+        - customCondition: SKIP_SCHOOL_DETAILS
+    nextPages:
+      - pageName: pregnant            
   pregnant:
     pageConfiguration: *pregnant
     nextPages:
