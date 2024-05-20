@@ -27,6 +27,8 @@ public class DatasourcePages extends HashMap<String, PageData> {
   public DatasourcePages(Map<String, PageData> pagesData) {
     super(pagesData);
   }
+  
+  
 
   /**
    * DatasourcePages satisfies method checks if condition contains multiple conditions,
@@ -45,11 +47,18 @@ public class DatasourcePages extends HashMap<String, PageData> {
       };
     }
     
-    String customCondition = condition.getCustomCondition();
-    if (customCondition != null) {
-    	return condition.satisfiesCustomCondition(customCondition);
-    }
-    
+	String customCondition = condition.getCustomCondition();
+	if (customCondition != null) {
+		switch (customCondition) {
+		case "SKIP_SCHOOL_DETAILS": {
+			return condition.satisfiesSkipSchoolDetailsCondition(this.get("childrenInNeedOfCare"),
+					this.get("whoIsGoingToSchool"));
+		}
+		default:
+			return true;
+		}
+	}
+
     PageData pageData = this.get(condition.getPageName());
     if (pageData == null || !pageData.containsKey(condition.getInput())) {
       return false; // The client didn't provide an answer, so this condition can't be satisfied.

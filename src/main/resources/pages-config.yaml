@@ -5565,6 +5565,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: childrenInNeedOfCare
       - pageName: goingToSchool
+      - pageName: whoIsGoingToSchool
       - groupName: household
         pageName: householdMemberInfo
     skipCondition:
