@@ -142,7 +142,7 @@ public class CountyMapConfiguration {
     updateCounty(Grant, "front@westernprairiemn.us", "A000061200");
     updateCounty(Hennepin, "hhs.imagingoperations@hennepin.us", "A000027200");
     updateCounty(Houston, "dhsinfo@co.houston.mn.us", "A000028100");
-    updateCounty(Hubbard, "beth.vredenburg@co.hubbard.mn.us", "A000029900");
+    updateCounty(Hubbard, "amanda.sharp@co.hubbard.mn.us", "A000029900");
     updateCounty(Isanti, "Kelly.Borchardt@co.isanti.mn.us", "A000030200");
     updateCounty(Itasca, "FAUsupport@co.itasca.mn.us", "A000031100");
     updateCounty(Jackson, "financial@dvhhs.org", "A000032900");
