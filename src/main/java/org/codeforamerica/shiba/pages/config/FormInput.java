@@ -30,4 +30,5 @@ public class FormInput{
   private String noticeMessage;//for NOTICE input type
   private String cssClass;
   private Boolean validationIcon = true;
+  private String noneCheckboxText;
 }

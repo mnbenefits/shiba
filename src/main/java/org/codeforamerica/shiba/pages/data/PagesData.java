@@ -219,7 +219,8 @@ public class PagesData extends HashMap<String, PageData> {
         formInput.getInputPostfix(),
         formInput.getHelpMessageKeyBelow(),
         formInput.getNoticeMessage(),
-        formInput.getValidationIcon()
+        formInput.getValidationIcon(),
+        formInput.getNoneCheckboxText()
     );
   }
 }

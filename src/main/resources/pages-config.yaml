@@ -1213,6 +1213,7 @@ pageDefinitions:
     headerKey: parent-not-at-home.who-are-the-children-that-have-a-parent-not-living-at-home
     inputs:
       - type: PEOPLE_CHECKBOX_WITH_NONE
+        noneCheckboxText: parent-not-at-home.none-of-the-children-have-parents-living-outside-the-home
         name: whoHasAParentNotLivingAtHome
         validators:
           - validation: SELECT_AT_LEAST_ONE
@@ -1236,6 +1237,21 @@ pageDefinitions:
             - pageName: whoHasParentNotAtHome
       - type: HIDDEN
         name: childIdMap # This input is controlled by whatAreTheParentsNames
+  - &childCareChildSupport
+    name: childCareChildSupport
+    pageTitle: child-care-child-support.title
+    headerKey: child-care-child-support.who-does-your-household-receive-child-support
+    headerHelpMessageKey: child-care-child-support.select-all-that-apply
+    inputs:
+      - type: PEOPLE_CHECKBOX_WITH_NONE
+        noneCheckboxText: child-care-child-support.none-receive-child-support
+        name: whoReceivesChildSupportPayments
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
+        datasources:
+          - pageName: whoHasParentNotAtHome
+            inputName: whoHasAParentNotLivingAtHome
   - &householdDeleteWarningPage
     name: householdDeleteWarningPage
     pageTitle: warning-page.delete-household-member-warning
@@ -5461,9 +5477,7 @@ workflow:
   parentNotAtHomeNames:
     pageConfiguration: *parentNotAtHomeNames
     nextPages:
-      - pageName: housingSubsidy
-        condition: *noOneChoseSNAP?
-      - pageName: preparingMealsTogether
+      - pageName: childCareChildSupport
     datasources:
       - pageName: choosePrograms
       - groupName: household
@@ -5480,6 +5494,18 @@ workflow:
         - pageName: whoHasParentNotAtHome
           input: whoHasAParentNotLivingAtHome
           value: NONE_OF_THE_ABOVE
+  childCareChildSupport:
+    pageConfiguration: *childCareChildSupport
+    skipCondition: *noOneChoseCCAP?
+    nextPages:
+      - pageName: housingSubsidy
+        condition: *noOneChoseSNAP?
+      - pageName: preparingMealsTogether
+    datasources:
+      - pageName: choosePrograms
+      - pageName: whoHasParentNotAtHome
+      - pageName: householdMemberInfo
+        groupName: household
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:

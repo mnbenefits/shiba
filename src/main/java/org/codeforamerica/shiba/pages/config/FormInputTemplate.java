@@ -27,6 +27,7 @@ public class FormInputTemplate {
   String helpMessageKeyBelow;
   String noticeMessage;
   Boolean validationIcon;
+  String noneCheckboxText; //for PEOPLE_CHECKBOX_WITH_NONE
   
   public String fragment() {
     return switch (type) {
