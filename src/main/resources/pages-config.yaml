@@ -5496,7 +5496,16 @@ workflow:
           value: NONE_OF_THE_ABOVE
   childCareChildSupport:
     pageConfiguration: *childCareChildSupport
-    skipCondition: *noOneChoseCCAP?
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - *noOneChoseCCAP?
+        - pageName: childrenInNeedOfCare
+          input: whoNeedsChildCare
+          matcher: NONE_SELECTED
+        - pageName: whoHasParentNotAtHome
+          input: whoHasAParentNotLivingAtHome
+          value: NONE_OF_THE_ABOVE
     nextPages:
       - pageName: housingSubsidy
         condition: *noOneChoseSNAP?
@@ -5506,6 +5515,7 @@ workflow:
       - pageName: whoHasParentNotAtHome
       - pageName: householdMemberInfo
         groupName: household
+      - pageName: childrenInNeedOfCare
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
