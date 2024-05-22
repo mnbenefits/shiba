@@ -90,6 +90,10 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     //driver.findElementByName("whatAreTheParentsNames[]").sendKeys(parentNotAtHomeName);
     driver.findElement(By.name("whatAreTheParentsNames[]")).sendKeys(parentNotAtHomeName);
     testPage.clickContinue();
+    
+    //child support
+    testPage.enter("whoReceivesChildSupportPayments", householdMemberFullName);
+    testPage.clickContinue();
 
     // Do you receive housing subsidy
     testPage.enter("hasHousingSubsidy", NO.getDisplayValue());

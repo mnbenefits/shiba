@@ -99,6 +99,10 @@ public class FullFlowJourneyTest extends JourneyTest {
     String parentNotAtHomeName = "My child's parent";
     driver.findElement(By.name("whatAreTheParentsNames[]")).sendKeys(parentNotAtHomeName);
     testPage.clickContinue();
+    
+    //child support
+    testPage.enter("whoReceivesChildSupportPayments", householdMemberFullName);
+    testPage.clickContinue();
 
     // Does everyone in your household buy and prepare food with you?
     testPage.enter("isPreparingMealsTogether", YES.getDisplayValue());

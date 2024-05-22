@@ -19,6 +19,7 @@ pageDefinitions:
     inputs:
       - name: option1Text
         type: PEOPLE_CHECKBOX_WITH_NONE
+        noneCheckboxText: parent-not-at-home.none-of-the-children-have-parents-living-outside-the-home
         datasources:
           - pageName: firstPage
             inputName: peopleSelect

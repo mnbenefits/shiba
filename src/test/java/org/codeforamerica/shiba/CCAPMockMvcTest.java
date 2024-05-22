@@ -211,7 +211,10 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         Map.of("whatAreTheParentsNames", List.of("My Parent", "Default's Parent"),
             "childIdMap", List.of("applicant", householdMemberId)
         ),
-        "Housing subsidy");
+        "Child support payments");
+    postExpectingNextPageTitle("childCareChildSupport",
+            Map.of("whoReceivesChildSupportPayments", List.of("defaultFirstName defaultLastName applicant")),
+            "Housing subsidy");
 
     postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "true", "livingSituation");
     postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
