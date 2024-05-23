@@ -37,6 +37,10 @@ public class ChildCarePreparer implements DocumentFieldPreparer {
 			ChildNeedingCare childNeedingCare = childrenNeedingCare.get(c);
 			childCareDocumentFields.add(
 					new DocumentField("childNeedsChildcare", "childName", childNeedingCare.childName, SINGLE_VALUE, c));
+			  if(childNeedingCare.childCareProviders.isEmpty()) {
+			  childCareDocumentFields.add(
+							new DocumentField("childNeedsChildcare",String.format("provider%dName", 1), "No Provider specified", SINGLE_VALUE, c));
+			  }else {
 			for (int p = 1; p <= childNeedingCare.childCareProviders.size(); p++) {
 				ChildCareProvider childCareProvider = childNeedingCare.childCareProviders.get(p - 1);
 				childCareDocumentFields.add(new DocumentField("childNeedsChildcare", String.format("provider%dName", p),
@@ -56,6 +60,7 @@ public class ChildCarePreparer implements DocumentFieldPreparer {
 						String.format("provider%dZipCode", p), childCareProvider.providerZipCode, SINGLE_VALUE, c));
 			}
 		}
+	}		  
 
 		return childCareDocumentFields;
 	}
