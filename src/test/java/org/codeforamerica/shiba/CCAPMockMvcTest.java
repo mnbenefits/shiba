@@ -140,7 +140,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
   
 
   @Test
-  void verifyChildCareProviderFlow() throws Exception {
+  void verifyChildCareProviderAndChildSupportFlow() throws Exception {
 	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
@@ -157,9 +157,19 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         List.of("householdMemberFirstName householdMemberLastName" + householdMemberId),
         "Child Care Provider List"
     );
+    getNavigationPageWithQueryParamAndExpectRedirect("childCareProviderList", "option", "1",
+            "whoHasParentNotAtHome");
     postExpectingNextPageTitle("whoHasParentNotAtHome",
             "whoHasAParentNotLivingAtHome",
-            List.of("NONE_OF_THE_ABOVE"),
+            List.of("householdMemberFirstName householdMemberLastName" + householdMemberId),
+            "Name of parent outside home");
+    postExpectingNextPageTitle("parentNotAtHomeNames",
+            Map.of("whatAreTheParentsNames", List.of("My Parent", "Default's Parent"),
+                "childIdMap", List.of("applicant", householdMemberId)
+            ),
+            "Child support payments");
+    postExpectingNextPageTitle("childCareChildSupport",
+            Map.of("whoReceivesChildSupportPayments", List.of("householdMemberFirstName householdMemberLastName" + householdMemberId)),
             "Housing subsidy");
     postExpectingRedirect("housingSubsidy", "livingSituation");
     postExpectingRedirect("livingSituation", "goingToSchool");
@@ -186,7 +196,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     // Don't select any children in need of care, should get redirected to preparing meals together
     assertCorrectPageTitle("childrenInNeedOfCare", "Who are the children in need of care?");
     postExpectingNextPageTitle("childrenInNeedOfCare", "Housing subsidy");
-//    postExpectingNextPageTitle("housingSubsidy", "Living situation");
 
     // Go back to childrenInNeedOfCare and select someone this time, but don't select anyone having a parent not at home
     String householdMemberId = getFirstHouseholdMemberId();

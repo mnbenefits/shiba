@@ -1027,7 +1027,40 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 
 	}
+	@Nested
+	@Tag("pdf")
+	class ChildSupportCCAP {
 
+		@Test
+		void shouldMapChildSupportCCAP() throws Exception {
+			selectPrograms("CCAP");
+			fillInPersonalInfoAndContactInfoAndAddress();
+			addHouseholdMembersWithProgram("CCAP");
+			String jimHalpertId = getFirstHouseholdMemberId();
+			postExpectingSuccess("childrenInNeedOfCare", "whoNeedsChildCare",
+					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId));
+			postExpectingSuccess("doYouHaveChildCareProvider", "hasChildCareProvider", "false");
+			postExpectingSuccess("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome",
+					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId));
+			postExpectingSuccess("parentNotAtHomeNames", Map.of("whatAreTheParentsNames", List.of("", "Jim's Parent"),
+					"childIdMap", List.of("applicant", jimHalpertId)));
+			postExpectingSuccess("childCareChildSupport", Map.of("whoReceivesChildSupportPayments", List.of("", "Jim Halpert " + jimHalpertId)));
+			var ccap = submitAndDownloadCcap();
+			assertPdfFieldEquals("CHILDCARE_CHILD_NAME_0", "Dwight Schrute", ccap);
+			assertPdfFieldEquals("CHILDCARE_CHILD_NAME_1", "Jim Halpert", ccap);
+			assertPdfFieldEquals("CHILD_FULL_NAME_0", "Dwight Schrute", ccap);
+			assertPdfFieldIsEmpty("PARENT_NOT_LIVING_AT_HOME_0", ccap);
+			assertPdfFieldEquals("CHILD_FULL_NAME_1", "Jim Halpert", ccap);
+			assertPdfFieldEquals("PARENT_NOT_LIVING_AT_HOME_1", "Jim's Parent", ccap);
+			assertPdfFieldIsEmpty("CHILD_FULL_NAME_2", ccap);
+			assertPdfFieldIsEmpty("PARENT_NOT_LIVING_AT_HOME_2", ccap);
+			assertPdfFieldEquals("CHILDCARE_CHILDSUPPORT_0", "No", ccap);
+			assertPdfFieldEquals("CHILDCARE_CHILDSUPPORT_1", "Yes", ccap);
+		}
+
+	}
+	
+	
 	@Nested
 	@Tag("pdf")
 	class UnearnedIncomeCCAP {
