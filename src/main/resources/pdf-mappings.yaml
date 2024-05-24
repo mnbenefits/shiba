@@ -428,6 +428,7 @@ mappings:
   custodyArrangement:
     childFullName: CHILD_FULL_NAME
     parentNotAtHomeName: PARENT_NOT_LIVING_AT_HOME
+    childCareChildSupport: CHILDCARE_CHILDSUPPORT
   whoIsGoingToSchool:
     fullName: STUDENT_FULL_NAME 
   schoolDetails:
