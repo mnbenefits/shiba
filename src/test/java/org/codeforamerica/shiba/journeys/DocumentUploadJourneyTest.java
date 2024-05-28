@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag("documentUploadJourney")
@@ -495,8 +497,14 @@ public class DocumentUploadJourneyTest extends JourneyTest {
 		anchor.click();
 		// Click the confirmation
 		driver.findElement(By.id("form-submit-button")).click();
+		// TODO monitor this on GitHub, Defect 118827
+		//new wait object, watch to see if intermittent wait failures still occur
+		var wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 		WebElement newUploadedFilesMessage = driver.findElement(By.id("number-of-uploaded-files"));
-		await().atMost(Duration.ofSeconds(30)).until(() -> newUploadedFilesMessage.getText().equals("3 files added"));
+		wait.until(ExpectedConditions.textToBePresentInElement(newUploadedFilesMessage, "3 files added"));
+		
+		//OLD METHOD THAT FAILS INTERMITTANTLY: 
+		//await().atMost(Duration.ofSeconds(30)).until(() -> newUploadedFilesMessage.getText().equals("3 files added"));
 
 		webElements = driver.findElements(By.id("file"));
 		assert (webElements.size() == 3);
