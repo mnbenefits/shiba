@@ -191,6 +191,9 @@ def documentUploadJourneyTest = tasks.register("documentUploadJourneyTest", Test
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("documentUploadJourney")
+        task.testLogging {
+    		events 'STANDARD_OUT', 'STANDARD_ERROR'
+  		}
         }
 }
 
