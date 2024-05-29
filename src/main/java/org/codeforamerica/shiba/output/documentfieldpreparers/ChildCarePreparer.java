@@ -27,35 +27,49 @@ public class ChildCarePreparer implements DocumentFieldPreparer {
 
 	// This method controls the mapping logic for each of the child care questions.
 	private List<DocumentField> map(Application application, Document document, Recipient recipient) {
-		// We collected based on providers, it needs to be mapped back to a per child basis.
+		// We collected based on providers, it needs to be mapped back to a per child
+		// basis.
 		ArrayList<ChildNeedingCare> childrenNeedingCare = mapChildCareProvidersToChildren(application);
 		if (childrenNeedingCare.size() == 0)
 			return childCareDocumentFields;
+		PageData providerInfo = application.getApplicationData().getPageData("doYouHaveChildCareProvider");
+		boolean hasProviders = providerInfo != null && providerInfo.get("hasChildCareProvider").getValue(0).equalsIgnoreCase("true");
 
-		// In these loops, c=child index and p=child's provider index. The CCAP supports two providers per child.
+		// In these loops, c=child index and p=child's provider index. The CCAP supports
+		// two providers per child.
 		for (int c = 0; c < childrenNeedingCare.size(); c++) {
 			ChildNeedingCare childNeedingCare = childrenNeedingCare.get(c);
 			childCareDocumentFields.add(
 					new DocumentField("childNeedsChildcare", "childName", childNeedingCare.childName, SINGLE_VALUE, c));
-			for (int p = 1; p <= childNeedingCare.childCareProviders.size(); p++) {
-				ChildCareProvider childCareProvider = childNeedingCare.childCareProviders.get(p - 1);
-				childCareDocumentFields.add(new DocumentField("childNeedsChildcare", String.format("provider%dName", p),
-						childCareProvider.providerName, SINGLE_VALUE, c));
-				childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
-						String.format("provider%dPhone", p), childCareProvider.providerPhone, SINGLE_VALUE, c));
-				String streetAddress = childCareProvider.providerStreet;
-				if (!childCareProvider.providerSuite.isBlank())
-					streetAddress = streetAddress + " #" + childCareProvider.providerSuite;
-				childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
-						String.format("provider%dStreet", p), streetAddress, SINGLE_VALUE, c));
-				childCareDocumentFields.add(new DocumentField("childNeedsChildcare", String.format("provider%dCity", p),
-						childCareProvider.providerCity, SINGLE_VALUE, c));
-				childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
-						String.format("provider%dState", p), childCareProvider.providerState, SINGLE_VALUE, c));
-				childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
-						String.format("provider%dZipCode", p), childCareProvider.providerZipCode, SINGLE_VALUE, c));
-			}
-		}
+			
+			if(!hasProviders) {
+				childCareDocumentFields.add(
+						new DocumentField("childNeedsChildcare",String.format("provider%dName", 1), "Household does not have provider(s)", SINGLE_VALUE, c));
+			}else if (childNeedingCare.childCareProviders.isEmpty()) {
+					childCareDocumentFields
+							.add(new DocumentField("childNeedsChildcare", String.format("provider%dName", 1), "No provider entered for this child", SINGLE_VALUE, c));
+			}else {
+					for (int p = 1; p <= childNeedingCare.childCareProviders.size(); p++) {
+						ChildCareProvider childCareProvider = childNeedingCare.childCareProviders.get(p - 1);
+						childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
+								String.format("provider%dName", p), childCareProvider.providerName, SINGLE_VALUE, c));
+						childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
+								String.format("provider%dPhone", p), childCareProvider.providerPhone, SINGLE_VALUE, c));
+						String streetAddress = childCareProvider.providerStreet;
+						if (!childCareProvider.providerSuite.isBlank())
+							streetAddress = streetAddress + " #" + childCareProvider.providerSuite;
+						childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
+								String.format("provider%dStreet", p), streetAddress, SINGLE_VALUE, c));
+						childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
+								String.format("provider%dCity", p), childCareProvider.providerCity, SINGLE_VALUE, c));
+						childCareDocumentFields.add(new DocumentField("childNeedsChildcare",
+								String.format("provider%dState", p), childCareProvider.providerState, SINGLE_VALUE, c));
+						childCareDocumentFields
+								.add(new DocumentField("childNeedsChildcare", String.format("provider%dZipCode", p),
+										childCareProvider.providerZipCode, SINGLE_VALUE, c));
+					}
+				}
+			}  
 
 		return childCareDocumentFields;
 	}

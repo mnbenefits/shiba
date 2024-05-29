@@ -34,6 +34,7 @@ import org.codeforamerica.shiba.pages.events.PageEventPublisher;
 import org.codeforamerica.shiba.pages.events.UploadedDocumentsSubmittedEvent;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,6 +75,13 @@ class AppsWithBlankStatusResubmissionTest {
       .minusNanos(1);
   private final ZonedDateTime tenHoursAgo = now().withFixedOffsetZone().minusHours(10);
 
+  @BeforeEach
+  void setUp() {
+    resubmissionService.setIsEnableEmailResubmissionTask(true);
+    resubmissionService.setIsEnableEsbResubmissionTask(true);
+    resubmissionService.setIsEnableNoStatusEsbResubmissionTask(true);
+  }
+  
   @Test
   void itTriggersAnEventForAppsWithMissingStatuses() {
     for (int i = 0; i < 31; i++) {
