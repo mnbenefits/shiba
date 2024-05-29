@@ -44,10 +44,10 @@ public class ChildCarePreparer implements DocumentFieldPreparer {
 			
 			if(!hasProviders) {
 				childCareDocumentFields.add(
-						new DocumentField("childNeedsChildcare",String.format("provider%dName", 1), "HouseHold does not have provider(s)", SINGLE_VALUE, c));
+						new DocumentField("childNeedsChildcare",String.format("provider%dName", 1), "Household does not have provider(s)", SINGLE_VALUE, c));
 			}else if (childNeedingCare.childCareProviders.isEmpty()) {
 					childCareDocumentFields
-							.add(new DocumentField("childNeedsChildcare", "providerName", "No provider entered for this child", SINGLE_VALUE, c));
+							.add(new DocumentField("childNeedsChildcare", String.format("provider%dName", 1), "No provider entered for this child", SINGLE_VALUE, c));
 			}else {
 					for (int p = 1; p <= childNeedingCare.childCareProviders.size(); p++) {
 						ChildCareProvider childCareProvider = childNeedingCare.childCareProviders.get(p - 1);
