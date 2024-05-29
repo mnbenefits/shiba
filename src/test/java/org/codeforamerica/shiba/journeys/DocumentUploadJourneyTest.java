@@ -499,10 +499,8 @@ public class DocumentUploadJourneyTest extends JourneyTest {
 		driver.findElement(By.id("form-submit-button")).click();
 		// TODO monitor this on GitHub, Defect 118827
 		//new wait object, watch to see if intermittent wait failures still occur
-		var wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+		var wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		WebElement newUploadedFilesMessage = driver.findElement(By.id("number-of-uploaded-files"));
-		String webElementText = newUploadedFilesMessage.getText();
-		System.out.println("===== webElementText: " + webElementText);//TODO emj delete
 		wait.until(ExpectedConditions.textToBePresentInElement(newUploadedFilesMessage, "3 files added"));
 		
 		//OLD METHOD THAT FAILS INTERMITTANTLY: 
