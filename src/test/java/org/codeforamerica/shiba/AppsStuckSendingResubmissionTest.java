@@ -24,6 +24,7 @@ import org.codeforamerica.shiba.pages.events.UploadedDocumentsSubmittedEvent;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,6 +50,13 @@ class AppsStuckSendingResubmissionTest {
 
   @MockBean
   private PageEventPublisher pageEventPublisher;
+
+  @BeforeEach
+  void setUp() {
+    resubmissionService.setIsEnableEmailResubmissionTask(true);
+    resubmissionService.setIsEnableEsbResubmissionTask(true);
+    resubmissionService.setIsEnableNoStatusEsbResubmissionTask(true);
+  }
 
   @Test
   void itTriggersAnEventFor50AppsStuckSending() {
