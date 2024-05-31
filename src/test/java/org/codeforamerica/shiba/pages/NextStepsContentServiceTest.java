@@ -182,7 +182,6 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
   }
 
   @Test
-  @Disabled("This test is disabled because it requires feature-flag.enhanced-next-steps: off. Remove test in final implementation.")
   void displaysCorrectSuccessMessageForHouseholdMemberPrograms() throws Exception {
     new TestApplicationDataBuilder(applicationData)
         .withApplicantPrograms(List.of("SNAP"))
@@ -191,9 +190,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
     var snapExpeditedEligibility = SnapExpeditedEligibility.ELIGIBLE;
     var ccapExpeditedEligibility = CcapExpeditedEligibility.UNDETERMINED;
     List<String> expectedMessages = List.of(
-        "Within 24 hours, expect a call from your county or Tribal Nation about your food assistance application.",
-        "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your housing and emergency assistance application. The letter will explain your next steps.",
-        "If you don't hear from your county or Tribal Nation within 7 days or want an update on your case, please call your county or Tribal Nation.");
+        "Within the next 5 days, expect a phone call from an eligibility worker with information about your next steps.",
+        "Program(s) on your application may require you to talk with a worker about your application.",
+        "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.");
     assertCorrectMessage(snapExpeditedEligibility, ccapExpeditedEligibility, expectedMessages);
   }
 
