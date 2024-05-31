@@ -92,6 +92,11 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
 
     // Who are the children that have a parent not living at home?
+    testPage.enter("whoHasAParentNotLivingAtHome", "None of the children have parents living outside the home");
+    testPage.clickContinue();
+    //check it skips over child support, then go back
+    assertThat(testPage.getTitle()).isEqualTo("Preparing meals together");
+    testPage.goBack();
     testPage.enter("whoHasAParentNotLivingAtHome", householdMemberFullName);
     testPage.clickContinue();
 
