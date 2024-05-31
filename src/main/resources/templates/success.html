@@ -58,7 +58,8 @@
             </div>
           </div>
         </div>
-
+        
+        <div class="grid__item bottom-horizontal-line-dark-grey">  
         <div id="healthcareCoverage"
              class="grid-ignore-mobile spacing-below-35 spacing-above-35"
              th:if="${doesNotHaveHealthcare && !isCertainPops}">
@@ -70,6 +71,22 @@
             <div th:utext="#{success.healthcare}" class="width-five-sixths"></div>
           </div>
         </div>
+        
+      
+        
+         <div id="ccapCoverage"
+             class="grid-ignore-mobile spacing-below-35 spacing-above-35"
+             <th:if="${isCCAP}"> 
+          <h2 class="h3" th:text="#{success.childcare-explore-coverage}"></h2>          
+          <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
+            <div th:replace="~{fragments/icons/icon-healthcare :: icon-healthcare}"></div>
+          </div>
+          <div class="grid__item width-five-sixths">
+            <div th:utext="#{success.childcare-coverage}" class="width-five-sixths"></div>
+          </div>
+         </div>   
+        
+             
         <div th:if="${sentiment == null}" id="feedbackButton">
           <a class="button button--secondary spacing-below-0"
              th:href="'/pages/'+${pageName}+'/navigation'">

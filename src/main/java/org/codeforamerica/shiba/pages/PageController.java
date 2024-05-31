@@ -545,6 +545,11 @@ public class PageController {
       model.put("doesNotHaveHealthcare", !hasHealthcare);
       boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
       model.put("isCertainPops", isCertainPops);
+  
+      boolean isCCAP = application.getApplicationData().isCCAPApplication();
+      model.put("isCCAP", isCCAP);      
+      
+
 
       // Get all routing destinations for this application
       Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
