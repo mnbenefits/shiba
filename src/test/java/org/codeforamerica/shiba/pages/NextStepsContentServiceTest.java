@@ -45,8 +45,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.ELIGIBLE,
             CcapExpeditedEligibility.UNDETERMINED,
             List.of(
-                "Within 24 hours, expect a call from your county or Tribal Nation about your food assistance application.",
-                "If you don't hear from your county or Tribal Nation within 7 days or want an update on your case, please call your county or Tribal Nation.")
+                "Within the next 5 days, expect a phone call from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Only Non-expedited SNAP",
@@ -54,8 +55,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.NOT_ELIGIBLE,
             CcapExpeditedEligibility.UNDETERMINED,
             List.of(
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your food support application. The letter will explain your next steps.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Expect an eligibility worker to contact you by phone or mail with information about your next steps. The time it takes to review applications can vary.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Expedited SNAP + Expedited CCAP",
@@ -63,9 +65,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.ELIGIBLE,
             CcapExpeditedEligibility.ELIGIBLE,
             List.of(
-                "Within 24 hours, expect a call from your county or Tribal Nation about your food assistance application.",
-                "Within 5 days, your county or Tribal Nation will determine your childcare assistance case and send you a letter in the mail.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Within the next 5 days, expect a phone call from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Expedited SNAP + non-expedited CCAP",
@@ -73,9 +75,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.ELIGIBLE,
             CcapExpeditedEligibility.NOT_ELIGIBLE,
             List.of(
-                "Within 24 hours, expect a call from your county or Tribal Nation about your food assistance application.",
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your childcare application. The letter will explain your next steps.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Within the next 5 days, expect a phone call from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Expedited CCAP + non-expedited SNAP",
@@ -83,9 +85,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.NOT_ELIGIBLE,
             CcapExpeditedEligibility.ELIGIBLE,
             List.of(
-                "Within 5 days, your county or Tribal Nation will determine your childcare assistance case and send you a letter in the mail.",
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your food support application. The letter will explain your next steps.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Within the next 5 days, expect a phone call or letter in the mail from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Only Expedited CCAP",
@@ -93,8 +95,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.UNDETERMINED,
             CcapExpeditedEligibility.ELIGIBLE,
             List.of(
-                "Within 5 days, your county or Tribal Nation will determine your childcare assistance case and send you a letter in the mail.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Within the next 5 days, expect a phone call or letter in the mail from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Only Non-expedited CCAP",
@@ -102,8 +105,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.UNDETERMINED,
             CcapExpeditedEligibility.NOT_ELIGIBLE,
             List.of(
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your childcare application. The letter will explain your next steps.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Expect an eligibility worker to contact you by phone or mail with information about your next steps. The time it takes to review applications can vary.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Expedited SNAP + any other program",
@@ -111,9 +115,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.ELIGIBLE,
             CcapExpeditedEligibility.UNDETERMINED,
             List.of(
-                "Within 24 hours, expect a call from your county or Tribal Nation about your food assistance application.",
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your housing application. The letter will explain your next steps.",
-                "If you don't hear from your county or Tribal Nation within 7 days or want an update on your case, please call your county or Tribal Nation.")
+                "Within the next 5 days, expect a phone call from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Expedited SNAP + multiple other programs",
@@ -121,9 +125,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.ELIGIBLE,
             CcapExpeditedEligibility.UNDETERMINED,
             List.of(
-                "Within 24 hours, expect a call from your county or Tribal Nation about your food assistance application.",
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your housing and emergency assistance application. The letter will explain your next steps.",
-                "If you don't hear from your county or Tribal Nation within 7 days or want an update on your case, please call your county or Tribal Nation.")
+                "Within the next 5 days, expect a phone call from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Expedited CCAP + any other program besides SNAP",
@@ -131,9 +135,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.UNDETERMINED,
             CcapExpeditedEligibility.ELIGIBLE,
             List.of(
-                "Within 5 days, your county or Tribal Nation will determine your childcare assistance case and send you a letter in the mail.",
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your housing application. The letter will explain your next steps.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Within the next 5 days, expect a phone call or letter in the mail from an eligibility worker with information about your next steps.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         ),
         Arguments.of(
             "Non-expedited CCAP + any other program besides SNAP",
@@ -141,8 +145,9 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
             SnapExpeditedEligibility.UNDETERMINED,
             CcapExpeditedEligibility.NOT_ELIGIBLE,
             List.of(
-                "In the next 7-10 days, expect to get a letter in the mail from your county or Tribal Nation about your childcare and housing application. The letter will explain your next steps.",
-                "Call your county or Tribal Nation if you don’t hear from them in the time period we’ve noted.")
+                "Expect an eligibility worker to contact you by phone or mail with information about your next steps. The time it takes to review applications can vary.",
+                "Program(s) on your application may require you to talk with a worker about your application.",
+                "A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.")
         )
     );
   }
@@ -166,10 +171,8 @@ public class NextStepsContentServiceTest extends AbstractPageControllerTest {
   }
 
 
-  @SuppressWarnings("unused")
   @ParameterizedTest(name = "{0}")
   @MethodSource("org.codeforamerica.shiba.pages.NextStepsContentServiceTest#successMessageTestCases")
-  @Disabled("This test is disabled because it requires feature-flag.enhanced-next-steps: off. Remove test in final implementation.")
   void displaysCorrectSuccessMessageForApplicantPrograms(String testName, List<String> programs,
       SnapExpeditedEligibility snapExpeditedEligibility,
       CcapExpeditedEligibility ccapExpeditedEligibility, List<String> expectedMessages)
