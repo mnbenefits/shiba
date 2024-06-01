@@ -200,6 +200,9 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     SuccessPage successPage = new SuccessPage(driver);
     assertThat(successPage.findElementById("snapExpeditedNotice").getText()).contains(
         "You were recommended for expedited food assistance (SNAP).");
+    // verify that the success page does not contain the "paying for child care" item
+    assertThat(successPage.elementDoesNotExistById("ccapCoverage")).isTrue();
+    
     assertApplicationSubmittedEventWasPublished(applicationId, EXPEDITED, 1);
 
     testFeedbackScreen();
