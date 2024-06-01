@@ -58,7 +58,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     driver.switchTo().window(landingPageWindowHandle);
 
     // Verify that the "paying for child care" link exists and links to DHS-3551-ENG
-    testPage.clickLink("paying for child care");
+    testPage.clickLink("resources to help pay for child care, and more.");
     windowHandles = new ArrayList<String>(driver.getWindowHandles());
     driver.switchTo().window(windowHandles.get(1));
     assertThat(driver.getCurrentUrl()).isEqualTo("https://edocs.dhs.state.mn.us/lfserver/Public/DHS-3551-ENG");
