@@ -232,13 +232,13 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
             "Your application was submitted to Hennepin County (612-596-1300) on January 1, 2020.");
 
     // Verify that the "paying for child care" link exists and links to DHS-3551
-    String landingPageWindowHandle = driver.getWindowHandle();
+    String successPageWindowHandle = driver.getWindowHandle();
     testPage.clickLink("resources for families with young children.");
     ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
     driver.switchTo().window(windowHandles.get(1));
     assertThat(driver.getCurrentUrl()).isEqualTo("https://edocs.dhs.state.mn.us/lfserver/Public/DHS-3551-ENG");
     driver.close();
-    driver.switchTo().window(landingPageWindowHandle);
+    driver.switchTo().window(successPageWindowHandle);
 
   }
 }
