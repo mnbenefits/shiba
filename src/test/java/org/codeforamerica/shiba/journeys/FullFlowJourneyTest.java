@@ -53,7 +53,16 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickLink("Learn more here.");
     ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
     driver.switchTo().window(windowHandles.get(1));
-    assertThat(driver.getTitle().equals("Recent reports of card skimming affecting EBT card users"));
+    assertThat(driver.getTitle()).isEqualTo("Recent reports of card skimming affecting EBT card users");
+    driver.close(); // close the tab 
+    driver.switchTo().window(landingPageWindowHandle);
+
+    // Verify that the "paying for child care" link exists and links to DHS-3551-ENG
+    testPage.clickLink("resources to help pay for child care, and more.");
+    windowHandles = new ArrayList<String>(driver.getWindowHandles());
+    driver.switchTo().window(windowHandles.get(1));
+    assertThat(driver.getCurrentUrl()).isEqualTo("https://edocs.dhs.state.mn.us/lfserver/Public/DHS-3551-ENG");
+    driver.close();
     driver.switchTo().window(landingPageWindowHandle);
     
     // Assert presence and functionality of the SNAP non-discrimination link on the footer.

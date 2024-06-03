@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
@@ -229,5 +230,15 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     assertThat(successPage.findElementById("submission-date").getText()).
         contains(
             "Your application was submitted to Hennepin County (612-596-1300) on January 1, 2020.");
+
+    // Verify that the "paying for child care" link exists and links to DHS-3551
+    String successPageWindowHandle = driver.getWindowHandle();
+    testPage.clickLink("resources for families with young children.");
+    ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
+    driver.switchTo().window(windowHandles.get(1));
+    assertThat(driver.getCurrentUrl()).isEqualTo("https://edocs.dhs.state.mn.us/lfserver/Public/DHS-3551-ENG");
+    driver.close();
+    driver.switchTo().window(successPageWindowHandle);
+
   }
 }
