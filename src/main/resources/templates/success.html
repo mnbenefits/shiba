@@ -8,7 +8,7 @@
   <section class="slab slab--shiba">
     <div class="grid-ignore-mobile">
       <div class="card spacing-above-0">
-
+       <div class="spacing-below-60">
         <div class="grid__item bottom-horizontal-line-dark-grey">
           <div
               th:replace="~{fragments/icons/icon-submission-success :: icon-submission-success}"></div>
@@ -84,12 +84,13 @@
         </div>
         
         <div th:if="${sentiment == null}" id="feedbackButton">
-          <a class="button button--secondary spacing-above-25 spacing-below-0"
+          <a class="button button--secondary spacing-above-45 spacing-below-25"
              th:href="'/pages/'+${pageName}+'/navigation'">
             <span th:text="#{success.give-us-feedback}"></span>
             <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
           </a>
         </div>
+       </div>
       </div>
   </section>
 </div>
