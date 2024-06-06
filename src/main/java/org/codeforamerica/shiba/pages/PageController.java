@@ -663,6 +663,12 @@ public class PageController {
 	  }
 
   private boolean shouldRedirectToNextStepsPage(String pageName) {
+	// a shortcut; if the application_id is null return false
+	// maybe this shortcut should exist at a higher level but lets look at its affect by having it here
+	if (applicationData.getId() == null) {
+		return false;
+	};
+	
     LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
         .getLandmarkPages();
     // Documents have been submitted in non-later docs flow and applicant is attempting to navigate back to upload/submit docs pages
