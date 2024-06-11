@@ -1,0 +1,55 @@
+<!-- This is a custom input for the schoolStartDate page.
+     This input is a custom input because it provides a variable number of start date inputs.
+     It displays formatted date data, it also stores hidden data that is needed for writing to the PDF.
+-->
+
+<th:block th:fragment="schoolStartDateInput (input, data)" th:with="householdSubFlow=${input.options.subworkflows.get('household')},
+                   schoolStartDates=${data.get(input.name).value},
+                   schoolStartDatesSize=${schoolStartDates.size},
+                   idList=${input.options.datasources.get('schoolDetails').get('personIdMap').value}">
+
+	<div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+		<th:block th:each="id, iterationStat: ${idList}" th:with="index=${iterationStat.index},
+                 householdMemberInfoPageData=${householdSubFlow.pagesDataForId(idList.get(index)).getPage('householdMemberInfo')},
+                 name=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
+                 startDateMM=${schoolStartDatesSize > index*3 ? schoolStartDates.get(index*3) : ''},
+                 startDateDD=${schoolStartDatesSize > index*3+1 ? schoolStartDates.get(index*3+1) : ''},
+                 startDateYYYY=${schoolStartDatesSize > index*3+2 ? schoolStartDates.get(index*3+2) : ''}">
+
+			<div class="form-group">
+				<fieldset class="date-input">
+					<legend class="form-question" id="schoolStartDate-legend" th:text="${name}"></legend>
+					<p class="text--help">
+						<label for="schoolStartDate-month" id="schoolStartDate-month-label"
+							th:text="#{school-start-date.month}"></label>
+						&nbsp;/&nbsp;
+						<label for="schoolStartDate-day" id="schoolStartDate-day-label"
+							th:text="#{school-start-date.day}"></label>
+						&nbsp;/&nbsp;
+						<label for="schoolStartDate-year" id="schoolStartDate-year-label"
+							th:text="#{school-start-date.year}"></label>
+					</p>
+					<input type="text" inputmode="numeric" maxlength="2"
+						class="text-input form-width--2-character dob-input" id="schoolStartDate-month"
+						th:name="|${input.name}[]|" th:value="${startDateMM}" placeholder="mm"
+						aria-labelledby="schoolStartDate-label" aria-invalid="false">
+					&nbsp;/&nbsp;
+					<input type="text" inputmode="numeric" maxlength="2"
+						class="text-input form-width--2-character dob-input" id="schoolStartDate-day"
+						th:name="|${input.name}[]|" th:value="${startDateDD}" placeholder="dd"
+						aria-labelledby="schoolStartDate-label" aria-invalid="false">
+					&nbsp;/&nbsp;
+					<input type="text" inputmode="numeric" maxlength="4"
+						class="text-input form-width--4-character dob-input" id="schoolStartDate-year"
+						th:name="|${input.name}[]|" th:value="${startDateYYYY}" placeholder="yyyy"
+						aria-labelledby="schoolStartDate-label" aria-invalid="false">
+				</fieldset>
+			</div>
+
+			<div>
+				<input type="hidden" th:id="|${id}-id|" th:value="${id}" th:name="schoolStartDatePersonIdMap[]">
+			</div>
+
+		</th:block>
+	</div>
+</th:block>

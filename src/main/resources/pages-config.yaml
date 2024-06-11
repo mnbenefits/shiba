@@ -1315,6 +1315,22 @@ pageDefinitions:
             - pageName: childrenInNeedOfCare
       - type: HIDDEN
         name: personIdMap         
+  - &schoolStartDate
+    name: schoolStartDate
+    pageTitle: school-start-date.title
+    headerKey: school-start-date.header
+    contextFragment: schoolContextFragment
+    inputs:
+      - type: CUSTOM
+        name: schoolStartDate
+        customInputFragment: schoolStartDateInput
+#       validators:  TODO: add validation
+        options:
+          datasources:
+            - pageName: schoolDetails
+            - groupName: household
+      - type: HIDDEN
+        name: schoolStartDatePersonIdMap         
   - &housingSubsidy
     name: housingSubsidy
     pageTitle: housing-subsidy.title
@@ -5614,7 +5630,30 @@ workflow:
           input: goingToSchool
         - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
-      - pageName: pregnant            
+      - pageName: schoolStartDate            
+  schoolStartDate:
+    pageConfiguration: *schoolStartDate
+    nextPages:
+      - pageName: pregnant
+    # TODO: fix skip condition and datasources (when no children in Kindergarten)            
+    datasources:
+      - pageName: schoolDetails
+      - pageName: choosePrograms
+      - pageName: childrenInNeedOfCare
+      - pageName: goingToSchool
+      - pageName: whoIsGoingToSchool
+      - groupName: household
+        pageName: householdMemberInfo
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - conditions:
+            - *applicantDidNotChooseCCAP?
+            - *householdMemberDidNotChooseCCAP?
+        - pageName: goingToSchool
+          value: "false"
+          input: goingToSchool
+        - customCondition: SKIP_SCHOOL_DETAILS
   pregnant:
     pageConfiguration: *pregnant
     nextPages:
