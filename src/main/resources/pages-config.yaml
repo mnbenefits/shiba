@@ -1314,7 +1314,23 @@ pageDefinitions:
             - pageName: whoIsGoingToSchool
             - pageName: childrenInNeedOfCare
       - type: HIDDEN
-        name: personIdMap         
+        name: personIdMap
+  - &schoolGrade
+     name: schoolGrade 
+     pageTitle: school-grade.title
+     headerKey: school-grade.header
+     headerHelpMessageKey: school-grade.If-you-dont-have-all-this-information-right-now
+     contextFragment: schoolContextFragment
+     inputs:
+      - name: schoolGrade
+        type: CUSTOM
+        customInputFragment: schoolGradeInput
+        options:
+          datasources:
+            - pageName: whoIsGoingToSchool
+            - pageName: childrenInNeedOfCare        
+      - type: HIDDEN
+        name: personIdMap
   - &schoolStartDate
     name: schoolStartDate
     pageTitle: school-start-date.title
@@ -1330,7 +1346,7 @@ pageDefinitions:
             - pageName: schoolDetails
             - groupName: household
       - type: HIDDEN
-        name: schoolStartDatePersonIdMap         
+        name: schoolStartDatePersonIdMap                
   - &housingSubsidy
     name: housingSubsidy
     pageTitle: housing-subsidy.title
@@ -5630,6 +5646,28 @@ workflow:
           input: goingToSchool
         - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
+      - pageName: schoolGrade
+  schoolGrade:
+    pageConfiguration: *schoolGrade
+    datasources:
+      - pageName: schoolDetails
+      - pageName: choosePrograms
+      - pageName: childrenInNeedOfCare
+      - pageName: goingToSchool
+      - pageName: whoIsGoingToSchool
+      - groupName: household
+        pageName: householdMemberInfo
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - conditions:
+            - *applicantDidNotChooseCCAP?
+            - *householdMemberDidNotChooseCCAP?
+        - pageName: goingToSchool
+          value: "false"
+          input: goingToSchool
+        - customCondition: SKIP_SCHOOL_DETAILS
+    nextPages:
       - pageName: schoolStartDate            
   schoolStartDate:
     pageConfiguration: *schoolStartDate
@@ -5654,7 +5692,7 @@ workflow:
         - pageName: goingToSchool
           value: "false"
           input: goingToSchool
-        - customCondition: SKIP_SCHOOL_DETAILS
+        - customCondition: SKIP_SCHOOL_DETAILS                         
   pregnant:
     pageConfiguration: *pregnant
     nextPages:
