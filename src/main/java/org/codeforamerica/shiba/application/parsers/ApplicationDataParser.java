@@ -20,7 +20,8 @@ public class ApplicationDataParser {
   private static final Map<Field, ParsingCoordinate> coordinatesMap = new HashMap<>();
   private static final Map<Group, String> groupCoordinatesMap = new HashMap<>();
   public static final String DOB_AS_DATE_FIELD_NAME = "dobAsDate";
-
+  public static final String SCHOOL_START_DATE_AS_DATE_FIELD_NAME = "schoolStartDateAsDate";
+  
   static {
     coordinatesMap.put(Field.WRITTEN_LANGUAGE_PREFERENCES,
         new ParsingCoordinate("languagePreferences", "writtenLanguage"));
@@ -338,7 +339,7 @@ public class ApplicationDataParser {
     		new ParsingCoordinate("childNeedsChildcare", "provider2State"));
     coordinatesMap.put(Field.CHILDCARE_PROVIDER2_ZIP,
     		new ParsingCoordinate("childNeedsChildcare", "provider2ZipCode"));
-    
+
     coordinatesMap.put(Field.HOME_EXPENSES,
         new ParsingCoordinate("homeExpenses", "homeExpenses"));
     coordinatesMap.put(Field.UTILITY_PAYMENTS,
@@ -384,6 +385,10 @@ public class ApplicationDataParser {
         new ParsingCoordinate("householdMemberInfo", "ssn"));
     coordinatesMap.put(Field.HOUSEHOLD_INFO_MARITAL_STATUS,
         new ParsingCoordinate("householdMemberInfo", "maritalStatus"));
+
+	coordinatesMap.put(Field.SCHOOL_START_DATE, new ParsingCoordinate("schoolStartDate", "schoolStartDate"));
+	coordinatesMap.put(Field.SCHOOL_START_DATE_AS_DATE,
+			new ParsingCoordinate("schoolStartDate", SCHOOL_START_DATE_AS_DATE_FIELD_NAME));
 
     coordinatesMap.put(Field.MATCH_INFO_DOB, new ParsingCoordinate("matchInfo", "dateOfBirth"));
     coordinatesMap
@@ -672,6 +677,9 @@ public class ApplicationDataParser {
     HOUSEHOLD_INFO_MARITAL_STATUS(""),
     HOUSEHOLD_INFO_SSN(""),
 
+	SCHOOL_START_DATE,
+	SCHOOL_START_DATE_AS_DATE,
+    
     MATCH_INFO_DOB,
     MATCH_INFO_FIRST_NAME(""),
     MATCH_INFO_LAST_NAME(""),

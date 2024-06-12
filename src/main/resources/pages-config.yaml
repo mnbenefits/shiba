@@ -5633,6 +5633,7 @@ workflow:
       - pageName: schoolStartDate            
   schoolStartDate:
     pageConfiguration: *schoolStartDate
+    enrichment: schoolStartDateEnrichment
     nextPages:
       - pageName: pregnant
     # TODO: fix skip condition and datasources (when no children in Kindergarten)            
