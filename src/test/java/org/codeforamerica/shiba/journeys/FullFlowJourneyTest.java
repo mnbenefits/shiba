@@ -139,6 +139,9 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.enter("schoolName", "ABC School");
     testPage.clickContinue();
     
+    // School grade?
+    testPage.clickContinue();
+    
     // School start date?
     testPage.clickContinue();
 
