@@ -1343,7 +1343,7 @@ pageDefinitions:
 #       validators:  TODO: add validation
         options:
           datasources:
-            - pageName: schoolDetails
+            - pageName: schoolGrade
             - groupName: household
       - type: HIDDEN
         name: schoolStartDatePersonIdMap                
@@ -5676,23 +5676,10 @@ workflow:
       - pageName: pregnant
     # TODO: fix skip condition and datasources (when no children in Kindergarten)            
     datasources:
-      - pageName: schoolDetails
-      - pageName: choosePrograms
-      - pageName: childrenInNeedOfCare
-      - pageName: goingToSchool
-      - pageName: whoIsGoingToSchool
-      - groupName: household
-        pageName: householdMemberInfo
+      - pageName: schoolGrade
     skipCondition:
-      logicalOperator: OR
       conditions:
-        - conditions:
-            - *applicantDidNotChooseCCAP?
-            - *householdMemberDidNotChooseCCAP?
-        - pageName: goingToSchool
-          value: "false"
-          input: goingToSchool
-        - customCondition: SKIP_SCHOOL_DETAILS                         
+        - customCondition: SKIP_SCHOOL_START_DATE
   pregnant:
     pageConfiguration: *pregnant
     nextPages:

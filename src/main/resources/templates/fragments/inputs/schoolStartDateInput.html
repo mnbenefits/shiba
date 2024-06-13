@@ -6,7 +6,7 @@
 <th:block th:fragment="schoolStartDateInput (input, data)" th:with="householdSubFlow=${input.options.subworkflows.get('household')},
                    schoolStartDates=${data.get(input.name).value},
                    schoolStartDatesSize=${schoolStartDates.size},
-                   idList=${input.options.datasources.get('schoolDetails').get('personIdMap').value}">
+                   idList=${input.options.datasources.get('schoolGrade').get('personIdMap').value}">
 
 	<div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 		<th:block th:each="id, iterationStat: ${idList}" th:with="index=${iterationStat.index},

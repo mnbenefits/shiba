@@ -141,9 +141,6 @@ public class FullFlowJourneyTest extends JourneyTest {
     
     // School grade?
     testPage.clickContinue();
-    
-    // School start date?
-    testPage.clickContinue();
 
     // Is anyone in your household pregnant?
     testPage.enter("isPregnant", YES.getDisplayValue());
