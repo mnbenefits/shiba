@@ -1326,9 +1326,44 @@ pageDefinitions:
         type: CUSTOM
         customInputFragment: schoolGradeInput
         options:
+          selectableOptions:
+            - value: ''
+              messageKey: school-grade.select-their-grade
+            - value: Hd Strt
+              messageKey: school-grade.Head-Start
+            - value: Pre-K
+              messageKey: school-grade.Pre-K
+            - value: K
+              messageKey: school-grade.Kindergarten
+            - value: 1
+              messageKey: school-grade.1st-grade
+            - value: 2
+              messageKey: school-grade.2nd-grade
+            - value: 3
+              messageKey: school-grade.3rd-grade
+            - value: 4
+              messageKey: school-grade.4th-grade
+            - value: 5
+              messageKey: school-grade.5th-grade
+            - value: 6
+              messageKey: school-grade.6th-grade
+            - value: 7
+              messageKey: school-grade.7th-grade
+            - value: 8
+              messageKey: school-grade.8th-grade
+            - value: 9
+              messageKey: school-grade.9th-grade
+            - value: 10
+              messageKey: school-grade.10th-grade
+            - value: 11
+              messageKey: school-grade.11th-grade
+            - value: 12
+              messageKey: school-grade.12th-grade
+            - value: Other 
+              messageKey: school-grade.Other                     
           datasources:
-            - pageName: whoIsGoingToSchool
-            - pageName: childrenInNeedOfCare        
+            - pageName: schoolDetails
+            - groupName: household        
       - type: HIDDEN
         name: personIdMap
   - &schoolStartDate

@@ -28,7 +28,7 @@ public class Condition implements Serializable {
 
   @Serial
   private static final long serialVersionUID = -7300484979833484734L;
-  private static final List<String> K_GRADES = List.of("head-start", "pre-k", "kindergarten");
+  private static final List<String> K_GRADES = List.of("hd-strt", "pre-k", "k");
   String pageName;
   String input;
   String value;

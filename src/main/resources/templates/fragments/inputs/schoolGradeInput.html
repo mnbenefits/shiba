@@ -1,54 +1,40 @@
-
+  
 <th:block th:fragment="schoolGradeInput(input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                     inputData=${data.get(input.name)},
                     childIdMapData=${data.get('personIdMap')},
                     hasHelpMessage=${input.helpMessageKey != null},
                     needsAriaLabel=${input.needsAriaLabel()},
-                    whoIsGoingToSchool=${input.options.datasources.get('whoIsGoingToSchool').get('whoIsGoingToSchool').value},
-                    childrenInNeedOfCare=${input.options.datasources.get('childrenInNeedOfCare').get('whoNeedsChildCare').value},
-                    childrenInSchool=${T(org.codeforamerica.shiba.pages.PageUtils).getEligibleSchoolAndChildCareMembers(childrenInNeedOfCare, whoIsGoingToSchool)}">
-                    
+                    childIdList=${pageDatasources.get('schoolDetails').get('personIdMap').value}">
+                       
   <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
     <th:block
-        th:each="fullNameAndId, iterationStat: ${childrenInSchool}"
+        th:each="fullNameAndId, iterationStat: ${childIdList}"
         th:with="fullNameAndIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
                          NameId=${fullNameAndIdArray[#arrays.length(fullNameAndIdArray)-1]},
                          childName=${#strings.substringBefore(fullNameAndId, ' ' + NameId)},
                          you=#{general.you},
                          indexInInputData=${childIdMapData.value.indexOf(NameId)},
-                         schoolGrade=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">
-                         
+                         schoolGrade=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">            
       <div class="form-group">
-        <label class="form-question spacing-below-5" th:for="|${NameId}-schoolgrade|"
-               th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
-               th:id="${NameId + '-label'}">
+        <label class="form-question spacing-below-5" th:for="|${NameId}-schoolGrade|"
+                 th:text="${NameId}"
+                 th:id="${NameId + '-label'}">
         </label>
-       <div class="select">
-        <select th:id= "input.name"
-                th:name="${formInputName}"
-                class="select__element"
-                th:attr="aria-describedby=${hasHelpMessage ? NameId + '-help-message' : ''},
-                         aria-labelledby=${NameId + '-label'}">
-          <option th:value="''" th:text="#{school-grade.select-their-grade}"></option>
-          <option value="Pre-K">Pre-K</option>
-          <option value="Head-Start">Head-Start</option>
-          <option value="kindergarten">Kindergarten</option>
-          <option value="1st grade">1st grade</option>          
-           <option value="2nd-grade">2nd-grade</option>
-          <option value="3rd-grade">3rd-grade</option>
-          <option value="4th-grade">4th-grade</option>
-          <option value="5th-grade">5th-grade</option>
-           <option value="6th-grade">6th-grade</option>
-          <option value="7th-grade">7th-grade</option>
-           <option value="8th-grade">8th-grade</option>
-          <option value="9th-grade">9th-grade</option>
-           <option value="10th-grade">10th-grade</option>
-          <option value="11th-grade">11th-grade</option>
-           <option value="12th-grade">12th-grade</option>
-          <option value="Other">Other</option>  
-        </select>
-         </div>
+      <div class="select">
+         <select th:id="|${NameId}-schoolGrade|"
+                    class="select__element"
+                    th:attr="aria-describedby=${hasHelpMessage ? NameId + '-help-message' : ''},
+                             aria-labelledby=${NameId + '-label'}"
+                             
+                    th:name="${formInputName}">
+            <th:block th:each="option: ${input.options.selectableOptions}">
+                    <option th:value="${option.value}" th:text="#{${option.messageKey}}"
+                            th:selected="${inputData.value.contains(option.value)}">
+                    </option>
+            </th:block>
+            </select>
+        </div>
         <input type="hidden"
                th:id="|${NameId}-id|"
                th:value="${NameId}"
