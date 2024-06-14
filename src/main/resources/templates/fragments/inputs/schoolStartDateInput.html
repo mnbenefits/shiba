@@ -6,20 +6,28 @@
 <th:block th:fragment="schoolStartDateInput (input, data)" th:with="householdSubFlow=${input.options.subworkflows.get('household')},
                    schoolStartDates=${data.get(input.name).value},
                    schoolStartDatesSize=${schoolStartDates.size},
-                   idList=${input.options.datasources.get('schoolGrade').get('personIdMap').value}">
+                   idList=${input.options.datasources.get('schoolGrade').get('personIdMap').value}
+                   ">
 
 	<div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-		<th:block th:each="id, iterationStat: ${idList}" th:with="index=${iterationStat.index},
+
+                         
+		<th:block th:each="id, iterationStat: ${idList}" th:with="index=${iterationStat.index}, 
                  householdMemberInfoPageData=${householdSubFlow.pagesDataForId(idList.get(index)).getPage('householdMemberInfo')},
                  name=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
                  startDateMM=${schoolStartDatesSize > index*3 ? schoolStartDates.get(index*3) : ''},
                  startDateDD=${schoolStartDatesSize > index*3+1 ? schoolStartDates.get(index*3+1) : ''},
                  startDateYYYY=${schoolStartDatesSize > index*3+2 ? schoolStartDates.get(index*3+2) : ''}">
+                 
+    		<th:block th:with="grade=${input.options.datasources.get('schoolGrade').get('schoolGrade').value[index]}">
+		        <th:block th:if="${grade == 'Hd Strt' or grade == 'Pre-K' or  grade == 'K'}">
+
+
 
 			<div class="form-group">
 				<fieldset class="date-input">
+					
 					<legend class="form-question" id="schoolStartDate-legend" th:text="${name}"></legend>
-					<p class="text--help">
 						<label for="schoolStartDate-month" id="schoolStartDate-month-label"
 							th:text="#{school-start-date.month}"></label>
 						&nbsp;/&nbsp;
@@ -49,7 +57,8 @@
 			<div>
 				<input type="hidden" th:id="|${id}-id|" th:value="${id}" th:name="schoolStartDatePersonIdMap[]">
 			</div>
-
+ 		</th:block>
+            </th:block>
 		</th:block>
 	</div>
 </th:block>
