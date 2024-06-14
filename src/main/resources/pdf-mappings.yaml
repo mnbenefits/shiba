@@ -433,6 +433,10 @@ mappings:
     fullName: STUDENT_FULL_NAME 
   schoolDetails:
      schoolName: SCHOOL_NAME
+  schoolGrade:
+     schoolGrade: SCHOOL_GRADE
+  schoolStartDate:
+     schoolStartDate: SCHOOL_START_DATE
   adultRequestingChildcareLookingForJob:
     fullName: ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME
   adultRequestingChildcareGoingToSchool:
