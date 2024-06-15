@@ -185,6 +185,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("whoIsGoingToSchool", "whoIsGoingToSchool", List.of(me, jim));
 		
 		postExpectingSuccess("schoolDetails", "schoolName", List.of("Test School"));
+		postExpectingSuccess("schoolGrade", "schoolGrade", List.of("K"));
+		postExpectingSuccess("schoolStartDate", "schoolStartDate", List.of("09","01","2020"));
 
 		// Add a job for Jim
 		addFirstJob(jim, "Jim's Employer");
@@ -200,6 +202,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_WORKING_EMPLOYERS_NAME_0", "Pam's Employer", ccap);
 		assertPdfFieldEquals("STUDENT_FULL_NAME_0", "Jim Halpert", ccap);
 		assertPdfFieldEquals("SCHOOL_NAME_0", "Test School", ccap);
+		assertPdfFieldEquals("SCHOOL_GRADE_0", "K", ccap);
+		assertPdfFieldEquals("SCHOOL_START_DATE_0", "09/01/2020", ccap);
 		assertPdfFieldIsEmpty("ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME_1", ccap);
 		assertPdfFieldIsEmpty("ADULT_REQUESTING_CHILDCARE_GOING_TO_SCHOOL_FULL_NAME_1", ccap);
 		assertPdfFieldIsEmpty("ADULT_REQUESTING_CHILDCARE_WORKING_FULL_NAME_1", ccap);

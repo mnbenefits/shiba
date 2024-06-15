@@ -1316,12 +1316,12 @@ pageDefinitions:
       - type: HIDDEN
         name: personIdMap
   - &schoolGrade
-     name: schoolGrade 
-     pageTitle: school-grade.title
-     headerKey: school-grade.header
-     headerHelpMessageKey: school-grade.If-you-dont-have-all-this-information-right-now
-     contextFragment: schoolContextFragment
-     inputs:
+    name: schoolGrade 
+    pageTitle: school-grade.title
+    headerKey: school-grade.header
+    headerHelpMessageKey: school-grade.If-you-dont-have-all-this-information-right-now
+    contextFragment: schoolContextFragment
+    inputs:
       - name: schoolGrade
         type: CUSTOM
         customInputFragment: schoolGradeInput
@@ -1363,9 +1363,9 @@ pageDefinitions:
               messageKey: school-grade.Other                     
           datasources:
             - pageName: schoolDetails
-            - groupName: household        
+            - groupName: household
       - type: HIDDEN
-        name: personIdMap
+        name: schoolGradePersonIdMap
   - &schoolStartDate
     name: schoolStartDate
     pageTitle: school-start-date.title

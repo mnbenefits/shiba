@@ -1,44 +1,43 @@
-  
+<!-- This is a custom input for the schoolGrade page.
+     This input is a custom input because it provides a variable number of grade inputs.
+     It displays school grade data, it also stores hidden data that is needed for writing to the PDF.
+     Parameters:
+	   input - the input (as described in pages-config.yaml)
+	   data - the PageData for this page (useful when returning\navigating back to this page)
+-->	 
 <th:block th:fragment="schoolGradeInput(input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
-                    inputData=${data.get(input.name)},
-                    childIdMapData=${data.get('personIdMap')},
-                    hasHelpMessage=${input.helpMessageKey != null},
-                    needsAriaLabel=${input.needsAriaLabel()},
-                    childIdList=${pageDatasources.get('schoolDetails').get('personIdMap').value}">
-                       
+                   householdSubFlow=${input.options.subworkflows.get('household')},
+                   schoolGrade=${data.get(input.name)},
+                   personIdMap=${data.get('personIdMap')},
+                   hasHelpMessage=${input.helpMessageKey != null},
+                   idList=${pageDatasources.get('schoolDetails').get('personIdMap').value}">
+
   <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
     <th:block
-        th:each="fullNameAndId, iterationStat: ${childIdList}"
-        th:with="fullNameAndIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
-                         NameId=${fullNameAndIdArray[#arrays.length(fullNameAndIdArray)-1]},
-                         childName=${#strings.substringBefore(fullNameAndId, ' ' + NameId)},
-                         you=#{general.you},
-                         indexInInputData=${childIdMapData.value.indexOf(NameId)},
-                         schoolGrade=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">            
+        th:each="id, iterationStat: ${idList}"
+        th:with="index=${iterationStat.index},
+	             householdMemberInfoPageData=${householdSubFlow.pagesDataForId(id).getPage('householdMemberInfo')},
+                 childName=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
+                 schoolGrade=${schoolGrade.value.isEmpty() ? '' : schoolGrade.value.get(index)}">            
+
       <div class="form-group">
-        <label class="form-question spacing-below-5" th:for="|${NameId}-schoolGrade|"
-                 th:text="${NameId}"
-                 th:id="${NameId + '-label'}">
+        <label class="form-question spacing-below-5" th:for="|schoolGrade-${index}|"
+               th:text="${childName}" th:id="${'label-' + index}">
         </label>
       <div class="select">
-         <select th:id="|${NameId}-schoolGrade|"
-                    class="select__element"
-                    th:attr="aria-describedby=${hasHelpMessage ? NameId + '-help-message' : ''},
-                             aria-labelledby=${NameId + '-label'}"
-                             
-                    th:name="${formInputName}">
+         <select th:id="|schoolGrade-${index}|" class="select__element"
+                 th:attr="aria-describedby=${hasHelpMessage ? 'help-message-' + index : ''},
+                          aria-labelledby=${'label-' + index}"
+                 th:name="${formInputName}">
             <th:block th:each="option: ${input.options.selectableOptions}">
                     <option th:value="${option.value}" th:text="#{${option.messageKey}}"
-                            th:selected="${inputData.value.contains(option.value)}">
+                            th:selected="${option.value.equals(schoolGrade)}">
                     </option>
             </th:block>
             </select>
         </div>
-        <input type="hidden"
-               th:id="|${NameId}-id|"
-               th:value="${NameId}"
-               th:name="personIdMap[]">
+        <input type="hidden" th:id="|personId-${index}|" th:value="${id}" th:name="schoolGradePersonIdMap[]">
       </div>
     </th:block>
   </div>

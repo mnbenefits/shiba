@@ -4,14 +4,10 @@ import static org.codeforamerica.shiba.output.FullNameFormatter.getListOfSelecte
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
-import org.codeforamerica.shiba.output.FullNameFormatter;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.pages.data.PageData;
 import org.springframework.stereotype.Component;
@@ -27,15 +23,18 @@ public class StudentFullNamePreparer implements DocumentFieldPreparer {
 		students.retainAll(children);
 		
 		PageData pageData = application.getApplicationData().getPageData("schoolDetails");
-		PageData schoolStartDatePageData = application.getApplicationData().getPageData("schoolStartDate");
 		PageData gradePageData = application.getApplicationData().getPageData("schoolGrade");
+		PageData schoolStartDatePageData = application.getApplicationData().getPageData("schoolStartDate");
 
 		if (pageData == null) {
 			return List.of();
 		}
 		List<String> schoolNames = pageData.get("schoolName").getValue();
-		List<String> schoolStartDates = schoolStartDatePageData.get("schoolStartDate").getValue();
 		List<String> grades = gradePageData.get("schoolGrade").getValue();
+		List<String> schoolStartDates = List.of();
+		if (schoolStartDatePageData != null) {
+			schoolStartDates = schoolStartDatePageData.get("schoolStartDate").getValue();
+		}
 
 		List<DocumentField> result = new ArrayList<>();
 
@@ -58,26 +57,26 @@ public class StudentFullNamePreparer implements DocumentFieldPreparer {
             	schoolStartDates.set(i, "0" + element);
             }
 		}		
-			for (int i = 0, j=0;  i < schoolStartDates.size(); j++, i+=3) {
-				
-		        List<String> sublist = schoolStartDates.subList(i, Math.min(i+3, schoolStartDates.size())); // ["", "", ""]
-		        boolean allEmpty = sublist.stream().allMatch(String::isEmpty);
-		        String sublistString;
+		for (int i = 0, j=0;  i < schoolStartDates.size(); j++, i+=3) {
+			
+	        List<String> sublist = schoolStartDates.subList(i, Math.min(i+3, schoolStartDates.size())); // ["", "", ""]
+	        boolean allEmpty = sublist.stream().allMatch(String::isEmpty);
+	        String sublistString;
 
-		        if (allEmpty) {
-		            sublistString = "";
-		        } else {
-		            for (int k = 0; k < sublist.size(); k++) {
-		                if (sublist.get(k).isEmpty()) {
-		                    sublist.set(k, "-");
-		                }
-		            }
-		            sublistString = String.join("/", sublist);
-		        }
+	        if (allEmpty) {
+	            sublistString = "";
+	        } else {
+	            for (int k = 0; k < sublist.size(); k++) {
+	                if (sublist.get(k).isEmpty()) {
+	                    sublist.set(k, "-");
+	                }
+	            }
+	            sublistString = String.join("/", sublist);
+	        }
 
 
-			result.add(new DocumentField("schoolStartDate", "schoolStartDate", List.of(sublistString),
-					DocumentFieldType.SINGLE_VALUE, j));
+		result.add(new DocumentField("schoolStartDate", "schoolStartDate", List.of(sublistString),
+				DocumentFieldType.SINGLE_VALUE, j));
 		}
 		return result;
 

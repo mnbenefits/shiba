@@ -26,10 +26,8 @@ public class StudentFullNamePreparerTest {
             List.of("studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d",
             		"studentCFirstName studentCLastName b9tmgf7e-d13a-6mf0-9093-calkjasdfiv4d",
                     "studentDFirstName studentDLastName y77f3f7e-b63a-4cf0-9089-asdfsafdba2a6"))
-        .withPageData("schoolDetails", "schoolName",
-        	List.of("test school name A",
-        			"test school name B",
-        			"test school name C"))
+        .withPageData("schoolDetails", "schoolName", List.of("test school name A", "test school name B", "test school name C"))
+        .withPageData("schoolGrade", "schoolGrade", List.of("", "", ""))
         .build();
 
     List<DocumentField> result = mapper.prepareDocumentFields(Application.builder()
@@ -91,9 +89,8 @@ public class StudentFullNamePreparerTest {
             List.of("studentAFirstName studentALastName y77f3f7e-b63a-4cf0-9089-asdfsafdba2a6",
             		"studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d",
             		"studentCFirstName studentCLastName b9tmgf7e-d13a-6mf0-9093-calkjasdfiv4d"))
-        .withPageData("schoolDetails", "schoolName",
-        	List.of("test school name B",
-        			""))
+        .withPageData("schoolDetails", "schoolName", List.of("test school name B", ""))
+        .withPageData("schoolGrade", "schoolGrade",	List.of("", ""))
         .build();
 
     List<DocumentField> result = mapper.prepareDocumentFields(Application.builder()
