@@ -19,7 +19,7 @@
         th:with="index=${iterationStat.index},
 	             householdMemberInfoPageData=${householdSubFlow.pagesDataForId(id).getPage('householdMemberInfo')},
                  childName=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
-                 schoolGrade=${schoolGrade.value.isEmpty() ? '' : schoolGrade.value.get(index)}">            
+                 gradeValue=${schoolGrade.value.isEmpty() ? '' : schoolGrade.value.get(index)}">            
 
       <div class="form-group">
         <label class="form-question spacing-below-5" th:for="|schoolGrade-${index}|"
@@ -32,7 +32,7 @@
                  th:name="${formInputName}">
             <th:block th:each="option: ${input.options.selectableOptions}">
                     <option th:value="${option.value}" th:text="#{${option.messageKey}}"
-                            th:selected="${option.value.equals(schoolGrade)}">
+                            th:selected="${option.value.equals(gradeValue)}">
                     </option>
             </th:block>
             </select>
