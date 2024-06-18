@@ -9,7 +9,8 @@
                     childrenInNeedOfCare=${input.options.datasources.get('childrenInNeedOfCare').get('whoNeedsChildCare').value},
                     childrenInSchool=${T(org.codeforamerica.shiba.pages.PageUtils).getEligibleSchoolAndChildCareMembers(childrenInNeedOfCare, whoIsGoingToSchool)}">
                     
-  <div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+  <div class="spacing-below-35" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+	  <div class="form-group">
     <th:block
         th:each="fullNameAndId, iterationStat: ${childrenInSchool}"
         th:with="fullNameAndIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
@@ -20,14 +21,13 @@
                          schoolName=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">
                          
                          
-      <div class="form-group">
-        <label class="form-question spacing-below-5" th:for="|${NameId}-schoolname|"
+        <label class="form-question spacing-below-5 spacing-above-30" th:for="|${NameId}-schoolname|"
                th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
                th:id="${NameId + '-label'}">
         </label>
         <p th:id="${NameId + '-help-message'}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
         <input type="text"
-               class="text-input form-width--medium"
+               class="text-input form-width--medium spacing-below-30"
                th:readonly="${input.readOnly}"
                th:id="|${NameId}-schoolname|"
                th:value="${schoolName}"
