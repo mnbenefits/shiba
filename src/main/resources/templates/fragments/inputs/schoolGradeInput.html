@@ -4,7 +4,7 @@
      Parameters:
 	   input - the input (as described in pages-config.yaml)
 	   data - the PageData for this page (useful when returning\navigating back to this page)
--->	 
+-->
 <th:block th:fragment="schoolGradeInput(input, data)" th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                    householdSubFlow=${input.options.subworkflows.get('household')},
                    schoolGrade=${data.get(input.name)},
@@ -17,7 +17,7 @@
 			<th:block th:each="id, iterationStat: ${idList}" th:with="index=${iterationStat.index},
 	             householdMemberInfoPageData=${householdSubFlow.pagesDataForId(id).getPage('householdMemberInfo')},
                  childName=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
-                 schoolGrade=${schoolGrade.value.isEmpty() ? '' : schoolGrade.value.get(index)}">
+                 gradeInput=${schoolGrade.value.isEmpty() ? '' : schoolGrade.value.get(index)}">
 
 				<label class="form-question spacing-below-15 spacing-above-30" th:for="|schoolGrade-${index}|"
 					th:text="${childName}" th:id="${'label-' + index}">
@@ -27,7 +27,7 @@
                           aria-labelledby=${'label-' + index}" th:name="${formInputName}">
 						<th:block th:each="option: ${input.options.selectableOptions}">
 							<option th:value="${option.value}" th:text="#{${option.messageKey}}"
-								th:selected="${option.value.equals(schoolGrade)}">
+								th:selected="${option.value.equals(gradeInput)}">
 							</option>
 						</th:block>
 					</select>
