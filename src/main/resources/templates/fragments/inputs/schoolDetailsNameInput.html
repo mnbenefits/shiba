@@ -14,6 +14,7 @@
     <th:block
         th:each="fullNameAndId, iterationStat: ${childrenInSchool}"
         th:with="fullNameAndIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
+                         index=${iterationStat.index},
                          NameId=${fullNameAndIdArray[#arrays.length(fullNameAndIdArray)-1]},
                          childName=${#strings.substringBefore(fullNameAndId, ' ' + NameId)},
                          you=#{general.you},
@@ -21,22 +22,22 @@
                          schoolName=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">
                          
                          
-        <label class="form-question spacing-below-5 spacing-above-30" th:for="|${NameId}-schoolname|"
+        <label class="form-question spacing-below-5 spacing-above-30" th:for="|schoolname-${index}|"
                th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
-               th:id="${NameId + '-label'}">
+               th:id="${'label-'+index}">
         </label>
-        <p th:id="${NameId + '-help-message'}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
+        <p th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
         <input type="text"
                class="text-input form-width--medium spacing-below-30"
                th:readonly="${input.readOnly}"
-               th:id="|${NameId}-schoolname|"
+               th:id="|schoolname-${index}|"
                th:value="${schoolName}"
                th:name="${formInputName}"
                th:attr="aria-describedby=${hasHelpMessage ? NameId + '-help-message' : ''},
-               aria-labelledby=${NameId + '-label'}"
+               aria-labelledby=${'label-'+index}"
         >
         <input type="hidden"
-               th:id="|${NameId}-id|"
+               th:id="|id-${index}|"
                th:value="${NameId}"
                th:name="personIdMap[]">
       </div>
