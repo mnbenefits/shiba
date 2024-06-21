@@ -1375,7 +1375,9 @@ pageDefinitions:
       - type: CUSTOM
         name: schoolStartDate
         customInputFragment: schoolStartDateInput
-#       validators:  TODO: add validation
+        validators:
+          - validation: MULTIPLE_DATES
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
         options:
           datasources:
             - pageName: schoolGrade

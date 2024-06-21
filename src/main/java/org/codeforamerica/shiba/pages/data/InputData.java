@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -41,6 +42,19 @@ public class InputData implements Serializable {
                 .satisfies(pageData)).map(Validator::getValidation)
         .allMatch(validation -> validation.apply(value));
   }
+  
+  // This method is only called from schoolStartDate.html
+  public Boolean valid(String input) {
+	  List<String> inputList = Arrays.asList(input.split(",", -1));
+	  boolean isEmpty = inputList.stream().anyMatch(string -> string.isBlank());
+	  if(isEmpty) {
+		  return false;
+	  }
+	  return validators.stream().filter(
+	            validator -> validator.getCondition() == null || validator.getCondition()
+	                .satisfies(input)).map(Validator::getValidation)
+	        .allMatch(validation -> validation.apply(inputList));
+	  }
 
   public List<String> errorMessageKeys(PageData pageData) {
     return validators.stream()

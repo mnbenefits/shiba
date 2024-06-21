@@ -70,6 +70,11 @@ public class Condition implements Serializable {
     return pageData != null && !pageData.isEmpty() && matcher
         .matches(pageData.get(input).getValue(), value);
   }
+  
+  public boolean satisfies(String input) {
+	    return input != null && !input.isEmpty() && matcher
+	        .matches(List.of(input), value);
+	  }
  
   /**
    * This method evaluates the SKIP_SCHOOL_DETAILS custom condition as specified in pages-config.yaml. 
