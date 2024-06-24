@@ -220,7 +220,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("whoIsGoingToSchool", "whoIsGoingToSchool", List.of("child name"), "School details");
     postExpectingNextPageTitle("schoolDetails", "schoolName", List.of("child school"), "School Grade");
     postExpectingNextPageTitle("schoolGrade", "schoolGrade", List.of("Pre-K"), "School start date");
-    postExpectingNextPageTitle("schoolStartDate", "schoolStartDate", List.of("01/01/2020"), "Pregnant");
+    postExpectingNextPageTitle("schoolStartDate", "schoolStartDate", List.of("01","01","2020"), "Pregnant");
   }
 
   @Test
