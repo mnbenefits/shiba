@@ -1,0 +1,69 @@
+<!--/* This is a custom input for the schoolStartDate page.
+     This input is a custom input because it provides a variable number of start date inputs.
+     It displays formatted date data, it also stores hidden data that is needed for writing to the PDF.
+     The parameter pageConfigFormInputTemplate is a FormInputTemplate.java object.
+     The parameter thisPageData is the data that was previously entered in this page and is returned from the JSON blob when
+     the page is reloaded with Go Back or the back button.
+*/-->
+<th:block th:fragment="schoolStartDateInput (pageConfigFormInputTemplate, thisPageData)" 
+					th:with="householdSubFlow=${pageConfigFormInputTemplate.options.subworkflows.get('household')},
+                   schoolStartDates=${thisPageData.get(pageConfigFormInputTemplate.name).value},
+                   schoolStartDatesSize=${schoolStartDates.size},
+                   idList=${pageConfigFormInputTemplate.options.datasources.get('schoolGrade').get('schoolGradePersonIdMap').value},
+				   thisPageDataSize=${thisPageData.get('schoolStartDatePersonIdMap').value.size},
+                   inputData=${thisPageData.get(pageConfigFormInputTemplate.name)} ">
+
+	<div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+		<th:block th:each="id, iterationStat: ${idList}" 
+		  th:with="index=${iterationStat.index},
+                   householdMemberInfoPageData=${householdSubFlow.pagesDataForId(idList.get(index)).getPage('householdMemberInfo')},
+                   name=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
+                   startDateMM=${schoolStartDatesSize > index*3 ? schoolStartDates.get(index*3) : ''},
+                   startDateDD=${schoolStartDatesSize > index*3+1 ? schoolStartDates.get(index*3+1) : ''},
+                   startDateYYYY=${schoolStartDatesSize > index*3+2 ? schoolStartDates.get(index*3+2) : ''},
+                   dateString=${startDateMM} + ',' + ${startDateDD} + ',' + ${startDateYYYY},
+                   dataIsInvalid=${index == thisPageDataSize ? false : !inputData.valid(dateString)},
+                   grade=${input.options.datasources.get('schoolGrade').get('schoolGrade').value[index]}
+                  ">
+           <th:block th:if="${grade == 'Hd Strt' or grade == 'Pre-K' or  grade == 'K'}">
+			<div class="form-group" th:classappend="${dataIsInvalid} ? 'form-group--error' : ''">
+				<fieldset class="date-input spacing-below-45">
+					<legend class="form-question" id="schoolStartDate-legend" th:text="${name}"></legend>
+					<p class="text--help">
+						<label for="schoolStartDate-month" id="schoolStartDate-month-label"
+							th:text="#{school-start-date.month}"></label>
+						&nbsp;/&nbsp;
+						<label for="schoolStartDate-day" id="schoolStartDate-day-label"
+							th:text="#{school-start-date.day}"></label>
+						&nbsp;/&nbsp;
+						<label for="schoolStartDate-year" id="schoolStartDate-year-label"
+							th:text="#{school-start-date.year}"></label>
+					</p>
+					<input type="text" inputmode="numeric" maxlength="2"
+						class="text-input form-width--2-character dob-input" id="schoolStartDate-month"
+						th:name="|${pageConfigFormInputTemplate.name}[]|" th:value="${startDateMM}" placeholder="mm"
+						aria-labelledby="schoolStartDate-label" aria-invalid="false">
+					&nbsp;/&nbsp;
+					<input type="text" inputmode="numeric" maxlength="2"
+						class="text-input form-width--2-character dob-input" id="schoolStartDate-day"
+						th:name="|${pageConfigFormInputTemplate.name}[]|" th:value="${startDateDD}" placeholder="dd"
+						aria-labelledby="schoolStartDate-label" aria-invalid="false">
+					&nbsp;/&nbsp;
+					<input type="text" inputmode="numeric" maxlength="4"
+						class="text-input form-width--4-character dob-input" id="schoolStartDate-year"
+						th:name="|${pageConfigFormInputTemplate.name}[]|" th:value="${startDateYYYY}" placeholder="yyyy"
+						aria-labelledby="schoolStartDate-label" aria-invalid="false">
+				</fieldset>
+			</div>
+
+			<div>
+				<input type="hidden" th:id="|${id}-id|" th:value="${id}" th:name="schoolStartDatePersonIdMap[]">
+			</div>
+			<div th:if="${dataIsInvalid}">
+		      	<div th:replace="~{fragments/inputErrorFragment :: validationError(${thisPageData}, ${pageConfigFormInputTemplate})}"></div>
+		    </div>
+           </th:block>
+		</th:block>
+
+	</div>
+</th:block>

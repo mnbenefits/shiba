@@ -27,6 +27,79 @@ public class ValidationEnumTest {
 	  }
 	  
 	  @Test
+	  public void testDateEnum() {
+		  List<String> value = new ArrayList<String>();
+		  value.add("2");
+		  value.add("2");
+		  value.add("1999");
+		  assertTrue(Validation.DATE.apply(value));
+		  value.clear();
+		  value.add("01");
+		  value.add("2");
+		  value.add("1999");
+		  assertTrue(Validation.DATE.apply(value));
+		  value.clear();
+		  value.add("x");
+		  value.add("2");
+		  value.add("1999");
+		  assertFalse(Validation.DATE.apply(value));
+	  }
+	  
+	  @Test
+	  public void testMultipleDatesEnum() {
+		  List<String> value = new ArrayList<String>();
+		  value.add("2");
+		  value.add("2");
+		  value.add("1999");
+		  assertTrue(Validation.MULTIPLE_DATES.apply(value));
+
+		  value.add("01");
+		  value.add("2");
+		  value.add("1999");
+		  assertTrue(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.add("12");
+		  value.add("12");
+		  value.add("2024");
+		  assertTrue(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.add("8");
+		  value.add("22");
+		  value.add("2023");
+		  assertTrue(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.add("12");
+		  value.add("12");
+		  value.add("12");//extra string will fail
+		  value.add("2024");
+		  assertFalse(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.clear();
+		  value.add("x");
+		  value.add("2");
+		  value.add("1999");
+		  assertFalse(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.clear();
+		  value.add("13");
+		  value.add("23");
+		  value.add("2022");
+		  assertFalse(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.clear();
+		  value.add("02");
+		  value.add("29");//leap year
+		  value.add("2024");
+		  assertTrue(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.clear();
+		  value.add("02");
+		  value.add("29");//not a leap year
+		  value.add("2025");
+		  assertFalse(Validation.MULTIPLE_DATES.apply(value));
+	  }
+	  
+	  @Test
 	  public void testShouldBeBlankEnum() {
 		  List<String> value = new ArrayList<String>();
 		  assertTrue(Validation.SHOULD_BE_BLANK.apply(value));

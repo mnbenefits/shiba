@@ -1314,7 +1314,76 @@ pageDefinitions:
             - pageName: whoIsGoingToSchool
             - pageName: childrenInNeedOfCare
       - type: HIDDEN
-        name: personIdMap         
+        name: personIdMap
+  - &schoolGrade
+    name: schoolGrade 
+    pageTitle: school-grade.title
+    headerKey: school-grade.header
+    headerHelpMessageKey: school-grade.If-you-dont-have-all-this-information-right-now
+    contextFragment: schoolContextFragment
+    inputs:
+      - name: schoolGrade
+        type: CUSTOM
+        customInputFragment: schoolGradeInput
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: school-grade.select-their-grade
+            - value: Hd Strt
+              messageKey: school-grade.Head-Start
+            - value: Pre-K
+              messageKey: school-grade.Pre-K
+            - value: K
+              messageKey: school-grade.Kindergarten
+            - value: 1
+              messageKey: school-grade.1st-grade
+            - value: 2
+              messageKey: school-grade.2nd-grade
+            - value: 3
+              messageKey: school-grade.3rd-grade
+            - value: 4
+              messageKey: school-grade.4th-grade
+            - value: 5
+              messageKey: school-grade.5th-grade
+            - value: 6
+              messageKey: school-grade.6th-grade
+            - value: 7
+              messageKey: school-grade.7th-grade
+            - value: 8
+              messageKey: school-grade.8th-grade
+            - value: 9
+              messageKey: school-grade.9th-grade
+            - value: 10
+              messageKey: school-grade.10th-grade
+            - value: 11
+              messageKey: school-grade.11th-grade
+            - value: 12
+              messageKey: school-grade.12th-grade
+            - value: Other 
+              messageKey: school-grade.Other                     
+          datasources:
+            - pageName: schoolDetails
+            - groupName: household
+      - type: HIDDEN
+        name: schoolGradePersonIdMap
+  - &schoolStartDate
+    name: schoolStartDate
+    pageTitle: school-start-date.title
+    headerKey: school-start-date.header
+    contextFragment: schoolContextFragment
+    inputs:
+      - type: CUSTOM
+        name: schoolStartDate
+        customInputFragment: schoolStartDateInput
+        validators:
+          - validation: MULTIPLE_DATES
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+        options:
+          datasources:
+            - pageName: schoolGrade
+            - groupName: household
+      - type: HIDDEN
+        name: schoolStartDatePersonIdMap                
   - &housingSubsidy
     name: housingSubsidy
     pageTitle: housing-subsidy.title
@@ -5614,7 +5683,40 @@ workflow:
           input: goingToSchool
         - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
-      - pageName: pregnant            
+      - pageName: schoolGrade
+  schoolGrade:
+    pageConfiguration: *schoolGrade
+    datasources:
+      - pageName: schoolDetails
+      - pageName: choosePrograms
+      - pageName: childrenInNeedOfCare
+      - pageName: goingToSchool
+      - pageName: whoIsGoingToSchool
+      - groupName: household
+        pageName: householdMemberInfo
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - conditions:
+            - *applicantDidNotChooseCCAP?
+            - *householdMemberDidNotChooseCCAP?
+        - pageName: goingToSchool
+          value: "false"
+          input: goingToSchool
+        - customCondition: SKIP_SCHOOL_DETAILS
+    nextPages:
+      - pageName: schoolStartDate            
+  schoolStartDate:
+    pageConfiguration: *schoolStartDate
+    enrichment: schoolStartDateEnrichment
+    nextPages:
+      - pageName: pregnant
+    # TODO: fix skip condition and datasources (when no children in Kindergarten)            
+    datasources:
+      - pageName: schoolGrade
+    skipCondition:
+      conditions:
+        - customCondition: SKIP_SCHOOL_START_DATE
   pregnant:
     pageConfiguration: *pregnant
     nextPages:

@@ -26,10 +26,8 @@ public class StudentFullNamePreparerTest {
             List.of("studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d",
             		"studentCFirstName studentCLastName b9tmgf7e-d13a-6mf0-9093-calkjasdfiv4d",
                     "studentDFirstName studentDLastName y77f3f7e-b63a-4cf0-9089-asdfsafdba2a6"))
-        .withPageData("schoolDetails", "schoolName",
-        	List.of("test school name A",
-        			"test school name B",
-        			"test school name C"))
+        .withPageData("schoolDetails", "schoolName", List.of("test school name A", "test school name B", "test school name C"))
+        .withPageData("schoolGrade", "schoolGrade", List.of("1", "3", "5"))
         .build();
 
     List<DocumentField> result = mapper.prepareDocumentFields(Application.builder()
@@ -78,6 +76,27 @@ public class StudentFullNamePreparerTest {
             List.of("test school name C"),
             DocumentFieldType.SINGLE_VALUE,
             2
+        ),
+        new DocumentField(
+            "schoolGrade",
+            "schoolGrade",
+            List.of("1"),
+            DocumentFieldType.SINGLE_VALUE,
+            0
+        ),
+        new DocumentField(
+            "schoolGrade",
+            "schoolGrade",
+            List.of("3"),
+            DocumentFieldType.SINGLE_VALUE,
+            1
+        ),
+        new DocumentField(
+            "schoolGrade",
+            "schoolGrade",
+            List.of("5"),
+            DocumentFieldType.SINGLE_VALUE,
+            2
         ));
   }
   
@@ -91,9 +110,9 @@ public class StudentFullNamePreparerTest {
             List.of("studentAFirstName studentALastName y77f3f7e-b63a-4cf0-9089-asdfsafdba2a6",
             		"studentBFirstName studentBLastName b99f3f7e-d13a-4cf0-9093-23ccdba2a64d",
             		"studentCFirstName studentCLastName b9tmgf7e-d13a-6mf0-9093-calkjasdfiv4d"))
-        .withPageData("schoolDetails", "schoolName",
-        	List.of("test school name B",
-        			""))
+        .withPageData("schoolDetails", "schoolName", List.of("test school name B", ""))
+        .withPageData("schoolGrade", "schoolGrade",	List.of("Pre-K", ""))
+        .withPageData("schoolStartDate", "schoolStartDate",	List.of("01/01/2020"))
         .build();
 
     List<DocumentField> result = mapper.prepareDocumentFields(Application.builder()
@@ -128,6 +147,27 @@ public class StudentFullNamePreparerTest {
             List.of(""),
             DocumentFieldType.SINGLE_VALUE,
             1
+        ),
+        new DocumentField(
+            "schoolGrade",
+            "schoolGrade",
+            List.of("Pre-K"),
+            DocumentFieldType.SINGLE_VALUE,
+            0
+        ),
+        new DocumentField(
+            "schoolGrade",
+            "schoolGrade",
+            List.of(""),
+            DocumentFieldType.SINGLE_VALUE,
+            1
+        ),
+        new DocumentField(
+            "schoolStartDate",
+            "schoolStartDate",
+            List.of("01/01/2020"),
+            DocumentFieldType.SINGLE_VALUE,
+            0
         ));
   }
 }

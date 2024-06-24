@@ -3,6 +3,8 @@ package org.codeforamerica.shiba.pages.data;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -31,4 +33,21 @@ public class Subworkflow extends ArrayList<Iteration> {
     }
     return -1;
   }
+
+  /**
+   * Return the PagesData object associated with a given Iteration of this Subworkflow
+   * @param id -  the UUID that identifies the given Iteration
+   * @return - the PagesData object, or null
+   */
+  public PagesData pagesDataForId(UUID id) {
+	Iteration iteration;
+    for (int i = 0; i < size(); i++) {
+      iteration = this.get(i);
+      if (iteration.getId().compareTo(id) == 0) {
+        return iteration.getPagesData();
+      }
+    }
+    return null;
+  }
+  
 }

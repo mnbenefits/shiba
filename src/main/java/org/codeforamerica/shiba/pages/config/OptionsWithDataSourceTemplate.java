@@ -8,6 +8,7 @@ import org.codeforamerica.shiba.inputconditions.Condition;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.DatasourcePages;
 import org.codeforamerica.shiba.pages.data.PageData;
+import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.data.Subworkflows;
 
 /**
@@ -50,6 +51,15 @@ public interface OptionsWithDataSourceTemplate {
 
   private static SelectableOptionsTemplate removeLimitedOptions(ApplicationData applicationData,
       FormInput formInput) {
+    SelectableOptionsTemplate optionsTemplate = new SelectableOptionsTemplate();
+    Subworkflows subworkflows = applicationData
+            .getSubworkflowsForPageDatasources(formInput.getOptions().getDatasources());
+    optionsTemplate.setSubworkflows(subworkflows);
+
+    DatasourcePages datasources = applicationData.getPagesData()
+            .getDatasourcePagesBy(formInput.getOptions().getDatasources());
+    optionsTemplate.setDatasources(datasources);
+	  
     List<Option> limitedOptions = formInput.getOptions().getSelectableOptions().stream()
         .filter(Option::isLimitSelection).toList();
 
@@ -91,8 +101,8 @@ public interface OptionsWithDataSourceTemplate {
     valuesToBeRemoved.forEach(value -> {
       selectableOptions.remove(unmodifiedSelectOptions.get(selectableOptionValues.indexOf(value)));
     });
-    SelectableOptionsTemplate optionsTemplate = new SelectableOptionsTemplate();
     optionsTemplate.setSelectableOptions(selectableOptions);
+    
     return optionsTemplate;
   }
 

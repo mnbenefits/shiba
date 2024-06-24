@@ -3,10 +3,14 @@ package org.codeforamerica.shiba.pages.config;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.validator.GenericValidator;
@@ -30,6 +34,7 @@ public enum Validation {
             || GenericValidator.isDate(String.join("/", strings), "M/d/yyyy", true)
             || GenericValidator.isDate(String.join("/", strings), "MM/d/yyyy", true));
   }),
+  MULTIPLE_DATES(strings -> {return validateMultipleDates(strings); }),
   DOB_VALID(strings -> {
     String dobString = String.join("/", strings);
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -78,8 +83,38 @@ public enum Validation {
     this.rule = rule;
   }
 
-public Boolean apply(List<String> value) {
-    return this.rule.test(value);
-  }
+	public Boolean apply(List<String> value) {
+		return this.rule.test(value);
+	}
+
+
+	public static boolean validateMultipleDates(List<String> strings) {
+		return strings.stream()
+				.map(s -> {return partitionDateList(strings);})
+				.allMatch(list -> {	return areDatesValid(list);});
+	}
+	
+	/**
+	 * Separate list of Strings into a collection of Lists of three Strings.
+	 * @param <T>
+	 * @param inputList
+	 * @return
+	 */
+	private static <T> Collection<List<T>> partitionDateList(List<T> inputList) {
+		final AtomicInteger counter = new AtomicInteger(0);
+		return inputList.stream().collect(Collectors.groupingBy(s -> counter.getAndIncrement() / 3)).values();
+	}
+	
+	private static boolean areDatesValid(Collection<List<String>> stringList) {
+		Iterator<List<String>> iterator = stringList.iterator();
+		while(iterator.hasNext()) {
+			List<String> date = iterator.next();
+			boolean isEmpty = date.stream().anyMatch(string -> string.isBlank());
+			if(isEmpty || DATE.apply(date) == false) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }

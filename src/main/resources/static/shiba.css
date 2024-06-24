@@ -665,12 +665,28 @@ input[id='sad']:checked + .feedback-buttons {
   word-break: break-word;
 }
 
-.spacing-above-45 {
-  margin-top: 45px;
+.spacing-above-15 {
+  margin-top: 15px;
 }
 
 .spacing-below-0 {
   margin-bottom: 0px;
+}
+
+.spacing-above-30 {
+  margin-top: 30px;
+}
+
+.spacing-below-30 {
+  margin-bottom: 30px;
+}
+
+.spacing-above-45 {
+  margin-top: 45px;
+}
+
+.spacing-below-45 {
+  margin-bottom: 45px;
 }
 
 .padding-left-20 {

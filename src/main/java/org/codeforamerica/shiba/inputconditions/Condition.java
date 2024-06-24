@@ -28,6 +28,7 @@ public class Condition implements Serializable {
 
   @Serial
   private static final long serialVersionUID = -7300484979833484734L;
+  private static final List<String> K_GRADES = List.of("hd strt", "pre-k", "k");
   String pageName;
   String input;
   String value;
@@ -69,6 +70,11 @@ public class Condition implements Serializable {
     return pageData != null && !pageData.isEmpty() && matcher
         .matches(pageData.get(input).getValue(), value);
   }
+  
+  public boolean satisfies(String input) {
+	    return input != null && !input.isEmpty() && matcher
+	        .matches(List.of(input), value);
+	  }
  
   /**
    * This method evaluates the SKIP_SCHOOL_DETAILS custom condition as specified in pages-config.yaml. 
@@ -101,6 +107,30 @@ public class Condition implements Serializable {
 
 			}
 
+		}
+		return true;
+	}
+	 
+  /**
+   * This method evaluates the SKIP_SCHOOL_START_DATE custom condition.
+   * @param schoolGradePageData - this is the PageData object for the schoolGrade page  
+   * @return 
+  */
+	public boolean satisfiesSkipSchoolStartDateCondition(PageData schoolGradePageData) {
+		if (schoolGradePageData == null) {
+			return true;
+		}
+		// Retrieve the list of grades from the schoolGradePage PageData
+		InputData schoolGradeInput = schoolGradePageData.get("schoolGrade");
+		if (schoolGradeInput == null) {
+			return true;
+		}
+		List<String> grades = schoolGradeInput.getValue();
+		// Is there at least one grade from the list Head Start, Pre-K or Kindergarten?
+		for (String grade : grades) {
+			if (K_GRADES.contains(grade.toLowerCase())) {
+				return false;
+			}
 		}
 		return true;
 	}
