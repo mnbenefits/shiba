@@ -22,9 +22,10 @@
                    startDateDD=${schoolStartDatesSize > index*3+1 ? schoolStartDates.get(index*3+1) : ''},
                    startDateYYYY=${schoolStartDatesSize > index*3+2 ? schoolStartDates.get(index*3+2) : ''},
                    dateString=${startDateMM} + ',' + ${startDateDD} + ',' + ${startDateYYYY},
-                   dataIsInvalid=${index == thisPageDataSize ? false : !inputData.valid(dateString)},
+                   dataIsInvalid=${thisPageDataSize == 0 ? false : !inputData.valid(dateString)},
                    grade=${input.options.datasources.get('schoolGrade').get('schoolGrade').value[index]}
                   ">
+
            <th:block th:if="${grade == 'Hd Strt' or grade == 'Pre-K' or  grade == 'K'}">
 			<div class="form-group" th:classappend="${dataIsInvalid} ? 'form-group--error' : ''">
 				<fieldset class="date-input spacing-below-45">
