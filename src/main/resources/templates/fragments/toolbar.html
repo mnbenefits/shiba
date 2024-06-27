@@ -20,7 +20,7 @@
             <select th:replace="~{fragments/localeSelect :: localeSelect}"></select>
             <script th:inline="javascript" th:with="lang=${#locale.toString()}">
                 window.intercomSettings = {
-                    app_id: "dje5ebi4",
+                    app_id: [[${@environment.getProperty('intercom-chat-app-id')}]],
                     confirmation_id: [[${applicationId}]],
                     county: [[${county}]],
                     zip_code: [[${zipCode}]],
@@ -33,7 +33,7 @@
                 };
             </script>
             <script>
-                (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/dje5ebi4';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+                (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',w.intercomSettings);}else{var d=document;var i=function(){i.c(arguments);};i.q=[];i.c=function(args){i.q.push(args);};w.Intercom=i;var l=function(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/[[${@environment.getProperty('intercom-chat-app-id')}]]';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);};if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
             </script>
         </div>
     </header>

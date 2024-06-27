@@ -62,8 +62,9 @@ comm-hub:
   multiplier: 3
   max-delay: 43200000
   timeout-seconds: 300
-   
 
+intercom-chat-app-id: mmxasuhx
+   
 mnit-filenet:
   enabled: true
   username: ${MNIT-FILENET_USERNAME}

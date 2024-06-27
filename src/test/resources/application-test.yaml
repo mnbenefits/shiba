@@ -27,6 +27,8 @@ mail-gun:
   
 mnb-notice-displayed: true
 
+intercom-chat-app-id: mmxasuhx
+
 feature-flag:
   show-delayed-processing-time-notice: on
   child-care: off
