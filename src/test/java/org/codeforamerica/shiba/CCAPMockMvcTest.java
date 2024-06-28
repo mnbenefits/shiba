@@ -218,7 +218,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("livingSituation", "goingToSchool");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
     postExpectingNextPageTitle("whoIsGoingToSchool", "whoIsGoingToSchool", List.of("child name"), "School details");
-    postExpectingNextPageTitle("schoolDetails", "schoolName", List.of("child school"), "School Grade");
+    postExpectingNextPageTitle("schoolDetails", "schoolName", List.of("child school"), "School grade level");
     postExpectingNextPageTitle("schoolGrade", "schoolGrade", List.of("Pre-K"), "School start date");
     postExpectingNextPageTitle("schoolStartDate", "schoolStartDate", List.of("01","01","2020"), "Pregnant");
   }

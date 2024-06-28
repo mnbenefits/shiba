@@ -21,11 +21,11 @@
                          indexInInputData=${childIdMapData.value.indexOf(NameId)},
                          schoolName=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">
                          
-        <label class="form-question spacing-below-5 spacing-above-30" th:for="|schoolname-${index}|"
+        <label class="form-question" th:for="|schoolname-${index}|"
                th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
                th:id="${'label-'+index}">
         </label>
-        <p th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}" class="spacing-below-15"></p>
+        <p  class="text--help spacing-below-15" th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
         <input type="text"
                class="text-input form-width--medium spacing-below-30"
                th:readonly="${input.readOnly}"
