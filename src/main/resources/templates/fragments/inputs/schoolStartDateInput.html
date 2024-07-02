@@ -27,10 +27,10 @@
                   ">
 
            <th:block th:if="${grade == 'Hd Strt' or grade == 'Pre-K' or  grade == 'K'}">
-			<div class="form-group" th:classappend="${dataIsInvalid} ? 'form-group--error' : ''">
-				<fieldset class="date-input spacing-below-45">
+			<div class="form-group spacing-below-45" th:classappend="${dataIsInvalid} ? 'form-group--error' : ''">
+				<fieldset class="date-input">
 					<legend class="form-question" id="schoolStartDate-legend" th:text="${name}"></legend>
-					<p class="text--help">
+					<p class="text--help spacing-below-15">
 						<label for="schoolStartDate-month" id="schoolStartDate-month-label"
 							th:text="#{school-start-date.month}"></label>
 						&nbsp;/&nbsp;
@@ -55,14 +55,15 @@
 						th:name="|${pageConfigFormInputTemplate.name}[]|" th:value="${startDateYYYY}" placeholder="yyyy"
 						aria-labelledby="schoolStartDate-label" aria-invalid="false">
 				</fieldset>
+				<div th:if="${dataIsInvalid}">
+				  	<div th:replace="~{fragments/inputErrorFragment :: validationError(${thisPageData}, ${pageConfigFormInputTemplate})}"></div>
+				</div>				
 			</div>
 
 			<div>
 				<input type="hidden" th:id="|${id}-id|" th:value="${id}" th:name="schoolStartDatePersonIdMap[]">
 			</div>
-			<div th:if="${dataIsInvalid}">
-		      	<div th:replace="~{fragments/inputErrorFragment :: validationError(${thisPageData}, ${pageConfigFormInputTemplate})}"></div>
-		    </div>
+
            </th:block>
 		</th:block>
 
