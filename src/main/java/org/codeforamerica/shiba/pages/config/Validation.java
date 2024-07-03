@@ -109,8 +109,12 @@ public enum Validation {
 		Iterator<List<String>> iterator = stringList.iterator();
 		while(iterator.hasNext()) {
 			List<String> date = iterator.next();
-			boolean isEmpty = date.stream().anyMatch(string -> string.isBlank());
-			if(isEmpty || DATE.apply(date) == false) {
+			boolean isEmpty = date.stream().allMatch(string -> string.isEmpty());
+			if(isEmpty) {
+				return true;
+			}
+			
+			if (DATE.apply(date) == false) {
 				return false;
 			}
 		}

@@ -43,17 +43,19 @@ public class InputData implements Serializable {
         .allMatch(validation -> validation.apply(value));
   }
   
-  // This method is only called from schoolStartDate.html
+  // This method is only called from schoolStartDateInput.html
   public Boolean valid(String input) {
 	  List<String> inputList = Arrays.asList(input.split(",", -1));
-	  boolean isEmpty = inputList.stream().anyMatch(string -> string.isBlank());
+	  boolean isEmpty = inputList.stream().allMatch(string -> string.isEmpty());
 	  if(isEmpty) {
-		  return false;
+		  return true;
 	  }
-	  return validators.stream().filter(
+	  
+	  boolean isValid = validators.stream().filter(
 	            validator -> validator.getCondition() == null || validator.getCondition()
-	                .satisfies(input)).map(Validator::getValidation)
-	        .allMatch(validation -> validation.apply(inputList));
+                .satisfies(input)).map(Validator::getValidation)
+        .allMatch(validation -> validation.apply(inputList));
+	  return isValid;
 	  }
 
   public List<String> errorMessageKeys(PageData pageData) {
