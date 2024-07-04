@@ -137,7 +137,7 @@ dependencies {
     implementation("ch.qos.logback:logback-core:1.5.6")
     implementation("ch.qos.logback:logback-parent:1.5.6")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.google.crypto.tink:tink:1.13.0")
+    implementation("com.google.crypto.tink:tink:1.14.0")
     implementation("com.azure:azure-storage-blob:12.26.1")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:24.1.0")
