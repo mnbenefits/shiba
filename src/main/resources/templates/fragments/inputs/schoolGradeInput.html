@@ -10,14 +10,15 @@
                    schoolGrade=${data.get(input.name)},
                    personIdMap=${data.get('personIdMap')},
                    hasHelpMessage=${input.helpMessageKey != null},
+                   schoolGradeListSize=${#lists.size(schoolGrade.value)},
                    idList=${pageDatasources.get('schoolDetails').get('personIdMap').value}">
-
+                      
 	<div class="spacing-below-35" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 		<div class="form-group">
 			<th:block th:each="id, iterationStat: ${idList}" th:with="index=${iterationStat.index},
 	             householdMemberInfoPageData=${householdSubFlow.pagesDataForId(id).getPage('householdMemberInfo')},
                  childName=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
-                 gradeInput=${schoolGrade.value.isEmpty() ? '' : schoolGrade.value.get(index)}">
+                 gradeInput=${!schoolGrade.value.isEmpty() && index lt schoolGradeListSize ? schoolGrade.value.get(index) : ''}">
 
 				<label class="form-question spacing-below-15 spacing-above-30" th:for="|schoolGrade-${index}|"
 					th:text="${childName}" th:id="${'label-' + index}">
