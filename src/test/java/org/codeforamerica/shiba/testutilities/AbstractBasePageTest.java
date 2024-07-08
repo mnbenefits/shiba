@@ -544,12 +544,21 @@ public abstract class AbstractBasePageTest {
   protected void getToLaterDocsUploadScreen() {
     testPage.clickButton("Upload documents");
     
-    testPage.enter("county", "Hennepin");
+    // Ready to upload documents?
     testPage.clickContinue();
     
+    // Match Info
     fillOutMatchInfo();
     testPage.clickContinue();
     
+    // Identify County
+    testPage.enter("county", "Hennepin");
+    testPage.clickContinue();
+    
+    // Tribal Nation Member
+    testPage.clickButton("No"); 
+    
+    // How to add documents
     testPage.clickContinue();
   }
   

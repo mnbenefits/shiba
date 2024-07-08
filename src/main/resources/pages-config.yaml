@@ -4,6 +4,10 @@ conditionDefinitions:
     pageName: doYouNeedHelpImmediately
     input: needHelpImmediately
     value: "false"
+  - &laterDocsFlow?
+    pageName: matchInfo
+    input: lastName
+    matcher: NOT_EMPTY
   - &onlyApplyingForOthers?
     pageName: choosePrograms
     input: programs
@@ -314,6 +318,10 @@ pageDefinitions:
     headerKey: timeout-notice.header
     contextFragment: timeoutNoticeContextFragment
     hasPrimaryButton: false
+  - &readyToUploadDocuments
+    name: readyToUploadDocuments
+    pageTitle: ready-to-upload-documents.title
+    headerKey: ready-to-upload-documents.header
   - &languagePreferences
     name: languagePreferences
     pageTitle: language-preferences.title
@@ -5085,6 +5093,11 @@ workflow:
     pageConfiguration: *identifyCounty
     nextPages:
       - pageName: prepareToApply
+  readyToUploadDocuments:
+    pageConfiguration: *readyToUploadDocuments
+    nextPages:
+      - pageName: matchInfo
+        flow: LATER_DOCS
 # We are navigating directly from later docs button on the landing page to here:
   identifyCountyOrTribalNation:
     pageConfiguration: *identifyCountyOrTribalNation
@@ -5094,14 +5107,12 @@ workflow:
   identifyCounty:
     pageConfiguration: *identifyCounty
     nextPages:
-      - pageName: matchInfo
-        flow: LATER_DOCS
+      - pageName: tribalNationMember
   matchInfo:
     pageConfiguration: *matchInfo
     enrichment: matchInfoDateOfBirthEnrichment
     nextPages:
-      - pageName: howToAddDocuments
-        flow: LATER_DOCS
+      - pageName: identifyCounty
   prepareToApply:
     pageConfiguration: *prepareToApply
     nextPages:
@@ -5840,6 +5851,8 @@ workflow:
           pageName: tribalNationMember
           input: isTribalNationMember
           value: "true"
+      - pageName: howToAddDocuments
+        condition: *laterDocsFlow?
       - pageName: medicalCareMilestone
         condition: 
           logicalOperator: AND
@@ -5860,13 +5873,17 @@ workflow:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: identifyCounty
+      - pageName: matchInfo
   selectTheTribe:
     pageConfiguration: *selectTheTribe
     nextPages:
+      - pageName: howToAddDocuments
+        condition: *laterDocsFlow?
       - pageName: nationsBoundary
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
+      - pageName: matchInfo
   linealDescendantWEN:
     pageConfiguration: *linealDescendantWEN
     datasources:
@@ -7551,6 +7568,7 @@ pageGroups:
 landmarkPages:
   startTimerPages: # "the first page" of a flow, where we set applicationData.startTime
     - identifyCountyBeforeApplying
+    - readyToUploadDocuments
     - identifyCounty
     - identifyCountyOrTribalNation
     - healthcareRenewalUpload

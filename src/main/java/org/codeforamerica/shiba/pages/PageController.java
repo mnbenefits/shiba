@@ -245,7 +245,7 @@ public class PageController {
     if(pageName.equals("healthcareRenewalUpload") || flowType.equals(FlowType.HEALTHCARE_RENEWAL.toString())) {
     	return "healthcareRenewalErrorUploadTimeout";
     }
-    else if(pageName.equals("identifyCountyOrTribalNation") || flowType.equals(FlowType.LATER_DOCS.toString())) {
+    else if(pageName.equals("readyToUploadDocuments") || flowType.equals(FlowType.LATER_DOCS.toString())) {
     	return "errorUploadTimeout";
     }
     else if (submittedAppId.length() == 0) {
