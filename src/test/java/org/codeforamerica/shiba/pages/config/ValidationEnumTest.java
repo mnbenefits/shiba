@@ -48,6 +48,16 @@ public class ValidationEnumTest {
 	  @Test
 	  public void testMultipleDatesEnum() {
 		  List<String> value = new ArrayList<String>();
+		  value.add("");
+		  value.add("");
+		  value.add("");
+		  assertTrue(Validation.MULTIPLE_DATES.apply(value));
+		  
+		  value.add("");
+		  value.add("");
+		  value.add("");
+		  assertTrue(Validation.MULTIPLE_DATES.apply(value));
+		  
 		  value.add("2");
 		  value.add("2");
 		  value.add("1999");
