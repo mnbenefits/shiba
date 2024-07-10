@@ -91,7 +91,7 @@ public enum Validation {
 	public static boolean validateMultipleDates(List<String> strings) {
 		return strings.stream()
 				.map(s -> {return partitionDateList(strings);})
-				.allMatch(list -> {	return areDatesValid(list);});
+				.allMatch(list -> {	return areAllDatesValid(list);});
 	}
 	
 	/**
@@ -105,20 +105,24 @@ public enum Validation {
 		return inputList.stream().collect(Collectors.groupingBy(s -> counter.getAndIncrement() / 3)).values();
 	}
 	
-	private static boolean areDatesValid(Collection<List<String>> stringList) {
+	private static boolean areAllDatesValid(Collection<List<String>> stringList) {
 		Iterator<List<String>> iterator = stringList.iterator();
+		boolean retVal = false;
 		while(iterator.hasNext()) {
 			List<String> date = iterator.next();
 			boolean isEmpty = date.stream().allMatch(string -> string.isEmpty());
 			if(isEmpty) {
-				return true;
+				retVal = true;
+				continue;
 			}
 			
 			if (DATE.apply(date) == false) {
 				return false;
+			}else {
+				retVal = true;
 			}
 		}
-		return true;
+		return retVal;
 	}
 
 }
