@@ -207,7 +207,7 @@ class ApplicationSubmittedListenerTest {
 		@Test
 		void shouldOnlyIncludeCountyForBeckerAndWEN() {
 			ZonedDateTime dateTime = ZonedDateTime.now();
-			String applicationId = "applicationId1";
+			String applicationId = "applicationId";
 			ApplicationData applicationData = mock(ApplicationData.class);
 			when(applicationData.getOriginalCounty()).thenReturn("Becker");
 			when(applicationData.getId()).thenReturn(applicationId);
