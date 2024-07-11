@@ -2,9 +2,13 @@ package org.codeforamerica.shiba.pages;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
@@ -104,5 +108,27 @@ public class PageUtils {
 	public static int findNumberOfHouseholdMembers(Subworkflow datasourcePages) {
 		return datasourcePages.size();
 	}
+	
+	/**
+	 * Create a HashMap that is used to retrieve a date for a particular id.
+	 * @param ids
+	 * @param dates
+	 * @return
+	 */
+	public static Map<String, List<String>> createDateMap(List<String> ids, List<String> dates) {
+		Map<String, List<String>> retVal = new HashMap<String, List<String>>();
+		Iterator<String> ik = ids.iterator();
+		Iterator<List<String>> iv = partitionDateList(dates).iterator();
+		while (ik.hasNext() && iv.hasNext()) {
+			retVal.put(ik.next(), iv.next());
+		}
+		return retVal;
+	}
+	
+	private static <T> Collection<List<T>> partitionDateList(List<T> inputList) {
+		final AtomicInteger counter = new AtomicInteger(0);
+		return inputList.stream().collect(Collectors.groupingBy(s -> counter.getAndIncrement() / 3)).values();
+	}
+	
   
 }

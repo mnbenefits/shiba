@@ -11,28 +11,33 @@
                    schoolStartDatesSize=${schoolStartDates.size},
                    idList=${pageConfigFormInputTemplate.options.datasources.get('schoolGrade').get('schoolGradePersonIdMap').value},
 				   thisPageDataSize=${thisPageData.get('schoolStartDatePersonIdMap').value.size},
-                   inputData=${thisPageData.get(pageConfigFormInputTemplate.name)} ">
+                   inputData=${thisPageData.get(pageConfigFormInputTemplate.name)},
+                   schoolStartDatesMap=${thisPageData.get('schoolStartDatePersonIdMap').value},
+                   startDatesIdsMap=${T(org.codeforamerica.shiba.pages.PageUtils).createDateMap(schoolStartDatesMap, schoolStartDates)},
+                    ">
+        
 	<div class="spacing-below-60" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 		<th:block th:each="id, iterationStat: ${idList}" 
 		  th:with="index=${iterationStat.index},
                    householdMemberInfoPageData=${householdSubFlow.pagesDataForId(idList.get(index)).getPage('householdMemberInfo')},
                    name=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
-                   startDateMM=${schoolStartDatesSize > index*3 ? schoolStartDates.get(index*3) : ''},
-                   startDateDD=${schoolStartDatesSize > index*3+1 ? schoolStartDates.get(index*3+1) : ''},
-                   startDateYYYY=${schoolStartDatesSize > index*3+2 ? schoolStartDates.get(index*3+2) : ''},
+                   grade=${input.options.datasources.get('schoolGrade').get('schoolGrade').value[index]},
+                   childIsDisplayed=${grade == 'Hd Strt' or grade == 'Pre-K' or  grade == 'K'},
+                   childId=${idList.get(index)},
+ 				   startDateList=${startDatesIdsMap.get(childId)},
+                   startDateMM=${childIsDisplayed and startDateList != null ?  startDateList.get(0) : ''},
+                   startDateDD=${childIsDisplayed and startDateList != null ? startDateList.get(1) : ''},
+                   startDateYYYY=${childIsDisplayed and startDateList != null ? startDateList.get(2) : ''},
                    dateString=${startDateMM} + ',' + ${startDateDD} + ',' + ${startDateYYYY},
-                   indexGreaterThanSize=${index + 1 > thisPageDataSize},
-                   dataIsInvalid=${thisPageDataSize == 0 or indexGreaterThanSize ? false : !inputData.valid(dateString)},
-                   grade=${input.options.datasources.get('schoolGrade').get('schoolGrade').value[index]}">
-                   
+                   dataIsInvalid=${thisPageDataSize == 0 ? false : !inputData.valid(dateString)}
+                   ">
+
                   <!--/* Validation notes 
                   When this page is navigated to for the first time, thisPageDataSize will be zero and no validation is needed.
                   If thisPageDataSize is not zero, it has been posted BUT if invalid it gets returned from PageController and NOT saved in the JSON blob. 
                   If data is valid it gets saved in the JSON blob, then whenever this page is reloaded it populates the input boxes. 
-                  If index+1 is greater than thisPageDataSize (indexGreaterThanSize), then the error bar should not show. This happens when a grade is changed to one in the 
-                  block below.
                   */-->
-           <th:block th:if="${grade == 'Hd Strt' or grade == 'Pre-K' or  grade == 'K'}">
+           <th:block th:if="${childIsDisplayed}">
 			<div class="form-group spacing-below-45" th:classappend="${dataIsInvalid} ? 'form-group--error' : ''">
 				<fieldset class="date-input">
 					<legend class="form-question" id="schoolStartDate-legend" th:text="${name}"></legend>
