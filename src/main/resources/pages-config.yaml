@@ -5705,13 +5705,14 @@ workflow:
           input: goingToSchool
         - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
-      - pageName: schoolStartDate            
+      - pageName: schoolStartDate
+        flag: school-start-date
+      - pageName: pregnant            
   schoolStartDate:
     pageConfiguration: *schoolStartDate
     enrichment: schoolStartDateEnrichment
     nextPages:
       - pageName: pregnant
-    # TODO: fix skip condition and datasources (when no children in Kindergarten)            
     datasources:
       - pageName: schoolGrade
     skipCondition:
