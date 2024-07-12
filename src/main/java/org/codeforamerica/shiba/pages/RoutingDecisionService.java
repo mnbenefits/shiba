@@ -1,5 +1,8 @@
 package org.codeforamerica.shiba.pages;
 
+import static org.codeforamerica.shiba.County.Becker;
+import static org.codeforamerica.shiba.County.Clearwater;
+import static org.codeforamerica.shiba.County.Mahnomen;
 import static org.codeforamerica.shiba.Program.*;
 import static org.codeforamerica.shiba.TribalNation.*;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLYING_FOR_TRIBAL_TANF;
@@ -101,16 +104,26 @@ public class RoutingDecisionService {
 	    RoutingDestination destination = countyRoutingDestinations.get(county);
 	    result.add(destination);
     }
-    
-    String tribalNationName = "";   
+    String tribalNationName = ""; 
+    TribalNation tribalNation;
+
     if (applicationData.getFlow().equals(FlowType.LATER_DOCS)) {
-        tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_LATER_DOCS);    	
+        tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_LATER_DOCS);
     }
     if (applicationData.getFlow().equals(FlowType.HEALTHCARE_RENEWAL)) {
         tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_HEALTHCARE_RENEWAL);    	
     }
     if (tribalNationName != null && !tribalNationName.isEmpty()) {
-      result.add(tribalNations.get(TribalNation.getFromName(tribalNationName)));
+        tribalNation = TribalNation.getFromName(tribalNationName);
+
+    	return switch (tribalNation) {
+        case WhiteEarthNation -> routeWhiteEarthClientsLaterDoc(county);
+        case MilleLacsBandOfOjibwe, BoisForte, FondDuLac, GrandPortage, LeechLake  ->
+            routeClientsServicedByMilleLacsLaterDoc(tribalNation, county);
+        case LowerSioux, PrairieIsland, RedLakeNation, ShakopeeMdewakanton, UpperSioux, OtherFederallyRecognizedTribe -> 
+        routeClientsInOtherFederallyRecognizedTribeLaterDoc(county);
+        default -> List.of(countyRoutingDestinations.get(county));
+      };
     }
     return result;
   }
@@ -147,6 +160,12 @@ public class RoutingDecisionService {
     }
     return List.of(tribalNations.get(RedLakeNation));
   }
+  private List<RoutingDestination> routeClientsInOtherFederallyRecognizedTribeLaterDoc(County county) {
+	    if (county.equals(County.Beltrami)) {
+		      return List.of(tribalNations.get(RedLakeNation),countyRoutingDestinations.get(county));
+	    }
+	    return List.of(countyRoutingDestinations.get(county));
+	  }
 
   private List<RoutingDestination> routeRedLakeClients(Set<String> programs,
       ApplicationData applicationData, County county) {
@@ -185,7 +204,37 @@ public class RoutingDecisionService {
     }
     return List.of(countyRoutingDestinations.get(county));
   }
+  private List<RoutingDestination> routeWhiteEarthClientsLaterDoc( County county) {
 
+	    if (COUNTIES_SERVICED_BY_WHITE_EARTH.contains(county)) {
+	      return List.of(tribalNations.get(WhiteEarthNation));
+	    }
+	    else if (County.Beltrami.equals(county)) {
+		   
+		      return List.of(tribalNations.get(RedLakeNation),countyRoutingDestinations.get(county));
+	    	
+	    }
+	    return List.of(countyRoutingDestinations.get(county));
+	  }
+  
+  private List<RoutingDestination> routeClientsServicedByMilleLacsLaterDoc(TribalNation tribalNation, County county) {
+	    List<RoutingDestination> result = new ArrayList<>();
+	//    MilleLacsBandOfOjibwe, BoisForte, FondDuLac, GrandPortage, LeechLake
+	
+	    if (MILLE_LACS_RURAL_COUNTIES.contains(county) || URBAN_COUNTIES.contains(county)) {
+		     return List.of(tribalNations.get(MilleLacsBandOfOjibwe), countyRoutingDestinations.get(county));
+	    }
+	    if ((County.Beltrami.toString().equals(county.toString()) && !(LeechLake.toString().equals(tribalNation.toString()))) || 
+	    		(County.Clearwater.toString().equals(county.toString()) && !LeechLake.toString().equals(tribalNation.toString()))) {
+		      result.add(tribalNations.get(RedLakeNation));
+		      result.add(countyRoutingDestinations.get(county));
+	    }
+	    else {
+	      result.add(countyRoutingDestinations.get(county));
+	    }
+	    return result;
+	  }
+  
   private boolean livesInCountyServicedByWhiteEarth(County county, String selectedTribeName) {
     return selectedTribeName != null
         && selectedTribeName.equals(WhiteEarthNation.toString())
