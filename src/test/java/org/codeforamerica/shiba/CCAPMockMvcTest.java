@@ -185,6 +185,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void verifySchoolInformationFlow() throws Exception {
 	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
+	when(featureFlagConfiguration.get("school-start-date")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
