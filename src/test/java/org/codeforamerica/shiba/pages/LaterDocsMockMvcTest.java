@@ -51,29 +51,50 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 
 	@Test
 	void routeLaterDocsToCorrectCountyOnly() throws Exception {
-		postExpectingSuccess("identifyCountyOrTribalNation", "county", "Aitkin");
-
+		//postExpectingSuccess("readyToUploadDocuments");
 		postExpectingSuccess("matchInfo", Map.of(
 				"firstName", List.of("Dwight"), 
 				"lastName", List.of("Schrute"),
 				"dateOfBirth", List.of("01", "12", "1928")));
-
+		postExpectingSuccess("identifyCounty", "county", "Aitkin");
+		postExpectingSuccess("tribalNationMember", "isTribalNationMember", "false");
+	
 		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
 		completeLaterDocsUploadFlow();
 		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
 		assertThat(routingDecisionService.getRoutingDestinations(applicationData, CAF))
 				.containsExactly(countyMap.get(County.getForName("Aitkin")));
 	}
+	
+	@Test
+	void routeLaterDocsToCorrectCountyOnlyEvenWhenIsTribalNationMemberButNotInSpecialScenarios() throws Exception {
+		//postExpectingSuccess("readyToUploadDocuments");
+		postExpectingSuccess("matchInfo", Map.of(
+				"firstName", List.of("Dwight"), 
+				"lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+		postExpectingSuccess("identifyCounty", "county", "Aitkin");
+		postExpectingSuccess("tribalNationMember", "isTribalNationMember", "True");
+		postExpectingSuccess("selectTheTribe", "selectedTribe", "Red Lake Nation");		
+	
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+		assertThat(routingDecisionService.getRoutingDestinations(applicationData, CAF))
+				.containsExactly(countyMap.get(County.getForName("Aitkin")));
+	}	
 
 	@Test
 	void routeLaterDocsToCorrectTribalNationOnly() throws Exception {
-		postExpectingSuccess("identifyCountyOrTribalNation", "tribalNation", "Red Lake Nation");
-
 		postExpectingSuccess("matchInfo", Map.of(
 				"firstName", List.of("Dwight"), 
 				"lastName", List.of("Schrute"),
 				"dateOfBirth", List.of("01", "12", "1928")));
 
+		postExpectingSuccess("identifyCounty", "county", "Becker");
+		postExpectingSuccess("tribalNationMember", "isTribalNationMember", "True");
+		postExpectingSuccess("selectTheTribe", "selectedTribe", "White Earth Nation");
+		
 		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
 		completeLaterDocsUploadFlow();
 
@@ -83,31 +104,67 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 		/*var countyServicingAgency = County.getForName("Hennepin");
 		var countyRoutingDestination = countyMap.get(countyServicingAgency);*/
 
-		var servicingAgency = TribalNation.getFromName("Red Lake Nation");
+		var servicingAgency = TribalNation.getFromName("White Earth Nation");
 		var tribalRoutingDestination = tribalNationMap.get(servicingAgency);
 		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
 				CAF);
 
 		assertThat(routingDestinations).containsExactly(tribalRoutingDestination);
 	}
-
+	
 	@Test
 	void routeLaterDocsToCorrectCountyAndTribalNation() throws Exception {
-		postExpectingSuccess("identifyCountyOrTribalNation", Map.of(
-						"tribalNation", List.of("Red Lake Nation"), 
-						"county", List.of("Aitkin")));
-
+		
 		postExpectingSuccess("matchInfo", Map.of(
 				"firstName", List.of("Dwight"), 
 				"lastName", List.of("Schrute"),
 				"dateOfBirth", List.of("01", "12", "1928")));
-
+		
+		postExpectingSuccess("identifyCounty", Map.of(
+						"county", List.of("Aitkin")));
+		postExpectingSuccess("tribalNationMember", Map.of(
+						"isTribalNationMember",List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of(
+								"selectedTribe",List.of("Mille Lacs Band of Ojibwe")));				
+						
 		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
 		completeLaterDocsUploadFlow();
 
 		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
 
 		var countyServicingAgency = County.getForName("Aitkin");
+		var countyRoutingDestination = countyMap.get(countyServicingAgency);
+
+		var tribalServicingAgency = TribalNation.getFromName("Mille Lacs Band of Ojibwe");
+		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+
+		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
+				CAF);
+
+		assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
+	}
+	
+	@Test
+	void routeLaterDocsToCountyAndTribalNationInCasesofNationBoundary() throws Exception {
+		
+		postExpectingSuccess("matchInfo", Map.of(
+				"firstName", List.of("Dwight"), 
+				"lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+		
+		postExpectingSuccess("identifyCounty", Map.of(
+						"county", List.of("Beltrami")));
+		postExpectingSuccess("tribalNationMember", Map.of(
+						"isTribalNationMember",List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of(
+								"selectedTribe",List.of("Red Lake Nation")));				
+						
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+
+		var countyServicingAgency = County.getForName("Beltrami");
 		var countyRoutingDestination = countyMap.get(countyServicingAgency);
 
 		var tribalServicingAgency = TribalNation.getFromName("Red Lake Nation");

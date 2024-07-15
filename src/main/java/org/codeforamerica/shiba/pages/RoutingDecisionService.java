@@ -162,7 +162,7 @@ public class RoutingDecisionService {
   }
   private List<RoutingDestination> routeClientsInOtherFederallyRecognizedTribeLaterDoc(County county) {
 	    if (county.equals(County.Beltrami)) {
-		      return List.of(tribalNations.get(RedLakeNation),countyRoutingDestinations.get(county));
+		      return List.of(countyRoutingDestinations.get(county), tribalNations.get(RedLakeNation));
 	    }
 	    return List.of(countyRoutingDestinations.get(county));
 	  }
@@ -211,7 +211,7 @@ public class RoutingDecisionService {
 	    }
 	    else if (County.Beltrami.equals(county)) {
 		   
-		      return List.of(tribalNations.get(RedLakeNation),countyRoutingDestinations.get(county));
+		      return List.of(countyRoutingDestinations.get(county), tribalNations.get(RedLakeNation));
 	    	
 	    }
 	    return List.of(countyRoutingDestinations.get(county));
@@ -222,7 +222,7 @@ public class RoutingDecisionService {
 	//    MilleLacsBandOfOjibwe, BoisForte, FondDuLac, GrandPortage, LeechLake
 	
 	    if (MILLE_LACS_RURAL_COUNTIES.contains(county) || URBAN_COUNTIES.contains(county)) {
-		     return List.of(tribalNations.get(MilleLacsBandOfOjibwe), countyRoutingDestinations.get(county));
+		     return List.of(countyRoutingDestinations.get(county), tribalNations.get(MilleLacsBandOfOjibwe));
 	    }
 	    if ((County.Beltrami.toString().equals(county.toString()) && !(LeechLake.toString().equals(tribalNation.toString()))) || 
 	    		(County.Clearwater.toString().equals(county.toString()) && !LeechLake.toString().equals(tribalNation.toString()))) {
