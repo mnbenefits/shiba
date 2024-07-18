@@ -5706,7 +5706,6 @@ workflow:
         - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
       - pageName: schoolStartDate
-        flag: school-start-date
       - pageName: pregnant            
   schoolStartDate:
     pageConfiguration: *schoolStartDate

@@ -108,7 +108,6 @@ feature-flag:
   enhanced-next-steps: on
   second-signature: on
   child-care: on
-  school-start-date: on
   
 document-upload:
   max-files-uploaded: 50
