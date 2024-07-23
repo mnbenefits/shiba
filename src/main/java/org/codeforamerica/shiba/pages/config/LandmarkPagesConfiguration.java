@@ -14,7 +14,7 @@ public class LandmarkPagesConfiguration {
   private List<String> postSubmitPages = new ArrayList<>();
   private HashSet<String> completed = new HashSet<>();
   private String nextStepsPage;
-  private String terminalPage;
+  private List<String> terminalPage = new ArrayList<>();
   private String submitPage;
   private String submissionConfirmationPage;
   private String feedbackPage;
@@ -33,11 +33,13 @@ public class LandmarkPagesConfiguration {
 	  }
 
   public boolean isTerminalPage(String pageName) {
-    return pageName.equals(terminalPage);
+    return terminalPage.contains(pageName);
   }
+  
   public boolean isSubmissionConfirmationPage(String pageName) {
 	return pageName.equals(submissionConfirmationPage);
   }
+  
   public boolean isFeedbackPage(String pageName) {
 	return pageName.equals(feedbackPage);
   }
@@ -45,12 +47,15 @@ public class LandmarkPagesConfiguration {
   public boolean isPostSubmitPage(String pageName) {
     return postSubmitPages.contains(pageName);
   }
+  
   public void addCompleted(String pageName) {
 	completed.add(pageName);	    	
   }
+  
   public void removeCompleted() {
   	completed.clear();	    	
   }
+  
   public boolean isCompleted() {
 	return	!completed.isEmpty();
   }

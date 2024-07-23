@@ -43,6 +43,11 @@ conditionDefinitions:
     input: enrichedCountyDifferentFromSelected
     matcher: CONTAINS
     value: "false"
+  - &isSomeonePregnant?
+    pageName: pregnant
+    input: isPregnant
+    matcher: CONTAINS
+    value: "true"
   - &isApplicantsJob?
     pageName: householdSelectionForIncome
     input: whoseJobIsIt
@@ -2479,6 +2484,10 @@ pageDefinitions:
   - &success
     name: success
     pageTitle: success.title
+    usingPageTemplateFragment: false
+  - &recommendations
+    name: recommendations
+    pageTitle: recommendations.title
     usingPageTemplateFragment: false
   - &feedback
     name: feedback
@@ -7441,13 +7450,24 @@ workflow:
   nextSteps:
     pageConfiguration: *nextSteps
     nextPages:
+      - pageName: recommendations
+        condition:
+          logicalOperator: OR
+          conditions:
+            - *isSomeonePregnant?
+            - *isSomeonePregnant?
       - pageName: success
     datasources:
       - pageName: contactInfo
+      - pageName: pregnant
   feedback:
     pageConfiguration: *feedback
   success:
     pageConfiguration: *success
+    nextPages:
+      - pageName: feedback
+  recommendations:
+    pageConfiguration: *recommendations
     nextPages:
       - pageName: feedback
   documentsSent:
@@ -7567,6 +7587,7 @@ landmarkPages:
     - nextSteps
     - submissionConfirmation
     - success
+    - recommendations
     - feedback
     - matchInfo
     - documentsSent
@@ -7582,7 +7603,9 @@ landmarkPages:
     - healthcareRenewalMatchInfo
     - healthcareRenewalDocumentsSent
   nextStepsPage: nextSteps
-  terminalPage: success # the final page of the main flow ("Done! Your application has been submitted.")
+  terminalPage: 
+    - success # the final page of the main flow ("Done! Your application has been submitted.")
+    - recommendations
   submissionConfirmationPage: submissionConfirmation
   feedbackPage: feedback
   laterDocsTerminalPage: documentsSent # the final page of the laterdocs flow  healthcareRenewalUpload
