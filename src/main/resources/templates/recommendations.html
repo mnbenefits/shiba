@@ -10,83 +10,71 @@
       <div class="card spacing-above-0">
        <div class="spacing-below-60">
         <div class="grid__item bottom-horizontal-line-dark-grey">
-          <div
-              th:replace="~{fragments/icons/icon-submission-success :: icon-submission-success}"></div>
-          <h1 th:if="${!hasUploadDocuments}" class="h2 spacing-below-0 spacing-above-10"
-              th:text="|#{success.done-your-application-has-been-submitted}|"></h1>
-          <h1 th:if="${hasUploadDocuments}" class="h2 spacing-below-0 spacing-above-10"
-              th:text="|#{success.done-your-application-and-docs-have-been-submitted}|"></h1>
-
-          <!-- Routing Destination -->
-          <p class="spacing-below-35 spacing-above-15 text--help"
-             id="submission-date"
-             th:text="#{success.application-submitted-generic(${routingDestinationList}, ${T(java.time.format.DateTimeFormatter).ofPattern('MMMM d, yyyy', #locale).format(submissionTime)})}"></p>
-              
-         <th:block th:if="${expeditedSnap.equals(T(org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility).ELIGIBLE)}">
-            <div class="notice--success">
-                <span id="snapExpeditedNotice" th:text="#{success.You-were-recommended-for-expedited-snap}"></span>
-            </div>
-         </th:block>
-                 
-         <div class="spacing-below-35">
-      		<h2 id="confirmation-number" class="h3" th:text="|#{success.confirmation-number} ${applicationId}|">	</h2>
-    	 </div>
+          <h1 class="h2 spacing-below-35 spacing-above-10"
+              th:text="|#{recommendations.based-on}|"></h1>
     	</div>
+		
         <div class="grid__item spacing-above-35">
-          <h2 class="h3" th:text="#{success.helpful-resources}"></h2>
+          <h2 class="h3" th:text="#{recommendations.apply-for-food}"></h2>
           <div class="grid-ignore-mobile">
-            <div
-                class="success-icons grid__item width-one-sixth spacing-above-5 spacing-below-0">
-              <div th:replace="~{fragments/icons/icon-download :: icon-download}"></div>
+			<div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
+
             </div>
             <div class="grid__item width-five-sixths">
               <div class="spacing-above-0 spacing-below-15"
-                   th:text="#{success.download-my-application}"></div>
-                <div class="spacing-below-10">
-                  <a class="link--subtle" th:href="@{/download}" id="download"
-                     th:text="#{success.download-your-application}"></a>
-                </div>
+                   th:utext="#{recommendations.because-your-household}"></div>
             </div>
           </div>
-
-          <div class="grid-ignore-mobile spacing-above-35 spacing-below-35">
-            <div class="success-icons grid__item width-one-sixth spacing-above-5">
-              <div th:replace="~{fragments/icons/icon-documents :: icon-documents}"></div>
-            </div>
-            <div class="grid__item width-five-sixths">
-              <span th:utext="#{success.additional-documents}"></span>
-            </div>
-          </div>
-        </div>
-        
-        <div id="ccapCoverage"
-             class="grid-ignore-mobile spacing-above-10 top-horizontal-line-dark-grey"
-             th:if="${isCCAP}"> 
-          <h2 class="h3 spacing-above-35" th:text="#{success.childcare-explore-coverage}"></h2>          
-          <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
-            <div th:replace="~{fragments/icons/icon-child-care :: icon-child-care}"></div>
-          </div>
-          <div class="grid__item width-five-sixths">
-            <div th:utext="#{success.childcare-coverage}" class="width-five-sixths"></div>
-          </div>
-         </div>   
+		  
+		  <div class="reveal reveal-adjacent spacing-above-25 spacing-below-25">
+		  	  <button th:text="#{recommendations.who-can}"
+		  	          type="button" class="reveal__link reveal__link-adjacent reveal__link__header-adjacent"
+		  	          aria-expanded="false" aria-controls="reveal-content">
+		  	  </button>
+		  	  <div class="reveal__content reveal__content-adjacent" id="reveal-content">
+				<div class="spacing-above-15" th:text="|#{recommendations.who-can}|"></div>
+		        <div class="spacing-above-15" th:text="|• #{recommendations.pregnant}|"></div>
+				<div class="spacing-above-15" th:text="|• #{recommendations.breastfeeding}|"></div>
+				<div class="spacing-above-15" th:text="|• #{recommendations.non-breastfeeding}|"></div>
+				<div class="spacing-above-15" th:text="|• #{recommendations.individuals-who}|"></div>
+				<div class="spacing-above-15" th:text="|• #{recommendations.mothers-and}|"></div>
+				<div class="spacing-above-15" th:text="|• #{recommendations.you-do-not}|"></div>
+		  	  </div>
+		  </div>
+		  
+		  <div class="spacing-above-0 spacing-below-25"
+             th:utext="#{recommendations.learn-about}"></div>
+		  <div class="spacing-above-0 spacing-below-60"
+		     th:utext="#{recommendations.apply-for-wic}"></div>
+        </div> 
        
         <div id="healthcareCoverage"
              class="grid-ignore-mobile spacing-above-10 top-horizontal-line-dark-grey"
              th:if="${doesNotHaveHealthcare && !isCertainPops}">
-          <h2 class="h3 spacing-above-35" th:text="#{success.apply-for-healthcare-coverage}"></h2>
+          <h2 class="h3 spacing-above-35" th:text="#{recommendations.apply-for-health}"></h2>
           <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
             <div th:replace="~{fragments/icons/icon-healthcare :: icon-healthcare}"></div>
           </div>
           <div class="grid__item width-five-sixths">
-            <div th:utext="#{success.healthcare}" class="width-five-sixths"></div>
+            <div th:utext="#{recommendations.if-you-do-not}" class="width-five-sixths"></div>
+          </div>
+        </div>
+		
+		<div id="childCare"
+             class="grid-ignore-mobile spacing-above-10 spacing-below-25 top-horizontal-line-dark-grey">
+          <h2 class="h3 spacing-above-35" th:text="#{recommendations.get-help-paying}"></h2>
+          <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
+            <div th:replace="~{fragments/icons/icon-child-care :: icon-child-care}"></div>
+          </div>
+          <div class="grid__item width-five-sixths">
+            <div th:utext="#{recommendations.view-and-download}" class="width-five-sixths"></div>
           </div>
         </div>
         
         <div th:if="${sentiment == null}" id="feedbackButton">
-          <a class="button button--secondary spacing-above-45 spacing-below-25"
+          <a class="button button--secondary spacing-above-60 spacing-below-25"
              th:href="'/pages/'+${pageName}+'/navigation'">
-            <span th:text="#{success.give-us-feedback}"></span>
+            <span th:text="#{recommendations.give-us-feedback}"></span>
             <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
           </a>
         </div>
