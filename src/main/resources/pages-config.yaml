@@ -7450,22 +7450,23 @@ workflow:
   nextSteps:
     pageConfiguration: *nextSteps
     nextPages:
+      - pageName: success
+    datasources:
+      - pageName: contactInfo
+  feedback:
+    pageConfiguration: *feedback
+  success:
+    pageConfiguration: *success
+    nextPages:
       - pageName: recommendations
         condition:
           logicalOperator: OR
           conditions:
             - *isSomeonePregnant?
             - *isSomeonePregnant?
-      - pageName: success
-    datasources:
-      - pageName: contactInfo
-      - pageName: pregnant
-  feedback:
-    pageConfiguration: *feedback
-  success:
-    pageConfiguration: *success
-    nextPages:
       - pageName: feedback
+    datasources:
+      - pageName: pregnant
   recommendations:
     pageConfiguration: *recommendations
     nextPages:

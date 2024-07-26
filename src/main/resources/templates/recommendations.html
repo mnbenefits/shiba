@@ -61,7 +61,8 @@
         </div>
 		
 		<div id="childCare"
-             class="grid-ignore-mobile spacing-above-10 spacing-below-25 top-horizontal-line-dark-grey">
+             class="grid-ignore-mobile spacing-above-10 spacing-below-25 top-horizontal-line-dark-grey"
+			 th:if="${isCCAP}">
           <h2 class="h3 spacing-above-35" th:text="#{recommendations.get-help-paying}"></h2>
           <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
             <div th:replace="~{fragments/icons/icon-child-care :: icon-child-care}"></div>
