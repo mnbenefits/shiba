@@ -50,7 +50,7 @@
        
         <div id="healthcareCoverage"
              class="grid-ignore-mobile spacing-above-10 top-horizontal-line-dark-grey"
-             th:if="${doesNotHaveHealthcare && !isCertainPops}">
+             th:if="${doesNotHaveHealthcare}">
           <h2 class="h3 spacing-above-35" th:text="#{recommendations.apply-for-health}"></h2>
           <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
             <div th:replace="~{fragments/icons/icon-healthcare :: icon-healthcare}"></div>
