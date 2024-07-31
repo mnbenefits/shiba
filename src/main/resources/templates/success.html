@@ -58,12 +58,15 @@
             </div>
           </div>
         </div>
-Recommended just for you on next page goes here.
         
-        <a th:fragment="continue" class="button button--primary"
-   th:href="'/pages/'+${pageName}+'/navigation'" th:text="#{general.continue}"></a>
-   
-
+       
+        <div th:if="${sentiment == null}" id="feedbackButton">
+          <a class="button button--secondary spacing-above-45 spacing-below-25"
+             th:href="'/pages/'+${pageName}+'/navigation'">
+            <span th:text="#{success.give-us-feedback}"></span>
+            <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
+          </a>
+        </div>
        </div>
       </div>
   </section>

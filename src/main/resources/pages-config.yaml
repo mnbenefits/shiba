@@ -7604,7 +7604,7 @@ landmarkPages:
     - healthcareRenewalMatchInfo
     - healthcareRenewalDocumentsSent
   nextStepsPage: nextSteps
-  terminalPage: recommendations # the final page of the main flow ("Done! Your application has been submitted.")
+  terminalPage: success # the final page of the main flow ("Done! Your application has been submitted.")
   submissionConfirmationPage: submissionConfirmation
   feedbackPage: feedback
   laterDocsTerminalPage: documentsSent # the final page of the laterdocs flow  healthcareRenewalUpload
