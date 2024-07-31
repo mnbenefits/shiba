@@ -153,6 +153,7 @@ public class PageController {
   private final CcapExpeditedEligibilityDecider ccapExpeditedEligibilityDecider;
   private final NextStepsContentService nextStepsContentService;
   private final DocRecommendationMessageService docRecommendationMessageService;
+  private final WicRecommendationService wicRecommendationService;
   private final RoutingDecisionService routingDecisionService;
   private final DocumentRepository documentRepository;
   private final RoutingDestinationMessageService routingDestinationMessageService;
@@ -181,6 +182,7 @@ public class PageController {
       CcapExpeditedEligibilityDecider ccapExpeditedEligibilityDecider,
       NextStepsContentService nextStepsContentService,
       DocRecommendationMessageService docRecommendationMessageService,
+      WicRecommendationService wicRecommendationService,
       RoutingDecisionService routingDecisionService,
       DocumentRepository documentRepository,
       ApplicationRepository applicationRepository,
@@ -204,6 +206,7 @@ public class PageController {
     this.ccapExpeditedEligibilityDecider = ccapExpeditedEligibilityDecider;
     this.nextStepsContentService = nextStepsContentService;
     this.docRecommendationMessageService = docRecommendationMessageService;
+    this.wicRecommendationService = wicRecommendationService;
     this.routingDecisionService = routingDecisionService;
     this.documentRepository = documentRepository;
     this.applicationRepository = applicationRepository;
@@ -546,8 +549,9 @@ public class PageController {
       boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
       model.put("isCertainPops", isCertainPops);
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
-      model.put("isCCAP", isCCAP);      
-      
+      model.put("isCCAP", isCCAP);
+      boolean recommendWIC = wicRecommendationService.showWicMessage(application);//TODO emj new model entry
+      model.put("recommendWIC", recommendWIC);     
       // Get all routing destinations for this application
       Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
       DocumentListParser.parse(applicationData).forEach(doc -> {

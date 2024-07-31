@@ -13,8 +13,10 @@
           <h1 class="h2 spacing-below-35 spacing-above-10"
               th:text="|#{recommendations.based-on}|"></h1>
     	</div>
-		
-        <div class="grid__item spacing-above-35">
+	recommendWIC:	<p th:text="${recommendWIC}"> test</p>
+
+        <div id="recommendWIC" class="grid__item spacing-above-35"
+        th:if="${recommendWIC}" >
           <h2 class="h3" th:text="#{recommendations.apply-for-food}"></h2>
           <div class="grid-ignore-mobile">
 			<div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">

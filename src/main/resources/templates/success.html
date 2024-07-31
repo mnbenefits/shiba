@@ -58,38 +58,12 @@
             </div>
           </div>
         </div>
+Recommended just for you on next page goes here.
         
-        <div id="ccapCoverage"
-             class="grid-ignore-mobile spacing-above-10 top-horizontal-line-dark-grey"
-             th:if="${isCCAP}"> 
-          <h2 class="h3 spacing-above-35" th:text="#{success.childcare-explore-coverage}"></h2>          
-          <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
-            <div th:replace="~{fragments/icons/icon-child-care :: icon-child-care}"></div>
-          </div>
-          <div class="grid__item width-five-sixths">
-            <div th:utext="#{success.childcare-coverage}" class="width-five-sixths"></div>
-          </div>
-         </div>   
-       
-        <div id="healthcareCoverage"
-             class="grid-ignore-mobile spacing-above-10 top-horizontal-line-dark-grey"
-             th:if="${doesNotHaveHealthcare && !isCertainPops}">
-          <h2 class="h3 spacing-above-35" th:text="#{success.apply-for-healthcare-coverage}"></h2>
-          <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
-            <div th:replace="~{fragments/icons/icon-healthcare :: icon-healthcare}"></div>
-          </div>
-          <div class="grid__item width-five-sixths">
-            <div th:utext="#{success.healthcare}" class="width-five-sixths"></div>
-          </div>
-        </div>
-        
-        <div th:if="${sentiment == null}" id="feedbackButton">
-          <a class="button button--secondary spacing-above-45 spacing-below-25"
-             th:href="'/pages/'+${pageName}+'/navigation'">
-            <span th:text="#{success.give-us-feedback}"></span>
-            <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
-          </a>
-        </div>
+        <a th:fragment="continue" class="button button--primary"
+   th:href="'/pages/'+${pageName}+'/navigation'" th:text="#{general.continue}"></a>
+   
+
        </div>
       </div>
   </section>
