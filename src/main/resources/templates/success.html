@@ -60,13 +60,15 @@
         </div>
         
        
-        <div th:if="${sentiment == null}" id="feedbackButton">
+        <div th:if="${showFeedback}" id="feedbackButton">
           <a class="button button--secondary spacing-above-45 spacing-below-25"
              th:href="'/pages/'+${pageName}+'/navigation'">
             <span th:text="#{success.give-us-feedback}"></span>
             <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
           </a>
         </div>
+        
+        
        </div>
       </div>
   </section>

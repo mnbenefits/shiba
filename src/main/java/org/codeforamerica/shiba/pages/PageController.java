@@ -527,7 +527,7 @@ public class PageController {
               .getNextStepsCompleteAnInterview(new ArrayList<>(programs), snapExpeditedEligibility,
                   ccapExpeditedEligibility, locale));
       }
-
+    // the terminal page has always been the success page. The success page needs more items in the model to display correctly.
     if (landmarkPagesConfiguration.isTerminalPage(pageName) || landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)) {
       Application application = applicationRepository.find(applicationData.getId());
       model.put("documents", DocumentListParser.parse(application.getApplicationData()));
@@ -539,19 +539,27 @@ public class PageController {
     	  zonedDateTime = zonedDateTime.withZoneSameInstant(CENTRAL_TIMEZONE);
       }
       model.put("submissionTime", zonedDateTime);
-      model.put("sentiment", application.getSentiment());
+      
       model.put("feedbackText", application.getFeedback());
       model.put("combinedFormText", applicationData.combinedApplicationProgramsList());
+
       String inputData = pagesData
           .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
       boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
-      model.put("doesNotHaveHealthcare", !hasHealthcare);
+      //model.put("doesNotHaveHealthcare", !hasHealthcare);
       boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
-      model.put("isCertainPops", isCertainPops);
+      //model.put("isCertainPops", isCertainPops);
+      //TODO need to provide these for the recommendations page, these are only provided to the success page where they don't do anything.
+      boolean recommendHealthCare = !hasHealthcare && !isCertainPops;
+      model.put("recommendHealthCare", recommendHealthCare);
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
-      model.put("isCCAP", isCCAP);
-      boolean recommendWIC = wicRecommendationService.showWicMessage(application);//TODO emj new model entry
-      model.put("recommendWIC", recommendWIC);     
+      model.put("recommendCC", isCCAP);
+      boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());//TODO emj new model entry
+      model.put("recommendWIC", recommendWIC);    
+      Sentiment sentiment = application.getSentiment();
+     // model.put("sentiment", sentiment);//show feedback button
+      boolean showFeedback = sentiment == null ? true:false;
+      model.put("showFeedback", showFeedback); 
       // Get all routing destinations for this application
       Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
       DocumentListParser.parse(applicationData).forEach(doc -> {
