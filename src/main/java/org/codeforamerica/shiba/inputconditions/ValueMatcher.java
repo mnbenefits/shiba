@@ -1,10 +1,17 @@
 package org.codeforamerica.shiba.inputconditions;
 
-import static org.codeforamerica.shiba.TribalNation.*;
+import static org.codeforamerica.shiba.TribalNation.COUNTIES_SERVICED_BY_WHITE_EARTH;
+import static org.codeforamerica.shiba.TribalNation.MILLE_LACS_RURAL_COUNTIES;
+import static org.codeforamerica.shiba.TribalNation.MILLE_LACS_SERVICED_TRIBES;
+import static org.codeforamerica.shiba.TribalNation.URBAN_COUNTIES;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.TribalNation;
 
@@ -47,11 +54,15 @@ public enum ValueMatcher {
       .map(County::toString)
       .anyMatch(testValue::contains)),
 
+  HH_MEMBER_AGE_LESS_THAN_5((testValue, targetValue) -> (testValue.stream().filter(s -> !s.isBlank())
+			.map(stringDob -> LocalDate.parse(stringDob, DateTimeFormatter.ofPattern("MM/dd/yyyy")))
+			.collect(Collectors.toList()).stream().anyMatch(stringDob -> Period.between(stringDob, LocalDate.now()).getYears() < 5))),
+  
   DOES_NOT_CONTAIN_SUBSTRING((testValue, targetValue) -> testValue.stream()
       .noneMatch(string -> string.contains(targetValue)));
 
   private final BiFunction<List<String>, String, Boolean> matcher;
-
+  
   ValueMatcher(BiFunction<List<String>, String, Boolean> matcher) {
     this.matcher = matcher;
   }
@@ -59,10 +70,11 @@ public enum ValueMatcher {
   public Boolean matches(List<String> testValue, String targetValue) {
     return this.matcher.apply(testValue, targetValue);
   }
-  
+
   private static Boolean containsOnly(List<String> testValue, String targetValue) {
 	List<String> programNoneOnly = testValue.stream().filter(program -> !program.equals(targetValue)).toList();
 	List<String> programOnly = testValue.stream().filter(program -> program.equals(targetValue)).toList();
 	return (programNoneOnly.stream().allMatch(string -> string.contains("NONE")) && programOnly.stream().allMatch(string -> string.contains(targetValue)));
   }
+
 }

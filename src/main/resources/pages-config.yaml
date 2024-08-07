@@ -302,6 +302,21 @@ conditionDefinitions:
       - pageName: identifyCounty
         input: county
         value: "Clearwater"
+  - &doesNotHaveHealthcare?
+    logicalOperator: OR
+    conditions:
+      - pageName: healthcareCoverage
+        input: healthcareCoverage
+        matcher: CONTAINS
+        value: NOT_SURE
+      - pageName: healthcareCoverage
+        input: healthcareCoverage
+        matcher: CONTAINS
+        value: NO
+  - &householdMemberLessThanAge5?
+    pageName: householdMemberInfo
+    input: dobAsDate
+    matcher: HH_MEMBER_AGE_LESS_THAN_5
 pageDefinitions:
   - &landing
     name: landing
@@ -7459,18 +7474,40 @@ workflow:
     pageConfiguration: *success
     nextPages:
       - pageName: recommendations
-        condition:
-          logicalOperator: OR
-          conditions:
-            - *isSomeonePregnant?
-            - *isSomeonePregnant?
+# TODO From the success page, we can go to either the recommendations page or the Feedback page.
+# To navigate to the recommendations page, ONE of these conditions need to be true:
+# ${doesNotHaveHealthcare && !isCertainPops}
+#          logicalOperator: AND
+      # *doesNotHaveHealthcare?
+      # *applicantDidNotChooseCERTAINPOPS?
+      # OR 
+      # *someoneChoseCCAP?
+      # OR 
+      # *isSomeonePregnant?
+      # *householdMemberLessThanAge5?
+#        condition: *householdMemberLessThanAge5?
+ #         logicalOperator: OR
+ #         conditions:
+ #           - *isSomeonePregnant?
+ #           - *householdMemberLessThanAge5?
+#      - pageName: feedback
+#    datasources:
+#      - pageName: pregnant
+#      - groupName: household
+#        pageName: householdMemberInfo
+  recommendations:
+    pageConfiguration: *recommendations
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - *householdMemberLessThanAge5?
+        - *isSomeonePregnant?
+    nextPages:
       - pageName: feedback
     datasources:
       - pageName: pregnant
-  recommendations:
-    pageConfiguration: *recommendations
-    nextPages:
-      - pageName: feedback
+      - groupName: household
+        pageName: householdMemberInfo
   documentsSent:
     pageConfiguration: *documentsSent
 # We are navigating directly from https://mn.gov/dhs/renewmycoverage/ to here:
@@ -7607,6 +7644,7 @@ landmarkPages:
   terminalPage: success # the final page of the main flow ("Done! Your application has been submitted.")
   submissionConfirmationPage: submissionConfirmation
   feedbackPage: feedback
+  recommendationsPage: recommendations
   laterDocsTerminalPage: documentsSent # the final page of the laterdocs flow  healthcareRenewalUpload
   healthcareRenewalTerminalPage: healthcareRenewalDocumentsSent # the final page of the healthcare renewal flow
   healthcareRenewalLandingPage: healthcareRenewalUpload

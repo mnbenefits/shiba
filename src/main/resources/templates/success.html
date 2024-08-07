@@ -58,8 +58,23 @@
             </div>
           </div>
         </div>
-        
+
+        <div th:if="${showRecommendationLink}" id="showRecommendationLink">
+			<hr><!-- TODO emj fix this so it is a HR from honeycrisp class -->
+         <div class="grid__item spacing-above-35">
+          <h2 class="h3" th:text="#{success.you-may-be-able-to-apply}"></h2>
+         <div class="grid__item width-five-sixths">
+          <span th:utext="#{success.learn-more-about-programs}"></span>
+        </div>
+          <a class="button button--secondary spacing-above-45 spacing-below-25"
+             th:href="'/pages/'+${pageName}+'/navigation'">
+            <span th:text="#{success.view-more-programs}"></span>
+          </a>
+         </div>
+        </div>
        
+       
+       <div th:if="${!showRecommendationLink}">
         <div th:if="${showFeedback}" id="feedbackButton">
           <a class="button button--secondary spacing-above-45 spacing-below-25"
              th:href="'/pages/'+${pageName}+'/navigation'">
@@ -67,7 +82,7 @@
             <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
           </a>
         </div>
-        
+        </div>
         
        </div>
       </div>

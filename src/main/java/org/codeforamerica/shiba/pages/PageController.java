@@ -513,6 +513,7 @@ public class PageController {
     model.put("totalMilestones", programs.contains(Program.CERTAIN_POPS) ? "7" : "6");
 
     if (landmarkPagesConfiguration.isPostSubmitPage(pageName)) {
+    	System.out.println("========= PageController POST SUBMIT PAGE =============");//TODO emj delete
       model.put("docRecommendations", docRecommendationMessageService
           .getPageSpecificRecommendationsMessage(applicationData, locale));
       model.put("nextStepSections", nextStepsContentService
@@ -529,6 +530,7 @@ public class PageController {
       }
     // the terminal page has always been the success page. The success page needs more items in the model to display correctly.
     if (landmarkPagesConfiguration.isTerminalPage(pageName) || landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)) {
+    	System.out.println("========= PageController TERMINAL PAGE =============");//TODO emj delete
       Application application = applicationRepository.find(applicationData.getId());
       model.put("documents", DocumentListParser.parse(application.getApplicationData()));
       model.put("hasUploadDocuments", !applicationData.getUploadedDocs().isEmpty());
@@ -549,13 +551,16 @@ public class PageController {
       //model.put("doesNotHaveHealthcare", !hasHealthcare);
       boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
       //model.put("isCertainPops", isCertainPops);
-      //TODO need to provide these for the recommendations page, these are only provided to the success page where they don't do anything.
+      //TODO need to provide these for the recommendations page, these are only provided to the success page 
+      // where they determine if the link to the recommendation page will show.
       boolean recommendHealthCare = !hasHealthcare && !isCertainPops;
       model.put("recommendHealthCare", recommendHealthCare);
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
       model.put("recommendCC", isCCAP);
       boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());//TODO emj new model entry
       model.put("recommendWIC", recommendWIC);    
+      boolean showRecommendationLink = recommendHealthCare || isCCAP || recommendWIC;
+      model.put("showRecommendationLink", showRecommendationLink);
       Sentiment sentiment = application.getSentiment();
      // model.put("sentiment", sentiment);//show feedback button
       boolean showFeedback = sentiment == null ? true:false;
@@ -567,8 +572,8 @@ public class PageController {
             routingDecisionService.getRoutingDestinations(applicationData, doc);
         routingDestinations.addAll(routingDestinationsForThisDoc);
       });
-
-      applicationRepository.save(application);
+      System.out.println("----------- PageController SAVING application ---------------");//TODO emj delete
+      applicationRepository.save(application);//TODO emj why is the application saved at this point of the logic?
 
       // Generate human-readable list of routing destinations for success page
       String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
@@ -577,6 +582,28 @@ public class PageController {
           new ArrayList<>(routingDestinations));
       model.put("routingDestinationList", finalDestinationList);
     }
+    
+    if (landmarkPagesConfiguration.isRecommendationsPage(pageName)){
+    	System.out.println("=========== PageController RECOMMENDATION PAGE ============");//TODO emj delete
+        Application application = applicationRepository.find(applicationData.getId());
+        String inputData = pagesData
+                .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
+            boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
+            //model.put("doesNotHaveHealthcare", !hasHealthcare);
+            boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
+        boolean recommendHealthCare = !hasHealthcare && !isCertainPops;
+        model.put("recommendHealthCare", recommendHealthCare);
+        boolean isCCAP = application.getApplicationData().isCCAPApplication();
+        model.put("recommendCC", isCCAP);
+        boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());//TODO emj new model entry
+        model.put("recommendWIC", recommendWIC);    
+        Sentiment sentiment = application.getSentiment();
+        // model.put("sentiment", sentiment);//show feedback button
+         boolean showFeedback = sentiment == null ? true:false;
+         model.put("showFeedback", showFeedback); 
+    }
+    
+
 
     if (landmarkPagesConfiguration.isUploadDocumentsPage(pageName)) {
       record DocWithThumbnail(UploadedDocument doc, String thumbnail) {

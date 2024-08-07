@@ -14,6 +14,7 @@ public class LandmarkPagesConfiguration {
   private List<String> postSubmitPages = new ArrayList<>();
   private HashSet<String> completed = new HashSet<>();
   private String nextStepsPage;
+  private String recommendationsPage;
   private String terminalPage;
   private String submitPage;
   private String submissionConfirmationPage;
@@ -42,6 +43,11 @@ public class LandmarkPagesConfiguration {
   
   public boolean isFeedbackPage(String pageName) {
 	return pageName.equals(feedbackPage);
+  }
+  
+  public boolean isRecommendationsPage(String pageName) {
+	  System.out.println(">>> pageName: " + pageName);//TODO emj delete
+	return pageName.equals(recommendationsPage);
   }
 
   public boolean isPostSubmitPage(String pageName) {
