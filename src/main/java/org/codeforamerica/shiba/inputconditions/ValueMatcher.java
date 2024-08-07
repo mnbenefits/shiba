@@ -53,8 +53,8 @@ public enum ValueMatcher {
   IS_WHITE_EARTH_COUNTY((testValue, ignored) -> COUNTIES_SERVICED_BY_WHITE_EARTH.stream()
       .map(County::toString)
       .anyMatch(testValue::contains)),
-
-  HH_MEMBER_AGE_LESS_THAN_5((testValue, targetValue) -> (testValue.stream().filter(s -> !s.isBlank())
+//TODO emj remove peek
+  HH_MEMBER_AGE_LESS_THAN_5((testValue, targetValue) -> (testValue.stream().peek(x -> System.out.println("testValue = " + testValue)).filter(s -> !s.isBlank())
 			.map(stringDob -> LocalDate.parse(stringDob, DateTimeFormatter.ofPattern("MM/dd/yyyy")))
 			.collect(Collectors.toList()).stream().anyMatch(stringDob -> Period.between(stringDob, LocalDate.now()).getYears() < 5))),
   
@@ -68,7 +68,9 @@ public enum ValueMatcher {
   }
 
   public Boolean matches(List<String> testValue, String targetValue) {
-    return this.matcher.apply(testValue, targetValue);
+	boolean matches = this.matcher.apply(testValue, targetValue);
+	System.out.println(">>>> ValueMatcher testValue: " + testValue + " matches=" + matches);//TODO emj revert
+    return matches;
   }
 
   private static Boolean containsOnly(List<String> testValue, String targetValue) {
