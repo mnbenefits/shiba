@@ -106,7 +106,7 @@ dependencies {
     implementation("org.apache.httpcomponents.core5:httpcore5:5.2.5")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
     implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1")
-    implementation("org.apache.pdfbox:pdfbox:3.0.2")
+    implementation("org.apache.pdfbox:pdfbox:3.0.3")
 
     implementation("org.springframework:spring-aspects")
     implementation("org.springframework.retry:spring-retry")
