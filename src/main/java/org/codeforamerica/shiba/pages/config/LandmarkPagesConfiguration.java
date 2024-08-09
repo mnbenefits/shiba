@@ -46,7 +46,6 @@ public class LandmarkPagesConfiguration {
   }
   
   public boolean isRecommendationsPage(String pageName) {
-	  System.out.println(">>> pageName: " + pageName);//TODO emj delete
 	return pageName.equals(recommendationsPage);
   }
 

@@ -7426,11 +7426,12 @@ workflow:
         pageName: householdMemberInfo
         optional: "true"
       - pageName: medicalExpenses
-
+      
   uploadDocumentsDeleteWarningPage:
     pageConfiguration: *uploadDocumentsDeleteWarningPage
     nextPages:
       - pageName: uploadDocuments
+      
   documentSubmitConfirmation:
     pageConfiguration: *documentSubmitConfirmation
     nextPages:
@@ -7446,7 +7447,6 @@ workflow:
         pageName: householdMemberInfo
         optional: "true"
       - pageName: medicalExpenses
-
   documentOffboarding:
     pageConfiguration: *documentOffboarding
     nextPages:
@@ -7468,8 +7468,6 @@ workflow:
       - pageName: success
     datasources:
       - pageName: contactInfo
-  feedback:
-    pageConfiguration: *feedback
   success:
     pageConfiguration: *success
     nextPages:
@@ -7491,15 +7489,19 @@ workflow:
       - pageName: pregnant
       - groupName: household
         pageName: householdMemberInfo
+        optional: "true"
       - pageName: healthcareCoverage
       - pageName: choosePrograms
+
   recommendations:
     pageConfiguration: *recommendations
     nextPages:
       - pageName: feedback
   documentsSent:
     pageConfiguration: *documentsSent
-# We are navigating directly from https://mn.gov/dhs/renewmycoverage/ to here:
+  feedback:
+    pageConfiguration: *feedback
+# The public is navigating directly from https://mn.gov/dhs/renewmycoverage/ to here:
   healthcareRenewalUpload:
     pageConfiguration: *healthcareRenewalUpload
     nextPages:

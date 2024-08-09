@@ -466,9 +466,23 @@ public class PageController {
     return currentIterationPagesData;
   }
 
+  /** 
+   * This method may be intended to ensure workflow configurations are complete.
+   * The method name "hasRequiredSubworkflows" implies this is to enforce correct configuration.
+   * In certain conditions that use subworkflow data, there may no need for that 
+   * data, so the PageDatasource optional variable is set to true. 
+   * Modified this method to log any time a subworkflow is missing from the data for development purposes. Uncomment for troubleshooting.
+   * @param pageWorkflow
+   * @return
+   */
   private boolean missingRequiredSubworkflows(PageWorkflowConfiguration pageWorkflow) {
-    return pageWorkflow.getPageConfiguration().getInputs().isEmpty() &&
-        !applicationData.hasRequiredSubworkflows(pageWorkflow.getDatasources());
+	  var dataSources = pageWorkflow.getDatasources();
+	  boolean inputsAreEmpty = pageWorkflow.getPageConfiguration().getInputs().isEmpty();
+	  boolean doesNotHaveRSWFs = !applicationData.hasRequiredSubworkflows(dataSources);
+//	  if(doesNotHaveRSWFs) {
+//		  log.info("CONFIGURATION ERROR! A datasource may need to be set to optional = true for pageworkflow " + pageWorkflow.getPageConfiguration().getName());
+//	  }
+    return inputsAreEmpty && doesNotHaveRSWFs;
   }
 
   private boolean isStartPageForGroup(@PathVariable String pageName, String groupName) {
@@ -513,7 +527,6 @@ public class PageController {
     model.put("totalMilestones", programs.contains(Program.CERTAIN_POPS) ? "7" : "6");
 
     if (landmarkPagesConfiguration.isPostSubmitPage(pageName)) {
-    	System.out.println("========= PageController POST SUBMIT PAGE =============");//TODO emj delete
       model.put("docRecommendations", docRecommendationMessageService
           .getPageSpecificRecommendationsMessage(applicationData, locale));
       model.put("nextStepSections", nextStepsContentService
@@ -530,7 +543,6 @@ public class PageController {
       }
     // the terminal page has always been the success page. The success page needs more items in the model to display correctly.
     if (landmarkPagesConfiguration.isTerminalPage(pageName) || landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)) {
-    	System.out.println("========= PageController TERMINAL PAGE =============");//TODO emj delete
       Application application = applicationRepository.find(applicationData.getId());
       model.put("documents", DocumentListParser.parse(application.getApplicationData()));
       model.put("hasUploadDocuments", !applicationData.getUploadedDocs().isEmpty());
@@ -548,21 +560,16 @@ public class PageController {
       String inputData = pagesData
           .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
       boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
-      //model.put("doesNotHaveHealthcare", !hasHealthcare);
       boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
-      //model.put("isCertainPops", isCertainPops);
-      //TODO need to provide these for the recommendations page, these are only provided to the success page 
-      // where they determine if the link to the recommendation page will show.
       boolean recommendHealthCare = !hasHealthcare && !isCertainPops;
       model.put("recommendHealthCare", recommendHealthCare);
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
       model.put("recommendCC", isCCAP);
-      boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());//TODO emj new model entry
+      boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
       model.put("recommendWIC", recommendWIC);    
       boolean showRecommendationLink = recommendHealthCare || isCCAP || recommendWIC;
       model.put("showRecommendationLink", showRecommendationLink);
       Sentiment sentiment = application.getSentiment();
-     // model.put("sentiment", sentiment);//show feedback button
       boolean showFeedback = sentiment == null ? true:false;
       model.put("showFeedback", showFeedback); 
       // Get all routing destinations for this application
@@ -572,8 +579,7 @@ public class PageController {
             routingDecisionService.getRoutingDestinations(applicationData, doc);
         routingDestinations.addAll(routingDestinationsForThisDoc);
       });
-      System.out.println("----------- PageController SAVING application ---------------");//TODO emj delete
-      applicationRepository.save(application);//TODO emj why is the application saved at this point of the logic?
+      applicationRepository.save(application);
 
       // Generate human-readable list of routing destinations for success page
       String finalDestinationList = routingDestinationMessageService.generatePhrase(locale,
@@ -584,21 +590,18 @@ public class PageController {
     }
     
     if (landmarkPagesConfiguration.isRecommendationsPage(pageName)){
-    	System.out.println("=========== PageController RECOMMENDATION PAGE ============");//TODO emj delete
         Application application = applicationRepository.find(applicationData.getId());
         String inputData = pagesData
                 .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
             boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
-            //model.put("doesNotHaveHealthcare", !hasHealthcare);
             boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
         boolean recommendHealthCare = !hasHealthcare && !isCertainPops;
         model.put("recommendHealthCare", recommendHealthCare);
         boolean isCCAP = application.getApplicationData().isCCAPApplication();
         model.put("recommendCC", isCCAP);
-        boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());//TODO emj new model entry
+        boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
         model.put("recommendWIC", recommendWIC);    
         Sentiment sentiment = application.getSentiment();
-        // model.put("sentiment", sentiment);//show feedback button
          boolean showFeedback = sentiment == null ? true:false;
          model.put("showFeedback", showFeedback); 
     }
