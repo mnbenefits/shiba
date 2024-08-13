@@ -22,10 +22,13 @@ import org.codeforamerica.shiba.testutilities.AbstractPageControllerTest;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
 
 public class HouseholdTest extends AbstractPageControllerTest {
-
+  @MockBean
+  private WicRecommendationService wicRecommendationService;
+	  
   @Test
   void shouldRedirectToHouseholdListWhenDeletingNonExistentHouseholdMember() throws Exception {
     makeApplicationWithTwoHouseholdMembers();

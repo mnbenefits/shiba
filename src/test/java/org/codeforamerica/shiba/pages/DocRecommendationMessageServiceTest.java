@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.codeforamerica.shiba.County;
+import org.codeforamerica.shiba.RoutingDestinationMessageService;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.testutilities.AbstractPageControllerTest;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
 
 public class DocRecommendationMessageServiceTest extends AbstractPageControllerTest {
@@ -36,6 +38,9 @@ public class DocRecommendationMessageServiceTest extends AbstractPageControllerT
   private static final String proofOfHousingCost = "proofOfHousingCost";
   private static final String proofOfMedicalExpenses = "proofOfMedicalExpenses";
 
+  @MockBean
+  private WicRecommendationService wicRecommendationService;
+  
   @SuppressWarnings("unused")
   private static Stream<Arguments> docRecommendationMessageTestCases() {
     //send over: test name, list of programs, list of doc recs to show, string pagename
