@@ -13,12 +13,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.Iteration;
 import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.enrichment.DateOfBirthEnrichment;
 import org.codeforamerica.shiba.pages.enrichment.HouseholdMemberDateOfBirthEnrichment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,9 +29,12 @@ public class WicRecommendationService {
 
 	public static final int CHILD_AGE_MAXIMUM = 5;
 	private final DateOfBirthEnrichment dateOfBirthEnrichment = new HouseholdMemberDateOfBirthEnrichment();
+	@Autowired
+	FeatureFlagConfiguration featureFlagConfiguration;
 
 	public boolean showWicMessage(ApplicationData applicationData) {
-		return hasPregnantHouseholdMember(applicationData) || hasHouseholdMemberUpToAge5(applicationData);
+        FeatureFlag showWicRecommendation = featureFlagConfiguration.get("show-wic-recommendation");
+		return showWicRecommendation.isOn() && (hasPregnantHouseholdMember(applicationData) || hasHouseholdMemberUpToAge5(applicationData));
 	}
 
 	public boolean hasPregnantHouseholdMember(ApplicationData applicationData) {

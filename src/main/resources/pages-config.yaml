@@ -7470,7 +7470,12 @@ workflow:
       - pageName: contactInfo
   success:
     pageConfiguration: *success
+#   We navigate to the recommendations page when the conditions are the same
+#   as when we change the button text on the success page to "View more programs".
+#   From PageController: showRecommendationLink = recommendHealthCare || isCCAP || recommendWIC
     nextPages:
+      - pageName: recommendations
+        flow: EXPEDITED
       - pageName: recommendations
         condition:
           logicalOperator: OR

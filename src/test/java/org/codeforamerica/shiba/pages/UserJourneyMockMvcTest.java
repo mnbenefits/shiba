@@ -2,6 +2,8 @@ package org.codeforamerica.shiba.pages;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.Arrays;
@@ -9,15 +11,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.FormPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 
+  @MockBean
+  private WicRecommendationService wicRecommendationService;
+	
   @BeforeEach
   protected void setUp() throws Exception {
     super.setUp();
@@ -32,13 +39,32 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
   void healthcareCoverageDoesNotDisplayOnSuccessPageWhenClientAlreadyHasHealthcare()
       throws Exception {
     var successPage = nonExpeditedFlowToSuccessPage(true, true, true, true);
-    assertThat(successPage.getElementById("healthcareCoverage")).isNull();
+	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
+	// We expect to see the WIC recommendation because the pregnancy question response was "YES"
+	when(wicRecommendationService.showWicMessage(any())).thenReturn(true);	  
+    assertThat(successPage.getElementById("showRecommendationLink")).isNotNull();
+    var recommendationsPage = new FormPage(getPage("recommendations"));
+    assertThat(recommendationsPage.getElementById("recommendWIC")).isNotNull();
+    // The application has CCAP so we expect to see the child care recommendation
+    assertThat(recommendationsPage.getElementById("childCare")).isNotNull();
+    // The applicant said "YES" to health care so the health care recommendation should not be displayed
+    assertThat(recommendationsPage.getElementById("healthcareCoverage")).isNull();
   }
 
   @Test
-  void healthcareCoverageDisplaysOnSuccessPageWhenClientDoesNotHaveHealthcare() throws Exception {
+  void healthcareCoverageDisplaysOnRecommendationsPageWhenClientDoesNotHaveHealthcare() throws Exception {
     var successPage = nonExpeditedFlowToSuccessPage(false, false, false, false);
-    assertThat(successPage.getElementById("healthcareCoverage")).isNotNull();
+	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
+	// We do not expect to see the WIC recommendation because hasHousehold is false thus
+	// the pregnancy question response was "NO" and no children under 5.
+	when(wicRecommendationService.showWicMessage(any())).thenReturn(false);	  
+    assertThat(successPage.getElementById("showRecommendationLink")).isNotNull();
+    var recommendationsPage = new FormPage(getPage("recommendations"));
+    assertThat(recommendationsPage.getElementById("recommendWIC")).isNull();
+    // The application has CCAP so we expect to see the child care recommendation
+    assertThat(recommendationsPage.getElementById("childCare")).isNotNull();
+    // The applicant said "NO" to health care so the health care recommendation should be displayed
+    assertThat(recommendationsPage.getElementById("healthcareCoverage")).isNotNull();
   }
 
   @Test
