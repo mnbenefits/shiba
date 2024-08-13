@@ -44,6 +44,7 @@ import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.output.caf.EligibilityListBuilder;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.PageData;
@@ -371,7 +372,7 @@ class PageControllerTest {
             "8675309", null)
     ));
     when(applicationRepository.find(applicationId)).thenReturn(application);
-
+    when(featureFlags.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     mockMvc.perform(get("/pages/terminalPage"));
 
     verify(applicationRepository).save(application);
