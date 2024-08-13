@@ -2,14 +2,12 @@ package org.codeforamerica.shiba.pages;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.FlowType;
-import org.codeforamerica.shiba.pages.WicRecommendationService;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
@@ -17,7 +15,8 @@ import org.junit.jupiter.api.Test;
 
 public class WicRecommendationServiceTest {
 	
-	WicRecommendationService wicRecommendationService = new WicRecommendationService();
+	private FeatureFlagConfiguration featureFlagConfiguration = new FeatureFlagConfiguration(Map.of("show-wic-recommendation", FeatureFlag.ON));
+	private WicRecommendationService wicRecommendationService = new WicRecommendationService(featureFlagConfiguration);
 	
 	@Test
 	public void isAnybodyInHouseholdPregnant() {
