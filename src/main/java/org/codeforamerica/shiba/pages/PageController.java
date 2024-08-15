@@ -470,8 +470,11 @@ public class PageController {
    * This method may be intended to ensure workflow configurations are complete.
    * The method name "hasRequiredSubworkflows" implies this is to enforce correct configuration.
    * In certain conditions that use subworkflow data, there may no need for that 
-   * data, so the PageDatasource optional variable is set to true. 
-   * Modified this method to log any time a subworkflow is missing from the data for development purposes. Uncomment for troubleshooting.
+   * data, so the PageDatasource optional variable is set to true OR the groupName is missing. (See the ApplicationData 
+   * hasRequiredSubworkflows method)
+   * This needs further investigation for a better explanation of what this is doing.
+   * In some pages, booleandoesNotHaveRSWFs is true, example pages are homeExpenses, legalStuff, signThisApplication, so it isn't clear what this is for.
+   * Modified this method to log any time doesNotHaveRSWFs is true for development purposes. Uncomment for troubleshooting.
    * @param pageWorkflow
    * @return
    */
@@ -555,13 +558,12 @@ public class PageController {
       model.put("submissionTime", zonedDateTime);
       
       model.put("feedbackText", application.getFeedback());
-      model.put("combinedFormText", applicationData.combinedApplicationProgramsList());
-
+      model.put("combinedFormText", applicationData.combinedApplicationProgramsList());   
       String inputData = pagesData
           .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
-      boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
-      boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
-      boolean recommendHealthCare = !hasHealthcare && !isCertainPops;
+      boolean doesNotHaveHealthcare = !"YES".equalsIgnoreCase(inputData);
+      boolean isNotCertainPops = !application.getApplicationData().isCertainPopsApplication();
+      boolean recommendHealthCare = doesNotHaveHealthcare && isNotCertainPops;
       model.put("recommendHealthCare", recommendHealthCare);
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
       model.put("recommendCC", isCCAP);
@@ -593,9 +595,9 @@ public class PageController {
         Application application = applicationRepository.find(applicationData.getId());
         String inputData = pagesData
                 .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
-            boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
-            boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
-        boolean recommendHealthCare = !hasHealthcare && !isCertainPops;
+        boolean doesNotHaveHealthcare = !"YES".equalsIgnoreCase(inputData);
+        boolean isNotCertainPops = !application.getApplicationData().isCertainPopsApplication();
+        boolean recommendHealthCare = doesNotHaveHealthcare && isNotCertainPops;
         model.put("recommendHealthCare", recommendHealthCare);
         boolean isCCAP = application.getApplicationData().isCCAPApplication();
         model.put("recommendCC", isCCAP);

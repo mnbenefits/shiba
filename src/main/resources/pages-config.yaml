@@ -1,9 +1,15 @@
 # see @ApplicationConfiguration for how to maintain this file
 conditionDefinitions:
   - &minimumFlow?
+    name: minimumFlow
     pageName: doYouNeedHelpImmediately
     input: needHelpImmediately
     value: "false"
+  - &expeditedFlow?
+    name: minimumFlow
+    pageName: doYouNeedHelpImmediately
+    input: needHelpImmediately
+    value: "true"
   - &onlyApplyingForOthers?
     pageName: choosePrograms
     input: programs
@@ -124,12 +130,15 @@ conditionDefinitions:
         input: programs
         value: CASH
   - &someoneChoseCCAP?
+    name: someoneChoseCCAP
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
+        name: chooseProgramsCCAP
         input: programs
         value: CCAP
       - pageName: householdMemberInfo
+        name: householdMemberInfoChoseCCAP
         input: programs
         value: CCAP
   - &applicantOnlyChoseCCAP?
@@ -303,17 +312,21 @@ conditionDefinitions:
         input: county
         value: "Clearwater"
   - &doesNotHaveHealthcare?
+    name: doesNotHaveHealthcare
     logicalOperator: OR
     conditions:
       - pageName: healthcareCoverage
+        name: healthcareNotSure
         input: healthcareCoverage
         matcher: CONTAINS
         value: NOT_SURE
       - pageName: healthcareCoverage
+        name: healthcareCoverageNo
         input: healthcareCoverage
         matcher: CONTAINS
         value: NO
   - &householdMemberLessThanAge5?
+    name: householdMemberLessThanAge5
     pageName: householdMemberInfo
     input: dobAsDate
     matcher: HH_MEMBER_AGE_LESS_THAN_5
@@ -7476,8 +7489,13 @@ workflow:
     nextPages:
       - pageName: recommendations
         flow: EXPEDITED
+        condition: *expeditedFlow?
+      - pageName: recommendations
+        flow: MINIMUM
+        condition: *minimumFlow?
       - pageName: recommendations
         condition:
+          name: fullFlow
           logicalOperator: OR
           conditions:
             - *someoneChoseCCAP?
@@ -7497,7 +7515,7 @@ workflow:
         optional: "true"
       - pageName: healthcareCoverage
       - pageName: choosePrograms
-
+      - pageName: doYouNeedHelpImmediately
   recommendations:
     pageConfiguration: *recommendations
     nextPages:

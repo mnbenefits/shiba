@@ -3,11 +3,8 @@ package org.codeforamerica.shiba.inputconditions;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.output.LogicalOperator;
 import org.codeforamerica.shiba.pages.data.InputData;
