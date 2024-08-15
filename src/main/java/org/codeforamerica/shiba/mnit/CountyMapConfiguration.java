@@ -134,7 +134,7 @@ public class CountyMapConfiguration {
     updateCounty(Dakota, "EEARIGAppResearch@CO.DAKOTA.MN.US", "1427127620");
     updateCounty(Dodge, "OSS@MNPrairie.org", "A000020500");
     updateCounty(Douglas, "dcss@co.douglas.mn.us", "A000021300");
-    updateCounty(Faribault, "emily.hanson@fmchs.com", "A000022100");
+    updateCounty(Faribault, "lea.silverthorn@fmchs.com", "A000022100");
     updateCounty(Fillmore, "SS-FAX@co.fillmore.mn.us", "1437228236");
     updateCounty(Freeborn, "im.dhs@co.freeborn.mn.us", "A000024800");
     updateCounty(Goodhue, "hhs.imu@goodhuecountymn.gov", "A000025600");
@@ -197,7 +197,7 @@ public class CountyMapConfiguration {
     updateCounty(Wadena, "wchs.benefits@wcmn.us", "A000080900");
     updateCounty(Waseca, "OSS@MNPrairie.org", "A000081700");
     updateCounty(Washington, "stephanie.schlageter@co.washington.mn.us", "1700969334");
-    updateCounty(Watonwan, "Jodi.Halvorson@co.watonwan.mn.us", "1942539846");
+    updateCounty(Watonwan, "randee.nelson@co.watonwan.mn.us", "1942539846");
     updateCounty(Wilkin, "intake@co.wilkin.mn.us", "1962567529");
     updateCounty(Winona, "dhs@co.winona.mn.us", "A000085000");
     updateCounty(Wright, "HSFSPrograms@co.wright.mn.us", "1124197249");
