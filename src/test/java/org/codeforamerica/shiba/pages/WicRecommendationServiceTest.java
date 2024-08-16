@@ -2,6 +2,8 @@ package org.codeforamerica.shiba.pages;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -17,14 +19,13 @@ public class WicRecommendationServiceTest {
 	
 	private FeatureFlagConfiguration featureFlagConfiguration = new FeatureFlagConfiguration(Map.of("show-wic-recommendation", FeatureFlag.ON));
 	private WicRecommendationService wicRecommendationService = new WicRecommendationService(featureFlagConfiguration);
-	
+    ZonedDateTime now = ZonedDateTime.now();
+
 	@Test
 	public void isAnybodyInHouseholdPregnant() {
 		
 	    ApplicationData applicationData = new ApplicationData();
-	    
-	    //TODO create year more than 5 for test
-	    
+	    	    
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
 		        .withContactInfo()
@@ -33,7 +34,7 @@ public class WicRecommendationServiceTest {
 		            new PagesDataBuilder().withPageData("householdMemberInfo", Map.of(
 		                "firstName", "Jane",
 		                "lastName", "Testerson",
-		                "dateOfBirth", List.of("01", "09", "2016"))).build())
+		                "dateOfBirth", List.of("01", "09", "2016"))).build())		                
 		        .withApplicantPrograms(List.of("SNAP"))
 		        .withPageData("verifyHomeAddress", "useEnrichedAddress", List.of("true"))
 		        .withPageData("pregnant", "isPregnant", List.of("true"))
@@ -49,8 +50,9 @@ public class WicRecommendationServiceTest {
 	public void testChildLessThan5() {
 		
 	    ApplicationData applicationData = new ApplicationData();
-	    
-	    //TODO create year less than 5 for test
+	    String date = String.valueOf(now.getDayOfMonth()+1); 
+	    String year = String.valueOf(now.getYear()-5); 
+	    String month = String.valueOf(now.getMonthValue());
 	    
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
@@ -60,7 +62,7 @@ public class WicRecommendationServiceTest {
 		            new PagesDataBuilder().withPageData("householdMemberInfo", Map.of(
 		                "firstName", "Jane",
 		                "lastName", "Testerson",
-		                "dateOfBirth", List.of("01", "09", "2020"))).build())
+		                "dateOfBirth", List.of(month, date, year))).build())
 		        .withApplicantPrograms(List.of("SNAP"))
 		        .withPageData("verifyHomeAddress", "useEnrichedAddress", List.of("true"))
 		        .build();
@@ -72,10 +74,10 @@ public class WicRecommendationServiceTest {
 	
 	@Test
 	public void testChildMoreThan5() {
-		
 	    ApplicationData applicationData = new ApplicationData();
-	    
-	    //TODO create year more than 5 for test
+	    String date = String.valueOf(now.getDayOfMonth()-1); 
+	    String year = String.valueOf(now.getYear()-5); 
+	    String month = String.valueOf(now.getMonthValue());
 	    
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
@@ -85,7 +87,7 @@ public class WicRecommendationServiceTest {
 		            new PagesDataBuilder().withPageData("householdMemberInfo", Map.of(
 		                "firstName", "Jane",
 		                "lastName", "Testerson",
-		                "dateOfBirth", List.of("01", "09", "2016"))).build())
+		                "dateOfBirth", List.of(month, date, year))).build())
 		        .withApplicantPrograms(List.of("SNAP"))
 		        .withPageData("verifyHomeAddress", "useEnrichedAddress", List.of("true"))
 		        .build();
@@ -98,10 +100,7 @@ public class WicRecommendationServiceTest {
 	@Test
 	public void testShowWicWithAnybodyInHouseholdPregnant() {
 		
-	    ApplicationData applicationData = new ApplicationData();
-	    
-	    //TODO create year more than 5 for test
-	    
+	    ApplicationData applicationData = new ApplicationData();	    
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
 		        .withContactInfo()
@@ -147,21 +146,40 @@ public class WicRecommendationServiceTest {
 	
 	@Test
 	public void testDoNotShowWicWithNobodyUnder5() {
-		//TODO identical to other test, 
+		String date = String.valueOf(now.getDayOfMonth() - 1);
+		String year = String.valueOf(now.getYear() - 5);
+		String month = String.valueOf(now.getMonthValue());
+
+		ApplicationData applicationData = new ApplicationData();
+
+		applicationData = new TestApplicationDataBuilder(applicationData).withPersonalInfo().withContactInfo()
+				.withApplicantPrograms(List.of("CCAP"))
+				.withSubworkflow("household",
+						new PagesDataBuilder().withPageData("householdMemberInfo",
+								Map.of("firstName", "Jane", "lastName", "Testerson", "dateOfBirth",
+										List.of(month, date, year)))
+								.build())
+				.withApplicantPrograms(List.of("SNAP"))
+				.withPageData("verifyHomeAddress", "useEnrichedAddress", List.of("true"))
+				// .withPageData("pregnant", "isPregnant", List.of("true"))
+				.build();
+		applicationData.setId("9870000123");
+		applicationData.setFlow(FlowType.FULL);
+		boolean showWicMessage = wicRecommendationService.showWicMessage(applicationData);
+		assertFalse(showWicMessage);
+	}
+	
+	@Test
+	public void testWithOutAnyHousholdMembersAndNobodyIsPregnant() {
 	    ApplicationData applicationData = new ApplicationData();
     
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
 		        .withContactInfo()
 		        .withApplicantPrograms(List.of("CCAP"))
-		        .withSubworkflow("household",
-		            new PagesDataBuilder().withPageData("householdMemberInfo", Map.of(
-		                "firstName", "Jane",
-		                "lastName", "Testerson",
-		                "dateOfBirth", List.of("01", "09", "2016"))).build())
 		        .withApplicantPrograms(List.of("SNAP"))
 		        .withPageData("verifyHomeAddress", "useEnrichedAddress", List.of("true"))
-		        //.withPageData("pregnant", "isPregnant", List.of("true"))
+		        .withPageData("pregnant", "isPregnant", List.of("false"))
 		        .build();
 	    applicationData.setId("9870000123");
 	    applicationData.setFlow(FlowType.FULL);
