@@ -7480,10 +7480,18 @@ workflow:
     nextPages:
       - pageName: recommendations
         flow: EXPEDITED
-        condition: *expeditedFlow?
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - *expeditedFlow?
+            - *applicantDidNotChooseCERTAINPOPS?
       - pageName: recommendations
         flow: MINIMUM
-        condition: *minimumFlow?
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - *minimumFlow?
+            - *applicantDidNotChooseCERTAINPOPS?
       - pageName: recommendations
         condition:
           logicalOperator: OR
