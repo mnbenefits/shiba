@@ -317,6 +317,9 @@ conditionDefinitions:
         input: healthcareCoverage
         matcher: CONTAINS
         value: NO
+      - pageName: healthcareCoverage
+        input: healthcareCoverage
+        matcher: NONE_SELECTED
   - &householdMemberLessThanAge5?
     pageName: householdMemberInfo
     input: dobAsDate
