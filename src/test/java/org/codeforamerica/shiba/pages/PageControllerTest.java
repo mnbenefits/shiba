@@ -339,7 +339,7 @@ class PageControllerTest {
             .locale(locale)
             .param("sentiment", "HAPPY")
             .param("feedback", feedback))
-        .andExpect(redirectedUrl("/pages/terminalPage"))
+        .andExpect(redirectedUrl("/pages/recommendationsPage"))
         .andExpect(flash().attribute("feedbackSuccess", equalTo(successMessage)));
 
     verify(applicationRepository).save(Application.builder()
@@ -397,7 +397,7 @@ class PageControllerTest {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .locale(locale)
             .param("feedback", feedback))
-        .andExpect(redirectedUrl("/pages/terminalPage"))
+        .andExpect(redirectedUrl("/pages/recommendationsPage"))
         .andExpect(flash().attribute("feedbackSuccess", equalTo(successMessage)));
 
     verify(applicationRepository).save(Application.builder()

@@ -20,6 +20,7 @@ public class WicRecommendationServiceTest {
 	private FeatureFlagConfiguration featureFlagConfiguration = new FeatureFlagConfiguration(Map.of("show-wic-recommendation", FeatureFlag.ON));
 	private WicRecommendationService wicRecommendationService = new WicRecommendationService(featureFlagConfiguration);
     ZonedDateTime now = ZonedDateTime.now();
+    ZonedDateTime fiveYearsBefore = now.minusYears(5);    
 
 	@Test
 	public void isAnybodyInHouseholdPregnant() {
@@ -48,12 +49,10 @@ public class WicRecommendationServiceTest {
 	
 	@Test
 	public void testChildLessThan5() {
-		
 	    ApplicationData applicationData = new ApplicationData();
-	    String date = String.valueOf(now.getDayOfMonth()+1); 
-	    String year = String.valueOf(now.getYear()-5); 
-	    String month = String.valueOf(now.getMonthValue());
-	    
+	    String month = String.valueOf(fiveYearsBefore.getMonthValue());
+	    String date = String.valueOf(fiveYearsBefore.plusDays(1).getDayOfMonth());
+	    String year = String.valueOf(fiveYearsBefore.getYear());
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
 		        .withContactInfo()
@@ -75,9 +74,9 @@ public class WicRecommendationServiceTest {
 	@Test
 	public void testChildMoreThan5() {
 	    ApplicationData applicationData = new ApplicationData();
-	    String date = String.valueOf(now.getDayOfMonth()-1); 
-	    String year = String.valueOf(now.getYear()-5); 
-	    String month = String.valueOf(now.getMonthValue());
+	    String month = String.valueOf(fiveYearsBefore.getMonthValue());
+	    String date = String.valueOf(fiveYearsBefore.minusDays(1).getDayOfMonth());
+	    String year = String.valueOf(fiveYearsBefore.getYear());
 	    
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
@@ -146,9 +145,10 @@ public class WicRecommendationServiceTest {
 	
 	@Test
 	public void testDoNotShowWicWithNobodyUnder5() {
-		String date = String.valueOf(now.getDayOfMonth() - 1);
-		String year = String.valueOf(now.getYear() - 5);
-		String month = String.valueOf(now.getMonthValue());
+		String month = String.valueOf(fiveYearsBefore.getMonthValue());
+	    String date = String.valueOf(fiveYearsBefore.minusDays(1).getDayOfMonth());
+	    String year = String.valueOf(fiveYearsBefore.getYear());
+	   
 
 		ApplicationData applicationData = new ApplicationData();
 
