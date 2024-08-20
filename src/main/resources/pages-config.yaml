@@ -7504,6 +7504,16 @@ workflow:
               conditions:
                 - *doesNotHaveHealthcare?
                 - *applicantDidNotChooseCERTAINPOPS?
+      - pageName: recommendations
+        flag: show-wic-recommendation
+        condition:
+          logicalOperator: OR
+          conditions:
+            - *someoneChoseCCAP?
+            - logicalOperator: AND
+              conditions:
+                - *doesNotHaveHealthcare?
+                - *applicantDidNotChooseCERTAINPOPS?
             - logicalOperator: OR
               conditions:
                 - *isSomeonePregnant?
