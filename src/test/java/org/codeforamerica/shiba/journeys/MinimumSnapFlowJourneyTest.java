@@ -418,7 +418,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   }
 
   private void testFeedbackScreen() {
-    testPage.clickButton("Give us feedback");
+    testPage.clickLink("Give us feedback");
     assertThat(testPage.getTitle()).isEqualTo("Feedback");
     assertThat(driver.findElement(By.id("happy"))).isNotNull();
     assertThat(driver.findElement(By.id("meh"))).isNotNull();

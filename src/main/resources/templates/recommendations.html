@@ -6,47 +6,63 @@
   <div th:replace="~{fragments/toolbar :: toolbar}"></div>
   <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
   <section class="slab slab--shiba">
-    <div class="grid-ignore-mobile">
-      <div class="card spacing-above-0">
+   <div class="grid-ignore-mobile">
+
+    <div id="cardHeader" class="toolbar">
+      <div class="stack-vertical">
+        <th:block th:if="not ${page.excludeGoBack}">
+        	<div th:replace="~{fragments/goBack :: goBackLink}">
+        	</div>
+        </th:block>
+      </div>
+    </div>  
+
+      <div class="card spacing-above-35">
        <div class="spacing-below-60">
         <div class="grid__item bottom-horizontal-line-dark-grey">
-          <h1 class="h2 spacing-below-35 spacing-above-10"
-              th:text="|#{recommendations.based-on}|"></h1>
+          <div th:replace="~{fragments/contextFragments :: chooseProgramsContextFragment}"></div>
+          <h1 class="h2 spacing-below-0 spacing-above-10"
+              th:text="${recommendHealthCare OR recommendCC} ? #{recommendations.header-2} : #{recommendations.header}">
+          </h1>
+          <p class="spacing-below-35 spacing-above-15 text--help" th:text="#{recommendations.help-message}"></p>
     	</div>
-        <div id="recommendWIC" class="grid__item spacing-above-35 bottom-horizontal-line-dark-grey"
-        th:if="${recommendWIC}" >
-          <h2 class="h3" th:text="#{recommendations.apply-for-food}"></h2>
-          <div class="grid-ignore-mobile">
-			<div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
 
-            </div>
-            <div class="grid__item width-five-sixths">
-              <div class="spacing-above-0 spacing-below-15"
-                   th:utext="#{recommendations.because-your-household}"></div>
-            </div>
-          </div>
-		  
-		  <div class="reveal reveal-adjacent spacing-above-25 spacing-below-25">
-		  	  <button th:text="#{recommendations.who-can}"
-		  	          type="button" class="reveal__link reveal__link-adjacent reveal__link__header-adjacent"
-		  	          aria-expanded="false" aria-controls="reveal-content">
-		  	  </button>
-		  	  <div class="reveal__content reveal__content-adjacent" id="reveal-content">
-				<div class="spacing-above-15" th:text="|#{recommendations.who-can}|"></div>
-		        <div class="spacing-above-15" th:text="|• #{recommendations.pregnant}|"></div>
-				<div class="spacing-above-15" th:text="|• #{recommendations.breastfeeding}|"></div>
-				<div class="spacing-above-15" th:text="|• #{recommendations.non-breastfeeding}|"></div>
-				<div class="spacing-above-15" th:text="|• #{recommendations.individuals-who}|"></div>
-				<div class="spacing-above-15" th:text="|• #{recommendations.mothers-and}|"></div>
-				<div class="spacing-above-15" th:text="|• #{recommendations.you-do-not}|"></div>
-		  	  </div>
-		  </div>
-		  
-		  <div class="spacing-above-0 spacing-below-25"
-             th:utext="#{recommendations.learn-about}"></div>
-		  <div class="spacing-above-0 spacing-below-60"
-		     th:utext="#{recommendations.apply-for-wic}"></div>
-        </div> 
+		<div id="recommendWIC" class="grid__item spacing-above-35 bottom-horizontal-line-dark-grey" th:if="${recommendWIC}">
+			<h2 class="h3" th:text="#{recommendations.apply-for-food}"></h2>
+			<div class="grid-ignore-mobile">
+				<div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
+					<div th:replace="~{fragments/contextFragments :: icon-wic}"></div>
+				</div>
+				<div class="grid__item width-five-sixths">
+					<div class="spacing-above-0 spacing-below-15">
+						<p th:text="#{recommendations.wic-1}"></p>
+						<p th:text="#{recommendations.wic-2}"></p>
+					</div>
+				</div>
+			</div>
+		
+			<div class="reveal reveal-adjacent spacing-above-25 spacing-below-35">
+				<button th:text="#{recommendations.who-can}" type="button"
+					class="reveal__link reveal__link-adjacent reveal__link__header-adjacent" aria-expanded="false"
+					aria-controls="reveal-content">
+				</button>
+				<div class="reveal__content reveal__content-adjacent" id="reveal-content">
+					<div class="spacing-above-15" th:text="|#{recommendations.who-can}|"></div>
+					<div class="spacing-above-15" th:text="|• #{recommendations.pregnant}|"></div>
+					<div class="spacing-above-15" th:text="|• #{recommendations.breastfeeding}|"></div>
+					<div class="spacing-above-15" th:text="|• #{recommendations.non-breastfeeding}|"></div>
+					<div class="spacing-above-15" th:text="|• #{recommendations.individuals-who}|"></div>
+					<div class="spacing-above-15" th:text="|• #{recommendations.mothers-and}|"></div>
+					<div class="spacing-above-15" th:text="|• #{recommendations.you-do-not}|"></div>
+				</div>
+			</div>
+		
+			<div class="spacing-above-0 spacing-below-35" th:utext="#{recommendations.learn-about}">
+			</div>
+			<div class="button margin-left-0 spacing-above-0 spacing-below-60"
+				th:utext="#{recommendations.apply-for-wic} + '' + ~{fragments/icons/icon-arrow-black :: icon-arrow-black}">
+			</div>
+		</div>
        
         <div id="healthcareCoverage"
              class="grid-ignore-mobile spacing-above-10 bottom-horizontal-line-dark-grey"
@@ -55,8 +71,11 @@
           <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
             <div th:replace="~{fragments/icons/icon-healthcare :: icon-healthcare}"></div>
           </div>
-          <div class="grid__item width-five-sixths">
-            <div th:utext="#{recommendations.if-you-do-not}" class="width-five-sixths"></div>
+          <div class="grid__item width-five-sixths spacing-below-35">
+            <div class="width-five-sixths">
+              <p th:text="#{recommendations.healthcare-1}"></p>
+              <p th:utext="#{recommendations.healthcare-2}"></p>
+            </div>
           </div>
         </div>
 		
@@ -67,20 +86,23 @@
           <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
             <div th:replace="~{fragments/icons/icon-child-care :: icon-child-care}"></div>
           </div>
-          <div class="grid__item width-five-sixths spacing-below-25">
+          <div class="grid__item width-five-sixths spacing-below-35">
             <div th:utext="#{recommendations.view-and-download}" class="width-five-sixths"></div>
           </div>
         </div>
         
-        <div th:if="${showFeedback}" id="feedbackButton">
-          <a class="button button--secondary spacing-above-60 spacing-below-25"
-             th:href="'/pages/'+${pageName}+'/navigation'">
-            <span th:text="#{recommendations.give-us-feedback}"></span>
-            <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
-          </a>
-        </div>
+		<div th:if="${showFeedback}" id="feedbackButton">
+			<div class="spacing-above-35 spacing-below-25">
+				<h2 class="h3 spacing-above-35 spacing-below-25" th:text="#{recommendations.how-was-your-experience}"></h2>
+				<a class="button--link" th:href="'/pages/'+${pageName}+'/navigation'">
+					<span th:text="#{recommendations.give-us-feedback}"></span>
+				</a>
+			</div>
+		</div>
+		
        </div>
       </div>
+    </div>
   </section>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>

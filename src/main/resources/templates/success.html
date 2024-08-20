@@ -59,32 +59,39 @@
           </div>
         </div>
 
-        <div th:if="${showRecommendationLink}" id="showRecommendationLink" class="grid__item bottom-horizontal-line-dark-grey">
-         <div class="grid__item spacing-above-35">
-          <h2 class="h3" th:text="#{success.you-may-be-able-to-apply}"></h2>
-         <div class="grid__item width-five-sixths">
-          <span th:utext="#{success.learn-more-about-programs}"></span>
-        </div>
-          <a class="button button--secondary spacing-above-45 spacing-below-25"
-             th:href="'/pages/'+${pageName}+'/navigation'">
-            <span th:text="#{success.view-more-programs}"></span>
-          </a>
+       <div th:if="${showRecommendationLink}" id="showRecommendationLink" class="grid__item top-horizontal-line-dark-grey">
+         <div class="grid__item spacing-above-35 ">
+           <h2 class="h3" th:text="#{success.you-may-be-able-to-apply}"></h2>
+           <div class="grid-ignore-mobile">
+             <div class="success-icons grid__item width-one-sixth spacing-above-5 spacing-below-0">
+               <div th:replace="~{fragments/contextFragments :: icon-bullhorn}"></div>
+             </div>
+             <div class="grid__item width-five-sixths">
+               <div class="spacing-above-0 spacing-below-15" th:text="#{success.learn-more-about-programs}"></div>
+             </div>
+           </div>
          </div>
-        </div>
-       
+         <div class="grid-ignore-mobile">
+           <a class="button button--primary spacing-above-45 spacing-below-25"
+                     th:href="'/pages/'+${pageName}+'/navigation'">
+             <span th:text="#{success.view-more-programs}"></span>
+           </a>
+         </div>
+       </div>
        
        <div th:if="${!showRecommendationLink}">
         <div th:if="${showFeedback}" id="feedbackButton">
-          <a class="button button--secondary spacing-above-45 spacing-below-25"
+          <a class="button button--secondary spacing-above-25 spacing-below-25"
              th:href="'/pages/'+${pageName}+'/navigation'">
             <span th:text="#{success.give-us-feedback}"></span>
             <div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
           </a>
         </div>
-        </div>
+       </div>
         
        </div>
       </div>
+    </div>
   </section>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
