@@ -84,12 +84,12 @@ public class TribalNationConfiguration {
     addTribalNation(result,
         WhiteEarthNation,
         "A086642300",
-        "amy.littlewolf@whiteearth-nsn.gov",
+        "Teresa.kappedal@whiteearth-nsn.gov",
         "218-935-2359"
     );
     addTribalNation(result, RedLakeNation,
         "A590043300",
-        "sarah.smythe@redlakenation.org",
+        "RlTanf@redlakenation.org",
         "218-679-3350"
     );
     return result;
