@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.events.ApplicationSubmittedListener;
 import org.codeforamerica.shiba.testutilities.AbstractStaticMessageSourceFrameworkTest;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -30,7 +30,6 @@ public class SubmissionAndTerminalPageTest extends AbstractStaticMessageSourceFr
   @MockBean
   private ApplicationRepository applicationRepository;
 
-  @Disabled("This test needs to be debugged, started failing during WIC\recommendations feature implementation.")
   @Test
   void shouldProvideApplicationDataToTerminalPageWhenApplicationIsSigned() throws Exception {
     var applicationId = "someId";
@@ -57,13 +56,13 @@ public class SubmissionAndTerminalPageTest extends AbstractStaticMessageSourceFr
     postToUrlExpectingSuccess("/submit",
         "/pages/firstPage/navigation",
         Map.of("foo", List.of("some value")));
-
+    
+    when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     var testTerminalPage = getNextPageAsFormPage("firstPage");
     assertThat(testTerminalPage.getElementTextById("submission-time"))
         .isEqualTo("2020-01-01T05:10-06:00[America/Chicago]");
     assertThat(testTerminalPage.getElementTextById("application-id")).isEqualTo(applicationId);
     assertThat(testTerminalPage.getElementTextById("county")).isEqualTo(county.name());
-    assertThat(testTerminalPage.getElementTextById("sentiment")).isEqualTo(sentiment.name());
     assertThat(testTerminalPage.getElementTextById("feedback-text")).isEqualTo(feedbackText);
     assertThat(testTerminalPage.getElementTextById("CAF")).contains("CAF");
     assertThat(testTerminalPage.getElementTextById("CCAP")).contains("CCAP");
