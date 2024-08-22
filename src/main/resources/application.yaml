@@ -108,6 +108,7 @@ feature-flag:
   enhanced-next-steps: on
   second-signature: on
   child-care: on
+  show-wic-recommendation: on
   
 document-upload:
   max-files-uploaded: 50

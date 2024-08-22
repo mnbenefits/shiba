@@ -29,6 +29,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
         LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
         LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
     when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON);
+    when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 
     List<String> programSelections = List.of(PROGRAM_CCAP);
     getToHomeAddress("Hennepin", programSelections);
@@ -148,7 +149,6 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
     // Expenses & Deductions
     testPage.clickContinue();
-
     testPage.enter("medicalExpenses", "None of the above");
     testPage.clickContinue();
 
@@ -223,14 +223,13 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     	 List<String> nextStepSections = driver.findElements(By.className("next-step-section")).stream().map(WebElement::getText).collect(Collectors.toList());
      	 assertThat(nextStepSections).containsExactly(expectedMessages.toArray(new String[0]));
     }
-
     testPage.clickContinue();// nextSteps
-
     SuccessPage successPage = new SuccessPage(driver);
     assertThat(successPage.findElementById("submission-date").getText()).
         contains(
             "Your application was submitted to Hennepin County (612-596-1300) on January 1, 2020.");
-
+    
+    testPage.clickLink("View more programs");
     // Verify that the "paying for child care" link exists and links to DHS-3551
     String successPageWindowHandle = driver.getWindowHandle();
     testPage.clickLink("resources for families with young children.");

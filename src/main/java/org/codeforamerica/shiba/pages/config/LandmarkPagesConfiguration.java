@@ -13,7 +13,9 @@ public class LandmarkPagesConfiguration {
   private List<String> landingPages = new ArrayList<>();
   private List<String> postSubmitPages = new ArrayList<>();
   private HashSet<String> completed = new HashSet<>();
+  private HashSet<Boolean> recommended = new HashSet<>();
   private String nextStepsPage;
+  private String recommendationsPage;
   private String terminalPage;
   private String submitPage;
   private String submissionConfirmationPage;
@@ -31,29 +33,53 @@ public class LandmarkPagesConfiguration {
   public boolean isHealthcareRenewalLandingPage(String pageName) {
 	return healthcareRenewalLandingPage.contains(pageName);
 	  }
-
+  
   public boolean isTerminalPage(String pageName) {
-    return pageName.equals(terminalPage);
+	return pageName.equals(terminalPage);
   }
+  
   public boolean isSubmissionConfirmationPage(String pageName) {
 	return pageName.equals(submissionConfirmationPage);
   }
+  
   public boolean isFeedbackPage(String pageName) {
 	return pageName.equals(feedbackPage);
+  }
+  
+  public boolean isRecommendationsPage(String pageName) {
+	return pageName.equals(recommendationsPage);
   }
 
   public boolean isPostSubmitPage(String pageName) {
     return postSubmitPages.contains(pageName);
   }
+  
   public void addCompleted(String pageName) {
 	completed.add(pageName);	    	
   }
+  
   public void removeCompleted() {
   	completed.clear();	    	
   }
+  
   public boolean isCompleted() {
 	return	!completed.isEmpty();
   }
+  
+  public void showRecommendation(boolean isRecommended) {
+	  recommended.clear();
+		recommended.add(isRecommended);	    	
+	  }
+	  
+
+  public boolean isRecommended() {
+	  if(!recommended.isEmpty()) {
+	  for (boolean element : recommended) {
+          return element;
+	  			}
+	  		}
+		return	false;
+	  }
 
   public boolean isStartTimerPage(String pageName) {
     return startTimerPages.contains(pageName);

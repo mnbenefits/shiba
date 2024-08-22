@@ -31,11 +31,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.ResultActions;
 
 public class NextStepsContentServiceTest extends AbstractPageControllerTest {
-  
+  @MockBean
+  private WicRecommendationService wicRecommendationService;
   @SuppressWarnings("unused")
   private static Stream<Arguments> successMessageTestCases() {
     return Stream.of(

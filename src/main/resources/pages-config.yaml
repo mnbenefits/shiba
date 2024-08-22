@@ -8,6 +8,10 @@ conditionDefinitions:
     pageName: matchInfo
     input: lastName
     matcher: NOT_EMPTY
+  - &expeditedFlow?
+    pageName: doYouNeedHelpImmediately
+    input: needHelpImmediately
+    value: "true"
   - &onlyApplyingForOthers?
     pageName: choosePrograms
     input: programs
@@ -47,6 +51,11 @@ conditionDefinitions:
     input: enrichedCountyDifferentFromSelected
     matcher: CONTAINS
     value: "false"
+  - &isSomeonePregnant?
+    pageName: pregnant
+    input: isPregnant
+    matcher: CONTAINS
+    value: "true"
   - &isApplicantsJob?
     pageName: householdSelectionForIncome
     input: whoseJobIsIt
@@ -301,6 +310,24 @@ conditionDefinitions:
       - pageName: identifyCounty
         input: county
         value: "Clearwater"
+  - &doesNotHaveHealthcare?
+    logicalOperator: OR
+    conditions:
+      - pageName: healthcareCoverage
+        input: healthcareCoverage
+        matcher: CONTAINS
+        value: NOT_SURE
+      - pageName: healthcareCoverage
+        input: healthcareCoverage
+        matcher: CONTAINS
+        value: NO
+      - pageName: healthcareCoverage
+        input: healthcareCoverage
+        matcher: NONE_SELECTED
+  - &householdMemberLessThanAge5?
+    pageName: householdMemberInfo
+    input: dobAsDate
+    matcher: HH_MEMBER_AGE_LESS_THAN_5
 pageDefinitions:
   - &landing
     name: landing
@@ -2487,6 +2514,10 @@ pageDefinitions:
   - &success
     name: success
     pageTitle: success.title
+    usingPageTemplateFragment: false
+  - &recommendations
+    name: recommendations
+    pageTitle: recommendations.title
     usingPageTemplateFragment: false
   - &feedback
     name: feedback
@@ -7419,11 +7450,12 @@ workflow:
         pageName: householdMemberInfo
         optional: "true"
       - pageName: medicalExpenses
-
+      
   uploadDocumentsDeleteWarningPage:
     pageConfiguration: *uploadDocumentsDeleteWarningPage
     nextPages:
       - pageName: uploadDocuments
+      
   documentSubmitConfirmation:
     pageConfiguration: *documentSubmitConfirmation
     nextPages:
@@ -7439,7 +7471,6 @@ workflow:
         pageName: householdMemberInfo
         optional: "true"
       - pageName: medicalExpenses
-
   documentOffboarding:
     pageConfiguration: *documentOffboarding
     nextPages:
@@ -7461,15 +7492,67 @@ workflow:
       - pageName: success
     datasources:
       - pageName: contactInfo
-  feedback:
-    pageConfiguration: *feedback
   success:
     pageConfiguration: *success
+#   We navigate to the recommendations page when the conditions are the same
+#   as when we change the button text on the success page to "View more programs".
+#   From PageController: showRecommendationLink = recommendHealthCare || isCCAP || recommendWIC
+    nextPages:
+      - pageName: recommendations
+        flow: EXPEDITED
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - *expeditedFlow?
+            - *applicantDidNotChooseCERTAINPOPS?
+      - pageName: recommendations
+        flow: MINIMUM
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - *minimumFlow?
+            - *applicantDidNotChooseCERTAINPOPS?
+      - pageName: recommendations
+        condition:
+          logicalOperator: OR
+          conditions:
+            - *someoneChoseCCAP?
+            - logicalOperator: AND
+              conditions:
+                - *doesNotHaveHealthcare?
+                - *applicantDidNotChooseCERTAINPOPS?
+      - pageName: recommendations
+        flag: show-wic-recommendation
+        condition:
+          logicalOperator: OR
+          conditions:
+            - *someoneChoseCCAP?
+            - logicalOperator: AND
+              conditions:
+                - *doesNotHaveHealthcare?
+                - *applicantDidNotChooseCERTAINPOPS?
+            - logicalOperator: OR
+              conditions:
+                - *isSomeonePregnant?
+                - *householdMemberLessThanAge5?
+      - pageName: feedback
+    datasources:
+      - pageName: pregnant
+      - groupName: household
+        pageName: householdMemberInfo
+        optional: "true"
+      - pageName: healthcareCoverage
+      - pageName: choosePrograms
+      - pageName: doYouNeedHelpImmediately
+  recommendations:
+    pageConfiguration: *recommendations
     nextPages:
       - pageName: feedback
   documentsSent:
     pageConfiguration: *documentsSent
-# We are navigating directly from https://mn.gov/dhs/renewmycoverage/ to here:
+  feedback:
+    pageConfiguration: *feedback
+# The public is navigating directly from https://mn.gov/dhs/renewmycoverage/ to here:
   healthcareRenewalUpload:
     pageConfiguration: *healthcareRenewalUpload
     nextPages:
@@ -7585,6 +7668,7 @@ landmarkPages:
     - nextSteps
     - submissionConfirmation
     - success
+    - recommendations
     - feedback
     - matchInfo
     - documentsSent
@@ -7603,6 +7687,7 @@ landmarkPages:
   terminalPage: success # the final page of the main flow ("Done! Your application has been submitted.")
   submissionConfirmationPage: submissionConfirmation
   feedbackPage: feedback
+  recommendationsPage: recommendations
   laterDocsTerminalPage: documentsSent # the final page of the laterdocs flow  healthcareRenewalUpload
   healthcareRenewalTerminalPage: healthcareRenewalDocumentsSent # the final page of the healthcare renewal flow
   healthcareRenewalLandingPage: healthcareRenewalUpload

@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.codeforamerica.shiba.pages.Sentiment;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;
@@ -28,6 +29,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
   @Test
   void nonExpeditedFlow() {
+	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     // No permanent address for this test
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
@@ -132,6 +134,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
   @Test
   void expeditedFlow() {
+	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
     // Where are you currently Living?
@@ -200,10 +203,13 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     SuccessPage successPage = new SuccessPage(driver);
     assertThat(successPage.findElementById("snapExpeditedNotice").getText()).contains(
         "You were recommended for expedited food assistance (SNAP).");
-    // verify that the success page does not contain the "paying for child care" item
-    assertThat(successPage.elementDoesNotExistById("ccapCoverage")).isTrue();
-    
     assertApplicationSubmittedEventWasPublished(applicationId, EXPEDITED, 1);
+    // continue to the recommendations page
+    testPage.clickButton("View more programs");
+    // verify that the recommendations page does contain the "apply for healthcare coverage" item
+    assertThat(testPage.elementDoesNotExistById("healthcareCoverage")).isFalse();
+    // verify that the recommendations page does not contain the "paying for child care" item
+    assertThat(testPage.elementDoesNotExistById("ccapCoverage")).isTrue();
 
     testFeedbackScreen();
 
@@ -412,8 +418,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   }
 
   private void testFeedbackScreen() {
-    // should load back to success page, check to see if button is no longer shown
-    testPage.clickButton("Give us feedback");
+    testPage.clickLink("Give us feedback");
     assertThat(testPage.getTitle()).isEqualTo("Feedback");
     assertThat(driver.findElement(By.id("happy"))).isNotNull();
     assertThat(driver.findElement(By.id("meh"))).isNotNull();
