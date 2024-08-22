@@ -57,6 +57,7 @@ landmarkPages:
   startTimerPages:
     - firstPage
   terminalPage: terminalPage
+  recommendationsPage: recommendationsPage
   submitPage: secondPage
   healthcareRenewalLandingPage: healthcareRenewalUpload
   uploadDocumentsPage: 

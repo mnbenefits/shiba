@@ -153,6 +153,7 @@ public class PageController {
   private final CcapExpeditedEligibilityDecider ccapExpeditedEligibilityDecider;
   private final NextStepsContentService nextStepsContentService;
   private final DocRecommendationMessageService docRecommendationMessageService;
+  private final WicRecommendationService wicRecommendationService;
   private final RoutingDecisionService routingDecisionService;
   private final DocumentRepository documentRepository;
   private final RoutingDestinationMessageService routingDestinationMessageService;
@@ -181,6 +182,7 @@ public class PageController {
       CcapExpeditedEligibilityDecider ccapExpeditedEligibilityDecider,
       NextStepsContentService nextStepsContentService,
       DocRecommendationMessageService docRecommendationMessageService,
+      WicRecommendationService wicRecommendationService,
       RoutingDecisionService routingDecisionService,
       DocumentRepository documentRepository,
       ApplicationRepository applicationRepository,
@@ -204,6 +206,7 @@ public class PageController {
     this.ccapExpeditedEligibilityDecider = ccapExpeditedEligibilityDecider;
     this.nextStepsContentService = nextStepsContentService;
     this.docRecommendationMessageService = docRecommendationMessageService;
+    this.wicRecommendationService = wicRecommendationService;
     this.routingDecisionService = routingDecisionService;
     this.documentRepository = documentRepository;
     this.applicationRepository = applicationRepository;
@@ -463,9 +466,26 @@ public class PageController {
     return currentIterationPagesData;
   }
 
+  /** 
+   * This method may be intended to ensure workflow configurations are complete.
+   * The method name "hasRequiredSubworkflows" implies this is to enforce correct configuration.
+   * In certain conditions that use subworkflow data, there may no need for that 
+   * data, so the PageDatasource optional variable is set to true OR the groupName is missing. (See the ApplicationData 
+   * hasRequiredSubworkflows method)
+   * This needs further investigation for a better explanation of what this is doing.
+   * In some pages, booleandoesNotHaveRSWFs is true, example pages are homeExpenses, legalStuff, signThisApplication, so it isn't clear what this is for.
+   * Modified this method to log any time doesNotHaveRSWFs is true for development purposes. Uncomment for troubleshooting.
+   * @param pageWorkflow
+   * @return
+   */
   private boolean missingRequiredSubworkflows(PageWorkflowConfiguration pageWorkflow) {
-    return pageWorkflow.getPageConfiguration().getInputs().isEmpty() &&
-        !applicationData.hasRequiredSubworkflows(pageWorkflow.getDatasources());
+	  var dataSources = pageWorkflow.getDatasources();
+	  boolean inputsAreEmpty = pageWorkflow.getPageConfiguration().getInputs().isEmpty();
+	  boolean doesNotHaveRSWFs = !applicationData.hasRequiredSubworkflows(dataSources);
+//	  if(doesNotHaveRSWFs) {
+//		  log.info("CONFIGURATION ERROR! A datasource may need to be set to optional = true for pageworkflow " + pageWorkflow.getPageConfiguration().getName());
+//	  }
+    return inputsAreEmpty && doesNotHaveRSWFs;
   }
 
   private boolean isStartPageForGroup(@PathVariable String pageName, String groupName) {
@@ -524,7 +544,7 @@ public class PageController {
               .getNextStepsCompleteAnInterview(new ArrayList<>(programs), snapExpeditedEligibility,
                   ccapExpeditedEligibility, locale));
       }
-
+    // the terminal page has always been the success page. The success page needs more items in the model to display correctly.
     if (landmarkPagesConfiguration.isTerminalPage(pageName) || landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)) {
       Application application = applicationRepository.find(applicationData.getId());
       model.put("documents", DocumentListParser.parse(application.getApplicationData()));
@@ -536,18 +556,25 @@ public class PageController {
     	  zonedDateTime = zonedDateTime.withZoneSameInstant(CENTRAL_TIMEZONE);
       }
       model.put("submissionTime", zonedDateTime);
-      model.put("sentiment", application.getSentiment());
+      
       model.put("feedbackText", application.getFeedback());
-      model.put("combinedFormText", applicationData.combinedApplicationProgramsList());
+      model.put("combinedFormText", applicationData.combinedApplicationProgramsList());   
       String inputData = pagesData
           .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
-      boolean hasHealthcare = "YES".equalsIgnoreCase(inputData);
-      model.put("doesNotHaveHealthcare", !hasHealthcare);
-      boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
-      model.put("isCertainPops", isCertainPops);
+      boolean doesNotHaveHealthcare = !"YES".equalsIgnoreCase(inputData);
+      boolean isNotCertainPops = !application.getApplicationData().isCertainPopsApplication();
+      boolean recommendHealthCare = doesNotHaveHealthcare && isNotCertainPops;
+      model.put("recommendHealthCare", recommendHealthCare);
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
-      model.put("isCCAP", isCCAP);      
-      
+      model.put("recommendCC", isCCAP);
+      boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
+      model.put("recommendWIC", recommendWIC);    
+      boolean showRecommendationLink = recommendHealthCare || isCCAP || recommendWIC;
+      model.put("showRecommendationLink", showRecommendationLink);
+      applicationConfiguration.getLandmarkPages().showRecommendation(showRecommendationLink);
+      Sentiment sentiment = application.getSentiment();
+      boolean showFeedback = sentiment == null ? true:false;
+      model.put("showFeedback", showFeedback); 
       // Get all routing destinations for this application
       Set<RoutingDestination> routingDestinations = new LinkedHashSet<>();
       DocumentListParser.parse(applicationData).forEach(doc -> {
@@ -555,7 +582,6 @@ public class PageController {
             routingDecisionService.getRoutingDestinations(applicationData, doc);
         routingDestinations.addAll(routingDestinationsForThisDoc);
       });
-
       applicationRepository.save(application);
 
       // Generate human-readable list of routing destinations for success page
@@ -565,6 +591,25 @@ public class PageController {
           new ArrayList<>(routingDestinations));
       model.put("routingDestinationList", finalDestinationList);
     }
+    
+    if (landmarkPagesConfiguration.isRecommendationsPage(pageName)){
+        Application application = applicationRepository.find(applicationData.getId());
+        String inputData = pagesData
+                .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
+        boolean doesNotHaveHealthcare = !"YES".equalsIgnoreCase(inputData);
+        boolean isNotCertainPops = !application.getApplicationData().isCertainPopsApplication();
+        boolean recommendHealthCare = doesNotHaveHealthcare && isNotCertainPops;
+        model.put("recommendHealthCare", recommendHealthCare);
+        boolean isCCAP = application.getApplicationData().isCCAPApplication();
+        model.put("recommendCC", isCCAP);
+        boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
+        model.put("recommendWIC", recommendWIC);    
+        Sentiment sentiment = application.getSentiment();
+         boolean showFeedback = sentiment == null ? true:false;
+         model.put("showFeedback", showFeedback); 
+    }
+    
+
 
     if (landmarkPagesConfiguration.isUploadDocumentsPage(pageName)) {
       record DocWithThumbnail(UploadedDocument doc, String thumbnail) {
@@ -910,13 +955,23 @@ public class PageController {
   RedirectView submitFeedback(Feedback feedback,
       RedirectAttributes redirectAttributes,
       Locale locale) {
-    String terminalPage = applicationConfiguration.getLandmarkPages().getTerminalPage();
+	    String terminalPage = applicationConfiguration.getLandmarkPages().getTerminalPage();
+	    String recommendations = applicationConfiguration.getLandmarkPages().getRecommendationsPage();
+	    
+    boolean isRecommended =applicationConfiguration.getLandmarkPages().isRecommended();
     if (applicationData.getId() == null) {
-      return new RedirectView("/pages/" + terminalPage);
+    	if(isRecommended) {
+        return new RedirectView("/pages/" + recommendations);
+    	}
+        return new RedirectView("/pages/" + terminalPage);
     }
     String message = messageSource.getMessage(feedback.getMessageKey(), null, locale);
     if (feedback.isInvalid()) {
+
       redirectAttributes.addFlashAttribute("feedbackFailure", message);
+      if(isRecommended) {
+    	  return new RedirectView("/pages/" + recommendations);
+      	}
       return new RedirectView("/pages/" + terminalPage);
     }
     redirectAttributes.addFlashAttribute("feedbackSuccess", message);
@@ -926,6 +981,9 @@ public class PageController {
       Application updatedApplication = application.addFeedback(feedback);
       applicationRepository.save(updatedApplication);
     }
+	if(isRecommended) {
+		return new RedirectView("/pages/" + recommendations);
+    	}
     return new RedirectView("/pages/" + terminalPage);
   }
 
