@@ -22,6 +22,8 @@ import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -168,6 +170,93 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 		var countyRoutingDestination = countyMap.get(countyServicingAgency);
 
 		var tribalServicingAgency = TribalNation.getFromName("Red Lake Nation");
+		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+
+		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
+				CAF);
+
+		assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
+	}
+	
+  @ParameterizedTest
+  @CsvSource({"Anoka, FondDuLac",
+	  "Hennepin, FondDuLac",
+	  "Ramsey, FondDuLac",
+	  "Anoka, MilleLacsBandOfOjibwe",
+	  "Hennepin, MilleLacsBandOfOjibwe",
+	  "Ramsey, MilleLacsBandOfOjibwe",
+	  "Anoka, GrandPortage",
+	  "Hennepin, GrandPortage",
+	  "Ramsey, GrandPortage",
+	  "Anoka, BoisForte",
+	  "Hennepin, BoisForte",
+	  "Ramsey, BoisForte",
+	  "Anoka, LeechLake",
+	  "Hennepin, LeechLake",
+	  "Ramsey, LeechLake"})
+	void routeLaterDocsToUrbanCountyAndMillLacsTribalNation(String county, String tribalNation) throws Exception {
+		
+		postExpectingSuccess("matchInfo", Map.of(
+				"firstName", List.of("Dwight"), 
+				"lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+		
+		postExpectingSuccess("identifyCounty", Map.of(
+						"county", List.of(county)));
+		postExpectingSuccess("tribalNationMember", Map.of(
+						"isTribalNationMember",List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of(
+								"selectedTribe",List.of(tribalNation)));				
+						
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+
+		var countyServicingAgency = County.getForName(county);
+		var countyRoutingDestination = countyMap.get(countyServicingAgency);
+
+		var tribalServicingAgency = TribalNation.getFromName("Mille Lacs Band of Ojibwe");
+		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+
+		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
+				CAF);
+
+		assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
+	}
+  
+  @ParameterizedTest
+  @CsvSource({"Aitkin",
+	  "Benton",
+	  "Chisago",
+	  "Crow Wing",
+	  "Kanabec",
+	  "Mille Lacs",
+	  "Morrison",
+	  "Pine"})
+	void routeLaterDocsToCountyAndMillLacsTribalNation(String county) throws Exception {
+		
+		postExpectingSuccess("matchInfo", Map.of(
+				"firstName", List.of("Dwight"), 
+				"lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+		
+		postExpectingSuccess("identifyCounty", Map.of(
+						"county", List.of(county)));
+		postExpectingSuccess("tribalNationMember", Map.of(
+						"isTribalNationMember",List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of(
+								"selectedTribe",List.of("MilleLacsBandOfOjibwe")));				
+						
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+
+		var countyServicingAgency = County.getForName(county);
+		var countyRoutingDestination = countyMap.get(countyServicingAgency);
+
+		var tribalServicingAgency = TribalNation.getFromName("Mille Lacs Band of Ojibwe");
 		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
 
 		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
