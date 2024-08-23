@@ -349,6 +349,8 @@ pageDefinitions:
     name: readyToUploadDocuments
     pageTitle: ready-to-upload-documents.title
     headerKey: ready-to-upload-documents.header
+    headerHelpMessageKey: ready-to-upload-documents.first-we'll-ask-you
+    contextFragment: readyToUploadContextFragment
   - &languagePreferences
     name: languagePreferences
     pageTitle: language-preferences.title
