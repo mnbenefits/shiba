@@ -7,7 +7,14 @@
   <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
   <section class="slab slab--shiba">
     <div class="grid-ignore-mobile">
-      <main class="card spacing-above-0" id="content">
+      <div id="cardHeader" class="toolbar">
+        <div class="stack-vertical">
+          <th:block th:if="not ${page.excludeGoBack}">
+        	<div th:replace="~{fragments/goBack :: goBackLink}"></div>
+          </th:block>
+        </div>
+      </div>  
+      <main class="card spacing-above-35" id="content">
         <div class="form-group " th:if="${sentiment == null || feedbackText == null}">
           <form id="success-feedback-page-form" method="post" th:action="'/submit-feedback'">
             <fieldset  th:if="${sentiment == null}" class="feedback-buttons-group spacing-below-25" aria-labelledby="page-header">
