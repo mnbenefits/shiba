@@ -47,21 +47,24 @@
 					aria-controls="reveal-content">
 				</button>
 				<div class="reveal__content reveal__content-adjacent" id="reveal-content">
-					<div class="spacing-above-15" th:text="|#{recommendations.who-can}|"></div>
-					<div class="spacing-above-15" th:text="|• #{recommendations.pregnant}|"></div>
-					<div class="spacing-above-15" th:text="|• #{recommendations.breastfeeding}|"></div>
-					<div class="spacing-above-15" th:text="|• #{recommendations.non-breastfeeding}|"></div>
-					<div class="spacing-above-15" th:text="|• #{recommendations.individuals-who}|"></div>
-					<div class="spacing-above-15" th:text="|• #{recommendations.mothers-and}|"></div>
-					<div class="spacing-above-15" th:text="|• #{recommendations.you-do-not}|"></div>
+					<ul class="left-justified-list">
+						<li th:text="#{recommendations.pregnant}"></li>
+						<li class="spacing-above-15" th:text="#{recommendations.breastfeeding}"></li>
+						<li class="spacing-above-15" th:text="#{recommendations.non-breastfeeding}"></li>
+						<li class="spacing-above-15" th:text="#{recommendations.individuals-who}"></li>
+						<li class="spacing-above-15" th:text="#{recommendations.mothers-and}"></li>
+						<li class="spacing-above-15" th:text="#{recommendations.you-do-not}"></li>
+					</ul>
 				</div>
 			</div>
 		
 			<div class="spacing-above-0 spacing-below-35" th:utext="#{recommendations.learn-about}">
 			</div>
-			<div class="button margin-left-0 spacing-above-0 spacing-below-60"
-				th:utext="#{recommendations.apply-for-wic} + '' + ~{fragments/icons/icon-arrow-black :: icon-arrow-black}">
-			</div>
+			<a class="button button--secondary spacing-above-0 spacing-below-60" th:href="'https://redcap.health.state.mn.us/redcap/surveys/?s=4WCPLJL77MLKRPJ3'">
+				<span th:text="#{recommendations.apply-for-wic}"></span>
+				<svg th:fragment="icon-arrow-black" class="icon-arrow_forward vertical-align-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+			</a>
+            
 		</div>
        
         <div id="healthcareCoverage"
