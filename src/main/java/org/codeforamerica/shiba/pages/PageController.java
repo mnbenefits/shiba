@@ -571,7 +571,6 @@ public class PageController {
       model.put("recommendWIC", recommendWIC);    
       boolean showRecommendationLink = recommendHealthCare || isCCAP || recommendWIC;
       model.put("showRecommendationLink", showRecommendationLink);
-      applicationConfiguration.getLandmarkPages().showRecommendation(showRecommendationLink);
       Sentiment sentiment = application.getSentiment();
       boolean showFeedback = sentiment == null ? true:false;
       model.put("showFeedback", showFeedback); 
@@ -955,23 +954,13 @@ public class PageController {
   RedirectView submitFeedback(Feedback feedback,
       RedirectAttributes redirectAttributes,
       Locale locale) {
-	    String terminalPage = applicationConfiguration.getLandmarkPages().getTerminalPage();
-	    String recommendations = applicationConfiguration.getLandmarkPages().getRecommendationsPage();
-	    
-    boolean isRecommended =applicationConfiguration.getLandmarkPages().isRecommended();
+	String terminalPage = applicationConfiguration.getLandmarkPages().getTerminalPage();
     if (applicationData.getId() == null) {
-    	if(isRecommended) {
-        return new RedirectView("/pages/" + recommendations);
-    	}
         return new RedirectView("/pages/" + terminalPage);
     }
     String message = messageSource.getMessage(feedback.getMessageKey(), null, locale);
     if (feedback.isInvalid()) {
-
       redirectAttributes.addFlashAttribute("feedbackFailure", message);
-      if(isRecommended) {
-    	  return new RedirectView("/pages/" + recommendations);
-      	}
       return new RedirectView("/pages/" + terminalPage);
     }
     redirectAttributes.addFlashAttribute("feedbackSuccess", message);
@@ -981,9 +970,6 @@ public class PageController {
       Application updatedApplication = application.addFeedback(feedback);
       applicationRepository.save(updatedApplication);
     }
-	if(isRecommended) {
-		return new RedirectView("/pages/" + recommendations);
-    	}
     return new RedirectView("/pages/" + terminalPage);
   }
 
