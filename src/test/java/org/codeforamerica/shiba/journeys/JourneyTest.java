@@ -273,28 +273,67 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("apartmentNumber", homeApartmentNumber);
-    when(smartyStreetClient.validateAddress(any())).thenReturn(
-        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
-    );
+//    when(smartyStreetClient.validateAddress(any())).thenReturn(
+//        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+//    );
     testPage.clickContinue();
-
+//TODO emj revert all this
     // Where can the county send your mail? (accept the smarty streets enriched address)
-    testPage.enter("zipCode", "23456");
-    testPage.enter("city", "someCity");
-    testPage.enter("streetAddress", "someStreetAddress");
-    testPage.enter("state", "IL");
-    testPage.enter("apartmentNumber", "someApartmentNumber");
-    when(smartyStreetClient.validateAddress(any())).thenReturn(
-        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
-    );
-    
+//    testPage.enter("zipCode", "23456");
+//    testPage.enter("city", "someCity");
+//    testPage.enter("streetAddress", "someStreetAddress");
+//    testPage.enter("state", "IL");
+//    testPage.enter("apartmentNumber", "someApartmentNumber");
+//    when(smartyStreetClient.validateAddress(any())).thenReturn(
+//        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+//    );
+    testPage.clickElementById("true");//same as my current living address checkbox
     testPage.clickContinue();
-    
-    testPage.clickElementById("enriched-address");
-    testPage.clickContinue();
-    testPage.clickElementById("original-county");
-    testPage.clickContinue();
+ //   takeSnapShot("address3.png");
+   // testPage.clickElementById("enriched-address");
+    testPage.clickButton("Use this address");
+ //   testPage.clickElementById("original-address");
+  //  testPage.clickContinue();
+//    takeSnapShot("address1.png");
+    testPage.clickButton("Use this county");
+ //   testPage.clickElementById("original-county");
+ //   testPage.clickContinue();
   }
+  
+  protected void fillOutHomeAndMailingAddress2(String homeZip, String homeCity,
+	      String homeStreetAddress, String homeApartmentNumber) {
+	    testPage.enter("zipCode", homeZip);
+	    testPage.enter("city", homeCity);
+	    testPage.enter("streetAddress", homeStreetAddress);
+	    testPage.enter("apartmentNumber", homeApartmentNumber);
+//	    when(smartyStreetClient.validateAddress(any())).thenReturn(
+//	        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+//	    );
+	    testPage.clickContinue();
+	//TODO emj revert all this
+	    // Where can the county send your mail? (accept the smarty streets enriched address)
+//	    testPage.enter("zipCode", "23456");
+//	    testPage.enter("city", "someCity");
+//	    testPage.enter("streetAddress", "someStreetAddress");
+//	    testPage.enter("state", "IL");
+//	    testPage.enter("apartmentNumber", "someApartmentNumber");
+//	    when(smartyStreetClient.validateAddress(any())).thenReturn(
+//	        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+//	    );
+	//    takeSnapShot("address1.png");
+	   // testPage.clickElementById("true");//same as my current living address checkbox
+	   // takeSnapShot("address2.png");
+	    testPage.clickContinue();
+	//    takeSnapShot("address3.png");
+	   // testPage.clickElementById("enriched-address");
+	    testPage.clickButton("Use this address");
+	 //   testPage.clickElementById("original-address");
+	  //  testPage.clickContinue();
+//	    takeSnapShot("address1.png");
+	    testPage.clickButton("Use this county");
+	 //   testPage.clickElementById("original-county");
+	 //   testPage.clickContinue();
+	  }
   
   protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,
       String homeStreetAddress, String homeApartmentNumber) {

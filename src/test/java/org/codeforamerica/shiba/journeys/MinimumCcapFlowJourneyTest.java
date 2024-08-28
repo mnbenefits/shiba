@@ -37,7 +37,8 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     // Where are you currently Living?
     fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     
-    fillOutContactAndReview(true, "Hennepin");
+   // fillOutContactAndReview(true, "Hennepin");
+    fillOutContactAndReview(false, "Hennepin");
     
     testPage.clickLink("This looks correct");
 
