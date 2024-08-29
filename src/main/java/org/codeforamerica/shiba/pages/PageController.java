@@ -1022,13 +1022,9 @@ public class PageController {
           byte[] compressedImage = compressImage(file.getBytes(), file.getOriginalFilename());
           file = new CustomMultipartFile(compressedImage, file.getName(), file.getOriginalFilename(), file.getContentType());
         }
-        log.info("PageController - making request to upload " + filePath + " to Azure storage");
         documentRepository.upload(filePath, file);
-        log.info("PageController - making request to upload " + thumbnailFilePath + " to Azure storage");
         documentRepository.upload(thumbnailFilePath, dataURL);
-        log.info("PageController - adding upload info to applicationData");
         applicationData.addUploadedDoc(file, filePath, thumbnailFilePath, type);
-        log.info("PageController - finished adding upload info to applicationData");
       }
 
       return new ResponseEntity<>(HttpStatus.OK);

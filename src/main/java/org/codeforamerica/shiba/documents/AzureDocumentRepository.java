@@ -3,8 +3,6 @@ package org.codeforamerica.shiba.documents;
 import com.azure.storage.blob.BlobClient;
 import com.azure.storage.blob.BlobContainerClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
-import com.azure.storage.blob.models.StorageAccountInfo;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -64,10 +62,8 @@ public class AzureDocumentRepository implements DocumentRepository {
 
   private void uploadToAzure(String filepath, long size, InputStream inputStream) {
     BlobClient blobClient = containerClient.getBlobClient(filepath);
-    log.info("Uploading blob to Azure storage, file path: " + filepath);
-    log.info(String.format("Azure Storage account name: %s, url: %s",  blobClient.getAccountName(), blobClient.getAccountUrl()));
     blobClient.upload(inputStream, size);
-    log.info("Finished uploading " + filepath + " to Azure storage");
+    log.info("finished uploading");
   }
 
   public void delete(String filepath) {
