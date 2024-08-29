@@ -23,12 +23,14 @@ public class AzureDocumentRepository implements DocumentRepository {
       @Value("${AZURE_CONNECTION_STRING:}") String connectionString,
       @Value("${AZURE_CONTAINER_NAME:}") String containerName
   ) {
+	log.info("AzureDocumentRepository construction is starting...");
     if (!connectionString.equals("") && !containerName.equals("")) {
       var blobServiceClient = new BlobServiceClientBuilder()
           .connectionString(connectionString)
           .buildClient();
       this.containerClient = blobServiceClient.getBlobContainerClient(containerName);
     }
+	log.info("AzureDocumentRepository successfully constructed!");
   }
 
   public byte[] get(String filepath) {
@@ -62,6 +64,7 @@ public class AzureDocumentRepository implements DocumentRepository {
 
   private void uploadToAzure(String filepath, long size, InputStream inputStream) {
     BlobClient blobClient = containerClient.getBlobClient(filepath);
+    log.info(String.format("BlobClient: Upload to Azure, file: %s, account: %s, url: %s", filepath, blobClient.getAccountName(), blobClient.getAccountUrl()));
     blobClient.upload(inputStream, size);
     log.info("finished uploading");
   }
