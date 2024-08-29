@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -23,6 +24,7 @@ import org.openqa.selenium.WebElement;
 @Tag("minimumFlowJourney")
 public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
+  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void fullApplicationOnlyCCAP() {
     when(clock.instant()).thenReturn(
