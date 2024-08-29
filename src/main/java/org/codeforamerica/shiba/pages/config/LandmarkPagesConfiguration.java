@@ -13,7 +13,6 @@ public class LandmarkPagesConfiguration {
   private List<String> landingPages = new ArrayList<>();
   private List<String> postSubmitPages = new ArrayList<>();
   private HashSet<String> completed = new HashSet<>();
-  private HashSet<Boolean> recommended = new HashSet<>();
   private String nextStepsPage;
   private String recommendationsPage;
   private String terminalPage;
@@ -66,21 +65,6 @@ public class LandmarkPagesConfiguration {
 	return	!completed.isEmpty();
   }
   
-  public void showRecommendation(boolean isRecommended) {
-	  recommended.clear();
-		recommended.add(isRecommended);	    	
-	  }
-	  
-
-  public boolean isRecommended() {
-	  if(!recommended.isEmpty()) {
-	  for (boolean element : recommended) {
-          return element;
-	  			}
-	  		}
-		return	false;
-	  }
-
   public boolean isStartTimerPage(String pageName) {
     return startTimerPages.contains(pageName);
   }
