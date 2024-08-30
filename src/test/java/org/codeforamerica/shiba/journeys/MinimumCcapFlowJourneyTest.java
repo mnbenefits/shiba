@@ -19,14 +19,19 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Tag("minimumFlowJourney")
 public class MinimumCcapFlowJourneyTest extends JourneyTest {
+	
+	private static final Logger logger = LoggerFactory.getLogger(MinimumCcapFlowJourneyTest.class);
 
   //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void fullApplicationOnlyCCAP() {
+	  logger.info("MinimumCcapFlowJourneyTest START");
     when(clock.instant()).thenReturn(
         LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
         LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());

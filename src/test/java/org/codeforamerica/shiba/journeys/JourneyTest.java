@@ -52,6 +52,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 
 abstract class JourneyTest extends AbstractBasePageTest {
 	
+
 	static final Logger logger = 
 			LoggerFactory.getLogger(JourneyTest.class);
 
