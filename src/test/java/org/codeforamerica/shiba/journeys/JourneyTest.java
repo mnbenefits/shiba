@@ -44,11 +44,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 abstract class JourneyTest extends AbstractBasePageTest {
+	
+	static final Logger logger = 
+			LoggerFactory.getLogger(JourneyTest.class);
 
   protected PDAcroForm caf;
   protected PDAcroForm ccap;
@@ -289,7 +294,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     );
     
     testPage.clickContinue();
-    System.out.println("HEADER: " + testPage.getHeader());
+    logger.info("HEADER: " + testPage.getHeader());
 //    takeSnapShot("address1.png");//TODO emj delete
 //    assertThat(testPage.getTitle()).contains("Address Validation");
     testPage.clickElementById("enriched-address");
