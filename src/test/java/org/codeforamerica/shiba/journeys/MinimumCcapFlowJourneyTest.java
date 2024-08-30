@@ -31,7 +31,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
   //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void fullApplicationOnlyCCAP() {
-	  logger.info("MinimumCcapFlowJourneyTest START");
+	  logger.debug("MinimumCcapFlowJourneyTest START");
     when(clock.instant()).thenReturn(
         LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
         LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
