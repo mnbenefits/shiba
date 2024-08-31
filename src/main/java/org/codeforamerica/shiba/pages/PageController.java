@@ -980,7 +980,6 @@ public class PageController {
       @RequestParam("dataURL") String dataURL,
       @RequestParam("type") String type,
       Locale locale) throws IOException, InterruptedException {
-	log.info("PageController POST /document-upload invoked");
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
     try {
       if (applicationData.getUploadedDocs().size() <= MAX_FILES_UPLOADED &&
