@@ -49,10 +49,11 @@ public class WicRecommendationServiceTest {
 	
 	@Test
 	public void testChildLessThan5() {
+		ZonedDateTime fiveYearsLessOneDayBefore = fiveYearsBefore.plusDays(1);
 	    ApplicationData applicationData = new ApplicationData();
-	    String month = String.valueOf(fiveYearsBefore.getMonthValue());
-	    String date = String.valueOf(fiveYearsBefore.plusDays(1).getDayOfMonth());
-	    String year = String.valueOf(fiveYearsBefore.getYear());
+	    String month = String.valueOf(fiveYearsLessOneDayBefore.getMonthValue());
+	    String date = String.valueOf(fiveYearsLessOneDayBefore.getDayOfMonth());
+	    String year = String.valueOf(fiveYearsLessOneDayBefore.getYear());
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
 		        .withContactInfo()
@@ -73,10 +74,11 @@ public class WicRecommendationServiceTest {
 	
 	@Test
 	public void testChildMoreThan5() {
+		ZonedDateTime fiveYearsOneDayBefore = fiveYearsBefore.minusDays(1);
 	    ApplicationData applicationData = new ApplicationData();
-	    String month = String.valueOf(fiveYearsBefore.getMonthValue());
-	    String date = String.valueOf(fiveYearsBefore.minusDays(1).getDayOfMonth());
-	    String year = String.valueOf(fiveYearsBefore.getYear());
+	    String month = String.valueOf(fiveYearsOneDayBefore.getMonthValue());
+	    String date = String.valueOf(fiveYearsOneDayBefore.getDayOfMonth());
+	    String year = String.valueOf(fiveYearsOneDayBefore.getYear());
 	    
 	    applicationData = new TestApplicationDataBuilder(applicationData)
 		        .withPersonalInfo()
@@ -145,9 +147,10 @@ public class WicRecommendationServiceTest {
 	
 	@Test
 	public void testDoNotShowWicWithNobodyUnder5() {
-		String month = String.valueOf(fiveYearsBefore.getMonthValue());
-	    String date = String.valueOf(fiveYearsBefore.minusDays(1).getDayOfMonth());
-	    String year = String.valueOf(fiveYearsBefore.getYear());
+		ZonedDateTime fiveYearsOneDayBefore = fiveYearsBefore.minusDays(1);
+		String month = String.valueOf(fiveYearsOneDayBefore.getMonthValue());
+	    String date = String.valueOf(fiveYearsOneDayBefore.getDayOfMonth());
+	    String year = String.valueOf(fiveYearsOneDayBefore.getYear());
 	   
 
 		ApplicationData applicationData = new ApplicationData();
