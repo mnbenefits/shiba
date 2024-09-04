@@ -42,8 +42,10 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
+@Slf4j
 public class ApplicationData implements Serializable {
 
   @Serial
@@ -111,26 +113,32 @@ public class ApplicationData implements Serializable {
         .orElseThrow(() -> new RuntimeException("Cannot find suitable next page."));
   }
 
+ 
   private boolean nextPageConditionsAreSatisfied(FeatureFlagConfiguration featureFlags,
-      @NotNull PageWorkflowConfiguration currentPage, NextPage nextPage) {
-    boolean satisfied = true;
-    Condition condition = nextPage.getCondition();
-    if (condition != null) {
-      if (currentPage.isInAGroup()) {
-        satisfied = condition.matches(
-            incompleteIterations.get(currentPage.getGroupName())
-                .get(currentPage.getPageConfiguration().getName()),
-            pagesData);
-      } else {
-        var datasourcePages = getDatasourceDataForPageIncludingSubworkflows(currentPage);
-        satisfied = datasourcePages.satisfies(condition);
-      }
-    }
-    if (nextPage.getFlag() != null) {
-      satisfied &= featureFlags.get(nextPage.getFlag()) == FeatureFlag.ON;
-    }
-    return satisfied;
-  }
+	      @NotNull PageWorkflowConfiguration currentPage, NextPage nextPage) {
+	    boolean satisfied = true;
+	    Condition condition = nextPage.getCondition();
+	    if (condition != null) {
+	        log.debug("===== ApplicationData currentPage: " + currentPage.getPageConfiguration().getName());
+	      //KEEP THE SPACES IN FRONT! It helps separate the conditions in the logs.
+	        log.debug("    nextPage: " + nextPage.getPageName() + " Condition name: " + condition.getName());
+	      if (currentPage.isInAGroup()) {
+	        satisfied = condition.matches(
+	            incompleteIterations.get(currentPage.getGroupName())
+	                .get(currentPage.getPageConfiguration().getName()),
+	            pagesData);
+	      } else {
+	        var datasourcePages = getDatasourceDataForPageIncludingSubworkflows(currentPage);
+	        satisfied = datasourcePages.satisfies(condition);
+	        log.debug("    DatasourcePages:  " + datasourcePages.keySet());
+	      }
+	    }
+	    if (nextPage.getFlag() != null) {
+	      satisfied &= featureFlags.get(nextPage.getFlag()) == FeatureFlag.ON;
+	    }
+	   
+	    return satisfied;
+	  }
 
   public boolean isCCAPApplication() {
     return isApplicationWith(List.of("CCAP"));

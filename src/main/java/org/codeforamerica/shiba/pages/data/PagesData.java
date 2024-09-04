@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
+
 import org.codeforamerica.shiba.inputconditions.Condition;
 import org.codeforamerica.shiba.pages.config.*;
 
@@ -18,6 +20,7 @@ import org.codeforamerica.shiba.pages.config.*;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Slf4j
 public class PagesData extends HashMap<String, PageData> {
 
   @Serial
@@ -49,22 +52,28 @@ public class PagesData extends HashMap<String, PageData> {
    * PagesData satisfies method checks if condition contains multiple conditions,
    * which then uses allMatch for AND logicalOperator, or anyMatch for OR logicalOperator.</br>
    * If there are no multiple conditions, it checks if the single condition matches the pageData.</br>
-   * This method recursivly calls itself.
+   * This method recursively calls itself.
+   * Logging is added for help during development. KEEP THE SPACES IN FRONT! It helps to separate the conditions in the logs.
    * @param condition
    * @return Boolean
    */
-  public boolean satisfies(Condition condition) {
-    if (condition.getConditions() != null) {
-      Stream<Condition> conditionStream = condition.getConditions().stream();
-      return switch (condition.getLogicalOperator()) {
-        case AND -> conditionStream.allMatch(this::satisfies);
-        case OR -> conditionStream.anyMatch(this::satisfies);
-      };
-    }
 
-    PageData pageData = get(condition.getPageName()); // this can't handle groups
-    return condition.matches(pageData, this);
-  }
+  public boolean satisfies(Condition condition) {
+	    if (condition.getConditions() != null) {
+	      Stream<Condition> conditionStream = condition.getConditions().stream();
+	    	boolean retVal =  switch (condition.getLogicalOperator()) {
+	        case AND -> conditionStream.allMatch(this::satisfies);
+	        case OR -> conditionStream.anyMatch(this::satisfies);
+	      };
+	      log.debug("     PagesData satisfies( ) for condition name: " + condition.getName() + " " + retVal);
+	      return retVal;
+	    }
+
+	    PageData pageData = get(condition.getPageName()); //Original comment: this can't handle groups
+	    boolean retVal = condition.matches(pageData, this);
+	    log.debug("     PagesData satisfies( ) matches for condition name: " + condition.getName() + " " + retVal);
+	    return retVal;
+	  }
 
   public DatasourcePages getDatasourcePagesBy(List<PageDatasource> datasources) {
     return new DatasourcePages(new PagesData(datasources.stream()
