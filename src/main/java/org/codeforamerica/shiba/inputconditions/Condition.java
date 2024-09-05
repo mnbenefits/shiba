@@ -27,6 +27,7 @@ public class Condition implements Serializable {
   private static final long serialVersionUID = -7300484979833484734L;
   private static final List<String> K_GRADES = List.of("hd strt", "pre-k", "k");
   String pageName;
+  String name;
   String input;
   String value;
   String customCondition;

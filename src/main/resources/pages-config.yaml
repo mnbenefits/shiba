@@ -2,6 +2,7 @@
 conditionDefinitions:
   - &minimumFlow?
     pageName: doYouNeedHelpImmediately
+    name: minimumFlow
     input: needHelpImmediately
     value: "false"
   - &laterDocsFlow?
@@ -10,21 +11,26 @@ conditionDefinitions:
     matcher: NOT_EMPTY
   - &expeditedFlow?
     pageName: doYouNeedHelpImmediately
+    name: expeditedFlow
     input: needHelpImmediately
     value: "true"
   - &onlyApplyingForOthers?
     pageName: choosePrograms
+    name: onlyApplyingForOthers
     input: programs
     value: NONE
   - &livesAlone?
     pageName: addHouseholdMembers
+    name: livesAlone
     input: addHouseholdMembers
     value: "false"
   - &isUrbanTribalNationMember?
     pageName: selectTheTribe
+    name: isUrbanTribalNationMember
     input: selectedTribe
     matcher: IS_URBAN_TRIBAL_NATION_MEMBER
   - &doesNotLiveAlone?
+    name: doesNotLiveAlone
     logicalOperator: OR
     conditions:
       - *onlyApplyingForOthers?
@@ -33,96 +39,117 @@ conditionDefinitions:
         value: "true"
   - &isHomeless?
     pageName: homeAddress
+    name: isHomeless
     input: isHomeless
     matcher: DOES_NOT_CONTAIN
     value: "true"
   - &continueWithoutSecondSignature?
     pageName: secondSignatureLegalStuff
+    name: continueWithoutSecondSignature
     input: secondSignatureOption
     matcher: CONTAINS
     value: CONTINUE_WITHOUT_SECOND_SIGNATURE
   - &selectedCountyDoesNotMatchEnrichedCountyHome?
     pageName: homeAddressValidation
+    name: selectedCountyDoesNotMatchEnrichedCountyHome
     input: enrichedCountyDifferentFromSelected
     matcher: CONTAINS
     value: "false"
   - &selectedCountyDoesNotMatchEnrichedCountyMailing?
     pageName: mailingAddressValidation
+    name: selectedCountyDoesNotMatchEnrichedCountyMailing
     input: enrichedCountyDifferentFromSelected
     matcher: CONTAINS
     value: "false"
   - &isSomeonePregnant?
     pageName: pregnant
+    name: isSomeonePregnant
     input: isPregnant
     matcher: CONTAINS
     value: "true"
   - &isApplicantsJob?
     pageName: householdSelectionForIncome
+    name: isApplicantsJob
     input: whoseJobIsIt
     value: applicant
     matcher: CONTAINS_SUBSTRING
   - &selectedOtherUnearnedIncome?
     pageName: otherUnearnedIncome
+    name: selectedOtherUnearnedIncome
     input: otherUnearnedIncome
     value: NO_OTHER_UNEARNED_INCOME_SELECTED
     matcher: DOES_NOT_CONTAIN
   - &selectedUnearnedIncome?
     pageName: unearnedIncome
+    name: selectedUnearnedIncome
     input: unearnedIncome
     value: NO_UNEARNED_INCOME_SELECTED
     matcher: DOES_NOT_CONTAIN
   - &noUnearnedIncomeSelected?
     pageName: unearnedIncome
+    name: noUnearnedIncomeSelected
     input: unearnedIncome
     value: NO_UNEARNED_INCOME_SELECTED
   - &noOtherUnearnedIncomeSelected?
     pageName: otherUnearnedIncome
+    name: noOtherUnearnedIncomeSelected
     input: otherUnearnedIncome
     value: NO_OTHER_UNEARNED_INCOME_SELECTED
   - &doesNotHaveMortgage?
     pageName: homeExpenses
+    name: doesNotHaveMortgage
     input: homeExpenses
     value: MORTGAGE
     matcher: DOES_NOT_CONTAIN
   - &doesNotHaveRent?
     pageName: homeExpenses
+    name: doesNotHaveRent
     input: homeExpenses
     value: RENT
     matcher: DOES_NOT_CONTAIN
   - &doesNotHaveRoomAndBoard?
     pageName: homeExpenses
+    name: doesNotHaveRoomAndBoard
     input: homeExpenses
     value: ROOM_AND_BOARD
     matcher: DOES_NOT_CONTAIN
   - &hasMortgage?
     pageName: homeExpenses
+    name: hasMortgage
     input: homeExpenses
     value: MORTGAGE
   - &hasRent?
     pageName: homeExpenses
+    name: hasRent
     input: homeExpenses
     value: RENT
   - &hasRoomAndBoard?
     pageName: homeExpenses
+    name: hasRoomAndBoard
     input: homeExpenses
     value: ROOM_AND_BOARD
   - &applicantChoseSNAP?
     pageName: choosePrograms
+    name: applicantChoseSNAP
     value: SNAP
     input: programs
   - &applicantChoseCASH?
     pageName: choosePrograms
+    name: applicantChoseCASH
     value: CASH
     input: programs
   - &applicantChoseGRH?
     pageName: choosePrograms
+    name: applicantChoseGRH
     value: GRH
     input: programs
   - &applicantChoseCERTAINPOPS?
     pageName: choosePrograms
+    name: applicantChoseCERTAINPOPS
     value: CERTAIN_POPS
     input: programs
   - &someoneChoseCASH?
+    name: someoneChoseCASH
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
@@ -132,6 +159,7 @@ conditionDefinitions:
         input: programs
         value: CASH
   - &someoneChoseCCAP?
+    name: someoneChoseCCAP
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
@@ -142,60 +170,74 @@ conditionDefinitions:
         value: CCAP
   - &applicantOnlyChoseCCAP?
     pageName: choosePrograms
+    name: applicantOnlyChoseCCAP
     value: CCAP
     input: programs
     matcher: CONTAINS_ONLY
   - &householdOnlyChoseCERTAINPOPS?
     pageName: householdMemberInfo
+    name: householdOnlyChoseCERTAINPOPS
     input: programs
     value: CERTAIN_POPS
     matcher: CONTAINS_ONLY
   - &applicantOnlyChoseCERTAINPOPS?
     pageName: choosePrograms
+    name: applicantOnlyChoseCERTAINPOPS
     value: CERTAIN_POPS
     input: programs
     matcher: CONTAINS_ONLY
   - &householdOnlyChoseCCAP?
     pageName: householdMemberInfo
+    name: householdOnlyChoseCCAP
     input: programs
     value: CCAP
     matcher: CONTAINS_ONLY
   - &applicantDidNotChooseProgram?
     pageName: choosePrograms
+    name: applicantDidNotChooseProgram
     input: programs
     matcher: DOES_NOT_CONTAIN
   - &applicantChoseAtLeastOneProgram?
     pageName: choosePrograms
+    name: applicantChoseAtLeastOneProgram
     value: NONE
     input: programs
     matcher: DOES_NOT_CONTAIN
   - &applicantDidNotChooseCCAPOnly?
     pageName: choosePrograms
+    name: applicantDidNotChooseCCAPOnly
     value: CCAP
     input: programs
     matcher: DOES_NOT_EQUAL
   - &applicantDidNotChooseCCAP?
+    name: applicantDidNotChooseCCAP
     <<: *applicantDidNotChooseProgram?
     value: CCAP
   - &applicantDidNotChooseGRH?
+    name: applicantDidNotChooseGRH
     <<: *applicantDidNotChooseProgram?
     value: GRH
   - &applicantDidNotChooseCERTAINPOPS?
+    name: applicantDidNotChooseCERTAINPOPS
     <<: *applicantDidNotChooseProgram?
     value: CERTAIN_POPS
   - &householdMemberDidNotChooseProgram?
     pageName: householdMemberInfo
+    name: householdMemberDidNotChooseProgram
     input: programs
     matcher: DOES_NOT_CONTAIN
   - &householdMemberChoseAtLeastOneProgram?
     pageName: householdMemberInfo
+    name: householdMemberChoseAtLeastOneProgram
     input: programs
     matcher: CONTAINS_STRING_OTHER_THAN
     value: NONE
   - &householdMemberDidNotChooseCCAP?
+    name: householdMemberDidNotChooseCCAP
     <<: *householdMemberDidNotChooseProgram?
     value: CCAP
   - &noOneChoseCCAP?
+    name: noOneChoseCCAP
     logicalOperator: AND
     conditions:
       - *applicantDidNotChooseCCAP?
@@ -204,6 +246,7 @@ conditionDefinitions:
           - *householdMemberDidNotChooseCCAP?
           - *livesAlone?
   - &noOneChoseSNAP?
+    name: noOneChoseSNAP
     logicalOperator: AND
     conditions:
       - <<: *applicantDidNotChooseProgram?
@@ -214,6 +257,7 @@ conditionDefinitions:
             value: SNAP
           - *livesAlone?
   - &noOneChoseCASH?
+    name: noOneChoseCASH
     logicalOperator: AND
     conditions:
       - <<: *applicantDidNotChooseProgram?
@@ -224,6 +268,7 @@ conditionDefinitions:
             value: CASH
           - *livesAlone?
   - &noOneChoseEA?
+    name: noOneChoseEA
     logicalOperator: AND
     conditions:
       - <<: *applicantDidNotChooseProgram?
@@ -234,6 +279,7 @@ conditionDefinitions:
             value: EA
           - *livesAlone?
   - &noOneChoseGRH?
+    name: noOneChoseGRH
     logicalOperator: AND
     conditions:
       - *applicantDidNotChooseGRH?
@@ -243,47 +289,56 @@ conditionDefinitions:
             value: GRH
           - *livesAlone?
   - &livesAloneOrIsApplicantsJob?
+    name: livesAloneOrIsApplicantsJob
     logicalOperator: OR
     conditions:
       - *isApplicantsJob?
       - *livesAlone?
   - &isNoSSN?
     pageName: personalInfo
+    name: isNoSSN
     input: ssn
     matcher: NOT_EMPTY
   - &applicantChoseCCAPProgram?
     pageName: choosePrograms
+    name: applicantChoseCCAPProgram
     value: CCAP
     input: programs
     matcher: CONTAINS
-# new conditions for tribal routing -->
   - &countyNotSelected?
     pageName: identifyCountyOrTribalNation
+    name: countyNotSelected
     input: county
     matcher: EMPTY
   - &tribalNationNotSelected?
     pageName: identifyCountyOrTribalNation
+    name: tribalNationNotSelected
     input: tribalNation
     matcher: EMPTY
   - &countySelected?
     pageName: identifyCountyOrTribalNation
+    name: countySelected
     input: county
     matcher: NOT_EMPTY
   - &tribalNationSelected?
     pageName: identifyCountyOrTribalNation
+    name: tribalNationSelected
     input: tribalNation
     matcher: NOT_EMPTY
   - &countyANDtribalNationNotSelected?
+    name: countyANDtribalNationNotSelected
     logicalOperator: AND
     conditions:
       - *countyNotSelected?
       - *tribalNationNotSelected?
   - &eitherCountyOrTribalNationIsSelected?
+    name: eitherCountyOrTribalNationIsSelected
     logicalOperator: OR
     conditions:
       - *countySelected?
       - *tribalNationSelected?
   - &certainPopsPilot?
+    name: certainPopsPilot
     logicalOperator: OR
     conditions:
       - pageName: identifyCounty
@@ -299,6 +354,7 @@ conditionDefinitions:
         input: county
         value: "Polk"
   - &WENCountySelected?
+    name: WENCountySelected
     logicalOperator: OR
     conditions:
       - pageName: identifyCounty
@@ -311,6 +367,7 @@ conditionDefinitions:
         input: county
         value: "Clearwater"
   - &doesNotHaveHealthcare?
+    name: doesNotHaveHealthcare
     logicalOperator: OR
     conditions:
       - pageName: healthcareCoverage
@@ -326,6 +383,7 @@ conditionDefinitions:
         matcher: NONE_SELECTED
   - &householdMemberLessThanAge5?
     pageName: householdMemberInfo
+    name: householdMemberLessThanAge5
     input: dobAsDate
     matcher: HH_MEMBER_AGE_LESS_THAN_5
 pageDefinitions:
@@ -5882,6 +5940,7 @@ workflow:
       - pageName: selectTheTribe
         condition:
           pageName: tribalNationMember
+          name: isTribalNationMemberTrue
           input: isTribalNationMember
           value: "true"
       - pageName: howToAddDocuments
@@ -5898,6 +5957,7 @@ workflow:
           conditions:
             - *WENCountySelected?
             - pageName: tribalNationMember
+              name: isTribalNationMemberFalse
               input: isTribalNationMember
               value: "false"
         flag: WEN-lineal-descendant
@@ -5929,25 +5989,33 @@ workflow:
       - pageName: applyForTribalTANF
         condition:
           logicalOperator: OR
+          name: livingInUrbanCounty_OR_isMilleLacsBand_OR_isPregnantLivingAlone
           conditions:
             - logicalOperator: AND
+              name: isTribalMemberLivingInUrbanTribalNationCounty
               conditions:
                 - *isUrbanTribalNationMember?
                 - pageName: identifyCounty
+                  name: isUrbanTribalNationCounty
                   input: county
                   matcher: IS_URBAN_TRIBAL_NATION_COUNTY
             - logicalOperator: AND
+              name: isMilleLacsBandMemberInMilleLacsBandCounty
               conditions:
                 - pageName: selectTheTribe
+                  name: selectedTribeMilleLacsBand
                   input: selectedTribe
                   value: Mille Lacs Band of Ojibwe
                 - pageName: identifyCounty
+                  name: selectedCountyMilleLacsBandRuralCounty
                   input: county
                   matcher: IS_MILLE_LACS_RURAL_COUNTY
             - logicalOperator: AND
+              name: livesAlone_AND_isPregnantTrue
               conditions:
                 - *livesAlone?
                 - pageName: pregnant
+                  name: isPregnantTrue
                   input: isPregnant
                   value: "true"
       - pageName: medicalCareMilestone
@@ -5956,35 +6024,43 @@ workflow:
             - *certainPopsPilot?
             - *applicantChoseCERTAINPOPS?
             - pageName: nationsBoundary
+              name: isLivingInNationBoundaryFalse
               input: livingInNationBoundary
               value: "false"
         flag: certain-pops
       - pageName: introIncome
         condition:
           pageName: nationsBoundary
+          name: isLivingInNationBoundaryFalse
           input: livingInNationBoundary
           value: "false"
       - pageName: applyForTribalTANF
         condition:
           pageName: selectTheTribe
+          name: selectedTribeRLN
           input: selectedTribe
           value: Red Lake Nation
       - pageName: applyForTribalTANF
         condition:
           logicalOperator: AND
+          name: livesInBeltrami_AND_isFederallyRecognizedTribeOutsideMN
           conditions:
             - pageName: selectTheTribe
+              name: selectedTribeFederallyRecognizedTribeOutsideMN
               input: selectedTribe
               value: Federally recognized tribe outside of MN
             - pageName: identifyCounty
+              name: identifyCountyBeltrami
               input: county
               value: Beltrami
       - pageName: applyForMFIP
     skipCondition:
       logicalOperator: OR
+      name: SKIP_isUrbanTribalNationMember_OR_selectedTribeIsFederallyRecognizedOutsideMN
       conditions:
         - *isUrbanTribalNationMember?
         - pageName: selectTheTribe
+          name: selectedTribeIsFederallyRecognizedOutsideMN
           input: selectedTribe
           value: Federally recognized tribe outside of MN
     datasources:
