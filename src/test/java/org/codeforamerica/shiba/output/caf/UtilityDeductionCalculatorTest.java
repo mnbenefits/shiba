@@ -19,7 +19,7 @@ class UtilityDeductionCalculatorTest {
   UtilityDeductionCalculator utilityDeductionCalculator = new UtilityDeductionCalculator();
 
   @SuppressWarnings("unused")
-  static List<Arguments> deductionShouldBe490WhenIncludesEitherHeatingOrCooling() {
+  static List<Arguments> deductionShouldBe651WhenIncludesEitherHeatingOrCooling() {
     return List.of(
         Arguments.of(List.of(heating)),
         Arguments.of(List.of(cooling)),
