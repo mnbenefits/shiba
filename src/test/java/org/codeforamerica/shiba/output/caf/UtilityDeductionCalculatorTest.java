@@ -19,7 +19,7 @@ class UtilityDeductionCalculatorTest {
   UtilityDeductionCalculator utilityDeductionCalculator = new UtilityDeductionCalculator();
 
   @SuppressWarnings("unused")
-  static List<Arguments> deductionShouldBe651WhenIncludesEitherHeatingOrCooling() {
+  static List<Arguments> deductionWhenIncludesEitherHeatingOrCooling() {
     return List.of(
         Arguments.of(List.of(heating)),
         Arguments.of(List.of(cooling)),
@@ -40,18 +40,18 @@ class UtilityDeductionCalculatorTest {
   static List<Arguments> shouldCalculateDeductionWhenIncludesNoneOfHeatingOrCooling() {
     return List.of(
         Arguments.of(List.of(noneOfTheAbove), "0"),
-        Arguments.of(List.of(electricity), "213"),
-        Arguments.of(List.of(phone), "54"),
-        Arguments.of(List.of(electricity, phone), "267")
+        Arguments.of(List.of(electricity), "229"),
+        Arguments.of(List.of(phone), "60"),
+        Arguments.of(List.of(electricity, phone), "289")
     );
   }
 
   @ParameterizedTest
   @MethodSource
-  void deductionShouldBe651WhenIncludesEitherHeatingOrCooling(List<String> utilityOptions) {
+  void deductionWhenIncludesEitherHeatingOrCooling(List<String> utilityOptions) {
     Money deduction = utilityDeductionCalculator.calculate(utilityOptions);
 
-    assertThat(deduction).isEqualTo(Money.parse("651"));
+    assertThat(deduction).isEqualTo(Money.parse("649"));
   }
 
   @ParameterizedTest
