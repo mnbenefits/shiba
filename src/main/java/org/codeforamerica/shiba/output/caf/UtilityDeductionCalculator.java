@@ -16,14 +16,14 @@ public class UtilityDeductionCalculator {
     int deduction = 0;
 
     if (utilityOptions.contains(heating) || utilityOptions.contains(cooling)) {
-      deduction += 651;
+      deduction += 649;
     } else {
       if (utilityOptions.contains(electricity)) {
-        deduction += 213;
+        deduction += 229;
       }
 
       if (utilityOptions.contains(phone)) {
-        deduction += 54;
+        deduction += 60;
       }
     }
 
