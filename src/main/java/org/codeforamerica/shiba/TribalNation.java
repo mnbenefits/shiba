@@ -37,12 +37,11 @@ public enum TribalNation implements ServicingAgency {
   ShakopeeMdewakanton("Shakopee Mdewakanton"),
   UpperSioux("Upper Sioux");
 
-  public static final List<County> URBAN_COUNTIES = List.of(Hennepin, Anoka, Ramsey, Chisago,
-      Kanabec);
+  public static final List<County> URBAN_COUNTIES = List.of(Hennepin, Anoka, Ramsey);
   public static final List<County> COUNTIES_SERVICED_BY_WHITE_EARTH = List.of(Becker, Mahnomen,
       Clearwater);
   public static final List<County> MILLE_LACS_RURAL_COUNTIES = List.of(
-      Aitkin, Benton, CrowWing, Morrison, MilleLacs, Pine);
+      Aitkin, Benton, Chisago, CrowWing,Kanabec, Morrison, MilleLacs, Pine);
   public static final Set<TribalNation> MILLE_LACS_SERVICED_TRIBES = Set.of(BoisForte, GrandPortage,
       LeechLake, MilleLacsBandOfOjibwe, WhiteEarthNation, FondDuLac);
   private final String name;
