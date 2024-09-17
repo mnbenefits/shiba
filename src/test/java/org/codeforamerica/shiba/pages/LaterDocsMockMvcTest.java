@@ -18,6 +18,7 @@ import org.codeforamerica.shiba.TribalNationRoutingDestination;
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
+import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -263,6 +264,113 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 				CAF);
 
 		assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
+	}
+
+	@ParameterizedTest
+	@CsvSource({ "BoisForte, true", "FondDuLac, true", "GrandPortage, true", "MilleLacsBandOfOjibwe, true",
+			"LowerSioux, true", "PrairieIsland, true", "RedLakeNation, true", "ShakopeeMdewakanton, true",
+			"UpperSioux, true", "OtherFederallyRecognizedTribe, true", "LeechLake, false", "WhiteEarthNation, false" })
+	void routeLaterDocsToClearwaterAndRedLakeNation(String tribalNation, String routingToClearwaterAndRedLakeNation)
+			throws Exception {
+		postExpectingSuccess("matchInfo", Map.of("firstName", List.of("Dwight"), "lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+
+		postExpectingSuccess("identifyCounty", Map.of("county", List.of("Clearwater")));
+		postExpectingSuccess("tribalNationMember", Map.of("isTribalNationMember", List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of(tribalNation)));
+
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+
+		var countyServicingAgency = County.getForName("Clearwater");
+		var countyRoutingDestination = countyMap.get(countyServicingAgency);
+
+		var tribalServicingAgency = TribalNation.getFromName("Red Lake Nation");
+		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+
+		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
+				Document.UPLOADED_DOC);
+
+		if (Boolean.parseBoolean(routingToClearwaterAndRedLakeNation)) {
+			assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
+		} else { // handle the two special cases
+			if (tribalNation.equals("LeechLake")) {
+				assertThat(routingDestinations).containsExactly(countyRoutingDestination);
+			}
+			if (tribalNation.equals("WhiteEarthNation")) {
+				tribalServicingAgency = TribalNation.getFromName("White Earth Nation");
+				tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+				assertThat(routingDestinations).containsExactly(tribalRoutingDestination);
+			}
+		}
+	}
+	  
+	@ParameterizedTest
+	@CsvSource({ "BoisForte, true", "FondDuLac, true", "GrandPortage, true", "MilleLacsBandOfOjibwe, true",
+			"LowerSioux, true", "PrairieIsland, true", "RedLakeNation, true", "ShakopeeMdewakanton, true",
+			"UpperSioux, true", "WhiteEarthNation, true", "OtherFederallyRecognizedTribe, true", "LeechLake, false" })
+	void routeLaterDocsToBeltramiAndRedLakeNation(String tribalNation, String routingToBeltramiAndRedLakeNation)
+			throws Exception {
+		postExpectingSuccess("matchInfo", Map.of("firstName", List.of("Dwight"), "lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+
+		postExpectingSuccess("identifyCounty", Map.of("county", List.of("Beltrami")));
+		postExpectingSuccess("tribalNationMember", Map.of("isTribalNationMember", List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of(tribalNation)));
+
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+
+		var countyServicingAgency = County.getForName("Beltrami");
+		var countyRoutingDestination = countyMap.get(countyServicingAgency);
+
+		var tribalServicingAgency = TribalNation.getFromName("Red Lake Nation");
+		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+
+		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
+				Document.UPLOADED_DOC);
+
+		if (Boolean.parseBoolean(routingToBeltramiAndRedLakeNation)) {
+			assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
+		} else {
+			assertThat(routingDestinations).containsExactly(countyRoutingDestination);
+		}
+	}
+	  
+	@ParameterizedTest
+	@CsvSource({ "Becker, true", "Mahnomen, true", "Clearwater, true", "Norman, false", "Hennepin, false" })
+	void routeLaterDocsToWhiteEarthNation(String county, String routingToWhiteEarthNation)
+			throws Exception {
+		postExpectingSuccess("matchInfo", Map.of("firstName", List.of("Dwight"), "lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+
+		postExpectingSuccess("identifyCounty", Map.of("county", List.of(county)));
+		postExpectingSuccess("tribalNationMember", Map.of("isTribalNationMember", List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of("WhiteEarthNation")));
+
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+
+		var countyServicingAgency = County.getForName(county);
+		var countyRoutingDestination = countyMap.get(countyServicingAgency);
+
+		var tribalServicingAgency = TribalNation.getFromName("White Earth Nation");
+		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+
+		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
+				Document.UPLOADED_DOC);
+
+		if (Boolean.parseBoolean(routingToWhiteEarthNation)) {
+			assertThat(routingDestinations).containsExactly(tribalRoutingDestination);
+		} else {
+			assertThat(routingDestinations).containsExactly(countyRoutingDestination);
+		}
 	}
 
 	private void completeLaterDocsUploadFlow() throws Exception {

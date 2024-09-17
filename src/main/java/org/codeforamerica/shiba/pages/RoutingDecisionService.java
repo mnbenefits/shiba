@@ -1,8 +1,7 @@
 package org.codeforamerica.shiba.pages;
 
-import static org.codeforamerica.shiba.County.Becker;
+import static org.codeforamerica.shiba.County.Beltrami;
 import static org.codeforamerica.shiba.County.Clearwater;
-import static org.codeforamerica.shiba.County.Mahnomen;
 import static org.codeforamerica.shiba.Program.*;
 import static org.codeforamerica.shiba.TribalNation.*;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLYING_FOR_TRIBAL_TANF;
@@ -12,6 +11,7 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.LINEAL_DESCENDANT_WEN;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IDENTIFY_TRIBAL_NATION_LATER_DOCS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IDENTIFY_TRIBAL_NATION_HEALTHCARE_RENEWAL;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IDENTIFY_COUNTY_HEALTHCARE_RENEWAL;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
 
@@ -32,11 +32,16 @@ import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
+import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 @SuppressWarnings("DanglingJavadoc")
 @Service
+@Slf4j
 /**
  * The tests for this class live in a few places:
  * @see org.codeforamerica.shiba.pages.TribalNationsMockMvcTest
@@ -62,7 +67,7 @@ public class RoutingDecisionService {
 	    return getLaterDocsRoutingDestinations(applicationData, document);
     }
     if (applicationData.getFlow() == FlowType.HEALTHCARE_RENEWAL) {
-	    return getLaterDocsRoutingDestinations(applicationData, document);
+	    return getHealthcareRenewalRoutingDestinations(applicationData, document);
     }
     Set<String> programs = applicationData.getApplicantAndHouseholdMemberPrograms();
     County county = CountyParser.parse(applicationData);
@@ -97,37 +102,114 @@ public class RoutingDecisionService {
     return List.of(countyRoutingDestinations.get(county));
   }
 
-  private List<RoutingDestination> getLaterDocsRoutingDestinations(ApplicationData applicationData, Document document) {
-    List<RoutingDestination> result = new ArrayList<>();
-    County county = CountyParser.parse(applicationData);
-    if(!county.equals(County.Other)) {//Stop sending document to default county
-	    RoutingDestination destination = countyRoutingDestinations.get(county);
-	    result.add(destination);
-    }
-    String tribalNationName = ""; 
-    TribalNation tribalNation;
+	/*
+	 * Rules for Later Docs routing (based on LaterDocsTribalNatonsRouting_Iteration2_06252024.xlsx):
+	 * 
+	 * Tribal Nation Member is Yes: AND
+	 *   Tribal Nation is White Earth Nation:
+	 *   County is Becker, Mahnomen or Clearwater - route White Earth Nation
+	 * 
+	 *   Tribal Nation is any other than Leech Lake or White Earth Nation 
+	 *   AND county is Clearwater - route to both Clearwater and Red Lake Nation
+	 * 
+	 *   Tribal Nation is any other than Leech Lake 
+	 *   AND county is Beltrami - route to Beltrami and Red Lake Nation
+	 * 
+	 *   Tribal Nation is Mille Lacs Band of Ojibwe 
+	 *     AND county is Aitkin, Benton, Chisago, Crow Wing, Kanabec, Morrison, Mille Lacs, Pine 
+	 *   OR
+	 *   Tribal Nation is Bois Forte, Fond Du Lac, Grand Portage, Leech Lake, Mille Lacs Band Of Ojibwe  
+	 *     AND county is Anoka, Hennepin, Ramsey - route to the county and to Mille Lacs Band of Ojibwe
+	 * 
+	 * Any other scenario:
+	 *   Tribal Nation Member is Yes but doesn't fit above scenarios
+	 *   OR Tribal Nation Member is No - route to the county
+	 */
+	private List<RoutingDestination> getLaterDocsRoutingDestinations(ApplicationData applicationData,
+			Document document) {
 
-    if (applicationData.getFlow().equals(FlowType.LATER_DOCS)) {
-        tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_LATER_DOCS);
-    }
-    if (applicationData.getFlow().equals(FlowType.HEALTHCARE_RENEWAL)) {
-        tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_HEALTHCARE_RENEWAL);    	
-    }
-    if (tribalNationName != null && !tribalNationName.isEmpty()) {
-        tribalNation = TribalNation.getFromName(tribalNationName);
+		County county = CountyParser.parse(applicationData);
+		
+		// Is applicant a Tribal Nation member?
+		Boolean isTribalNationMember = Boolean.valueOf("false");
+		PageData tribalNationMemberPageData = applicationData.getPageData("tribalNationMember");
+		if (tribalNationMemberPageData != null) {
+			isTribalNationMember = Boolean.valueOf(tribalNationMemberPageData.get("isTribalNationMember").getValue(0));
+		}
+		if (isTribalNationMember.equals(true)) {
+			// Applicant indicated they are a Tribal Nation member
+			String tribalNationName = getFirstValue(applicationData.getPagesData(), IDENTIFY_TRIBAL_NATION_LATER_DOCS);
 
-    	return switch (tribalNation) {
-        case WhiteEarthNation -> routeWhiteEarthClientsLaterDoc(county);
-        case MilleLacsBandOfOjibwe, BoisForte, FondDuLac, GrandPortage, LeechLake  ->
-            routeClientsServicedByMilleLacsLaterDoc(tribalNation, county);
-        case LowerSioux, PrairieIsland, RedLakeNation, ShakopeeMdewakanton, UpperSioux, OtherFederallyRecognizedTribe -> 
-        routeClientsInOtherFederallyRecognizedTribeLaterDoc(county);
-        default -> List.of(countyRoutingDestinations.get(county));
-      };
-    }
-    return result;
-  }
+			// Here is where we determine if a Tribal Nation should be added to the routing
+			// destinations.
+			TribalNation tribalNation;
+			if (tribalNationName != null && !tribalNationName.isEmpty()) {
+				tribalNation = TribalNation.getFromName(tribalNationName);
+				if (shouldRouteLaterDocsToWhiteEarthNation(county, tribalNation)) {
+					return List.of(tribalNations.get(WhiteEarthNation));
+				}
+				if (shouldRouteLaterDocsToClearwaterAndRedLakeNation(county, tribalNation)) {
+					return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
+				}
+				if (shouldRouteLaterDocsToBeltramiAndRedLakeNation(county, tribalNation)) {
+					return List.of(countyRoutingDestinations.get(Beltrami), tribalNations.get(RedLakeNation));
+				}
+				if (shouldRouteLaterDocsToMilleLacsBandOfOjibweAndCounty(county, tribalNation)) {
+					return List.of(countyRoutingDestinations.get(county), tribalNations.get(MilleLacsBandOfOjibwe));
+				}
+			}
+		}
+		// All other cases return the county
+		// But stop sending documents to the "default county".
+		if (county.equals(County.Other)) {
+			log.info("Note: Later Docs application " + applicationData.getId() + " has no routing destinations, the county = County.Other.");
+			return List.of();
+		}
+		return List.of(countyRoutingDestinations.get(county));
+	}
 
+	private boolean shouldRouteLaterDocsToWhiteEarthNation(County county, TribalNation tribalNation) {
+		return (tribalNation.equals(TribalNation.WhiteEarthNation)
+				&& COUNTIES_SERVICED_BY_WHITE_EARTH.contains(county));
+	}
+
+	private boolean shouldRouteLaterDocsToClearwaterAndRedLakeNation(County county, TribalNation tribalNation) {
+		return (county.equals(County.Clearwater) && !(tribalNation.equals(TribalNation.LeechLake)
+				|| tribalNation.equals(TribalNation.WhiteEarthNation)));
+	}
+
+	private boolean shouldRouteLaterDocsToBeltramiAndRedLakeNation(County county, TribalNation tribalNation) {
+		return (county.equals(County.Beltrami) && !tribalNation.equals(TribalNation.LeechLake));
+	}
+
+	private boolean shouldRouteLaterDocsToMilleLacsBandOfOjibweAndCounty(County county, TribalNation tribalNation) {
+		return ((tribalNation.equals(TribalNation.MilleLacsBandOfOjibwe) && MILLE_LACS_RURAL_COUNTIES.contains(county))
+				|| (MN_CHIPPEWA_TRIBES.contains(tribalNation) && URBAN_COUNTIES.contains(county)));
+	}
+
+	private List<RoutingDestination> getHealthcareRenewalRoutingDestinations(ApplicationData applicationData,
+			Document document) {
+		List<RoutingDestination> routingDestinations = new ArrayList<RoutingDestination>();
+
+		String countyName = getFirstValue(applicationData.getPagesData(), IDENTIFY_COUNTY_HEALTHCARE_RENEWAL);
+		if (countyName != null && !countyName.isEmpty()) {
+			County county = County.getForName(countyName);
+			routingDestinations.add(countyRoutingDestinations.get(county));
+		}
+
+		String tribalNationName = getFirstValue(applicationData.getPagesData(),
+				IDENTIFY_TRIBAL_NATION_HEALTHCARE_RENEWAL);
+		if (tribalNationName != null && !tribalNationName.isEmpty()) {
+			TribalNation tribalNation = TribalNation.getFromName(tribalNationName);
+			routingDestinations.add(tribalNations.get(tribalNation));
+		}
+
+		if (routingDestinations.size() < 1) {
+			log.info("Note: Healthcare renewal upload " + applicationData.getId() + " has no routing destinations.");
+		}
+		return routingDestinations;
+	}
+	
   public RoutingDestination getRoutingDestinationByName(String name) {
     RoutingDestination result;
     try {
@@ -160,13 +242,7 @@ public class RoutingDecisionService {
     }
     return List.of(tribalNations.get(RedLakeNation));
   }
-  private List<RoutingDestination> routeClientsInOtherFederallyRecognizedTribeLaterDoc(County county) {
-	    if (county.equals(County.Beltrami)) {
-		      return List.of(countyRoutingDestinations.get(county), tribalNations.get(RedLakeNation));
-	    }
-	    return List.of(countyRoutingDestinations.get(county));
-	  }
-
+  
   private List<RoutingDestination> routeRedLakeClients(Set<String> programs,
       ApplicationData applicationData, County county) {
 
@@ -204,36 +280,6 @@ public class RoutingDecisionService {
     }
     return List.of(countyRoutingDestinations.get(county));
   }
-  private List<RoutingDestination> routeWhiteEarthClientsLaterDoc( County county) {
-
-	    if (COUNTIES_SERVICED_BY_WHITE_EARTH.contains(county)) {
-	      return List.of(tribalNations.get(WhiteEarthNation));
-	    }
-	    else if (County.Beltrami.equals(county)) {
-		   
-		      return List.of(countyRoutingDestinations.get(county), tribalNations.get(RedLakeNation));
-	    	
-	    }
-	    return List.of(countyRoutingDestinations.get(county));
-	  }
-  
-  private List<RoutingDestination> routeClientsServicedByMilleLacsLaterDoc(TribalNation tribalNation, County county) {
-	    List<RoutingDestination> result = new ArrayList<>();
-	//    MilleLacsBandOfOjibwe, BoisForte, FondDuLac, GrandPortage, LeechLake
-	
-	    if (MILLE_LACS_RURAL_COUNTIES.contains(county) || URBAN_COUNTIES.contains(county)) {
-		     return List.of(countyRoutingDestinations.get(county), tribalNations.get(MilleLacsBandOfOjibwe));
-	    }
-	    if ((County.Beltrami.toString().equals(county.toString()) && !(LeechLake.toString().equals(tribalNation.toString()))) || 
-	    		(County.Clearwater.toString().equals(county.toString()) && !LeechLake.toString().equals(tribalNation.toString()))) {
-		      result.add(tribalNations.get(RedLakeNation));
-		      result.add(countyRoutingDestinations.get(county));
-	    }
-	    else {
-	      result.add(countyRoutingDestinations.get(county));
-	    }
-	    return result;
-	  }
   
   private boolean livesInCountyServicedByWhiteEarth(County county, String selectedTribeName) {
     return selectedTribeName != null
@@ -244,6 +290,7 @@ public class RoutingDecisionService {
   private boolean isApplyingForTribalTanf(PagesData pagesData) {
     return getBooleanValue(pagesData, APPLYING_FOR_TRIBAL_TANF);
   }
+
 
   private List<RoutingDestination> routeClientsServicedByMilleLacs(Set<String> programs,
       ApplicationData applicationData, Document document, County county) {

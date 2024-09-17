@@ -118,7 +118,10 @@ public List<String> getAndSetFileNames(Application application, Document documen
     List<RoutingDestination> routingDestinations =
         routingDecisionService.getRoutingDestinations(application.getApplicationData(), document);
    var fileName = routingDestinations.stream().distinct().map(rtDest -> getAndSetFileNames(application, document, rtDest)).collect(Collectors.toList());
-   return fileName.get(0);
+   if (fileName.size() > 0) {
+	   return fileName.get(0);
+   }
+   return new ArrayList<String>(); 
   }
   public void createOrUpdate(String applicationId, Document document,
       String routingDestinationName,

@@ -44,6 +44,8 @@ public enum TribalNation implements ServicingAgency {
       Aitkin, Benton, Chisago, CrowWing,Kanabec, Morrison, MilleLacs, Pine);
   public static final Set<TribalNation> MILLE_LACS_SERVICED_TRIBES = Set.of(BoisForte, GrandPortage,
       LeechLake, MilleLacsBandOfOjibwe, WhiteEarthNation, FondDuLac);
+  public static final Set<TribalNation> MN_CHIPPEWA_TRIBES = Set.of(BoisForte, FondDuLac, GrandPortage,
+	      LeechLake, MilleLacsBandOfOjibwe);
   private final String name;
 
   TribalNation(String name) {
