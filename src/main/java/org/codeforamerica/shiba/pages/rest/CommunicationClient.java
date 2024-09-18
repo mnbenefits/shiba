@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -31,11 +32,20 @@ public class CommunicationClient{
 	private RestTemplate commHubRestServiceTemplate;
 	
 	private String commHubUrl;
-	private Boolean enabled;
+	private Boolean enabled ;
 	
+	/*
+	 * public CommunicationClient(@Qualifier("commHubRestServiceTemplate")
+	 * RestTemplateBuilder commHubRestServiceBuilder,
+	 * 
+	 * @Value("${comm-hub.url}") String commHubUrl,
+	 * 
+	 * @Value("${comm-hub.enabled}") Boolean enabled)
+	 */
+	//@Autowired
 	public CommunicationClient(@Qualifier("commHubRestServiceTemplate") RestTemplateBuilder commHubRestServiceBuilder, 
-			@Value("${comm-hub.url}") String commHubUrl,
-			@Value("${comm-hub.enabled}") Boolean enabled) {
+			 String commHubUrl,
+			 Boolean enabled) {
 		super();
 		this.commHubRestServiceBuilder = commHubRestServiceBuilder;
 		this.commHubRestServiceTemplate = this.commHubRestServiceBuilder.build();

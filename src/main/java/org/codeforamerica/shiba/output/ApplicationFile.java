@@ -7,6 +7,9 @@ import lombok.Value;
 @ToString(exclude = {"fileBytes"})
 public class ApplicationFile {
 
-  byte[] fileBytes;
-  String fileName;
+ byte[] fileBytes;
+ String fileName; 
+	public byte[] getContent() {
+		return this.fileBytes;
+	}
 }

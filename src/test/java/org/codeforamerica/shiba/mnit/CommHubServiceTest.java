@@ -16,6 +16,7 @@ import org.codeforamerica.shiba.pages.rest.CommunicationClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,7 +39,9 @@ public class CommHubServiceTest {
 	private Clock clock;
     
     private MockRestServiceServer mockServer;
-    @Value("${comm-hub.url}")
+    //@Value("${comm-hub.url}")
+    @Autowired
+    @Qualifier("commHubUrl")
     private String commHubURL;
     
     @Value("${comm-hub.max-attempts}")

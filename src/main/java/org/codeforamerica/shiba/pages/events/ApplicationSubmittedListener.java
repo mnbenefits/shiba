@@ -4,9 +4,12 @@ import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.MonitoringService;
@@ -37,6 +40,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import lombok.extern.slf4j.Slf4j;
@@ -89,37 +94,38 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     MDC.clear();
   }
 
-  @Async
-  @EventListener
-  public void sendConfirmationEmail(ApplicationSubmittedEvent event) {
-    Application application = getApplicationFromEvent(event);
-    ApplicationData applicationData = application.getApplicationData();
-
-    EmailParser.parse(applicationData).ifPresent(email -> {
-      String applicationId = application.getId();
-      SnapExpeditedEligibility snapExpeditedEligibility =
-          snapExpeditedEligibilityDecider.decide(applicationData);
-      CcapExpeditedEligibility ccapExpeditedEligibility =
-          ccapExpeditedEligibilityDecider.decide(applicationData);
-      List<Document> docs = DocumentListParser.parse(applicationData);
-      List<ApplicationFile> pdfs = docs.stream()
-          .map(doc -> pdfGenerator.generate(applicationId, doc, CLIENT)).toList();
-
-      if (ContactInfoParser.optedIntoEmailCommunications(applicationData)) {
-        emailClient.sendShortConfirmationEmail(applicationData, email, applicationId,
-            new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-            snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-        emailClient.sendNextStepsEmail(applicationData, email, applicationId,
-            new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-            snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-      } else {
-        emailClient.sendConfirmationEmail(applicationData, email, applicationId,
-            new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-            snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-      }
-    });
-    MDC.clear();
-  }
+	
+	
+	  @Async
+	  
+	  @EventListener public void sendConfirmationEmail(ApplicationSubmittedEvent
+	  event) { Application application = getApplicationFromEvent(event);
+	  ApplicationData applicationData = application.getApplicationData();
+	  
+	  EmailParser.parse(applicationData).ifPresent(email -> { String applicationId=
+	  application.getId(); SnapExpeditedEligibility snapExpeditedEligibility =
+	  snapExpeditedEligibilityDecider.decide(applicationData);
+	  CcapExpeditedEligibility ccapExpeditedEligibility =
+	  ccapExpeditedEligibilityDecider.decide(applicationData);
+	  
+	  List<Document> docs = DocumentListParser.parse(applicationData);
+	  List<ApplicationFile> pdfs = docs.stream() .map(doc ->
+	  pdfGenerator.generate(applicationId, doc, CLIENT)).toList();
+	  
+	  if (ContactInfoParser.optedIntoEmailCommunications(applicationData)) {
+	  
+	  emailClient.sendShortConfirmationEmail(applicationData, email, applicationId,
+	  new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+	  snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+	  emailClient.sendNextStepsEmail(applicationData, email, applicationId, new
+	  ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+	  snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+	  } else { emailClient.sendConfirmationEmail(applicationData, email,
+	  applicationId, new
+	  ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+	  snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+	  } }); MDC.clear(); }
+	 
   
 	@Async
 	@EventListener
@@ -131,6 +137,29 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 	public void notifyApplicationSubmission(ApplicationSubmittedEvent event) {
 		Application application = getApplicationFromEvent(event);
 		ApplicationData applicationData = application.getApplicationData();
+		String applicationId = application.getId();
+		
+		List<Document> docs = DocumentListParser.parse(applicationData);
+		List<ApplicationFile> pdfs = docs.stream()
+	          .map(doc -> pdfGenerator.generate(applicationId, doc, CLIENT)).toList();
+		
+		
+		  List<String> encodedPdfs = pdfs.stream() .map(pdf -> pdf.getFileName() + "|"
+		  + Base64.getUrlEncoder().encodeToString(pdf.getContent()))//create a list ofencodedPdfs each containing a filename & content seperated by a pipe xter
+		  .collect(Collectors.toList());
+		 
+		/*
+		 * List<String> encodedPdfs = pdfs.stream() .map(pdf -> { try { String fileName
+		 * = pdf.getFileName(); String encodedContent =
+		 * Base64.getUrlEncoder().encodeToString(pdf.getContent()); return fileName +
+		 * "|" + encodedContent; }catch(Exception e) {
+		 * log.error("Error encoding pdf: for application {}: {} " , pdf.getFileName(),
+		 * applicationId, e.getMessage()); return null; } }) .filter(Objects::nonNull)
+		 * .collect(Collectors.toList());
+		 */
+        
+        String pdfString = String.join(", ", encodedPdfs);
+        
 	
 		MDC.put("applicationId", application.getId());
 
@@ -150,6 +179,10 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		appJsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 		appJsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
         appJsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
+        
+       // String pdfString = String.join(", ", encodedPdfs);//join all those strings into a single string using , as a delimiter
+        appJsonObject.addProperty("applicationPDF", pdfString); // add the single string into jsonObj with key, applicationPDF
+        
 		appJsonObject.addProperty("completed-dt", completedAt.toString());
 		appJsonObject.addProperty("county", routingDestination.getName());
 		appJsonObject.addProperty("countyPhoneNumber", routingDestination.getPhoneNumber());
