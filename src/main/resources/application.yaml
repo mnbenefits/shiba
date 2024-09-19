@@ -89,6 +89,8 @@ show-healthcare-renewal-chat: true
 
 mnb-notice-displayed: true
 
+wic-pilot-counties: all
+
 general:
    notice:
       title-en: 'Important Update!'
