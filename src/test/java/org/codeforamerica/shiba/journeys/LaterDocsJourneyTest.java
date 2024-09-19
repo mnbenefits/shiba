@@ -18,7 +18,7 @@ public class LaterDocsJourneyTest extends JourneyTest {
   void laterDocsFlow() {
      testPage.clickButton("Upload documents");
 
-    assertThat(driver.getTitle()).isEqualTo("Are you ready to upload documents");
+    assertThat(driver.getTitle()).isEqualTo("Ready to upload documents");
     assertNotNull(testPage.findElementById("headerMNbenefits"));
     assertNotNull(testPage.findElementById("footerMNbenefits"));
     testPage.clickContinue();
