@@ -143,21 +143,12 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		List<ApplicationFile> pdfs = docs.stream()
 	          .map(doc -> pdfGenerator.generate(applicationId, doc, CLIENT)).toList();
 		
-		
+		//create a list ofencodedPdfs each containing a filename & content seperated by a pipe xter
 		  List<String> encodedPdfs = pdfs.stream() .map(pdf -> pdf.getFileName() + "|"
-		  + Base64.getUrlEncoder().encodeToString(pdf.getContent()))//create a list ofencodedPdfs each containing a filename & content seperated by a pipe xter
+		  + Base64.getUrlEncoder().encodeToString(pdf.getContent()))
 		  .collect(Collectors.toList());
 		 
-		/*
-		 * List<String> encodedPdfs = pdfs.stream() .map(pdf -> { try { String fileName
-		 * = pdf.getFileName(); String encodedContent =
-		 * Base64.getUrlEncoder().encodeToString(pdf.getContent()); return fileName +
-		 * "|" + encodedContent; }catch(Exception e) {
-		 * log.error("Error encoding pdf: for application {}: {} " , pdf.getFileName(),
-		 * applicationId, e.getMessage()); return null; } }) .filter(Objects::nonNull)
-		 * .collect(Collectors.toList());
-		 */
-        
+		
         String pdfString = String.join(", ", encodedPdfs);
         
 	
@@ -180,7 +171,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		appJsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
         appJsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
         
-       // String pdfString = String.join(", ", encodedPdfs);//join all those strings into a single string using , as a delimiter
+
         appJsonObject.addProperty("applicationPDF", pdfString); // add the single string into jsonObj with key, applicationPDF
         
 		appJsonObject.addProperty("completed-dt", completedAt.toString());
