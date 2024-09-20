@@ -685,6 +685,7 @@ public class PageController {
             !landmarkPagesConfiguration.isTerminalPage(pageName) &&
 	        !landmarkPagesConfiguration.isLandingPage(pageName) &&
 	        !landmarkPagesConfiguration.isStartTimerPage(pageName) &&
+	    	!landmarkPagesConfiguration.isRecommendationsPage(pageName) &&
 	        applicationData.isSubmitted();  
     }
   
@@ -720,6 +721,7 @@ public class PageController {
      	   !landmarkPagesConfiguration.isNextStepsPage(pageName) &&
     	   !landmarkPagesConfiguration.isTerminalPage(pageName) &&
     	   !landmarkPagesConfiguration.isFeedbackPage(pageName) &&
+    	   !landmarkPagesConfiguration.isRecommendationsPage(pageName) &&
     	   !landmarkPagesConfiguration.isHealthcareRenewalLandingPage(pageName) &&
     	   !landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName) &&
            applicationData.getFlow() != LATER_DOCS

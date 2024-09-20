@@ -204,35 +204,12 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.selectFromDropdown("selectedTribe[]", "Bois Forte");
     testPage.clickContinue();
 
-    // It looks like you might be eligible for Tribal TANF. Would you like to apply?
-    // This triggers Tribal TANF to be mapped for CAF program selections
-    testPage.enter("applyForTribalTANF", YES.getDisplayValue());
+    // It looks like you might be eligible for MFIP. Would you like to apply?
+    // This triggers CASH to be mapped for CAF program selections
+    testPage.enter("applyForMFIP", YES.getDisplayValue());
 
     // Tribal TANF Confirmation screen
     testPage.clickContinue();
-
-    // Medical Care Milestone
-    testPage.clickContinue();
-
-    // Long Term Care
-    testPage.enter("doYouNeedLongTermCare", YES.getDisplayValue());
-
-    //Past Injury
-    testPage.enter("didYouHaveAPastInjury", YES.getDisplayValue());
-
-    //Retroactive Coverage
-    testPage.enter("retroactiveCoverageQuestion", YES.getDisplayValue());
-    
-    //Retroactive Coverage Source
-    testPage.enter("retroactiveCoverageSourceQuestion", "me");
-    testPage.clickContinue();
-    
-    //Retroactive Coverage Time Period
-    testPage.selectFromDropdown("retroactiveCoverageNumberMonths[]", "1 month");
-    testPage.clickContinue();
-
-    //Medical Benefits in another state
-    testPage.enter("medicalInOtherState", YES.getDisplayValue());
 
     // Income & Employment
     // Certain Pops will increment milestone steps
@@ -518,13 +495,18 @@ public class FullFlowJourneyTest extends JourneyTest {
     //assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
     //assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
     testPage.clickContinue();
-
+    testPage.clickLink("View more programs");
+    assertThat(driver.getTitle()).isEqualTo("Recommendations");
+    testPage.goBack();
     SuccessPage successPage = new SuccessPage(driver);
+    
+
     assertThat(successPage.findElementById("submission-date").getText()).contains(
         "Your application was submitted to Chisago County (888-234-1246) and Mille Lacs Band of Ojibwe (320-532-7407) on January 1, 2020.");
     applicationId = downloadPdfs();
     assertThat(successPage.findElementById("confirmation-number").getText()).contains("Confirmation # " + applicationId);
 
+    
     // CCAP fields
     assertCcapFieldEquals("APPLICATION_ID", applicationId);
     assertCcapFieldEquals("SUBMISSION_DATETIME", "01/01/2020 at 04:15 AM");
@@ -544,7 +526,7 @@ public class FullFlowJourneyTest extends JourneyTest {
         This application was submitted to Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
                     
         For more support, you can call Chisago County (888-234-1246).""");
-    assertCcapFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, TRIBAL TANF, CASH");
+    assertCcapFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH");
     assertCcapFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCcapFieldEquals("UTM_SOURCE", "");
     assertCcapFieldEquals("FULL_NAME_0", householdMemberFullName);
@@ -666,7 +648,7 @@ public class FullFlowJourneyTest extends JourneyTest {
             This application was submitted to Mille Lacs Band of Ojibwe and Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
             For more support, you can call Mille Lacs Band of Ojibwe (320-532-7407) and Chisago County (888-234-1246).""");
-    assertCafFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, TRIBAL TANF, CASH");
+    assertCafFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH");
     assertCafFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
     assertCafFieldEquals("FULL_NAME_0", householdMemberFullName);
@@ -721,7 +703,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("CCAP", "Yes");
     assertCafFieldEquals("EMERGENCY", "Yes");
     assertCafFieldEquals("GRH", "Yes");
-    assertCafFieldEquals("TANF", "Yes");
+    assertCafFieldEquals("TANF", "Off");
     assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
     assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
     assertCafFieldEquals("APPLICANT_OTHER_NAME", "defaultOtherName");
@@ -807,7 +789,7 @@ public class FullFlowJourneyTest extends JourneyTest {
                 This application was submitted to Mille Lacs Band of Ojibwe and Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
                 For more support, you can call Mille Lacs Band of Ojibwe (320-532-7407) and Chisago County (888-234-1246).""");
-    assertCertainPopsFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, TRIBAL TANF, CASH");
+    assertCertainPopsFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH");
     assertCertainPopsFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCertainPopsFieldEquals("TRIBAL_NATION", "Bois Forte");
     assertCertainPopsFieldEquals("FULL_NAME_0", householdMemberFullName);
@@ -824,7 +806,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCertainPopsFieldEquals("APPLICANT_IS_PREGNANT", "Yes");
     assertCertainPopsFieldEquals("HAS_PHYSICAL_MENTAL_HEALTH_CONDITION", "Yes");
     assertCertainPopsFieldEquals("DISABILITY_DETERMINATION", "Yes");
-    assertCertainPopsFieldEquals("NEED_LONG_TERM_CARE", "Yes");
+    assertCertainPopsFieldEquals("NEED_LONG_TERM_CARE", "Off");
     assertCertainPopsFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH");
     assertCertainPopsFieldEquals("NEED_INTERPRETER", "Yes");
     assertCertainPopsFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
@@ -836,7 +818,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCertainPopsFieldEquals("APPLICANT_MAILING_STATE", "CA");
     assertCertainPopsFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
     assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "someCounty");
-    assertCertainPopsFieldEquals("MEDICAL_IN_OTHER_STATE", "Yes");
+    assertCertainPopsFieldEquals("MEDICAL_IN_OTHER_STATE", "Off");
     assertCertainPopsFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
     assertCertainPopsFieldEquals("HH_HEALTHCARE_COVERAGE_0", "Yes");
     assertCertainPopsFieldEquals("FIRST_NAME_0", "householdMemberFirstName");
@@ -852,9 +834,9 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCertainPopsFieldEquals("NAME_OF_NON_US_CITIZEN_0", "Ahmed St. George");
     assertCertainPopsFieldEquals("ALIEN_ID_0", "A12345678");
     assertCertainPopsFieldEquals("WANT_AUTHORIZED_REP", "Yes");
-    assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_HELP", "Yes");
-    assertCertainPopsFieldEquals("RETROACTIVE_APPLICANT_FULLNAME_0", "Ahmed St. George");
-    assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_MONTH_0", "1");
+    assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_HELP", "Off");
+    assertCertainPopsFieldEquals("RETROACTIVE_APPLICANT_FULLNAME_0", "");
+    assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_MONTH_0", "Off");
     //assertCertainPopsFieldEquals("SELF_EMPLOYED", "Yes");
     assertCertainPopsFieldEquals("IS_WORKING", "No");
     //assertCertainPopsFieldEquals("NO_CP_UNEARNED_INCOME", "Yes");
@@ -887,7 +869,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCertainPopsFieldEquals("HAVE_BURIAL_ACCOUNT", "No");
     assertCertainPopsFieldEquals("HAVE_OWNERSHIP_BUSINESS", "No");
     assertCertainPopsFieldEquals("HAVE_OTHER_ASSETS", "No");
-    assertCertainPopsFieldEquals("HAD_A_PAST_ACCIDENT_OR_INJURY", "Yes");
+    assertCertainPopsFieldEquals("HAD_A_PAST_ACCIDENT_OR_INJURY", "Off");
     assertCertainPopsFieldEquals("HAVE_HEALTHCARE_COVERAGE", "Yes");
     assertCertainPopsFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
     assertCertainPopsFieldEquals("CREATED_DATE", "2020-01-01");

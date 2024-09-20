@@ -21,6 +21,7 @@ import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.enrichment.DateOfBirthEnrichment;
 import org.codeforamerica.shiba.pages.enrichment.HouseholdMemberDateOfBirthEnrichment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,14 +30,20 @@ public class WicRecommendationService {
 	public static final int CHILD_AGE_MAXIMUM = 5;
 	private final DateOfBirthEnrichment dateOfBirthEnrichment = new HouseholdMemberDateOfBirthEnrichment();
 	private FeatureFlagConfiguration featureFlagConfiguration;
+	private List<String> wicPilotCounties;
+	
 
-	public WicRecommendationService(FeatureFlagConfiguration featureFlagConfiguration) {
-		    this.featureFlagConfiguration = featureFlagConfiguration;
+	public WicRecommendationService(FeatureFlagConfiguration featureFlagConfiguration,
+			@Value("${wic-pilot-counties:}") List<String> wicPilotCounties) {
+		this.featureFlagConfiguration = featureFlagConfiguration;
+		this.wicPilotCounties = wicPilotCounties;
 	}
 	
 	public boolean showWicMessage(ApplicationData applicationData) {
         FeatureFlag showWicRecommendation = featureFlagConfiguration.get("show-wic-recommendation");
-		return showWicRecommendation.isOn() && (hasPregnantHouseholdMember(applicationData) || hasHouseholdMemberUpToAge5(applicationData));
+		return showWicRecommendation.isOn() 
+				&& (hasPregnantHouseholdMember(applicationData) || hasHouseholdMemberUpToAge5(applicationData))
+				&& showWicForThisCounty(applicationData);
 	}
 
 	public boolean hasPregnantHouseholdMember(ApplicationData applicationData) {
@@ -65,6 +72,11 @@ public class WicRecommendationService {
 		return birthDatesAsStrings.stream().filter(s -> !s.isBlank())
 				.map(stringDob -> LocalDate.parse(stringDob, DateTimeFormatter.ofPattern("MM/dd/yyyy")))
 				.collect(Collectors.toList());
+	}
+	
+	private boolean showWicForThisCounty(ApplicationData applicationData) {
+		return wicPilotCounties.contains("all") 
+			   || wicPilotCounties.contains(applicationData.getOriginalCounty());
 	}
 
 }

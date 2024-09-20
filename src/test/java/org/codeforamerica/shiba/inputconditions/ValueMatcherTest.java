@@ -34,7 +34,9 @@ class ValueMatcherTest {
 	  ValueMatcher valueMatcher = ValueMatcher.IS_MILLE_LACS_RURAL_COUNTY;
 	  assertThat(valueMatcher.matches(List.of("Aitkin"), null)).isTrue();
 	  assertThat(valueMatcher.matches(List.of("Benton"), null)).isTrue();
+	  assertThat(valueMatcher.matches(List.of("Chisago"), null)).isTrue();
 	  assertThat(valueMatcher.matches(List.of("Crow Wing"), null)).isTrue();
+	  assertThat(valueMatcher.matches(List.of("Kanabec"), null)).isTrue();
 	  assertThat(valueMatcher.matches(List.of("Morrison"), null)).isTrue();
 	  assertThat(valueMatcher.matches(List.of("Mille Lacs"), null)).isTrue();
 	  assertThat(valueMatcher.matches(List.of("Pine"), null)).isTrue();
@@ -51,9 +53,9 @@ class ValueMatcherTest {
 	  assertThat(valueMatcher.matches(List.of("Hennepin"), null)).isTrue();
 	  assertThat(valueMatcher.matches(List.of("Anoka"), null)).isTrue();
 	  assertThat(valueMatcher.matches(List.of("Ramsey"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Chisago"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Kanabec"), null)).isTrue();
 	  //anything else is false
+	  assertThat(valueMatcher.matches(List.of("Chisago"), null)).isFalse();
+	  assertThat(valueMatcher.matches(List.of("Kanabec"), null)).isFalse();
 	  assertThat(valueMatcher.matches(List.of("Aitkin"), null)).isFalse();
 	  assertThat(valueMatcher.matches(List.of("Yellow Medicine"), null)).isFalse();
 	  assertThat(valueMatcher.matches(List.of("foobar"), null)).isFalse();

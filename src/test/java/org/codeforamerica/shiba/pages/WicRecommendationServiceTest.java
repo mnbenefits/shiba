@@ -17,8 +17,10 @@ import org.junit.jupiter.api.Test;
 
 public class WicRecommendationServiceTest {
 	
-	private FeatureFlagConfiguration featureFlagConfiguration = new FeatureFlagConfiguration(Map.of("show-wic-recommendation", FeatureFlag.ON));
-	private WicRecommendationService wicRecommendationService = new WicRecommendationService(featureFlagConfiguration);
+	private FeatureFlagConfiguration featureFlagConfiguration = new FeatureFlagConfiguration(
+			Map.of("show-wic-recommendation", FeatureFlag.ON));
+	private WicRecommendationService wicRecommendationService = new WicRecommendationService(featureFlagConfiguration,
+			List.of("Anoka", "Carver"));
     ZonedDateTime now = ZonedDateTime.now();
     ZonedDateTime fiveYearsBefore = now.minusYears(5);    
 
@@ -117,6 +119,7 @@ public class WicRecommendationServiceTest {
 		        .build();
 	    applicationData.setId("9870000123");
 	    applicationData.setFlow(FlowType.FULL);
+	    applicationData.setOriginalCounty("Anoka");
 		boolean showWicMessage = wicRecommendationService.showWicMessage(applicationData);
 		assertTrue(showWicMessage);
 	}
@@ -141,6 +144,7 @@ public class WicRecommendationServiceTest {
 		        .build();
 	    applicationData.setId("9870000123");
 	    applicationData.setFlow(FlowType.FULL);
+	    applicationData.setOriginalCounty("Anoka");
 		boolean showWicMessage = wicRecommendationService.showWicMessage(applicationData);
 		assertFalse(showWicMessage);
 	}
@@ -168,6 +172,7 @@ public class WicRecommendationServiceTest {
 				.build();
 		applicationData.setId("9870000123");
 		applicationData.setFlow(FlowType.FULL);
+	    applicationData.setOriginalCounty("Anoka");
 		boolean showWicMessage = wicRecommendationService.showWicMessage(applicationData);
 		assertFalse(showWicMessage);
 	}
@@ -186,6 +191,33 @@ public class WicRecommendationServiceTest {
 		        .build();
 	    applicationData.setId("9870000123");
 	    applicationData.setFlow(FlowType.FULL);
+	    applicationData.setOriginalCounty("Anoka");
+		boolean showWicMessage = wicRecommendationService.showWicMessage(applicationData);
+		assertFalse(showWicMessage);
+	}
+
+    //Assert that method showMessage returns false when even though the household has a pregnant member,
+	//the county is not in the wic-pilot-counties list.
+	@Test
+	public void doNotShowWicWithAnybodyInHouseholdPregnantButNotPilotCounty() {
+		
+	    ApplicationData applicationData = new ApplicationData();	    
+	    applicationData = new TestApplicationDataBuilder(applicationData)
+		        .withPersonalInfo()
+		        .withContactInfo()
+		        .withApplicantPrograms(List.of("CCAP"))
+		        .withSubworkflow("household",
+		            new PagesDataBuilder().withPageData("householdMemberInfo", Map.of(
+		                "firstName", "Jane",
+		                "lastName", "Testerson",
+		                "dateOfBirth", List.of("01", "09", "2016"))).build())
+		        .withApplicantPrograms(List.of("SNAP"))
+		        .withPageData("verifyHomeAddress", "useEnrichedAddress", List.of("true"))
+		        .withPageData("pregnant", "isPregnant", List.of("true"))
+		        .build();
+	    applicationData.setId("9870000123");
+	    applicationData.setFlow(FlowType.FULL);
+	    applicationData.setOriginalCounty("Clay"); // not a pilot county
 		boolean showWicMessage = wicRecommendationService.showWicMessage(applicationData);
 		assertFalse(showWicMessage);
 	}
