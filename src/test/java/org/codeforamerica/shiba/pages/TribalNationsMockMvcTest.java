@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.TribalNation;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
@@ -370,6 +371,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void clientsFromOtherFederallyRecognizedNationsShouldBeAbleToApplyForMFIPAndRouteToCounty()
       throws Exception {
+	applicationData.setFlow(FlowType.FULL);
     addHouseholdMembersWithProgram("EA");
     goThroughShortTribalTanfFlow(OtherFederallyRecognizedTribe.toString(), Beltrami.toString(),
         "true", EA);

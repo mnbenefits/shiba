@@ -133,7 +133,7 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.IDENTIFY_ZIPCODE, new ParsingCoordinate("identifyZipcode", "zipCode"));
     coordinatesMap.put(Field.IDENTIFY_COUNTY, new ParsingCoordinate("identifyCounty", "county"));
     coordinatesMap.put(Field.IDENTIFY_COUNTY_LATER_DOCS, new ParsingCoordinate("identifyCountyOrTribalNation", "county"));
-    coordinatesMap.put(Field.IDENTIFY_TRIBAL_NATION_LATER_DOCS, new ParsingCoordinate("identifyCountyOrTribalNation", "tribalNation"));
+    coordinatesMap.put(Field.IDENTIFY_TRIBAL_NATION_LATER_DOCS, new ParsingCoordinate("selectTheTribe", "selectedTribe"));
     coordinatesMap.put(Field.IDENTIFY_COUNTY_HEALTHCARE_RENEWAL, new ParsingCoordinate("healthcareRenewalUpload", "county"));
     coordinatesMap.put(Field.IDENTIFY_TRIBAL_NATION_HEALTHCARE_RENEWAL, new ParsingCoordinate("healthcareRenewalUpload", "tribalNation"));
 

@@ -83,24 +83,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
   @Test
   void laterDocsFlow() {
     testPage.clickButton("Upload documents");
-
-    // Enter nothing to throw error on select to check aria-properties on error
+    // Ready to upload documents page
     testPage.clickContinue();
-    //assertThat(testPage.selectHasInputError("county")).isTrue();
-    assertThat(testPage.selectHasInputError("tribalNation")).isTrue();
-    assertThat(testPage.getSelectAriaDescribedBy("tribalNation")).isEqualTo("tribalNation-error-message-1");
-   // assertThat(testPage.getSelectAriaDescribedBy("county")).isEqualTo("county-error-message-1");
-
-    // should direct me to email docs to my county if my county is not supported
-    navigateTo("identifyCounty");
-    testPage.enter("county", "Dakota");
-    testPage.clickContinue();
-
-    // should allow me to enter personal info and continue the flow if my county is supported
-    testPage.clickLink("< Go Back");
-    testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
-
+    
+    // Match Info page
     // Enter incorrect information to get validation errors to check against aria-properties
     assertThat(testPage.inputIsValid("firstName")).isTrue();
     assertThat(driver.findElement(By.id("dateOfBirth-day")).getAttribute("aria-invalid")).isEqualTo(
@@ -139,8 +125,44 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("caseNumber", "1234567");
     testPage.enter("phoneNumber", "7041234567");
     testPage.clickContinue();
-    // 	howToAddDocuments page is here
+    
+    // Identify County page
+    assertThat(driver.getTitle()).isEqualTo("Identify County");
     testPage.clickContinue();
+    assertThat(testPage.selectHasInputError("county")).isTrue();
+    assertThat(testPage.getSelectAriaLabel("county")).isEqualTo("Error county");
+    assertThat(testPage.getSelectAriaDescribedBy("county")).isEqualTo("county-error-message-1");
+    testPage.enter("county", "Dakota");
+    testPage.clickContinue();
+
+    // Tribal Nation Member page
+    assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
+    testPage.clickButton("Yes");
+    
+    // Select Tribal Nation
+    assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
+    testPage.clickContinue();
+    assertThat(testPage.selectHasInputError("selectedTribe")).isTrue();
+    assertThat(testPage.getSelectAriaLabel("selectedTribe")).isEqualTo("Error selectedTribe");
+    assertThat(testPage.getSelectAriaDescribedBy("selectedTribe")).isEqualTo("selectedTribe-error-message-1");
+    
+    // go back to isTribalNationMember
+    testPage.clickLink("< Go Back"); // this Go Back just takes you the selectTribalNation page that appeared before there was an error
+    testPage.clickLink("< Go Back"); 
+    assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
+    
+    // go back to identifyCounty
+    testPage.clickLink("< Go Back");
+    assertThat(driver.getTitle()).isEqualTo("Identify County");
+    testPage.enter("county", "Hennepin");
+    testPage.clickContinue();
+    
+    // isTribalNationMember
+    testPage.clickButton("No");
+    
+    // howToAddDocuments page
+    testPage.clickContinue();
+    
     // should allow me to upload documents and those documents should be sent to the ESB
     uploadPdfFile();
     await().until(uploadCompletes());
