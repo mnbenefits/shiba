@@ -141,7 +141,7 @@ dependencies {
     implementation("com.google.crypto.tink:tink:1.15.0")
     implementation("com.azure:azure-storage-blob:12.28.0")
     implementation("org.postgresql:postgresql")
-    implementation("org.jetbrains:annotations:24.1.0")
+    implementation("org.jetbrains:annotations:25.0.0")
     implementation("commons-validator:commons-validator:1.9.0")
     implementation("org.flywaydb:flyway-core:10.18.0")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:10.18.0")
