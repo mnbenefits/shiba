@@ -667,7 +667,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertNull(caf.getField("FIRST_NAME_4"));
 		}
 
-
 		@Test
 		void shouldMapMfipAsCash() throws Exception {
 			fillInRequiredPages();
