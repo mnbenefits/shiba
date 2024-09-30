@@ -69,6 +69,7 @@ class ApplicationSubmittedListenerTest {
   ApplicationSubmittedListener applicationSubmittedListener;
   RoutingDecisionService routingDecisionService = mock(RoutingDecisionService.class);
   CommunicationClient communicationClient = mock(CommunicationClient.class);
+  PdfEncoder pdfEncoder = mock(PdfEncoder.class);
 
   @BeforeEach
   void setUp() {
@@ -83,7 +84,8 @@ class ApplicationSubmittedListenerTest {
         monitoringService, 
         routingDecisionService, 
         communicationClient,
-        "true"
+        "true",
+        pdfEncoder
         );
   }
   
@@ -135,8 +137,10 @@ class ApplicationSubmittedListenerTest {
 			ApplicationSubmittedEvent  event = new ApplicationSubmittedEvent("someSessionId", applicationId, null, Locale.ENGLISH);
 			when(applicationSubmittedListener.getApplicationFromEvent(event)).thenReturn(application);
 			when(routingDecisionService.getRoutingDestinationByName("Ramsey")).thenReturn(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
+			when(pdfEncoder.createEncodedPdfString(application)).thenReturn("someFileName.pdf|c29tZUNvbnRlbnQy=");
 			Set<RoutingDestination> destinationSet = Set.of(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
 			when(routingDecisionService.findRoutingDestinations(application)).thenReturn(destinationSet);
+
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("appId", applicationData.getId());
 			jsonObject.addProperty("expedited", applicationData.getExpeditedEligibility().toString());
@@ -148,6 +152,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 			jsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
 			jsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
+			jsonObject.addProperty("applicationPDF", pdfEncoder.createEncodedPdfString(application));
 			jsonObject.addProperty("completed-dt", Timestamp.valueOf(dateTime.toLocalDateTime()).toString()); 
 			jsonObject.addProperty("county", "Ramsey");
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
@@ -179,8 +184,10 @@ class ApplicationSubmittedListenerTest {
 			ApplicationSubmittedEvent  event = new ApplicationSubmittedEvent("someSessionId", applicationId, null, Locale.ENGLISH);
 			when(applicationSubmittedListener.getApplicationFromEvent(event)).thenReturn(application);
 			when(routingDecisionService.getRoutingDestinationByName("Olmsted")).thenReturn(new CountyRoutingDestination(Olmsted, "DPI", "email", "(651)555-5555"));
+			when(pdfEncoder.createEncodedPdfString(application)).thenReturn("someFileName.pdf|c29tZUNvbnRlbnQy=");
 			Set<RoutingDestination> destinationSet = Set.of(new CountyRoutingDestination(Olmsted, "DPI", "email", "(651)555-5555"), new TribalNationRoutingDestination(RedLakeNation, "DPI", "email", "(651)555-6666"));
 			when(routingDecisionService.findRoutingDestinations(application)).thenReturn(destinationSet);
+			
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("appId", applicationData.getId());
 			jsonObject.addProperty("expedited", applicationData.getExpeditedEligibility().toString());
@@ -192,6 +199,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 			jsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
 			jsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
+			jsonObject.addProperty("applicationPDF", pdfEncoder.createEncodedPdfString(application));
 			jsonObject.addProperty("completed-dt", Timestamp.valueOf(dateTime.toLocalDateTime()).toString()); 
 			jsonObject.addProperty("county", "Olmsted");
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
@@ -226,7 +234,9 @@ class ApplicationSubmittedListenerTest {
 			when(applicationSubmittedListener.getApplicationFromEvent(event)).thenReturn(application);
 			when(routingDecisionService.getRoutingDestinationByName("Becker")).thenReturn(new CountyRoutingDestination(Becker, "DPI", "email", "(651)555-5555"));
 			Set<RoutingDestination> destinationSet = Set.of(new TribalNationRoutingDestination(WhiteEarthNation, "DPI", "email", "(651)555-6666"));
+			when(pdfEncoder.createEncodedPdfString(application)).thenReturn("someFileName.pdf|c29tZUNvbnRlbnQy=");
 			when(routingDecisionService.findRoutingDestinations(application)).thenReturn(destinationSet);
+
 			JsonObject jsonObject = new JsonObject();
 			jsonObject.addProperty("appId", applicationData.getId());
 			jsonObject.addProperty("expedited", applicationData.getExpeditedEligibility().toString());
@@ -238,6 +248,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 			jsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
 			jsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
+			jsonObject.addProperty("applicationPDF", pdfEncoder.createEncodedPdfString(application));
 			jsonObject.addProperty("completed-dt", Timestamp.valueOf(dateTime.toLocalDateTime()).toString()); 
 			jsonObject.addProperty("county", "Becker");
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
@@ -281,7 +292,8 @@ class ApplicationSubmittedListenerTest {
                 monitoringService, 
                 routingDecisionService, 
                 communicationClient,
-                "false"
+                "false",
+                pdfEncoder
                 );
 
       ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("", "", null, Locale.ENGLISH);

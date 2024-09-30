@@ -4,9 +4,11 @@ import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.MonitoringService;
@@ -53,6 +55,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
   private final RoutingDecisionService routingDecisionService;
   private final CommunicationClient communicationClient;
   private final String filenetEnabled;
+  private final PdfEncoder pdfEncoder;
 
 
   public ApplicationSubmittedListener(MnitDocumentConsumer mnitDocumentConsumer,
@@ -64,7 +67,8 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
       MonitoringService monitoringService,
       RoutingDecisionService routingDecisionService,
       CommunicationClient communicationClient,
-      @Value ("${mnit-filenet.enabled}") String filenetEnabled) {
+      @Value ("${mnit-filenet.enabled}") String filenetEnabled , 
+      PdfEncoder pdfEncoder) {
     super(applicationRepository, monitoringService);
     this.mnitDocumentConsumer = mnitDocumentConsumer;
     this.emailClient = emailClient;
@@ -74,6 +78,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     this.routingDecisionService = routingDecisionService;
     this.communicationClient = communicationClient;
     this.filenetEnabled = filenetEnabled;
+	this.pdfEncoder = pdfEncoder;
   }
 
   @Async
@@ -89,38 +94,38 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     MDC.clear();
   }
 
-  @Async
-  @EventListener
-  public void sendConfirmationEmail(ApplicationSubmittedEvent event) {
-    Application application = getApplicationFromEvent(event);
-    ApplicationData applicationData = application.getApplicationData();
+	
+	@Async
 
-    EmailParser.parse(applicationData).ifPresent(email -> {
-      String applicationId = application.getId();
-      SnapExpeditedEligibility snapExpeditedEligibility =
-          snapExpeditedEligibilityDecider.decide(applicationData);
-      CcapExpeditedEligibility ccapExpeditedEligibility =
-          ccapExpeditedEligibilityDecider.decide(applicationData);
-      List<Document> docs = DocumentListParser.parse(applicationData);
-      List<ApplicationFile> pdfs = docs.stream()
-          .map(doc -> pdfGenerator.generate(applicationId, doc, CLIENT)).toList();
+	@EventListener
+	public void sendConfirmationEmail(ApplicationSubmittedEvent event) {
+		Application application = getApplicationFromEvent(event);
+		ApplicationData applicationData = application.getApplicationData();
 
-      if (ContactInfoParser.optedIntoEmailCommunications(applicationData)) {
-        emailClient.sendShortConfirmationEmail(applicationData, email, applicationId,
-            new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-            snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-        emailClient.sendNextStepsEmail(applicationData, email, applicationId,
-            new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-            snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-      } else {
-        emailClient.sendConfirmationEmail(applicationData, email, applicationId,
-            new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-            snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-      }
-    });
-    MDC.clear();
-  }
-  
+		EmailParser.parse(applicationData).ifPresent(email -> {
+			String applicationId = application.getId();
+			SnapExpeditedEligibility snapExpeditedEligibility = snapExpeditedEligibilityDecider.decide(applicationData);
+			CcapExpeditedEligibility ccapExpeditedEligibility = ccapExpeditedEligibilityDecider.decide(applicationData);
+			List<Document> docs = DocumentListParser.parse(applicationData);
+			List<ApplicationFile> pdfs = docs.stream().map(doc -> pdfGenerator.generate(applicationId, doc, CLIENT))
+					.toList();
+
+			if (ContactInfoParser.optedIntoEmailCommunications(applicationData)) {
+				emailClient.sendShortConfirmationEmail(applicationData, email, applicationId,
+						new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+						snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+				emailClient.sendNextStepsEmail(applicationData, email, applicationId,
+						new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+						snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+			} else {
+				emailClient.sendConfirmationEmail(applicationData, email, applicationId,
+						new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+						snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+			}
+		});
+		MDC.clear();
+	}
+
 	@Async
 	@EventListener
 	/**
@@ -132,6 +137,8 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		Application application = getApplicationFromEvent(event);
 		ApplicationData applicationData = application.getApplicationData();
 	
+	    String pdfString = pdfEncoder.createEncodedPdfString(application);
+	   
 		MDC.put("applicationId", application.getId());
 
         Timestamp completedAt = Timestamp.valueOf(application.getCompletedAt().toLocalDateTime());
@@ -150,6 +157,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		appJsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 		appJsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
         appJsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
+        appJsonObject.addProperty("applicationPDF", pdfString);
 		appJsonObject.addProperty("completed-dt", completedAt.toString());
 		appJsonObject.addProperty("county", routingDestination.getName());
 		appJsonObject.addProperty("countyPhoneNumber", routingDestination.getPhoneNumber());
