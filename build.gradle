@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.3.3"
+    id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     id("java")
     id("com.github.jk1.dependency-license-report") version "2.9"
@@ -104,8 +104,8 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("org.apache.commons:commons-text:1.12.0")
     implementation("org.apache.httpcomponents.core5:httpcore5:5.3")
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.3.1")
-    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.3.1")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.4")
+    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.4")
     implementation("org.apache.pdfbox:pdfbox:3.0.3")
 
     implementation("org.springframework:spring-aspects")
@@ -115,15 +115,15 @@ dependencies {
     implementation("org.springframework.session:spring-session-core:3.3.2")
     implementation("org.springframework.session:spring-session-jdbc:3.3.2")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-web:3.3.3")
+    implementation("org.springframework.boot:spring-boot-starter-web:3.3.4")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.3.3")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.3.4")
     //webflux is needed even though it is reactive, not servlet. Used by MailGun and SmartyStreet
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web-services:3.3.3") {
+    implementation("org.springframework.boot:spring-boot-starter-web-services:3.3.4") {
     	exclude(group: "org.springframework.boot", module: "spring-boot-starter-tomcat")
     }
     
@@ -141,17 +141,17 @@ dependencies {
     implementation("com.google.crypto.tink:tink:1.15.0")
     implementation("com.azure:azure-storage-blob:12.28.0")
     implementation("org.postgresql:postgresql")
-    implementation("org.jetbrains:annotations:24.1.0")
+    implementation("org.jetbrains:annotations:25.0.0")
     implementation("commons-validator:commons-validator:1.9.0")
-    implementation("org.flywaydb:flyway-core:10.18.0")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.18.0")
+    implementation("org.flywaydb:flyway-core:10.18.2")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.18.2")
     implementation("com.mixpanel:mixpanel-java:1.5.3")
     implementation("net.javacrumbs.shedlock:shedlock-spring:5.16.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.16.0")
     implementation("net.coobird:thumbnailator:0.4.20")
     implementation("mobi.openddr.client:openddr-classifier-client:1.4.1")
     implementation("mobi.openddr:openddr-data:1.34")
-    implementation("com.google.guava:guava:33.3.0-jre")
+    implementation("com.google.guava:guava:33.3.1-jre")
 
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")

@@ -108,14 +108,12 @@ public class PdfFieldFillersConfiguration {
       @Value("classpath:ccap-headers.pdf") Resource ccapHeaders,
       @Value("classpath:ccap-body-client-page1.pdf") Resource ccapPage1,
       @Value("classpath:ccap-body.pdf") Resource ccapBody,
-      @Value("classpath:ccap-body-authorize-info-sharing.pdf") Resource ccapInfoSharing,
       @Value("classpath:ccap-body-perjury-and-general-declarations.pdf") Resource ccapDeclarations,
       @Value("classpath:ccap-body-additional-room.pdf") Resource ccapAdditionalRoom,
       @Value("classpath:ccap-footers.pdf") Resource ccapFooters
   ) {
     return new PDFBoxFieldFiller(List.of(
-        coverPages, ccapHeaders, ccapPage1, ccapBody, ccapInfoSharing, ccapDeclarations,
-        ccapAdditionalRoom, ccapFooters
+        coverPages, ccapHeaders, ccapPage1, ccapBody, ccapDeclarations, ccapAdditionalRoom, ccapFooters
     ));
   }
 
