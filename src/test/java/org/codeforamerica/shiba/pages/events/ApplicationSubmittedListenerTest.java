@@ -70,12 +70,8 @@ class ApplicationSubmittedListenerTest {
   ApplicationSubmittedListener applicationSubmittedListener;
   RoutingDecisionService routingDecisionService = mock(RoutingDecisionService.class);
   CommunicationClient communicationClient = mock(CommunicationClient.class);
-<<<<<<< HEAD
   PdfEncoder pdfEncoder = mock(PdfEncoder.class);
-=======
   WicRecommendationService wicRecommendationService = mock(WicRecommendationService.class);
->>>>>>> stash
-
   @BeforeEach
   void setUp() {
     LocaleContextHolder.setLocale(Locale.ENGLISH);
@@ -89,13 +85,9 @@ class ApplicationSubmittedListenerTest {
         monitoringService, 
         routingDecisionService, 
         communicationClient,
-<<<<<<< HEAD
-        "true",
-        pdfEncoder
-=======
+        pdfEncoder,
         wicRecommendationService,
         "true"
->>>>>>> stash
         );
   }
   
@@ -305,13 +297,9 @@ class ApplicationSubmittedListenerTest {
                 monitoringService, 
                 routingDecisionService, 
                 communicationClient,
-<<<<<<< HEAD
-                "false",
-                pdfEncoder
-=======
+                pdfEncoder,
                 wicRecommendationService,
                 "false"
->>>>>>> stash
                 );
 
       ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("", "", null, Locale.ENGLISH);

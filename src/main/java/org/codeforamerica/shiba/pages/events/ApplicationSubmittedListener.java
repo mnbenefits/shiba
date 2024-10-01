@@ -69,13 +69,9 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
       MonitoringService monitoringService,
       RoutingDecisionService routingDecisionService,
       CommunicationClient communicationClient,
-<<<<<<< HEAD
-      @Value ("${mnit-filenet.enabled}") String filenetEnabled , 
-      PdfEncoder pdfEncoder) {
-=======
+      PdfEncoder pdfEncoder,
       WicRecommendationService wicRecommendationService,
       @Value ("${mnit-filenet.enabled}") String filenetEnabled) {
->>>>>>> stash
     super(applicationRepository, monitoringService);
     this.mnitDocumentConsumer = mnitDocumentConsumer;
     this.emailClient = emailClient;
@@ -85,11 +81,8 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     this.routingDecisionService = routingDecisionService;
     this.communicationClient = communicationClient;
     this.filenetEnabled = filenetEnabled;
-<<<<<<< HEAD
 	this.pdfEncoder = pdfEncoder;
-=======
     this.wicRecommendationService = wicRecommendationService;
->>>>>>> stash
   }
 
   @Async
