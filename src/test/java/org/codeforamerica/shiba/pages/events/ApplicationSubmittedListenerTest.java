@@ -39,6 +39,7 @@ import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibilityDecider;
 import org.codeforamerica.shiba.output.pdf.PdfGenerator;
 import org.codeforamerica.shiba.pages.RoutingDecisionService;
+import org.codeforamerica.shiba.pages.WicRecommendationService;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.PagesData;
@@ -69,7 +70,11 @@ class ApplicationSubmittedListenerTest {
   ApplicationSubmittedListener applicationSubmittedListener;
   RoutingDecisionService routingDecisionService = mock(RoutingDecisionService.class);
   CommunicationClient communicationClient = mock(CommunicationClient.class);
+<<<<<<< HEAD
   PdfEncoder pdfEncoder = mock(PdfEncoder.class);
+=======
+  WicRecommendationService wicRecommendationService = mock(WicRecommendationService.class);
+>>>>>>> stash
 
   @BeforeEach
   void setUp() {
@@ -84,8 +89,13 @@ class ApplicationSubmittedListenerTest {
         monitoringService, 
         routingDecisionService, 
         communicationClient,
+<<<<<<< HEAD
         "true",
         pdfEncoder
+=======
+        wicRecommendationService,
+        "true"
+>>>>>>> stash
         );
   }
   
@@ -149,6 +159,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("phoneNumber", ContactInfoParser.phoneNumber(applicationData).replaceAll("[^0-9]", ""));
 			jsonObject.addProperty("email", ContactInfoParser.email(applicationData));
 			jsonObject.addProperty("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
+			jsonObject.addProperty("wic-message", wicRecommendationService.showWicMessage(applicationData));
 			jsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 			jsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
 			jsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
@@ -196,6 +207,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("phoneNumber", ContactInfoParser.phoneNumber(applicationData).replaceAll("[^0-9]", ""));
 			jsonObject.addProperty("email", ContactInfoParser.email(applicationData));
 			jsonObject.addProperty("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
+			jsonObject.addProperty("wic-message", wicRecommendationService.showWicMessage(applicationData));
 			jsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 			jsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
 			jsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
@@ -245,6 +257,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("phoneNumber", ContactInfoParser.phoneNumber(applicationData).replaceAll("[^0-9]", ""));
 			jsonObject.addProperty("email", ContactInfoParser.email(applicationData));
 			jsonObject.addProperty("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
+			jsonObject.addProperty("wic-message", wicRecommendationService.showWicMessage(applicationData));
 			jsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 			jsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
 			jsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
@@ -292,8 +305,13 @@ class ApplicationSubmittedListenerTest {
                 monitoringService, 
                 routingDecisionService, 
                 communicationClient,
+<<<<<<< HEAD
                 "false",
                 pdfEncoder
+=======
+                wicRecommendationService,
+                "false"
+>>>>>>> stash
                 );
 
       ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("", "", null, Locale.ENGLISH);

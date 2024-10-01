@@ -30,6 +30,7 @@ import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibilityDecider;
 import org.codeforamerica.shiba.output.pdf.PdfGenerator;
 import org.codeforamerica.shiba.pages.RoutingDecisionService;
+import org.codeforamerica.shiba.pages.WicRecommendationService;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.emails.EmailClient;
 import org.codeforamerica.shiba.pages.rest.CommunicationClient;
@@ -53,6 +54,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
   private final CcapExpeditedEligibilityDecider ccapExpeditedEligibilityDecider;
   private final PdfGenerator pdfGenerator;
   private final RoutingDecisionService routingDecisionService;
+  private final WicRecommendationService wicRecommendationService;
   private final CommunicationClient communicationClient;
   private final String filenetEnabled;
   private final PdfEncoder pdfEncoder;
@@ -67,8 +69,13 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
       MonitoringService monitoringService,
       RoutingDecisionService routingDecisionService,
       CommunicationClient communicationClient,
+<<<<<<< HEAD
       @Value ("${mnit-filenet.enabled}") String filenetEnabled , 
       PdfEncoder pdfEncoder) {
+=======
+      WicRecommendationService wicRecommendationService,
+      @Value ("${mnit-filenet.enabled}") String filenetEnabled) {
+>>>>>>> stash
     super(applicationRepository, monitoringService);
     this.mnitDocumentConsumer = mnitDocumentConsumer;
     this.emailClient = emailClient;
@@ -78,7 +85,11 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     this.routingDecisionService = routingDecisionService;
     this.communicationClient = communicationClient;
     this.filenetEnabled = filenetEnabled;
+<<<<<<< HEAD
 	this.pdfEncoder = pdfEncoder;
+=======
+    this.wicRecommendationService = wicRecommendationService;
+>>>>>>> stash
   }
 
   @Async
@@ -154,6 +165,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		appJsonObject.addProperty("phoneNumber", ContactInfoParser.phoneNumber(applicationData).replaceAll("[^0-9]", ""));
 		appJsonObject.addProperty("email", ContactInfoParser.email(applicationData));
 		appJsonObject.addProperty("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
+		appJsonObject.addProperty("wic-message", wicRecommendationService.showWicMessage(applicationData));
 		appJsonObject.addProperty("opt-status-email", ContactInfoParser.optedIntoEmailCommunications(applicationData));
 		appJsonObject.addProperty("writtenLangPref", ContactInfoParser.writtenLanguagePref(applicationData));
         appJsonObject.addProperty("spokenLangPref", ContactInfoParser.spokenLanguagePref(applicationData));
