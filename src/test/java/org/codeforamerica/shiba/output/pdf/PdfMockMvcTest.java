@@ -5,7 +5,6 @@ import static org.codeforamerica.shiba.output.Document.CCAP;
 import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.output.caf.CoverPagePreparer.CHILDCARE_WAITING_LIST_UTM_SOURCE;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEquals;
-import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldContains;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsEmpty;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsNull;
@@ -13,26 +12,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.zip.ZipInputStream;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.codeforamerica.shiba.Program;
+import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
+import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
@@ -40,11 +35,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Tag("pdf")
 public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
-
+	@Autowired
+	private PdfGenerator pdfGenerator;
+	
 	@Override
 	@BeforeEach
 	protected void setUp() throws Exception {
@@ -338,26 +335,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		// Submit the application
 		submitApplication();
 
-		// Download the CCAP, the version for a caseworker. Note: /download downloads a
-		// .zip file
-		ResultActions resultActions = mockMvc.perform(get("/download")
-				.with(oauth2Login().attributes(attrs -> attrs.put("email", ADMIN_EMAIL))).session(session));
-		byte[] downloadBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
-		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(downloadBytes);
-		// The /download endpoint downloads a .zip file
-		ZipInputStream zipFile = new ZipInputStream(byteArrayInputStream);
-		List<File> zippedFiles = unzip(zipFile);
-
-		// Extract the CCAP file
-		File ccapFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CCAP)).toList().get(0);
-		byte[] ccapBytes = FileUtils.readFileToByteArray(ccapFile);
-		// PDAcroForm pdAcroForm =
-		// Loader.loadPDF(FileUtils.readFileToByteArray(ccapFile)).getDocumentCatalog().getAcroForm();
+		// Generate the CCAP PDF, caseworker version
+		ApplicationFile ccapFile = pdfGenerator.generate(applicationData.getId(), CCAP, Recipient.CASEWORKER);
+		byte[] ccapBytes = ccapFile.getFileBytes();
 		PDDocument pdDocument = Loader.loadPDF(ccapBytes);
 
-		// The CCAP PDF should have 29 pages (based on viewing a real example)
+		// The CCAP PDF version for the caseworker should have 19 pages (based on viewing a real example)
 		int pageCount = pdDocument.getNumberOfPages();
-		assert (pageCount == 29);
+		assert (pageCount == 19);
 
 		// Strip out all text so that we can search it for specific strings
 		PDFTextStripper pdfStripper = new PDFTextStripper();
