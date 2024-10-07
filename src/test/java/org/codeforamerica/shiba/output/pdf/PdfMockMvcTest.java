@@ -10,16 +10,23 @@ import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsE
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.zip.ZipInputStream;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
@@ -36,6 +43,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.ResultActions;
 
 @Tag("pdf")
 public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
@@ -291,10 +299,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("COUNTY_INSTRUCTIONS", expectedCountyInstructions, ccap);
 	}
 
-	// Verify that the CCAP PDF which is generated for the caseworker has all of the
-	// pieces\pages that it should have.
 	@Test
-	void ccapPdfForCaseWorkerShouldHaveExpectedPages() throws Exception {
+	void ccapShouldHaveExpectedPage() throws Exception{
 		// Run a simple CCAP flow
 		fillOutPersonalInfo();
 		selectPrograms("CCAP");
@@ -335,6 +341,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		// Submit the application
 		submitApplication();
 
+	}
+	// Verify that the CCAP PDF which is generated for the caseworker has all of the
+	// pieces\pages that it should have.
+	@Test
+	void ccapPdfForCaseWorkerShouldHaveExpectedPages() throws Exception {
+		// Run a simple CCAP flow
+		ccapShouldHaveExpectedPage();
+
 		// Generate the CCAP PDF, caseworker version
 		ApplicationFile ccapFile = pdfGenerator.generate(applicationData.getId(), CCAP, Recipient.CASEWORKER);
 		byte[] ccapBytes = ccapFile.getFileBytes();
@@ -357,6 +371,49 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		pdDocument.close();
 	}
+	// Verify that the CCAP PDF which is generated for the client has all of the
+		@Test
+		void ccapPdfForClientShouldHaveExpectedPages() throws Exception {
+
+			ccapShouldHaveExpectedPage();
+
+			// Download the CCAP, the version for a caseworker. Note: /download downloads a
+			// .zip file
+			ResultActions resultActions = mockMvc.perform(get("/download")
+					.with(oauth2Login().attributes(attrs -> attrs.put("email", ADMIN_EMAIL))).session(session));
+			byte[] downloadBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(downloadBytes);
+			// The /download endpoint downloads a .zip file
+			ZipInputStream zipFile = new ZipInputStream(byteArrayInputStream);
+			List<File> zippedFiles = unzip(zipFile);
+
+			// Extract the CCAP file
+			File ccapFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CCAP)).toList().get(0);
+			byte[] ccapBytes = FileUtils.readFileToByteArray(ccapFile);
+			// PDAcroForm pdAcroForm =
+			// Loader.loadPDF(FileUtils.readFileToByteArray(ccapFile)).getDocumentCatalog().getAcroForm();
+			PDDocument pdDocument = Loader.loadPDF(ccapBytes);
+
+			// The CCAP PDF should have 29 pages (based on viewing a real example)
+			int pageCount = pdDocument.getNumberOfPages();
+			assert (pageCount == 29);
+
+			// Strip out all text so that we can search it for specific strings
+			PDFTextStripper pdfStripper = new PDFTextStripper();
+			String text = pdfStripper.getText(pdDocument);
+			
+			assertTrue(text.contains("This is the Minnesota Child Care Assistance Program (CCAP)")); // ccap-headers.pdf
+			assertTrue(text.contains("Your responsibilities")); // ccap-footers.pdf
+			assertTrue(text.contains("Attached is a new MNbenefits Application")); // cover-pages.pdf
+			assertTrue(text.contains("Minnesota Child Care Assistance Program Application")); //HDR/ ccap-body-caseworker-page1.pdf
+			assertTrue(text.contains("2. Family members")); /// ccap-body.pdf
+			assertTrue(text.contains("Authorization to share information for fraud investigation and audits.")); /// ccap-body.pdf
+			assertTrue(text.contains("Perjury and general declarations")); /// ccap-body-perjury-and-general-declarations.pdf
+			assertTrue(text.contains("Use this space if you need additional room")); // ccap-body-additional-room.pdf
+
+			pdDocument.close();
+		
+		}
 
 	@Nested
 	@Tag("pdf")
