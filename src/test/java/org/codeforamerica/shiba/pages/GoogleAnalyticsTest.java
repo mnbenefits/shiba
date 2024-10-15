@@ -27,7 +27,7 @@ public class GoogleAnalyticsTest extends AbstractShibaMockMvcTest {
 	@CsvSource(value = {
             // The whitespace and commas are removed from the test strings that we pass to the test
 			"true, id=G-A1B2C3D4E5, <noscript><iframesrc=\"https://www.googletagmanager.com/ns.html?id=GTM-PZQSDKBT\"",
-			"false, <!--Googletag(gtag.js)--><!--EndGooglesnippets-->, <!--GoogleTagManager(noscript)--><noscript></noscript><!--EndGoogleTagManager(noscript)-->"
+			"false, <!--Googletag(gtag.js)--><!--GoogleTagManager--><!--EndGoogleTagManager-->, <!--GoogleTagManager(noscript)--><noscript></noscript><!--EndGoogleTagManager(noscript)-->"
 	})
 	void googleAnalyticsSnippetsShouldBeManagedBySwitch(String gaSwitch, String gaTestString1, String gaTestString2)
 			throws Exception {
