@@ -49,7 +49,7 @@
             </div>
           </div>
 
-          <div class="grid-ignore-mobile spacing-above-35 spacing-below-35">
+          <div class="grid-ignore-mobile spacing-above-35" style="margin-bottom: 40px;">
             <div class="success-icons grid__item width-one-sixth spacing-above-5">
               <div th:replace="~{fragments/icons/icon-documents :: icon-documents}"></div>
             </div>
@@ -60,8 +60,8 @@
         </div>
 
        <div th:if="${showRecommendationLink}" id="showRecommendationLink" class="grid__item top-horizontal-line-dark-grey">
-         <div class="grid__item spacing-above-35 ">
-           <h2 class="h3" th:text="#{success.you-may-be-able-to-apply}"></h2>
+         <div class="grid__item" style="margin-top: 40px;">
+           <h2 class="h2" th:text="#{success.you-may-be-able-to-apply}"></h2>
            <div class="grid-ignore-mobile">
              <div class="success-icons grid__item width-one-sixth spacing-above-5 spacing-below-0">
                <div th:replace="~{fragments/contextFragments :: icon-bullhorn}"></div>
@@ -72,7 +72,7 @@
            </div>
          </div>
          <div class="grid-ignore-mobile">
-           <a class="button button--primary spacing-above-45 spacing-below-25"
+           <a class="button button--primary spacing-above-60 spacing-below-25"
                      th:href="'/pages/'+${pageName}+'/navigation'">
              <span th:text="#{success.view-more-programs}"></span>
            </a>
