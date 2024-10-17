@@ -91,6 +91,15 @@ mnb-notice-displayed: true
 
 wic-pilot-counties: all
 
+#enable or disable Google Analytics in MNbenefits
+mnb-enable-google-analytics: false
+#these are the defined Google Analytics measurement IDs
+#STST: G-K0F9RK5C8D
+#DEV: G-55XYS198EZ
+#ATST: G-BNPB7RTWE7
+#PROD: G-66EHZQVJ2M
+ga-measurement-id: G-K0F9RK5C8D
+
 general:
    notice:
       title-en: 'Important Update!'
