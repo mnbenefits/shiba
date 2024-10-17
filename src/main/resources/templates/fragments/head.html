@@ -25,8 +25,6 @@
     <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
     <link rel="preload" href="/shiba.js" as="script">
     <script src="/shiba.js"></script>
-    <!-- Google tag (gtag.js) -->
-    <script th:if="${@environment.getProperty('mnb-enable-google-analytics')}" async th:src="@{https://www.googletagmanager.com/gtag/js(id=${@environment.getProperty('ga-measurement-id')})}"></script>
     <script th:if="${@environment.getProperty('mnb-enable-google-analytics')}"> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '[[${@environment.getProperty("ga-measurement-id")}]]'); </script>
     <!-- Google Tag Manager -->
     <script th:if="${@environment.getProperty('mnb-enable-google-analytics')}">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
