@@ -96,6 +96,46 @@ public class CommunicationClient{
 		}
 
 	}
+	  
+		public void sendEmailDataToCommhub(JsonObject appJsonObject){
+			List<String> retryCodes = new ArrayList<>();
+			retryCodes.add("502");
+			retryCodes.add("503");
+			retryCodes.add("504");
+			
+			String url = commHubUrl + "/mnb-email-controller";
+			  
+			if (!isEnabled()) {
+				log.info("Post requests to comm-hub are disabled.");
+				return;
+			}
+
+			try {
+		      HttpHeaders headers = new HttpHeaders();
+		      headers.setContentType(MediaType.APPLICATION_JSON);
+		      
+		      HttpEntity<String> entity = 
+		            new HttpEntity<String>(appJsonObject.toString(), headers);
+		        
+		      ResponseEntity<String> responseEntityStr = commHubRestServiceTemplate.
+		            postForEntity(url, entity, String.class);
+		      
+		      log.info("responseEntityStr Result = {}", responseEntityStr);
+			}catch(RestClientException rce ) {
+				Throwable t = rce.getMostSpecificCause();
+				String name = t.getClass().getTypeName();
+				log.info("Comm Hub Client Error Exception name: " + name + " - Most Specific Cause: " + t.getLocalizedMessage());
+				log.error("Comm Hub Client Error: " + rce.getMessage() + " for JSON object: " + appJsonObject.toString(), rce);
+				if(Stream.of(t.getLocalizedMessage()).anyMatch(retryCodes::contains)) {
+					throw rce;
+				}
+				
+			} catch(Exception e) {
+				log.error("Comm Hub Error: " + e.getMessage() + " for JSON object: " + appJsonObject.toString(), e);
+				throw e;
+			}
+
+		}
 
 	public Boolean isEnabled() {
 		return enabled;
