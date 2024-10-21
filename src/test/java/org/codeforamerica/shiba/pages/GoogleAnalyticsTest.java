@@ -26,13 +26,13 @@ public class GoogleAnalyticsTest extends AbstractShibaMockMvcTest {
 	@ParameterizedTest
 	@CsvSource(value = {
             // The whitespace and commas are removed from the test strings that we pass to the test
-			"true, id=G-A1B2C3D4E5, <noscript><iframesrc=\"https://www.googletagmanager.com/ns.html?id=GTM-PZQSDKBT\"",
-			"false, <!--Googletag(gtag.js)--><!--GoogleTagManager--><!--EndGoogleTagManager-->, <!--GoogleTagManager(noscript)--><noscript></noscript><!--EndGoogleTagManager(noscript)-->"
+			"true, (window,document,'script','dataLayer','GTM-A1B2C3D4'), <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-T7N8SWFD\"",
+			"false, <!--GoogleTagManager--><!--EndGoogleTagManager-->, <!--GoogleTagManager(noscript)--><noscript></noscript><!--EndGoogleTagManager(noscript)-->"
 	})
 	void googleAnalyticsSnippetsShouldBeManagedBySwitch(String gaSwitch, String gaTestString1, String gaTestString2)
 			throws Exception {
 		System.setProperty("mnb-enable-google-analytics", gaSwitch);
-		System.setProperty("ga-measurement-id", "G-A1B2C3D4E5");  // made up GA measurement ID
+		System.setProperty("google-tag-manager-id", "GTM-A1B2C3D4");  // made up Google tag manager ID
 		ResultActions resultActions = mockMvc.perform(get("/pages/landing"));
 		MockHttpServletResponse mockHttpServletResponse = resultActions.andReturn().getResponse();
 

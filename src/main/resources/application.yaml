@@ -93,12 +93,12 @@ wic-pilot-counties: all
 
 #enable or disable Google Analytics in MNbenefits
 mnb-enable-google-analytics: false
-#these are the defined Google Analytics measurement IDs
-#STST: G-K0F9RK5C8D
-#DEV: G-55XYS198EZ
-#ATST: G-BNPB7RTWE7
-#PROD: G-66EHZQVJ2M
-ga-measurement-id: G-K0F9RK5C8D
+#following are the defined Google tag manager IDs
+#STST: GTM-T7N8SWFD
+#DEV: GTM-TMMX88T6
+#ATST: GTM-P9QLRS7G
+#PROD: 
+google-tag-manager-id: GTM-T7N8SWFD
 
 general:
    notice:

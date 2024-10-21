@@ -3,7 +3,7 @@
                    options=${input.getOptions()},
                    addressData=${applicationData.getPagesData().getPage('homeAddress')}">
     <!-- Google Tag Manager (noscript) -->
-	<noscript><iframe th:if="${@environment.getProperty('mnb-enable-google-analytics')}" src="https://www.googletagmanager.com/ns.html?id=GTM-PZQSDKBT"
+	<noscript><iframe th:if="${@environment.getProperty('mnb-enable-google-analytics')}" th:src="@{https://www.googletagmanager.com/ns.html(id=${@environment.getProperty('google-tag-manager-id')})}"
 	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<!-- End Google Tag Manager (noscript) -->
 	<!-- display the page icon -->
