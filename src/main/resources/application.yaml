@@ -91,6 +91,15 @@ mnb-notice-displayed: true
 
 wic-pilot-counties: all
 
+#enable or disable Google Analytics in MNbenefits
+mnb-enable-google-analytics: false
+#following are the defined Google tag manager IDs
+#STST: GTM-T7N8SWFD
+#DEV: GTM-TMMX88T6
+#ATST: GTM-P9QLRS7G
+#PROD: 
+google-tag-manager-id: GTM-T7N8SWFD
+
 general:
    notice:
       title-en: 'Important Update!'
