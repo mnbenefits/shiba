@@ -3,7 +3,7 @@
 <div th:replace="~{fragments/head :: head(#{${page.pageTitle}})}"></div>
 <body>
     <!-- Google Tag Manager (noscript) -->
-	<noscript><iframe th:if="${@environment.getProperty('mnb-enable-google-analytics')}" src="https://www.googletagmanager.com/ns.html?id=GTM-PZQSDKBT"
+	<noscript><iframe th:if="${@environment.getProperty('mnb-enable-google-analytics')}" th:src="@{https://www.googletagmanager.com/ns.html(id=${@environment.getProperty('google-tag-manager-id')})}"
 	height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	<!-- End Google Tag Manager (noscript) -->
 
@@ -14,7 +14,7 @@
     <div class="grid-ignore-mobile">
       <div class="card spacing-above-0">
        <div class="spacing-below-60">
-        <div class="grid__item bottom-horizontal-line-dark-grey">
+        <div class="grid__item">
           <div
               th:replace="~{fragments/icons/icon-submission-success :: icon-submission-success-large}"></div>
           <h1 th:if="${!hasUploadDocuments}" class="h2 spacing-below-0 spacing-above-10"
@@ -37,8 +37,13 @@
       		<h2 id="confirmation-number" class="h3" th:text="|#{success.confirmation-number} ${applicationId}|">	</h2>
     	 </div>
     	</div>
-        <div class="grid__item spacing-above-35">
-          <h2 class="h3" th:text="#{success.helpful-resources}"></h2>
+    	
+    	<div th:if="${!showRecommendationLink}" class="grid__item spacing-below-35 spacing-above-35 top-horizontal-line-dark-grey">
+			<h2 class="h3 spacing-above-35" th:text="#{success.helpful-resources}"></h2>
+		</div>
+    	
+        <div class="grid__item spacing-below-45">
+          
           <div class="grid-ignore-mobile">
             <div
                 class="success-icons grid__item width-one-sixth spacing-above-5 spacing-below-0">
@@ -54,7 +59,7 @@
             </div>
           </div>
 
-          <div class="grid-ignore-mobile spacing-above-35" style="margin-bottom: 40px;">
+          <div th:if="${!showRecommendationLink}" class="grid-ignore-mobile" style="margin-bottom: 40px;">
             <div class="success-icons grid__item width-one-sixth spacing-above-5">
               <div th:replace="~{fragments/icons/icon-documents :: icon-documents}"></div>
             </div>
