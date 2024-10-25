@@ -77,8 +77,9 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
     var countyInstructionsInput = getCountyInstructions(application, recipient, document);
     var utmSourceInput = getUtmSource(application, document);
     var documentDestinations = getDocumentDestinations(application, recipient, document);
+    var tnDestinations = getTnDestinations(application, recipient, document);
     return combineCoverPageInputs(programsInput, fullNameInput, countyInstructionsInput,
-        utmSourceInput, householdMemberInputs, tribalAffiliationInput, documentDestinations);
+        utmSourceInput, householdMemberInputs, tribalAffiliationInput, documentDestinations, tnDestinations);
   }
 
   @Nullable
@@ -97,7 +98,7 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
   private List<DocumentField> combineCoverPageInputs(DocumentField programsInput,
       DocumentField fullNameInput, DocumentField countyInstructionsInput,
       DocumentField utmSourceInput, List<DocumentField> householdMemberInputs,
-      DocumentField tribalAffiliationInput, DocumentField documentDestinationsInput) {
+      DocumentField tribalAffiliationInput, DocumentField documentDestinationsInput, DocumentField tnDestinationsInput) {
     var everythingExceptHouseholdMembers = new ArrayList<DocumentField>();
     everythingExceptHouseholdMembers.add(programsInput);
     everythingExceptHouseholdMembers.add(fullNameInput);
@@ -105,6 +106,7 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
     everythingExceptHouseholdMembers.add(countyInstructionsInput);
     everythingExceptHouseholdMembers.add(utmSourceInput);
     everythingExceptHouseholdMembers.add(documentDestinationsInput);
+    everythingExceptHouseholdMembers.add(tnDestinationsInput);
     everythingExceptHouseholdMembers.addAll(householdMemberInputs);
     return everythingExceptHouseholdMembers.stream().filter(Objects::nonNull).toList();
   }
@@ -196,7 +198,22 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
 			.getRoutingDestinations(application.getApplicationData(), document);
 	Locale locale = LocaleContextHolder.getLocale();
 	String destinations = routingDestinationMessageService.generatePhrase(locale, application.getCounty(), false, routingDestinations);
-
+	
 	return new DocumentField("coverPage", "documentDestinations", destinations, SINGLE_VALUE);
   }
+  private DocumentField getTnDestinations(Application application, Recipient recipient, Document document) {
+	
+	//
+		String value = null;
+		Boolean isTribalNationMember = getBooleanValue(application.getApplicationData().getPagesData(), TRIBAL_NATION);
+
+		if (Boolean.TRUE.equals(isTribalNationMember)) {
+			value = getFirstValue(application.getApplicationData().getPagesData(), SELECTED_TRIBAL_NATION);
+		}
+			if (getBooleanValue(application.getApplicationData().getPagesData(), LINEAL_DESCENDANT_WEN)) {
+				value = tribalNations.get(WhiteEarthNation).getName();
+			}
+
+		return new DocumentField("coverPage", "tribalDestinations", value , SINGLE_VALUE);
+	  }
 }

@@ -390,6 +390,7 @@ mappings:
     fullName: FULL_NAME
     tribal: TRIBAL_NATION
     documentDestinations: DOCUMENT_DESTINATIONS
+    tribalDestinations: TRIBAL_DESTINATIONS
   incomePerPayPeriod:
     incomePerPayPeriod: INCOME_PER_PAY_PERIOD
   nonSelfEmployment_incomePerPayPeriod:
