@@ -189,7 +189,7 @@ public class DocumentUploadEmailServiceTesting {
 		}
 		
 		// Assert- Verify FAILURE path status update
-		verify(applicationRepository, times(0))
+		verify(applicationRepository, times(1))
 			.setDocUploadEmailStatus(eq("test-app-id"), eq(Status.DELIVERY_FAILED));
 		
 		verify(applicationRepository, times(0))
