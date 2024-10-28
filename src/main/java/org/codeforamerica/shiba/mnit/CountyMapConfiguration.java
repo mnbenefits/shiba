@@ -120,7 +120,7 @@ public class CountyMapConfiguration {
     updateCounty(Benton, "financial@co.benton.mn.us", "1174697148");
     updateCounty(BigStone, "familyservicecenter@bigstonecounty.gov", "A000006000");
     updateCounty(BlueEarth, "FA@blueearthcountymn.gov", "A000007800");
-    updateCounty(Brown, "help123@co.brown.mn.us", "A000008600");
+    updateCounty(Brown, "help123@browncountymn.gov", "A000008600");
     updateCounty(Carlton, "IMOSS@carltoncountymn.gov", "1003921875");
     updateCounty(Carver, "cssfinancial@co.carver.mn.us", "A000010800");
     updateCounty(Cass, "cass.socserv@casscountymn.gov", "1760489769");
