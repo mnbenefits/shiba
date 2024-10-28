@@ -55,13 +55,19 @@ client:
   truststore: src/main/resources/truststore-non-prod.jks
 
 comm-hub:
-  url: https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
-  enabled: false
+#  url: https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
+  url: http://localhost:8081
+  enabled: true 
   max-attempts: 3
   delay: 900000
   multiplier: 3
   max-delay: 43200000
   timeout-seconds: 300
+
+comm-hub-email:
+#  url: https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-email-controller
+  url: http://localhost:8081/mnb-email-controller
+  enabled: true
 
 intercom-chat-app-id: mmxasuhx
    
@@ -144,7 +150,8 @@ asyncConfiguration:
   queueCapacity: ${ASYNC_QUEUE_CAPACITY:2}
 
 documentUploadEmails:
-  cronExpression: "0 0 15 * * *" # send document upload emails at 15:00 UTC (10:00 CT) each day
+#  cronExpression: "0 0 15 * * *" # send document upload emails at 15:00 UTC (10:00 CT) each day
+  cronExpression: "0 */5 * * * *" # send document upload emails at every 5 minute
 
 failed-resubmission:
   interval:

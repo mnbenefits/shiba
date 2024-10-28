@@ -17,8 +17,11 @@ import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.application.Status;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.emails.EmailClient;
+import org.codeforamerica.shiba.pages.rest.CommunicationClient;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,6 +43,12 @@ class DocumentUploadEmailServiceTest {
 
   @MockBean
   private EmailClient emailClient;
+  
+	@MockBean
+	private CommunicationClient commHubEmailSendingClient;
+	
+	@Captor
+	private ArgumentCaptor<Status> statusCaptor;
 
   @Test
   void sendDocumentUploadEmails() {

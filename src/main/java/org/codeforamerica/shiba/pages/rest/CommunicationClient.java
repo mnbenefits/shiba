@@ -32,21 +32,21 @@ public class CommunicationClient{
 	
 	private String commHubUrl;
 	private Boolean enabled;
+	private String commHubEmailUrl;
 	
 	public CommunicationClient(@Qualifier("commHubRestServiceTemplate") RestTemplateBuilder commHubRestServiceBuilder, 
 			@Value("${comm-hub.url}") String commHubUrl,
-			@Value("${comm-hub.enabled}") Boolean enabled) {
+			@Value("${comm-hub.enabled}") Boolean enabled,
+			@Value("${comm-hub-email.url}") String commHubEmailUrl) {
 		super();
 		this.commHubRestServiceBuilder = commHubRestServiceBuilder;
 		this.commHubRestServiceTemplate = this.commHubRestServiceBuilder.build();
 		this.commHubUrl = commHubUrl;
 		this.enabled = enabled;
+		this.commHubEmailUrl = commHubEmailUrl;
 	}
 
-	/**
-	 * This method composes the REST request with the given Json object and posts to comm-hub
-	 *  
-	 */
+	
 	  @Retryable(
 		      retryFor = {RestClientException.class},
 		      maxAttempts = 3,
@@ -58,6 +58,7 @@ public class CommunicationClient{
 		      ),
 		      listeners = {"commHubRetryListener"}
 		  )
+
 
 	public void send(JsonObject appJsonObject){
 		List<String> retryCodes = new ArrayList<>();
@@ -96,6 +97,44 @@ public class CommunicationClient{
 		}
 
 	}
+	  
+	  public void sendEmailDataToCommhub(JsonObject appJsonObject){
+			List<String> retryCodes = new ArrayList<>();
+			retryCodes.add("502");
+			retryCodes.add("503");
+			retryCodes.add("504");
+			  
+			if (!isEnabled()) {
+				log.info("Post requests to comm-hub are disabled.");
+				return;
+			}
+
+			try {
+		      HttpHeaders headers = new HttpHeaders();
+		      headers.setContentType(MediaType.APPLICATION_JSON);
+		      
+		      HttpEntity<String> entity = 
+		            new HttpEntity<String>(appJsonObject.toString(), headers);
+		        
+		      ResponseEntity<String> responseEntityStr = commHubRestServiceTemplate.
+		            postForEntity(commHubEmailUrl, entity, String.class);
+		      
+		      log.info("responseEntityStr Result = {}", responseEntityStr);
+			}catch(RestClientException rce ) {
+				Throwable t = rce.getMostSpecificCause();
+				String name = t.getClass().getTypeName();
+				log.info("Comm Hub Client Error Exception name: " + name + " - Most Specific Cause: " + t.getLocalizedMessage());
+				log.error("Comm Hub Client Error: " + rce.getMessage() + " for JSON object: " + appJsonObject.toString(), rce);
+				if(Stream.of(t.getLocalizedMessage()).anyMatch(retryCodes::contains)) {
+					throw rce;
+				}
+				
+			} catch(Exception e) {
+				log.error("Comm Hub Error: " + e.getMessage() + " for JSON object: " + appJsonObject.toString(), e);
+				throw e;
+			}
+
+		}
 
 	public Boolean isEnabled() {
 		return enabled;
