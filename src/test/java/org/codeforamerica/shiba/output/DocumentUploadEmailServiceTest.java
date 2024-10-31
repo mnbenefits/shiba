@@ -44,12 +44,6 @@ class DocumentUploadEmailServiceTest {
   @MockBean
   private EmailClient emailClient;
   
-	@MockBean
-	private CommunicationClient commHubEmailSendingClient;
-	
-	@Captor
-	private ArgumentCaptor<Status> statusCaptor;
-
   @Test
   void sendDocumentUploadEmails() {
     Application appThatShouldTriggerEmail = saveApplicationThatNeedsDocumentUploadEmail();
