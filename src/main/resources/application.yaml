@@ -63,6 +63,10 @@ comm-hub:
   max-delay: 43200000
   timeout-seconds: 300
 
+comm-hub-email:
+  url: https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-email-controller
+  enabled: false
+
 intercom-chat-app-id: mmxasuhx
    
 mnit-filenet:
