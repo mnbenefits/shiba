@@ -16,6 +16,7 @@ import org.codeforamerica.shiba.application.parsers.EmailParser;
 import org.codeforamerica.shiba.output.MnitDocumentConsumer;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.emails.EmailClient;
+import org.codeforamerica.shiba.pages.rest.CommunicationClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +24,8 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.google.gson.JsonObject;
 
 @ExtendWith(MockitoExtension.class)
 class UploadedDocumentsSubmittedListenerTest {
@@ -39,9 +42,14 @@ class UploadedDocumentsSubmittedListenerTest {
   private FeatureFlagConfiguration featureFlags;
   @Mock
   private EmailClient emailClient;
+  @Mock
+  private CommunicationClient communicationClient;
+  @Mock
+  private EmailJsonDataCreator emailJsonDataCreator;
+  
   private UploadedDocumentsSubmittedListener uploadedDocumentsSubmittedListener;
   private UploadedDocumentsSubmittedEvent event;
-
+  
   @BeforeEach
   void setUp() {
     String sessionId = "some-session-id";
@@ -51,7 +59,9 @@ class UploadedDocumentsSubmittedListenerTest {
         mnitDocumentConsumer,
         applicationRepository,
         monitoringService,
-        emailClient);
+        emailClient,
+        communicationClient,
+        emailJsonDataCreator );
   }
 
   @Test
@@ -65,19 +75,41 @@ class UploadedDocumentsSubmittedListenerTest {
     verify(mnitDocumentConsumer).processUploadedDocuments(application);
   }
 
-  @Test
-  void shouldSendConfirmationEmail() {
-    Application application = Application.builder().id(applicationId).flow(FlowType.LATER_DOCS)
-        .build();
-    when(applicationRepository.find(eq(applicationId))).thenReturn(application);
-    String email = "confirmation email";
-    try (MockedStatic<EmailParser> mockEmailParser = Mockito.mockStatic(EmailParser.class)) {
-      mockEmailParser.when(() -> EmailParser.parse(any())).thenReturn(Optional.of(email));
-      uploadedDocumentsSubmittedListener.sendConfirmationEmail(event);
-    }
+	@Test
+	void shouldSendConfirmationEmail() {
+		Application application = Application.builder().id(applicationId).flow(FlowType.LATER_DOCS).build();
+		when(applicationRepository.find(eq(applicationId))).thenReturn(application);
+		String email = "confirmation email";
+		try (MockedStatic<EmailParser> mockEmailParser = Mockito.mockStatic(EmailParser.class)) {
+			mockEmailParser.when(() -> EmailParser.parse(any())).thenReturn(Optional.of(email));
+			uploadedDocumentsSubmittedListener.sendConfirmationEmail(event);
+		}
 
-    verify(emailClient).sendLaterDocsConfirmationEmail(application, applicationId, email, locale);
-  }
+		verify(emailClient).sendLaterDocsConfirmationEmail(application, applicationId, email, locale);
+	}
+  
+  
+	@Test
+	void shouldSendConfirmationEmailLaterDocsWithJsonDataToCommhub() {
+		Application application = Application.builder().id(applicationId).flow(FlowType.LATER_DOCS).build();
+		when(applicationRepository.find(eq(applicationId))).thenReturn(application);
+		String email = "confirmation email";
+		JsonObject emailData = new JsonObject();
+
+		// mock email parser
+		MockedStatic<EmailParser> mockEmailParser1 = Mockito.mockStatic(EmailParser.class);
+		try {
+			mockEmailParser1.when(() -> EmailParser.parse(any())).thenReturn(Optional.of(email));
+			when(emailJsonDataCreator.createLaterDocsJsonObject(application, email, locale)).thenReturn(emailData);
+
+			uploadedDocumentsSubmittedListener.sendConfirmationEmail(event);
+			
+			verify(communicationClient).sendEmailDataToCommhub(emailData);
+		} finally {
+			mockEmailParser1.close();
+		}
+	}
+
   
   @Test
   void shouldSendConfirmationEmailHealthcareRenewal() {

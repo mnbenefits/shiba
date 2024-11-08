@@ -31,47 +31,37 @@ import com.google.gson.JsonObject;
 @Slf4j
 public class DocumentUploadEmailService {
 
-  private final EmailClient emailClient;
-  private final EmailContentCreator emailContentCreator;
-  private final ApplicationRepository applicationRepository;
-  private final MessageSource messageSource;
-  private final String senderEmail;
-  private final DocRecommendationMessageService docRecommendationMessageService;
-  private final CommunicationClient commHubEmailSendingClient;
+	private final EmailClient emailClient;
+	private final EmailContentCreator emailContentCreator;
+	private final ApplicationRepository applicationRepository;
+	private final MessageSource messageSource;
+	private final String senderEmail;
+	private final DocRecommendationMessageService docRecommendationMessageService;
+	private final CommunicationClient commHubEmailSendingClient;
 
-  public DocumentUploadEmailService(
-      @Value("${sender-email}") String senderEmail,
-      EmailClient emailClient,
-      EmailContentCreator emailContentCreator,
-      ApplicationRepository applicationRepository,
-      MessageSource messageSource,
-      DocRecommendationMessageService docRecommendationMessageService,
-      CommunicationClient commHubEmailSendingClient) {
-    this.senderEmail = senderEmail;
-    this.emailClient = emailClient;
-    this.emailContentCreator = emailContentCreator;
-    this.applicationRepository = applicationRepository;
-    this.messageSource = messageSource;
-    this.docRecommendationMessageService = docRecommendationMessageService;
-	this.commHubEmailSendingClient = commHubEmailSendingClient;
-  }
+	public DocumentUploadEmailService(@Value("${sender-email}") String senderEmail, EmailClient emailClient,
+			EmailContentCreator emailContentCreator, ApplicationRepository applicationRepository,
+			MessageSource messageSource, DocRecommendationMessageService docRecommendationMessageService,
+			CommunicationClient commHubEmailSendingClient) {
+		this.senderEmail = senderEmail;
+		this.emailClient = emailClient;
+		this.emailContentCreator = emailContentCreator;
+		this.applicationRepository = applicationRepository;
+		this.messageSource = messageSource;
+		this.docRecommendationMessageService = docRecommendationMessageService;
+		this.commHubEmailSendingClient = commHubEmailSendingClient;
+	}
 
-  /**
-   * Sends document upload reminder emails to any applications that
-   * - Are not laterdocs apps
-   * - were submitted between 48 and 12 hours ago
-   * - do not have any uploaded docs
-   * - have an email address
-   * - have not yet been sent a doc upload email
-   * - has document recommendations
-   * - opted into email communications
-   */
-	
-	
-	
+	/**
+	 * Sends document upload reminder emails to any applications that - Are not
+	 * laterdocs apps - were submitted between 48 and 12 hours ago - do not have any
+	 * uploaded docs - have an email address - have not yet been sent a doc upload
+	 * email - has document recommendations - opted into email communications
+	 */
+
 	@Scheduled(cron = "${documentUploadEmails.cronExpression}")
-
-	@SchedulerLock(name = "documentUploadEmails", lockAtMostFor = "30m", lockAtLeastFor = "15m")
+	@SchedulerLock(name = "documentUploadEmails", lockAtMostFor = "30m",
+	lockAtLeastFor = "15m")
 	public void sendDocumentUploadEmailReminders() {
 		log.info("Checking for applications that need document upload email reminders");
 		List<Application> applications = getApplicationsThatNeedDocumentUploadEmails();
@@ -111,6 +101,7 @@ public class DocumentUploadEmailService {
 				String subject = lms.getMessage("email.document-recommendation-email-subject");
 
 				JsonObject emailJson = new JsonObject();
+				emailJson.addProperty("emailType", "DOCUMENT_UPLOAD_REMINDER");
 				emailJson.addProperty("subject", subject);
 				emailJson.addProperty("senderEmail", senderEmail);
 				emailJson.addProperty("recepientEmail", clientEmail);
@@ -120,10 +111,9 @@ public class DocumentUploadEmailService {
 				commHubEmailSendingClient.sendEmailDataToCommhub(emailJson);
 				applicationRepository.setDocUploadEmailStatus(id, Status.DELIVERED);
 
-		
-				  emailClient.sendEmail(subject, senderEmail, clientEmail, emailContent, id);
-				  applicationRepository.setDocUploadEmailStatus(id, Status.DELIVERED);
-				 
+				emailClient.sendEmail(subject, senderEmail, clientEmail, emailContent, id);
+				applicationRepository.setDocUploadEmailStatus(id, Status.DELIVERED);
+
 			} catch (Exception e) {
 				log.error("Failed to send document upload email for application %s".formatted(id), e);
 				log.info("Setting status to DElivery Failed for application%s".formatted(id));

@@ -140,6 +140,8 @@ public class DocumentUploadEmailServiceUnitTest {
 
 		// Verify email content
 		JsonObject emailJson = jsonCaptor.getValue();
+		assertEquals("DOCUMENT_UPLOAD_REMINDER",
+				emailJson.get("emailType").getAsString());
 		assertEquals("[Action Required] Upload Documents To Your MNbenefits Application",
 				emailJson.get("subject").getAsString());
 		assertEquals("sender@email.org", emailJson.get("senderEmail").getAsString());
