@@ -39,8 +39,7 @@ jobs:
   # 3. update build config, set git ref to the release tag
   # 4. update build config, set image tag to the release tag
   # 5. build image
-  # 6. update deployment config to the release tag
-  # 7. rollout updated image
+  # 6. update deployment config to the release tag (rollout is automatic with change to Deployment object)
   mnitdeploy:
     name: deploy to MNbenefits ATST
     needs: draft-release
@@ -57,8 +56,7 @@ jobs:
         oc patch bc mn-benefits-release -p '{"spec":{"source":{"git":{"ref":"${{ github.event.inputs.branch }}"}}}}'
         oc patch bc mn-benefits-release -p '{"spec":{"output":{"to":{"name":"mn-benefits:${{ needs.draft-release.outputs.tag_name }}"}}}}'
         oc start-build mn-benefits-release --follow
-        oc patch dc mn-benefits-atst -p '{"spec":{"triggers":[{"type": "ImageChange", "imageChangeParams":{"from":{"name":"mn-benefits:${{ needs.draft-release.outputs.tag_name }}"}, "containerNames":["mn-benefits-atst"]}}]}}'
-        oc rollout latest dc/mn-benefits-atst
+        oc patch deployment mnbenefits-atst-deployment --namespace mn-benefits-non-prod -p '{"spec":{"template":{"spec":{"containers":[{"name":"mnbenefits-atst-container","image":"image-registry.openshift-image-registry.svc:5000/mn-benefits-non-prod/mn-benefits:${{ needs.draft-release.outputs.tag_name }}"}]}}}}'
     - name: Announce success on Teams
       if: ${{ job.status == 'success' }}
       uses: jdcargile/ms-teams-notification@v1.4
