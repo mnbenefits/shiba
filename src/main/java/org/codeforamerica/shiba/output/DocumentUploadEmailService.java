@@ -60,8 +60,7 @@ public class DocumentUploadEmailService {
 	 */
 
 	@Scheduled(cron = "${documentUploadEmails.cronExpression}")
-	@SchedulerLock(name = "documentUploadEmails", lockAtMostFor = "30m",
-	lockAtLeastFor = "15m")
+	@SchedulerLock(name = "documentUploadEmails", lockAtMostFor = "30m", lockAtLeastFor = "15m")
 	public void sendDocumentUploadEmailReminders() {
 		log.info("Checking for applications that need document upload email reminders");
 		List<Application> applications = getApplicationsThatNeedDocumentUploadEmails();
