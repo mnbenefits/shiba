@@ -55,7 +55,7 @@ client:
   truststore: src/main/resources/truststore-non-prod.jks
 
 comm-hub:
-  url: https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
+  url: https://communication-hub-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
   enabled: false
   max-attempts: 3
   delay: 900000
@@ -64,7 +64,7 @@ comm-hub:
   timeout-seconds: 300
 
 comm-hub-email:
-  url: https://surveys-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-email-controller
+  url: https://communication-hub-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-email-controller
   enabled: false
 
 intercom-chat-app-id: mmxasuhx
@@ -83,7 +83,7 @@ mnit-filenet:
   timeout-seconds: 300
 
 mnit-clammit:
-  url: https://clammit-clam-av.apps.gj1k10ie.centralus.aroapp.io/clammit/scan
+  url: https://clammit-route-clam-av.apps.gj1k10ie.centralus.aroapp.io/clammit/scan
   enabled: true
 
 sender-email: help@mnbenefits.org
