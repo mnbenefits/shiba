@@ -33,17 +33,20 @@ public class CommunicationClient{
 	private String commHubUrl;
 	private Boolean enabled;
 	private String commHubEmailUrl;
+	private Boolean commHubEmailEnabled;
 	
 	public CommunicationClient(@Qualifier("commHubRestServiceTemplate") RestTemplateBuilder commHubRestServiceBuilder, 
 			@Value("${comm-hub.url}") String commHubUrl,
 			@Value("${comm-hub.enabled}") Boolean enabled,
-			@Value("${comm-hub-email.url}") String commHubEmailUrl) {
+			@Value("${comm-hub-email.url}") String commHubEmailUrl,
+			@Value("${comm-hub-email.enabled}") Boolean commHubEmailEnabled) {
 		super();
 		this.commHubRestServiceBuilder = commHubRestServiceBuilder;
 		this.commHubRestServiceTemplate = this.commHubRestServiceBuilder.build();
 		this.commHubUrl = commHubUrl;
 		this.enabled = enabled;
 		this.commHubEmailUrl = commHubEmailUrl;
+		this.commHubEmailEnabled = commHubEmailEnabled;
 	}
 
 	
@@ -104,10 +107,11 @@ public class CommunicationClient{
 			retryCodes.add("503");
 			retryCodes.add("504");
 			  
-			if (!isEnabled()) {
-				log.info("Post requests to comm-hub are disabled.");
+			if (!isCommHubEmailEnabled()) {
+				log.info("Post requests to comm-hub-email are disabled.");
 				return;
 			}
+			log.info("Attempting to call email endpoint: {}", commHubEmailUrl);
 
 			try {
 		      HttpHeaders headers = new HttpHeaders();
@@ -135,6 +139,11 @@ public class CommunicationClient{
 			}
 
 		}
+
+	private boolean isCommHubEmailEnabled() {
+		return commHubEmailEnabled;
+	}
+
 
 	public Boolean isEnabled() {
 		return enabled;
