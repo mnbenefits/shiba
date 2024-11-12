@@ -15,10 +15,10 @@
         </div>
       </div>  
       <main class="card spacing-above-35" id="content">
-        <div class="form-group " th:if="${sentiment == null || feedbackText == null}">
+        <div class="form-group spacing-above-35" th:if="${sentiment == null || feedbackText == null}">
           <form id="success-feedback-page-form" method="post" th:action="'/submit-feedback'">
             <fieldset  th:if="${sentiment == null}" class="feedback-buttons-group spacing-below-25" aria-labelledby="page-header">
-              <legend><h1 class="h2 spacing-below-60 spacing-above-10" id="page-header"
+              <legend><h1 class="h2 spacing-below-60" id="page-header"
                           th:text="#{feedback.how-was-your-experience}">
               </h1></legend>
               <div class="feedback-sentiment-group">
