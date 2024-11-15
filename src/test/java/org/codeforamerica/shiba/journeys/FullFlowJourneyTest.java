@@ -32,7 +32,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage = new PercyTestPage(driver);
   }
 
-  @Disabled("This test passes on VDIs but fails on GitHub")
+//  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void fullApplicationWithDocumentUploads() {
     when(clock.instant()).thenReturn(
