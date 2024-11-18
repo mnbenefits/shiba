@@ -45,7 +45,6 @@ class DocumentUploadEmailServiceTest {
   @MockBean
   private EmailClient emailClient;
   
-  @Disabled("This test has been temporarily disabled because it is affected by the change i made on the timeFrame")
   @Test
   void sendDocumentUploadEmails() {
     Application appThatShouldTriggerEmail = saveApplicationThatNeedsDocumentUploadEmail();

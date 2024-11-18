@@ -148,8 +148,8 @@ asyncConfiguration:
   queueCapacity: ${ASYNC_QUEUE_CAPACITY:2}
 
 documentUploadEmails:
-#  cronExpression: "0 0 15 * * *" # send document upload emails at 15:00 UTC (10:00 CT) each day
-   cronExpression: "0 */5 * * * *" # send document upload emails at every 5 minute
+  cronExpression: "0 0 15 * * *" # send document upload emails at 15:00 UTC (10:00 CT) each day
+
 
 failed-resubmission:
   interval:

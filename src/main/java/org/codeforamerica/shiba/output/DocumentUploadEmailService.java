@@ -60,8 +60,7 @@ public class DocumentUploadEmailService {
 	 */
 
 	@Scheduled(cron = "${documentUploadEmails.cronExpression}")
-	//@SchedulerLock(name = "documentUploadEmails", lockAtMostFor = "30m", lockAtLeastFor = "15m")
-	@SchedulerLock(name = "documentUploadEmails", lockAtMostFor = "4m",lockAtLeastFor = "1m")
+	@SchedulerLock(name = "documentUploadEmails", lockAtMostFor = "30m", lockAtLeastFor = "15m")
 	public void sendDocumentUploadEmailReminders() {
 		log.info("Checking for applications that need document upload email reminders");
 		List<Application> applications = getApplicationsThatNeedDocumentUploadEmails();
@@ -77,10 +76,8 @@ public class DocumentUploadEmailService {
 
 	private List<Application> getApplicationsThatNeedDocumentUploadEmails() {
 		List<Application> appsFromTheLastTwoDays = applicationRepository.getApplicationsSubmittedBetweenTimestamps(
-				//Timestamp.from(Instant.now().minus(Duration.ofHours(48))),
-				//Timestamp.from(Instant.now().minus(Duration.ofHours(12))));
-				Timestamp.from(Instant.now().minus(Duration.ofMinutes(15))),
-				Timestamp.from(Instant.now()));
+				Timestamp.from(Instant.now().minus(Duration.ofHours(48))),
+				Timestamp.from(Instant.now().minus(Duration.ofHours(12))));
 		return appsFromTheLastTwoDays.stream().filter(a -> !a.getFlow().equals(FlowType.LATER_DOCS))
 				.filter(a -> a.getApplicationData().getUploadedDocs().isEmpty())
 				.filter(a -> a.getDocUploadEmailStatus() == null)
