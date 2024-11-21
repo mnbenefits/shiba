@@ -112,8 +112,8 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.ws:spring-ws-core")
 
-    implementation("org.springframework.session:spring-session-core:3.3.3")
-    implementation("org.springframework.session:spring-session-jdbc:3.3.3")
+    implementation("org.springframework.session:spring-session-core:3.4.0")
+    implementation("org.springframework.session:spring-session-jdbc:3.4.0")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web:3.3.5")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
@@ -129,8 +129,8 @@ dependencies {
     
      //logging -->
     implementation("org.slf4j:slf4j-api:2.0.16")
-    implementation("io.sentry:sentry-spring-boot-starter-jakarta:7.17.0")
-    implementation("io.sentry:sentry-logback:7.17.0")
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:7.18.0")
+    implementation("io.sentry:sentry-logback:7.18.0")
     implementation("net.logstash.logback:logstash-logback-encoder:8.0")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
@@ -143,8 +143,8 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.1")
     implementation("commons-validator:commons-validator:1.9.0")
-    implementation("org.flywaydb:flyway-core:10.21.0")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.21.0")
+    implementation("org.flywaydb:flyway-core:10.22.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:10.22.0")
     implementation("com.mixpanel:mixpanel-java:1.5.3")
     implementation("net.javacrumbs.shedlock:shedlock-spring:5.16.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:5.16.0")
