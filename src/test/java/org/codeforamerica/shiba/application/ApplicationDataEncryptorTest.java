@@ -13,16 +13,16 @@ import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 @JsonTest
 class ApplicationDataEncryptorTest {
 
-  @SpyBean
+  @MockitoSpyBean
   private ObjectMapper objectMapper;
 
-  @MockBean
+  @MockitoBean
   private StringEncryptor stringEncryptor;
   private ApplicationDataEncryptor applicationDataEncryptor;
 

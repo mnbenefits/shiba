@@ -43,8 +43,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.ws.client.WebServiceTransportException;
 import org.springframework.ws.client.core.WebServiceTemplate;
@@ -84,7 +84,7 @@ class FilenetWebServiceClientTest {
   private WebServiceTemplate webServiceTemplate;
   @Autowired
   private FilenetWebServiceClient filenetWebServiceClient;
-  @MockBean
+  @MockitoBean
   private Clock clock;
   @Value("${mnit-filenet.upload-url}")
   private String url;
@@ -95,9 +95,9 @@ class FilenetWebServiceClientTest {
   @Value("${mnit-filenet.sftp-upload-url}")
   private String sftpUploadUrl;
   private MockWebServiceServer mockWebServiceServer;
-  @MockBean
+  @MockitoBean
   private ApplicationStatusRepository applicationStatusRepository;
-  @MockBean
+  @MockitoBean
   private RestTemplate restTemplate;
   
   private Application application;

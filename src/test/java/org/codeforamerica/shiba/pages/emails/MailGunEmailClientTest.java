@@ -46,10 +46,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.BasicCredentials;
@@ -74,7 +74,7 @@ class MailGunEmailClientTest {
   MailGunEmailClient mailGunEmailClient;
   EmailContentCreator emailContentCreator;
   WireMockServer wireMockServer;
-  @MockBean
+  @MockitoBean
   private ClientRegistrationRepository springSecurityFilterChain;
   PdfGenerator pdfGenerator = mock(PdfGenerator.class);
   ApplicationStatusRepository applicationStatusRepository;
