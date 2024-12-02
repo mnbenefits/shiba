@@ -16,6 +16,8 @@ import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.RoutingDecisionService;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.InputData;
+import org.codeforamerica.shiba.pages.data.PageData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,75 +45,141 @@ public class EmailJsonDataCreatorTest {
 	@Mock
 	private Document doc1, doc2;
 
+	@Mock
+	private PageData matchInfoPage;
+
+	@Mock
+	private PageData healthcareRenewalMatchInfoPage;
+
 	private EmailJsonDataCreator emailJsonDataCreator;
 	private static final String TEST_APP_ID = "12345";
+
+	// Define Common test parameters
+	private RoutingDestination countyDestination;
+	private RoutingDestination tribalDestination;
+	private String recepientEmail;
+	private Locale locale;
+	private ZonedDateTime completedAt;
 
 	@BeforeEach
 	void setUp() {
 		routingDecisionService = mock(RoutingDecisionService.class);
 		emailJsonDataCreator = new EmailJsonDataCreator(routingDecisionService);
+
+		// Setup basic application data
+		completedAt = ZonedDateTime.now();
+		when(application.getApplicationData()).thenReturn(appData);
+		when(application.getId()).thenReturn(TEST_APP_ID);
+		when(application.getCompletedAt()).thenReturn(completedAt);
+
+		// Mock RoutingDestination common objects
+		countyDestination = mock(RoutingDestination.class);
+		tribalDestination = mock(TribalNationRoutingDestination.class);
+
+		// Set up county destination
+		when(countyDestination.getName()).thenReturn("Beltrami County");
+		when(countyDestination.getPhoneNumber()).thenReturn("218-333-8300");
+
+		// Set up tribal destination
+		when(tribalDestination.getName()).thenReturn("Red Lake Nation");
+		when(tribalDestination.getPhoneNumber()).thenReturn("218-679-3350");
+
+		// Common test values
+		recepientEmail = "test@ex.com";
+		locale = new Locale("en");
+	}
+
+	/* HelperMethod1: Sets up document parser and routing destinations */
+	private void setupDocumentParser() {
+		doc1 = mock(Document.class);
+		doc2 = mock(Document.class);
+
+		when(routingDecisionService.getRoutingDestinations(appData, doc1)).thenReturn(List.of(countyDestination));
+		when(routingDecisionService.getRoutingDestinations(appData, doc2)).thenReturn(List.of(tribalDestination));
+	}
+
+	/* HelperMethod2: Verifies common JSON properties that both email types share */
+	private void verifyCommonJsonProperties(String expectedEmailType, JsonObject result) {
+		assertEquals(expectedEmailType, result.get("emailType").getAsString());
+		assertEquals(recepientEmail, result.get("recepientEmail").getAsString());
+		assertEquals("en", result.get("locale").getAsString());
+		assertEquals(TEST_APP_ID, result.get("applicationId").getAsString());
+	}
+
+	/* HelperMethod3: Verifies the routing destinations array content */
+	private void verifyRoutingDestinations(JsonArray routingDestinationsArray) {
+		assertEquals(2, routingDestinationsArray.size());
+
+		// Verify county destination
+		JsonObject countyJson = routingDestinationsArray.get(0).getAsJsonObject();
+		assertEquals("Bel County", countyJson.get("name").getAsString());
+		assertEquals("218-999-9000", countyJson.get("phoneNumber").getAsString());
+		assertEquals("COUNTY", countyJson.get("type").getAsString());
+
+		// Verify tribal destination
+		JsonObject tribalJson = routingDestinationsArray.get(1).getAsJsonObject();
+		assertEquals("Red", tribalJson.get("name").getAsString());
+		assertEquals("217-678-5555", tribalJson.get("phoneNumber").getAsString());
+		assertEquals("TRIBAL", tribalJson.get("type").getAsString());
 	}
 
 	@Test
 	public void testCreateLaterDocsJsonObject() {
-		// Mock Application and ApplicationData
-		application = mock(Application.class);
-		appData = mock(ApplicationData.class);
-
-		when(application.getApplicationData()).thenReturn(appData);
-		when(application.getId()).thenReturn(TEST_APP_ID);
-		when(application.getCompletedAt()).thenReturn(ZonedDateTime.now());
-
-		// Mock DocumentListParser behavior
 		try (MockedStatic<DocumentListParser> mockedDocumentListParser = mockStatic(DocumentListParser.class)) {
-			doc1 = mock(Document.class);
-			doc2 = mock(Document.class);
-
+			setupDocumentParser();
 			mockedDocumentListParser.when(() -> DocumentListParser.parse(appData))
 					.thenReturn(Arrays.asList(doc1, doc2));
 
-			// Mock RoutingDestination objects
-			RoutingDestination countyDestination = mock(RoutingDestination.class);
-			RoutingDestination tribalDestination = mock(TribalNationRoutingDestination.class);
+			// Mock InputData for first and last names
+			InputData firstNameData = mock(InputData.class);
+			InputData lastNameData = mock(InputData.class);
 
-			// Set up county destination
-			when(countyDestination.getName()).thenReturn("Beltrami County");
-			when(countyDestination.getPhoneNumber()).thenReturn("218-333-8300");
+			// Setup the getValue behavior
+			when(firstNameData.getValue(0)).thenReturn("John");
+			when(lastNameData.getValue(0)).thenReturn("Doe");
 
-			// Set up tribal destination
-			when(tribalDestination.getName()).thenReturn("Red Lake Nation");
-			when(tribalDestination.getPhoneNumber()).thenReturn("218-679-3350");
+			// Setup the page data returns
+			when(matchInfoPage.get("firstName")).thenReturn(firstNameData);
+			when(matchInfoPage.get("lastName")).thenReturn(lastNameData);
+			when(appData.getPageData("matchInfo")).thenReturn(matchInfoPage);
 
-			// Set up routing destinations
-			when(routingDecisionService.getRoutingDestinations(appData, doc1)).thenReturn(List.of(countyDestination));
-			when(routingDecisionService.getRoutingDestinations(appData, doc2)).thenReturn(List.of(tribalDestination));
+			JsonObject result = emailJsonDataCreator.createLaterDocsJsonObject(application, recepientEmail, locale);
 
-			// Call the method to test
-			Locale locale = new Locale("es");
-			String recipientEmail = "test@ex.com";
-			JsonObject result = emailJsonDataCreator.createLaterDocsJsonObject(application, recipientEmail, locale);
+			verifyCommonJsonProperties("LATER_DOCS_CONFIRMATION", result);
+			verifyRoutingDestinations(result.getAsJsonArray("routingDestinations"));
+			assertEquals("John", result.get("firstName").getAsString());
+			assertEquals("Doe", result.get("lastName").getAsString());
+		}
+	}
 
-			// Assertions for JSON properties
-			assertEquals("LATER_DOCS_CONFIRMATION", result.get("emailType").getAsString());
-			assertEquals("test@ex.com", result.get("recepientEmail").getAsString());
-			assertEquals("es", result.get("locale").getAsString());
-			assertEquals("12345", result.get("applicationId").getAsString());
+	@Test
+	public void testCreateHealthcareRenewalJsonObject() {
+		try (MockedStatic<DocumentListParser> mockedDocumentListParser = mockStatic(DocumentListParser.class)) {
+			setupDocumentParser();
+			mockedDocumentListParser.when(() -> DocumentListParser.parse(appData))
+					.thenReturn(Arrays.asList(doc1, doc2));
 
-			// Verify the content of the routing destinations array
-			JsonArray routingDestinationsArray = result.getAsJsonArray("routingDestinations");
-			assertEquals(2, routingDestinationsArray.size());
+			// Mock InputData for first and last names
+			InputData firstNameData = mock(InputData.class);
+			InputData lastNameData = mock(InputData.class);
 
-			// Verify county destination
+			// Setup the getValue behavior
+			when(firstNameData.getValue(0)).thenReturn("Jane");
+			when(lastNameData.getValue(0)).thenReturn("Smith");
 
-			JsonObject countyJson = routingDestinationsArray.get(0).getAsJsonObject();
-			assertEquals("Beltrami County", countyJson.get("name").getAsString());
-			assertEquals("218-333-8300", countyJson.get("phoneNumber").getAsString());
-			assertEquals("COUNTY", countyJson.get("type").getAsString());
+			// Setup the page data returns
+			when(healthcareRenewalMatchInfoPage.get("firstName")).thenReturn(firstNameData);
+			when(healthcareRenewalMatchInfoPage.get("lastName")).thenReturn(lastNameData);
+			when(appData.getPageData("healthcareRenewalMatchInfo")).thenReturn(healthcareRenewalMatchInfoPage);
 
-			JsonObject tribalJson = routingDestinationsArray.get(1).getAsJsonObject();
-			assertEquals("Red Lake Nation", tribalJson.get("name").getAsString());
-			assertEquals("218-679-3350", tribalJson.get("phoneNumber").getAsString());
-			assertEquals("TRIBAL", tribalJson.get("type").getAsString());
+			JsonObject result = emailJsonDataCreator.createHealthcareRenewalJsonObject(application, recepientEmail,
+					locale);
+
+			verifyCommonJsonProperties("HEALTHCARE_RENEWAL", result);
+			verifyRoutingDestinations(result.getAsJsonArray("routingDestinations"));
+
+			assertEquals("Jane", result.get("firstName").getAsString());
+			assertEquals("Smith", result.get("lastName").getAsString());
 		}
 	}
 }

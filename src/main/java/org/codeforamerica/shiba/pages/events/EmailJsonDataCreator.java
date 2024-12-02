@@ -12,6 +12,7 @@ import org.codeforamerica.shiba.application.parsers.DocumentListParser;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.pages.RoutingDecisionService;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.PageData;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonArray;
@@ -25,8 +26,8 @@ public class EmailJsonDataCreator {
 		super();
 		this.routingDecisionService = routingDecisionService;
 	}
-
-	public JsonObject createLaterDocsJsonObject(Application application, String recepientEmail, Locale locale) {
+	
+	private JsonObject createBaseEmailJsonObject(Application application, String recepientEmail, Locale locale, String emailType, String pageName) {
 		JsonObject emailData = new JsonObject();
 		ApplicationData appData = application.getApplicationData();
 		Timestamp completedAt = Timestamp.valueOf(application.getCompletedAt().toLocalDateTime());
@@ -37,14 +38,21 @@ public class EmailJsonDataCreator {
 					.getRoutingDestinations(appData, doc);
 			destinations.addAll(routingDestinationsForThisDoc);
 		});
-
-		emailData.addProperty("emailType", "LATER_DOCS_CONFIRMATION");
+		
+		//Add common properties
+		emailData.addProperty("emailType", emailType);
 		emailData.addProperty("senderEmail", "help@mnbenefits.com");
 		emailData.addProperty("applicationId", application.getId());
 		emailData.addProperty("recepientEmail", recepientEmail);
 		emailData.addProperty("locale", locale.toString());
 		emailData.addProperty("completed-dt", completedAt.toString());
-
+		
+		//Get first&last name for specific page
+		PageData pageData = appData.getPageData(pageName);
+		emailData.addProperty("firstName",pageData.get("firstName").getValue(0));
+		emailData.addProperty("lastName",pageData.get("lastName").getValue(0));
+		
+		//Add routing destinations
 		JsonArray routingDestinationsArray = new JsonArray();
 		destinations.forEach(destination -> {
 			JsonObject dest = new JsonObject();
@@ -57,6 +65,16 @@ public class EmailJsonDataCreator {
 		emailData.add("routingDestinations", routingDestinationsArray);
 
 		return emailData;
+		
 	}
 
+	public JsonObject createLaterDocsJsonObject(Application application, String recepientEmail, Locale locale) {
+		return createBaseEmailJsonObject(
+				application,recepientEmail,locale,"LATER_DOCS_CONFIRMATION","matchInfo");	
+	}
+
+	public JsonObject createHealthcareRenewalJsonObject(Application application, String recepientEmail, Locale locale) {
+		return createBaseEmailJsonObject(
+				application,recepientEmail,locale,"HEALTHCARE_RENEWAL","healthcareRenewalMatchInfo");	
+	}
 }

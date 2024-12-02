@@ -55,8 +55,9 @@ client:
   truststore: src/main/resources/truststore-non-prod.jks
 
 comm-hub:
-  url: https://communication-hub-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
-  enabled: false
+#  url: https://communication-hub-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
+  url: http://localhost:8081/	
+  enabled: true
   max-attempts: 3
   delay: 900000
   multiplier: 3
@@ -64,8 +65,9 @@ comm-hub:
   timeout-seconds: 300
 
 comm-hub-email:
-  url: https://communication-hub-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-email-controller
-  enabled: false
+#  url: https://communication-hub-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-email-controller
+  url: http://localhost:8081/mnb-email-controller	
+  enabled: true
 
 intercom-chat-app-id: mmxasuhx
    
