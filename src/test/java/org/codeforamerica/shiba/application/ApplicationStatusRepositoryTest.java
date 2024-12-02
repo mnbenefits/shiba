@@ -27,8 +27,8 @@ import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 public class ApplicationStatusRepositoryTest extends AbstractRepositoryTest {
 
@@ -36,9 +36,9 @@ public class ApplicationStatusRepositoryTest extends AbstractRepositoryTest {
   private JdbcTemplate jdbcTemplate;
   private ApplicationStatusRepository applicationStatusRepository;
   private final RoutingDecisionService routingDecisionService = mock(RoutingDecisionService.class);
-  @MockBean
+  @MockitoBean
   private FilenameGenerator filenameGenerator;
-  @MockBean
+  @MockitoBean
   private PdfGenerator pdfGenerator;
   private CountyRoutingDestination routingDestination;
 

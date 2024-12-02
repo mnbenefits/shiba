@@ -38,10 +38,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
@@ -59,16 +59,16 @@ class AppsWithBlankStatusResubmissionTest {
   @Autowired
   private ApplicationStatusRepository applicationStatusRepository;
 
-  @MockBean
+  @MockitoBean
   private PageEventPublisher pageEventPublisher;
 
-  @MockBean
+  @MockitoBean
   private ClientRegistrationRepository repository;
 
-  @MockBean
+  @MockitoBean
   private DocumentRepository documentRepository;
 
-  @MockBean
+  @MockitoBean
   private PdfGenerator pdfGenerator;
 
   private final ZonedDateTime moreThan60DaysAgo = now().withFixedOffsetZone().minusDays(60)

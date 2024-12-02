@@ -66,14 +66,14 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import de.redsix.pdfcompare.PdfComparator;
 
@@ -91,29 +91,29 @@ class MnitDocumentConsumerTest {
   @Autowired
   private ServicingAgencyMap<TribalNationRoutingDestination> tribalNations;
 
-  @MockBean
+  @MockitoBean
   private FeatureFlagConfiguration featureFlagConfig;
-  @MockBean
+  @MockitoBean
   private FilenetWebServiceClient mnitClient;
-  @MockBean
+  @MockitoBean
   private EmailClient emailClient;
-  @MockBean
+  @MockitoBean
   private XmlGenerator xmlGenerator;
-  @MockBean
+  @MockitoBean
   private MonitoringService monitoringService;
-  @MockBean
+  @MockitoBean
   private DocumentRepository documentRepository;
-  @MockBean
+  @MockitoBean
   private ClientRegistrationRepository repository;
-  @MockBean
+  @MockitoBean
   private FilenameGenerator fileNameGenerator;
-  @MockBean
+  @MockitoBean
   private ApplicationRepository applicationRepository;
-  @MockBean
+  @MockitoBean
   private ApplicationStatusRepository applicationStatusRepository;
-  @MockBean
+  @MockitoBean
   private MessageSource messageSource;
-  @SpyBean
+  @MockitoSpyBean
   private PdfGenerator pdfGenerator;
 
   @Autowired

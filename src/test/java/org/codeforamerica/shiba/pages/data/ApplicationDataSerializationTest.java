@@ -27,21 +27,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
 class ApplicationDataSerializationTest {
 
-  @MockBean
+  @MockitoBean
   private ClientRegistrationRepository repository;
-  @MockBean
+  @MockitoBean
   private ApplicationRepository applicationRepository;
-  @MockBean
+  @MockitoBean
   private FilenameGenerator fileNameGenerator;
-  @MockBean
+  @MockitoBean
   private DocumentRepository documentRepository;
   @Autowired
   private PdfGenerator pdfGenerator;

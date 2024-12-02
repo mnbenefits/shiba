@@ -36,10 +36,10 @@ import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.StaticMessageSource;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -47,11 +47,11 @@ class CoverPagePreparerTest {
 
   private CoverPagePreparer preparer;
   private ApplicationData applicationData;
-  @MockBean
+  @MockitoBean
   private RoutingDecisionService routingDecisionService;
-  @MockBean
+  @MockitoBean
   private RoutingDestinationMessageService routingDestinationMessageService;
-  @MockBean
+  @MockitoBean
   private ServicingAgencyMap<TribalNationRoutingDestination> tribalNations;
 
   @BeforeEach

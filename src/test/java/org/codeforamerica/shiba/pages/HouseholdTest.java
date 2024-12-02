@@ -22,11 +22,11 @@ import org.codeforamerica.shiba.testutilities.AbstractPageControllerTest;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 public class HouseholdTest extends AbstractPageControllerTest {
-  @MockBean
+  @MockitoBean
   private WicRecommendationService wicRecommendationService;
 	  
   @Test

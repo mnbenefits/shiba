@@ -17,18 +17,14 @@ import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.application.Status;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.emails.EmailClient;
-import org.codeforamerica.shiba.pages.rest.CommunicationClient;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -42,7 +38,7 @@ class DocumentUploadEmailServiceTest {
   @Autowired
   private ApplicationRepository applicationRepository;
 
-  @MockBean
+  @MockitoBean
   private EmailClient emailClient;
   
   @Test

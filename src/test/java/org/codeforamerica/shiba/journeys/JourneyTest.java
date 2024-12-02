@@ -44,9 +44,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 abstract class JourneyTest extends AbstractBasePageTest {
 
@@ -55,21 +55,21 @@ abstract class JourneyTest extends AbstractBasePageTest {
   protected PDAcroForm certainPops;
   protected String applicationId;
 
-  @MockBean
+  @MockitoBean
   protected Clock clock;
-  @MockBean
+  @MockitoBean
   protected SmartyStreetClient smartyStreetClient;
-  @SpyBean
+  @MockitoSpyBean
   protected DocumentRepository documentRepository;
-  @MockBean
+  @MockitoBean
   private ClientRegistrationRepository springSecurityFilterChain;
-  @MockBean
+  @MockitoBean
   protected PageEventPublisher pageEventPublisher;
-  @MockBean
+  @MockitoBean
   protected MailGunEmailClient mailGunEmailClient;
-  @MockBean
+  @MockitoBean
   protected FeatureFlagConfiguration featureFlagConfiguration;
-  @SpyBean
+  @MockitoSpyBean
   protected UploadDocumentConfiguration uploadDocumentConfiguration;
 
   @Override

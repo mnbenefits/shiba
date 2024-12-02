@@ -12,9 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Controller;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Import(SessionScopedApplicationDataTest.ApplicationDataCaptureController.class)
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SessionScopedApplicationDataTest extends AbstractStaticMessageSourcePageTest {
 
   private static ApplicationData applicationData;
-  @MockBean
+  @MockitoBean
   private PageEventPublisher pageEventPublisher;
 
   @Override
