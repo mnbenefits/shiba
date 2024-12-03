@@ -17,12 +17,12 @@ import org.codeforamerica.shiba.testutilities.FormPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(properties = {"pagesConfig=pages-config/test-sub-workflow.yaml"})
 public class SubworkflowTest extends AbstractFrameworkTest {
 
-  @MockBean
+  @MockitoBean
   private PageEventPublisher pageEventPublisher;
 
   @Override

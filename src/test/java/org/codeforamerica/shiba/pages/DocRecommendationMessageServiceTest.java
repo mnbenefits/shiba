@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 import org.codeforamerica.shiba.County;
-import org.codeforamerica.shiba.RoutingDestinationMessageService;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.testutilities.AbstractPageControllerTest;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
@@ -28,8 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 public class DocRecommendationMessageServiceTest extends AbstractPageControllerTest {
 
@@ -38,7 +37,7 @@ public class DocRecommendationMessageServiceTest extends AbstractPageControllerT
   private static final String proofOfHousingCost = "proofOfHousingCost";
   private static final String proofOfMedicalExpenses = "proofOfMedicalExpenses";
 
-  @MockBean
+  @MockitoBean
   private WicRecommendationService wicRecommendationService;
   
   @SuppressWarnings("unused")

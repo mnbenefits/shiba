@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import com.deque.html.axecore.results.Results;
 import com.deque.html.axecore.results.Rule;
@@ -36,7 +36,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
   protected static List<Rule> resultsList = new ArrayList<>();
   protected static Results results;
 
-  @MockBean
+  @MockitoBean
   protected DocumentRepository documentRepository;
 
   @AfterAll

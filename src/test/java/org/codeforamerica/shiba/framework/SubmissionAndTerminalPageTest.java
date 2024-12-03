@@ -20,14 +20,14 @@ import org.codeforamerica.shiba.testutilities.AbstractStaticMessageSourceFramewo
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(properties = {"pagesConfig=pages-config/test-submit-page.yaml"})
 public class SubmissionAndTerminalPageTest extends AbstractStaticMessageSourceFrameworkTest {
 
-  @MockBean
+  @MockitoBean
   private ApplicationSubmittedListener applicationSubmittedListener;
-  @MockBean
+  @MockitoBean
   private ApplicationRepository applicationRepository;
 
   @Test

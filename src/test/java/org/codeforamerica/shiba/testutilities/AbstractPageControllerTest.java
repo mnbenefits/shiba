@@ -26,10 +26,10 @@ import org.codeforamerica.shiba.pages.events.PageEventPublisher;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ActiveProfiles("test")
@@ -45,33 +45,33 @@ import org.springframework.test.web.servlet.MockMvc;
 })
 public class AbstractPageControllerTest {
 
-  @MockBean
+  @MockitoBean
   protected ApplicationRepository applicationRepository;
-  @MockBean
+  @MockitoBean
   protected SnapExpeditedEligibilityDecider snapExpeditedEligibilityDecider;
-  @MockBean
+  @MockitoBean
   protected CcapExpeditedEligibilityDecider ccapExpeditedEligibilityDecider;
-  @MockBean
+  @MockitoBean
   protected MonitoringService monitoringService;
-  @MockBean
+  @MockitoBean
   protected PageEventPublisher pageEventPublisher;
-  @MockBean
+  @MockitoBean
   protected ApplicationEnrichment applicationEnrichment;
-  @MockBean
+  @MockitoBean
   protected CityInfoConfiguration cityInfoConfiguration;
-  @MockBean
+  @MockitoBean
   protected FeatureFlagConfiguration featureFlagConfiguration;
-  @MockBean
+  @MockitoBean
   protected UploadDocumentConfiguration uploadDocumentConfiguration;
-  @MockBean
+  @MockitoBean
   protected DocumentRepository documentRepository;
-  @MockBean
+  @MockitoBean
   protected RoutingDecisionService routingDecisionService;
-  @MockBean
+  @MockitoBean
   protected RoutingDestinationMessageService routingDestinationMessageService;
-  @MockBean
+  @MockitoBean
   protected ApplicationStatusRepository applicationStatusRepository;
-  @MockBean
+  @MockitoBean
   protected EligibilityListBuilder listBuilder;
 
   @Autowired

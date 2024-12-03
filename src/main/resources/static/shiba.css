@@ -600,7 +600,7 @@ form .drag-and-drop-box-compact {
   text-align: center;
   border: 1px solid #5F5854;
   border-radius: 4px;
-  height: 10rem;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -612,6 +612,14 @@ form .drag-and-drop-box-compact {
   font-size: 5rem;
 }
 
+.feedback-button {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	height: 100%;
+}
+.feedback-buttons-group legend {
+	padding-right: 25px;
+}
 .textarea {
   resize: none;
 }
