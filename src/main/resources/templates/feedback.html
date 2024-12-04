@@ -24,22 +24,28 @@
               <div class="feedback-sentiment-group">
                 <input type="radio" class="radio-as-feedback-button" id="happy" name="sentiment" value="HAPPY">
                 <label class="feedback-buttons" for="happy">
-                  <i class="icon-sentiment_satisfied"></i>
+                <div class="feedback-button">
+				  <i class="icon-sentiment_satisfied"></i>
                   <div th:text="#{success.great}"></div>
+                 </div>
                 </label>
               </div>
               <div class="feedback-sentiment-group">
                 <input type="radio" class="radio-as-feedback-button" id="meh" name="sentiment" value="MEH">
                 <label class="feedback-buttons" for="meh">
-                  <i class="icon-sentiment_neutral"></i>
+                <div class="feedback-button">
+				  <i class="icon-sentiment_neutral"></i>
                   <div th:text="#{success.ok}"></div>
+                </div>
                 </label>
               </div>
               <div class="feedback-sentiment-group">
                 <input type="radio" class="radio-as-feedback-button" id="sad" name="sentiment" value="SAD">
                 <label class="feedback-buttons" for="sad">
-                  <i class="icon-sentiment_dissatisfied"></i>
+                <div class="feedback-button">
+				  <i class="icon-sentiment_dissatisfied"></i>
                   <div th:text="#{success.not-good}"></div>
+                </div>
                 </label>
               </div>
             </fieldset>

@@ -63,14 +63,14 @@ import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -92,33 +92,33 @@ class PageControllerTest {
 
   private MockMvc mockMvc;
 
-  @MockBean
+  @MockitoBean
   private MessageSource messageSource;
-  @MockBean
+  @MockitoBean
   private Clock clock;
-  @MockBean
+  @MockitoBean
   private ApplicationRepository applicationRepository;
-  @MockBean
+  @MockitoBean
   private ApplicationStatusRepository applicationStatusRepository;
-  @MockBean
+  @MockitoBean
   private ApplicationFactory applicationFactory;
-  @MockBean
+  @MockitoBean
   private PageEventPublisher pageEventPublisher;
-  @MockBean
+  @MockitoBean
   private FeatureFlagConfiguration featureFlags;
-  @MockBean
+  @MockitoBean
   private RoutingDecisionService routingDecisionService;
-  @SpyBean
+  @MockitoSpyBean
   private DocumentRepository documentRepository;
-  @SpyBean
+  @MockitoSpyBean
   private Device device;
-  @MockBean
+  @MockitoBean
   private EligibilityListBuilder listBuilder;
   @Autowired
   private PageController pageController;
   @Autowired
   private ApplicationData applicationData;
-  @MockBean
+  @MockitoBean
   private MockWebServiceServer mockWebServiceServer;
   @Value("${mnit-clammit.url}")
   private String clammitUrl;

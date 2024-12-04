@@ -15,8 +15,8 @@ public class CommHubRestServiceTemplateConfiguration {
 	RestTemplateBuilder commHubRestServiceTemplate(RestTemplateBuilderConfigurer configurer,
 			@Value("${comm-hub.timeout-seconds}") long timeoutSeconds) {
 		return configurer.configure(new RestTemplateBuilder())
-				.setConnectTimeout(Duration.ofSeconds(timeoutSeconds))
-				.setReadTimeout(Duration.ofSeconds(timeoutSeconds));
+				.connectTimeout(Duration.ofSeconds(timeoutSeconds))
+				.readTimeout(Duration.ofSeconds(timeoutSeconds));
 	}
 
 }
