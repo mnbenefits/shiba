@@ -112,14 +112,14 @@ public class EmailJsonDataCreatorTest {
 
 		// Verify county destination
 		JsonObject countyJson = routingDestinationsArray.get(0).getAsJsonObject();
-		assertEquals("Bel County", countyJson.get("name").getAsString());
-		assertEquals("218-999-9000", countyJson.get("phoneNumber").getAsString());
+		assertEquals("Beltrami County", countyJson.get("name").getAsString());
+		assertEquals("218-333-8300", countyJson.get("phoneNumber").getAsString());
 		assertEquals("COUNTY", countyJson.get("type").getAsString());
 
 		// Verify tribal destination
 		JsonObject tribalJson = routingDestinationsArray.get(1).getAsJsonObject();
-		assertEquals("Red", tribalJson.get("name").getAsString());
-		assertEquals("217-678-5555", tribalJson.get("phoneNumber").getAsString());
+		assertEquals("Red Lake Nation", tribalJson.get("name").getAsString());
+		assertEquals("218-679-3350", tribalJson.get("phoneNumber").getAsString());
 		assertEquals("TRIBAL", tribalJson.get("type").getAsString());
 	}
 
