@@ -64,7 +64,7 @@ public class UploadedDocumentsSubmittedListener extends ApplicationEventListener
 		}
 		
 		if((flowType == FlowType.LATER_DOCS || flowType == FlowType.HEALTHCARE_RENEWAL)){
-			sendConfirmationEmailByType(application, event.getLocale(),  application.getFlow());
+			sendConfirmationEmailByType(application, event.getLocale(),  flowType);
 			
 		}
 		

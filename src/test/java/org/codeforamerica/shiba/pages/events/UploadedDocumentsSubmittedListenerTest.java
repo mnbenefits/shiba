@@ -84,28 +84,6 @@ class UploadedDocumentsSubmittedListenerTest {
 
 		verify(emailClient).sendLaterDocsConfirmationEmail(application, applicationId, email, locale);
 	}
-	
-	@Disabled
-	@Test
-	void shouldSendConfirmationEmailLaterDocsWithJsonDataToCommhub() {
-		Application application = Application.builder().id(applicationId).flow(FlowType.LATER_DOCS).build();
-		when(applicationRepository.find(eq(applicationId))).thenReturn(application);
-		String email = "confirmation email";
-		JsonObject emailData = new JsonObject();
-
-		// mock email parser
-		MockedStatic<EmailParser> mockEmailParser1 = Mockito.mockStatic(EmailParser.class);
-		try {
-			mockEmailParser1.when(() -> EmailParser.parse(any())).thenReturn(Optional.of(email));
-			when(emailJsonDataCreator.createLaterDocsJsonObject(application, email, locale)).thenReturn(emailData);
-
-			uploadedDocumentsSubmittedListener.sendConfirmationEmail(event);
-
-			verify(communicationClient).sendEmailDataToCommhub(emailData);
-		} finally {
-			mockEmailParser1.close();
-		}
-	}
 
 	@Test
 	void shouldSendConfirmationEmailHealthcareRenewal() {
