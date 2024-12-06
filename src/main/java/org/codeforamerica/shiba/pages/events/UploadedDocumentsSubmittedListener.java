@@ -30,8 +30,7 @@ public class UploadedDocumentsSubmittedListener extends ApplicationEventListener
 
 	public UploadedDocumentsSubmittedListener(MnitDocumentConsumer mnitDocumentConsumer,
 			ApplicationRepository applicationRepository, MonitoringService monitoringService, EmailClient emailClient,
-			CommunicationClient communicationClient, 
-			EmailJsonDataCreator emailJsonDataCreator) {
+			CommunicationClient communicationClient, EmailJsonDataCreator emailJsonDataCreator) {
 
 		super(applicationRepository, monitoringService);
 		this.mnitDocumentConsumer = mnitDocumentConsumer;
@@ -45,6 +44,7 @@ public class UploadedDocumentsSubmittedListener extends ApplicationEventListener
 	public void send(UploadedDocumentsSubmittedEvent event) {
 		log.info("Processing uploaded documents for application ID: " + event.getApplicationId());
 		Application application = getApplicationFromEvent(event);
+
 		logTimeSinceCompleted(application);
 		mnitDocumentConsumer.processUploadedDocuments(application);
 		MDC.clear();
@@ -54,12 +54,20 @@ public class UploadedDocumentsSubmittedListener extends ApplicationEventListener
 	@EventListener
 	public void sendConfirmationEmail(UploadedDocumentsSubmittedEvent event) {
 		Application application = getApplicationFromEvent(event);
+		FlowType flowType = application.getFlow();
+
 		if (application.getFlow() == FlowType.LATER_DOCS) {
 			sendLaterDocsConfirmationEmail(application, event.getLocale());
 		}
 		if (application.getFlow() == FlowType.HEALTHCARE_RENEWAL) {
 			sendHealthcareRenewalConfirmationEmail(application, event.getLocale());
 		}
+
+		if ((flowType == FlowType.LATER_DOCS || flowType == FlowType.HEALTHCARE_RENEWAL)) {
+			sendConfirmationEmailByType(application, event.getLocale(), flowType);
+
+		}
+
 		MDC.clear();
 	}
 
@@ -68,20 +76,29 @@ public class UploadedDocumentsSubmittedListener extends ApplicationEventListener
 
 		EmailParser.parse(applicationData).ifPresent(
 				email -> emailClient.sendLaterDocsConfirmationEmail(application, application.getId(), email, locale));
-
-		EmailParser.parse(applicationData).ifPresent(email -> {
-			JsonObject emailData = emailJsonDataCreator.createLaterDocsJsonObject(application, email, locale);
-			communicationClient.sendEmailDataToCommhub(emailData);
-		});
-
 	}
 
 	private void sendHealthcareRenewalConfirmationEmail(Application application, Locale locale) {
 		ApplicationData applicationData = application.getApplicationData();
-
 		EmailParser.parse(applicationData).ifPresent(email -> emailClient
 				.sendHealthcareRenewalConfirmationEmail(application, application.getId(), email, locale));
-
 	}
 
+	private void sendConfirmationEmailByType(Application application, Locale locale, FlowType flowType) {
+		ApplicationData applicationData = application.getApplicationData();
+
+		EmailParser.parse(applicationData).ifPresent(email -> {
+			JsonObject emailData = createEmailData(application, email, locale, flowType);
+			communicationClient.sendEmailDataToCommhub(emailData);
+		});
+	}
+
+	private JsonObject createEmailData(Application application, String email, Locale locale, FlowType flowType) {
+		return switch (flowType) {
+		case LATER_DOCS -> emailJsonDataCreator.createLaterDocsJsonObject(application, email, locale);
+		case HEALTHCARE_RENEWAL -> emailJsonDataCreator.createHealthcareRenewalJsonObject(application, email, locale);
+		default -> throw new IllegalArgumentException();
+
+		};
+	}
 }
