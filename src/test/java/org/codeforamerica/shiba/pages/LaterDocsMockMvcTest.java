@@ -61,8 +61,7 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 		super.setUp();
 		applicationData.setFlow(FlowType.LATER_DOCS);
 		new TestApplicationDataBuilder(applicationData);
-		mockMvc.perform(get("/pages/identifyCountyOrTribalNation").session(session)); // start timer
-
+		mockMvc.perform(get("/pages/readyToUploadDocuments").session(session)); // start timer
 	}
 
 	@Test
@@ -256,7 +255,10 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 	  "Ramsey, BoisForte",
 	  "Anoka, LeechLake",
 	  "Hennepin, LeechLake",
-	  "Ramsey, LeechLake"})
+	  "Ramsey, LeechLake",
+	  "Anoka, WhiteEarthNation",
+	  "Hennepin, WhiteEarthNation",
+	  "Ramsey, WhiteEarthNation"})
 	void routeLaterDocsToUrbanCountyAndMillLacsTribalNation(String county, String tribalNation) throws Exception {
 		
 		postExpectingSuccess("matchInfo", Map.of(
@@ -404,7 +406,7 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 	  
 	@ParameterizedTest
-	@CsvSource({ "Becker, true", "Mahnomen, true", "Clearwater, true", "Norman, false", "Hennepin, false" })
+	@CsvSource({ "Becker, true", "Mahnomen, true", "Clearwater, true", "Norman, false", "Wright, false" })
 	void routeLaterDocsToWhiteEarthNation(String county, String routingToWhiteEarthNation)
 			throws Exception {
 		postExpectingSuccess("matchInfo", Map.of("firstName", List.of("Dwight"), "lastName", List.of("Schrute"),

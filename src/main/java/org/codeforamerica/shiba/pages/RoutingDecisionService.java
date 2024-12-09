@@ -103,7 +103,7 @@ public class RoutingDecisionService {
   }
 
 	/*
-	 * Rules for Later Docs routing (based on LaterDocsTribalNatonsRouting_Iteration2_06252024.xlsx):
+	 * Rules for Later Docs routing (based on LaterDocsTribalNatonsRouting_Iteration2_12092024.xlsx):
 	 * 
 	 * Tribal Nation Member is Yes: AND
 	 *   Tribal Nation is White Earth Nation:
@@ -118,7 +118,7 @@ public class RoutingDecisionService {
 	 *   Tribal Nation is Mille Lacs Band of Ojibwe 
 	 *     AND county is Aitkin, Benton, Chisago, Crow Wing, Kanabec, Morrison, Mille Lacs, Pine 
 	 *   OR
-	 *   Tribal Nation is Bois Forte, Fond Du Lac, Grand Portage, Leech Lake, Mille Lacs Band Of Ojibwe  
+	 *   Tribal Nation is Bois Forte, Fond Du Lac, Grand Portage, Leech Lake, Mille Lacs Band Of Ojibwe, White Earth Nation  
 	 *     AND county is Anoka, Hennepin, Ramsey - route to the county and to Mille Lacs Band of Ojibwe
 	 * 
 	 * Any other scenario:
