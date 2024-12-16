@@ -42,6 +42,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("apartmentNumber", "someApartmentNumber");
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("MN"); // home address page default state is MN
     testPage.enter("state", "WI"); // user can set state to something besides MN
+    assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("WI");
     testPage.clickContinue(); // go to mailing address page, then back
     testPage.goBack();
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("WI");
