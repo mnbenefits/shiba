@@ -44,6 +44,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.mockito.ArgumentCaptor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
@@ -290,6 +292,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     
     testPage.clickContinue();
     
+    new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.titleIs(("Address Validation")));
     testPage.clickElementById("enriched-address");
     testPage.clickContinue();
     testPage.clickElementById("original-county");
