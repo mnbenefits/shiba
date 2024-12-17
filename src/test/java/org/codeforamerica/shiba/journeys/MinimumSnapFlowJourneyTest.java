@@ -283,6 +283,10 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();
     
     // Page title: Out of State Address Notice
+    //new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.titleIs(("Out of State Address Notice")));
+
+    assertThat(driver.getTitle()).isEqualTo("Out of State Address Notice");  // but was Home Address
+
     //assertTrue(testPage.getTitle().equals("Out of State Address Notice"));
     // Verify that the given address is what was input on the homeAddress page
     assertTrue(testPage.findElementById("given-address-street").getText().equals("someStreetAddress"));
@@ -298,7 +302,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     
     // Page title: Address Validation
     assertTrue(testPage.getTitle().equals("Address Validation"));
-    testPage.clickElementById("enriched-address");
+    testPage.clickElementById("enrichedaddress");
     testPage.clickContinue();
     
     // County Validation is skipped for out of state address
@@ -337,7 +341,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     
     // Page title: Address Validation
     assertTrue(testPage.getTitle().equals("Address Validation"));
-    testPage.clickElementById("enriched-address");
+    testPage.clickElementById("enrichedaddress");
     testPage.clickContinue();
     
     // Page title: County Validation

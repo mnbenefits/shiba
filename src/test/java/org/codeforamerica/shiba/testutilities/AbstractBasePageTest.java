@@ -267,7 +267,7 @@ public abstract class AbstractBasePageTest {
     );
     testPage.clickContinue();
 
-    testPage.clickElementById("enriched-address");
+    testPage.clickElementById("enrichedaddress");
     testPage.clickContinue();
     assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
         .isEqualTo("smarty street");

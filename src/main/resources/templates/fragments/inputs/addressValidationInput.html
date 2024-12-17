@@ -30,7 +30,7 @@
        th:text="#{address-validation.we-couldnt-find-your-address}" class="notice--warning"></p>
   </div>
   <div class="grid__item address-validation spacing-below-60">
-    <label th:for="enriched-address" class="radio-button"
+    <label th:for="enrichedaddress" class="radio-button"
            th:if="${foundEnrichedAddress}">
       <p class="spacing-below-15"
          th:text="#{${input.options.selectableOptions.get(0).messageKey}}"></p>
@@ -40,7 +40,7 @@
       <div
           th:text="${T(org.codeforamerica.shiba.Utils).joinNonEmpty(addressData.get('enrichedCity').value[0], addressData.get('enrichedState').value[0])}"></div>
       <div th:text="${addressData.get('enrichedZipCode').value[0]}"></div>
-      <input type="radio" th:name="${formInputName}" id="enriched-address"
+      <input type="radio" th:name="${formInputName}" id="enrichedaddress"
              th:value="true"
              th:checked="true">
     </label>

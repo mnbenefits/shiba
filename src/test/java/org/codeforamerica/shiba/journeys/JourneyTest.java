@@ -271,6 +271,8 @@ abstract class JourneyTest extends AbstractBasePageTest {
   
   protected void fillOutHomeAndMailingAddress(String homeZip, String homeCity,
       String homeStreetAddress, String homeApartmentNumber) {
+	assertThat(driver.getTitle()).isEqualTo("Home Address");
+
     testPage.enter("zipCode", homeZip);
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
@@ -279,6 +281,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
         Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
     );
     testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Mailing address");
 
     // Where can the county send your mail? (accept the smarty streets enriched address)
     testPage.enter("zipCode", "23456");
@@ -291,9 +294,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
     );
     
     testPage.clickContinue();
-    
-    new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.titleIs(("Address Validation")));
-    testPage.clickElementById("enriched-address");
+    assertThat(driver.getTitle()).isEqualTo("Address Validation");
+    new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.id("enrichedaddress")));
+
+    testPage.clickElementById("enrichedaddress");
     testPage.clickContinue();
     testPage.clickElementById("original-county");
     testPage.clickContinue();
