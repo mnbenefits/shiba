@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void nonExpeditedFlow() {
+	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     // No permanent address for this test
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
@@ -44,7 +46,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("state", "WI"); // user can set state to something besides MN
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("WI");
     testPage.clickContinue(); // go to mailing address page, then back
-    assertThat(driver.getTitle()).isEqualTo("Out of State Address Notice");
+    assertThat(driver.getTitle()).isEqualTo("Out of State Address Notice");  // but was Home Address
     testPage.goBack();
     assertThat(driver.getTitle()).isEqualTo("Home Address");
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("WI");
@@ -140,6 +142,8 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void expeditedFlow() {
+	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+  
 	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
@@ -257,6 +261,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void outOfStateApplicantFlow() {
+	driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
     
     // Page title: Home Address
