@@ -23,6 +23,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 @Tag("minimumFlowJourney")
 public class MinimumSnapFlowJourneyTest extends JourneyTest {
@@ -46,6 +48,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("state", "WI"); // user can set state to something besides MN
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("WI");
     testPage.clickContinue(); // go to mailing address page, then back
+    new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.titleIs(("Out of State Address Notice")));
     assertThat(driver.getTitle()).isEqualTo("Out of State Address Notice");  // but was Home Address
     testPage.goBack();
     assertThat(driver.getTitle()).isEqualTo("Home Address");
