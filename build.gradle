@@ -112,7 +112,7 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.ws:spring-ws-core")
 
-    implementation("org.springframework.session:spring-session-core:3.4.0")
+    implementation("org.springframework.session:spring-session-core:3.4.1")
     implementation("org.springframework.session:spring-session-jdbc:3.4.0")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web:3.4.0")
