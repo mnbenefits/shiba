@@ -2657,6 +2657,45 @@ pageDefinitions:
               messageKey: select-the-tribe.white-earth
             - value: Federally recognized tribe outside of MN
               messageKey: select-the-tribe.other
+  - &nationOfResidence
+    name: nationOfResidence
+    pageTitle: nation-of-residence.title
+    headerKey: nation-of-residence.header
+    hasPrimaryButton: true
+    inputs:
+      - name: selectedNationOfResidence
+        type: SELECT
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-tribe
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: select-the-tribe.select-the-tribe
+            - value: Bois Forte
+              messageKey: select-the-tribe.bois-forte
+            - value: Fond Du Lac
+              messageKey: select-the-tribe.fond-du-lac
+            - value: Grand Portage
+              messageKey: select-the-tribe.grand-portage
+            - value: Leech Lake
+              messageKey: select-the-tribe.leech-lake
+            - value: Lower Sioux
+              messageKey: select-the-tribe.lower-sioux
+            - value: Mille Lacs Band of Ojibwe
+              messageKey: select-the-tribe.mille-lacs
+            - value: Prairie Island
+              messageKey: select-the-tribe.prairie-island
+            - value: Red Lake Nation
+              messageKey: select-the-tribe.red-lake
+            - value: Shakopee Mdewakanton
+              messageKey: select-the-tribe.shakopee-mdewakanton
+            - value: Upper Sioux
+              messageKey: select-the-tribe.upper-sioux
+            - value: White Earth Nation
+              messageKey: select-the-tribe.white-earth
+            - value: Federally recognized tribe outside of MN
+              messageKey: select-the-tribe.other
   - &linealDescendantWEN
     name: linealDescendantWhiteEarthNation
     pageTitle: lineal-descendant-WEN.title
@@ -5952,6 +5991,16 @@ workflow:
   nationsBoundary:
     pageConfiguration: *nationsBoundary
     nextPages:
+      - pageName: nationOfResidence
+        condition:
+          pageName: nationsBoundary
+          name: livingInNationBoundaryIsTrue
+          input: livingInNationBoundary
+          value: "true"
+      - pageName: introIncome
+  nationOfResidence:
+    pageConfiguration: *nationOfResidence
+    nextPages:
       - pageName: applyForTribalTANF
         condition:
           logicalOperator: OR
@@ -6020,15 +6069,6 @@ workflow:
               input: county
               value: Beltrami
       - pageName: applyForMFIP
-    skipCondition:
-      logicalOperator: OR
-      name: SKIP_isUrbanTribalNationMember_OR_selectedTribeIsFederallyRecognizedOutsideMN
-      conditions:
-        - *isUrbanTribalNationMember?
-        - pageName: selectTheTribe
-          name: selectedTribeIsFederallyRecognizedOutsideMN
-          input: selectedTribe
-          value: Federally recognized tribe outside of MN
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
