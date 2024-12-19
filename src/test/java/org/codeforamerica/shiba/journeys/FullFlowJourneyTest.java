@@ -189,9 +189,13 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.selectFromDropdown("selectedTribe[]", "Prairie Island");
     testPage.clickContinue();
 
-    // Are any of the tribal members in your household living in or near the nation’s boundaries?
+    // Are any of the tribal members in your household living in or near the Nation's boundaries?
     testPage.enter("livingInNationBoundary", YES.getDisplayValue());
 
+    // Residence is in what Nation's boundaries?
+    testPage.selectFromDropdown("selectedNationOfResidence[]", "Prairie Island");
+    testPage.clickContinue();
+    
     // It looks like you might be eligible for MFIP. Would you like to apply?
     // This triggers CASH to be mapped for CAF program selections
     testPage.enter("applyForMFIP", YES.getDisplayValue());
@@ -202,6 +206,13 @@ public class FullFlowJourneyTest extends JourneyTest {
     navigateTo("selectTheTribe");
     // Go back and select a tribe that routes to Mille Lacs
     testPage.selectFromDropdown("selectedTribe[]", "Bois Forte");
+    testPage.clickContinue();
+
+    // Are any of the tribal members in your household living in or near the Nation's boundaries?
+    testPage.enter("livingInNationBoundary", YES.getDisplayValue());
+
+    // Residence is in what Nation's boundaries?
+    testPage.selectFromDropdown("selectedNationOfResidence[]", "Bois Forte");
     testPage.clickContinue();
 
     // It looks like you might be eligible for MFIP. Would you like to apply?
