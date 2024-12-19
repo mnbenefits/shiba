@@ -94,7 +94,7 @@ jobs:
       continue-on-error: true
     - name: Convert pipeline scan output to SARIF format
       id: convert
-      uses: veracode/veracode-pipeline-scan-results-to-sarif@6a1ca6ebb21c9ec0cfca69987bf320a936b0577d
+      uses: veracode/veracode-pipeline-scan-results-to-sarif@bbb92f8ccedc6c38e07d32c16cf2f690e7b4ba08
       with:
         pipeline-results-json: results.json
     - uses: github/codeql-action/upload-sarif@v3
