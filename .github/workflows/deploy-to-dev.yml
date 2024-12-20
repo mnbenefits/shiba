@@ -16,7 +16,7 @@ on:
 jobs:
   announce_failure:
     name: Announce test failure on Teams
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Announce on Teams
         if: ${{ github.event.workflow_run.conclusion == 'failure' }}
@@ -31,7 +31,7 @@ jobs:
   mnitdeploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: deploy to MNbenefits DEV
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Authenticate and set context for non-prod
         uses: redhat-actions/oc-login@v1
@@ -66,7 +66,7 @@ jobs:
     needs: mnitdeploy
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Merge main -> staging
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     permissions: write-all
     steps:
       - name: Checkout
