@@ -5991,16 +5991,14 @@ workflow:
   nationsBoundary:
     pageConfiguration: *nationsBoundary
     nextPages:
+    # page flow when response is "Yes"
       - pageName: nationOfResidence
         condition:
           pageName: nationsBoundary
           name: livingInNationBoundaryIsTrue
           input: livingInNationBoundary
           value: "true"
-      - pageName: introIncome
-  nationOfResidence:
-    pageConfiguration: *nationOfResidence
-    nextPages:
+    # page flow when response is "No"
       - pageName: applyForTribalTANF
         condition:
           logicalOperator: OR
@@ -6044,11 +6042,47 @@ workflow:
               value: "false"
         flag: certain-pops
       - pageName: introIncome
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: selectTheTribe
+      - pageName: identifyCounty
+      - pageName: pregnant
+  nationOfResidence:
+    pageConfiguration: *nationOfResidence
+    nextPages:
+      - pageName: applyForTribalTANF
         condition:
-          pageName: nationsBoundary
-          name: isLivingInNationBoundaryFalse
-          input: livingInNationBoundary
-          value: "false"
+          logicalOperator: OR
+          name: livingInUrbanCounty_OR_isMilleLacsBand_OR_isPregnantLivingAlone
+          conditions:
+            - logicalOperator: AND
+              name: isTribalMemberLivingInUrbanTribalNationCounty
+              conditions:
+                - *isUrbanTribalNationMember?
+                - pageName: identifyCounty
+                  name: isUrbanTribalNationCounty
+                  input: county
+                  matcher: IS_URBAN_TRIBAL_NATION_COUNTY
+            - logicalOperator: AND
+              name: isMilleLacsBandMemberInMilleLacsBandCounty
+              conditions:
+                - pageName: selectTheTribe
+                  name: selectedTribeMilleLacsBand
+                  input: selectedTribe
+                  value: Mille Lacs Band of Ojibwe
+                - pageName: identifyCounty
+                  name: selectedCountyMilleLacsBandRuralCounty
+                  input: county
+                  matcher: IS_MILLE_LACS_RURAL_COUNTY
+            - logicalOperator: AND
+              name: livesAlone_AND_isPregnantTrue
+              conditions:
+                - *livesAlone?
+                - pageName: pregnant
+                  name: isPregnantTrue
+                  input: isPregnant
+                  value: "true"
       - pageName: applyForTribalTANF
         condition:
           pageName: selectTheTribe
@@ -6070,10 +6104,8 @@ workflow:
               value: Beltrami
       - pageName: applyForMFIP
     datasources:
-      - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: selectTheTribe
-      - pageName: tribalNationMember
       - pageName: identifyCounty
       - pageName: pregnant
   applyForTribalTANF:
