@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
-import org.codeforamerica.shiba.TribalNation;
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
@@ -456,6 +455,32 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
   }
 
+	/**
+	 * This test verifies: 
+	 * 1) if "true" is selected on the tribalNationMember page then the next page is selectTheTribe 
+	 * 2) the exact content of the select list on the selectTheTribe page 
+	 * 3) that regardless of the selectedTribe input value the next page is always nationsBoundary
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void selectTheTribeFlowsToNationsBoundary() throws Exception {
+		// start with the tribalNationMember page, we do not need preceding inputs
+		// tribalNationMember
+		var nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		assertThat(nextPage.getTitle()).isEqualTo("Select a Tribal Nation");
+		List<String> selectedTribeOptions = nextPage.getElementById("selectedTribe").getElementsByTag("option")
+				.eachText();
+		assertThat(selectedTribeOptions).containsExactly("Select a Tribal Nation", "Bois Forte", "Fond Du Lac",
+				"Grand Portage", "Leech Lake", "Lower Sioux", "Mille Lacs Band of Ojibwe", "Prairie Island",
+				"Red Lake Nation", "Shakopee Mdewakanton", "Upper Sioux", "White Earth Nation",
+				"Other federally recognized tribe");
+
+		// selectTheTribe
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "any selected tribe");
+		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
+	}
+  
   private void goThroughLongTribalTanfFlow(String nationName, String county,
       String applyForTribalTanf,
       String... programs) throws Exception {
