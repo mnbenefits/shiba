@@ -480,7 +480,96 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "any selected tribe");
 		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
 	}
-  
+
+	/**
+	 * This test verifies the exact content of the select list on the
+	 * nationOfResidence page
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	void nationOfResidenceOptions() throws Exception {
+		var page = new FormPage(getPage("nationOfResidence"));
+		assertThat(page.getTitle()).isEqualTo("Tribal Nation of residence");
+		List<String> selectedNationOfResidenceOptions = page.getElementById("selectedNationOfResidence")
+				.getElementsByTag("option").eachText();
+		assertThat(selectedNationOfResidenceOptions).containsExactly("Select a Tribal Nation", "Bois Forte",
+				"Fond Du Lac", "Grand Portage", "Leech Lake", "Lower Sioux", "Mille Lacs Band of Ojibwe",
+				"Prairie Island", "Red Lake Nation", "Shakopee Mdewakanton", "Upper Sioux", "White Earth Nation");
+	}
+
+	/**
+	 * This test verifies: When the applicant is: 
+	 * 1) An urban tribe member AND the county is an urban county 
+	 * 2) OR the applicant is a member of Mille Lacs Band of Ojibwe AND the county is an MLB rural county 
+	 * 3) OR the applicant lives alone AND is pregnant 
+	 * 4) OR the applicant is a member of Red Lake Nation
+	 * THEN the next page is applyForTribalTANF 
+	 * 5) OTHERWISE the next page is applyForMFIP
+	 * 
+	 * @throws Exception
+	 */
+	@ParameterizedTest
+	@CsvSource(value = {
+			// case 1
+			"Anoka, Bois Forte, false, apply for Tribal TANF", "Hennepin, Fond Du Lac, false, apply for Tribal TANF",
+			"Ramsey, Grand Portage, false, apply for Tribal TANF", "Anoka, Leech Lake, false, apply for Tribal TANF",
+			"Hennepin, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Ramsey, White Earth Nation, false, apply for Tribal TANF",
+			// case 2
+			"Aitkin, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Benton, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Chisago, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Crow Wing, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Kanabec, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Morrison, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Mille Lacs, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Pine, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			// case 3
+			"Norman, Prairie Island, true, apply for Tribal TANF",
+			// case 4
+			"Norman, Red Lake Nation, false, apply for Tribal TANF",
+			// case 5
+			"Clay, Shakopee Mdewakanton, false, apply for MFIP" })
+	void nationOfResidenceNavigatesToCorrectNextPage(String county, String tribe, String liveAloneAndPregnant,
+			String nextPageTitle) throws Exception {
+		postExpectingRedirect("identifyCountyBeforeApplying", "county", county, "prepareToApply");
+		postExpectingRedirect("choosePrograms", "programs", "SNAP", "expeditedNotice");
+
+		FormPage nextPage;
+		if (Boolean.valueOf(liveAloneAndPregnant)) {
+			// addHouseholdMember
+			nextPage = postAndFollowRedirect("addHouseholdMembers", "addHouseholdMembers", "false");
+			assertThat(nextPage.getTitle()).isEqualTo("Intro: Personal Details");
+			// pregnant
+			nextPage = postAndFollowRedirect("pregnant", "isPregnant", "true");
+			assertThat(nextPage.getTitle()).isEqualTo("Expedited Migrant Farm Worker, 1 person");
+		} else {
+			// addHouseholdMember
+			nextPage = postAndFollowRedirect("addHouseholdMembers", "addHouseholdMembers", "true");
+			assertThat(nextPage.getTitle()).isEqualTo("Start Household");
+			// pregnant
+			nextPage = postAndFollowRedirect("pregnant", "isPregnant", "false");
+			assertThat(nextPage.getTitle()).isEqualTo("Expedited Migrant Farm Worker, Household");
+		}
+
+		// tribalNationMember
+		nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		assertThat(nextPage.getTitle()).isEqualTo("Select a Tribal Nation");
+
+		// selectTheTribe
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", tribe);
+		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
+
+		// nationsBoundary
+		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "true");
+		assertThat(nextPage.getTitle()).isEqualTo("Tribal Nation of residence");
+
+		// nationOfResidence
+		nextPage = postAndFollowRedirect("nationOfResidence", "selectedNationOfResidence", tribe);
+		assertThat(nextPage.getTitle()).isEqualTo(nextPageTitle);
+	}	
+	
   private void goThroughLongTribalTanfFlow(String nationName, String county,
       String applyForTribalTanf,
       String... programs) throws Exception {

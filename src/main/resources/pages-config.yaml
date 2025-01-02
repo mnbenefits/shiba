@@ -2694,8 +2694,6 @@ pageDefinitions:
               messageKey: select-the-tribe.upper-sioux
             - value: White Earth Nation
               messageKey: select-the-tribe.white-earth
-            - value: Federally recognized tribe outside of MN
-              messageKey: select-the-tribe.other
   - &linealDescendantWEN
     name: linealDescendantWhiteEarthNation
     pageTitle: lineal-descendant-WEN.title
