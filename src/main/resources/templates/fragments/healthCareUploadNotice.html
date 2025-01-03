@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
+ <div>
+  <div th:if="${@environment.getProperty('hc.upload.notice.displayed')}">
+	  <div th:fragment="healthCareUploadNotice" id="healthCareUploadNotice" class="general-notice-box">
+      <span id="generalNoticeTitle" th:utext="${#locale.language == 'en' ?
+                    @environment.getProperty('hc.upload.notice.title-en') : 
+                    @environment.getProperty('hc.upload.notice.title-es')}"></span>
+      <span id="generalNoticeMessage" th:utext="${#locale.language == 'en' ? 
+                    @environment.getProperty('hc.upload.notice.message-en') : 
+                    @environment.getProperty('hc.upload.notice.message-es')}"></span>
+    </div>
+  </div>
+ </div>
+</body>
+</html>
