@@ -38,6 +38,10 @@
             </script>
         </div>
     </header>
+	<div class="spacing-above-15 grid"
+	    th:if="${@environment.getProperty('hc.upload.notice.displayed')}">
+	    <div th:replace="~{fragments/healthCareUploadNotice :: healthCareUploadNotice}"></div>
+	</div>
 </div>
 </body>
 
