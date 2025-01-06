@@ -354,6 +354,17 @@ conditionDefinitions:
     name: householdMemberLessThanAge5
     input: dobAsDate
     matcher: HH_MEMBER_AGE_LESS_THAN_5
+  - &householdMemberLessThanAge18?
+    pageName: householdMemberInfo
+    name: householdMemberLessThanAge18
+    input: dobAsDate
+    matcher: HH_MEMBER_AGE_LESS_THAN_18
+  - &isEligibleForTribalTANF?
+    name: isEligibleForTribalTANF
+    logicalOperator: OR
+    conditions:
+      - *isSomeonePregnant?
+      - *householdMemberLessThanAge18?
 pageDefinitions:
   - &landing
     name: landing
