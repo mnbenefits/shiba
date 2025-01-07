@@ -11,7 +11,7 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.LIVING_IN_TRIBAL_NATION_BOUNDARY;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.SELECTED_TRIBAL_NATION;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.TRIBAL_NATION;
-
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.NATION_OF_RESIDENCE;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +28,28 @@ public class TribalNationPreparer implements DocumentFieldPreparer {
         Boolean isTribalNationMember = getBooleanValue(application.getApplicationData().getPagesData(), TRIBAL_NATION);
         String selectedTribe = isTribalNationMember? getFirstValue(application.getApplicationData().getPagesData(), SELECTED_TRIBAL_NATION) : null;
         Boolean livesInNationBoundary = isTribalNationMember ? getBooleanValue(application.getApplicationData().getPagesData(), LIVING_IN_TRIBAL_NATION_BOUNDARY) : null;
+       
+        Boolean isNationBoundary = getBooleanValue(application.getApplicationData().getPagesData(), LIVING_IN_TRIBAL_NATION_BOUNDARY);
+        String selectedNationOfResidence = isTribalNationMember? getFirstValue(application.getApplicationData().getPagesData(), NATION_OF_RESIDENCE) : null;
+  
+
         if (Boolean.FALSE.equals(isTribalNationMember)) {
         	return result;
         }
+        
         boolean tribeRequiresBoundaryAnswer = selectedTribe !=null && TRIBES_REQUIRING_BOUNDARY_ANSWER.contains(selectedTribe);
+        
+        if (Boolean.FALSE.equals(livesInNationBoundary) && isNationBoundary) {
+        	result.add(new DocumentField("nationsBoundary", "boundaryMember", "No",
+                    DocumentFieldType.SINGLE_VALUE));
+        }
+        if (Boolean.TRUE.equals(livesInNationBoundary) && isNationBoundary) {
+       	 result.add(new DocumentField("nationsBoundary", "boundaryMember","Yes",
+                    DocumentFieldType.SINGLE_VALUE));
+           	result.add(new DocumentField("nationsBoundary", "selectedNationBoundaryTribe", selectedNationOfResidence,
+                       DocumentFieldType.SINGLE_VALUE));
+        }
+        
        
         if (Boolean.TRUE.equals(isTribalNationMember) && tribeRequiresBoundaryAnswer) {
         	 result.add(new DocumentField("nationsBoundary", "boundaryMember",livesInNationBoundary ? "Yes" : "No",
