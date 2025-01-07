@@ -359,12 +359,83 @@ conditionDefinitions:
     name: householdMemberLessThanAge18
     input: dobAsDate
     matcher: HH_MEMBER_AGE_LESS_THAN_18
-  - &isEligibleForTribalTANF?
-    name: isEligibleForTribalTANF
-    logicalOperator: OR
+  - &isMilleLacsBandMemberInMilleLacsBandCounty?    
+    name: isMilleLacsBandMemberInMilleLacsBandCounty
+    logicalOperator: AND
     conditions:
-      - *isSomeonePregnant?
-      - *householdMemberLessThanAge18?
+      - pageName: selectTheTribe
+        name: selectedTribeMilleLacsBand
+        input: selectedTribe
+        value: Mille Lacs Band of Ojibwe
+      - pageName: identifyCounty
+        name: selectedCountyMilleLacsBandRuralCounty
+        input: county
+        matcher: IS_MILLE_LACS_RURAL_COUNTY
+  - &isTribalMemberLivingInUrbanTribalNationCounty?    
+    name: isTribalMemberLivingInUrbanTribalNationCounty
+    logicalOperator: AND
+    conditions:
+      - *isUrbanTribalNationMember?
+      - pageName: identifyCounty
+        name: isUrbanTribalNationCounty
+        input: county
+        matcher: IS_URBAN_TRIBAL_NATION_COUNTY
+  - &isTribalMemberNotLeechLakeLivingInBeltramiCounty?    
+    name: isTribalMemberNotLeechLakeLivingInBeltramiCounty
+    logicalOperator: AND
+    conditions:
+      - pageName: tribalNationMember
+        input: isTribalNationMember
+        value: "true"
+      - pageName: selectTheTribe
+        input: selectedTribe
+        matcher: DOES_NOT_EQUAL        
+        value: "Leech Lake"
+      - pageName: identifyCounty
+        input: county
+        value: "Beltrami"
+  - &isLivingInRedLakeNationAndBeltramiOrClearwaterCounty?    
+    name: isLivingOnRedLakeNationAndBeltramiOrClearwaterCounty
+    logicalOperator: AND
+    conditions:
+      - pageName: nationOfResidence
+        input: selectedNationOfResidence
+        value: "Red Lake Nation"
+      - logicalOperator: OR
+        conditions:
+          - pageName: identifyCounty
+            input: county
+            value: "Beltrami"
+          - pageName: identifyCounty
+            input: county
+            value: "Clearwater"
+  - &isEligibleForTribalTANFonNationsBoundaryPage?
+    name: isEligibleForTribalTANFonNationsBoundaryPage
+    logicalOperator: AND
+    conditions:
+      - logicalOperator: OR
+        conditions:
+          - *isSomeonePregnant?
+          - *householdMemberLessThanAge18?
+      - logicalOperator: OR
+        conditions:
+          - *isMilleLacsBandMemberInMilleLacsBandCounty?
+          - *isTribalMemberLivingInUrbanTribalNationCounty?
+          - *isTribalMemberNotLeechLakeLivingInBeltramiCounty?
+  - &isEligibleForTribalTANFonNationOfResidencePage?
+    name: isEligibleForTribalTANFonNationOfResidencePage
+    logicalOperator: AND
+    conditions:
+      - logicalOperator: OR
+        conditions:
+          - *isSomeonePregnant?
+          - *householdMemberLessThanAge18?
+      - logicalOperator: OR
+        conditions:
+          - *isMilleLacsBandMemberInMilleLacsBandCounty?
+          - *isTribalMemberLivingInUrbanTribalNationCounty?
+          - *isTribalMemberNotLeechLakeLivingInBeltramiCounty?
+          - *isLivingInRedLakeNationAndBeltramiOrClearwaterCounty?
 pageDefinitions:
   - &landing
     name: landing
