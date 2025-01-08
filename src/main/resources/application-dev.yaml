@@ -4,6 +4,16 @@ spring:
     driverClassName: org.postgresql.Driver
 
 feature-flag:
+  WEN-lineal-descendant: on
+  certain-pops: on
+  enhanced-next-steps: on
+  second-signature: on
+  child-care: on
+  show-wic-recommendation: on
+
+asyncConfiguration:
+  corePoolSize: ${ASYNC_THREAD_POOL:10}
+  queueCapacity: ${ASYNC_QUEUE_CAPACITY:2}
 
 intercom-chat-app-id: mmxasuhx
 
