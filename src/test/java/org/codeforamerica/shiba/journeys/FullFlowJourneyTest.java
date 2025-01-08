@@ -78,7 +78,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     
     fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
-    fillOutContactAndReview(true, "Chisago");
+    fillOutContactAndReview(false, "Chisago");
     
     testPage.clickLink("This looks correct");
     verifyHouseholdMemberCannotSelectCertainPops();
@@ -908,7 +908,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     
     fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
-    fillOutContactAndReview(true, "Chisago");
+    fillOutContactAndReview(false, "Chisago");
     
     testPage.clickLink("This looks correct");
  
