@@ -119,7 +119,7 @@ public class ApplicationData implements Serializable {
 	    boolean satisfied = true;
 	    Condition condition = nextPage.getCondition();
 	    if (condition != null) {
-	        log.debug("===== ApplicationData currentPage: " + currentPage.getPageConfiguration().getName());
+	        log.debug("===== currentPage: " + currentPage.getPageConfiguration().getName());
 	      //KEEP THE SPACES IN FRONT! It helps separate the conditions in the logs.
 	        log.debug("    nextPage: " + nextPage.getPageName() + " Condition name: " + condition.getName());
 	      if (currentPage.isInAGroup()) {
