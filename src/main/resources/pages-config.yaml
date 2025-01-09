@@ -6093,6 +6093,9 @@ workflow:
         flag: certain-pops
       - pageName: introIncome
     datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+        optional: "true"
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: selectTheTribe
@@ -6124,6 +6127,9 @@ workflow:
               value: Beltrami
       - pageName: applyForMFIP
     datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+        optional: "true"
       - pageName: addHouseholdMembers
       - pageName: selectTheTribe
       - pageName: identifyCounty
@@ -6150,6 +6156,7 @@ workflow:
       conditions:
         - *livesAlone?
         - pageName: pregnant
+          name: isNotPregnant
           input: isPregnant
           value: "false"
     datasources:

@@ -99,4 +99,15 @@ class ValueMatcherTest {
 	  assertThat(valueMatcher.matches(List.of("05/08/1955"), null)).isFalse();
   }
   
+  @Test 
+  void testDateOfBirthLessThan18() {
+	  ValueMatcher valueMatcher = ValueMatcher.HH_MEMBER_AGE_LESS_THAN_18;
+	  assertThat(valueMatcher.matches(List.of("02/02/2012","02/14/2023"), null)).isTrue();
+	  assertThat(valueMatcher.matches(List.of("01/01/2007","06/15/1955"), null)).isFalse();
+	  assertThat(valueMatcher.matches(List.of("05/05/2000"), null)).isFalse();
+	  assertThat(valueMatcher.matches(List.of("01/01/1979","12/12/1973"), null)).isFalse();
+	  assertThat(valueMatcher.matches(List.of("01/01/3333"), null)).isTrue();
+	  assertThat(valueMatcher.matches(List.of("05/08/1955"), null)).isFalse();
+  }
+  
 }
