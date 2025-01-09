@@ -6080,37 +6080,7 @@ workflow:
           value: "true"
     # page flow when response is "No"
       - pageName: applyForTribalTANF
-        condition:
-          logicalOperator: OR
-          name: livingInUrbanCounty_OR_isMilleLacsBand_OR_isPregnantLivingAlone
-          conditions:
-            - logicalOperator: AND
-              name: isTribalMemberLivingInUrbanTribalNationCounty
-              conditions:
-                - *isUrbanTribalNationMember?
-                - pageName: identifyCounty
-                  name: isUrbanTribalNationCounty
-                  input: county
-                  matcher: IS_URBAN_TRIBAL_NATION_COUNTY
-            - logicalOperator: AND
-              name: isMilleLacsBandMemberInMilleLacsBandCounty
-              conditions:
-                - pageName: selectTheTribe
-                  name: selectedTribeMilleLacsBand
-                  input: selectedTribe
-                  value: Mille Lacs Band of Ojibwe
-                - pageName: identifyCounty
-                  name: selectedCountyMilleLacsBandRuralCounty
-                  input: county
-                  matcher: IS_MILLE_LACS_RURAL_COUNTY
-            - logicalOperator: AND
-              name: livesAlone_AND_isPregnantTrue
-              conditions:
-                - *livesAlone?
-                - pageName: pregnant
-                  name: isPregnantTrue
-                  input: isPregnant
-                  value: "true"
+        condition: *isEligibleForTribalTANFonNationsBoundaryPage?
       - pageName: medicalCareMilestone
         condition:
           conditions:
@@ -6132,37 +6102,7 @@ workflow:
     pageConfiguration: *nationOfResidence
     nextPages:
       - pageName: applyForTribalTANF
-        condition:
-          logicalOperator: OR
-          name: livingInUrbanCounty_OR_isMilleLacsBand_OR_isPregnantLivingAlone
-          conditions:
-            - logicalOperator: AND
-              name: isTribalMemberLivingInUrbanTribalNationCounty
-              conditions:
-                - *isUrbanTribalNationMember?
-                - pageName: identifyCounty
-                  name: isUrbanTribalNationCounty
-                  input: county
-                  matcher: IS_URBAN_TRIBAL_NATION_COUNTY
-            - logicalOperator: AND
-              name: isMilleLacsBandMemberInMilleLacsBandCounty
-              conditions:
-                - pageName: selectTheTribe
-                  name: selectedTribeMilleLacsBand
-                  input: selectedTribe
-                  value: Mille Lacs Band of Ojibwe
-                - pageName: identifyCounty
-                  name: selectedCountyMilleLacsBandRuralCounty
-                  input: county
-                  matcher: IS_MILLE_LACS_RURAL_COUNTY
-            - logicalOperator: AND
-              name: livesAlone_AND_isPregnantTrue
-              conditions:
-                - *livesAlone?
-                - pageName: pregnant
-                  name: isPregnantTrue
-                  input: isPregnant
-                  value: "true"
+        condition: *isEligibleForTribalTANFonNationOfResidencePage?
       - pageName: applyForTribalTANF
         condition:
           pageName: selectTheTribe
@@ -6205,6 +6145,7 @@ workflow:
         flag: certain-pops
       - pageName: introIncome
     skipCondition:
+      name: livesAloneAndIsNotPregnant
       logicalOperator: AND
       conditions:
         - *livesAlone?
