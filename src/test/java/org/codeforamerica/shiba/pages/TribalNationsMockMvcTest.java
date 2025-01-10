@@ -481,6 +481,20 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "any selected tribe");
 		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
 	}
+	
+	/**
+	 * Tests when "Yes" is selected on Nations Boundary page, the next page will be the nationOfResidence page.
+	 * @throws Exception
+	 */
+	@Test
+	void whenLivesInNationsBoundaryNextPageIsNationOfResidence() throws Exception {
+		// start with the tribalNationMember page, we do not need preceding inputs
+		var nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "any selected tribe");
+		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
+		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "true");
+		assertThat(nextPage.getTitle()).isEqualTo("Tribal Nation of residence");
+	}
 
 	/**
 	 * This test verifies the exact content of the select list on the
@@ -620,6 +634,105 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 		nextPage = postAndFollowRedirect("nationOfResidence", "selectedNationOfResidence", tribe);
 		assertThat(nextPage.getTitle()).isEqualTo(nextPageTitle);
 	}	
+	
+	/**
+	 * When the county is a Certain_Pops pilot country (Chisago and Mille Lacs are also CP pilots, but exclude them from this test because
+	 * they are MLBO rural counties)
+	 * AND the Certain_Pops program is selected 
+	 * AND Certain_Pops feature flag is on 
+	 * AND Applicant is a member of Mille Lacs Band of Ojibwe
+	 * AND "No" is selected on nationsBoundary page
+	 * then the next page is medicalCareMilestone
+	 * @param county
+	 * @throws Exception
+	 */
+	@ParameterizedTest
+	@CsvSource(value = {
+			"Mower",
+			"Polk"
+	})
+	public void whenCertainPopsNextPageIsMedicalCareMilestone(String county) throws Exception {
+		when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
+		postExpectingRedirect("identifyCountyBeforeApplying", "county", county, "prepareToApply");
+		postExpectingRedirect("choosePrograms", "programs", "CERTAIN_POPS", "basicCriteria");
+		postExpectingRedirect("basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER"),
+				"certainPopsConfirm");
+	    fillOutPersonalInfo();
+	    postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
+	    postExpectingRedirect("whoIsPregnant", "whoIsPregnant", "Dwight Schrute", "migrantFarmWorker");
+		var nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "Mille Lacs Band of Ojibwe");
+		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
+		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
+		assertThat(nextPage.getTitle()).isEqualTo("Medical Care Milestone");
+		
+	}
+
+	/**
+	 * Test for Minnesota Chippewa Tribes.
+	 * When "No" is selected on nationsBoundary page 
+	 * AND when the applicant is (an urban tribe member AND the county is an urban county) 
+	 * AND applicant is pregnant
+	 * then the next page is applyForTribalTANF.
+	 * @throws Exception 
+	 */
+	@ParameterizedTest
+	@CsvSource(value = {
+			"Anoka, Bois Forte",
+			"Hennepin, Bois Forte",
+			"Ramsey, Bois Forte",
+			"Anoka, Leech Lake",
+			"Hennepin, Leech Lake",
+			"Ramsey, Leech Lake",
+			"Anoka, Mille Lacs Band of Ojibwe",
+			"Hennepin, Mille Lacs Band of Ojibwe",
+			"Ramsey, Mille Lacs Band of Ojibwe",
+			"Anoka, White Earth Nation",
+			"Hennepin, White Earth Nation",
+			"Ramsey, White Earth Nation",
+			"Anoka, Bois Forte",
+			"Hennepin, Bois Forte",
+			"Ramsey, Bois Forte",
+			"Anoka, Grand Portage",
+			"Hennepin, Grand Portage",
+			"Ramsey, Grand Portage" })
+	public void whenUrbanNotInTribalBoundaryNextPageIsApplyForTribalTANF(String urbanCounty, String tribalNation) throws Exception {
+		postExpectingRedirect("identifyCountyBeforeApplying", "county", urbanCounty, "prepareToApply");
+	    fillOutPersonalInfo();
+	    postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
+	    postExpectingRedirect("whoIsPregnant", "whoIsPregnant", "Dwight Schrute", "migrantFarmWorker");
+		var nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", tribalNation);
+		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
+		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
+		assertThat(nextPage.getTitle()).isEqualTo("apply for Tribal TANF");
+	}
+	
+	/**
+	 * Test for Mille Lacs Band of Ojibwe.
+	 * When "No" is selected on nationsBoundary page 
+	 * AND when the applicant is a Mille Lacs Band of Ojibwe tribe member AND the county is a rural MLBO county) 
+	 * AND applicant is pregnant
+	 * then the next page is applyForTribalTANF.
+	 * @throws Exception 
+	 */
+	@ParameterizedTest
+	@CsvSource(value = {
+			"Aitkin", "Benton", "Chisago", "Crow Wing", "Kanabec", "Mille Lacs", "Morrison", "Pine" 		
+	})
+	public void whenMilleLacsIsRuralNotInTribalBoundaryNextPageIsApplyForTribalTANF(String ruralCounty) throws Exception {
+		postExpectingRedirect("identifyCountyBeforeApplying", "county", ruralCounty, "prepareToApply");
+	    fillOutPersonalInfo();
+	    addHouseholdMembersWithProgram(CCAP);
+	    postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
+	    postExpectingRedirect("whoIsPregnant", "whoIsPregnant", "Dwight Schrute", "migrantFarmWorker");
+		var nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "Mille Lacs Band of Ojibwe");
+		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
+		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
+		assertThat(nextPage.getTitle()).isEqualTo("apply for Tribal TANF");
+	}
+	
 	
   private void goThroughLongTribalTanfFlow(String nationName, String county,
       String applyForTribalTanf,
