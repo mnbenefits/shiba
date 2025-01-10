@@ -371,33 +371,70 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	}    
   }
 
+  /**
+   * This test is verifying that only Red Lake Nation will get a copy of the application documents when:
+   *  - the selected programs include SNAP, CASH, CCAP and EA (no GRH)
+   *  - tribal membership is Red Lake Nation
+   *  - the response to "do you want to apply for Tribal TANF" is "Yes"
+   * 
+   * Note: In order to get the applyForTribalTANF page when the Tribal Nation is Red Lake Nation the
+   * following conditions must also be met:
+   *  - someone in the household must be pregnant or less than age 18
+   *  - the county of residence must be either Beltrami or Clearwater
+   * @throws Exception
+   */
   @Test
   void redLakeApplicationsWithoutGrhGetSentToRedLake() throws Exception {
     addHouseholdMembersWithProgram("EA");
-    goThroughLongTribalTanfFlow(RedLakeNation.toString(), "Hennepin", "true", CCAP, SNAP, CASH, EA);
+    goThroughLongTribalTanfFlow(RedLakeNation.toString(), "Clearwater", "true", CCAP, SNAP, CASH, EA);
 
     assertRoutingDestinationIsCorrectForDocument(CAF, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, RedLakeNation.toString());
   }
 
+  /**
+   * This test is verifying that only Red Lake Nation will get a copy of the application documents when:
+   *  - the selected programs include only SNAP
+   *  - tribal membership is Red Lake Nation
+   *  - the response to "do you want to apply for Tribal TANF" is "No"
+   * 
+   * Note: In order to get the applyForTribalTANF page when the Tribal Nation is Red Lake Nation the
+   * following conditions must also be met:
+   *  - someone in the household must be pregnant or less than age 18
+   *  - the county of residence must be either Beltrami or Clearwater
+   * @throws Exception
+   */
   @Test
   void redLakeApplicationsWithOnlySnapGetSentToRedLake() throws Exception {
     fillOutPersonalInfo();
     addHouseholdMembersWithProgram(SNAP);
-    goThroughLongTribalTanfFlow(RedLakeNation.toString(), "Hennepin", "false", SNAP);
+    goThroughLongTribalTanfFlow(RedLakeNation.toString(), "Clearwater", "false", SNAP);
 
     assertRoutingDestinationIsCorrectForDocument(CAF, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, RedLakeNation.toString());
   }
 
+  /**
+   * This test is verifying that both Red Lake Nation and Red Lake County will get a copy of
+   * the application documents when:
+   *  - the selected programs include only GRH
+   *  - tribal membership is Red Lake Nation
+   *  - the response to "do you want to apply for Tribal TANF" is "Yes"
+   * 
+   * Note: In order to get the applyForTribalTANF page when the Tribal Nation is Red Lake Nation the
+   * following conditions must also be met:
+   *  - someone in the household must be pregnant or less than age 18
+   *  - the county of residence must be either Beltrami or Clearwater
+   * @throws Exception
+   */
   @Test
   void redLakeApplicationsWithGrhAndTribalTanfGetSentToRedLakeAndCounty() throws Exception {
     fillOutPersonalInfo();
     addHouseholdMembersWithProgram("GRH");
 
-    String county = "Olmsted";
+    String county = "Clearwater";
     goThroughLongTribalTanfFlow(RedLakeNation.toString(), county, "true", GRH);
     assertRoutingDestinationIsCorrectForDocument(CAF, county, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county,
@@ -405,12 +442,25 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county, RedLakeNation.toString());
   }
 
+  /**
+   * This test is verifying that both Red Lake Nation and Red Lake County will get a copy of
+   * the application documents when:
+   *  - the selected programs include both GRH and SNAP
+   *  - tribal membership is Red Lake Nation
+   *  - the response to "do you want to apply for Tribal TANF" is "Yes"
+   * 
+   * Note: In order to get the applyForTribalTANF page when the Tribal Nation is Red Lake Nation the
+   * following conditions must also be met:
+   *  - someone in the household must be pregnant or less than age 18
+   *  - the county of residence must be either Beltrami or Clearwater
+   * @throws Exception
+   */
   @Test
   void redLakeApplicationsWithGrhAndSnapAndTribalTanfGetSentToRedLakeAndCounty() throws Exception {
     fillOutPersonalInfo();
     addHouseholdMembersWithProgram(SNAP);
 
-    String county = "Olmsted";
+    String county = "Clearwater";
     goThroughLongTribalTanfFlow(RedLakeNation.toString(), county, "true", GRH);
     assertRoutingDestinationIsCorrectForDocument(CAF, county, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county,
@@ -418,12 +468,25 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county, RedLakeNation.toString());
   }
 
+  /**
+   * This test is verifying that both Red Lake Nation and Red Lake County will get a copy of
+   * the application documents when:
+   *  - the selected programs include both GRH and CCAP
+   *  - tribal membership is Red Lake Nation
+   *  - the response to "do you want to apply for Tribal TANF" is "No"
+   * 
+   * Note: In order to get the applyForTribalTANF page when the Tribal Nation is Red Lake Nation the
+   * following conditions must also be met:
+   *  - someone in the household must be pregnant or less than age 18
+   *  - the county of residence must be either Beltrami or Clearwater
+   * @throws Exception
+   */
   @Test
   void redLakeApplicationsWithOnlyGrhAndCcapGetSentToRedLakeAndCounty() throws Exception {
     fillOutPersonalInfo();
     addHouseholdMembersWithProgram(CCAP);
 
-    String county = "Olmsted";
+    String county = "Clearwater";
     goThroughLongTribalTanfFlow(RedLakeNation.toString(), county, "false", GRH);
 
     assertRoutingDestinationIsCorrectForDocument(CAF, county, RedLakeNation.toString());
@@ -739,6 +802,8 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
       String... programs) throws Exception {
     getToPersonalInfoScreen(programs);
     addAddressInGivenCounty(county);
+    postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
+    postExpectingRedirect("whoIsPregnant", "whoIsPregnant", "Dwight Schrute", "migrantFarmWorker");
 
 	postExpectingRedirect("tribalNationMember", "isTribalNationMember", "true", "selectTheTribe");
 	postExpectingRedirect("selectTheTribe", "selectedTribe", nationName, "nationsBoundary");
