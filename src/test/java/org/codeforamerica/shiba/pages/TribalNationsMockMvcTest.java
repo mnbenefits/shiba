@@ -119,7 +119,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
       "Mille Lacs Band of Ojibwe,Mille Lacs",
       "Mille Lacs Band of Ojibwe,Pine"
   })
-  void shouldAddTribalTanfAndRouteCAFToMilleLacsAndCCAPToCounty(//TODO emj fix this test
+  void shouldAddTribalTanfAndRouteCAFToMilleLacsAndCCAPToCounty(
       String tribalNation, String county)
       throws Exception {
 	fillOutPersonalInfo();
@@ -499,12 +499,18 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 				"Prairie Island", "Red Lake Nation", "Shakopee Mdewakanton", "Upper Sioux", "White Earth Nation");
 	}
 
+
 	/**
-	 * This test verifies: When the applicant is: 
-	 * 1) An urban tribe member AND the county is an urban county 
-	 * 2) OR the applicant is a member of Mille Lacs Band of Ojibwe AND the county is an MLB rural county 
-	 * 3) OR the applicant lives alone AND is pregnant 
-	 * 4) OR the applicant is a member of Red Lake Nation
+	 * This test verifies correct next page flow from the nationOfResidence page.
+	 * When the household includes someone who is pregnant and/or a child under age 18
+	 * AND
+	 * 1) a household member is a member of the Mille Lacs Band of Ojibwe 
+	 *    AND the household lives in one of (Aitkin, Benton, Chisago, Crow Wing, Kanabec, Mille Lacs, Morrison, Pine) counties
+	 * 2) OR a household member is a member of any of (Leech Lake, White Earth, Bois Forte, Grand Portage, Fond du Lac, 
+	 *    Mille Lacs Band of Ojibwe) AND the household lives in one of (Anoka, Hennepin, Ramsey)
+	 * 3) OR a household member is a member of any Tribal Nation other than Leech Lake AND the household lives in Beltrami County
+	 * 4) OR they indicate they live within the boundaries of Red Lake Nation 
+	 *    AND the county of residence is Beltrami or Clearwater County (member of any Tribal Nation)
 	 * THEN the next page is applyForTribalTANF 
 	 * 5) OTHERWISE the next page is applyForMFIP
 	 * 
@@ -512,33 +518,77 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	 */
 	@ParameterizedTest
 	@CsvSource(value = {
+			// Test cases when the household includes someone who is pregnant and/or a child under age 18
 			// case 1
-			"Anoka, Bois Forte, false, apply for Tribal TANF", "Hennepin, Fond Du Lac, false, apply for Tribal TANF",
-			"Ramsey, Grand Portage, false, apply for Tribal TANF", "Anoka, Leech Lake, false, apply for Tribal TANF",
-			"Hennepin, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Ramsey, White Earth Nation, false, apply for Tribal TANF",
+			"Aitkin, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Benton, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Chisago, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Crow Wing, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Kanabec, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Morrison, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Mille Lacs, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Pine, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
 			// case 2
-			"Aitkin, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Benton, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Chisago, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Crow Wing, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Kanabec, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Morrison, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Mille Lacs, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
-			"Pine, Mille Lacs Band of Ojibwe, false, apply for Tribal TANF",
+			"Anoka, Bois Forte, true, apply for Tribal TANF",
+			"Hennepin, Fond Du Lac, true, apply for Tribal TANF",
+			"Ramsey, Grand Portage, true, apply for Tribal TANF",
+			"Anoka, Leech Lake, true, apply for Tribal TANF",
+			"Hennepin, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Ramsey, White Earth Nation, true, apply for Tribal TANF",
 			// case 3
-			"Norman, Prairie Island, true, apply for Tribal TANF",
-			// case 4
-			"Norman, Red Lake Nation, false, apply for Tribal TANF",
+			"Beltrami, Bois Forte, true, apply for Tribal TANF",
+			"Beltrami, Fond Du Lac, true, apply for Tribal TANF",
+			"Beltrami, Grand Portage, true, apply for Tribal TANF",
+			"Beltrami, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"Beltrami, White Earth Nation, true, apply for Tribal TANF",
+			"Beltrami, Lower Sioux, true, apply for Tribal TANF",
+			"Beltrami, Upper Sioux, true, apply for Tribal TANF",
+			"Beltrami, Prairie Island, true, apply for Tribal TANF",
+			"Beltrami, Shakopee Mdewakanton, true, apply for Tribal TANF",
+ 			// case 4
+			"Beltrami, Red Lake Nation, true, apply for Tribal TANF",
+			"Clearwater, Red Lake Nation, true, apply for Tribal TANF",
+			// case 5
+			"Clay, Shakopee Mdewakanton, true, apply for MFIP",
+			// Repeat test cases for household that DOES NOT include someone who is pregnant and/or a child under age 18
+			// case 1
+			"Aitkin, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Benton, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Chisago, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Crow Wing, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Kanabec, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Morrison, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Mille Lacs, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Pine, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			// case 2
+			"Anoka, Bois Forte, false, apply for MFIP",
+			"Hennepin, Fond Du Lac, false, apply for MFIP",
+			"Ramsey, Grand Portage, false, apply for MFIP",
+			"Anoka, Leech Lake, false, apply for MFIP",
+			"Hennepin, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Ramsey, White Earth Nation, false, apply for MFIP",
+			// case 3
+			"Beltrami, Bois Forte, false, apply for MFIP",
+			"Beltrami, Fond Du Lac, false, apply for MFIP",
+			"Beltrami, Grand Portage, false, apply for MFIP",
+			"Beltrami, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Beltrami, White Earth Nation, false, apply for MFIP",
+			"Beltrami, Lower Sioux, false, apply for MFIP",
+			"Beltrami, Upper Sioux, false, apply for MFIP",
+			"Beltrami, Prairie Island, false, apply for MFIP",
+			"Beltrami, Shakopee Mdewakanton, false, apply for MFIP",
+				// case 4
+			"Beltrami, Red Lake Nation, false, apply for MFIP",
+			"Clearwater, Red Lake Nation, false, apply for MFIP",
 			// case 5
 			"Clay, Shakopee Mdewakanton, false, apply for MFIP" })
-	void nationOfResidenceNavigatesToCorrectNextPage(String county, String tribe, String liveAloneAndPregnant,
+	void nationOfResidenceNavigatesToCorrectNextPage(String county, String tribe, String pregnantOrChildUnderAge18,
 			String nextPageTitle) throws Exception {
 		postExpectingRedirect("identifyCountyBeforeApplying", "county", county, "prepareToApply");
 		postExpectingRedirect("choosePrograms", "programs", "SNAP", "expeditedNotice");
 
 		FormPage nextPage;
-		if (Boolean.valueOf(liveAloneAndPregnant)) {
+		if (Boolean.valueOf(pregnantOrChildUnderAge18)) {
 			// addHouseholdMember
 			nextPage = postAndFollowRedirect("addHouseholdMembers", "addHouseholdMembers", "false");
 			assertThat(nextPage.getTitle()).isEqualTo("Intro: Personal Details");

@@ -6106,31 +6106,13 @@ workflow:
     nextPages:
       - pageName: applyForTribalTANF
         condition: *isEligibleForTribalTANFonNationOfResidencePage?
-      - pageName: applyForTribalTANF
-        condition:
-          pageName: selectTheTribe
-          name: selectedTribeRLN
-          input: selectedTribe
-          value: Red Lake Nation
-      - pageName: applyForTribalTANF
-        condition:
-          logicalOperator: AND
-          name: livesInBeltrami_AND_isFederallyRecognizedTribeOutsideMN
-          conditions:
-            - pageName: selectTheTribe
-              name: selectedTribeFederallyRecognizedTribeOutsideMN
-              input: selectedTribe
-              value: Federally recognized tribe outside of MN
-            - pageName: identifyCounty
-              name: identifyCountyBeltrami
-              input: county
-              value: Beltrami
       - pageName: applyForMFIP
     datasources:
       - groupName: household
         pageName: householdMemberInfo
         optional: "true"
       - pageName: addHouseholdMembers
+      - pageName: tribalNationMember
       - pageName: selectTheTribe
       - pageName: identifyCounty
       - pageName: pregnant
