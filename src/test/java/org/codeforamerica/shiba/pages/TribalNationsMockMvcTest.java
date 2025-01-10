@@ -119,9 +119,10 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
       "Mille Lacs Band of Ojibwe,Mille Lacs",
       "Mille Lacs Band of Ojibwe,Pine"
   })
-  void shouldAddTribalTanfAndRouteCAFToMilleLacsAndCCAPToCounty(
+  void shouldAddTribalTanfAndRouteCAFToMilleLacsAndCCAPToCounty(//TODO emj fix this test
       String tribalNation, String county)
       throws Exception {
+	fillOutPersonalInfo();
     addHouseholdMembersWithProgram("CCAP");
     goThroughShortTribalTanfFlow(tribalNation, county, "true", CCAP);
     assertRoutingDestinationIsCorrectForDocument(CAF, "Mille Lacs Band of Ojibwe");
@@ -588,7 +589,8 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
       String... programs) throws Exception {
     getToPersonalInfoScreen(programs);
     addAddressInGivenCounty(county);
-
+    postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
+    postExpectingRedirect("whoIsPregnant", "whoIsPregnant", "Dwight Schrute", "migrantFarmWorker");
 	postExpectingRedirect("tribalNationMember", "isTribalNationMember", "true", "selectTheTribe");
 	postExpectingRedirect("selectTheTribe", "selectedTribe", nationName, "nationsBoundary");
     postExpectingRedirect("nationsBoundary", "livingInNationBoundary", "true", "nationOfResidence");
