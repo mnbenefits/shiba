@@ -730,6 +730,25 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 		assertThat(nextPage.getTitle()).isEqualTo("Medical Care Milestone");
 		
 	}
+	
+	/**
+	 * When "No" is the response to the nationsBoundary page
+	 * AND the condition for applyForTribalTANF as the next page are not met
+	 * AND the condition for medicalCareMilestone as the next page is not met
+	 * THEN the next page is intoIncome
+	 * @throws Exception
+	 */
+	@Test
+	public void whenNotTribalTanfOrCertainPopsTheNextPageIsIntroIncome() throws Exception {
+		postExpectingRedirect("identifyCountyBeforeApplying", "county", "Norman", "prepareToApply");
+		postExpectingRedirect("choosePrograms", "programs", "SNAP", "expeditedNotice");
+	    fillOutPersonalInfo();
+		var nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "Mille Lacs Band of Ojibwe");
+		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
+		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
+		assertThat(nextPage.getTitle()).isEqualTo("Intro: Income");
+	}
 
 	/**
 	 * Test for Minnesota Chippewa Tribes.
