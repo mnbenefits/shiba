@@ -586,7 +586,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("BOUNDARY_MEMBER", "Yes", caf);
 			assertPdfFieldEquals("TRIBAL_NATION_BOUNDARY", "Prairie Island", caf);
 		}
-		//This test still needs to exist to verify that the application created before implementation of NationOfResidence is compatible. 
+		
+		//This test still needs to exist to verify that the application created before implementation 
+		//of NationOfResidence is compatible, except the No radio field will be set. 
 		 @Test
 		  void shouldMapTribalNationMemberYesOrNoAndWhichTribalNation() throws Exception {
 			 fillInRequiredPages();
@@ -596,9 +598,10 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				var caf = submitAndDownloadCaf();
 
-				assertPdfFieldEquals("BOUNDARY_MEMBER","Off", caf);
+				assertPdfFieldEquals("BOUNDARY_MEMBER","No", caf);
 				assertPdfFieldIsEmpty("TRIBAL_NATION_BOUNDARY", caf);
 			}
+		 
 		 // this test verify NationBoundary
 		 @Test
 		  void shouldMapTribalNationMemberYesOrNoNationBoundary() throws Exception {
