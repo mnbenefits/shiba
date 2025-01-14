@@ -6101,6 +6101,7 @@ workflow:
       - pageName: selectTheTribe
       - pageName: identifyCounty
       - pageName: pregnant
+      - pageName: tribalNationMember
   nationOfResidence:
     pageConfiguration: *nationOfResidence
     nextPages:
