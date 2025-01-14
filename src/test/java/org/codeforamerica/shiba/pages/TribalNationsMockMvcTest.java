@@ -672,6 +672,14 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 			// pregnant
 			nextPage = postAndFollowRedirect("pregnant", "isPregnant", "true");
 			assertThat(nextPage.getTitle()).isEqualTo("Expedited Migrant Farm Worker, 1 person");
+			//household member is a member of any Tribal Nation other than Leech Lake AND the household lives in Beltrami County
+			if ("Beltrami".equals(county)) {
+				nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+				nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", tribe);
+				nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
+				assertThat(nextPage.getTitle()).isEqualTo("apply for Tribal TANF");
+			}
+
 		} else {
 			// addHouseholdMember
 			nextPage = postAndFollowRedirect("addHouseholdMembers", "addHouseholdMembers", "true");
