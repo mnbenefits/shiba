@@ -46,9 +46,9 @@ public enum ValueMatcher {
 
   IS_URBAN_TRIBAL_NATION_COUNTY((testValue, ignoredTargetValue) ->
       URBAN_COUNTIES.stream().map(County::toString).anyMatch(testValue::contains)),
-
+  
   IS_MILLE_LACS_RURAL_COUNTY((testValue, ignoredTargetValue) ->
-      MILLE_LACS_RURAL_COUNTIES.stream().map(County::toString).anyMatch(testValue::contains)),
+      MILLE_LACS_RURAL_COUNTIES.stream().map(County::getEnumName).anyMatch(testValue::contains)),
 
   IS_WHITE_EARTH_COUNTY((testValue, ignored) -> COUNTIES_SERVICED_BY_WHITE_EARTH.stream()
       .map(County::toString)

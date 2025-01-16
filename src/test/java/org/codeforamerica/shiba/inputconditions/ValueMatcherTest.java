@@ -32,18 +32,25 @@ class ValueMatcherTest {
   @Test
   void testMilleLacsRuralCounties() {
 	  ValueMatcher valueMatcher = ValueMatcher.IS_MILLE_LACS_RURAL_COUNTY;
-	  assertThat(valueMatcher.matches(List.of("Aitkin"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Benton"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Chisago"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Crow Wing"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Kanabec"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Morrison"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Mille Lacs"), null)).isTrue();
-	  assertThat(valueMatcher.matches(List.of("Pine"), null)).isTrue();
+	  assertThat(valueMatcher.matches(List.of("Aitkin"), "Aitkin")).isTrue();
+	  assertThat(valueMatcher.matches(List.of("Aitkin"), null)).isTrue(); // nulls work because the 2nd parameter is ignored in the enum
+	  assertThat(valueMatcher.matches(List.of("Benton"), "Benton")).isTrue();
+	  assertThat(valueMatcher.matches(List.of("Chisago"), "Chisago")).isTrue();
+	  assertThat(valueMatcher.matches(List.of("CrowWing"), "Crow Wing")).isTrue();//space needs to be removed
+	  assertThat(valueMatcher.matches(List.of("Kanabec"), "Kanabec")).isTrue();
+	  assertThat(valueMatcher.matches(List.of("Morrison"), "Morrison")).isTrue();
+	  assertThat(valueMatcher.matches(List.of("MilleLacs"), "Mille Lacs")).isTrue();
+	  assertThat(valueMatcher.matches(List.of("Pine"), "Pine")).isTrue();
 	  //anything else is false
+	  assertThat(valueMatcher.matches(List.of("Anoka"), "Anoka")).isFalse();
+	  assertThat(valueMatcher.matches(List.of("Hennepin"), "Hennepin")).isFalse();
 	  assertThat(valueMatcher.matches(List.of("Hennepin"), null)).isFalse();
+	  assertThat(valueMatcher.matches(List.of("Hennepin"), "null")).isFalse();
 	  assertThat(valueMatcher.matches(List.of("Lake of the Woods"), null)).isFalse();
 	  assertThat(valueMatcher.matches(List.of("foobar"), null)).isFalse();
+	  //these two have spaces that need to be removed for the County enum
+	  assertThat(valueMatcher.matches(List.of("Crow Wing"), "Crow Wing")).isFalse();
+	  assertThat(valueMatcher.matches(List.of("Mille Lacs"), "Mille Lacs")).isFalse();
   }
   
 

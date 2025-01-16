@@ -113,10 +113,10 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
       "Mille Lacs Band of Ojibwe,Aitkin",
       "Mille Lacs Band of Ojibwe,Benton",
       "Mille Lacs Band of Ojibwe,Chisago",
-      "Mille Lacs Band of Ojibwe,Crow Wing",
+      "Mille Lacs Band of Ojibwe,CrowWing",
       "Mille Lacs Band of Ojibwe,Kanabec",
       "Mille Lacs Band of Ojibwe,Morrison",
-      "Mille Lacs Band of Ojibwe,Mille Lacs",
+      "Mille Lacs Band of Ojibwe,MilleLacs",
       "Mille Lacs Band of Ojibwe,Pine"
   })
   void shouldAddTribalTanfAndRouteCAFToMilleLacsAndCCAPToCounty(
@@ -126,9 +126,10 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     addHouseholdMembersWithProgram("CCAP");
     goThroughShortTribalTanfFlow(tribalNation, county, "true", CCAP);
     assertRoutingDestinationIsCorrectForDocument(CAF, "Mille Lacs Band of Ojibwe");
+    String countyName = County.getForName(county).toString();
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, "Mille Lacs Band of Ojibwe",
-        county);
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
+    		countyName);
+    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, countyName);
   }
 
   @ParameterizedTest
@@ -600,10 +601,10 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 			"Aitkin, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
 			"Benton, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
 			"Chisago, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
-			"Crow Wing, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"CrowWing, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
 			"Kanabec, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
 			"Morrison, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
-			"Mille Lacs, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
+			"MilleLacs, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF", 
 			"Pine, Mille Lacs Band of Ojibwe, true, apply for Tribal TANF",
 			// case 2
 			"Anoka, Bois Forte, true, apply for Tribal TANF",
@@ -808,7 +809,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	 */
 	@ParameterizedTest
 	@CsvSource(value = {
-			"Aitkin", "Benton", "Chisago", "Crow Wing", "Kanabec", "Mille Lacs", "Morrison", "Pine" 		
+			"Aitkin", "Benton", "Chisago", "CrowWing", "Kanabec", "MilleLacs", "Morrison", "Pine" 		
 	})
 	public void whenMilleLacsIsRuralNotInTribalBoundaryNextPageIsApplyForTribalTANF(String ruralCounty) throws Exception {
 		postExpectingRedirect("identifyCountyBeforeApplying", "county", ruralCounty, "prepareToApply");

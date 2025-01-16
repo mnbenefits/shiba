@@ -41,7 +41,7 @@ public enum TribalNation implements ServicingAgency {
   public static final List<County> COUNTIES_SERVICED_BY_WHITE_EARTH = List.of(Becker, Mahnomen,
       Clearwater);
   public static final List<County> MILLE_LACS_RURAL_COUNTIES = List.of(
-      Aitkin, Benton, Chisago, CrowWing,Kanabec, Morrison, MilleLacs, Pine);
+      Aitkin, Benton, Chisago, CrowWing, Kanabec, Morrison, MilleLacs, Pine);
   public static final Set<TribalNation> MILLE_LACS_SERVICED_TRIBES = Set.of(BoisForte, GrandPortage,
       LeechLake, MilleLacsBandOfOjibwe, WhiteEarthNation, FondDuLac);
   public static final Set<TribalNation> MN_CHIPPEWA_TRIBES = Set.of(BoisForte, FondDuLac, GrandPortage,
@@ -52,6 +52,9 @@ public enum TribalNation implements ServicingAgency {
     this.name = name;
   }
 
+  /**
+   * Returns name of TribalNation.
+   */
   @Override
   public String toString() {
     return name;

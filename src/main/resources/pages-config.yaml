@@ -6,6 +6,7 @@ conditionDefinitions:
     input: needHelpImmediately
     value: "false"
   - &laterDocsFlow?
+    name: laterDocsFlow
     pageName: matchInfo
     input: lastName
     matcher: NOT_EMPTY
@@ -385,13 +386,16 @@ conditionDefinitions:
     logicalOperator: AND
     conditions:
       - pageName: tribalNationMember
+        name: isTribalNationMemberTrue
         input: isTribalNationMember
         value: "true"
       - pageName: selectTheTribe
+        name: notInLeechLakeTribe
         input: selectedTribe
         matcher: DOES_NOT_EQUAL        
         value: "Leech Lake"
       - pageName: identifyCounty
+        name: livesInBeltramiCounty
         input: county
         value: "Beltrami"
   - &isLivingInRedLakeNationAndBeltramiOrClearwaterCounty?    
@@ -399,9 +403,11 @@ conditionDefinitions:
     logicalOperator: AND
     conditions:
       - pageName: nationOfResidence
+        name: nationOfResidenceIsRedLakeNation
         input: selectedNationOfResidence
         value: "Red Lake Nation"
       - logicalOperator: OR
+        name: livingInBeltramiOrClearwaterCounty
         conditions:
           - pageName: identifyCounty
             input: county
@@ -414,10 +420,12 @@ conditionDefinitions:
     logicalOperator: AND
     conditions:
       - logicalOperator: OR
+        name: isPregnantOrHouseHoldMemberLessThan18
         conditions:
           - *isSomeonePregnant?
           - *householdMemberLessThanAge18?
       - logicalOperator: OR
+        name: threeOrConditionsInIsEligibleForTribalTANFonNationsBoundaryPage
         conditions:
           - *isMilleLacsBandMemberInMilleLacsBandCounty?
           - *isTribalMemberLivingInUrbanTribalNationCounty?
@@ -427,10 +435,12 @@ conditionDefinitions:
     logicalOperator: AND
     conditions:
       - logicalOperator: OR
+        name: someOneIsPregnantOrHHmemberLessThan18
         conditions:
           - *isSomeonePregnant?
           - *householdMemberLessThanAge18?
       - logicalOperator: OR
+        name: fourOrConditionsInIsEligibleForTribalTANFonNationOfResidencePage
         conditions:
           - *isMilleLacsBandMemberInMilleLacsBandCounty?
           - *isTribalMemberLivingInUrbanTribalNationCounty?
