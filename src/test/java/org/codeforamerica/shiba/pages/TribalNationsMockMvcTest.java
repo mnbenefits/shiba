@@ -673,13 +673,6 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 			// pregnant
 			nextPage = postAndFollowRedirect("pregnant", "isPregnant", "true");
 			assertThat(nextPage.getTitle()).isEqualTo("Expedited Migrant Farm Worker, 1 person");
-			//household member is a member of any Tribal Nation other than Leech Lake AND the household lives in Beltrami County
-			if ("Beltrami".equals(county)) {
-				nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
-				nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", tribe);
-				nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
-				assertThat(nextPage.getTitle()).isEqualTo("apply for Tribal TANF");
-			}
 
 		} else {
 			// addHouseholdMember
@@ -706,6 +699,48 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 		nextPage = postAndFollowRedirect("nationOfResidence", "selectedNationOfResidence", tribe);
 		assertThat(nextPage.getTitle()).isEqualTo(nextPageTitle);
 	}	
+	
+	/**
+	 * This test verifies correct next page flow from the nationsBoundary page. When
+	 * the household includes someone who is pregnant and/or a child under age 18
+	 * AND a household member is a member of any Tribal Nation other than Leech Lake AND the household lives in Beltrami County THEN the next page is
+	 * applyForTribalTANF 
+	 * 
+	 * @throws Exception
+	 */
+	@ParameterizedTest
+	@CsvSource(value = {		
+			//Test cases when the household lives in Beltrami County AND member of TribalNations
+			  "Beltrami, Bois Forte,  apply for Tribal TANF", 
+			  "Beltrami, Fond Du Lac,  apply for Tribal TANF",
+			  "Beltrami, Grand Portage,  apply for Tribal TANF",
+			  "Beltrami, Mille Lacs Band of Ojibwe,  apply for Tribal TANF",
+			  "Beltrami, White Earth Nation,  apply for Tribal TANF",
+			  "Beltrami, Lower Sioux,  apply for Tribal TANF",
+			  "Beltrami, Upper Sioux,  apply for Tribal TANF",
+			  "Beltrami, Prairie Island,  apply for Tribal TANF",
+			  "Beltrami, Shakopee Mdewakanton,  apply for Tribal TANF",
+			  "Beltrami, Red Lake Nation,  apply for Tribal TANF",
+			  //if Leech Lake then navigation goes to page introIncome
+			  "Beltrami, Leech Lake,  Intro: Income"
+	})
+	void nationsBoundaryNavigatesToCorrectNextPage(String county, String tribe, String nextPageTitle)
+			throws Exception {
+		postExpectingRedirect("identifyCountyBeforeApplying", "county", county, "prepareToApply");
+		postExpectingRedirect("choosePrograms", "programs", "SNAP", "expeditedNotice");
+
+		FormPage nextPage;
+		//when the household includes someone who is pregnant
+		nextPage = postAndFollowRedirect("addHouseholdMembers", "addHouseholdMembers", "false");
+		nextPage = postAndFollowRedirect("pregnant", "isPregnant", "true");
+
+		nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
+		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", tribe);
+		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
+			
+		assertThat(nextPage.getTitle()).isEqualTo(nextPageTitle);
+			
+	}
 	
 	/**
 	 * When the county is a Certain_Pops pilot country (Chisago and Mille Lacs are also CP pilots, but exclude them from this test because
