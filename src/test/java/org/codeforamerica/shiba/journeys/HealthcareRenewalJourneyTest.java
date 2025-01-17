@@ -28,9 +28,20 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Health Care Renewal Document Upload");
     assertNotNull(testPage.findElementById("headerHealthcareRenewal"));
     assertNotNull(testPage.findElementById("footerHealthcareRenewal"));
-    testPage.clickLink("Renew my MN health care coverage");
+    WebElement logoElement = testPage.findElementById("mn-healthcare-renewal-logo");
+    assertTrue(logoElement.getAttribute("href").equalsIgnoreCase("https://mn.gov/dhs/renewmycoverage/"));
     // Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub
-    // assertThat(driver.getTitle()).isEqualTo("Renew my coverage / Minnesota Department of Human Services");
+    //testPage.clickLink("Renew my MN health care coverage");
+    //assertThat(driver.getTitle()).isEqualTo("Renew my coverage / Minnesota Department of Human Services");
+    //driver.navigate().back();
+
+    // Switch to the Spanish version of the page and repeat verifications.
+    testPage.selectFromDropdown("locales", "Español");
+    logoElement = testPage.findElementById("mn-healthcare-renewal-logo");
+    assertTrue(logoElement.getAttribute("href").equalsIgnoreCase("https://mn.gov/dhs/renewmycoverage-es/"));
+    // Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub
+    //testPage.clickElementById("mn-healthcare-renewal-logo");
+    //assertThat(driver.getTitle()).isEqualTo("Renovar mi cobertura / Minnesota Department of Human Services");
   }
   
   @Test
