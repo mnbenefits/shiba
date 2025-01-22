@@ -16,6 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -132,17 +133,36 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, countyName);
   }
 
-  @ParameterizedTest
-  @CsvSource(value = {"Becker", "Mahnomen", "Clearwater"})
-  void routeWhiteEarthApplicationsToWhiteEarthOnlyAndSeeMFIP(String county) throws Exception {
-    addHouseholdMembersWithProgram("EA");
-    goThroughShortMfipFlow(county, "White Earth Nation", new String[]{EA, CCAP, GRH, SNAP});
+	/**
+	 * This test verifies that the routing destination is White Earth Nation when
+	 * the applicant is a tribal member of White Earth Nation and resides in one of
+	 * the counties serviced by WEN. This test also verifies that the applicant will
+	 * see the applyForMFIP page when they do not CASH in the selected programs
+	 * list.
+	 * 
+	 * @param county
+	 * @param program
+	 * @throws Exception
+	 */
+	@ParameterizedTest
+	@CsvSource(value = { "Becker, SNAP", "Becker, EA", "Becker, CASH", "Becker, CCAP", "Becker, GRH",
+			"Mahnomen, SNAP", "Mahnomen, EA", "Mahnomen, CASH", "Mahnomen, CCAP", "Mahnomen, GRH",
+			"Clearwater, SNAP", "Clearwater, EA", "Clearwater, CASH", "Clearwater, CCAP", "Clearwater, GRH" })
+	void routeWhiteEarthApplicationsToWhiteEarthOnlyAndSeeMFIP(String county, String program) throws Exception {
+	    addHouseholdMembersWithProgram(program);
+    goThroughShortMfipFlow(county, "White Earth Nation", new String[]{program});
 
-    assertRoutingDestinationIsCorrectForDocument(CAF, WhiteEarthNation.toString());
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, WhiteEarthNation.toString());
+    Document expectedDocType;
+    if (program.equals("CCAP")) {
+    	expectedDocType = Document.CCAP;
+        assertRoutingDestinationIsCorrectForDocument(Document.CCAP, WhiteEarthNation.toString());
+    } else {
+    	expectedDocType = Document.CAF;
+    	assertRoutingDestinationIsCorrectForDocument(CAF, WhiteEarthNation.toString());
+    }
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, WhiteEarthNation.toString());
 
-    var routingDestinations = routingDecisionService.getRoutingDestinations(applicationData, CAF);
+    var routingDestinations = routingDecisionService.getRoutingDestinations(applicationData, expectedDocType);
     RoutingDestination routingDestination = routingDestinations.get(0);
     assertThat(routingDestination.getDhsProviderId()).isEqualTo("A086642300");
     assertThat(routingDestination.getEmail()).isEqualTo("mnbenefits@state.mn.us");
@@ -250,14 +270,32 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", "White Earth Nation", "introIncome");
   }
 
+  /**
+   * This test verifies that the routing destination is the county of residence when
+   * the applicant is a tribal member of White Earth Nation but does not resides in one of
+   * the counties serviced by WEN. This test also verifies that the applicant will
+   * see the applyForMFIP page when they do not have CASH in the selected programs list.
+   * 
+   * @param county
+   * @param program
+   * @throws Exception
+   */
   @ParameterizedTest
-  @ValueSource(strings = {"Nobles", "Scott", "Meeker"})
-  void routeWhiteEarthApplicationsToCountyOnlyAndSeeMfip(String county) throws Exception {
-    addHouseholdMembersWithProgram("EA");
-    goThroughShortMfipFlow(county, "White Earth Nation", new String[]{EA, CCAP, GRH, SNAP});
+  @CsvSource(value = { "Nobles, SNAP", "Nobles, EA", "Nobles, CASH", "Nobles, CCAP", "Nobles, GRH",
+		  "Scott, SNAP", "Scott, EA", "Scott, CASH", "Scott, CCAP", "Scott, GRH",
+		  "Meeker, SNAP", "Meeker, EA", "Meeker, CASH", "Meeker, CCAP", "Meeker, GRH" })
+  void routeWhiteEarthApplicationsToCountyOnlyAndSeeMfip(String county, String program) throws Exception {
+    addHouseholdMembersWithProgram(program);
+    goThroughShortMfipFlow(county, "White Earth Nation", new String[]{program});
 
-    assertRoutingDestinationIsCorrectForDocument(CAF, county);
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
+    Document expectedDocType;
+    if (program.equals("CCAP")) {
+    	expectedDocType = Document.CCAP;
+        assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
+    } else {
+    	expectedDocType = Document.CAF;
+    	assertRoutingDestinationIsCorrectForDocument(CAF, county);
+    }
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county);
   }
 
@@ -946,6 +984,10 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "true", "selectTheTribe");
 	postExpectingRedirect("selectTheTribe", "selectedTribe", tribalNation, "nationsBoundary");
     postExpectingRedirect("nationsBoundary", "livingInNationBoundary", "true", "nationOfResidence");
-	postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", tribalNation, "applyForMFIP");
+    if (Arrays.asList(programs).contains("CASH")) {
+    	postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", tribalNation, "introIncome");
+    } else {
+    	postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", tribalNation, "applyForMFIP");
+    }
   }
 }

@@ -32,6 +32,7 @@ import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.FilenetWebServiceClient;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.ApplicationFile;
+import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.MnitDocumentConsumer;
 import org.codeforamerica.shiba.output.caf.FilenameGenerator;
 import org.codeforamerica.shiba.output.pdf.PdfGenerator;
@@ -139,19 +140,28 @@ public class RoutingDestinationServiceTest {
 	    resetApplicationData(applicationData);
 	  }
 	  
-	  @ParameterizedTest
-	  @CsvSource({
-	      "Becker,WhiteEarthNation",
-	      "Mahnomen,WhiteEarthNation",
-	      "Clearwater,WhiteEarthNation"})
-	  public void routeToWhiteEarthNationForLinealDescendantWhenLivingInTheThreeCounties(String countyName, TribalNation expectedDestination) { 
+		/**
+		 * This test verifies that the routing destination is White Earth Nation when
+		 * the applicant is a lineal descendant of a White Earth Nation member and
+		 * resides in one of the counties serviced by WEN.
+		 * 
+		 * @param county
+		 * @param program
+		 * @throws Exception
+		 */
+		@ParameterizedTest
+		@CsvSource(value = { "Becker, SNAP", "Becker, EA", "Becker, CASH", "Becker, CCAP", "Becker, GRH",
+				"Mahnomen, SNAP", "Mahnomen, EA", "Mahnomen, CASH", "Mahnomen, CCAP", "Mahnomen, GRH",
+				"Clearwater, SNAP", "Clearwater, EA", "Clearwater, CASH", "Clearwater, CCAP", "Clearwater, GRH" })
+		public void routeToWhiteEarthNationForLinealDescendantWhenLivingInTheThreeCounties(String countyName,
+				String program) {
 		    ApplicationFile pdfApplicationFile = new ApplicationFile("my pdf".getBytes(), "someFile.pdf");
 		    doReturn(pdfApplicationFile).when(pdfGenerator).generate(anyString(), any(), any(), any());
 		    ApplicationFile xmlApplicationFile = new ApplicationFile("my xml".getBytes(), "someFile.xml");
 		    when(xmlGenerator.generate(any(), any(), any(), any())).thenReturn(xmlApplicationFile);
 
 		    application.setApplicationData(new TestApplicationDataBuilder()
-		        .withApplicantPrograms(List.of("EA"))
+		        .withApplicantPrograms(List.of(program))
 		        .withPageData("homeAddress", "county", List.of(countyName))
 		        .withPageData("identifyCounty", "county", countyName)
 		        .withPageData("linealDescendantWhiteEarthNation", "linealDescendantWEN", List.of("true") )
@@ -159,13 +169,20 @@ public class RoutingDestinationServiceTest {
 		    application.setCounty(County.getForName(countyName));
 		    documentConsumer.processCafAndCcap(application);
 
-		    TribalNationRoutingDestination routingDestination = tribalNationsMap.get(expectedDestination);
-		    verify(pdfGenerator).generate(application.getId(), CAF, CASEWORKER, routingDestination);
-		    verify(xmlGenerator).generate(application.getId(), CAF, CASEWORKER, routingDestination);
-		    verify(mnitClient, times(2)).send(any(), any(), any(), any());
-		    verify(mnitClient).send(application, pdfApplicationFile, tribalNationsMap.get(expectedDestination), CAF);
-		    verify(mnitClient).send(application, xmlApplicationFile, tribalNationsMap.get(expectedDestination), XML);
-		  
+		    Document docType = program.equals("CCAP")? Document.CCAP : Document.CAF;
+		    TribalNationRoutingDestination routingDestination = tribalNationsMap.get(TribalNation.WhiteEarthNation);
+		    if (docType.equals(Document.CAF)) {
+			    verify(pdfGenerator).generate(application.getId(), docType, CASEWORKER, routingDestination);
+			    verify(xmlGenerator).generate(application.getId(), docType, CASEWORKER, routingDestination);
+			    verify(mnitClient, times(2)).send(any(), any(), any(), any());
+			    verify(mnitClient).send(application, pdfApplicationFile, tribalNationsMap.get(TribalNation.WhiteEarthNation), docType);
+			    verify(mnitClient).send(application, xmlApplicationFile, tribalNationsMap.get(TribalNation.WhiteEarthNation), XML);
+		    } else {
+			    verify(pdfGenerator).generate(application.getId(), docType, CASEWORKER, routingDestination);
+			    verify(mnitClient, times(2)).send(any(), any(), any(), any());
+			    verify(mnitClient).send(application, pdfApplicationFile, tribalNationsMap.get(TribalNation.WhiteEarthNation), docType);
+		    }
+
 	  }
 	  
 	  @ParameterizedTest
@@ -200,33 +217,41 @@ public class RoutingDestinationServiceTest {
 
 	  @ParameterizedTest
 	  @CsvSource({
-	      "YellowMedicine,YellowMedicine",
-	      "Aitkin,Aitkin",
-	      "LakeOfTheWoods,LakeOfTheWoods",
-	      "StLouis,StLouis",
-	      "LacQuiParle,LacQuiParle"})
-	  public void routeToCountyForLinealDescendantWhenNotLivingInTheThreeCounties(String countyName, County expectedCounty) { 
+	      "YellowMedicine,SNAP","YellowMedicine,CASH","YellowMedicine,EA","YellowMedicine,GRH","YellowMedicine,CCAP",
+	      "Aitkin,SNAP","Aitkin,CASH","Aitkin,EA","Aitkin,GRH","Aitkin,CCAP",
+	      "LakeOfTheWoods,SNAP","LakeOfTheWoods,CASH","LakeOfTheWoods,EA","LakeOfTheWoods,GRH","LakeOfTheWoods,CCAP",
+	      "StLouis,SNAP","StLouis,CASH","StLouis,EA","StLouis,GRH","StLouis,CCAP",
+	      "LacQuiParle,SNAP","LacQuiParle,CASH","LacQuiParle,EA","LacQuiParle,GRH","LacQuiParle,CCAP",})
+	  public void routeToCountyForLinealDescendantWhenNotLivingInTheThreeCounties(String countyName, String program) { 
 		    ApplicationFile pdfApplicationFile = new ApplicationFile("my pdf".getBytes(), "someFile.pdf");
 		    doReturn(pdfApplicationFile).when(pdfGenerator).generate(anyString(), any(), any(), any());
 		    ApplicationFile xmlApplicationFile = new ApplicationFile("my xml".getBytes(), "someFile.xml");
 		    when(xmlGenerator.generate(any(), any(), any(), any())).thenReturn(xmlApplicationFile);
 
 		    application.setApplicationData(new TestApplicationDataBuilder()
-		        .withApplicantPrograms(List.of("EA"))
+		        .withApplicantPrograms(List.of(program))
 		        .withPageData("homeAddress", "county", List.of(countyName))
 		        .withPageData("identifyCounty", "county", countyName)
 		        .withPageData("linealDescendantWhiteEarthNation", "linealDescendantWEN", List.of("true") )
 		        .build());
-		    application.setCounty(expectedCounty);
+		    County county = County.getForName(countyName);
+		    application.setCounty(county);
 
 		    documentConsumer.processCafAndCcap(application);
 
-		    CountyRoutingDestination routingDestination = countyMap.get(expectedCounty);
-		    verify(pdfGenerator).generate(application.getId(), CAF, CASEWORKER, routingDestination);
-		    verify(xmlGenerator).generate(application.getId(), CAF, CASEWORKER, routingDestination);
-		    verify(mnitClient, times(2)).send(any(), any(), any(), any());
-		    verify(mnitClient).send(application, pdfApplicationFile, countyMap.get(expectedCounty), CAF);
-		    verify(mnitClient).send(application, xmlApplicationFile, countyMap.get(expectedCounty), XML);
+		    Document docType = program.equals("CCAP")? Document.CCAP : Document.CAF;
+		    CountyRoutingDestination routingDestination = countyMap.get(county);
+		    if (docType.equals(Document.CAF)) {
+			    verify(pdfGenerator).generate(application.getId(), docType, CASEWORKER, routingDestination);
+			    verify(xmlGenerator).generate(application.getId(), docType, CASEWORKER, routingDestination);
+			    verify(mnitClient, times(2)).send(any(), any(), any(), any());
+			    verify(mnitClient).send(application, pdfApplicationFile, countyMap.get(county), docType);
+			    verify(mnitClient).send(application, xmlApplicationFile, countyMap.get(county), XML);
+		    } else {
+			    verify(pdfGenerator).generate(application.getId(), docType, CASEWORKER, routingDestination);
+			    verify(mnitClient, times(2)).send(any(), any(), any(), any());
+			    verify(mnitClient).send(application, pdfApplicationFile, countyMap.get(county), docType);
+		    }
 	  }
 	  
 	  @ParameterizedTest
