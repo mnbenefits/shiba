@@ -36,6 +36,7 @@ public class MailGunEmailClient implements EmailClient {
 
   private final String senderEmail;
   private final String mailGunApiKey;
+  private final String emailSender;
   private final EmailContentCreator emailContentCreator;
   private final WebClient webClient;
   private final String activeProfile;
@@ -44,16 +45,19 @@ public class MailGunEmailClient implements EmailClient {
   public MailGunEmailClient(@Value("${sender-email}") String senderEmail,
       @Value("${mail-gun.url}") String mailGunUrl,
       @Value("${mail-gun.api-key}") String mailGunApiKey,
+      @Value("${comm-hub-email.delivery}") String emailSender,
       EmailContentCreator emailContentCreator,
       @Value("${spring.profiles.active:Unknown}") String activeProfile,
       MessageSource messageSource
   ) {
     this.senderEmail = senderEmail;
     this.mailGunApiKey = mailGunApiKey;
+    this.emailSender = emailSender;
     this.emailContentCreator = emailContentCreator;
     this.webClient = WebClient.builder().baseUrl(mailGunUrl).build();
     this.activeProfile = activeProfile;
     this.messageSource = messageSource;
+    System.out.println("====== MailGunEmailClient emailSender: " + emailSender);//TODO emj delete
   }
 
   @Override
@@ -65,6 +69,11 @@ public class MailGunEmailClient implements EmailClient {
       CcapExpeditedEligibility ccapExpeditedEligibility,
       List<ApplicationFile> applicationFiles,
       Locale locale) {
+	  
+	if(!isMailGunEnabled()) {
+		log.info("Confirmation email disabled");
+		return;
+	}
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
     String subject = getEmailSubject("email.subject", lms);
     String emailBody = emailContentCreator.createFullClientConfirmationEmail(
@@ -87,6 +96,10 @@ public class MailGunEmailClient implements EmailClient {
       CcapExpeditedEligibility ccapExpeditedEligibility,
       List<ApplicationFile> applicationFiles,
       Locale locale) {
+	if(!isMailGunEnabled()) {
+		log.info("Short Confirmation email disabled");
+		return;
+	}
     var lms = new LocaleSpecificMessageSource(locale, messageSource);
     var subject = getEmailSubject("email.subject", lms);
     var emailBody = emailContentCreator.createShortClientConfirmationEmail(applicationData, applicationId, locale);
@@ -103,6 +116,10 @@ public class MailGunEmailClient implements EmailClient {
       CcapExpeditedEligibility ccapExpeditedEligibility,
       List<ApplicationFile> applicationFiles,
       Locale locale) {
+	if(!isMailGunEnabled()) {
+		log.info("Next Steps email disabled");
+		return;
+	}
     LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
     String subject = getEmailSubject("email.next-steps-subject", lms);
     String emailContent = emailContentCreator.createNextStepsEmail(
@@ -118,6 +135,10 @@ public class MailGunEmailClient implements EmailClient {
 
   @Override
   public void sendLaterDocsConfirmationEmail(Application application, String confirmationId, String recipientEmail, Locale locale) {
+	if(!isMailGunEnabled()) {
+		log.info("LaterDocs Confirmation email disabled");
+		return;
+	}
     String subject = emailContentCreator.createClientLaterDocsConfirmationEmailSubject(locale);
     String body = emailContentCreator.createClientLaterDocsConfirmationEmailBody(application.getApplicationData(), confirmationId, locale);
     sendEmail(subject, senderEmail, recipientEmail, body, emptyList(), application.getId());
@@ -126,6 +147,10 @@ public class MailGunEmailClient implements EmailClient {
   
   @Override
   public void sendHealthcareRenewalConfirmationEmail(Application application, String confirmationId, String recipientEmail, Locale locale) {
+	if(!isMailGunEnabled()) {
+		log.info("Health Care Renewal Confirmation email disabled");
+		return;
+	}
     String subject = emailContentCreator.createClientHealthcareRenewalConfirmationEmailSubject(locale);
     String body = emailContentCreator.createClientHealthcareRenewalConfirmationEmailBody(application.getApplicationData(), confirmationId, locale);
     sendEmail(subject, senderEmail, recipientEmail, body, emptyList(), application.getId());
@@ -135,6 +160,10 @@ public class MailGunEmailClient implements EmailClient {
   @Override
   public void resubmitFailedEmail(String recipientEmail, Document document,
       ApplicationFile applicationFile, Application application) {
+	if(!isMailGunEnabled()) {
+		log.info("Resubmit Failed email disabled");
+		return;
+	}
     MDC.put("applicationFile", applicationFile.getFileName());
     String subject = "MN Benefits Application %s Resubmission".formatted(application.getId());
     String body = emailContentCreator.createResubmitEmailContent(document, ENGLISH);
@@ -226,4 +255,9 @@ public class MailGunEmailClient implements EmailClient {
       }
     };
   }
+  
+	private boolean isMailGunEnabled() {
+		System.out.println(" ######## emailSender = " + emailSender);//TODO emj delete
+		return emailSender.equalsIgnoreCase("mnbenefits");
+	}
 }

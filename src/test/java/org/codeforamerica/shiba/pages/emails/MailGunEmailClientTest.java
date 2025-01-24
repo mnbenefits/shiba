@@ -101,6 +101,7 @@ class MailGunEmailClientTest {
         senderEmail,
         "http://localhost:" + port,
         mailGunApiKey,
+        "mnbenefits",
         emailContentCreator,
         activeProfile,
         messageSource);
@@ -284,6 +285,7 @@ class MailGunEmailClientTest {
           senderEmail,
           "http://localhost:" + port,
           mailGunApiKey,
+          "mnbenefits",
           emailContentCreator,
           "demo",
           messageSource);

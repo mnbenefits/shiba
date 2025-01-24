@@ -87,7 +87,8 @@ class ApplicationSubmittedListenerTest {
         communicationClient,
         pdfEncoder,
         wicRecommendationService,
-        "true"
+        "true",
+        "mnbenefits"
         );
   }
   
@@ -113,7 +114,7 @@ class ApplicationSubmittedListenerTest {
 			when(applicationRepository.find(applicationId)).thenReturn(application);
 			ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("someSessionId", applicationId, null,
 					Locale.ENGLISH);
-			when(communicationClient.isEnabled()).thenReturn(false);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(false);
 			when(routingDecisionService.getRoutingDestinationByName("Ramsey")).thenReturn(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
 			applicationSubmittedListener.notifyApplicationSubmission(event);  
 			verify(communicationClient, never()).send(jsonObject);
@@ -161,7 +162,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
 			jsonObject.addProperty("countyRoutingDestination", "Ramsey");
 			jsonObject.addProperty("countyRoutingPhoneNumber", "(651)555-5555");
-			when(communicationClient.isEnabled()).thenReturn(true);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(true);
 			applicationSubmittedListener.notifyApplicationSubmission(event);
 			verify(communicationClient, times(1)).send(jsonObject);
 		}
@@ -211,7 +212,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("countyRoutingPhoneNumber", "(651)555-5555");
 			jsonObject.addProperty("tribalNationRoutingDestination", "Red Lake Nation");
 			jsonObject.addProperty("tribalNationRoutingPhoneNumber", "(651)555-6666");
-			when(communicationClient.isEnabled()).thenReturn(true);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(true);
 			applicationSubmittedListener.notifyApplicationSubmission(event);
 			verify(communicationClient, times(1)).send(jsonObject);
 		}	
@@ -259,7 +260,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
 			jsonObject.addProperty("tribalNationRoutingDestination", "White Earth Nation");
 			jsonObject.addProperty("tribalNationRoutingPhoneNumber", "(651)555-6666");
-			when(communicationClient.isEnabled()).thenReturn(true);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(true);
 			applicationSubmittedListener.notifyApplicationSubmission(event);
 			verify(communicationClient, times(1)).send(jsonObject);
 		}	
@@ -299,7 +300,8 @@ class ApplicationSubmittedListenerTest {
                 communicationClient,
                 pdfEncoder,
                 wicRecommendationService,
-                "false"
+                "false",
+                "mnbenefits"
                 );
 
       ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("", "", null, Locale.ENGLISH);

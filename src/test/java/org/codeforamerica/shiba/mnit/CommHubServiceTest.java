@@ -38,10 +38,10 @@ public class CommHubServiceTest {
 	private Clock clock;
     
     private MockRestServiceServer mockServer;
-    @Value("${comm-hub.url}")
+    @Value("${comm-hub-text.url}")
     private String commHubURL;
     
-    @Value("${comm-hub.max-attempts}")
+    @Value("${comm-hub-text.max-attempts}")
     private String maxAttempts;
 
     @BeforeEach
