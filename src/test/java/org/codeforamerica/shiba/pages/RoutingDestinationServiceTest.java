@@ -17,7 +17,11 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.MonitoringService;
@@ -321,4 +325,341 @@ public class RoutingDestinationServiceTest {
 	    assertThat(routingDestination.getDhsProviderId()).isEqualTo("A000001900");//Aitkin
 	  }
 
+		/**
+		 * This test verifies that the routing destination for applicants who live
+		 * within the boundaries of Red Lake Nation. In this case it does not matter
+		 * what tribe they are a member of so this test will use White Earth Nation for that
+		 * purpose. The routing destination is dependent upon the program(s) selected so
+		 * the test cycles through each program individually and as a set of programs.
+		 * 
+		 * @param county
+		 * @param program              - use ";" to separate a list of programs
+		 * @param expectedDestinations - use ";" to separate a list of expected destinations
+		 * @throws Exception
+		 */
+		@ParameterizedTest
+		@CsvSource(value = { "Beltrami, SNAP, Red Lake Nation", 
+				"Beltrami, EA, Red Lake Nation",
+				"Beltrami, CCAP, Red Lake Nation", 
+				"Beltrami, SNAP;TANF, Red Lake Nation", 
+				"Beltrami, CASH, Beltrami",
+				"Beltrami, GRH, Beltrami", 
+				"Beltrami, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Clearwater, SNAP, Red Lake Nation", 
+				"Clearwater, EA, Red Lake Nation",
+				"Clearwater, CCAP, Red Lake Nation", 
+				"Clearwater, SNAP;TANF, Red Lake Nation",
+				"Clearwater, CASH, Clearwater", 
+				"Clearwater, GRH, Clearwater",
+				"Clearwater, SNAP;EA;CASH, Red Lake Nation;White Earth Nation", // the test uses WEN for tribal membership
+				"Norman, SNAP, Norman", 
+				"Norman, EA, Norman",
+				"Norman, CCAP, Norman", 
+				"Norman, SNAP;TANF, Norman", 
+				"Norman, CASH, Norman", 
+				"Norman, GRH, Norman",
+				"Norman, SNAP;EA;CASH, Norman" })
+		public void routeWhenLivingInRedLakeNationBoundaries(String countyName, String programs,
+				String expectedDestinations) {
+			List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
+			String[] expectedDestinationsArray = expectedDestinations.split(";");
+
+			TestApplicationDataBuilder applicationDataBuilder = new TestApplicationDataBuilder();
+			// "TANF" isn't really a program so we need to include pageData for the
+			// applyForTribalTANF page and then remove it from the list.
+			if (programsList.contains("TANF")) {
+				applicationDataBuilder.withPageData("applyForTribalTANF", "applyForTribalTANF", List.of("true"));
+				programsList.remove("TANF");
+			}
+			// build the rest of the application_data
+			ApplicationData applicationData = applicationDataBuilder.withApplicantPrograms(programsList)
+					.withPageData("identifyCounty", "county", countyName)
+					.withPageData("tribalNationMember", "isTribalNationMember", List.of("true"))
+					.withPageData("selectTheTribe", "selectedTribe", "White Earth Nation")
+					.withPageData("nationsBoundary", "livingInNationBoundary", List.of("true"))
+					.withPageData("nationOfResidence", "selectedNationOfResidence", "Red Lake Nation").build();
+			application.setApplicationData(applicationData);
+			application.setCounty(County.getForName(countyName));
+
+			// consider 3 possible types of documents, CCAP, CAF and XML and merge
+			// destinations into one list
+			List<RoutingDestination> actualRoutingDestinations = new ArrayList<RoutingDestination>();
+			if (programsList.contains("CCAP")) {
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CCAP));
+			}
+			List<String> cafPrograms = List.of("SNAP", "EA", "CASH", "GRH");
+			boolean haveCafProgram = programsList.stream().anyMatch(cafPrograms::contains);
+			if (haveCafProgram) {
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CAF));
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.XML));
+			}
+			List<String> actualRoutingDestinationNames = actualRoutingDestinations.stream()
+					.map(RoutingDestination::getName).collect(Collectors.toList());
+			actualRoutingDestinationNames = new ArrayList<>(new LinkedHashSet<>(actualRoutingDestinationNames));
+
+			assertThat(actualRoutingDestinationNames).containsOnly(expectedDestinationsArray);
+		}
+
+		/**
+		 * This test verifies that the routing destination(s) for applicants who live
+		 * in Beltrami County but do not live within the boundaries of Red Lake Nation.
+		 * When they are a member of any Tribal Nation other than Leech Lake, the documents
+		 * are routed to Red Lake Nation for programs EA, Child Care, Tribal TANF.
+		 * Otherwise the documents are routed to Beltrami County.
+		 * The routing destination is dependent upon:
+		 *  - The county of residence (fixed, Beltrami)
+		 *  - The program(s) selected
+		 *  - Tribal Nation membership
+		 *  - Does not live within the boundaries of Red Lake Nation (fixed)
+		 * The test will cycle through each program individually and as a set of programs
+		 * and the Tribal Nations
+		 * 
+		 * @param tribalNation
+		 * @param program              - use ";" to separate a list of programs
+		 * @param expectedDestinations - use ";" to separate a list of expected destinations
+		 * @throws Exception
+		 */
+		@ParameterizedTest
+		@CsvSource(value = { "Bois Forte, SNAP, Red Lake Nation",
+				"Bois Forte, EA, Red Lake Nation",
+				"Bois Forte, CCAP, Red Lake Nation", 
+				"Bois Forte, SNAP;TANF, Red Lake Nation", 
+				"Bois Forte, CASH, Beltrami",
+				"Bois Forte, GRH, Beltrami", 
+				"Bois Forte, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Fond Du Lac, SNAP, Red Lake Nation", 
+				"Fond Du Lac, EA, Red Lake Nation",
+				"Fond Du Lac, CCAP, Red Lake Nation", 
+				"Fond Du Lac, SNAP;TANF, Red Lake Nation", 
+				"Fond Du Lac, CASH, Beltrami", 
+				"Fond Du Lac, GRH, Beltrami",
+				"Fond Du Lac, SNAP;EA;CASH, Red Lak Nation;Beltrami",
+				"Leech Lake, SNAP, Beltrami",
+				"Leech Lake, EA, Beltrami",
+				"Leech Lake, CCAP, Beltrami", 
+				"Leech Lake, SNAP;TANF, Beltrami", 
+				"Leech Lake, CASH, Beltrami",
+				"Leech Lake, GRH, Beltrami", 
+				"Leech Lake, SNAP;EA;CASH, Beltrami",  // with this combo of program we expect multiple destinations
+				"Lower Sioux, SNAP, Red Lake Nation",
+				"Lower Sioux, EA, Red Lake Nation",
+				"Lower Sioux, CCAP, Red Lake Nation", 
+				"Lower Sioux, SNAP;TANF, Red Lake Nation", 
+				"Lower Sioux, CASH, Beltrami",
+				"Lower Sioux, GRH, Beltrami", 
+				"Lower Sioux, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Mille Lacs Band of Ojibwe, SNAP, Red Lake Nation",
+				"Mille Lacs Band of Ojibwe, EA, Red Lake Nation",
+				"Mille Lacs Band of Ojibwe, CCAP, Red Lake Nation", 
+				"Mille Lacs Band of Ojibwe, SNAP;TANF, Red Lake Nation", 
+				"Mille Lacs Band of Ojibwe, CASH, Beltrami",
+				"Mille Lacs Band of Ojibwe, GRH, Beltrami", 
+				"Mille Lacs Band of Ojibwe, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Prairie Island, SNAP, Red Lake Nation",
+				"Prairie Island, EA, Red Lake Nation",
+				"Prairie Island, CCAP, Red Lake Nation", 
+				"Prairie Island, SNAP;TANF, Red Lake Nation", 
+				"Prairie Island, CASH, Beltrami",
+				"Prairie Island, GRH, Beltrami", 
+				"Prairie Island, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Red Lake Nation, SNAP, Red Lake Nation",
+				"Red Lake Nation, EA, Red Lake Nation",
+				"Red Lake Nation, CCAP, Red Lake Nation", 
+				"Red Lake Nation, SNAP;TANF, Red Lake Nation", 
+				"Red Lake Nation, CASH, Beltrami",
+				"Red Lake Nation, GRH, Beltrami", 
+				"Red Lake Nation, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Shakopee Mdewakanton, SNAP, Red Lake Nation",
+				"Shakopee Mdewakanton, EA, Red Lake Nation",
+				"Shakopee Mdewakanton, CCAP, Red Lake Nation", 
+				"Shakopee Mdewakanton, SNAP;TANF, Red Lake Nation", 
+				"Shakopee Mdewakanton, CASH, Beltrami",
+				"Shakopee Mdewakanton, GRH, Beltrami", 
+				"Shakopee Mdewakanton, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Upper Sioux, SNAP, Red Lake Nation",
+				"Upper Sioux, EA, Red Lake Nation",
+				"Upper Sioux, CCAP, Red Lake Nation", 
+				"Upper Sioux, SNAP;TANF, Red Lake Nation", 
+				"Upper Sioux, CASH, Beltrami",
+				"Upper Sioux, GRH, Beltrami", 
+				"Upper Sioux, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"White Earth Nation, SNAP, Red Lake Nation",
+				"White Earth Nation, EA, Red Lake Nation",
+				"White Earth Nation, CCAP, Red Lake Nation", 
+				"White Earth Nation, SNAP;TANF, Red Lake Nation", 
+				"White Earth Nation, CASH, Beltrami",
+				"White Earth Nation, GRH, Beltrami", 
+				"White Earth Nation, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				"Federally recognized tribe outside of MN, SNAP, Red Lake Nation",
+				"Federally recognized tribe outside of MN, EA, Red Lake Nation",
+				"Federally recognized tribe outside of MN, CCAP, Red Lake Nation", 
+				"Federally recognized tribe outside of MN, SNAP;TANF, Red Lake Nation", 
+				"Federally recognized tribe outside of MN, CASH, Beltrami",
+				"Federally recognized tribe outside of MN, GRH, Beltrami", 
+				"Federally recognized tribe outside of MN, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
+				})
+		public void routeBeltramiResidentsWhenNotLivingInRedLakeNationBoundaries(String tribalNation, String programs,
+				String expectedDestinations) {
+			List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
+			String[] expectedDestinationsArray = expectedDestinations.split(";");
+
+			TestApplicationDataBuilder applicationDataBuilder = new TestApplicationDataBuilder();
+			// "TANF" isn't really a program so we need to include pageData for the
+			// applyForTribalTANF page and then remove it from the list.
+			if (programsList.contains("TANF")) {
+				applicationDataBuilder.withPageData("applyForTribalTANF", "applyForTribalTANF", List.of("true"));
+				programsList.remove("TANF");
+			}
+			// build the rest of the application_data
+			ApplicationData applicationData = applicationDataBuilder.withApplicantPrograms(programsList)
+					.withPageData("identifyCounty", "county", "Beltrami")
+					.withPageData("tribalNationMember", "isTribalNationMember", List.of("true"))
+					.withPageData("selectTheTribe", "selectedTribe", tribalNation)
+					.withPageData("nationsBoundary", "livingInNationBoundary", List.of("false"))
+					.build();
+			application.setApplicationData(applicationData);
+			application.setCounty(County.Beltrami);
+
+			// consider 3 possible types of documents, CCAP, CAF and XML and merge
+			// destinations into one list
+			List<RoutingDestination> actualRoutingDestinations = new ArrayList<RoutingDestination>();
+			if (programsList.contains("CCAP")) {
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CCAP));
+			}
+			List<String> cafPrograms = List.of("SNAP", "EA", "CASH", "GRH");
+			boolean haveCafProgram = programsList.stream().anyMatch(cafPrograms::contains);
+			if (haveCafProgram) {
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CAF));
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.XML));
+			}
+			List<String> actualRoutingDestinationNames = actualRoutingDestinations.stream()
+					.map(RoutingDestination::getName).collect(Collectors.toList());
+			actualRoutingDestinationNames = new ArrayList<>(new LinkedHashSet<>(actualRoutingDestinationNames));
+
+			assertThat(actualRoutingDestinationNames).containsOnly(expectedDestinationsArray);
+		}
+
+		/**
+		 * This test verifies that the routing destination(s) for applicants who live
+		 * in Clearwater County but do not live within the boundaries of Red Lake Nation.
+		 * When they are a member of any Tribal Nation, other than White Earth Nation, the documents
+		 * are routed to Clearwater County for programs SNAP, Cash, Housing Supports, EA, Child Care.
+		 * Note: We do not include Tribal TANF in this test, we do not include WEN in this test.
+		 * The routing destination is dependent upon:
+		 *  - The county of residence (fixed, Clearwater)
+		 *  - The program(s) selected
+		 *  - Tribal Nation membership (any except White Earth Nation)
+		 *  - Does not live within the boundaries of Red Lake Nation (fixed)
+		 * The test will cycle through each program individually and as a set of programs
+		 * and the Tribal Nations
+		 * 
+		 * The expected routing destination is fixed to "Clearwater"
+		 * @param tribalNation
+		 * @param program              - use ";" to separate a list of programs
+		 * @throws Exception
+		 */
+		@ParameterizedTest
+		@CsvSource(value = { "Bois Forte, SNAP",
+				"Bois Forte, EA",
+				"Bois Forte, CCAP", 
+				"Bois Forte, CASH",
+				"Bois Forte, GRH", 
+				"Bois Forte, SNAP;EA;CASH",
+				"Fond Du Lac, SNAP", 
+				"Fond Du Lac, EA",
+				"Fond Du Lac, CCAP", 
+				"Fond Du Lac, CASH", 
+				"Fond Du Lac, GRH",
+				"Fond Du Lac, SNAP;EA;CASH",
+				"Leech Lake, SNAP",
+				"Leech Lake, EA",
+				"Leech Lake, CCAP", 
+				"Leech Lake, CASH",
+				"Leech Lake, GRH", 
+				"Leech Lake, SNAP;EA;CASH",
+				"Lower Sioux, SNAP",
+				"Lower Sioux, EA",
+				"Lower Sioux, CCAP", 
+				"Lower Sioux, CASH",
+				"Lower Sioux, GRH", 
+				"Lower Sioux, SNAP;EA;CASH",
+				"Mille Lacs Band of Ojibwe, SNAP",
+				"Mille Lacs Band of Ojibwe, EA",
+				"Mille Lacs Band of Ojibwe, CCAP", 
+				"Mille Lacs Band of Ojibwe, CASH",
+				"Mille Lacs Band of Ojibwe, GRH", 
+				"Mille Lacs Band of Ojibwe, SNAP;EA;CASH",
+				"Prairie Island, SNAP",
+				"Prairie Island, EA",
+				"Prairie Island, CCAP", 
+				"Prairie Island, CASH",
+				"Prairie Island, GRH", 
+				"Prairie Island, SNAP;EA;CASH",
+				"Red Lake Nation, SNAP",
+				"Red Lake Nation, EA",
+				"Red Lake Nation, CCAP", 
+				"Red Lake Nation, CASH",
+				"Red Lake Nation, GRH", 
+				"Red Lake Nation, SNAP;EA;CASH",
+				"Shakopee Mdewakanton, SNAP",
+				"Shakopee Mdewakanton, EA",
+				"Shakopee Mdewakanton, CCAP", 
+				"Shakopee Mdewakanton, CASH",
+				"Shakopee Mdewakanton, GRH", 
+				"Shakopee Mdewakanton, SNAP;EA;CASH",
+				"Upper Sioux, SNAP, Red Lakpper Sioux, EA",
+				"Upper Sioux, CCAP", 
+				"Upper Sioux, CASH",
+				"Upper Sioux, GRH", 
+				"Upper Sioux, SNAP;EA;CASH",
+				"Federally recognized tribe outside of MN, SNAP",
+				"Federally recognized tribe outside of MN, EA",
+				"Federally recognized tribe outside of MN, CCAP", 
+				"Federally recognized tribe outside of MN, CASH",
+				"Federally recognized tribe outside of MN, GRH", 
+				"Federally recognized tribe outside of MN, SNAP;EA;CASH",
+				})
+		public void routeClearwaterResidentsWhenNotLivingInRedLakeNationBoundaries(String tribalNation, String programs) {
+			List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
+			String[] expectedDestinationsArray = {"Clearwater"};
+
+			// Build the application_data
+			TestApplicationDataBuilder applicationDataBuilder = new TestApplicationDataBuilder();
+			ApplicationData applicationData = applicationDataBuilder.withApplicantPrograms(programsList)
+					.withPageData("identifyCounty", "county", "Clearwater")
+					.withPageData("tribalNationMember", "isTribalNationMember", List.of("true"))
+					.withPageData("selectTheTribe", "selectedTribe", tribalNation)
+					.withPageData("nationsBoundary", "livingInNationBoundary", List.of("false"))
+					.build();
+			application.setApplicationData(applicationData);
+			application.setCounty(County.Clearwater);
+
+			// consider 3 possible types of documents, CCAP, CAF and XML and merge
+			// destinations into one list
+			List<RoutingDestination> actualRoutingDestinations = new ArrayList<RoutingDestination>();
+			if (programsList.contains("CCAP")) {
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CCAP));
+			}
+			List<String> cafPrograms = List.of("SNAP", "EA", "CASH", "GRH");
+			boolean haveCafProgram = programsList.stream().anyMatch(cafPrograms::contains);
+			if (haveCafProgram) {
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CAF));
+				actualRoutingDestinations
+						.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.XML));
+			}
+			List<String> actualRoutingDestinationNames = actualRoutingDestinations.stream()
+					.map(RoutingDestination::getName).collect(Collectors.toList());
+			actualRoutingDestinationNames = new ArrayList<>(new LinkedHashSet<>(actualRoutingDestinationNames));
+
+			assertThat(actualRoutingDestinationNames).containsOnly(expectedDestinationsArray);
+		}
+		
 }
