@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
+import org.codeforamerica.shiba.TribalNation;
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
@@ -458,9 +459,9 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   /**
    * This test is verifying that both Red Lake Nation and Red Lake County will get a copy of
    * the application documents when:
-   *  - the selected programs include only GRH
+   *  - the selected programs include only GRH (which is processed by the county)
    *  - tribal membership is Red Lake Nation
-   *  - the response to "do you want to apply for Tribal TANF" is "Yes"
+   *  - the response to "do you want to apply for Tribal TANF" is "Yes" (which is processed by the tribe)
    * 
    * Note: In order to get the applyForTribalTANF page when the Tribal Nation is Red Lake Nation the
    * following conditions must also be met:
@@ -478,13 +479,15 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     assertRoutingDestinationIsCorrectForDocument(CAF, county, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county,
         RedLakeNation.toString());
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county, RedLakeNation.toString());
+    assertRoutingDestinationIsCorrectForDocument(Document.XML, county, RedLakeNation.toString());
   }
 
   /**
-   * This test is verifying that both Red Lake Nation and Red Lake County will get a copy of
+   * This test is verifying that both Red Lake Nation and Clearwater County will get a copy of
    * the application documents when:
+   *  - the county of Residence is Clearwater County
    *  - the selected programs include both GRH and SNAP
+   *  - they live within the boundaries of Red Lake Nation
    *  - tribal membership is Red Lake Nation
    *  - the response to "do you want to apply for Tribal TANF" is "Yes"
    * 
@@ -494,23 +497,27 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
    *  - the county of residence must be either Beltrami or Clearwater
    * @throws Exception
    */
-  @Test
-  void redLakeApplicationsWithGrhAndSnapAndTribalTanfGetSentToRedLakeAndCounty() throws Exception {
-    fillOutPersonalInfo();
-    addHouseholdMembersWithProgram(SNAP);
+	@Test
+	void redLakeApplicationsWithGrhAndSnapAndTribalTanfGetSentToRedLakeAndCounty() throws Exception {
+		fillOutPersonalInfo();
+		addHouseholdMembersWithProgram(SNAP); // adds a spouse and a child with program SNAP
 
-    String county = "Clearwater";
-    goThroughLongTribalTanfFlow(RedLakeNation.toString(), county, "true", GRH);
-    assertRoutingDestinationIsCorrectForDocument(CAF, county, RedLakeNation.toString());
-    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county,
-        RedLakeNation.toString());
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county, RedLakeNation.toString());
-  }
+		County countyOfResidence = County.Clearwater;
+		goThroughLongTribalTanfFlow(RedLakeNation.toString(), countyOfResidence.toString(), "true", GRH);
+		// The 3 documents that could be generated with the given inputs are: CAF, UPLOADED_DOC, XML
+		assertRoutingDestinationIsCorrectForDocument(CAF, RedLakeNation.toString(), countyOfResidence.toString());
+		assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, countyOfResidence.toString(), RedLakeNation.toString(),
+				countyOfResidence.toString());
+		assertRoutingDestinationIsCorrectForDocument(Document.XML, countyOfResidence.toString(), RedLakeNation.toString(),
+				countyOfResidence.toString());
+	}
 
   /**
-   * This test is verifying that both Red Lake Nation and Red Lake County will get a copy of
+   * This test is verifying that both Red Lake Nation and Clearwater County will get a copy of
    * the application documents when:
-   *  - the selected programs include both GRH and CCAP
+   *  - the county of Residence is Clearwater County
+   *  - the selected programs include both GRH and CCAP (GRH to county, CCAP to RLN)  
+   *  - they live within the boundaries of Red Lake Nation
    *  - tribal membership is Red Lake Nation
    *  - the response to "do you want to apply for Tribal TANF" is "No"
    * 
@@ -531,6 +538,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     assertRoutingDestinationIsCorrectForDocument(CAF, county, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county,
         RedLakeNation.toString());
+    assertRoutingDestinationIsCorrectForDocument(Document.XML, county, RedLakeNation.toString());
     assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county, RedLakeNation.toString());
   }
 
@@ -934,7 +942,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     List<String> routingDestinationNames = routingDestinations.stream()
         .map(RoutingDestination::getName)
         .collect(Collectors.toList());
-    assertThat(routingDestinationNames).containsExactly(expectedNames);
+    assertThat(routingDestinationNames).containsOnly(expectedNames);
   }
 
   private void addAddressInGivenCounty(String county) throws Exception {
