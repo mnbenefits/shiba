@@ -661,5 +661,231 @@ public class RoutingDestinationServiceTest {
 
 			assertThat(actualRoutingDestinationNames).containsOnly(expectedDestinationsArray);
 		}
-		
+
+
+		/**
+		 * This test verifies the routing destination for applicants who live in one of the MLBO
+		 * rural counties: Aitkin, Benton, Crow Wing, Mille Lacs, Morrison, Kanabec, Chisago, Pine
+		 * When they are a member of Mille Lacs Band of Ojibwe, the documents are routed
+		 * to MLBO for programs Tribal TANF or (SNAP + Tribal TANF).
+		 * Otherwise the documents are routed to the county of residence.
+		 * The routing destination is dependent upon:
+		 *  - The county of residence (in this test it is fixed to the MLBO rural counties)
+		 *  - Tribal Nation membership
+		 *  - The program(s) selected
+		 * Note: This test does not consider living in tribal boundaries so the living in
+		 * tribal boundaries question is fixed to "No".
+		 * 
+		 * @param isMlboMember         - "true" or "false"
+		 * @param program              - use ";" to separate a list of programs
+		 * @param expectedDestinations - use ";" to separate a list of expected destinations
+		 * @throws Exception
+		 */
+		@ParameterizedTest
+		@CsvSource(value = { 
+				"true, SNAP, county of residence",
+				"true, EA, county of residence",
+				"true, CCAP, county of residence", 
+				"true, SNAP;TANF, Mille Lacs Band of Ojibwe", 
+				"true, CASH, county of residence",
+				"true, GRH, county of residence", 
+				"true, EA;TANF, Mille Lacs Band of Ojibwe;county of residence",  // expect multiple destinations
+				"false, SNAP, county of residence", 
+				"false, EA, county of residence",
+				"false, CCAP, county of residence", 
+				"false, SNAP;TANF, county of residence", 
+				"false, CASH, county of residence", 
+				"false, GRH, county of residence",
+				"false, EA;TANF, county of residence"
+				})
+		public void routeDocumentsForResidentsOfMilleLacsBandOfOjibweRuralCounties(String isMlboMember, String programs,
+				String expectedDestinations) {
+			String[] ruralCounties = {"Aitkin", "Benton", "Crow Wing", "Mille Lacs", "Morrison", 
+					"Kanabec", "Chisago", "Pine"};
+			List<String> ruralCountiesList = new ArrayList<String>(Arrays.asList(ruralCounties));
+			
+            String[] mlbo = {"Mille Lacs Band of Ojibwe"};
+			String[] otherTribes = {"Bois Forte", "Fond Du Lac", "Leech Lake", "Lower Sioux", "Prairie Island", 
+					"Red Lake Nation", "Shakopee Mdewakanton", "Upper Sioux", "White Earth Nation", 
+					"Federally recognized tribe outside of MN"};
+			
+            List<String> tribesList;
+			if (Boolean.valueOf(isMlboMember).booleanValue()) {
+            	tribesList = new ArrayList<String>(Arrays.asList(mlbo));
+            } else {
+            	tribesList = new ArrayList<String>(Arrays.asList(otherTribes));
+            }
+			
+			List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
+			
+			String[] expectedDestinationsArray = expectedDestinations.split(";");
+
+			// Outer loop is for tribe(s), inner loop for MLBO rural counties
+			for (String tribe : tribesList) {
+				for (String county : ruralCountiesList) {
+					TestApplicationDataBuilder applicationDataBuilder = new TestApplicationDataBuilder();
+					// "TANF" isn't really a program so we need to include pageData for the
+					// applyForTribalTANF page and then remove it from the list.
+					if (programsList.contains("TANF")) {
+						applicationDataBuilder.withPageData("applyForTribalTANF", "applyForTribalTANF", List.of("true"));
+						programsList.remove("TANF");
+					}
+					// build the rest of the application_data
+					ApplicationData applicationData = applicationDataBuilder.withApplicantPrograms(programsList)
+							.withPageData("identifyCounty", "county", county)
+							.withPageData("tribalNationMember", "isTribalNationMember", List.of("true"))
+							.withPageData("selectTheTribe", "selectedTribe", tribe)
+							.withPageData("nationsBoundary", "livingInNationBoundary", List.of("false"))
+							.build();
+					application.setApplicationData(applicationData);
+					application.setCounty(County.getForName(county));
+
+					// consider 3 possible types of documents, CCAP, CAF and XML, then merge the
+					// destinations into one list
+					List<RoutingDestination> actualRoutingDestinations = new ArrayList<RoutingDestination>();
+					if (programsList.contains("CCAP")) {
+						actualRoutingDestinations
+								.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CCAP));
+					}
+					List<String> cafPrograms = List.of("SNAP", "EA", "CASH", "GRH");
+					boolean haveCafProgram = programsList.stream().anyMatch(cafPrograms::contains);
+					if (haveCafProgram) {
+						actualRoutingDestinations
+								.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CAF));
+						actualRoutingDestinations
+								.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.XML));
+					}
+					List<String> actualRoutingDestinationNames = actualRoutingDestinations.stream()
+							.map(RoutingDestination::getName).collect(Collectors.toList());
+					actualRoutingDestinationNames = new ArrayList<>(new LinkedHashSet<>(actualRoutingDestinationNames));
+
+					// Replace "county of residence" with the actual county name
+					List<String> expectedDestinationsList = new ArrayList<String>(Arrays.asList(expectedDestinationsArray));
+					if (expectedDestinationsList.contains("county of residence")) {
+						expectedDestinationsList.remove("county of residence");
+						expectedDestinationsList.add(county);
+					}
+					String [] expectedDestinationsThisLoop = expectedDestinationsList.toArray(new String[expectedDestinationsList.size()]);
+					assertThat(actualRoutingDestinationNames).containsOnly(expectedDestinationsThisLoop);
+					
+				} // inner county loop
+			} // outer tribe loop
+		} // test
+
+		/**
+		 * This test verifies the routing destination for applicants who live in one of the MLBO
+		 * urban counties: Anoka, Hennepin, Ramsey
+		 * When they are a member of one of the MN Chippewa tribes the documents are routed
+		 * to MLBO for programs Tribal TANF or (SNAP + Tribal TANF) and will be routed to the
+		 * county for programs EA, GRH, Child Care, Cash (other the Tribal TANF), SNAP
+		 *  
+		 * MN Chippewa tribes: Leech Lake, White Earth Nation, Bois Forte, Grand Portage, 
+         *                     Fond du Lac, Mille Lacs Band of Ojibwe
+		 * Otherwise when they are a member of one of the other tribes the documents are routed
+		 * to the county of residence.
+		 * Other tribes: Red Lake Nation, Lower Sioux, Prairie Island, Shakopee Mdewakanton, 
+		 *			Upper Sioux, Federally recognized tribe outside of MN
+		 * 
+		 * The routing destination is dependent upon:
+		 *  - The county of residence (in this test it is fixed to the MLBO urban counties)
+		 *  - Tribal Nation membership
+		 *  - The program(s) selected
+		 * Note: This test does not consider living in tribal boundaries so the living in
+		 * tribal boundaries question is fixed to "No".
+		 * 
+		 * @param isMlboMember         - "true" or "false"
+		 * @param program              - use ";" to separate a list of programs
+		 * @param expectedDestinations - use ";" to separate a list of expected destinations
+		 * @throws Exception
+		 */
+		@ParameterizedTest
+		@CsvSource(value = { 
+				"true, SNAP, county of residence",
+				"true, EA, county of residence",
+				"true, CCAP, county of residence", 
+				"true, SNAP;TANF, Mille Lacs Band of Ojibwe", 
+				"true, CASH, county of residence",
+				"true, GRH, county of residence", 
+				"true, EA;TANF, Mille Lacs Band of Ojibwe;county of residence",  // expect multiple destinations
+				"false, SNAP, county of residence", 
+				"false, EA, county of residence",
+				"false, CCAP, county of residence", 
+				"false, SNAP;TANF, county of residence", 
+				"false, CASH, county of residence", 
+				"false, GRH, county of residence",
+				"false, EA;TANF, county of residence"
+				})
+		public void routeDocumentsForResidentsOfMilleLacsBandOfOjibweUrbanCounties(String isMnChippewaTribeMember, String programs,
+				String expectedDestinations) {
+			String[] urbanCounties = {"Anoka", "Hennepin", "Ramsey"};
+			List<String> urbanCountiesList = new ArrayList<String>(Arrays.asList(urbanCounties));
+			
+            String[] mnChippewaTribes = {"Leech Lake", "White Earth Nation", "Bois Forte", "Grand Portage", 
+            		"Fond du Lac", "Mille Lacs Band of Ojibwe"};
+			String[] otherTribes = {"Red Lake Nation", "Lower Sioux", "Prairie Island", "Shakopee Mdewakanton", 
+					"Upper Sioux", "Federally recognized tribe outside of MN"};
+			
+            List<String> tribesList;
+			if (Boolean.valueOf(isMnChippewaTribeMember).booleanValue()) {
+            	tribesList = new ArrayList<String>(Arrays.asList(mnChippewaTribes));
+            } else {
+            	tribesList = new ArrayList<String>(Arrays.asList(otherTribes));
+            }
+			
+			List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
+			
+			String[] expectedDestinationsArray = expectedDestinations.split(";");
+
+			// Outer loop is for tribe(s), inner loop for MLBO rural counties
+			for (String tribe : tribesList) {
+				for (String county : urbanCountiesList) {
+					TestApplicationDataBuilder applicationDataBuilder = new TestApplicationDataBuilder();
+					// "TANF" isn't really a program so we need to include pageData for the
+					// applyForTribalTANF page and then remove it from the list.
+					if (programsList.contains("TANF")) {
+						applicationDataBuilder.withPageData("applyForTribalTANF", "applyForTribalTANF", List.of("true"));
+						programsList.remove("TANF");
+					}
+					// build the rest of the application_data
+					ApplicationData applicationData = applicationDataBuilder.withApplicantPrograms(programsList)
+							.withPageData("identifyCounty", "county", county)
+							.withPageData("tribalNationMember", "isTribalNationMember", List.of("true"))
+							.withPageData("selectTheTribe", "selectedTribe", tribe)
+							.withPageData("nationsBoundary", "livingInNationBoundary", List.of("false"))
+							.build();
+					application.setApplicationData(applicationData);
+					application.setCounty(County.getForName(county));
+
+					// consider 3 possible types of documents, CCAP, CAF and XML, then merge the
+					// destinations into one list
+					List<RoutingDestination> actualRoutingDestinations = new ArrayList<RoutingDestination>();
+					if (programsList.contains("CCAP")) {
+						actualRoutingDestinations
+								.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CCAP));
+					}
+					List<String> cafPrograms = List.of("SNAP", "EA", "CASH", "GRH");
+					boolean haveCafProgram = programsList.stream().anyMatch(cafPrograms::contains);
+					if (haveCafProgram) {
+						actualRoutingDestinations
+								.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.CAF));
+						actualRoutingDestinations
+								.addAll(routingDecisionService.getRoutingDestinations(applicationData, Document.XML));
+					}
+					List<String> actualRoutingDestinationNames = actualRoutingDestinations.stream()
+							.map(RoutingDestination::getName).collect(Collectors.toList());
+					actualRoutingDestinationNames = new ArrayList<>(new LinkedHashSet<>(actualRoutingDestinationNames));
+
+					// Replace "county of residence" with the actual county name
+					List<String> expectedDestinationsList = new ArrayList<String>(Arrays.asList(expectedDestinationsArray));
+					if (expectedDestinationsList.contains("county of residence")) {
+						expectedDestinationsList.remove("county of residence");
+						expectedDestinationsList.add(county);
+					}
+					String [] expectedDestinationsThisLoop = expectedDestinationsList.toArray(new String[expectedDestinationsList.size()]);
+					assertThat(actualRoutingDestinationNames).containsOnly(expectedDestinationsThisLoop);
+					
+				} // inner county loop
+			} // outer tribe loop
+		} // test
+
 }
