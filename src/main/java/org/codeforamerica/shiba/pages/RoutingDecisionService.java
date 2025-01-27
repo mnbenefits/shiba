@@ -83,7 +83,7 @@ public class RoutingDecisionService {
       TribalNation tribalNation = TribalNation.getFromName(tribeName);
       
       List<RoutingDestination> isRoutedToRedLakeAndBoundaries = routeToRedLakeAndBoundaries(programs, applicationData, county, tribeName);
-      if(isRoutedToRedLakeAndBoundaries!=null) {
+      if(!isRoutedToRedLakeAndBoundaries.isEmpty() && isRoutedToRedLakeAndBoundaries!=null) {
     	  return isRoutedToRedLakeAndBoundaries;
       }
       // Route members of Tribal Nations we service
@@ -337,65 +337,55 @@ public class RoutingDecisionService {
 		Boolean isTribalTANF = getBooleanValue(applicationData.getPagesData(), APPLYING_FOR_TRIBAL_TANF);
 		Boolean isLinealDescendantWEN = getBooleanValue(applicationData.getPagesData(), LINEAL_DESCENDANT_WEN);
 		String nationOfResidence = getFirstValue(applicationData.getPagesData(), NATION_OF_RESIDENCE);
+		List<RoutingDestination> routingDestinations = new ArrayList<RoutingDestination>();
 
 		if (RedLakeNation.toString().equals(nationOfResidence)) {
 			if (county.equals(County.Clearwater) || county.equals(County.Beltrami)) {
 				if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CCAP)
 						|| Boolean.TRUE.equals(isTribalTANF)) {
 
-					return List.of(tribalNations.get(RedLakeNation));
+					routingDestinations.add(tribalNations.get(RedLakeNation));
 				}
 				if (programs.contains(CASH) || programs.contains(GRH)) {
-					return List.of(countyRoutingDestinations.get(county));
+					routingDestinations.add(countyRoutingDestinations.get(county));
 				}
 			}
-		}
+		} else {
+			if (tribeName != null && TRIBES_WE_CAN_ROUTE_TO.contains(tribeName)) {
+				if (!LeechLake.equals(TribalNation.getFromName(tribeName))) {
+					if (county.equals(County.Beltrami)) {
 
-		if (tribeName != null && TRIBES_WE_CAN_ROUTE_TO.contains(tribeName)) {
-			if (!LeechLake.equals(TribalNation.getFromName(tribeName))) {
+						if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CCAP)
+								|| Boolean.TRUE.equals(isTribalTANF)) {
+							routingDestinations.add(tribalNations.get(RedLakeNation));
+						}
+						if (programs.contains(CASH) || programs.contains(GRH)) {
+							routingDestinations.add(countyRoutingDestinations.get(county));
+						}
+					}
+				}
+			}
+
+			if (Boolean.TRUE.equals(isLinealDescendantWEN)) {
 				if (county.equals(County.Beltrami)) {
-
-					if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CCAP)
-							|| Boolean.TRUE.equals(isTribalTANF)) {
-						return List.of(tribalNations.get(RedLakeNation));
-					}
-					if (programs.contains(CASH) || programs.contains(GRH)) {
-						return List.of(countyRoutingDestinations.get(county));
+					if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CASH)
+							|| programs.contains(GRH) || programs.contains(CCAP)) {
+						routingDestinations.add(countyRoutingDestinations.get(county));
 					}
 				}
 			}
-		}
 
-//		if (Boolean.TRUE.equals(isLinealDescendantWEN)) {
-//			if (county.equals(County.Beltrami)) {
-//				if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CASH)
-//						|| programs.contains(GRH) || programs.contains(CCAP)) {
-//					return List.of(countyRoutingDestinations.get(county));
-//				}
-//			}
-//		}
-
-		if (!tribeName.equals(LeechLake.toString())) {
-			if (county.equals(County.Beltrami)) {
-				if (programs.contains(CASH) || programs.contains(GRH)) {
-					return List.of(countyRoutingDestinations.get(county));
-				}
-				if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CCAP)) {
-					return List.of(tribalNations.get(RedLakeNation));
+			if (!tribeName.equals(WhiteEarthNation.toString())) {
+				if (county.equals(County.Clearwater)) {
+					if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CASH)
+							|| programs.contains(GRH) || programs.contains(CCAP)) {
+						routingDestinations.add(countyRoutingDestinations.get(county));
+					}
 				}
 			}
 		}
 
-		if (!tribeName.equals(WhiteEarthNation.toString())) {
-			if (county.equals(County.Clearwater)) {
-				if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CASH)
-						|| programs.contains(GRH) || programs.contains(CCAP)) {
-					return List.of(countyRoutingDestinations.get(county));
-				}
-			}
-		}
-
-		return null;
+		return routingDestinations;
 	}
 }
 

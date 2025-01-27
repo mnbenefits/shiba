@@ -351,7 +351,7 @@ public class RoutingDestinationServiceTest {
 				"Clearwater, SNAP;TANF, Red Lake Nation",
 				"Clearwater, CASH, Clearwater", 
 				"Clearwater, GRH, Clearwater",
-				"Clearwater, SNAP;EA;CASH, Red Lake Nation;White Earth Nation", // the test uses WEN for tribal membership
+				"Clearwater, SNAP;EA;CASH, Red Lake Nation;Clearwater", // the test uses WEN for tribal membership
 				"Norman, SNAP, Norman", 
 				"Norman, EA, Norman",
 				"Norman, CCAP, Norman", 
@@ -436,7 +436,7 @@ public class RoutingDestinationServiceTest {
 				"Fond Du Lac, SNAP;TANF, Red Lake Nation", 
 				"Fond Du Lac, CASH, Beltrami", 
 				"Fond Du Lac, GRH, Beltrami",
-				"Fond Du Lac, SNAP;EA;CASH, Red Lak Nation;Beltrami",
+				"Fond Du Lac, SNAP;EA;CASH, Red Lake Nation;Beltrami",
 				"Leech Lake, SNAP, Beltrami",
 				"Leech Lake, EA, Beltrami",
 				"Leech Lake, CCAP, Beltrami", 
