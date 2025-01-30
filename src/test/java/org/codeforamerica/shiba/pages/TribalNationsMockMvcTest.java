@@ -412,7 +412,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   }
 
   /**
-   * This test is verifying that only Red Lake Nation will get a copy of the application documents when:
+   * This test is verifying that Red Lake Nation and county will get a copy of the application documents when:
    *  - the selected programs include SNAP, CASH, CCAP and EA (no GRH)
    *  - tribal membership is Red Lake Nation
    *  - the response to "do you want to apply for Tribal TANF" is "Yes"
@@ -426,11 +426,12 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void redLakeApplicationsWithoutGrhGetSentToRedLake() throws Exception {
     addHouseholdMembersWithProgram("EA");
-    goThroughLongTribalTanfFlow(RedLakeNation.toString(), "Clearwater", "true", CCAP, SNAP, CASH, EA);
+    String county = "Clearwater";
+    goThroughLongTribalTanfFlow(RedLakeNation.toString(), county, "true", CCAP, SNAP, CASH, EA);
 
-    assertRoutingDestinationIsCorrectForDocument(CAF, RedLakeNation.toString());
-    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, RedLakeNation.toString());
-    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, RedLakeNation.toString());
+    assertRoutingDestinationIsCorrectForDocument(CAF, RedLakeNation.toString(),county);
+    assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, RedLakeNation.toString(),county);
+    assertRoutingDestinationIsCorrectForDocument(Document.CCAP, RedLakeNation.toString(),county);
   }
 
   /**

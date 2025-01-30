@@ -79,13 +79,17 @@ public class RoutingDecisionService {
     if(Boolean.FALSE.equals(isTribalNationMember) && Boolean.FALSE.equals(isLinealDescendantWEN)){
     	return List.of(countyRoutingDestinations.get(county));
     }
+	if (tribeName != null && !tribeName.isEmpty()) {
+		List<RoutingDestination> isRoutedToRedLakeAndBoundaries = routeToRedLakeAndBoundaries(programs, applicationData,
+				county, tribeName);
+
+		if (!isRoutedToRedLakeAndBoundaries.isEmpty() && isRoutedToRedLakeAndBoundaries != null) {
+			return isRoutedToRedLakeAndBoundaries;
+		}
+	}
     if (tribeName != null && TRIBES_WE_CAN_ROUTE_TO.contains(tribeName)) {
-      TribalNation tribalNation = TribalNation.getFromName(tribeName);
-      
-      List<RoutingDestination> isRoutedToRedLakeAndBoundaries = routeToRedLakeAndBoundaries(programs, applicationData, county, tribeName);
-      if(!isRoutedToRedLakeAndBoundaries.isEmpty() && isRoutedToRedLakeAndBoundaries!=null) {
-    	  return isRoutedToRedLakeAndBoundaries;
-      }
+      TribalNation tribalNation = TribalNation.getFromName(tribeName); 
+
       // Route members of Tribal Nations we service
       return switch (tribalNation) {
         case WhiteEarthNation -> routeWhiteEarthClients(programs, applicationData, document, county);
@@ -331,7 +335,7 @@ public class RoutingDecisionService {
         && Document.CCAP != document;
   }
   
-  private List<RoutingDestination> routeToRedLakeAndBoundaries(Set<String> programs, ApplicationData applicationData,
+  public List<RoutingDestination> routeToRedLakeAndBoundaries(Set<String> programs, ApplicationData applicationData,
 			County county, String tribeName) {
 
 		Boolean isTribalTANF = getBooleanValue(applicationData.getPagesData(), APPLYING_FOR_TRIBAL_TANF);
@@ -351,17 +355,15 @@ public class RoutingDecisionService {
 				}
 			}
 		} else {
-			if (tribeName != null && TRIBES_WE_CAN_ROUTE_TO.contains(tribeName)) {
-				if (!LeechLake.equals(TribalNation.getFromName(tribeName))) {
-					if (county.equals(County.Beltrami)) {
 
-						if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CCAP)
-								|| Boolean.TRUE.equals(isTribalTANF)) {
-							routingDestinations.add(tribalNations.get(RedLakeNation));
-						}
-						if (programs.contains(CASH) || programs.contains(GRH)) {
-							routingDestinations.add(countyRoutingDestinations.get(county));
-						}
+			if (!tribeName.equals(LeechLake.toString())) {
+				if (county.equals(County.Beltrami)) {
+					if (programs.contains(SNAP) || programs.contains(EA) || programs.contains(CCAP)
+							|| Boolean.TRUE.equals(isTribalTANF)) {
+						routingDestinations.add(tribalNations.get(RedLakeNation));
+					}
+					if (programs.contains(CASH) || programs.contains(GRH)) {
+						routingDestinations.add(countyRoutingDestinations.get(county));
 					}
 				}
 			}

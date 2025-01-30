@@ -407,7 +407,7 @@ public class RoutingDestinationServiceTest {
 		 * This test verifies that the routing destination(s) for applicants who live
 		 * in Beltrami County but do not live within the boundaries of Red Lake Nation.
 		 * When they are a member of any Tribal Nation other than Leech Lake, the documents
-		 * are routed to Red Lake Nation for programs EA, Child Care, Tribal TANF.
+		 * are routed to Red Lake Nation for programs SNAP, EA, Child Care, Tribal TANF.
 		 * Otherwise the documents are routed to Beltrami County.
 		 * The routing destination is dependent upon:
 		 *  - The county of residence (fixed, Beltrami)
@@ -438,12 +438,12 @@ public class RoutingDestinationServiceTest {
 				"Fond Du Lac, GRH, Beltrami",
 				"Fond Du Lac, SNAP;EA;CASH, Red Lake Nation;Beltrami",
 				"Leech Lake, SNAP, Beltrami",
-				"Leech Lake, EA, Beltrami",
+				"Leech Lake, EA, Mille Lacs Band of Ojibwe",
 				"Leech Lake, CCAP, Beltrami", 
-				"Leech Lake, SNAP;TANF, Beltrami", 
+				"Leech Lake, SNAP;TANF, Mille Lacs Band of Ojibwe;Beltrami", 
 				"Leech Lake, CASH, Beltrami",
 				"Leech Lake, GRH, Beltrami", 
-				"Leech Lake, SNAP;EA;CASH, Beltrami",  // with this combo of program we expect multiple destinations
+				"Leech Lake, SNAP;EA;CASH, Mille Lacs Band of Ojibwe;Beltrami",  // with this combo of program we expect multiple destinations
 				"Lower Sioux, SNAP, Red Lake Nation",
 				"Lower Sioux, EA, Red Lake Nation",
 				"Lower Sioux, CCAP, Red Lake Nation", 
