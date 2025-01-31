@@ -103,7 +103,7 @@ dependencies {
     
     implementation("org.apache.commons:commons-lang3:3.17.0")
     implementation("org.apache.commons:commons-text:1.13.0")
-    implementation("org.apache.httpcomponents.core5:httpcore5:5.3.2")
+    implementation("org.apache.httpcomponents.core5:httpcore5:5.3.3")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.4.1")
     implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.4.1")
     implementation("org.apache.pdfbox:pdfbox:3.0.4")
@@ -129,8 +129,8 @@ dependencies {
     
      //logging -->
     implementation("org.slf4j:slf4j-api:2.0.16")
-    implementation("io.sentry:sentry-spring-boot-starter-jakarta:8.0.0")
-    implementation("io.sentry:sentry-logback:8.0.0")
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:8.1.0")
+    implementation("io.sentry:sentry-logback:8.1.0")
     implementation("net.logstash.logback:logstash-logback-encoder:8.0")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
@@ -143,8 +143,8 @@ dependencies {
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2")
     implementation("commons-validator:commons-validator:1.9.0")
-    implementation("org.flywaydb:flyway-core:11.2.0")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.2.0")
+    implementation("org.flywaydb:flyway-core:11.3.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.3.0")
     implementation("com.mixpanel:mixpanel-java:1.5.3")
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.2.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.2.0")
