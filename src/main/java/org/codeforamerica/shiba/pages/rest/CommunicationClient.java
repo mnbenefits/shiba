@@ -31,33 +31,36 @@ public class CommunicationClient{
 	private RestTemplate commHubRestServiceTemplate;
 	
 	private String commHubUrl;
-	private Boolean enabled;
+	private Boolean commHubTextEnabled;
 	private String commHubEmailUrl;
 	private Boolean commHubEmailEnabled;
+	private String emailSender;
 	
 	public CommunicationClient(@Qualifier("commHubRestServiceTemplate") RestTemplateBuilder commHubRestServiceBuilder, 
-			@Value("${comm-hub.url}") String commHubUrl,
-			@Value("${comm-hub.enabled}") Boolean enabled,
+			@Value("${comm-hub-text.url}") String commHubUrl,
+			@Value("${comm-hub-text.enabled}") Boolean commHubTextEnabled,
 			@Value("${comm-hub-email.url}") String commHubEmailUrl,
-			@Value("${comm-hub-email.enabled}") Boolean commHubEmailEnabled) {
+			@Value("${comm-hub-email.enabled}") Boolean commHubEmailEnabled,
+			@Value("${comm-hub-email.delivery}") String emailSender) {
 		super();
 		this.commHubRestServiceBuilder = commHubRestServiceBuilder;
 		this.commHubRestServiceTemplate = this.commHubRestServiceBuilder.build();
 		this.commHubUrl = commHubUrl;
-		this.enabled = enabled;
+		this.commHubTextEnabled = commHubTextEnabled;
 		this.commHubEmailUrl = commHubEmailUrl;
 		this.commHubEmailEnabled = commHubEmailEnabled;
+		this.emailSender = emailSender;
 	}
 
 	
 	  @Retryable(
 		      retryFor = {RestClientException.class},
 		      maxAttempts = 3,
-		      maxAttemptsExpression = "#{${comm-hub.max-attempts}}",
+		      maxAttemptsExpression = "#{${comm-hub-text.max-attempts}}",
 		      backoff = @Backoff(
-		          delayExpression = "#{${comm-hub.delay}}",
-		          multiplierExpression = "#{${comm-hub.multiplier}}",
-		          maxDelayExpression = "#{${comm-hub.max-delay}}"
+		          delayExpression = "#{${comm-hub-text.delay}}",
+		          multiplierExpression = "#{${comm-hub-text.multiplier}}",
+		          maxDelayExpression = "#{${comm-hub-text.max-delay}}"
 		      ),
 		      listeners = {"commHubRetryListener"}
 		  )
@@ -69,7 +72,7 @@ public class CommunicationClient{
 		retryCodes.add("503");
 		retryCodes.add("504");
 		  
-		if (!isEnabled()) {
+		if (!iscommHubTextEnabled()) {
 			log.info("Post requests to comm-hub are disabled.");
 			return;
 		}
@@ -84,7 +87,7 @@ public class CommunicationClient{
 	      ResponseEntity<String> responseEntityStr = commHubRestServiceTemplate.
 	            postForEntity(commHubUrl, entity, String.class);
 	      
-	      log.info("responseEntityStr Result = {}", responseEntityStr);
+	      log.info("send responseEntityStr Result = {}", responseEntityStr);
 		}catch(RestClientException rce ) {
 			Throwable t = rce.getMostSpecificCause();
 			String name = t.getClass().getTypeName();
@@ -123,7 +126,7 @@ public class CommunicationClient{
 		      ResponseEntity<String> responseEntityStr = commHubRestServiceTemplate.
 		            postForEntity(commHubEmailUrl, entity, String.class);
 		      
-		      log.info("responseEntityStr Result = {}", responseEntityStr);
+		      log.info("sendEmailDataToCommhub responseEntityStr Result = {}", responseEntityStr);
 			}catch(RestClientException rce ) {
 				Throwable t = rce.getMostSpecificCause();
 				String name = t.getClass().getTypeName();
@@ -140,13 +143,13 @@ public class CommunicationClient{
 
 		}
 
-	private boolean isCommHubEmailEnabled() {
-		return commHubEmailEnabled;
+	public boolean isCommHubEmailEnabled() {
+		return commHubEmailEnabled && emailSender.equalsIgnoreCase("commhub");
 	}
 
 
-	public Boolean isEnabled() {
-		return enabled;
+	public Boolean iscommHubTextEnabled() {
+		return commHubTextEnabled;
 	}
 
 }

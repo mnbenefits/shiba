@@ -44,7 +44,7 @@ mnit-filenet:
   password: somePassword
   router-url: some-router-url
   
-comm-hub:
+comm-hub-text:
   url: /some-url
   enabled: true
   max-attempts: 3
@@ -52,6 +52,12 @@ comm-hub:
   multiplier: 1
   max-delay: 1000 # 1 second max delay
   timeout-seconds: 5
+
+comm-hub-email:
+  url: some-url
+  enabled: true
+  # delivery designates which application sends emails: mnbenefits or commhub
+  delivery: mnbenefits
 
 mnit-clammit:
   url: https://clammit-route-clam-av.apps.gj1k10ie.centralus.aroapp.io/clammit/scan

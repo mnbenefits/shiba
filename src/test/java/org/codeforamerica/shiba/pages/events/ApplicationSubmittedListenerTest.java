@@ -72,27 +72,31 @@ class ApplicationSubmittedListenerTest {
   CommunicationClient communicationClient = mock(CommunicationClient.class);
   PdfEncoder pdfEncoder = mock(PdfEncoder.class);
   WicRecommendationService wicRecommendationService = mock(WicRecommendationService.class);
-  @BeforeEach
-  void setUp() {
-    LocaleContextHolder.setLocale(Locale.ENGLISH);
-     applicationSubmittedListener = new ApplicationSubmittedListener(
-        mnitDocumentConsumer,
-        applicationRepository,
-        emailClient,
-        snapExpeditedEligibilityDecider,
-        ccapExpeditedEligibilityDecider,
-        pdfGenerator,
-        monitoringService, 
-        routingDecisionService, 
-        communicationClient,
-        pdfEncoder,
-        wicRecommendationService,
-        "true"
-        );
-  }
+  
+
   
 	@Nested
 	class SendTextToCommHub{
+		
+		  @BeforeEach
+		  void setUp() {
+		    LocaleContextHolder.setLocale(Locale.ENGLISH);
+		     applicationSubmittedListener = new ApplicationSubmittedListener(
+		        mnitDocumentConsumer,
+		        applicationRepository,
+		        emailClient,
+		        snapExpeditedEligibilityDecider,
+		        ccapExpeditedEligibilityDecider,
+		        pdfGenerator,
+		        monitoringService, 
+		        routingDecisionService, 
+		        communicationClient,
+		        pdfEncoder,
+		        wicRecommendationService,
+		        "true",
+		        "commhub"
+		        );
+		  }
 
 		@Test
 		void confirmTextMessageNotSentWhenDisabled() {
@@ -113,7 +117,7 @@ class ApplicationSubmittedListenerTest {
 			when(applicationRepository.find(applicationId)).thenReturn(application);
 			ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("someSessionId", applicationId, null,
 					Locale.ENGLISH);
-			when(communicationClient.isEnabled()).thenReturn(false);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(false);
 			when(routingDecisionService.getRoutingDestinationByName("Ramsey")).thenReturn(new CountyRoutingDestination(Ramsey, "DPI", "email", "(651)555-5555"));
 			applicationSubmittedListener.notifyApplicationSubmission(event);  
 			verify(communicationClient, never()).send(jsonObject);
@@ -161,7 +165,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
 			jsonObject.addProperty("countyRoutingDestination", "Ramsey");
 			jsonObject.addProperty("countyRoutingPhoneNumber", "(651)555-5555");
-			when(communicationClient.isEnabled()).thenReturn(true);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(true);
 			applicationSubmittedListener.notifyApplicationSubmission(event);
 			verify(communicationClient, times(1)).send(jsonObject);
 		}
@@ -211,7 +215,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("countyRoutingPhoneNumber", "(651)555-5555");
 			jsonObject.addProperty("tribalNationRoutingDestination", "Red Lake Nation");
 			jsonObject.addProperty("tribalNationRoutingPhoneNumber", "(651)555-6666");
-			when(communicationClient.isEnabled()).thenReturn(true);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(true);
 			applicationSubmittedListener.notifyApplicationSubmission(event);
 			verify(communicationClient, times(1)).send(jsonObject);
 		}	
@@ -259,7 +263,7 @@ class ApplicationSubmittedListenerTest {
 			jsonObject.addProperty("countyPhoneNumber", "(651)555-5555");
 			jsonObject.addProperty("tribalNationRoutingDestination", "White Earth Nation");
 			jsonObject.addProperty("tribalNationRoutingPhoneNumber", "(651)555-6666");
-			when(communicationClient.isEnabled()).thenReturn(true);
+			when(communicationClient.iscommHubTextEnabled()).thenReturn(true);
 			applicationSubmittedListener.notifyApplicationSubmission(event);
 			verify(communicationClient, times(1)).send(jsonObject);
 		}	
@@ -269,6 +273,26 @@ class ApplicationSubmittedListenerTest {
 
   @Nested
   class sendApplicationToMNIT {
+	  
+	  @BeforeEach
+	  void setUp() {
+	    LocaleContextHolder.setLocale(Locale.ENGLISH);
+	     applicationSubmittedListener = new ApplicationSubmittedListener(
+	        mnitDocumentConsumer,
+	        applicationRepository,
+	        emailClient,
+	        snapExpeditedEligibilityDecider,
+	        ccapExpeditedEligibilityDecider,
+	        pdfGenerator,
+	        monitoringService, 
+	        routingDecisionService, 
+	        communicationClient,
+	        pdfEncoder,
+	        wicRecommendationService,
+	        "true",
+	        "mnbenefits"
+	        );
+	  }
 
     @Test
     void shouldSendSubmittedApplicationToMNITWhenFilenetIsEnabled() {
@@ -299,7 +323,8 @@ class ApplicationSubmittedListenerTest {
                 communicationClient,
                 pdfEncoder,
                 wicRecommendationService,
-                "false"
+                "false",
+                "mnbenefits"
                 );
 
       ApplicationSubmittedEvent event = new ApplicationSubmittedEvent("", "", null, Locale.ENGLISH);
@@ -312,6 +337,26 @@ class ApplicationSubmittedListenerTest {
 
   @Nested
   class SendClientConfirmationEmail {
+	  
+	  @BeforeEach
+	  void setUp() {
+	    LocaleContextHolder.setLocale(Locale.ENGLISH);
+	     applicationSubmittedListener = new ApplicationSubmittedListener(
+	        mnitDocumentConsumer,
+	        applicationRepository,
+	        emailClient,
+	        snapExpeditedEligibilityDecider,
+	        ccapExpeditedEligibilityDecider,
+	        pdfGenerator,
+	        monitoringService, 
+	        routingDecisionService, 
+	        communicationClient,
+	        pdfEncoder,
+	        wicRecommendationService,
+	        "true",
+	        "mnbenefits"
+	        );
+	  }
 
     @Test
     void shouldSendConfirmationMailForSubmittedApplicationWithCAF() {
@@ -353,6 +398,7 @@ class ApplicationSubmittedListenerTest {
           List.of(applicationFile),
           Locale.ENGLISH);
     }
+
 
     @Test
     void shouldSendMultipleConfirmationMailingsWhenOptedIn() {

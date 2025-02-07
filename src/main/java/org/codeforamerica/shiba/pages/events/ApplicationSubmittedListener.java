@@ -4,18 +4,14 @@ import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Base64;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.MonitoringService;
 import org.codeforamerica.shiba.TribalNationRoutingDestination;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
-import org.codeforamerica.shiba.application.ApplicationStatus;
 import org.codeforamerica.shiba.application.parsers.ContactInfoParser;
 import org.codeforamerica.shiba.application.parsers.DocumentListParser;
 import org.codeforamerica.shiba.application.parsers.EmailParser;
@@ -58,7 +54,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
   private final CommunicationClient communicationClient;
   private final String filenetEnabled;
   private final PdfEncoder pdfEncoder;
-
+  private final String emailSender;
 
   public ApplicationSubmittedListener(MnitDocumentConsumer mnitDocumentConsumer,
       ApplicationRepository applicationRepository,
@@ -71,7 +67,8 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
       CommunicationClient communicationClient,
       PdfEncoder pdfEncoder,
       WicRecommendationService wicRecommendationService,
-      @Value ("${mnit-filenet.enabled}") String filenetEnabled) {
+      @Value ("${mnit-filenet.enabled}") String filenetEnabled,
+      @Value("${comm-hub-email.delivery}") String emailSender) {
     super(applicationRepository, monitoringService);
     this.mnitDocumentConsumer = mnitDocumentConsumer;
     this.emailClient = emailClient;
@@ -83,6 +80,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     this.filenetEnabled = filenetEnabled;
 	this.pdfEncoder = pdfEncoder;
     this.wicRecommendationService = wicRecommendationService;
+    this.emailSender = emailSender;
   }
 
   @Async
@@ -100,7 +98,6 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 
 	
 	@Async
-
 	@EventListener
 	public void sendConfirmationEmail(ApplicationSubmittedEvent event) {
 		Application application = getApplicationFromEvent(event);
@@ -115,19 +112,33 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 					.toList();
 
 			if (ContactInfoParser.optedIntoEmailCommunications(applicationData)) {
-				emailClient.sendShortConfirmationEmail(applicationData, email, applicationId,
-						new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-						snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-				emailClient.sendNextStepsEmail(applicationData, email, applicationId,
-						new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-						snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+				sendOptedInEmails(applicationData, email, applicationId, snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event);
 			} else {
-				emailClient.sendConfirmationEmail(applicationData, email, applicationId,
-						new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
-						snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+				sendConfirmationEmailForOptOut(applicationData, email, applicationId, snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event);
 			}
 		});
 		MDC.clear();
+	}
+	
+	private void sendOptedInEmails(ApplicationData applicationData, String email, String applicationId, SnapExpeditedEligibility snapExpeditedEligibility,
+			CcapExpeditedEligibility ccapExpeditedEligibility, List<ApplicationFile> pdfs, ApplicationSubmittedEvent event ) {
+		if(emailSender.equalsIgnoreCase("mnbenefits")) {
+		emailClient.sendShortConfirmationEmail(applicationData, email, applicationId,
+				new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+				snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+		emailClient.sendNextStepsEmail(applicationData, email, applicationId,
+				new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+				snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+		}
+	}
+
+	private void sendConfirmationEmailForOptOut(ApplicationData applicationData, String email, String applicationId, SnapExpeditedEligibility snapExpeditedEligibility,
+			CcapExpeditedEligibility ccapExpeditedEligibility, List<ApplicationFile> pdfs, ApplicationSubmittedEvent event) {
+		if(emailSender.equalsIgnoreCase("mnbenefits")) {
+			emailClient.sendConfirmationEmail(applicationData, email, applicationId,
+					new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
+					snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
+		}
 	}
 
 	@Async
@@ -138,6 +149,9 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 	 * @param event
 	 */
 	public void notifyApplicationSubmission(ApplicationSubmittedEvent event) {
+		if(emailSender.equalsIgnoreCase("mnbenefits")) {
+			return;
+		}
 		Application application = getApplicationFromEvent(event);
 		ApplicationData applicationData = application.getApplicationData();
 	
