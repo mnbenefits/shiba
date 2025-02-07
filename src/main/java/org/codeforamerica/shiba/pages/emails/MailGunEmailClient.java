@@ -57,7 +57,6 @@ public class MailGunEmailClient implements EmailClient {
     this.webClient = WebClient.builder().baseUrl(mailGunUrl).build();
     this.activeProfile = activeProfile;
     this.messageSource = messageSource;
-    System.out.println("====== MailGunEmailClient emailSender: " + emailSender);//TODO emj delete
   }
 
   @Override
@@ -257,7 +256,6 @@ public class MailGunEmailClient implements EmailClient {
   }
   
 	private boolean isMailGunEnabled() {
-		System.out.println(" ######## emailSender = " + emailSender);//TODO emj delete
 		return emailSender.equalsIgnoreCase("mnbenefits");
 	}
 }

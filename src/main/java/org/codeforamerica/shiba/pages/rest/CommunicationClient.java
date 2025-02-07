@@ -50,9 +50,6 @@ public class CommunicationClient{
 		this.commHubEmailUrl = commHubEmailUrl;
 		this.commHubEmailEnabled = commHubEmailEnabled;
 		this.emailSender = emailSender;
-		System.out.println(" --------- CommunicationClient commHubTextEnabled: " + commHubTextEnabled);//TODO emj delete
-		System.out.println(" --------- CommunicationClient commHubEmailEnabled: " + commHubEmailEnabled);//TODO emj delete
-		System.out.println(" --------- CommunicationClient emailSender: " + emailSender);//TODO emj delete
 	}
 
 	

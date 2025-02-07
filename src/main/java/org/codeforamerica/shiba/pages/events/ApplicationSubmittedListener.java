@@ -86,7 +86,6 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
   @Async
   @EventListener
   public void sendViaApi(ApplicationSubmittedEvent event) {
-	  System.out.println("====== ApplicationSubmittedListener sendViaApi");//TODO emj delete
     log.info("sendViaApi received ApplicationSubmittedEvent with application ID: "
         + event.getApplicationId());
     if(Boolean.parseBoolean(filenetEnabled)) {
@@ -101,7 +100,6 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 	@Async
 	@EventListener
 	public void sendConfirmationEmail(ApplicationSubmittedEvent event) {
-		System.out.println("====== ApplicationSubmittedListener sendConfirmationEmail");//TODO emj delete
 		Application application = getApplicationFromEvent(event);
 		ApplicationData applicationData = application.getApplicationData();
 
@@ -131,10 +129,6 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		emailClient.sendNextStepsEmail(applicationData, email, applicationId,
 				new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
 				snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-		}else if(emailSender.equalsIgnoreCase("commhub")) {
-			notifyApplicationSubmission(event);
-		}else{
-			log.info("@@@@@ Unable to send email for applicationId " + applicationId + ". Check emailSender configuration.  @@@@@@");
 		}
 	}
 
@@ -144,12 +138,7 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 			emailClient.sendConfirmationEmail(applicationData, email, applicationId,
 					new ArrayList<>(applicationData.getApplicantAndHouseholdMemberPrograms()),
 					snapExpeditedEligibility, ccapExpeditedEligibility, pdfs, event.getLocale());
-		}else if(emailSender.equalsIgnoreCase("commhub")) {
-			notifyApplicationSubmission(event);
-		}else{
-			log.info("@@@@@ Unable to send opt out email for applicationId " + applicationId + ". Check emailSender configuration. @@@@@");	
 		}
-		
 	}
 
 	@Async
@@ -160,7 +149,9 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 	 * @param event
 	 */
 	public void notifyApplicationSubmission(ApplicationSubmittedEvent event) {
-		System.out.println("====== ApplicationSubmittedListener notifyApplicationSubmission");//TODO emj delete
+		if(emailSender.equalsIgnoreCase("mnbenefits")) {
+			return;
+		}
 		Application application = getApplicationFromEvent(event);
 		ApplicationData applicationData = application.getApplicationData();
 	

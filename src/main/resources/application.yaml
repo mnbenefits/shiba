@@ -140,7 +140,7 @@ logging:
     org.springframework.ws.server.MessageTracing.sent: DEBUG
     org.springframework.ws.client.MessageTracing.received: DEBUG
     org.springframework.ws.server.MessageTracing.received: DEBUG
-    org.springframework.web.client.RestTemplate: TRACE
+    org.springframework.web.client.RestTemplate: INFO
     org.springframework.context.event.EventListener: TRACE
     
 pagesConfig: pages-config.yaml
