@@ -72,28 +72,31 @@ class ApplicationSubmittedListenerTest {
   CommunicationClient communicationClient = mock(CommunicationClient.class);
   PdfEncoder pdfEncoder = mock(PdfEncoder.class);
   WicRecommendationService wicRecommendationService = mock(WicRecommendationService.class);
-  @BeforeEach
-  void setUp() {
-    LocaleContextHolder.setLocale(Locale.ENGLISH);
-     applicationSubmittedListener = new ApplicationSubmittedListener(
-        mnitDocumentConsumer,
-        applicationRepository,
-        emailClient,
-        snapExpeditedEligibilityDecider,
-        ccapExpeditedEligibilityDecider,
-        pdfGenerator,
-        monitoringService, 
-        routingDecisionService, 
-        communicationClient,
-        pdfEncoder,
-        wicRecommendationService,
-        "true",
-        "mnbenefits"
-        );
-  }
+  
+
   
 	@Nested
 	class SendTextToCommHub{
+		
+		  @BeforeEach
+		  void setUp() {
+		    LocaleContextHolder.setLocale(Locale.ENGLISH);
+		     applicationSubmittedListener = new ApplicationSubmittedListener(
+		        mnitDocumentConsumer,
+		        applicationRepository,
+		        emailClient,
+		        snapExpeditedEligibilityDecider,
+		        ccapExpeditedEligibilityDecider,
+		        pdfGenerator,
+		        monitoringService, 
+		        routingDecisionService, 
+		        communicationClient,
+		        pdfEncoder,
+		        wicRecommendationService,
+		        "true",
+		        "commhub"
+		        );
+		  }
 
 		@Test
 		void confirmTextMessageNotSentWhenDisabled() {
@@ -270,6 +273,26 @@ class ApplicationSubmittedListenerTest {
 
   @Nested
   class sendApplicationToMNIT {
+	  
+	  @BeforeEach
+	  void setUp() {
+	    LocaleContextHolder.setLocale(Locale.ENGLISH);
+	     applicationSubmittedListener = new ApplicationSubmittedListener(
+	        mnitDocumentConsumer,
+	        applicationRepository,
+	        emailClient,
+	        snapExpeditedEligibilityDecider,
+	        ccapExpeditedEligibilityDecider,
+	        pdfGenerator,
+	        monitoringService, 
+	        routingDecisionService, 
+	        communicationClient,
+	        pdfEncoder,
+	        wicRecommendationService,
+	        "true",
+	        "mnbenefits"
+	        );
+	  }
 
     @Test
     void shouldSendSubmittedApplicationToMNITWhenFilenetIsEnabled() {
@@ -314,6 +337,26 @@ class ApplicationSubmittedListenerTest {
 
   @Nested
   class SendClientConfirmationEmail {
+	  
+	  @BeforeEach
+	  void setUp() {
+	    LocaleContextHolder.setLocale(Locale.ENGLISH);
+	     applicationSubmittedListener = new ApplicationSubmittedListener(
+	        mnitDocumentConsumer,
+	        applicationRepository,
+	        emailClient,
+	        snapExpeditedEligibilityDecider,
+	        ccapExpeditedEligibilityDecider,
+	        pdfGenerator,
+	        monitoringService, 
+	        routingDecisionService, 
+	        communicationClient,
+	        pdfEncoder,
+	        wicRecommendationService,
+	        "true",
+	        "mnbenefits"
+	        );
+	  }
 
     @Test
     void shouldSendConfirmationMailForSubmittedApplicationWithCAF() {
@@ -355,6 +398,7 @@ class ApplicationSubmittedListenerTest {
           List.of(applicationFile),
           Locale.ENGLISH);
     }
+
 
     @Test
     void shouldSendMultipleConfirmationMailingsWhenOptedIn() {
