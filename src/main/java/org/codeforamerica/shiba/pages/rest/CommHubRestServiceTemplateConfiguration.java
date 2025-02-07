@@ -13,7 +13,7 @@ public class CommHubRestServiceTemplateConfiguration {
 
 	@Bean
 	RestTemplateBuilder commHubRestServiceTemplate(RestTemplateBuilderConfigurer configurer,
-			@Value("${comm-hub.timeout-seconds}") long timeoutSeconds) {
+			@Value("${comm-hub-text.timeout-seconds}") long timeoutSeconds) {
 		return configurer.configure(new RestTemplateBuilder())
 				.connectTimeout(Duration.ofSeconds(timeoutSeconds))
 				.readTimeout(Duration.ofSeconds(timeoutSeconds));

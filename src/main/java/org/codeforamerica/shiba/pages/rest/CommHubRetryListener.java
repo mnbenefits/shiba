@@ -19,7 +19,7 @@ public class CommHubRetryListener implements RetryListener{
 
   private final String maxAttempts;
 
-  public CommHubRetryListener(@Value("${comm-hub.max-attempts}") String maxAttempts) {
+  public CommHubRetryListener(@Value("${comm-hub-text.max-attempts}") String maxAttempts) {
     this.maxAttempts = maxAttempts;
   }
 
