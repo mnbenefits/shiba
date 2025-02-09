@@ -511,9 +511,10 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.goBack();
     SuccessPage successPage = new SuccessPage(driver);
     
-
+    // County: Chisago  Tribe: Bois Forte  Nation of Residence: Bois Forte  Programs: SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH
+    // But NO Tribal TANF so application will only go to Chisago County.
     assertThat(successPage.findElementById("submission-date").getText()).contains(
-        "Your application was submitted to Chisago County (888-234-1246) and Mille Lacs Band of Ojibwe (320-532-7407) on January 1, 2020.");
+        "Your application was submitted to Chisago County (888-234-1246) on January 1, 2020.");
     applicationId = downloadPdfs();
     assertThat(successPage.findElementById("confirmation-number").getText()).contains("Confirmation # " + applicationId);
 
@@ -654,11 +655,13 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("INCOME_PER_PAY_PERIOD_0", "1.00");
     assertCafFieldEquals("DATE_OF_BIRTH_0", "09/14/2018");
     assertCafFieldEquals("SSN_0", "XXX-XX-XXXX");
+    // County: Chisago  Tribe: Bois Forte  Nation of Residence: Bois Forte  Programs: SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH
+    // But NO Tribal TANF so application will only go to Chisago County.
     assertCafFieldEquals("COUNTY_INSTRUCTIONS",
         """
-            This application was submitted to Mille Lacs Band of Ojibwe and Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
+            This application was submitted to Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
-            For more support, you can call Mille Lacs Band of Ojibwe (320-532-7407) and Chisago County (888-234-1246).""");
+            For more support, you can call Chisago County (888-234-1246).""");
     assertCafFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH");
     assertCafFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
@@ -795,11 +798,13 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCertainPopsFieldEquals("INCOME_PER_PAY_PERIOD_0", "1.00");
     assertCertainPopsFieldEquals("DATE_OF_BIRTH_0", "09/14/2018");
     assertCertainPopsFieldEquals("SSN_0", "XXX-XX-XXXX");
+    // County: Chisago  Tribe: Bois Forte  Nation of Residence: Bois Forte  Programs: SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH
+    // But NO Tribal TANF so application will only go to Chisago County.
     assertCertainPopsFieldEquals("COUNTY_INSTRUCTIONS",
             """
-                This application was submitted to Mille Lacs Band of Ojibwe and Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
+                This application was submitted to Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
-                For more support, you can call Mille Lacs Band of Ojibwe (320-532-7407) and Chisago County (888-234-1246).""");
+                For more support, you can call Chisago County (888-234-1246).""");
     assertCertainPopsFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS, CASH");
     assertCertainPopsFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCertainPopsFieldEquals("TRIBAL_NATION", "Bois Forte");

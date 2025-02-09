@@ -345,13 +345,13 @@ public class RoutingDestinationServiceTest {
 				"Beltrami, CASH, Beltrami",
 				"Beltrami, GRH, Beltrami", 
 				"Beltrami, SNAP;EA;CASH, Red Lake Nation;Beltrami",  // with this combo of program we expect multiple destinations
-				"Clearwater, SNAP, Red Lake Nation", 
-				"Clearwater, EA, Red Lake Nation",
-				"Clearwater, CCAP, Red Lake Nation", 
-				"Clearwater, SNAP;TANF, Red Lake Nation",
-				"Clearwater, CASH, Clearwater", 
-				"Clearwater, GRH, Clearwater",
-				"Clearwater, SNAP;EA;CASH, Red Lake Nation;Clearwater", // the test uses WEN for tribal membership
+				"Clearwater, SNAP, White Earth Nation", // This test uses WEN tribal membership so route to WEN for Clearwater
+				"Clearwater, EA, White Earth Nation",
+				"Clearwater, CCAP, White Earth Nation", 
+				"Clearwater, SNAP;TANF, White Earth Nation",
+				"Clearwater, CASH, White Earth Nation", 
+				"Clearwater, GRH, White Earth Nation",
+				"Clearwater, SNAP;EA;CASH, White Earth Nation",
 				"Norman, SNAP, Norman", 
 				"Norman, EA, Norman",
 				"Norman, CCAP, Norman", 
@@ -438,12 +438,12 @@ public class RoutingDestinationServiceTest {
 				"Fond Du Lac, GRH, Beltrami",
 				"Fond Du Lac, SNAP;EA;CASH, Red Lake Nation;Beltrami",
 				"Leech Lake, SNAP, Beltrami",
-				"Leech Lake, EA, Mille Lacs Band of Ojibwe",
+				"Leech Lake, EA, Beltrami",
 				"Leech Lake, CCAP, Beltrami", 
-				"Leech Lake, SNAP;TANF, Mille Lacs Band of Ojibwe;Beltrami", 
+				"Leech Lake, SNAP;TANF, Beltrami", 
 				"Leech Lake, CASH, Beltrami",
 				"Leech Lake, GRH, Beltrami", 
-				"Leech Lake, SNAP;EA;CASH, Mille Lacs Band of Ojibwe;Beltrami",  // with this combo of program we expect multiple destinations
+				"Leech Lake, SNAP;EA;CASH, Beltrami",
 				"Lower Sioux, SNAP, Red Lake Nation",
 				"Lower Sioux, EA, Red Lake Nation",
 				"Lower Sioux, CCAP, Red Lake Nation", 
@@ -716,8 +716,6 @@ public class RoutingDestinationServiceTest {
             	tribesList = new ArrayList<String>(Arrays.asList(otherTribes));
             }
 			
-			List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
-			
 			String[] expectedDestinationsArray = expectedDestinations.split(";");
 
 			// Outer loop is for tribe(s), inner loop for MLBO rural counties
@@ -726,6 +724,7 @@ public class RoutingDestinationServiceTest {
 					TestApplicationDataBuilder applicationDataBuilder = new TestApplicationDataBuilder();
 					// "TANF" isn't really a program so we need to include pageData for the
 					// applyForTribalTANF page and then remove it from the list.
+					List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
 					if (programsList.contains("TANF")) {
 						applicationDataBuilder.withPageData("applyForTribalTANF", "applyForTribalTANF", List.of("true"));
 						programsList.remove("TANF");
@@ -776,8 +775,8 @@ public class RoutingDestinationServiceTest {
 		 * This test verifies the routing destination for applicants who live in one of the MLBO
 		 * urban counties: Anoka, Hennepin, Ramsey
 		 * When they are a member of one of the MN Chippewa tribes the documents are routed
-		 * to MLBO for programs Tribal TANF or (SNAP + Tribal TANF) and will be routed to the
-		 * county for programs EA, GRH, Child Care, Cash (other the Tribal TANF), SNAP
+		 * to MLBO for programs Tribal TANF or (SNAP + Tribal TANF)
+		 * Documents are routed to the county for programs EA, GRH, Child Care, Cash (other than Tribal TANF), SNAP
 		 *  
 		 * MN Chippewa tribes: Leech Lake, White Earth Nation, Bois Forte, Grand Portage, 
          *                     Fond du Lac, Mille Lacs Band of Ojibwe
@@ -803,17 +802,15 @@ public class RoutingDestinationServiceTest {
 				"true, SNAP, county of residence",
 				"true, EA, county of residence",
 				"true, CCAP, county of residence", 
-				"true, SNAP;TANF, Mille Lacs Band of Ojibwe", 
 				"true, CASH, county of residence",
 				"true, GRH, county of residence", 
-				"true, EA;TANF, Mille Lacs Band of Ojibwe;county of residence",  // expect multiple destinations
+				"true, SNAP;TANF, Mille Lacs Band of Ojibwe",  // SNAP + TANF goes to MLBO only
 				"false, SNAP, county of residence", 
 				"false, EA, county of residence",
 				"false, CCAP, county of residence", 
-				"false, SNAP;TANF, county of residence", 
 				"false, CASH, county of residence", 
 				"false, GRH, county of residence",
-				"false, EA;TANF, county of residence"
+				"false, SNAP;TANF, county of residence"
 				})
 		public void routeDocumentsForResidentsOfMilleLacsBandOfOjibweUrbanCounties(String isMnChippewaTribeMember, String programs,
 				String expectedDestinations) {
@@ -821,7 +818,7 @@ public class RoutingDestinationServiceTest {
 			List<String> urbanCountiesList = new ArrayList<String>(Arrays.asList(urbanCounties));
 			
             String[] mnChippewaTribes = {"Leech Lake", "White Earth Nation", "Bois Forte", "Grand Portage", 
-            		"Fond du Lac", "Mille Lacs Band of Ojibwe"};
+            		"Fond Du Lac", "Mille Lacs Band of Ojibwe"};
 			String[] otherTribes = {"Red Lake Nation", "Lower Sioux", "Prairie Island", "Shakopee Mdewakanton", 
 					"Upper Sioux", "Federally recognized tribe outside of MN"};
 			
@@ -832,16 +829,15 @@ public class RoutingDestinationServiceTest {
             	tribesList = new ArrayList<String>(Arrays.asList(otherTribes));
             }
 			
-			List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
-			
 			String[] expectedDestinationsArray = expectedDestinations.split(";");
 
-			// Outer loop is for tribe(s), inner loop for MLBO rural counties
+			// Outer loop is for tribe(s), inner loop for MLBO urban counties
 			for (String tribe : tribesList) {
 				for (String county : urbanCountiesList) {
 					TestApplicationDataBuilder applicationDataBuilder = new TestApplicationDataBuilder();
 					// "TANF" isn't really a program so we need to include pageData for the
 					// applyForTribalTANF page and then remove it from the list.
+					List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
 					if (programsList.contains("TANF")) {
 						applicationDataBuilder.withPageData("applyForTribalTANF", "applyForTribalTANF", List.of("true"));
 						programsList.remove("TANF");
