@@ -383,6 +383,7 @@ public class RoutingDecisionService {
 				return countyOfResidence(county, applicationData);			
 			}
 			
+			// At this point we are a tribal nation member
 			if (shouldRouteApplicationToWhiteEarthNation(county, tribalNation, isLinealDescendantWEN)) {
 					return List.of(tribalNations.get(WhiteEarthNation));
 			}
@@ -410,7 +411,7 @@ public class RoutingDecisionService {
 	/*
 	 * There are two scenarios where we route to Red Lake Nation only
 	 * 1.) County of residence is one of: Beltrami, Clearwater
-	 *     AND tribal member of any tribe (Note: this method would not be invoked unless the appicant was a tribal member)
+	 *     AND tribal member of any tribe (Note: this method would not be invoked unless the applicant was a tribal member)
 	 *     AND Lives within boundaries of Red Lake Nation
 	 *     AND all selected programs are from this set: SNAP, EA, Child Care, Tribal TANF
 	 * 
@@ -573,7 +574,6 @@ public class RoutingDecisionService {
 	 * because the routing logic can be based on the programs including Tribal TANF. 
 	 */
 	private Set<String> applicantPrograms(ApplicationData applicationData) {
-	    //Set<String> programs = applicationData.getApplicantAndHouseholdMemberPrograms();
 		Set<String> programs = getProgramsFoundInTheApplication(applicationData);
 	    if (isApplyingForTribalTanf(applicationData.getPagesData())) {
 	    	programs.add("TANF"); // TANF is added as a pseudo program 
