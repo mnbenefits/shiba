@@ -65,13 +65,13 @@ public class PagesData extends HashMap<String, PageData> {
 	        case AND -> conditionStream.allMatch(this::satisfies);
 	        case OR -> conditionStream.anyMatch(this::satisfies);
 	      };
-	      log.debug("     PagesData satisfies( ) for condition name: " + condition.getName() + " " + retVal);
+	      log.debug("          satisfies( ) for condition name: " + condition.getName() + " " + retVal);
 	      return retVal;
 	    }
 
 	    PageData pageData = get(condition.getPageName()); //Original comment: this can't handle groups
 	    boolean retVal = condition.matches(pageData, this);
-	    log.debug("     PagesData satisfies( ) matches for condition name: " + condition.getName() + " " + retVal);
+	    log.debug("          satisfies( ) matches for condition name: " + condition.getName() + " " + retVal);
 	    return retVal;
 	  }
 

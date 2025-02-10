@@ -294,8 +294,11 @@ public class PageController {
     if (skipCondition != null) {
       PagesData pagesData = applicationData.getDatasourceDataForPageIncludingSubworkflows(
           nextPageWorkflow);
+      String pageName = nextPageWorkflow.getPageConfiguration().getName();
       DatasourcePages datasourcePages = new DatasourcePages(pagesData);
-      return datasourcePages.satisfies(skipCondition);
+      boolean retVal = datasourcePages.satisfies(skipCondition);
+      log.debug("===== skipCondition " + skipCondition.getName() + " for page " + pageName + " returns " + retVal);
+      return retVal;
     }
     return false;
   }

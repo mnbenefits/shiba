@@ -46,16 +46,21 @@ public enum ValueMatcher {
 
   IS_URBAN_TRIBAL_NATION_COUNTY((testValue, ignoredTargetValue) ->
       URBAN_COUNTIES.stream().map(County::toString).anyMatch(testValue::contains)),
-
+  
   IS_MILLE_LACS_RURAL_COUNTY((testValue, ignoredTargetValue) ->
-      MILLE_LACS_RURAL_COUNTIES.stream().map(County::toString).anyMatch(testValue::contains)),
+      MILLE_LACS_RURAL_COUNTIES.stream().map(County::getEnumName).anyMatch(testValue::contains)),
 
   IS_WHITE_EARTH_COUNTY((testValue, ignored) -> COUNTIES_SERVICED_BY_WHITE_EARTH.stream()
       .map(County::toString)
       .anyMatch(testValue::contains)),
+  
   HH_MEMBER_AGE_LESS_THAN_5((testValue, targetValue) -> (testValue.stream().filter(s -> !s.isBlank())
 			.map(stringDob -> LocalDate.parse(stringDob, DateTimeFormatter.ofPattern("MM/dd/yyyy")))
 			.collect(Collectors.toList()).stream().anyMatch(stringDob -> Period.between(stringDob, LocalDate.now()).getYears() < 5))),
+  
+  HH_MEMBER_AGE_LESS_THAN_18((testValue, targetValue) -> (testValue.stream().filter(s -> !s.isBlank())
+			.map(stringDob -> LocalDate.parse(stringDob, DateTimeFormatter.ofPattern("MM/dd/yyyy")))
+			.collect(Collectors.toList()).stream().anyMatch(stringDob -> Period.between(stringDob, LocalDate.now()).getYears() < 18))),
   
   DOES_NOT_CONTAIN_SUBSTRING((testValue, targetValue) -> testValue.stream()
       .noneMatch(string -> string.contains(targetValue)));

@@ -6,6 +6,7 @@ conditionDefinitions:
     input: needHelpImmediately
     value: "false"
   - &laterDocsFlow?
+    name: laterDocsFlow
     pageName: matchInfo
     input: lastName
     matcher: NOT_EMPTY
@@ -354,6 +355,97 @@ conditionDefinitions:
     name: householdMemberLessThanAge5
     input: dobAsDate
     matcher: HH_MEMBER_AGE_LESS_THAN_5
+  - &householdMemberLessThanAge18?
+    pageName: householdMemberInfo
+    name: householdMemberLessThanAge18
+    input: dobAsDate
+    matcher: HH_MEMBER_AGE_LESS_THAN_18
+  - &isMilleLacsBandMemberInMilleLacsBandCounty?    
+    name: isMilleLacsBandMemberInMilleLacsBandCounty
+    logicalOperator: AND
+    conditions:
+      - pageName: selectTheTribe
+        name: selectedTribeMilleLacsBand
+        input: selectedTribe
+        value: Mille Lacs Band of Ojibwe
+      - pageName: identifyCounty
+        name: selectedCountyMilleLacsBandRuralCounty
+        input: county
+        matcher: IS_MILLE_LACS_RURAL_COUNTY
+  - &isTribalMemberLivingInUrbanTribalNationCounty?    
+    name: isTribalMemberLivingInUrbanTribalNationCounty
+    logicalOperator: AND
+    conditions:
+      - *isUrbanTribalNationMember?
+      - pageName: identifyCounty
+        name: isUrbanTribalNationCounty
+        input: county
+        matcher: IS_URBAN_TRIBAL_NATION_COUNTY
+  - &isTribalMemberNotLeechLakeLivingInBeltramiCounty?    
+    name: isTribalMemberNotLeechLakeLivingInBeltramiCounty
+    logicalOperator: AND
+    conditions:
+      - pageName: tribalNationMember
+        name: isTribalNationMemberTrue
+        input: isTribalNationMember
+        value: "true"
+      - pageName: selectTheTribe
+        name: notInLeechLakeTribe
+        input: selectedTribe
+        matcher: DOES_NOT_EQUAL        
+        value: "Leech Lake"
+      - pageName: identifyCounty
+        name: livesInBeltramiCounty
+        input: county
+        value: "Beltrami"
+  - &isLivingInRedLakeNationAndBeltramiOrClearwaterCounty?    
+    name: isLivingOnRedLakeNationAndBeltramiOrClearwaterCounty
+    logicalOperator: AND
+    conditions:
+      - pageName: nationOfResidence
+        name: nationOfResidenceIsRedLakeNation
+        input: selectedNationOfResidence
+        value: "Red Lake Nation"
+      - logicalOperator: OR
+        name: livingInBeltramiOrClearwaterCounty
+        conditions:
+          - pageName: identifyCounty
+            input: county
+            value: "Beltrami"
+          - pageName: identifyCounty
+            input: county
+            value: "Clearwater"
+  - &isEligibleForTribalTANFonNationsBoundaryPage?
+    name: isEligibleForTribalTANFonNationsBoundaryPage
+    logicalOperator: AND
+    conditions:
+      - logicalOperator: OR
+        name: isPregnantOrHouseHoldMemberLessThan18
+        conditions:
+          - *isSomeonePregnant?
+          - *householdMemberLessThanAge18?
+      - logicalOperator: OR
+        name: threeOrConditionsInIsEligibleForTribalTANFonNationsBoundaryPage
+        conditions:
+          - *isMilleLacsBandMemberInMilleLacsBandCounty?
+          - *isTribalMemberLivingInUrbanTribalNationCounty?
+          - *isTribalMemberNotLeechLakeLivingInBeltramiCounty?
+  - &isEligibleForTribalTANFonNationOfResidencePage?
+    name: isEligibleForTribalTANFonNationOfResidencePage
+    logicalOperator: AND
+    conditions:
+      - logicalOperator: OR
+        name: someOneIsPregnantOrHHmemberLessThan18
+        conditions:
+          - *isSomeonePregnant?
+          - *householdMemberLessThanAge18?
+      - logicalOperator: OR
+        name: fourOrConditionsInIsEligibleForTribalTANFonNationOfResidencePage
+        conditions:
+          - *isMilleLacsBandMemberInMilleLacsBandCounty?
+          - *isTribalMemberLivingInUrbanTribalNationCounty?
+          - *isTribalMemberNotLeechLakeLivingInBeltramiCounty?
+          - *isLivingInRedLakeNationAndBeltramiOrClearwaterCounty?
 pageDefinitions:
   - &landing
     name: landing
@@ -2657,6 +2749,43 @@ pageDefinitions:
               messageKey: select-the-tribe.white-earth
             - value: Federally recognized tribe outside of MN
               messageKey: select-the-tribe.other
+  - &nationOfResidence
+    name: nationOfResidence
+    pageTitle: nation-of-residence.title
+    headerKey: nation-of-residence.header
+    hasPrimaryButton: true
+    inputs:
+      - name: selectedNationOfResidence
+        type: SELECT
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-tribe
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: select-the-tribe.select-the-tribe
+            - value: Bois Forte
+              messageKey: select-the-tribe.bois-forte
+            - value: Fond Du Lac
+              messageKey: select-the-tribe.fond-du-lac
+            - value: Grand Portage
+              messageKey: select-the-tribe.grand-portage
+            - value: Leech Lake
+              messageKey: select-the-tribe.leech-lake
+            - value: Lower Sioux
+              messageKey: select-the-tribe.lower-sioux
+            - value: Mille Lacs Band of Ojibwe
+              messageKey: select-the-tribe.mille-lacs
+            - value: Prairie Island
+              messageKey: select-the-tribe.prairie-island
+            - value: Red Lake Nation
+              messageKey: select-the-tribe.red-lake
+            - value: Shakopee Mdewakanton
+              messageKey: select-the-tribe.shakopee-mdewakanton
+            - value: Upper Sioux
+              messageKey: select-the-tribe.upper-sioux
+            - value: White Earth Nation
+              messageKey: select-the-tribe.white-earth
   - &linealDescendantWEN
     name: linealDescendantWhiteEarthNation
     pageTitle: lineal-descendant-WEN.title
@@ -5952,38 +6081,16 @@ workflow:
   nationsBoundary:
     pageConfiguration: *nationsBoundary
     nextPages:
-      - pageName: applyForTribalTANF
+    # page flow when response is "Yes"
+      - pageName: nationOfResidence
         condition:
-          logicalOperator: OR
-          name: livingInUrbanCounty_OR_isMilleLacsBand_OR_isPregnantLivingAlone
-          conditions:
-            - logicalOperator: AND
-              name: isTribalMemberLivingInUrbanTribalNationCounty
-              conditions:
-                - *isUrbanTribalNationMember?
-                - pageName: identifyCounty
-                  name: isUrbanTribalNationCounty
-                  input: county
-                  matcher: IS_URBAN_TRIBAL_NATION_COUNTY
-            - logicalOperator: AND
-              name: isMilleLacsBandMemberInMilleLacsBandCounty
-              conditions:
-                - pageName: selectTheTribe
-                  name: selectedTribeMilleLacsBand
-                  input: selectedTribe
-                  value: Mille Lacs Band of Ojibwe
-                - pageName: identifyCounty
-                  name: selectedCountyMilleLacsBandRuralCounty
-                  input: county
-                  matcher: IS_MILLE_LACS_RURAL_COUNTY
-            - logicalOperator: AND
-              name: livesAlone_AND_isPregnantTrue
-              conditions:
-                - *livesAlone?
-                - pageName: pregnant
-                  name: isPregnantTrue
-                  input: isPregnant
-                  value: "true"
+          pageName: nationsBoundary
+          name: livingInNationBoundaryIsTrue
+          input: livingInNationBoundary
+          value: "true"
+    # page flow when response is "No"
+      - pageName: applyForTribalTANF
+        condition: *isEligibleForTribalTANFonNationsBoundaryPage?
       - pageName: medicalCareMilestone
         condition:
           conditions:
@@ -5995,45 +6102,29 @@ workflow:
               value: "false"
         flag: certain-pops
       - pageName: introIncome
-        condition:
-          pageName: nationsBoundary
-          name: isLivingInNationBoundaryFalse
-          input: livingInNationBoundary
-          value: "false"
-      - pageName: applyForTribalTANF
-        condition:
-          pageName: selectTheTribe
-          name: selectedTribeRLN
-          input: selectedTribe
-          value: Red Lake Nation
-      - pageName: applyForTribalTANF
-        condition:
-          logicalOperator: AND
-          name: livesInBeltrami_AND_isFederallyRecognizedTribeOutsideMN
-          conditions:
-            - pageName: selectTheTribe
-              name: selectedTribeFederallyRecognizedTribeOutsideMN
-              input: selectedTribe
-              value: Federally recognized tribe outside of MN
-            - pageName: identifyCounty
-              name: identifyCountyBeltrami
-              input: county
-              value: Beltrami
-      - pageName: applyForMFIP
-    skipCondition:
-      logicalOperator: OR
-      name: SKIP_isUrbanTribalNationMember_OR_selectedTribeIsFederallyRecognizedOutsideMN
-      conditions:
-        - *isUrbanTribalNationMember?
-        - pageName: selectTheTribe
-          name: selectedTribeIsFederallyRecognizedOutsideMN
-          input: selectedTribe
-          value: Federally recognized tribe outside of MN
     datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+        optional: "true"
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: selectTheTribe
+      - pageName: identifyCounty
+      - pageName: pregnant
       - pageName: tribalNationMember
+  nationOfResidence:
+    pageConfiguration: *nationOfResidence
+    nextPages:
+      - pageName: applyForTribalTANF
+        condition: *isEligibleForTribalTANFonNationOfResidencePage?
+      - pageName: applyForMFIP
+    datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+        optional: "true"
+      - pageName: addHouseholdMembers
+      - pageName: tribalNationMember
+      - pageName: selectTheTribe
       - pageName: identifyCounty
       - pageName: pregnant
   applyForTribalTANF:
@@ -6053,10 +6144,12 @@ workflow:
         flag: certain-pops
       - pageName: introIncome
     skipCondition:
+      name: livesAloneAndIsNotPregnant
       logicalOperator: AND
       conditions:
         - *livesAlone?
         - pageName: pregnant
+          name: isNotPregnant
           input: isPregnant
           value: "false"
     datasources:

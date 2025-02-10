@@ -587,6 +587,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("TRIBAL_NATION_BOUNDARY", "Prairie Island", caf);
 		}
 		
+		//This test still needs to exist to verify that the application created before implementation 
+		//of NationOfResidence is compatible, except the No radio field will be set. 
 		 @Test
 		  void shouldMapTribalNationMemberYesOrNoAndWhichTribalNation() throws Exception {
 			 fillInRequiredPages();
@@ -596,8 +598,37 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				var caf = submitAndDownloadCaf();
 
-				assertPdfFieldEquals("BOUNDARY_MEMBER","Off", caf);
+				assertPdfFieldEquals("BOUNDARY_MEMBER","No", caf);
 				assertPdfFieldIsEmpty("TRIBAL_NATION_BOUNDARY", caf);
+			}
+		 
+		 // this test verify NationBoundary
+		 @Test
+		  void shouldMapTribalNationMemberYesOrNoNationBoundary() throws Exception {
+			 fillInRequiredPages();
+				postExpectingSuccess("tribalNationMember", "isTribalNationMember", "true");
+				postExpectingSuccess("selectTheTribe", "selectedTribe", "Red Lake Nation");
+				postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "false");
+
+				var caf = submitAndDownloadCaf();
+
+				assertPdfFieldEquals("BOUNDARY_MEMBER","No", caf);
+				assertPdfFieldIsEmpty("TRIBAL_NATION_BOUNDARY", caf);
+			}
+		 // this test verify NationOfResidence
+
+		 @Test
+		  void shouldMapTribalNationMemberYesOrNoAndWhichNationBoundary() throws Exception {
+			 fillInRequiredPages();
+				postExpectingSuccess("tribalNationMember", "isTribalNationMember", "true");
+				postExpectingSuccess("selectTheTribe", "selectedTribe", "Leech Lake");
+				postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "true");
+				postExpectingSuccess("nationOfResidence", "selectedNationOfResidence", "Red Lake Nation");
+
+				var caf = submitAndDownloadCaf();
+
+				assertPdfFieldEquals("BOUNDARY_MEMBER","Yes", caf);
+				assertPdfFieldEquals("TRIBAL_NATION_BOUNDARY", "Red Lake Nation", caf);
 			}
 		
 		@Test

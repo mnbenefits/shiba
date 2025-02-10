@@ -49,8 +49,19 @@ public enum County implements ServicingAgency {
     return County.valueOf(nameFromString(name));
   }
 
+  /**
+   * Returns the displayName of the County.
+   */
   @Override
   public String toString() {
     return displayName;
+  }
+  
+  /**
+   * Returns enum name of this County without spaces (if County name has spaces).
+   * @return
+   */
+  public String getEnumName() {
+	  return nameFromString(displayName);
   }
 }

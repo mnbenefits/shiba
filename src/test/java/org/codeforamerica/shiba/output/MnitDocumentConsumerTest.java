@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.shiba.County.Dakota;
 import static org.codeforamerica.shiba.County.Hennepin;
 import static org.codeforamerica.shiba.County.Olmsted;
+import static org.codeforamerica.shiba.County.Anoka;
 import static org.codeforamerica.shiba.TribalNation.MilleLacsBandOfOjibwe;
 import static org.codeforamerica.shiba.TribalNation.UpperSioux;
 import static org.codeforamerica.shiba.application.FlowType.FULL;
@@ -204,6 +205,12 @@ class MnitDocumentConsumerTest {
     verify(mnitClient).send(application, xmlApplicationFile, countyMap.get(expectedCounty), XML);
   }
 
+  /* In order to send to Mille Lacs Band of Ojibwe only we use the
+   * following in this test:
+   * Tribal Nation: one of MN Chippewa tribes
+   * Programs: SNAP and Tribal TANF
+   * County: one of the MLBO urban counties
+   */
   @Test
   void sendsToTribalNationOnly() {
     ApplicationFile pdfApplicationFile = new ApplicationFile("my pdf".getBytes(), "someFile.pdf");
@@ -212,11 +219,13 @@ class MnitDocumentConsumerTest {
     when(xmlGenerator.generate(any(), any(), any(), any())).thenReturn(xmlApplicationFile);
 
     application.setApplicationData(new TestApplicationDataBuilder()
-        .withApplicantPrograms(List.of("EA"))
+        .withPageData("identifyCounty", "county", "Anoka")
+        .withApplicantPrograms(List.of("SNAP"))
         .withPageData("tribalNationMember", "isTribalNationMember", "true")
         .withPageData("selectTheTribe", "selectedTribe", List.of("Bois Forte"))
-        .withPageData("homeAddress", "county", List.of("Olmsted"))
+        .withPageData("applyForTribalTANF", "applyForTribalTANF", "true")
         .build());
+    application.setCounty(Anoka);
 
     documentConsumer.processCafAndCcap(application);
 
@@ -255,11 +264,17 @@ class MnitDocumentConsumerTest {
     verify(mnitClient).send(application, xmlApplicationFile, olmstedRoutingDestination,  XML);
   }
 
+  /* In order for this application to be routed to Mille Lacs Band of Ojibwe
+   * and the county we use the following in this test:
+   * County: one of MLBO urban counties
+   * Tribe: one of the MN Chippewa Tribes
+   * Programs: multiple but must include Tribal TANF
+   */
   @Test
   void sendsToBothTribalNationAndCounty() {
     // set up county caf mock
-    CountyRoutingDestination countyDestination = countyMap.get(Olmsted);
-    ApplicationFile countycaf = new ApplicationFile("mycaf".getBytes(), "countycaf.pdf");
+	CountyRoutingDestination countyDestination = countyMap.get(Anoka);
+	ApplicationFile countycaf = new ApplicationFile("mycaf".getBytes(), "countycaf.pdf");
     doReturn(countycaf).when(pdfGenerator)
         .generate(anyString(), eq(CAF), any(), eq(countyDestination));
 
@@ -281,9 +296,9 @@ class MnitDocumentConsumerTest {
         .withApplicantPrograms(List.of("EA", "SNAP", "CCAP"))
         .withPageData("tribalNationMember", "isTribalNationMember", "true")
         .withPageData("selectTheTribe", "selectedTribe", List.of("Bois Forte"))
-        .withPageData("identifyCounty", "county", "Olmsted")
-        .withPageData("homeAddress", "county", List.of("Olmsted"))
-        .withPageData("homeAddress", "enrichedCounty", List.of("Olmsted"))
+        .withPageData("applyForTribalTANF", "applyForTribalTANF", "true")
+        .withPageData("identifyCounty", "county", "Anoka")
+        .withPageData("homeAddress", "enrichedCounty", List.of("Anoka"))
         .withPageData("verifyHomeAddress", "useEnrichedAddress", List.of("true"))
         .build());
 
@@ -493,6 +508,7 @@ class MnitDocumentConsumerTest {
         .withPageData("identifyCounty", "county", Hennepin.name())
         .withPageData("tribalNationMember", "isTribalNationMember", "true")
         .withPageData("selectTheTribe", "selectedTribe", "Bois Forte")
+        .withPageData("applyForTribalTANF", "applyForTribalTANF", "true")
         .withPageData("homeAddress", "enrichedCounty", "Hennepin")
         .withPageData("homeAddress", "county", "Hennepin");
 
