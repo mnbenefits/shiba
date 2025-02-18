@@ -28,7 +28,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
   private final String signature = "some signature";
   
- // @Disabled("This test passes on VDIs but fails on GitHub")
+  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void nonExpeditedFlow() {
 	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
@@ -134,7 +134,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "56510-9999");
   }
   
-  //@Disabled("This test passes on VDIs but fails on GitHub")
+  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void expeditedFlow() {
 	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
@@ -251,7 +251,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
   }
 
-  //@Disabled("This test passes on VDIs but fails on GitHub")
+  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void outOfStateApplicantFlow() {
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));

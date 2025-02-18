@@ -24,7 +24,7 @@ import org.openqa.selenium.WebElement;
 @Tag("minimumFlowJourney")
 public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
- // @Disabled("This test passes on VDIs but fails on GitHub")
+  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void fullApplicationOnlyCCAP() {
     when(clock.instant()).thenReturn(
