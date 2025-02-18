@@ -642,27 +642,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 
 		@Test
-		void shouldMapMFIP() throws Exception {
-			fillInRequiredPages();
-			selectPrograms("SNAP");
-			postExpectingSuccess("applyForMFIP", "applyForMFIP", "true");
-
-			var caf = submitAndDownloadCaf();
-
-			assertPdfFieldEquals("PROGRAMS", "SNAP, CASH", caf);
-		}
-
-		@Test
-		void shouldNotMapCashTwiceIfCashAndMFIP() throws Exception {
-			fillInRequiredPages();
-			postExpectingSuccess("applyForMFIP", "applyForMFIP", "true");
-
-			var caf = submitAndDownloadCaf();
-
-			assertPdfFieldEquals("PROGRAMS", "SNAP, CCAP, CASH", caf);
-		}
-
-		@Test
 		void shouldMapProgramSelections() throws Exception {
 			fillInRequiredPages();
 			selectPrograms("SNAP", "CASH", "EA");
@@ -738,29 +717,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillOutHousemateInfoMoreThanFiveLessThanTen(3);
 			var caf = submitAndDownloadCaf();
 			assertNull(caf.getField("FIRST_NAME_4"));
-		}
-
-		@Test
-		void shouldMapMfipAsCash() throws Exception {
-			fillInRequiredPages();
-			selectPrograms("SNAP");
-			postExpectingSuccess("applyForMFIP", "applyForMFIP", "true");
-
-			var caf = submitAndDownloadCaf();
-
-			assertPdfFieldEquals("FOOD", "Yes", caf);
-			assertPdfFieldEquals("CASH", "Yes", caf);
-		}
-
-		@Test
-		void shouldMarkCashIfUserSelectsBothCashAndMFIP() throws Exception {
-			fillInRequiredPages();
-			selectPrograms("CASH");
-			postExpectingSuccess("applyForMFIP", "applyForMFIP", "true");
-
-			var caf = submitAndDownloadCaf();
-
-			assertPdfFieldEquals("CASH", "Yes", caf);
 		}
 
 		@Test
