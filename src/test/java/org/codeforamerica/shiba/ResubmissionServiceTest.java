@@ -172,43 +172,40 @@ class ResubmissionServiceTest {
   @Test
   void itResubmitsUploadedDocuments() {
     ApplicationData applicationData = new ApplicationData();
-    MockMultipartFile image = new MockMultipartFile("image", "test".getBytes());
-    applicationData.addUploadedDoc(image, "someS3FilePath", "someDataUrl", "image/jpeg", "fileName.txt");
-    applicationData.addUploadedDoc(image, "someS3FilePath2", "someDataUrl2", "image/jpeg", "fileName1.txt");
+    // Upload 2 jpg files
+    MockMultipartFile file0 = new MockMultipartFile("file0.jpg", "file0.jpg".getBytes());
+    MockMultipartFile file1 = new MockMultipartFile("file1.jpg", "file1.jgp".getBytes());
+    applicationData.addUploadedDoc(file0, "someS3FilePath", "someDataUrl", "image/jpeg", null);
+    applicationData.addUploadedDoc(file1, "someS3FilePath2", "someDataUrl2", "image/jpeg", null);
 
     Application application = Application.builder().id(APP_ID).county(Olmsted)
         .applicationData(applicationData).build();
-    when(applicationStatusRepository.getDocumentStatusToResubmit())
-        .thenReturn(
-            List.of(new ApplicationStatus(APP_ID, UPLOADED_DOC, "Olmsted", DELIVERY_FAILED, "fileName.txt"),
-                new ApplicationStatus(APP_ID, UPLOADED_DOC, "Olmsted", DELIVERY_FAILED, "fileName1.txt")));
+    // The uploaded documents are merged into a single PDF by the time the data 
+    // is written to the application_status table
+    when(applicationStatusRepository.getDocumentStatusToResubmit()).thenReturn(
+            List.of(new ApplicationStatus(APP_ID, UPLOADED_DOC, "Olmsted", DELIVERY_FAILED, "doc1o1.pdf")));
     when(applicationRepository.find(APP_ID)).thenReturn(application);
 
-    ApplicationFile applicationFile1 = new ApplicationFile("test".getBytes(), "fileName.txt");
-    ApplicationFile applicationFile2 = new ApplicationFile("test".getBytes(), "fileName1.txt");
+    ApplicationFile doc1of1 = new ApplicationFile("doc1of1.pdf".getBytes(), "doc1of1.pdf");
     var coverPage = "someCoverPageText".getBytes();
     when(pdfGenerator.generateCoverPageForUploadedDocs(any()))
         .thenReturn(coverPage);
     var uploadedDocs = applicationData.getUploadedDocs();
-    when(pdfGenerator.generateCombinedUploadedDocument(eq(List.of(uploadedDocs.get(0))), eq(application), eq(coverPage), any()))
-        .thenReturn(List.of(applicationFile1));
-    when(pdfGenerator.generateCombinedUploadedDocument(eq(List.of(uploadedDocs.get(1))), eq(application), eq(coverPage), any()))
-        .thenReturn(List.of(applicationFile2));
+    when(pdfGenerator.generateCombinedUploadedDocument(eq(List.of(uploadedDocs.get(0),uploadedDocs.get(1))),
+    		eq(application), eq(coverPage), any())).thenReturn(List.of(doc1of1));
 
     resubmissionService.resubmitFailedApplications();
 
+    // Uploaded documents are merged so expect just one request to resubmitFailedEmail
     ArgumentCaptor<ApplicationFile> captor = ArgumentCaptor.forClass(ApplicationFile.class);
-    verify(emailClient, times(2))
+    verify(emailClient, times(1))
         .resubmitFailedEmail(eq(DEFAULT_EMAIL), eq(UPLOADED_DOC), captor.capture(),
             eq(application));
 
     List<ApplicationFile> applicationFiles = captor.getAllValues();
-    assertThat(applicationFiles)
-        .containsExactlyElementsOf(List.of(applicationFile1, applicationFile2));
+    assertThat(applicationFiles).containsExactlyElementsOf(List.of(doc1of1));
     verify(applicationStatusRepository).createOrUpdate(APP_ID, UPLOADED_DOC, "Olmsted",
-        Status.DELIVERED_BY_EMAIL, "fileName.txt");
-    verify(applicationStatusRepository).createOrUpdate(APP_ID, UPLOADED_DOC, "Olmsted",
-        Status.DELIVERED_BY_EMAIL, "fileName1.txt");
+        Status.DELIVERED_BY_EMAIL, "doc1o1.pdf");
   }
 
   @Test

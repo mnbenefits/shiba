@@ -156,13 +156,14 @@ public class MailGunEmailClient implements EmailClient {
     log.info(StringEscapeUtils.escapeJava("health care renewal confirmation email sent for confirmationId " + confirmationId));
   }
 
+  /**
+   * This method is invoked directly (i.e., not by event) from the ResubmissionService,
+   * method resubmitFailedApplications.
+   * It is used to distribute documents via email.
+   */
   @Override
   public void resubmitFailedEmail(String recipientEmail, Document document,
       ApplicationFile applicationFile, Application application) {
-	if(!isMailGunEnabled()) {
-		log.info("Resubmit Failed email disabled");
-		return;
-	}
     MDC.put("applicationFile", applicationFile.getFileName());
     String subject = "MN Benefits Application %s Resubmission".formatted(application.getId());
     String body = emailContentCreator.createResubmitEmailContent(document, ENGLISH);

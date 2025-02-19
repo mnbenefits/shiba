@@ -71,7 +71,7 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/gc.properties
   minimum-flow-journey-test:
     name: Run minimum SNAP flow journey test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up ChromeDriver

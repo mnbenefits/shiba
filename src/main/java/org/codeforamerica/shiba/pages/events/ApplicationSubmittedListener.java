@@ -96,7 +96,12 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
     MDC.clear();
   }
 
-	
+
+  /**
+   * This event listener will control whether or not MNbenefits sends client emails.
+   * It does not control whether or not the comm-hub sends emails.
+   * @param event
+   */
 	@Async
 	@EventListener
 	public void sendConfirmationEmail(ApplicationSubmittedEvent event) {
@@ -149,9 +154,6 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 	 * @param event
 	 */
 	public void notifyApplicationSubmission(ApplicationSubmittedEvent event) {
-		if(emailSender.equalsIgnoreCase("mnbenefits")) {
-			return;
-		}
 		Application application = getApplicationFromEvent(event);
 		ApplicationData applicationData = application.getApplicationData();
 	

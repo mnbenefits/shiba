@@ -268,14 +268,11 @@ public class ResubmissionService {
       String recipientEmail, String documentName, RoutingDestination routingDestination) {
     var coverPage = pdfGenerator.generateCoverPageForUploadedDocs(application);
     var uploadedDocs = application.getApplicationData().getUploadedDocs();
-    var failedDoc = uploadedDocs.stream()
-        .filter(uploadedDoc -> uploadedDoc.getSysFileName().equals(documentName)).toList();
     List<ApplicationFile> fileToSend =
-        pdfGenerator.generateCombinedUploadedDocument(List.of(failedDoc.get(0)), application, coverPage, routingDestination);
+    	  pdfGenerator.generateCombinedUploadedDocument(uploadedDocs, application, coverPage, routingDestination);
     var esbFilename = fileToSend.get(0).getFileName();
-    var originalFilename = failedDoc.get(0).getFilename();
-    log.info("Resubmitting uploaded doc: %s original filename: %s".formatted(esbFilename,
-        originalFilename));
+    log.info("Resubmitting uploaded doc: %s, %d original file(s): %s, etc.".formatted(esbFilename,
+        uploadedDocs.size(), uploadedDocs.get(0).getFilename()));
     emailClient.resubmitFailedEmail(recipientEmail, document, fileToSend.get(0), application);
     log.info("Finished resubmitting document %s".formatted(esbFilename));
   }

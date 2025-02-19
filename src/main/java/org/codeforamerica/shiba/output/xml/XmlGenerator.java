@@ -65,7 +65,7 @@ public class XmlGenerator implements FileGenerator {
   @Override
   public ApplicationFile generate(String applicationId, Document document, Recipient recipient, RoutingDestination routingDestination) {
     Application application = applicationRepository.find(applicationId);
-    List<DocumentField> documentFields = preparers.prepareDocumentFields(application, null,
+    List<DocumentField> documentFields = preparers.prepareDocumentFields(application, document,
         recipient);
     /*
      * Putting this regex outside of the try block so it can be recorded if errors occur.
