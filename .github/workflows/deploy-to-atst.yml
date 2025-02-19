@@ -43,7 +43,7 @@ jobs:
   mnitdeploy:
     name: deploy to MNbenefits ATST
     needs: draft-release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - name: Authenticate and set context for non-prod
       uses: redhat-actions/oc-login@v1
