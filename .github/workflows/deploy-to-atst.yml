@@ -11,7 +11,7 @@ on:
 jobs:
   draft-release:
     name: Draft a new release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     permissions: write-all
     outputs:
       tag_name: release-${{ steps.create-tagname.outputs.TAG_NAME }}
@@ -43,7 +43,7 @@ jobs:
   mnitdeploy:
     name: deploy to MNbenefits ATST
     needs: draft-release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
     - name: Authenticate and set context for non-prod
       uses: redhat-actions/oc-login@v1
