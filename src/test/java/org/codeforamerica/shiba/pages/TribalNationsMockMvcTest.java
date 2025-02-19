@@ -62,38 +62,6 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 
   @ParameterizedTest
   @CsvSource(value = {
-      "Lower Sioux,Otter Tail",
-      "Prairie Island,Otter Tail",
-      "Shakopee Mdewakanton,Otter Tail",
-      "Upper Sioux,Otter Tail"
-  })
-  void tribesThatSeeMfipAndMustLiveInNationBoundaries(String nationName, String county)
-      throws Exception {
-    addHouseholdMembersWithProgram("EA");
-    getToPersonalInfoScreen(EA);
-    addAddressInGivenCounty(county);
-
-    postExpectingRedirect("tribalNationMember",
-        "isTribalNationMember",
-        "true",
-        "selectTheTribe");
-    postExpectingRedirect("selectTheTribe", "selectedTribe", nationName, "nationsBoundary");
-    postExpectingRedirect("nationsBoundary",
-        "livingInNationBoundary",
-        "true",
-        "nationOfResidence");
-    postExpectingRedirect("nationOfResidence",
-        "selectedNationOfResidence",
-        nationName,
-        "applyForMFIP");
-
-    assertThat(routingDecisionService.getRoutingDestinations(applicationData, CAF))
-        .containsExactly(countyMap.get(County.getForName(county)));
-  }
-
-
-  @ParameterizedTest
-  @CsvSource(value = {
       "Bois Forte,Hennepin",
       "Fond Du Lac,Hennepin",
       "Grand Portage,Hennepin",
@@ -137,9 +105,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	/**
 	 * This test verifies that the routing destination is White Earth Nation when
 	 * the applicant is a tribal member of White Earth Nation and resides in one of
-	 * the counties serviced by WEN. This test also verifies that the applicant will
-	 * see the applyForMFIP page when they do not CASH in the selected programs
-	 * list.
+	 * the counties serviced by WEN.
 	 * 
 	 * @param county
 	 * @param program
@@ -149,9 +115,9 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	@CsvSource(value = { "Becker, SNAP", "Becker, EA", "Becker, CASH", "Becker, CCAP", "Becker, GRH",
 			"Mahnomen, SNAP", "Mahnomen, EA", "Mahnomen, CASH", "Mahnomen, CCAP", "Mahnomen, GRH",
 			"Clearwater, SNAP", "Clearwater, EA", "Clearwater, CASH", "Clearwater, CCAP", "Clearwater, GRH" })
-	void routeWhiteEarthApplicationsToWhiteEarthOnlyAndSeeMFIP(String county, String program) throws Exception {
+	void routeWhiteEarthApplicationsToWhiteEarthOnly(String county, String program) throws Exception {
 	    addHouseholdMembersWithProgram(program);
-    goThroughShortMfipFlow(county, "White Earth Nation", new String[]{program});
+	    goThroughNationOfResidence(county, "White Earth Nation", new String[]{program});
 
     Document expectedDocType;
     if (program.equals("CCAP")) {
@@ -274,8 +240,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   /**
    * This test verifies that the routing destination is the county of residence when
    * the applicant is a tribal member of White Earth Nation but does not resides in one of
-   * the counties serviced by WEN. This test also verifies that the applicant will
-   * see the applyForMFIP page when they do not have CASH in the selected programs list.
+   * the counties serviced by WEN.
    * 
    * @param county
    * @param program
@@ -285,9 +250,9 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   @CsvSource(value = { "Nobles, SNAP", "Nobles, EA", "Nobles, CASH", "Nobles, CCAP", "Nobles, GRH",
 		  "Scott, SNAP", "Scott, EA", "Scott, CASH", "Scott, CCAP", "Scott, GRH",
 		  "Meeker, SNAP", "Meeker, EA", "Meeker, CASH", "Meeker, CCAP", "Meeker, GRH" })
-  void routeWhiteEarthApplicationsToCountyOnlyAndSeeMfip(String county, String program) throws Exception {
+  void routeWhiteEarthApplicationsToCountyOnly(String county, String program) throws Exception {
     addHouseholdMembersWithProgram(program);
-    goThroughShortMfipFlow(county, "White Earth Nation", new String[]{program});
+    goThroughNationOfResidence(county, "White Earth Nation", new String[]{program});
 
     Document expectedDocType;
     if (program.equals("CCAP")) {
@@ -392,23 +357,6 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
       "Lower Sioux,Ramsey,true",
       "Upper Sioux,Ramsey,true"
   })
-  void tribesThatCanApplyForMfipIfWithinNationBoundaries(String nationName, String county,
-      String livingInNationBoundary) throws Exception {
-    addHouseholdMembersWithProgram("EA");
-
-    postExpectingSuccess("identifyCountyBeforeApplying", "county", county);
-    postExpectingRedirect("tribalNationMember",
-        "isTribalNationMember",
-        "true",
-        "selectTheTribe");
-    postExpectingRedirect("selectTheTribe", "selectedTribe", nationName, "nationsBoundary");
-	if (livingInNationBoundary.equalsIgnoreCase("false")) {
-		postExpectingRedirect("nationsBoundary", "livingInNationBoundary", "false", "applyForMFIP");
-	} else {
-		postExpectingRedirect("nationsBoundary", "livingInNationBoundary", "true", "nationOfResidence");
-		postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", nationName, "applyForMFIP");
-	}    
-  }
 
   /**
    * This test is verifying that Red Lake Nation and county will get a copy of the application documents when:
@@ -641,7 +589,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	 * 4) OR they indicate they live within the boundaries of Red Lake Nation 
 	 *    AND the county of residence is Beltrami or Clearwater County (member of any Tribal Nation)
 	 * THEN the next page is applyForTribalTANF 
-	 * 5) OTHERWISE the next page is applyForMFIP
+	 * 5) OTHERWISE the next page is introIncome
 	 * 
 	 * @throws Exception
 	 */
@@ -678,39 +626,39 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 			"Beltrami, Red Lake Nation, true, apply for Tribal TANF",
 			"Clearwater, Red Lake Nation, true, apply for Tribal TANF",
 			// case 5
-			"Clay, Shakopee Mdewakanton, true, apply for MFIP",
+			"Clay, Shakopee Mdewakanton, true, Intro: Income",
 			// Repeat test cases for household that DOES NOT include someone who is pregnant and/or a child under age 18
 			// case 1
-			"Aitkin, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Benton, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Chisago, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Crow Wing, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Kanabec, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Morrison, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Mille Lacs, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Pine, Mille Lacs Band of Ojibwe, false, apply for MFIP",
+			"Aitkin, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Benton, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Chisago, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Crow Wing, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Kanabec, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Morrison, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Mille Lacs, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Pine, Mille Lacs Band of Ojibwe, false, Intro: Income",
 			// case 2
-			"Anoka, Bois Forte, false, apply for MFIP",
-			"Hennepin, Fond Du Lac, false, apply for MFIP",
-			"Ramsey, Grand Portage, false, apply for MFIP",
-			"Anoka, Leech Lake, false, apply for MFIP",
-			"Hennepin, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Ramsey, White Earth Nation, false, apply for MFIP",
+			"Anoka, Bois Forte, false, Intro: Income",
+			"Hennepin, Fond Du Lac, false, Intro: Income",
+			"Ramsey, Grand Portage, false, Intro: Income",
+			"Anoka, Leech Lake, false, Intro: Income",
+			"Hennepin, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Ramsey, White Earth Nation, false, Intro: Income",
 			// case 3
-			"Beltrami, Bois Forte, false, apply for MFIP",
-			"Beltrami, Fond Du Lac, false, apply for MFIP",
-			"Beltrami, Grand Portage, false, apply for MFIP",
-			"Beltrami, Mille Lacs Band of Ojibwe, false, apply for MFIP",
-			"Beltrami, White Earth Nation, false, apply for MFIP",
-			"Beltrami, Lower Sioux, false, apply for MFIP",
-			"Beltrami, Upper Sioux, false, apply for MFIP",
-			"Beltrami, Prairie Island, false, apply for MFIP",
-			"Beltrami, Shakopee Mdewakanton, false, apply for MFIP",
+			"Beltrami, Bois Forte, false, Intro: Income",
+			"Beltrami, Fond Du Lac, false, Intro: Income",
+			"Beltrami, Grand Portage, false, Intro: Income",
+			"Beltrami, Mille Lacs Band of Ojibwe, false, Intro: Income",
+			"Beltrami, White Earth Nation, false, Intro: Income",
+			"Beltrami, Lower Sioux, false, Intro: Income",
+			"Beltrami, Upper Sioux, false, Intro: Income",
+			"Beltrami, Prairie Island, false, Intro: Income",
+			"Beltrami, Shakopee Mdewakanton, false, Intro: Income",
 				// case 4
-			"Beltrami, Red Lake Nation, false, apply for MFIP",
-			"Clearwater, Red Lake Nation, false, apply for MFIP",
+			"Beltrami, Red Lake Nation, false, Intro: Income",
+			"Clearwater, Red Lake Nation, false, Intro: Income",
 			// case 5
-			"Clay, Shakopee Mdewakanton, false, apply for MFIP" })
+			"Clay, Shakopee Mdewakanton, false, Intro: Income" })
 	void nationOfResidenceNavigatesToCorrectNextPage(String county, String tribe, String pregnantOrChildUnderAge18,
 			String nextPageTitle) throws Exception {
 		postExpectingRedirect("identifyCountyBeforeApplying", "county", county, "prepareToApply");
@@ -976,7 +924,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
         "smarty street");
   }
 
-  private void goThroughShortMfipFlow(String county, String tribalNation, String[] programs)
+  private void goThroughNationOfResidence(String county, String tribalNation, String[] programs)
       throws Exception {
     getToPersonalInfoScreen(programs);
     addAddressInGivenCounty(county);
@@ -984,10 +932,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "true", "selectTheTribe");
 	postExpectingRedirect("selectTheTribe", "selectedTribe", tribalNation, "nationsBoundary");
     postExpectingRedirect("nationsBoundary", "livingInNationBoundary", "true", "nationOfResidence");
-    if (Arrays.asList(programs).contains("CASH")) {
-    	postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", tribalNation, "introIncome");
-    } else {
-    	postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", tribalNation, "applyForMFIP");
-    }
+    postExpectingRedirect("nationOfResidence", "selectedNationOfResidence", tribalNation, "introIncome");
+    
   }
 }
