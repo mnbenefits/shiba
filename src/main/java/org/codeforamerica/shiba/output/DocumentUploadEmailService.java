@@ -99,23 +99,23 @@ public class DocumentUploadEmailService {
 				LocaleSpecificMessageSource lms = new LocaleSpecificMessageSource(locale, messageSource);
 				String subject = lms.getMessage("email.document-recommendation-email-subject");
 
-				JsonObject emailJson = new JsonObject();
-				emailJson.addProperty("emailType", "DOCUMENT_UPLOAD_REMINDER");
-				emailJson.addProperty("subject", subject);
-				emailJson.addProperty("senderEmail", senderEmail);
-				emailJson.addProperty("recepientEmail", clientEmail);
-				emailJson.addProperty("emailContent", emailContent);
-				emailJson.addProperty("applicationId", id);
-
-				commHubEmailSendingClient.sendEmailDataToCommhub(emailJson);
-				applicationRepository.setDocUploadEmailStatus(id, Status.DELIVERED);
-
-				emailClient.sendEmail(subject, senderEmail, clientEmail, emailContent, id);
+				if (commHubEmailSendingClient.isCommHubEmailEnabled()) {
+					JsonObject emailJson = new JsonObject();
+					emailJson.addProperty("emailType", "DOCUMENT_UPLOAD_REMINDER");
+					emailJson.addProperty("subject", subject);
+					emailJson.addProperty("senderEmail", senderEmail);
+					emailJson.addProperty("recepientEmail", clientEmail);
+					emailJson.addProperty("emailContent", emailContent);
+					emailJson.addProperty("applicationId", id);
+					commHubEmailSendingClient.sendEmailDataToCommhub(emailJson);
+				} else {
+					emailClient.sendEmail(subject, senderEmail, clientEmail, emailContent, id);
+				}
 				applicationRepository.setDocUploadEmailStatus(id, Status.DELIVERED);
 
 			} catch (Exception e) {
 				log.error("Failed to send document upload email for application %s".formatted(id), e);
-				log.info("Setting status to DElivery Failed for application%s".formatted(id));
+				log.info("Setting status to delivery_failed for application %s".formatted(id));
 				applicationRepository.setDocUploadEmailStatus(id, Status.DELIVERY_FAILED);
 			}
 		});

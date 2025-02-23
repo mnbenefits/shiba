@@ -6,6 +6,7 @@ import static org.codeforamerica.shiba.Program.SNAP;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.application.Status;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.emails.EmailClient;
+import org.codeforamerica.shiba.pages.rest.CommunicationClient;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +42,19 @@ class DocumentUploadEmailServiceTest {
 
   @MockitoBean
   private EmailClient emailClient;
-  
+
+  @MockitoBean
+  private CommunicationClient commHubEmailSendingClient;
+
+  /**
+   * This test verifies that MNbenefits will send the document upload reminder email
+   * when comm-hub emails are disabled.
+   */
+
   @Test
   void sendDocumentUploadEmails() {
+	when(commHubEmailSendingClient.isCommHubEmailEnabled()).thenReturn(false);
+	  
     Application appThatShouldTriggerEmail = saveApplicationThatNeedsDocumentUploadEmail();
     Application appThatIsTooOld = saveApplicationThatIsTooOld();
     Application appWithDocumentUploads = saveApplicationWithDocumentUploads();
