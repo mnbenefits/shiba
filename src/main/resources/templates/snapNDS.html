@@ -8,8 +8,17 @@
   <link href="/honeycrisp.min.css" rel="stylesheet"/>
   <link href="/shiba.css" rel="stylesheet"/>
   <script src="/honeycrisp.min.js"></script>
+  <!-- Google Tag Manager -->
+  <script th:if="${@environment.getProperty('mnb-enable-google-analytics')}">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','[[${@environment.getProperty("google-tag-manager-id")}]]');</script>
+  <!-- End Google Tag Manager -->
+
 </head>
 <body class="locale-en" id="snapNDS">
+<div th:replace="~{fragments/google-analytics-body-snippet :: google-analytics-body-snippet}"></div>
 <div class="page-wrapper slab--shiba">
   <div th:replace="~{fragments/toolbar :: toolbar}"></div>
   <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
