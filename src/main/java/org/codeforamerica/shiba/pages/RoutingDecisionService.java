@@ -81,14 +81,15 @@ public class RoutingDecisionService {
 	 * Rules for Later Docs routing (based on LaterDocsTribalNatonsRouting_Iteration2_12092024.xlsx):
 	 * 
 	 * Tribal Nation Member is Yes: AND
+	 * 
+	 * 	 Live within the boundaries of a Tribal Nation is YES
+	 * 	 route to both Clearwater and Red Lake Nation
+	 * 
 	 *   Tribal Nation is White Earth Nation:
 	 *   County is Becker, Mahnomen or Clearwater - route White Earth Nation
 	 * 
 	 *   Tribal Nation is any other than Leech Lake or White Earth Nation 
 	 *   AND county is Clearwater - route to both Clearwater and Red Lake Nation
-	 * 
-	 * live within the boundaries of a Tribal Nation is YES
-	 * route to both Clearwater and Red Lake Nation
 	 * 
 	 *   Tribal Nation is any other than Leech Lake 
 	 *   AND county is Beltrami - route to Beltrami and Red Lake Nation
