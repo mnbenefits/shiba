@@ -398,6 +398,23 @@ conditionDefinitions:
         name: livesInBeltramiCounty
         input: county
         value: "Beltrami"
+  - &isTribalMemberNotWhiteEarthNationLivingInClearwaterCounty?    
+    name: isTribalMemberNotWhiteEarthNationLivingInClearwaterCounty
+    logicalOperator: AND
+    conditions:
+      - pageName: identifyCounty
+        name: livesInClearwaterCounty
+        input: county
+        value: "Clearwater"
+      - pageName: tribalNationMember
+        name: isTribalNationMemberTrue
+        input: isTribalNationMember
+        value: "true"
+      - pageName: selectTheTribe
+        name: notInLeechLakeTribe
+        input: selectedTribe
+        matcher: DOES_NOT_EQUAL        
+        value: "White Earth Nation"
   - &isLivingInRedLakeNationAndBeltramiOrClearwaterCounty?    
     name: isLivingOnRedLakeNationAndBeltramiOrClearwaterCounty
     logicalOperator: AND
@@ -2752,7 +2769,11 @@ pageDefinitions:
   - &nationOfResidence
     name: nationOfResidence
     pageTitle: nation-of-residence.title
-    headerKey: nation-of-residence.header
+    headerKey:
+      defaultValue: nation-of-residence.header
+      conditionalValues:
+        - value: later-docs-nation-of-residence.header
+          condition: *laterDocsFlow?
     hasPrimaryButton: true
     inputs:
       - name: selectedNationOfResidence
@@ -6051,6 +6072,12 @@ workflow:
   selectTheTribe:
     pageConfiguration: *selectTheTribe
     nextPages:
+      - pageName: nationsBoundary
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - *laterDocsFlow?
+            - *isTribalMemberNotWhiteEarthNationLivingInClearwaterCounty?
       - pageName: howToAddDocuments
         condition: *laterDocsFlow?
       - pageName: nationsBoundary
@@ -6058,6 +6085,9 @@ workflow:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: matchInfo
+      - pageName: identifyCounty
+      - pageName: tribalNationMember
+      - pageName: selectTheTribe
   linealDescendantWEN:
     pageConfiguration: *linealDescendantWEN
     datasources:
@@ -6075,6 +6105,8 @@ workflow:
           input: livingInNationBoundary
           value: "true"
     # page flow when response is "No"
+      - pageName: howToAddDocuments
+        condition: *laterDocsFlow?
       - pageName: applyForTribalTANF
         condition: *isEligibleForTribalTANFonNationsBoundaryPage?
       - pageName: medicalCareMilestone
@@ -6098,9 +6130,12 @@ workflow:
       - pageName: identifyCounty
       - pageName: pregnant
       - pageName: tribalNationMember
+      - pageName: matchInfo
   nationOfResidence:
     pageConfiguration: *nationOfResidence
     nextPages:
+      - pageName: howToAddDocuments
+        condition: *laterDocsFlow?
       - pageName: applyForTribalTANF
         condition: *isEligibleForTribalTANFonNationOfResidencePage?
       - pageName: introIncome
@@ -6113,6 +6148,7 @@ workflow:
       - pageName: selectTheTribe
       - pageName: identifyCounty
       - pageName: pregnant
+      - pageName: matchInfo
   applyForTribalTANF:
     pageConfiguration: *applyForTribalTANF
     nextPages:
