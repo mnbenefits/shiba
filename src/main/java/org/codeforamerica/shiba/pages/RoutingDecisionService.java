@@ -87,6 +87,9 @@ public class RoutingDecisionService {
 	 *   Tribal Nation is any other than Leech Lake or White Earth Nation 
 	 *   AND county is Clearwater - route to both Clearwater and Red Lake Nation
 	 * 
+	 * live within the boundaries of a Tribal Nation is YES
+	 * route to both Clearwater and Red Lake Nation
+	 * 
 	 *   Tribal Nation is any other than Leech Lake 
 	 *   AND county is Beltrami - route to Beltrami and Red Lake Nation
 	 * 
@@ -119,6 +122,16 @@ public class RoutingDecisionService {
 			// destinations.
 			TribalNation tribalNation;
 			if (tribalNationName != null && !tribalNationName.isEmpty()) {
+				//Does applicant live in nationsBoundary
+				Boolean doesLiveInNationsBoundary = Boolean.valueOf("false");
+				PageData nationsBoundaryPageData = applicationData.getPageData("nationsBoundary");
+				if(nationsBoundaryPageData!=null) {
+				doesLiveInNationsBoundary = Boolean.valueOf(nationsBoundaryPageData.get("livingInNationBoundary").getValue(0));
+				}
+				
+				if(doesLiveInNationsBoundary){
+					return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
+				}
 				tribalNation = TribalNation.getFromName(tribalNationName);
 				if (shouldRouteLaterDocsToWhiteEarthNation(county, tribalNation)) {
 					return List.of(tribalNations.get(WhiteEarthNation));
