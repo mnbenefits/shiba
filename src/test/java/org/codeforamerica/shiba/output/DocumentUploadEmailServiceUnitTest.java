@@ -15,16 +15,14 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
-
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.application.Status;
 import org.codeforamerica.shiba.application.parsers.ContactInfoParser;
-import org.codeforamerica.shiba.application.parsers.EmailParser;
 import org.codeforamerica.shiba.pages.DocRecommendationMessageService;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.emails.EmailContentCreator;
 import org.codeforamerica.shiba.pages.rest.CommunicationClient;
 import org.junit.jupiter.api.AfterEach;
@@ -78,17 +76,14 @@ public class DocumentUploadEmailServiceUnitTest {
 
 	@Mock
 	private ApplicationData applicationData;
-	
-	private MockedStatic<EmailParser> emailParserMock;
+
+	@Mock
+	private PagesData pagesData;
 	
 	private MockedStatic<ContactInfoParser> contactInfoParserMock;
 
 	@BeforeEach
 	void setUp() {
-		// Mock EmailParser
-		emailParserMock = mockStatic(EmailParser.class);
-		emailParserMock.when(() -> EmailParser.parse(any(ApplicationData.class))).thenReturn(Optional.of(CLIENT_EMAIL));
-
 		// Mock ContactInfoParser for email opt-in
 		contactInfoParserMock = mockStatic(ContactInfoParser.class);
 		contactInfoParserMock.when(() -> ContactInfoParser.optedIntoEmailCommunications(any(ApplicationData.class)))
@@ -105,6 +100,8 @@ public class DocumentUploadEmailServiceUnitTest {
 		when(applicationData.getUploadedDocs()).thenReturn(Collections.emptyList());
 		when(applicationData.getLocale()).thenReturn(Locale.ENGLISH);
 		when(applicationData.getId()).thenReturn("test-app-id");
+		when(applicationData.getPagesData()).thenReturn(pagesData);
+		when(pagesData.getPageInputFirstValue("contactInfo", "email")).thenReturn(CLIENT_EMAIL);
 		
 		List<Application> mockApplications = Collections.singletonList(mockApp);
 		when(applicationRepository.getApplicationsSubmittedBetweenTimestamps(any(), any()))
@@ -115,7 +112,7 @@ public class DocumentUploadEmailServiceUnitTest {
 				.thenReturn(List.of(
 						new DocRecommendationMessageService.DocumentRecommendation("Test Title", "Test Explanation")));
 
-		when(emailContentCreator.createDocRecommendationEmail(any(ApplicationData.class)))
+		when(emailContentCreator.createDocRecommendationEmail(applicationData))
 				.thenReturn("Test email content");
 
 		when(messageSource.getMessage(eq("email.document-recommendation-email-subject"), any(), any(Locale.class)))
@@ -125,12 +122,18 @@ public class DocumentUploadEmailServiceUnitTest {
 
 	}
 
+	/**
+	 * This test verifies that the comm-hub will send the document upload reminder email
+	 * when comm-hub emails are enabled.
+	 */
 	@Test
 	void sendDocumentUploadEmailsTest() {
+		when(commHubEmailSendingClient.isCommHubEmailEnabled()).thenReturn(true);
 		documentUploadEmailService.sendDocumentUploadEmailReminders();
 
 		verify(applicationRepository, times(1)).getApplicationsSubmittedBetweenTimestamps(any(), any());
 
+		verify(commHubEmailSendingClient, times(1)).isCommHubEmailEnabled();
 		verify(commHubEmailSendingClient, times(1))
 		.sendEmailDataToCommhub(jsonCaptor.capture());
 
@@ -176,7 +179,6 @@ public class DocumentUploadEmailServiceUnitTest {
 	
 	@AfterEach
 	void tearDown() {
-		emailParserMock.close();
 		contactInfoParserMock.close();
 	}
 
