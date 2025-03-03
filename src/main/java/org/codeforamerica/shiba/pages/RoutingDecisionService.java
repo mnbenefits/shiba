@@ -81,6 +81,10 @@ public class RoutingDecisionService {
 	 * Rules for Later Docs routing (based on LaterDocsTribalNatonsRouting_Iteration2_12092024.xlsx):
 	 * 
 	 * Tribal Nation Member is Yes: AND
+	 * 
+	 * 	 Live within the boundaries of a Tribal Nation is YES
+	 * 	 route to both Clearwater and Red Lake Nation
+	 * 
 	 *   Tribal Nation is White Earth Nation:
 	 *   County is Becker, Mahnomen or Clearwater - route White Earth Nation
 	 * 
@@ -119,6 +123,17 @@ public class RoutingDecisionService {
 			// destinations.
 			TribalNation tribalNation;
 			if (tribalNationName != null && !tribalNationName.isEmpty()) {
+				//Does applicant live in nationsBoundary
+				Boolean doesLiveInNationsBoundary = Boolean.valueOf("false");
+				PageData nationsBoundaryPageData = applicationData.getPageData("nationsBoundary");
+				if(nationsBoundaryPageData!=null) {
+				doesLiveInNationsBoundary = Boolean.valueOf(nationsBoundaryPageData.get("livingInNationBoundary").getValue(0));
+				if(doesLiveInNationsBoundary){
+					return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
+				}
+				else
+					return List.of(countyRoutingDestinations.get(Clearwater));
+				}		
 				tribalNation = TribalNation.getFromName(tribalNationName);
 				if (shouldRouteLaterDocsToWhiteEarthNation(county, tribalNation)) {
 					return List.of(tribalNations.get(WhiteEarthNation));

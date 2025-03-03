@@ -66,6 +66,35 @@ public class LaterDocsJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
     testPage.enter("selectedTribe", "Red Lake Nation");
     testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("How to add documents");
+    
+    // when the county is Clearwater, the page after selectTheTribe is Nations Boundary
+    navigateTo("identifyCounty");
+    testPage.enter("county", "Clearwater");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
+    testPage.clickButton("Yes");
+    testPage.enter("selectedTribe", "Red Lake Nation");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("Nations Boundary");
+    testPage.clickButton("Yes");
+    testPage.enter("selectedNationOfResidence", "Red Lake Nation");
+    assertThat(testPage.getHeader()).isEqualTo("Tell us which Tribal Nation you live in.");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("How to add documents");
+
+    // when White Earth Nation is selected, Nations Boundary is not displayed
+    navigateTo("selectTheTribe");
+    testPage.enter("selectedTribe", "White Earth Nation");
+    testPage.clickContinue();
+    assertThat(driver.getTitle()).isEqualTo("How to add documents");
+
+    //when the answer to live in nationsBoundary question is No, then next page is HowToAddDocuments
+    navigateTo("selectTheTribe");
+    testPage.enter("selectedTribe", "Red Lake Nation");
+    testPage.clickContinue();
+    //at this point we should be on the nations boundary page
+    testPage.clickButton("No");
     
     // How to add documents
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
