@@ -128,11 +128,12 @@ public class RoutingDecisionService {
 				PageData nationsBoundaryPageData = applicationData.getPageData("nationsBoundary");
 				if(nationsBoundaryPageData!=null) {
 				doesLiveInNationsBoundary = Boolean.valueOf(nationsBoundaryPageData.get("livingInNationBoundary").getValue(0));
-				}
-				
 				if(doesLiveInNationsBoundary){
 					return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
 				}
+				else
+					return List.of(countyRoutingDestinations.get(Clearwater));
+				}		
 				tribalNation = TribalNation.getFromName(tribalNationName);
 				if (shouldRouteLaterDocsToWhiteEarthNation(county, tribalNation)) {
 					return List.of(tribalNations.get(WhiteEarthNation));
