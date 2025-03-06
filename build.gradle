@@ -139,7 +139,7 @@ dependencies {
     implementation("ch.qos.logback:logback-parent:1.5.17")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.16.0")
-    implementation("com.azure:azure-storage-blob:12.29.0")
+    implementation("com.azure:azure-storage-blob:12.29.1")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2")
     implementation("commons-validator:commons-validator:1.9.0")
@@ -170,7 +170,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("io.percy:percy-java-selenium:2.1.0")
     testImplementation("com.deque.html.axe-core:selenium:4.10.1")
-    testImplementation("org.jsoup:jsoup:1.18.3")
+    testImplementation("org.jsoup:jsoup:1.19.1")
 }
 
 compileJava {
