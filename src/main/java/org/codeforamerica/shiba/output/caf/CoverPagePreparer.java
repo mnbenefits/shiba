@@ -8,6 +8,8 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.LINEAL_DESCENDANT_WEN;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.SELECTED_TRIBAL_NATION;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.TRIBAL_NATION;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.NATION_OF_RESIDENCE;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.LIVING_IN_TRIBAL_NATION_BOUNDARY;
 import static org.codeforamerica.shiba.TribalNation.WhiteEarthNation;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
@@ -73,12 +75,13 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
     var programsInput = getPrograms(application);
     var fullNameInput = getFullName(application);
     var tribalAffiliationInput = getTribalAffiliation(application);
+    var tribalNationBoundary = getTribalNationBoundary(application);
     var householdMemberInputs = getHouseholdMembers(application);
     var countyInstructionsInput = getCountyInstructions(application, recipient, document);
     var utmSourceInput = getUtmSource(application, document);
     var documentDestinations = getDocumentDestinations(application, recipient, document);
     return combineCoverPageInputs(programsInput, fullNameInput, countyInstructionsInput,
-        utmSourceInput, householdMemberInputs, tribalAffiliationInput, documentDestinations);
+        utmSourceInput, householdMemberInputs, tribalAffiliationInput, tribalNationBoundary, documentDestinations);
   }
 
   @Nullable
@@ -97,11 +100,12 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
   private List<DocumentField> combineCoverPageInputs(DocumentField programsInput,
       DocumentField fullNameInput, DocumentField countyInstructionsInput,
       DocumentField utmSourceInput, List<DocumentField> householdMemberInputs,
-      DocumentField tribalAffiliationInput, DocumentField documentDestinationsInput) {
+      DocumentField tribalAffiliationInput, DocumentField tribalNationBoundary, DocumentField documentDestinationsInput) {
     var everythingExceptHouseholdMembers = new ArrayList<DocumentField>();
     everythingExceptHouseholdMembers.add(programsInput);
     everythingExceptHouseholdMembers.add(fullNameInput);
     everythingExceptHouseholdMembers.add(tribalAffiliationInput);
+    everythingExceptHouseholdMembers.add(tribalNationBoundary);
     everythingExceptHouseholdMembers.add(countyInstructionsInput);
     everythingExceptHouseholdMembers.add(utmSourceInput);
     everythingExceptHouseholdMembers.add(documentDestinationsInput);
@@ -139,6 +143,18 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
 
 		//}
 		return new DocumentField("coverPage", "tribal", value, SINGLE_VALUE);
+	}
+	
+	private DocumentField getTribalNationBoundary(Application application) {
+		String value = null;
+		Boolean doesLiveWithinNationBoundary = getBooleanValue(application.getApplicationData().getPagesData(),
+				LIVING_IN_TRIBAL_NATION_BOUNDARY);
+
+		if (Boolean.TRUE.equals(doesLiveWithinNationBoundary)) {
+			value = getFirstValue(application.getApplicationData().getPagesData(), NATION_OF_RESIDENCE);
+		}
+
+		return new DocumentField("coverPage", "nationOfResidence", value, SINGLE_VALUE);
 	}
 
   private List<DocumentField> getHouseholdMembers(Application application) {
