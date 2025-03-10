@@ -145,6 +145,32 @@ class CoverPagePreparerTest {
             DocumentFieldType.SINGLE_VALUE
         ));
   }
+  
+  /**
+   * This test verifies that "uploaded-document-cover-page" contain Nation of residence
+   * when the applicant makes selections to indicate that they live within Nation boundary
+   */
+  @Test
+  void shouldIncludeNationResidenceWhenLiveInNationBoundary() {
+    new TestApplicationDataBuilder(applicationData)
+        .withPageData("nationsBoundary", "livingInNationBoundary", "true")
+        .withPageData("nationOfResidence", "selectedNationOfResidence", "Red Lake Nation");
+    Application application = Application.builder()
+        .applicationData(applicationData)
+        .county(County.Clearwater)
+        .build();
+
+    List<DocumentField> documentFields = preparer
+        .prepareDocumentFields(application, CAF, Recipient.CLIENT);
+
+    assertThat(documentFields).contains(
+        new DocumentField(
+            "coverPage",
+            "nationOfResidence",
+            List.of("Red Lake Nation"),
+            DocumentFieldType.SINGLE_VALUE
+        ));
+  }
 
   /**
    * This test verifies that the DocumentField generated for field "tribal" in the "coverPage" group

@@ -82,8 +82,13 @@ public class RoutingDecisionService {
 	 * 
 	 * Tribal Nation Member is Yes: AND
 	 * 
-	 * 	 Live within the boundaries of a Tribal Nation is YES
+	 * 	 Live within the boundaries of a Tribal Nation is YES and live within RLN
 	 * 	 route to both Clearwater and Red Lake Nation
+	 * 
+	 *   Live within the boundaries of a Tribal Nation is NO OR
+	 *   Live within the boundaries of a Tribal Nation is Yes And
+	 *   Nation of residence is not live within RLN
+	 *   route Clearwater county only
 	 * 
 	 *   Tribal Nation is White Earth Nation:
 	 *   County is Becker, Mahnomen or Clearwater - route White Earth Nation
@@ -126,14 +131,21 @@ public class RoutingDecisionService {
 				//Does applicant live in nationsBoundary
 				Boolean doesLiveInNationsBoundary = Boolean.valueOf("false");
 				PageData nationsBoundaryPageData = applicationData.getPageData("nationsBoundary");
-				if(nationsBoundaryPageData!=null) {
-				doesLiveInNationsBoundary = Boolean.valueOf(nationsBoundaryPageData.get("livingInNationBoundary").getValue(0));
-				if(doesLiveInNationsBoundary){
-					return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
+
+				if (nationsBoundaryPageData != null) {
+					
+					doesLiveInNationsBoundary = Boolean.valueOf(nationsBoundaryPageData.get("livingInNationBoundary").getValue(0));
+					if (doesLiveInNationsBoundary) {
+						
+						String nationOfResidence = getFirstValue(applicationData.getPagesData(), NATION_OF_RESIDENCE);
+						TribalNation selectedNationOfResidence = TribalNation.getFromName(nationOfResidence);
+						if (shouldRouteLaterDocsToClearwaterAndRedLakeNationWhenLiveWithinNatioBoundary(selectedNationOfResidence)) {
+							return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
+						} else {
+							return List.of(countyRoutingDestinations.get(Clearwater));
+						}
+					}
 				}
-				else
-					return List.of(countyRoutingDestinations.get(Clearwater));
-				}		
 				tribalNation = TribalNation.getFromName(tribalNationName);
 				if (shouldRouteLaterDocsToWhiteEarthNation(county, tribalNation)) {
 					return List.of(tribalNations.get(WhiteEarthNation));
@@ -158,6 +170,10 @@ public class RoutingDecisionService {
 		return List.of(countyRoutingDestinations.get(county));
 	}
 
+	private boolean shouldRouteLaterDocsToClearwaterAndRedLakeNationWhenLiveWithinNatioBoundary(TribalNation nationOfesidancy) {
+		return (nationOfesidancy.equals(TribalNation.RedLakeNation));
+	}
+	
 	private boolean shouldRouteLaterDocsToWhiteEarthNation(County county, TribalNation tribalNation) {
 		return (tribalNation.equals(TribalNation.WhiteEarthNation)
 				&& COUNTIES_SERVICED_BY_WHITE_EARTH.contains(county));

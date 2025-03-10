@@ -372,26 +372,32 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 	
 	/*
-	 * This test verifies that if the answer to nationsBoundary is Yes,
-	 * the document routed to Clearwater And RedLakeNation
-	 * if the answer to nationsBoundary is No,
-	 * the document routed to Clearwater only
+	 *   This test verifies that if the answer to nationsBoundary is Yes,
+	 *   And nation of residence is RLN
+	 *   the document routed to Clearwater And RedLakeNation
+	 *   if the answer to nationsBoundary is No,
+	 *   OR nation of residence is not RLN
+	 *   the document routed to Clearwater only
 	 */
 	@ParameterizedTest
-	@CsvSource({ "BoisForte, true", "BoisForte, false", "FondDuLac, true", "FondDuLac, false", 
-		"GrandPortage, true", "GrandPortage, false", "MilleLacsBandOfOjibwe, true", "MilleLacsBandOfOjibwe, false",
-		"LowerSioux, true", "PrairieIsland, true", "RedLakeNation, true", "ShakopeeMdewakanton, true",
-		"UpperSioux, true", "UpperSioux, false", "OtherFederallyRecognizedTribe, true", "OtherFederallyRecognizedTribe, false", 
-		"LeechLake, false", "LeechLake, true" })
-	void routeLaterDocsToClearwaterAndRedLakeNationWhenLiveWithinNationBoundery(String tribalNation, String liveWithinTheNationBoundaries)
+	@CsvSource({ "true, BoisForte, false", "false, BoisForte, false", "true, FondDuLac, false", "false, FondDuLac, false", 
+		"true, GrandPortage, false", "false, GrandPortage, false", "true, MilleLacsBandOfOjibwe, false", "false, MilleLacsBandOfOjibwe, false",
+		"true, LowerSioux, false", "false, LowerSioux, false", "true, PrairieIsland, false", 
+		"true, RedLakeNation, true", "false, RedLakeNation, false", "true, ShakopeeMdewakanton, false", "false, ShakopeeMdewakanton, false",
+		"true, UpperSioux, false", "false, UpperSioux, false", "true, OtherFederallyRecognizedTribe, false", "false, OtherFederallyRecognizedTribe, false", 
+		"true, LeechLake, false", "false, LeechLake, false" })
+	void routeLaterDocsToClearwaterAndRedLakeNationWhenLiveWithinNationBoundery(String liveWithinTheNationBoundaries, String nationOfResidance, String routeToClearwaterAndRLN)
 			throws Exception {
 		postExpectingSuccess("matchInfo", Map.of("firstName", List.of("Dwight"), "lastName", List.of("Schrute"),
 				"dateOfBirth", List.of("01", "12", "1928")));
 
 		postExpectingSuccess("identifyCounty", Map.of("county", List.of("Clearwater")));
 		postExpectingSuccess("tribalNationMember", Map.of("isTribalNationMember", List.of("True")));
-		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of(tribalNation)));
+		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of("BoisForte")));
 		postExpectingSuccess("nationsBoundary", "livingInNationBoundary", liveWithinTheNationBoundaries);
+		
+		if(Boolean.parseBoolean(liveWithinTheNationBoundaries))
+			postExpectingSuccess("nationOfResidence", "selectedNationOfResidence", nationOfResidance);
 
 		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
 		completeLaterDocsUploadFlow();
@@ -406,9 +412,10 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 
 		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
 				Document.UPLOADED_DOC);		
-		if (Boolean.parseBoolean(liveWithinTheNationBoundaries)) {
+		if (Boolean.parseBoolean(routeToClearwaterAndRLN)) {
 			assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
 		} else { 
+			if(Boolean.parseBoolean(liveWithinTheNationBoundaries))
 			assertThat(routingDestinations).containsExactly(countyRoutingDestination);
 		}
 	}
