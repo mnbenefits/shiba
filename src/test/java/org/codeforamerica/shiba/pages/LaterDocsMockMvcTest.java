@@ -415,7 +415,6 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 		if (Boolean.parseBoolean(routeToClearwaterAndRLN)) {
 			assertThat(routingDestinations).containsExactly(countyRoutingDestination, tribalRoutingDestination);
 		} else { 
-			if(Boolean.parseBoolean(liveWithinTheNationBoundaries))
 			assertThat(routingDestinations).containsExactly(countyRoutingDestination);
 		}
 	}
