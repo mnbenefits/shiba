@@ -145,6 +145,7 @@ public class RoutingDecisionService {
 							return List.of(countyRoutingDestinations.get(Clearwater));
 						}
 					}
+						return List.of(countyRoutingDestinations.get(Clearwater));
 				}
 				tribalNation = TribalNation.getFromName(tribalNationName);
 				if (shouldRouteLaterDocsToWhiteEarthNation(county, tribalNation)) {
