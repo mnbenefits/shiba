@@ -535,7 +535,6 @@ public abstract class AbstractBasePageTest {
     testPage.enter("applicantSignature", "some name");
     testPage.clickButton("Continue");
     testPage.clickButton("Submit application");
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));//TODO emj test this on GitHub
     testPage.clickContinue();
     testPage.clickContinue();
     testPage.clickButton("Add documents now");
