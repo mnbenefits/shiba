@@ -155,7 +155,7 @@ dependencies {
 
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.seleniumhq.selenium:selenium-java")
+    testImplementation("org.seleniumhq.selenium:selenium-java:4.25.0")
     testImplementation("de.redsix:pdfcompare:1.2.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
