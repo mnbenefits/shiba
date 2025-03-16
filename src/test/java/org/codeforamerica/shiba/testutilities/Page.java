@@ -2,12 +2,15 @@ package org.codeforamerica.shiba.testutilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Page {
 
@@ -23,7 +26,12 @@ public class Page {
   }
 
   private void checkForBadMessageKeys() {
-    assertThat(getTitle()).doesNotContain("??");
+	assertThat(getTitle()).doesNotContain("??");
+
+	// try to avoid "StaleElementReferenceException"
+	var wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html")));
+		
     String htmlText = driver.findElement(By.xpath("/html")).getText();
     assertThat(htmlText).doesNotContain("??");
   }
