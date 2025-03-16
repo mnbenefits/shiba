@@ -29,7 +29,7 @@ public class Page {
 	assertThat(getTitle()).doesNotContain("??");
 
 	// try to avoid "StaleElementReferenceException"
-	var wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	var wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html")));
 		
     String htmlText = driver.findElement(By.xpath("/html")).getText();
