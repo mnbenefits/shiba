@@ -40,8 +40,14 @@ jobs:
     - name: import and deploy to prod
       run: |
         oc import-image mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} --from=${{ secrets.OPENSHIFT_IMAGE_LOCATION }}/mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} -n ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
-        oc patch dc mn-benefits-prod -p '{"spec":{"triggers":[{"type": "ImageChange", "imageChangeParams":{"from":{"name":"mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }}"}, "containerNames":["mn-benefits-prod"]}}]}}'
-        oc rollout latest dc/mn-benefits-prod
+        # These commands are changed with the migration from DeploymentConfig to Deployment
+        # Replace these commands:
+        # oc patch dc mn-benefits-prod -p '{"spec":{"triggers":[{"type": "ImageChange", "imageChangeParams":{"from":{"name":"mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }}"}, "containerNames":["mn-benefits-prod"]}}]}}'
+        # oc rollout latest dc/mn-benefits-prod
+        # with commands that will go something like this...
+        oc rollout pause deployment mnbenefits-prod-deployment
+        oc patch deployment mnbenefits-prod-deployment --namespace mn-benefits-prod -p '{"spec":{"template":{"spec":{"containers":[{"name":"mnbenefits-prod-container","image":"image-registry.openshift-image-registry.svc:5000/mn-benefits-prod/mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }}"}]}}}}'
+        oc rollout resume deployment mnbenefits-prod-deployment
     - name: Announce success on Teams
       if: ${{ job.status == 'success' }}
       uses: jdcargile/ms-teams-notification@v1.4
