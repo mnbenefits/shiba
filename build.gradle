@@ -138,13 +138,13 @@ dependencies {
     implementation("ch.qos.logback:logback-core:1.5.17")
     implementation("ch.qos.logback:logback-parent:1.5.17")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.google.crypto.tink:tink:1.16.0")
-    implementation("com.azure:azure-storage-blob:12.29.1")
+    implementation("com.google.crypto.tink:tink:1.17.0")
+    implementation("com.azure:azure-storage-blob:12.30.0")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2")
     implementation("commons-validator:commons-validator:1.9.0")
-    implementation("org.flywaydb:flyway-core:11.3.4")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.3.4")
+    implementation("org.flywaydb:flyway-core:11.4.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.4.0")
     implementation("com.mixpanel:mixpanel-java:1.5.3")
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.3.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.3.0")
@@ -155,7 +155,7 @@ dependencies {
 
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.seleniumhq.selenium:selenium-java:4.25.0")
+    testImplementation("org.seleniumhq.selenium:selenium-java")
     testImplementation("de.redsix:pdfcompare:1.2.3")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
