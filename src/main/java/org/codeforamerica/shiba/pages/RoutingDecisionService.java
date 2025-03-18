@@ -131,23 +131,33 @@ public class RoutingDecisionService {
 				//Does applicant live in nationsBoundary
 				Boolean doesLiveInNationsBoundary = Boolean.valueOf("false");
 				PageData nationsBoundaryPageData = applicationData.getPageData("nationsBoundary");
-
+				
+				tribalNation = TribalNation.getFromName(tribalNationName);
+				
 				if (nationsBoundaryPageData != null) {
-					
-					doesLiveInNationsBoundary = Boolean.valueOf(nationsBoundaryPageData.get("livingInNationBoundary").getValue(0));
+					//only applicants who live within Clearwater county can see this condition
+					//unless changed in the future
+
+					doesLiveInNationsBoundary = Boolean
+							.valueOf(nationsBoundaryPageData.get("livingInNationBoundary").getValue(0));
 					if (doesLiveInNationsBoundary) {
-						
 						String nationOfResidence = getFirstValue(applicationData.getPagesData(), NATION_OF_RESIDENCE);
 						TribalNation selectedNationOfResidence = TribalNation.getFromName(nationOfResidence);
-						if (shouldRouteLaterDocsToClearwaterAndRedLakeNationWhenLiveWithinNatioBoundary(selectedNationOfResidence)) {
+						if (shouldRouteLaterDocsToClearwaterAndRedLakeNationWhenLiveWithinNatioBoundary(
+								selectedNationOfResidence)) {
 							return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
+						}
+						if (tribalNation.equals(TribalNation.LeechLake)) {
+							if (shouldRouteLaterDocsToWENWhenLiveWithinNatioBoundary(selectedNationOfResidence)) {
+								return List.of(tribalNations.get(WhiteEarthNation));
+							}
 						} else {
 							return List.of(countyRoutingDestinations.get(Clearwater));
 						}
 					}
-						return List.of(countyRoutingDestinations.get(Clearwater));
+					// when boundary question answer is No
+					return List.of(countyRoutingDestinations.get(Clearwater));
 				}
-				tribalNation = TribalNation.getFromName(tribalNationName);
 				if (shouldRouteLaterDocsToWhiteEarthNation(county, tribalNation)) {
 					return List.of(tribalNations.get(WhiteEarthNation));
 				}
@@ -173,6 +183,10 @@ public class RoutingDecisionService {
 
 	private boolean shouldRouteLaterDocsToClearwaterAndRedLakeNationWhenLiveWithinNatioBoundary(TribalNation nationOfesidancy) {
 		return (nationOfesidancy.equals(TribalNation.RedLakeNation));
+	}
+	
+	private boolean shouldRouteLaterDocsToWENWhenLiveWithinNatioBoundary(TribalNation nationOfesidancy) {
+		return (nationOfesidancy.equals(TribalNation.WhiteEarthNation));
 	}
 	
 	private boolean shouldRouteLaterDocsToWhiteEarthNation(County county, TribalNation tribalNation) {

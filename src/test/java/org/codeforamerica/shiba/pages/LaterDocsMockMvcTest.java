@@ -418,6 +418,40 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 			assertThat(routingDestinations).containsExactly(countyRoutingDestination);
 		}
 	}
+	
+	/*
+	 *   This test verifies that if member of Leech Lake,
+	 *   the answer to nationsBoundary is Yes,
+	 *   And nation of residence is WEN
+	 *   the document routed WEN
+	 */
+	@Test
+	void routeLaterDocsToWENWhenMemberOfLeechLakeAndLivewithinWENBoundary()
+			throws Exception {
+		postExpectingSuccess("matchInfo", Map.of("firstName", List.of("Dwight"), "lastName", List.of("Schrute"),
+				"dateOfBirth", List.of("01", "12", "1928")));
+
+		postExpectingSuccess("identifyCounty", Map.of("county", List.of("Clearwater")));
+		postExpectingSuccess("tribalNationMember", Map.of("isTribalNationMember", List.of("True")));
+		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of("LeechLake")));
+		postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "true");
+		
+		postExpectingSuccess("nationOfResidence", "selectedNationOfResidence", "WhiteEarthNation");
+		
+		clickContinueOnInfoPage("howToAddDocuments", "Continue", "uploadDocuments");
+		completeLaterDocsUploadFlow();
+
+		clickContinueOnInfoPage("uploadDocuments", "Submit my documents", "documentSubmitConfirmation");
+
+		
+		var tribalServicingAgency = TribalNation.getFromName("White Earth Nation");
+		var tribalRoutingDestination = tribalNationMap.get(tribalServicingAgency);
+
+		List<RoutingDestination> routingDestinations = routingDecisionService.getRoutingDestinations(applicationData,
+				Document.UPLOADED_DOC);		
+			assertThat(routingDestinations).containsExactly(tribalRoutingDestination);
+		
+	}
 	  
 	@ParameterizedTest
 	@CsvSource({ "BoisForte, true", "FondDuLac, true", "GrandPortage, true", "MilleLacsBandOfOjibwe, true",
