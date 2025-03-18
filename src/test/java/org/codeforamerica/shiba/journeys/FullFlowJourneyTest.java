@@ -1065,6 +1065,9 @@ public class FullFlowJourneyTest extends JourneyTest {
     
     // document off boarding
     testPage.clickButton("Finish application");
+
+    // programDocuments
+    testPage.clickContinue();
     
     // next steps
     testPage.clickContinue();

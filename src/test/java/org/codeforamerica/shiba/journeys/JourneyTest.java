@@ -116,6 +116,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     // No document upload
     testPage.clickButton("I'll do this later");
     testPage.clickButton("Finish application");
+    testPage.clickContinue(); // on programDocuments page
 
     // Next steps screen
     List<WebElement> pageElements = driver.findElements(By.id("original-next-steps"));

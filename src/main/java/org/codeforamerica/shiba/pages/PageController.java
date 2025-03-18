@@ -721,6 +721,7 @@ public class PageController {
         .getLandmarkPages();
     // Documents have been submitted in non-later docs flow and applicant is attempting to navigate back to upload/submit docs pages
     return !landmarkPagesConfiguration.isLandingPage(pageName) &&
+      	   !landmarkPagesConfiguration.isProgramDocumentsPage(pageName) &&
      	   !landmarkPagesConfiguration.isNextStepsPage(pageName) &&
     	   !landmarkPagesConfiguration.isTerminalPage(pageName) &&
     	   !landmarkPagesConfiguration.isFeedbackPage(pageName) &&
@@ -1207,7 +1208,7 @@ public class PageController {
     }
     LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
         .getLandmarkPages();
-    String nextPage = landmarkPagesConfiguration.getNextStepsPage();
+    String nextPage = landmarkPagesConfiguration.getProgramDocumentsPage();
     return new ModelAndView(String.format("redirect:/pages/%s", nextPage));
   }
 
