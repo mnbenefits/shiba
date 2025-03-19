@@ -494,7 +494,6 @@ public class ValidationTest extends AbstractFrameworkTest {
     
     @Test
     void shouldFailValidationForInvalidTribalNationInput() throws Exception {
-    	System.out.println("test starting");//TODO emj delete
     	postExpectingFailure("selectTheTribe", "selectedTribe", "maliciousStringGiveMeYourPasswords");
     }
     

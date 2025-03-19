@@ -72,15 +72,10 @@ pageDefinitions:
         promptMessage:
           promptMessageKey: identify-county.select-a-tribal-nation
         validators:
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-to-make-a-selection
-            condition: 
-              input: county
-              matcher: EMPTY
           - validation: TRIBAL_NATION
             errorMessageKey: general.validation.invalid.select.option.value
             condition: 
-              input: tribalNation
+              input: selectedTribe
               matcher: NOT_EMPTY
         options:
           selectableOptions:

@@ -260,8 +260,8 @@ class AppsWithBlankStatusResubmissionTest {
         new TestApplicationDataBuilder().build();
     applicationData.setId(id);
     applicationData.setFlow(LATER_DOCS);
-    applicationData.getPagesData().putIfAbsent("identifyCountyOrTribalNation", new PageData());
-    applicationData.getPageData("identifyCountyOrTribalNation").putIfAbsent("county", new InputData(List.of(county.name())));
+    applicationData.getPagesData().putIfAbsent("identifyCounty", new PageData());
+    applicationData.getPageData("identifyCounty").putIfAbsent("county", new InputData(List.of(county.name())));
     Application laterDocsApplication = Application.builder()
         .completedAt(completedAt) // important that this is completed!!!
         .county(county)
