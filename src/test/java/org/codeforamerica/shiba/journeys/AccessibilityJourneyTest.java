@@ -270,7 +270,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
   }
 
-  @Disabled("This test passes on VDIs but fails on GitHub")
+  //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void userCanCompleteTheNonExpeditedHouseholdFlow() {
     List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP);

@@ -3,7 +3,7 @@ package org.codeforamerica.shiba.application.parsers;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ENRICHED_HOME_COUNTY;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IDENTIFY_COUNTY;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IDENTIFY_COUNTY_HEALTHCARE_RENEWAL;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IDENTIFY_COUNTY_LATER_DOCS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IDENTIFY_COUNTY_LATER_DOCS;//TODO emj delete
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
 
 import org.codeforamerica.shiba.County;
@@ -21,7 +21,9 @@ public class CountyParser {
     String countyName = getFirstValue(applicationData.getPagesData(), IDENTIFY_COUNTY);
     String countyNameLD = "Other";
     if (applicationData.getFlow().equals(FlowType.LATER_DOCS)) {
+    	System.out.println("========== CountyParser LATERDOCS ==========");//TODO emj delete
     	countyNameLD = getFirstValue(applicationData.getPagesData(), IDENTIFY_COUNTY_LATER_DOCS);
+    	System.out.println("countyNameLD = " + countyNameLD);
     }
     if (applicationData.getFlow().equals(FlowType.HEALTHCARE_RENEWAL)) {
     	countyNameLD = getFirstValue(applicationData.getPagesData(), IDENTIFY_COUNTY_HEALTHCARE_RENEWAL);

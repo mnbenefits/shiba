@@ -15,7 +15,7 @@ import org.openqa.selenium.By;
 public class LaterDocsJourneyTest extends JourneyTest {
 
   
-  @Disabled("This test passes on VDIs but fails on GitHub")
+  //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void laterDocsFlow() {
      testPage.clickButton("Upload documents");
