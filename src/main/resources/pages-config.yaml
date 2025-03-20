@@ -2118,6 +2118,12 @@ pageDefinitions:
     headerKey: document-submit-confirmation.ready-to-submit-your-documents
     contextFragment: documentsSuccessContextFragment
     hasPrimaryButton: false
+  - &programDocuments
+    name: programDocuments
+    pageTitle: program-documents.title
+    headerKey: program-documents.header
+    headerHelpMessageKey: program-documents.help-message
+    hasPrimaryButton: true
   - &identifyCounty
     name: identifyCounty
     pageTitle: identify-county.title
@@ -7349,11 +7355,14 @@ workflow:
     pageConfiguration: *uploadDocumentsDeleteWarningPage
     nextPages:
       - pageName: uploadDocuments
-      
+  programDocuments:
+    pageConfiguration: *programDocuments
+    nextPages:
+      - pageName: nextSteps
   documentSubmitConfirmation:
     pageConfiguration: *documentSubmitConfirmation
     nextPages:
-      - pageName: nextSteps
+      - pageName: programDocuments
       - pageName: uploadDocuments
     datasources:
       - pageName: choosePrograms
@@ -7368,7 +7377,7 @@ workflow:
   documentOffboarding:
     pageConfiguration: *documentOffboarding
     nextPages:
-      - pageName: nextSteps
+      - pageName: programDocuments
       - pageName: documentRecommendation
     datasources:
       - pageName: choosePrograms
@@ -7555,6 +7564,7 @@ landmarkPages:
     - documentRecommendation
     - uploadDocuments
     - uploadDocumentsDeleteWarningPage
+    - programDocuments
     - documentOffboarding
     - documentSubmitConfirmation
     - nextSteps
@@ -7576,6 +7586,7 @@ landmarkPages:
     - healthcareRenewalMatchInfo
     - healthcareRenewalDocumentsSent
   nextStepsPage: nextSteps
+  programDocumentsPage: programDocuments
   terminalPage: success # the final page of the main flow ("Done! Your application has been submitted.")
   submissionConfirmationPage: submissionConfirmation
   feedbackPage: feedback

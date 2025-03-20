@@ -362,9 +362,9 @@ public class PageController {
           String.format("redirect:/pages/%s", landmarkPagesConfiguration.getSubmissionConfirmationPage()));
       }
 
-    if (shouldRedirectToNextStepsPage(pageName)) {
+    if (shouldRedirectToProgramDocumentsPage(pageName)) {
       return new ModelAndView(
-          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getNextStepsPage()));
+          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getProgramDocumentsPage()));
     }
     
    if (shouldRedirectToLaterDocsTerminalPage(pageName)) {
@@ -710,7 +710,7 @@ public class PageController {
 	       applicationData.isSubmitted();        
 	  }
 
-  private boolean shouldRedirectToNextStepsPage(String pageName) {
+  private boolean shouldRedirectToProgramDocumentsPage(String pageName) {
 	// a shortcut; if the application_id is null return false
 	// maybe this shortcut should exist at a higher level but lets look at its affect by having it here
 	if (applicationData.getId() == null) {
@@ -721,6 +721,7 @@ public class PageController {
         .getLandmarkPages();
     // Documents have been submitted in non-later docs flow and applicant is attempting to navigate back to upload/submit docs pages
     return !landmarkPagesConfiguration.isLandingPage(pageName) &&
+      	   !landmarkPagesConfiguration.isProgramDocumentsPage(pageName) &&
      	   !landmarkPagesConfiguration.isNextStepsPage(pageName) &&
     	   !landmarkPagesConfiguration.isTerminalPage(pageName) &&
     	   !landmarkPagesConfiguration.isFeedbackPage(pageName) &&
@@ -728,7 +729,7 @@ public class PageController {
     	   !landmarkPagesConfiguration.isHealthcareRenewalLandingPage(pageName) &&
     	   !landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName) &&
            applicationData.getFlow() != LATER_DOCS
-           && hasSubmittedDocuments(pageName, "shouldRedirectToNextStepsPage");
+           && hasSubmittedDocuments(pageName, "shouldRedirectToProgramDocumentsPage");
   }
 
   private boolean shouldRedirectToLaterDocsTerminalPage(String pageName) {
@@ -1205,7 +1206,7 @@ public class PageController {
     }
     LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
         .getLandmarkPages();
-    String nextPage = landmarkPagesConfiguration.getNextStepsPage();
+    String nextPage = landmarkPagesConfiguration.getProgramDocumentsPage();
     return new ModelAndView(String.format("redirect:/pages/%s", nextPage));
   }
 
