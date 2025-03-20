@@ -420,20 +420,23 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 	
 	/*
-	 *   This test verifies that if member of Leech Lake,
+	 *   This test verifies that if member of any tribal Nation other than WEN,
 	 *   the answer to nationsBoundary is Yes,
 	 *   And nation of residence is WEN
 	 *   the document routed WEN
 	 */
-	@Test
-	void routeLaterDocsToWENWhenMemberOfLeechLakeAndLivewithinWENBoundary()
+	@ParameterizedTest
+	@CsvSource({ "BoisForte", "FondDuLac",  "GrandPortage", "MilleLacsBandOfOjibwe",
+			"LowerSioux", "PrairieIsland", "RedLakeNation", "ShakopeeMdewakanton",
+			"UpperSioux", "OtherFederallyRecognizedTribe", "LeechLake" })
+	void routeLaterDocsToWENWhenMemberOfLeechLakeAndLivewithinWENBoundary(String tribalNation)
 			throws Exception {
 		postExpectingSuccess("matchInfo", Map.of("firstName", List.of("Dwight"), "lastName", List.of("Schrute"),
 				"dateOfBirth", List.of("01", "12", "1928")));
 
 		postExpectingSuccess("identifyCounty", Map.of("county", List.of("Clearwater")));
 		postExpectingSuccess("tribalNationMember", Map.of("isTribalNationMember", List.of("True")));
-		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of("LeechLake")));
+		postExpectingSuccess("selectTheTribe", Map.of("selectedTribe", List.of(tribalNation)));
 		postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "true");
 		
 		postExpectingSuccess("nationOfResidence", "selectedNationOfResidence", "WhiteEarthNation");
