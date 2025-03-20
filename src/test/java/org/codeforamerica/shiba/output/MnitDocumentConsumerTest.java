@@ -449,7 +449,7 @@ class MnitDocumentConsumerTest {
   // There are two flows to consider in regards to sending XML for uploaded docs to Dakota County.
   @ParameterizedTest
   @CsvSource({
-      "identifyCountyOrTribalNation,LATER_DOCS",
+      "identifyCounty,LATER_DOCS",
       "healthcareRenewalUpload,HEALTHCARE_RENEWAL"})
   void sendsXMLAndDocumentUploadsToDakota(String pageName, String flowName) throws IOException {
 	// set the application-level attributes
