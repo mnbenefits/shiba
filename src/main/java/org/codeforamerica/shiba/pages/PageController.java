@@ -1093,8 +1093,6 @@ public class PageController {
     String id = applicationData.getId();
 
     if (id == null) {
-      // TODO: session timeout perhaps?
-      log.info("Attempt to get application data with null id when navigating to page: " + pageName + ", invoked by: " + invokedBy);
       return false;
     }
 
