@@ -147,10 +147,9 @@ public class RoutingDecisionService {
 								selectedNationOfResidence)) {
 							return List.of(countyRoutingDestinations.get(Clearwater), tribalNations.get(RedLakeNation));
 						}
-						if (tribalNation.equals(TribalNation.LeechLake)) {
-							if (shouldRouteLaterDocsToWENWhenLiveWithinNatioBoundary(selectedNationOfResidence)) {
-								return List.of(tribalNations.get(WhiteEarthNation));
-							}
+
+						if (shouldRouteLaterDocsToWENWhenLiveWithinNatioBoundary(selectedNationOfResidence)) {
+							return List.of(tribalNations.get(WhiteEarthNation));
 						} else {
 							return List.of(countyRoutingDestinations.get(Clearwater));
 						}
