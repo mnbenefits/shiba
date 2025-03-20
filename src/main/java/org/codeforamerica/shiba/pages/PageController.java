@@ -362,9 +362,9 @@ public class PageController {
           String.format("redirect:/pages/%s", landmarkPagesConfiguration.getSubmissionConfirmationPage()));
       }
 
-    if (shouldRedirectToNextStepsPage(pageName)) {
+    if (shouldRedirectToProgramDocumentsPage(pageName)) {
       return new ModelAndView(
-          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getNextStepsPage()));
+          String.format("redirect:/pages/%s", landmarkPagesConfiguration.getProgramDocumentsPage()));
     }
     
    if (shouldRedirectToLaterDocsTerminalPage(pageName)) {
@@ -710,7 +710,7 @@ public class PageController {
 	       applicationData.isSubmitted();        
 	  }
 
-  private boolean shouldRedirectToNextStepsPage(String pageName) {
+  private boolean shouldRedirectToProgramDocumentsPage(String pageName) {
 	// a shortcut; if the application_id is null return false
 	// maybe this shortcut should exist at a higher level but lets look at its affect by having it here
 	if (applicationData.getId() == null) {
@@ -729,7 +729,7 @@ public class PageController {
     	   !landmarkPagesConfiguration.isHealthcareRenewalLandingPage(pageName) &&
     	   !landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName) &&
            applicationData.getFlow() != LATER_DOCS
-           && hasSubmittedDocuments(pageName, "shouldRedirectToNextStepsPage");
+           && hasSubmittedDocuments(pageName, "shouldRedirectToProgramDocumentsPage");
   }
 
   private boolean shouldRedirectToLaterDocsTerminalPage(String pageName) {
