@@ -13,6 +13,7 @@ public class LandmarkPagesConfiguration {
   private List<String> landingPages = new ArrayList<>();
   private List<String> postSubmitPages = new ArrayList<>();
   private HashSet<String> completed = new HashSet<>();
+  private String programDocumentsPage;
   private String nextStepsPage;
   private String recommendationsPage;
   private String terminalPage;
@@ -95,6 +96,10 @@ public class LandmarkPagesConfiguration {
 		map.put(submitUploadedDocumentsPage.get(i), uploadDocumentsPage.get(i) );
 	}
 	return map.get(pageName);
+  }
+
+  public boolean isProgramDocumentsPage(String pageName) {
+    return pageName.equals(programDocumentsPage);
   }
 
   public boolean isNextStepsPage(String pageName) {

@@ -489,12 +489,12 @@ public class ValidationTest extends AbstractFrameworkTest {
     
     @Test
     void shouldPassValidationForTribalNation() throws Exception {
-      postExpectingNextPageTitle("identifyCountyOrTribalNation", "tribalNation", "Mille Lacs Band of Ojibwe", lastPageTitle);
+      postExpectingNextPageTitle("selectTheTribe", "selectedTribe", "Mille Lacs Band of Ojibwe", lastPageTitle);
     }
     
     @Test
     void shouldFailValidationForInvalidTribalNationInput() throws Exception {
-    	postExpectingFailure("identifyCountyOrTribalNation", "tribalNation", "maliciousStringGiveMeYourPasswords");
+    	postExpectingFailure("selectTheTribe", "selectedTribe", "maliciousStringGiveMeYourPasswords");
     }
     
   }

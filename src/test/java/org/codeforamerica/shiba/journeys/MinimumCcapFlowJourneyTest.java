@@ -207,6 +207,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     testPage.clickContinue();// addingDocuments
     testPage.clickButton("I'll do this later");// documentRecommendation
     testPage.clickButton("Finish application");// documentOffboarding
+    testPage.clickContinue();// programDocuments
 
     assertThat(driver.getTitle()).isEqualTo("Your next steps");
     // Next steps screen

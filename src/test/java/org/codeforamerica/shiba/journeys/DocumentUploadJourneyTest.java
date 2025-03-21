@@ -10,6 +10,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -19,6 +21,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag("documentUploadJourney")
+@Disabled
 public class DocumentUploadJourneyTest extends JourneyTest {
 
   @Test

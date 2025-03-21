@@ -1057,7 +1057,7 @@ public class AbstractShibaMockMvcTest {
     var jpgFile = new MockMultipartFile(UPLOADED_JPG_FILE_NAME,
         new FileInputStream(getAbsoluteFilepathString(UPLOADED_JPG_FILE_NAME)));
     mockMvc.perform(multipart("/submit-documents").file(jpgFile).session(session).with(csrf()))
-        .andExpect(redirectedUrl("/pages/nextSteps"));
+        .andExpect(redirectedUrl("/pages/programDocuments"));
   }
 
   protected void deleteOnlyHouseholdMember() throws Exception {
