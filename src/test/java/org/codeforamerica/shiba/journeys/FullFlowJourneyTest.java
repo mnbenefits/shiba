@@ -463,6 +463,20 @@ public class FullFlowJourneyTest extends JourneyTest {
     // Assert that applicant can't resubmit docs at this point
     navigateTo("uploadDocuments");
     assertThat(driver.getTitle()).isEqualTo("Additional Program Documents");
+    
+    // Before continuing to the next steps page, verify that the programDocuments pages has the expected links.
+    // Note:  This does not verify that the links would actually load the PDFs into a new tab.
+    //        eDocs will open a new tab even when the PDF doesn't exist that is a bit harder to verify.
+    assertThat(driver.findElement(By.linkText("Domestic violence information"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("Do you have a disability?"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("Program information for cash, food, and child care programs"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("How to use your Minnesota EBT card"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("Income and Eligibility System and Work Reporting System"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("Your appeal rights"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("SNAP program infosheet"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("SNAP reporting responsibilities"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("Facts on voluntarily quitting your job if you are on SNAP"))).isNotNull();
+    
     testPage.clickContinue();
     
     // Verify that we navigated to the nextSteps page.
