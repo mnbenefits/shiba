@@ -1823,6 +1823,10 @@ legend.form-question {
 	font-weight: normal;
 }
 
+.program-documents-section section p{
+	 margin-bottom: 25px;
+}
+
 .text-bold {
 	font-weight: bold;
 }
