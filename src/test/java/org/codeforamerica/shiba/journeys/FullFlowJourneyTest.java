@@ -457,9 +457,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 
     // Verify that we navigated to the programDocuments page.
     assertThat(driver.getTitle()).isEqualTo("Additional Program Documents");
-    // Verify that "go back" return you to the programDocuments page
-    testPage.goBack();
-    assertThat(driver.getTitle()).isEqualTo("Additional Program Documents");
     // Assert that applicant can't resubmit docs at this point
     navigateTo("uploadDocuments");
     assertThat(driver.getTitle()).isEqualTo("Additional Program Documents");
@@ -1102,10 +1099,6 @@ public class FullFlowJourneyTest extends JourneyTest {
     // program documents
     // Verify that we navigated to the programDocuments page.
     assertThat(driver.getTitle()).isEqualTo("Additional Program Documents");
-    // Verify that "go back" returns you to the documentOffboarding page
-    testPage.goBack();
-    assertThat(driver.getTitle()).isEqualTo("Document offboarding");
-    
     testPage.clickButton("Finish application");
 
     // programDocuments
