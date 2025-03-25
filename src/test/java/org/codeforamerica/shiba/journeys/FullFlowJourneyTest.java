@@ -468,7 +468,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.linkText("Do you have a disability?"))).isNotNull();
     assertThat(driver.findElement(By.linkText("Program information for cash, food, and child care programs"))).isNotNull();
     assertThat(driver.findElement(By.linkText("How to use your Minnesota EBT card"))).isNotNull();
-    assertThat(driver.findElement(By.linkText("Income and Eligibility System and Work Reporting System"))).isNotNull();
+    assertThat(driver.findElement(By.linkText("Income and Eligibility Verification and Work Reporting System"))).isNotNull();
     assertThat(driver.findElement(By.linkText("Your appeal rights"))).isNotNull();
     assertThat(driver.findElement(By.linkText("SNAP program infosheet"))).isNotNull();
     assertThat(driver.findElement(By.linkText("SNAP reporting responsibilities"))).isNotNull();
