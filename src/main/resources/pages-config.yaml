@@ -5149,18 +5149,19 @@ workflow:
   emergencyType:
     pageConfiguration: *emergencyType
     nextPages:
+      - pageName: expeditedNotice
+        condition:
+          pageName: emergencyType
+          input: emergencyType
+          matcher: DOES_NOT_CONTAIN
+          value: OTHER_EMERGENCY
       - pageName: otherEmergency
+    datasources:
+      - pageName: emergencyType
   otherEmergency:
     pageConfiguration: *otherEmergency
     nextPages:
       - pageName: expeditedNotice
-    skipCondition:
-      pageName: emergencyType
-      input: emergencyType
-      matcher: DOES_NOT_CONTAIN
-      value: OTHER_EMERGENCY
-    datasources:
-      - pageName: emergencyType
   expeditedNotice:
     pageConfiguration: *expeditedNotice
     nextPages:
