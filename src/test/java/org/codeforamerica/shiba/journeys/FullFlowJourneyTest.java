@@ -1099,9 +1099,6 @@ public class FullFlowJourneyTest extends JourneyTest {
     // program documents
     // Verify that we navigated to the programDocuments page.
     assertThat(driver.getTitle()).isEqualTo("Additional Program Documents");
-    testPage.clickButton("Finish application");
-
-    // programDocuments
     testPage.clickContinue();
     
     // next steps

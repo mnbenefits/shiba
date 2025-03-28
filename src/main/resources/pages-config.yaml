@@ -2122,7 +2122,6 @@ pageDefinitions:
     name: programDocuments
     pageTitle: program-documents.title
     headerKey: program-documents.header
-    headerHelpMessageKey: program-documents.help-message
     hasPrimaryButton: true
     excludeGoBack: true
   - &identifyCounty
