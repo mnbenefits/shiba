@@ -1137,6 +1137,15 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Program Selection
 		programSelections.forEach(program -> testPage.enter("programs", program));
 		testPage.clickContinue();
+		
+		if (programSelections.contains(PROGRAM_EA)) {
+			// Emergency type page
+			testPage.enter("emergencyType", "other emergency");
+			testPage.clickContinue();
+			// Other emergency page
+			testPage.enter("otherEmergency","my emergency!");
+			testPage.clickContinue();
+		}
 		// Getting to know you (Personal Info intro page)
 		testPage.clickContinue();
 		testPage.clickContinue();
@@ -1173,6 +1182,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		programSelectionsWithCP.forEach(program -> testPage.enter("programs", program));
 		testPage.clickContinue();
 
+		// Emergency type page - already set to "other emergency"
+		testPage.clickContinue();
+		// Other emergency page
+		testPage.enter("otherEmergency","my emergency!");
+		testPage.clickContinue();
+		
 		// Test Certain pops offboarding flow first by selecting None of the above
 		testPage.enter("basicCriteria", "None of the above");
 		testPage.clickContinue();

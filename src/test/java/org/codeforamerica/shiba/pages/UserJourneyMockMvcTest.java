@@ -259,9 +259,10 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 			  assertNavigationRedirectsToCorrectNextPage("certainPopsConfirm", "introBasicInfo");
 			  break;
 		  }
-		  case "EA": {
+		  case "EA": {  // choosePrograms > emergencyType > otherEmergency > introBasicInfo
 			  postExpectingRedirect("choosePrograms", "programs", Arrays.stream(programs).toList(), "emergencyType");
-			  assertNavigationRedirectsToCorrectNextPage("otherEmergency", "expeditedNotice");
+			  postExpectingRedirect("emergencyType", "emergencyType", "OTHER_EMERGENCY", "otherEmergency");
+			  assertNavigationRedirectsToCorrectNextPage("otherEmergency", "introBasicInfo");
 			  break;
 		  }
 		  default: {
