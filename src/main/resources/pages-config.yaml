@@ -5148,19 +5148,47 @@ workflow:
   emergencyType:
     pageConfiguration: *emergencyType
     nextPages:
-      - pageName: expeditedNotice
+      - pageName: otherEmergency
         condition:
           pageName: emergencyType
           input: emergencyType
-          matcher: DOES_NOT_CONTAIN
+          matcher: CONTAINS
           value: OTHER_EMERGENCY
-      - pageName: otherEmergency
+      - pageName: basicCriteria
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: CERTAIN_POPS
+      - pageName: expeditedNotice
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: SNAP
+      - pageName: introBasicInfo
     datasources:
       - pageName: emergencyType
+      - pageName: choosePrograms
   otherEmergency:
     pageConfiguration: *otherEmergency
     nextPages:
+      - pageName: basicCriteria
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: CERTAIN_POPS
       - pageName: expeditedNotice
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: SNAP
+      - pageName: introBasicInfo
+    datasources:
+      - pageName: emergencyType
+      - pageName: choosePrograms
   expeditedNotice:
     pageConfiguration: *expeditedNotice
     nextPages:
