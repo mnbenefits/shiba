@@ -2848,7 +2848,6 @@ pageDefinitions:
               messageKey: emergency-type.first-month-rent-rent-or-damage-deposit
             - value: OTHER_EMERGENCY
               messageKey: emergency-type.other-emergency
-              isNone: true  
   - &otherEmergency
     name: otherEmergency
     pageTitle: other-emergency-type.title
