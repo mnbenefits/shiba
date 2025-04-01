@@ -69,7 +69,7 @@ jobs:
     - name: Veracode Upload And Scan
       uses: veracode/veracode-uploadandscan-action@0.2.7
       with:
-        appname: DHS - MNbenefits # default is ${{ github.repository }}
+        appname: DCYF - mnbenefits/shiba # default is ${{ github.repository }}
     # createprofile
         createprofile: true # default is true
     # filepath
