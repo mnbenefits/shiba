@@ -71,7 +71,7 @@ jobs:
       with:
         appname: DCYF - mnbenefits/shiba # default is ${{ github.repository }}
     # createprofile
-        createprofile: true # default is true
+        createprofile: false # default is true
     # filepath
         filepath: veracode-scan-target.zip
         scanallnonfataltoplevelmodules: true
