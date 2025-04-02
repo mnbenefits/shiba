@@ -2834,6 +2834,7 @@ pageDefinitions:
     name: emergencyType
     pageTitle: emergency-type.title
     headerKey: emergency-type.describes-emergency
+    contextFragment: emergencyTypeContextFragment
     headerHelpMessageKey: emergency-type.check-all-that-apply
     inputs:
       - name: emergencyType
