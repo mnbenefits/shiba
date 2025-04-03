@@ -153,7 +153,7 @@ public class ApplicationDataParser {
         .put(Field.APPLICANT_PROGRAMS, new ParsingCoordinate("choosePrograms", "programs"));
     coordinatesMap
         .put(Field.HOUSEHOLD_PROGRAMS, new ParsingCoordinate("householdMemberInfo", "programs"));
-    coordinatesMap.put(Field.EA_COMMENTS, new ParsingCoordinate("otherEmergency", "otherEmergency"));    //TODO emj new
+    coordinatesMap.put(Field.EA_COMMENTS, new ParsingCoordinate("otherEmergency", "otherEmergency"));
     coordinatesMap.put(Field.EMERGENCY_TYPE, new ParsingCoordinate("emergencyType", "emergencyType"));
     coordinatesMap.put(Field.PREPARING_MEALS_TOGETHER,
         new ParsingCoordinate("preparingMealsTogether", "isPreparingMealsTogether"));

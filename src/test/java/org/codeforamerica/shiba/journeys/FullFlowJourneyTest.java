@@ -1140,7 +1140,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		
 		if (programSelections.contains(PROGRAM_EA)) {
 			// Emergency type page
-			testPage.enter("emergencyType", "other emergency");
+			testPage.enter("emergencyType", "Other emergency");
 			testPage.clickContinue();
 			// Other emergency page
 			testPage.enter("otherEmergency","my emergency!");
