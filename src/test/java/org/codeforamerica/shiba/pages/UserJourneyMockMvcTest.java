@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -223,6 +224,81 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
     selectedOption = applicationData.getPagesData()
         .safeGetPageInputValue("outOfStateAddressNotice", "selectedOutOfStateAddressOption").get(0);
     assertThat(selectedOption).isEqualTo("QUIT");
+  }
+
+  /**
+   * These test cases verify the page navigation within the Emergency Type section of MNbenefits.
+   * That is, it verifies the flow from the choosePrograms page to the introBasicInfo page based
+   * on the programs (EA, SNAP) and emergencyType choice (either EVICTION_NOTICE or OTHER_EMERGENCY) that is made.
+   * 
+   * @param programs  - a list of programs, must include EA, SNAP is optional
+   * @param emergencyType - can be either EVICTION_NOTICE or OTHER_EMERGENCY
+   * @throws Exception
+   */
+  @ParameterizedTest
+  @CsvSource(value = {
+		  "EA, EVICTION_NOTICE",       // choosePrograms > emergencyType > introBasicInfo
+		  "EA, OTHER_EMERGENCY",       // choosePrograms > emergencyType > otherEmergency > introBasicInfo
+		  "SNAP;EA, EVICTION_NOTICE",  // choosePrograms > emergencyType > expeditedNotice > introBasicInfo
+		  "SNAP;EA, OTHER_EMERGENCY"   // choosePrograms > emergencyType > otherEmergency > expeditedNotice > introBasicInfo
+		  })
+  void shouldNavigateEmergencyTypeFlow(String programs, String emergencyType) throws Exception {
+	  List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
+	  postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Chisago"));
+	  postExpectingRedirect("choosePrograms", "programs", programsList, "emergencyType");
+	  if (programsList.contains("SNAP")) {
+		  if (emergencyType.equals("OTHER_EMERGENCY")) {
+			  postExpectingRedirect("emergencyType", "emergencyType", emergencyType, "otherEmergency");
+			  assertNavigationRedirectsToCorrectNextPage("otherEmergency", "expeditedNotice");
+		  } else {
+			  postExpectingRedirect("emergencyType", "emergencyType", emergencyType, "expeditedNotice");
+		  }
+		  assertNavigationRedirectsToCorrectNextPage("expeditedNotice", "introBasicInfo");
+	  } else {
+		  if (emergencyType.equals("OTHER_EMERGENCY")) {
+			  postExpectingRedirect("emergencyType", "emergencyType", emergencyType, "otherEmergency");
+			  assertNavigationRedirectsToCorrectNextPage("otherEmergency", "introBasicInfo");
+		  } else {
+			  assertNavigationRedirectsToCorrectNextPage("emergencyType", "introBasicInfo");
+		  }
+	  }
+  }
+  
+  /**
+   * These test cases verify the page navigation within the Emergency Type section of MNbenefits.
+   * That is, it verifies the flow from the choosePrograms page to the introBasicInfo page based
+   * on the programs (EA, SNAP, CERTAIN_POPS) and emergencyType choice (either EVICTION_NOTICE or OTHER_EMERGENCY) that is made.
+   * 
+   * @param programs  - a list of programs, must include EA and CERTAIN_POPS, SNAP is optional
+   * @param emergencyType - can be either EVICTION_NOTICE or OTHER_EMERGENCY
+   * @throws Exception
+   */
+  @ParameterizedTest
+  @CsvSource(value = {
+		  "EA;CERTAIN_POPS, EVICTION_NOTICE",      // choosePrograms > emergencyType > basicCriteria > certainPopsConfirm > introBasicInfo
+		  "EA;CERTAIN_POPS, OTHER_EMERGENCY",      // choosePrograms > emergencyType > otherEmergency > basicCriteria > certainPopsConfirm > introBasicInfo
+		  "SNAP;EA;CERTAIN_POPS, EVICTION_NOTICE", // choosePrograms > emergnecyType > basicCriteria > certainPopsConfirm > expeditedNotice > introBasicInfo
+		  "SNAP;EA;CERTAIN_POPS, OTHER_EMERGENCY"  // choosePrograms > emergencyType > otherEmergency > basicCriteria > certainPopsConfirm > expeditedNotice > introBasicInfo
+		  })
+  void shouldNavigateEmergencyTypeFlowWithCertainPops(String programs, String emergencyType) throws Exception {
+	  List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
+	  // Use Chisago County to enable Certain Pops.
+	  postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Chisago"));
+	  postExpectingRedirect("choosePrograms", "programs", programsList, "emergencyType");
+	  if (emergencyType.equals("OTHER_EMERGENCY")) {
+		  postExpectingRedirect("emergencyType", "emergencyType", emergencyType, "otherEmergency");
+		  postExpectingRedirect("otherEmergency", "otherEmergency", "a different emergency", "basicCriteria");
+	  } else {
+		  postExpectingRedirect("emergencyType", "emergencyType", emergencyType, "basicCriteria");
+	  }
+	  // Certain Pops basic criteria needs to be something other than "NONE", use "SIXTY_FIVE_OR_OLDER"
+	  postExpectingRedirect("basicCriteria", "basicCriteria", "SIXTY_FIVE_OR_OLDER", "certainPopsConfirm");
+	  if (programsList.contains("SNAP")) {
+		  assertNavigationRedirectsToCorrectNextPage("certainPopsConfirm", "expeditedNotice");
+		  assertNavigationRedirectsToCorrectNextPage("expeditedNotice", "introBasicInfo");
+	  } else {
+		  assertNavigationRedirectsToCorrectNextPage("certainPopsConfirm", "introBasicInfo");
+	  }
   }
 
   /**
