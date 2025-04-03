@@ -2,6 +2,9 @@ package org.codeforamerica.shiba.output.caf;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLICANT_PROGRAMS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.EA_COMMENTS;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.EMERGENCY_TYPE;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_FIRST_NAME;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_LAST_NAME;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_PROGRAMS;
@@ -73,6 +76,7 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
   public List<DocumentField> prepareDocumentFields(Application application, Document document,
       Recipient recipient) {
     var programsInput = getPrograms(application);
+    var emergencyInput = getEmergencyAssistance(application);
     var fullNameInput = getFullName(application);
     var tribalAffiliationInput = getTribalAffiliation(application);
     var tribalNationBoundary = getTribalNationBoundary(application);
@@ -80,11 +84,58 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
     var countyInstructionsInput = getCountyInstructions(application, recipient, document);
     var utmSourceInput = getUtmSource(application, document);
     var documentDestinations = getDocumentDestinations(application, recipient, document);
-    return combineCoverPageInputs(programsInput, fullNameInput, countyInstructionsInput,
+    return combineCoverPageInputs(programsInput, emergencyInput, fullNameInput, countyInstructionsInput,
         utmSourceInput, householdMemberInputs, tribalAffiliationInput, tribalNationBoundary, documentDestinations);
   }
 
-  @Nullable
+	private List<DocumentField> getEmergencyAssistance(Application application) {
+		List<DocumentField> inputsForEmergencyAssistance = new ArrayList<>();
+		List<String> programs = new ArrayList<>(
+				getValues(application.getApplicationData().getPagesData(), APPLICANT_PROGRAMS));
+
+		if (!programs.isEmpty() && programs.contains("EA")) {
+
+			String value = getFirstValue(application.getApplicationData().getPagesData(), EA_COMMENTS);
+
+			if (value != null) {
+				inputsForEmergencyAssistance.add(new DocumentField("coverPage", "otherEmergency", value, SINGLE_VALUE));
+			}
+			List<String> eaSelections = getValues(application.getApplicationData().getPagesData(), EMERGENCY_TYPE);
+			if (eaSelections.isEmpty()) {
+				inputsForEmergencyAssistance
+						.add(new DocumentField("coverPage", "emergencyType", "No response", SINGLE_VALUE));
+			} else {
+				value = prepareEmergencyResponses(eaSelections);
+				inputsForEmergencyAssistance.add(new DocumentField("coverPage", "emergencyType", value, SINGLE_VALUE));
+			}
+
+		}
+		return inputsForEmergencyAssistance;
+	}
+
+	public String prepareEmergencyResponses(List<String> eaSelections) {
+		List<String> list = new ArrayList<>();
+		eaSelections.forEach(selection -> {
+			switch (selection) {
+			case "EVICTION_NOTICE":
+				list.add("Eviction Notice");
+				break;
+			case "UTILITY_SHUT_OFF":
+				list.add("Utility Shut Off");
+				break;
+			case "FIRST_MONTH_RENT_OR_DAMAGE":
+				list.add("First month rent or damage");
+				break;
+			case "OTHER_EMERGENCY":
+				list.add("Other emergency");
+				break;
+			}
+		});
+
+		return String.join(", ", list);
+	}
+
+@Nullable
   private DocumentField getUtmSource(Application application, Document document) {
     DocumentField utmSourceInput = null;
     if (document == Document.CCAP) {
@@ -97,12 +148,13 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
   }
 
   @NotNull
-  private List<DocumentField> combineCoverPageInputs(DocumentField programsInput,
+  private List<DocumentField> combineCoverPageInputs(DocumentField programsInput, List<DocumentField> emergencyInput,
       DocumentField fullNameInput, DocumentField countyInstructionsInput,
       DocumentField utmSourceInput, List<DocumentField> householdMemberInputs,
       DocumentField tribalAffiliationInput, DocumentField tribalNationBoundary, DocumentField documentDestinationsInput) {
     var everythingExceptHouseholdMembers = new ArrayList<DocumentField>();
     everythingExceptHouseholdMembers.add(programsInput);
+    everythingExceptHouseholdMembers.addAll(emergencyInput);
     everythingExceptHouseholdMembers.add(fullNameInput);
     everythingExceptHouseholdMembers.add(tribalAffiliationInput);
     everythingExceptHouseholdMembers.add(tribalNationBoundary);

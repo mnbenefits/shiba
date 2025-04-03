@@ -2829,7 +2829,35 @@ pageDefinitions:
               messageKey: unearned-income.tribal-payments
             - value: NO_UNEARNED_INCOME_SELECTED
               messageKey: general.inputs.none-of-the-above
-              isNone: true
+              isNone: true		  
+  - &emergencyType
+    name: emergencyType
+    pageTitle: emergency-type.title
+    headerKey: emergency-type.describes-emergency
+    contextFragment: emergencyTypeContextFragment
+    headerHelpMessageKey: emergency-type.check-all-that-apply
+    inputs:
+      - name: emergencyType
+        type: CHECKBOX
+        options:
+          selectableOptions:
+            - value: EVICTION_NOTICE
+              messageKey: emergency-type.eviction-notice
+            - value: UTILITY_SHUT_OFF
+              messageKey: emergency-type.utility-shut-off
+            - value: FIRST_MONTH_RENT_OR_DAMAGE
+              messageKey: emergency-type.first-month-rent-rent-or-damage-deposit
+            - value: OTHER_EMERGENCY
+              messageKey: emergency-type.other-emergency
+  - &otherEmergency
+    name: otherEmergency
+    pageTitle: other-emergency-type.title
+    headerKey: other-emergency-type.tell-us-your-emergency
+    headerHelpMessageKey: other-emergency-type.brief-description
+    inputs:
+      - name: otherEmergency
+        type: TEXTAREA
+        helpMessageKey: general.inputs.optional
   - &unearnedIncomeSources
     name: unearnedIncomeSources
     pageTitle: unearned-income-sources.title
@@ -5098,6 +5126,12 @@ workflow:
   choosePrograms:
     pageConfiguration: *choosePrograms
     nextPages:
+      - pageName: emergencyType
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: EA
       - pageName: basicCriteria
         condition:
           pageName: choosePrograms
@@ -5111,6 +5145,50 @@ workflow:
           matcher: CONTAINS
           value: SNAP
       - pageName: introBasicInfo
+  emergencyType:
+    pageConfiguration: *emergencyType
+    nextPages:
+      - pageName: otherEmergency
+        condition:
+          pageName: emergencyType
+          input: emergencyType
+          matcher: CONTAINS
+          value: OTHER_EMERGENCY
+      - pageName: basicCriteria
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: CERTAIN_POPS
+      - pageName: expeditedNotice
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: SNAP
+      - pageName: introBasicInfo
+    datasources:
+      - pageName: emergencyType
+      - pageName: choosePrograms
+  otherEmergency:
+    pageConfiguration: *otherEmergency
+    nextPages:
+      - pageName: basicCriteria
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: CERTAIN_POPS
+      - pageName: expeditedNotice
+        condition:
+          pageName: choosePrograms
+          input: programs
+          matcher: CONTAINS
+          value: SNAP
+      - pageName: introBasicInfo
+    datasources:
+      - pageName: emergencyType
+      - pageName: choosePrograms
   expeditedNotice:
     pageConfiguration: *expeditedNotice
     nextPages:

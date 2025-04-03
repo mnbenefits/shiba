@@ -391,6 +391,8 @@ mappings:
     tribal: TRIBAL_NATION
     nationOfResidence: NATION_OF_RESIDENCE
     documentDestinations: DOCUMENT_DESTINATIONS
+    emergencyType: EMERGENCY_TYPE
+    otherEmergency: EA_COMMENTS
   incomePerPayPeriod:
     incomePerPayPeriod: INCOME_PER_PAY_PERIOD
   nonSelfEmployment_incomePerPayPeriod:

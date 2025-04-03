@@ -76,7 +76,7 @@
                   rows="6"
                   maxlength="500"
                   th:id="${input.name}"
-                  th:value="${(!inputData.value.isEmpty()) ? inputData.value[0] : ''}"
+                  th:text="${(!inputData.value.isEmpty()) ? inputData.value[0] : ''}"
                   th:name="${formInputName}"
         ></textarea>
         <input th:case="${T(org.codeforamerica.shiba.pages.config.FormInputType).NUMBER}"
