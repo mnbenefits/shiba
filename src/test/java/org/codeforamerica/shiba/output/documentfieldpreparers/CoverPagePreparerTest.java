@@ -447,4 +447,103 @@ class CoverPagePreparerTest {
 
   }
   
+  // Test the case where OTHER_EMERGENCY is not selected.
+  @Test
+  void shouldIncludeEmergencyType() {
+	new TestApplicationDataBuilder(applicationData)
+        .withApplicantPrograms(List.of("EA"))
+        .withEmergencyType(List.of("UTILITY_SHUT_OFF"));
+	  
+    Application application = Application.builder()
+        .id("someId")
+        .completedAt(ZonedDateTime.now())
+        .applicationData(applicationData)
+        .county(Olmsted)
+        .timeToComplete(null)
+        .build();
+
+    List<DocumentField> documentFields = preparer
+        .prepareDocumentFields(application, CAF, Recipient.CASEWORKER);
+    assertThat(documentFields).contains(
+        new DocumentField(
+            "coverPage",
+            "emergencyType",
+            "Utility Shut Off",
+            DocumentFieldType.SINGLE_VALUE
+        ));
+    // We have loop through the list to verify there is no otherEmergency DocumentField 
+    for (DocumentField documentField : documentFields) {
+    	assertThat(documentField.getName()).isNotEqualTo("otherEmergency");
+    }
+  }
+
+  // Test the case where OTHER_EMERGENCY is selected.
+  @Test
+  void shouldIncludeOtherEmergency() {
+	new TestApplicationDataBuilder(applicationData)
+        .withApplicantPrograms(List.of("EA"))
+        .withEmergencyType(List.of("UTILITY_SHUT_OFF", "OTHER_EMERGENCY"), List.of("my unique emergency"));
+	  
+    Application application = Application.builder()
+        .id("someId")
+        .completedAt(ZonedDateTime.now())
+        .applicationData(applicationData)
+        .county(Olmsted)
+        .timeToComplete(null)
+        .build();
+
+    List<DocumentField> documentFields = preparer
+        .prepareDocumentFields(application, CAF, Recipient.CASEWORKER);
+    assertThat(documentFields).contains(
+        new DocumentField(
+            "coverPage",
+            "emergencyType",
+            "Utility Shut Off, Other emergency",
+            DocumentFieldType.SINGLE_VALUE
+        ));
+    assertThat(documentFields).contains(
+        new DocumentField(
+            "coverPage",
+            "otherEmergency",
+            "my unique emergency",
+            DocumentFieldType.SINGLE_VALUE
+        ));
+  }
+  
+  // This test emulates the case where OTHER_EMERGENCY was initially selected but the applicant
+  // then navigated backward and de-selected OTHER_EMERGENCY.  The data for the otherEmergency
+  // page still exists but is not valid in this case.
+  @Test
+  void shouldNotIncludeOtherEmergencyWhenOtherEmergencyIsNotSelected() {
+	new TestApplicationDataBuilder(applicationData)
+        .withApplicantPrograms(List.of("EA"))
+        .withEmergencyType(List.of("UTILITY_SHUT_OFF"), List.of("not applicable"));
+	  
+    Application application = Application.builder()
+        .id("someId")
+        .completedAt(ZonedDateTime.now())
+        .applicationData(applicationData)
+        .county(Olmsted)
+        .timeToComplete(null)
+        .build();
+
+    List<DocumentField> documentFields = preparer
+        .prepareDocumentFields(application, CAF, Recipient.CASEWORKER);
+    assertThat(documentFields).contains(
+        new DocumentField(
+            "coverPage",
+            "emergencyType",
+            "Utility Shut Off",
+            DocumentFieldType.SINGLE_VALUE
+        ));
+    // Expect otherEmergency DocumentField to not exist because OTHER_EMERGENCY is not selected
+    assertThat(documentFields).doesNotContain(
+        new DocumentField(
+            "coverPage",
+            "otherEmergency",
+            "not applicable",
+            DocumentFieldType.SINGLE_VALUE
+        ));
+  }
+  
 }

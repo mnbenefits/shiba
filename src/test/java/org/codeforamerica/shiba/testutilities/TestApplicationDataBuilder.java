@@ -45,6 +45,20 @@ public class TestApplicationDataBuilder {
     return this;
   }
 
+  public TestApplicationDataBuilder withEmergencyType(List<String> emergencyTypes, List<String> otherEmergencyComment) {
+    PageData emergencyTypePage = getPageData("emergencyType");
+    emergencyTypePage.put("emergencyType", new InputData(emergencyTypes));
+    PageData otherEmergencyPage = getPageData("otherEmergency");
+    otherEmergencyPage.put("otherEmergency", new InputData(otherEmergencyComment));
+    return this;
+  }
+
+  public TestApplicationDataBuilder withEmergencyType(List<String> emergencyTypes) {
+    PageData emergencyTypePage = getPageData("emergencyType");
+    emergencyTypePage.put("emergencyType", new InputData(emergencyTypes));
+    return this;
+  }
+
   public TestApplicationDataBuilder withPersonalInfo() {
     PageData personalInfo = getPageData("personalInfo");
     personalInfo.put("firstName", new InputData(List.of("Jane")));

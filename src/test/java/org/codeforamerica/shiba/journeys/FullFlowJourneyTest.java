@@ -541,6 +541,8 @@ public class FullFlowJourneyTest extends JourneyTest {
         This application was submitted to Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
                     
         For more support, you can call Chisago County (888-234-1246).""");
+    assertCcapFieldEquals("EMERGENCY_TYPE","Other emergency");
+    assertCcapFieldEquals("EA_COMMENTS","my emergency!");
     assertCcapFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS");
     assertCcapFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCcapFieldEquals("UTM_SOURCE", "");
@@ -665,6 +667,8 @@ public class FullFlowJourneyTest extends JourneyTest {
             This application was submitted to Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
             For more support, you can call Chisago County (888-234-1246).""");
+    assertCafFieldEquals("EMERGENCY_TYPE","Other emergency");
+    assertCafFieldEquals("EA_COMMENTS","my emergency!");
     assertCafFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS");
     assertCafFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
@@ -808,6 +812,8 @@ public class FullFlowJourneyTest extends JourneyTest {
                 This application was submitted to Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
                 For more support, you can call Chisago County (888-234-1246).""");
+    assertCertainPopsFieldEquals("EMERGENCY_TYPE","Other emergency");
+    assertCertainPopsFieldEquals("EA_COMMENTS","my emergency!");
     assertCertainPopsFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS");
     assertCertainPopsFieldEquals("FULL_NAME", "Ahmed St. George");
     assertCertainPopsFieldEquals("TRIBAL_NATION", "Bois Forte");

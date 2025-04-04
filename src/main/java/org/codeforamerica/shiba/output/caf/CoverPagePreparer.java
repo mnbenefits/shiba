@@ -97,10 +97,10 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
 
 			String value = getFirstValue(application.getApplicationData().getPagesData(), EA_COMMENTS);
 
-			if (value != null) {
+			List<String> eaSelections = getValues(application.getApplicationData().getPagesData(), EMERGENCY_TYPE);
+			if (eaSelections.contains("OTHER_EMERGENCY") && value != null) {
 				inputsForEmergencyAssistance.add(new DocumentField("coverPage", "otherEmergency", value, SINGLE_VALUE));
 			}
-			List<String> eaSelections = getValues(application.getApplicationData().getPagesData(), EMERGENCY_TYPE);
 			if (eaSelections.isEmpty()) {
 				inputsForEmergencyAssistance
 						.add(new DocumentField("coverPage", "emergencyType", "No response", SINGLE_VALUE));
