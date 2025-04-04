@@ -118,7 +118,7 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
 		eaSelections.forEach(selection -> {
 			switch (selection) {
 			case "EVICTION_NOTICE":
-				list.add("Eviction Notice");
+				list.add("Past due rent or Eviction Notice");
 				break;
 			case "UTILITY_SHUT_OFF":
 				list.add("Utility Shut Off");
