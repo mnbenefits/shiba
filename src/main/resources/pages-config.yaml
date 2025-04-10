@@ -4428,11 +4428,24 @@ pageDefinitions:
     name: raceAndEthnicity
     pageTitle: race-and-ethnicity.title
     headerKey: race-and-ethnicity.what-races-or-ethnicities-do-you-identify-with
-    headerHelpMessageKey: race-and-ethnicity.select-all-that-apply
     contextFragment: raceAndEthnicityFragment
     inputs:
+      - name: earnLessMoneyThisMonth
+        type: RADIO
+        promptMessage:
+          promptMessageKey: race-and-ethnicity.identify-ethnicity
+        helpMessageKey: race-and-ethnicity.select-one
+        options:
+          selectableOptions:
+            - value: HISPANIC_OR_LATINO
+              messageKey: race-and-ethnicity.hispanic-or-latino
+            - value:  NOT_HISPANIC_OR_LATINO
+              messageKey: race-and-ethnicity.not-hispanic-or-latino
       - name: raceAndEthnicity
         type: CHECKBOX
+        promptMessage:
+          promptMessageKey: race-and-ethnicity.which-races-best-dscribe-you
+        helpMessageKey: race-and-ethnicity.select-all-that-apply
         validators:
           - validation: SELECT_AT_LEAST_ONE
             errorMessageKey: general.validation.make-sure-you-answer-this-question
@@ -4444,8 +4457,6 @@ pageDefinitions:
               messageKey: race-and-ethnicity.asian
             - value: BLACK_OR_AFRICAN_AMERICAN
               messageKey: race-and-ethnicity.black-or-african-american
-            - value: HISPANIC_LATINO_OR_SPANISH
-              messageKey: race-and-ethnicity.hispanic-latino-or-spanish
             - value: MIDDLE_EASTERN_OR_NORTH_AFRICAN
               messageKey: race-and-ethnicity.middle-eastern-or-north-african
             - value: NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER
