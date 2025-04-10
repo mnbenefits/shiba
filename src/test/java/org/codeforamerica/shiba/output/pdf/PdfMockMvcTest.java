@@ -937,6 +937,19 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Yes", caf);
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Off", caf);
 			}
+			
+			@Test
+			void shouldNotMarkUnableToDetermineWithHispanicLatinoOrSpanishAndAsianSelected33() throws Exception {
+				selectPrograms("EA");
+
+				postExpectingSuccess("emergencyType",
+						Map.of("emergencyType", List.of("EVICTION_NOTICE", "UTILITY_SHUT_OFF", "FIRST_MONTH_RENT_OR_DAMAGE", "OTHER_EMERGENCY")));
+				var caf = submitAndDownloadCaf();
+				assertPdfFieldEquals("EVICTION_NOTICE", "Yes", caf);
+				assertPdfFieldEquals("UTILITY_SHUT_OFF", "Yes", caf);
+				assertPdfFieldEquals("FIRST_MONTH_RENT_OR_DAMAGE", "Yes", caf);
+//				assertPdfFieldEquals("OTHER_EMERGENCY", "Off", caf);
+			}
 
 			@Test
 			void shouldMarkWhiteWhenWhiteSelected() throws Exception {

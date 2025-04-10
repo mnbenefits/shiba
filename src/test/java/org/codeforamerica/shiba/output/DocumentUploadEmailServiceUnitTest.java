@@ -155,7 +155,7 @@ public class DocumentUploadEmailServiceUnitTest {
 		verifyNoMoreInteractions(commHubEmailSendingClient);
 	}
 
-	@Disabled("Test disabled for now to be fixed at a later time")
+	//@Disabled("Test disabled for now to be fixed at a later time")
 	@Test
 	void shouldHandleEmailSendingFailure()throws Exception {
 	
