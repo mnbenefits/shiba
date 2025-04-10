@@ -118,7 +118,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 		testPage.clickLink("remove");
 	}
 
-	@Disabled("This test is disabled because it runs inconsistently. It needs analysis and a fix.")
+	//@Disabled("This test is disabled because it runs inconsistently. It needs analysis and a fix.")
 	@Test
 	void shouldDetectVirusInUploadFileWithVbaScript() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();

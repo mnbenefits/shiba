@@ -2,27 +2,49 @@ name: Test action
 on:
   workflow_dispatch:
 
+env:
+  mnbenefits_env_url: any_string_works_for_github_tests
+
 jobs:
-  debug:
-    name: Show environment variables
+  virus-upload-test:
+    name: Run Virus Upload tests
     runs-on: ubuntu-latest
     steps:
-      - name: Display env vars
-        env:
-          OPENSHIFT_IMAGE_LOCATION: ${{ secrets.OPENSHIFT_IMAGE_LOCATION }} 
-#          SERVER_PROD: ${{ secrets.OPENSHIFT_SERVER_PROD }}
-#          TOKEN_PROD: ${{ secrets.OPENSHIFT_TOKEN_PROD }}
-#          NAMESPACE_PROD: ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
-#          NAMESPACE_NON_PROD: ${{ secrets.OPENSHIFT_TOKEN_NON_PROD }}
+      - uses: actions/checkout@v4
+      - name: Set up ChromeDriver
+        uses: nanasess/setup-chromedriver@v2.3.0
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+          cache: 'gradle'
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Linux info
         run: |
-           echo ${{ secrets.OPENSHIFT_IMAGE_LOCATION }}
-#          echo ${{secrets.OPENSHIFT_SERVER_PROD}} | sed 's/./& /g'
-#          echo ${{secrets.OPENSHIFT_TOKEN_PROD}} | sed 's/./& /g'
-#          echo ${{secrets.OPENSHIFT_NAMESPACE_PROD}} | sed 's/./& /g'
-#          echo ${{secrets.OPENSHIFT_TOKEN_NON_PROD}} | sed 's/./& /g'
-  #   - name: Post to webhook
-  #      uses: fjogeleit/http-request-action@v1
-  #      with:
-  #       url: 'https://webhook.site/108d58e1-026b-45b4-8b7f-8278824e2dec'
-  #        method: 'POST'
-  #        data: ${{ secrets.OPENSHIFT_SERVER_PROD }}
+          uname -a
+      - name: VM cpu
+        run: |
+          lscpu
+      - name: VM disk
+        run: |
+          lsblk
+      - name: VM memory
+        run: |
+          free -m
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Test with Gradle
+        run: ./gradlew virusUploadTest
+      - name: Cleanup Gradle Cache
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
