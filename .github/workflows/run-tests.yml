@@ -4,6 +4,7 @@ on:
   push:
     branches-ignore:
       - staging
+      - tests-on-github
       
 env:
   mnbenefits_env_url: any_string_works_for_github_tests
