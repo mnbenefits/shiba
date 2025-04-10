@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE_AND_ETHNICITY;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE;
 
 import java.util.List;
 import org.springframework.stereotype.Component;
@@ -16,6 +16,6 @@ public class RaceAndEthnicityPreparer extends OneToManyDocumentFieldPreparer {
 
   @Override
   protected OneToManyParams getParams() {
-    return new OneToManyParams("raceAndEthnicity", RACE_AND_ETHNICITY, RACE_AND_ETHNICITY_OPTIONS);
+    return new OneToManyParams("raceAndEthnicity", RACE, RACE_AND_ETHNICITY_OPTIONS);
   }
 }

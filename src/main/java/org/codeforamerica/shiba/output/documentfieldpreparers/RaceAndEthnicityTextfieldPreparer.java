@@ -1,8 +1,7 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE_AND_ETHNICITY;
-
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -23,7 +22,7 @@ public class RaceAndEthnicityTextfieldPreparer implements DocumentFieldPreparer 
       Recipient recipient) {
 	  
     PagesData pagesData = application.getApplicationData().getPagesData();
-    List<String> raceAndEthnicityValues = getValues(pagesData, RACE_AND_ETHNICITY);
+    List<String> raceAndEthnicityValues = getValues(pagesData, RACE);
     List<DocumentField> results = new ArrayList<DocumentField>();
     StringJoiner joiner = new StringJoiner(", ");
     

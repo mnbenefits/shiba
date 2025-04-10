@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE_AND_ETHNICITY;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE;
 import java.util.ArrayList;
 import java.util.List;
 import org.codeforamerica.shiba.application.Application;
@@ -20,7 +20,7 @@ public class MiddleEasternNorthAfricanWhiteAndOthersPreparer implements Document
       Recipient recipient) {
 
     PagesData pagesData = application.getApplicationData().getPagesData();
-    List<String> raceAndEthnicityValues = getValues(pagesData, RACE_AND_ETHNICITY);
+    List<String> raceAndEthnicityValues = getValues(pagesData, RACE);
     String otherRaceAndEthnicityValue = pagesData.getPageInputFirstValue("raceAndEthnicity", "otherRaceOrEthnicity");  
    
     List<DocumentField> middleEasternNorthAfricanDocumentField = new ArrayList<>();

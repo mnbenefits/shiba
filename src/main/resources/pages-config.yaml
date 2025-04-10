@@ -4430,7 +4430,7 @@ pageDefinitions:
     headerKey: race-and-ethnicity.what-races-or-ethnicities-do-you-identify-with
     contextFragment: raceAndEthnicityFragment
     inputs:
-      - name: earnLessMoneyThisMonth
+      - name: ethnicity
         type: RADIO
         promptMessage:
           promptMessageKey: race-and-ethnicity.identify-ethnicity
@@ -4441,7 +4441,7 @@ pageDefinitions:
               messageKey: race-and-ethnicity.hispanic-or-latino
             - value:  NOT_HISPANIC_OR_LATINO
               messageKey: race-and-ethnicity.not-hispanic-or-latino
-      - name: raceAndEthnicity
+      - name: race
         type: CHECKBOX
         promptMessage:
           promptMessageKey: race-and-ethnicity.which-races-best-dscribe-you

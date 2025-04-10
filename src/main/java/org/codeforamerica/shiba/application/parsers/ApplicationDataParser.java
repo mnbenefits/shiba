@@ -411,8 +411,11 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.WHO_ARE_NON_US_CITIZENS,
         new ParsingCoordinate("whoIsNonCitizen", "whoIsNonCitizen"));
 
-    coordinatesMap.put(Field.RACE_AND_ETHNICITY,
-        new ParsingCoordinate("raceAndEthnicity", "raceAndEthnicity"));
+    coordinatesMap.put(Field.ETHNICITY,
+        new ParsingCoordinate("raceAndEthnicity", "ethnicity"));
+
+    coordinatesMap.put(Field.RACE,
+        new ParsingCoordinate("raceAndEthnicity", "race"));
 
     coordinatesMap.put(Field.HAS_HOUSE_HOLD,
         new ParsingCoordinate("addHouseholdMembers", "addHouseholdMembers"));
@@ -693,7 +696,8 @@ public class ApplicationDataParser {
 
     EVERYONE_US_CITIZENS,
     WHO_ARE_NON_US_CITIZENS,
-    RACE_AND_ETHNICITY,
+    ETHNICITY,
+    RACE,
     HAS_HOUSE_HOLD,
     UNEARNED_SOCIAL_SECURITY_AMOUNT,
     UNEARNED_SSI_AMOUNT,

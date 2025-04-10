@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE_AND_ETHNICITY;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ETHNICITY;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.output.DocumentFieldType.ENUMERATED_SINGLE_VALUE;
 
@@ -21,23 +21,19 @@ public class HispanicLatinoOrSpanishPreparer implements DocumentFieldPreparer {
       Recipient recipient) {
 
     PagesData pagesData = application.getApplicationData().getPagesData();
-    List<String> raceAndEthnicityValues = getValues(pagesData, RACE_AND_ETHNICITY);
+    List<String> ethnicityValues = getValues(pagesData, ETHNICITY);
 
     List<DocumentField> hispanicLatinoOrSpanishDocumentField = new ArrayList<>();
 
     if (pagesData.containsKey("raceAndEthnicity")) {
-     if (raceAndEthnicityValues.contains("HISPANIC_LATINO_OR_SPANISH")) {
-        if(raceAndEthnicityValues.size() == 1) {
-          hispanicLatinoOrSpanishDocumentField.add(
-              new DocumentField("raceAndEthnicity", "UNABLE_TO_DETERMINE", "true",
-                  ENUMERATED_SINGLE_VALUE));
-        }
+     if (ethnicityValues.contains("HISPANIC_OR_LATINO")) {
+			 
         hispanicLatinoOrSpanishDocumentField.add(
-            new DocumentField("raceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH", "true",
+            new DocumentField("raceAndEthnicity", "HISPANIC_OR_LATINO", "true",
                 ENUMERATED_SINGLE_VALUE));
-      } else if (!raceAndEthnicityValues.contains("HISPANIC_LATINO_OR_SPANISH")) {
+      } else   {
         hispanicLatinoOrSpanishDocumentField.add(
-            new DocumentField("raceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH_NO", "true",
+            new DocumentField("raceAndEthnicity", "NOT_HISPANIC_OR_LATINO", "true",
                 ENUMERATED_SINGLE_VALUE));
       }  
     }
