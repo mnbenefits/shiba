@@ -198,6 +198,7 @@ public abstract class AbstractBasePageTest {
   }
 
   protected void fillOutPersonInfo() {
+	assertThat(testPage.getTitle()).isEqualTo("Personal Info");
     testPage.enter("firstName", "defaultFirstName");
     testPage.enter("lastName", "defaultLastName");
     testPage.enter("otherName", "defaultOtherName");
