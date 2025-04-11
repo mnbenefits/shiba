@@ -2,15 +2,12 @@ package org.codeforamerica.shiba.testutilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Page {
 
@@ -25,15 +22,20 @@ public class Page {
     return driver.getTitle();
   }
 
+  /*
+   *  The purpose of this method is to verify that the message keys (i.e., keys in messages.properties)
+   *  that are being referenced from this page are valid. When a page references a message key that is
+   *  is not defined in messages.properties it will insert a string in the format ??key??.  For example:
+   *  <h1 id="page-header" class="h2">??identify-county.select-your-countyx_en??</h1>
+   */
   private void checkForBadMessageKeys() {
 	assertThat(getTitle()).doesNotContain("??");
-
-	// try to avoid "StaleElementReferenceException"
-	var wait = new WebDriverWait(driver, Duration.ofSeconds(300)); // wait up to 5 minutes
-	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html")));
-		
-    String htmlText = driver.findElement(By.xpath("/html")).getText();
-    assertThat(htmlText).doesNotContain("??");
+	String pageSource = driver.getPageSource();
+	// Checking the page for the existence of an <html> tag provides some validity.
+	// If it does we will assume that it has the matching end tag.
+	int htmlStart = pageSource.indexOf("<html");
+	assertThat(htmlStart).isGreaterThanOrEqualTo(0);
+    assertThat(pageSource).doesNotContain("??");
   }
 
   public String getHeader() {
