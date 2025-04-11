@@ -13,8 +13,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
-        with:
-          chromedriver-version: 120.0.6099.109
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
@@ -45,8 +43,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
-        with:
-          chromedriver-version: 120.0.6099.109
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
