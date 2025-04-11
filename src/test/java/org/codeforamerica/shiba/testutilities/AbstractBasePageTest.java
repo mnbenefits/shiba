@@ -518,20 +518,32 @@ public abstract class AbstractBasePageTest {
   }
 
   protected void getToDocumentUploadScreen() {
-    testPage.clickButton("Apply now");
+    // landing page
+	testPage.clickButton("Apply now");
+	// identifyCountyBeforeApplying
     testPage.enter("county", "Hennepin");
     testPage.clickContinue();
+    // prepareToApply
     testPage.clickContinue();
+    // timeoutNotice
     testPage.clickContinue();
+    // languagePreferences
     testPage.enter("writtenLanguage", "English");
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue();
+    // choosePrograms
     testPage.enter("programs", PROGRAM_EA);
     testPage.clickContinue();
+    // emergencyType
+    testPage.enter("emergencyType", "Utility shut-off");
     testPage.clickContinue();
+    // introBasicInfo
+    testPage.clickContinue();
+    // personalInfo
     fillOutPersonalInfo();
     testPage.clickContinue();
+    // homeAddress
     navigateTo("signThisApplication");
     testPage.enter("applicantSignature", "some name");
     testPage.clickButton("Continue");
