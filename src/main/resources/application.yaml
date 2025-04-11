@@ -53,6 +53,9 @@ sentry:
 client:
   keystore: src/main/resources/keystore-non-prod.jks
   truststore: src/main/resources/truststore-non-prod.jks
+  # default time out values for ESB/SFTP
+  connect-timeout: 5000
+  read-timeout: 30000
 
 comm-hub-text:
   url: https://communication-hub-mn-benefits-non-prod.apps.gj1k10ie.centralus.aroapp.io/mnb-confirmation
