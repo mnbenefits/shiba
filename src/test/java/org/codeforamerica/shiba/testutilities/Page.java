@@ -53,6 +53,11 @@ public class Page {
   }
 
   public void clickButton(String buttonText) {
+	  clickButton(buttonText, 10);
+  }
+  // Hack to get past StaleElementReferenceException.
+  // We find the button (WebElement) but DOM gets updated before we can click it.
+  private void clickButton(String buttonText, int retryCount) {
 	try {  
 	    checkForBadMessageKeys();
 	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
@@ -61,7 +66,7 @@ public class Page {
 	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 	    buttonToClick.click();
 	} catch(StaleElementReferenceException e) {
-		this.clickButton(buttonText);
+		if (retryCount > 0) this.clickButton(buttonText, retryCount-1);
 	}
   }
 
