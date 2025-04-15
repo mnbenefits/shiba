@@ -25,6 +25,7 @@ public class GoBackButtonE2ETest extends AbstractExistingStartTimePageTest {
   @BeforeEach
   protected void setUp() throws IOException {
     super.setUp();
+    staticMessageSource.addMessage("landing.page-description", ENGLISH, "landingPageDescription");
     staticMessageSource.addMessage("starting-page-title", ENGLISH, "starting page");
     staticMessageSource.addMessage("first-page-title", ENGLISH, firstPageTitle);
     staticMessageSource.addMessage("second-page-title", ENGLISH, secondPageTitle);
@@ -38,7 +39,7 @@ public class GoBackButtonE2ETest extends AbstractExistingStartTimePageTest {
     staticMessageSource.addMessage("last-page-title", ENGLISH, "lastPageTitle");
   }
 
-  @Disabled("This test passes on VDIs but fails on GitHub")
+  //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void shouldBeAbleToNavigateBackMoreThanOnePage() {
     // should be able to navigate back more than one page

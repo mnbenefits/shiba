@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -12,7 +11,6 @@ import org.openqa.selenium.By;
 @Tag("virusUploadJourney")
 public class VirusUploadJourneyTest extends JourneyTest {
 
-    @Disabled("This test passes on VDIs but fails on GitHub")
 	@Test
 	void whenDocumentUploadVirusThereShouldBeAnError() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();
@@ -103,7 +101,6 @@ public class VirusUploadJourneyTest extends JourneyTest {
 		testPage.clickLink("remove");
 	}
 
-    @Disabled("This test passes on VDIs but fails on GitHub")
 	@Test
 	void shouldDetectVirusInUploadFileWithAttachment() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();
@@ -118,7 +115,6 @@ public class VirusUploadJourneyTest extends JourneyTest {
 		testPage.clickLink("remove");
 	}
 
-	@Disabled("This test is disabled because it runs inconsistently. It needs analysis and a fix.")
 	@Test
 	void shouldDetectVirusInUploadFileWithVbaScript() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();
@@ -134,7 +130,6 @@ public class VirusUploadJourneyTest extends JourneyTest {
 		testPage.clickLink("remove");
 	}
 
-    @Disabled("This test passes on VDIs but fails on GitHub")
 	@Test
 	void shouldDetectVirusInMaxSizeUploadFile() throws InterruptedException, IOException {
 		getToDocumentUploadScreen();

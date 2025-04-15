@@ -31,6 +31,7 @@ public class SessionScopedApplicationDataTest extends AbstractStaticMessageSourc
   @BeforeEach
   protected void setUp() throws IOException {
     super.setUp();
+    staticMessageSource.addMessage("landing.page-description", Locale.ENGLISH, "landingPageDescription");
     staticMessageSource.addMessage("first-page-title", Locale.ENGLISH, "first page title");
     staticMessageSource.addMessage("second-page-title", Locale.ENGLISH, "second page title");
     staticMessageSource.addMessage("third-page-title", Locale.ENGLISH, "third page title");
