@@ -4,11 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+
 
 public class Page {
 
@@ -36,7 +39,9 @@ public class Page {
 	// If it does we will assume that it has the matching end tag.
 	int htmlStart = pageSource.indexOf("<html");
 	assertThat(htmlStart).isGreaterThanOrEqualTo(0);
-    assertThat(pageSource).doesNotContain("??");
+	// Does the <html> contain a substring that fits the pattern "??<message-key>??"
+	String badMessageKey = StringUtils.substringBetween(pageSource, "??");
+	assertThat(badMessageKey).isNull();
   }
 
   public String getHeader() {
@@ -55,8 +60,8 @@ public class Page {
   public void clickButton(String buttonText) {
 	  clickButton(buttonText, 10);
   }
-  // Hack to get past StaleElementReferenceException.
-  // We find the button (WebElement) but DOM gets updated before we can click it.
+  // An attempt to get past StaleElementReferenceException that frequently occurs.
+  // We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
   private void clickButton(String buttonText, int retryCount) {
 	try {  
 	    checkForBadMessageKeys();
@@ -66,7 +71,11 @@ public class Page {
 	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 	    buttonToClick.click();
 	} catch(StaleElementReferenceException e) {
-		if (retryCount > 0) this.clickButton(buttonText, retryCount-1);
+		if (retryCount > 0) { // try again...
+			this.clickButton(buttonText, retryCount-1);
+		} else { // we tried... but we can't ignore the exception
+			throw e;
+		}
 	}
   }
 
