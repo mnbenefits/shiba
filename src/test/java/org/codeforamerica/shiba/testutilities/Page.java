@@ -2,15 +2,16 @@ package org.codeforamerica.shiba.testutilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 public class Page {
 
@@ -25,15 +26,22 @@ public class Page {
     return driver.getTitle();
   }
 
+  /*
+   *  The purpose of this method is to verify that the message keys (i.e., keys in messages.properties)
+   *  that are being referenced from this page are valid. When a page references a message key that is
+   *  is not defined in messages.properties it will insert a string in the format ??key??.  For example:
+   *  <h1 id="page-header" class="h2">??identify-county.select-your-countyx_en??</h1>
+   */
   private void checkForBadMessageKeys() {
 	assertThat(getTitle()).doesNotContain("??");
-
-	// try to avoid "StaleElementReferenceException"
-	var wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("/html")));
-		
-    String htmlText = driver.findElement(By.xpath("/html")).getText();
-    assertThat(htmlText).doesNotContain("??");
+	String pageSource = driver.getPageSource();
+	// Checking the page for the existence of an <html> tag provides some validity.
+	// If it does we will assume that it has the matching end tag.
+	int htmlStart = pageSource.indexOf("<html");
+	assertThat(htmlStart).isGreaterThanOrEqualTo(0);
+	// Does the <html> contain a substring that fits the pattern "??<message-key>??"
+	String badMessageKey = StringUtils.substringBetween(pageSource, "??");
+	assertThat(badMessageKey).isNull();
   }
 
   public String getHeader() {
@@ -50,12 +58,25 @@ public class Page {
   }
 
   public void clickButton(String buttonText) {
-    checkForBadMessageKeys();
-    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
-        .filter(button -> button.getText().contains(buttonText))
-        .findFirst()
-        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-    buttonToClick.click();
+	  clickButton(buttonText, 10);
+  }
+  // An attempt to get past StaleElementReferenceException that frequently occurs.
+  // We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
+  private void clickButton(String buttonText, int retryCount) {
+	try {  
+	    checkForBadMessageKeys();
+	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
+	        .filter(button -> button.getText().contains(buttonText))
+	        .findFirst()
+	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+	    buttonToClick.click();
+	} catch(StaleElementReferenceException e) {
+		if (retryCount > 0) { // try again...
+			this.clickButton(buttonText, retryCount-1);
+		} else { // we tried... but we can't ignore the exception
+			throw e;
+		}
+	}
   }
 
   public void clickButtonLink(String buttonLinkText) {

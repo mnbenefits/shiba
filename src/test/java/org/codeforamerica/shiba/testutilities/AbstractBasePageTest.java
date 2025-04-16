@@ -517,29 +517,41 @@ public abstract class AbstractBasePageTest {
   }
 
   protected void getToDocumentUploadScreen() {
-    testPage.clickButton("Apply now");
-    testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
-    testPage.clickContinue();
-    testPage.clickContinue();
-    testPage.enter("writtenLanguage", "English");
-    testPage.enter("spokenLanguage", "English");
-    testPage.enter("needInterpreter", "Yes");
-    testPage.clickContinue();
-    testPage.enter("programs", PROGRAM_EA);
-    testPage.clickContinue();
-    testPage.clickContinue();
-    fillOutPersonalInfo();
-    testPage.clickContinue();
-    navigateTo("signThisApplication");
-    testPage.enter("applicantSignature", "some name");
-    testPage.clickButton("Continue");
-    testPage.clickButton("Submit application");
-    testPage.clickContinue();
-    testPage.clickContinue();
-    testPage.clickButton("Add documents now");
-    testPage.clickContinue();
-  }
+	    // landing page
+		testPage.clickButton("Apply now");
+		// identifyCountyBeforeApplying
+	    testPage.enter("county", "Hennepin");
+	    testPage.clickContinue();
+	    // prepareToApply
+	    testPage.clickContinue();
+	    // timeoutNotice
+	    testPage.clickContinue();
+	    // languagePreferences
+	    testPage.enter("writtenLanguage", "English");
+	    testPage.enter("spokenLanguage", "English");
+	    testPage.enter("needInterpreter", "Yes");
+	    testPage.clickContinue();
+	    // choosePrograms
+	    testPage.enter("programs", PROGRAM_EA);
+	    testPage.clickContinue();
+	    // emergencyType
+	    testPage.enter("emergencyType", "Utility shut-off");
+	    testPage.clickContinue();
+	    // introBasicInfo
+	    testPage.clickContinue();
+	    // personalInfo
+	    fillOutPersonalInfo();
+	    testPage.clickContinue();
+	    // homeAddress
+	    navigateTo("signThisApplication");
+	    testPage.enter("applicantSignature", "some name");
+	    testPage.clickButton("Continue");
+	    testPage.clickButton("Submit application");
+	    testPage.clickContinue();
+	    testPage.clickContinue();
+	    testPage.clickButton("Add documents now");
+	    testPage.clickContinue();
+	  }
 
   protected void getToLaterDocsUploadScreen() {
     testPage.clickButton("Upload documents");

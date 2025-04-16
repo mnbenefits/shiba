@@ -17,12 +17,13 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactoryBuilder;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
+import org.apache.hc.client5.http.ssl.HostnameVerificationPolicy;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.utils.Base64;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.http.message.BasicHeader;
-import org.apache.hc.core5.http.ssl.TLS;
 import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
 import org.apache.hc.core5.pool.PoolReusePolicy;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
@@ -57,12 +58,14 @@ public class EsbWebServiceTemplateConfiguration {
 		byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(StandardCharsets.ISO_8859_1));
 		int timeoutMillis = (int) TimeUnit.MILLISECONDS.convert(timeoutSeconds, TimeUnit.SECONDS);
 		Timeout timeout = Timeout.ofMilliseconds(timeoutMillis);
+		
+		var tlsStrategy = new DefaultClientTlsStrategy(
+				  sslContextBuilder.build(), 
+				  HostnameVerificationPolicy.CLIENT, 
+				  NoopHostnameVerifier.INSTANCE);
 
 		PoolingHttpClientConnectionManager poolingConnectionManager = PoolingHttpClientConnectionManagerBuilder.create()
-				.setSSLSocketFactory(SSLConnectionSocketFactoryBuilder.create()
-						.setSslContext(sslContextBuilder.build())
-						.setTlsVersions(TLS.V_1_3)
-						.build())
+				.setTlsSocketStrategy(tlsStrategy)
 				.setDefaultSocketConfig(SocketConfig.custom()
 						.setSoTimeout(timeout)
 						.build())
