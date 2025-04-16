@@ -334,7 +334,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("healthcareCoverage", "healthcareCoverage", "YES");
 		postExpectingSuccess("authorizedRep", "helpWithBenefits", "false");
 		postExpectingSuccess("additionalInfo", "caseNumber", "");
-		postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "WHITE");
+		postExpectingSuccess("raceAndEthnicity", Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"), "race", List.of("WHITE")));
 		postExpectingRedirect("legalStuff", Map.of("agreeToTerms", List.of("true"), "drugFelony", List.of()),
 				"signThisApplication");
 		postExpectingSuccess("signThisApplication", "applicantSignature", "Dwight Schrute");
@@ -1042,8 +1042,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteClientReportedWhenOtherRaceOrEthnicitySelected() throws Exception {
 				selectPrograms("CCAP");
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "ASIAN"),
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "ASIAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
 				var ccap = submitAndDownloadCcap();
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", ccap);
@@ -1052,9 +1053,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteClientReportedForOthersOnlyWhenOtherRaceOrEthnicityAndMENASelected() throws Exception {
 				selectPrograms("CCAP");
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity",
-								List.of("SOME_OTHER_RACE_OR_ETHNICITY", "MIDDLE_EASTERN_OR_NORTH_AFRICAN"),
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "MIDDLE_EASTERN_OR_NORTH_AFRICAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
 				var ccap = submitAndDownloadCcap();
 				assertPdfFieldEquals("WHITE", "Off", ccap);
@@ -1064,8 +1065,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteClientReportedForOthersWhenOtherRaceOrEthnicityAndWHITESelected() throws Exception {
 				selectPrograms("CCAP");
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "WHITE"),
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "WHITE"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
 				var ccap = submitAndDownloadCcap();
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
@@ -1081,7 +1083,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			void shouldWriteToApplicantRaceAndEthnicityFieldWithMiddleEasternOrNorthAfricanOnly() throws Exception {
 				selectPrograms("CERTAIN_POPS");
 
-				postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "MIDDLE_EASTERN_OR_NORTH_AFRICAN");
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("MIDDLE_EASTERN_OR_NORTH_AFRICAN")));
 
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "Middle Eastern / N. African", certainPops);
@@ -1091,7 +1095,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			void shouldWriteToApplicantRaceAndEthnicityFieldWithHispanicLatinoOrSpanishOnly() throws Exception {
 				selectPrograms("CERTAIN_POPS");
 
-				postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH");
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("HISPANIC_LATINO_OR_SPANISH")));
 
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "Hispanic, Latino, or Spanish", certainPops);
@@ -1100,9 +1106,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteToApplicantRaceAndEthnicityFieldWithHispanicLatinoOrSpanishAndAsianSelected() throws Exception {
 				selectPrograms("CERTAIN_POPS");
-
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity", List.of("ASIAN", "HISPANIC_LATINO_OR_SPANISH", "WHITE")));
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("ASIAN", "HISPANIC_LATINO_OR_SPANISH", "WHITE")));
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "White, Asian, Hispanic, Latino, or Spanish", certainPops);
 			}
@@ -1110,9 +1116,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteToApplicantRaceAndEthnicityFieldWithAsianWhiteMiddleEasternOrNorthAfricanSelected() throws Exception {
 				selectPrograms("CERTAIN_POPS");
-
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity", List.of("ASIAN", "WHITE", "MIDDLE_EASTERN_OR_NORTH_AFRICAN")));
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("ASIAN", "WHITE", "MIDDLE_EASTERN_OR_NORTH_AFRICAN")));
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "Middle Eastern / N. African, White, Asian", certainPops);
 			}
@@ -1120,8 +1126,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteToApplicantRaceAndEthnicityFieldWithOtherRaceOrEthnicitySelected() throws Exception {
 				selectPrograms("CERTAIN_POPS");
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "ASIAN"),
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
+								"race", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "ASIAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "Asian, SomeOtherRaceOrEthnicity", certainPops);
@@ -1130,9 +1137,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteToApplicantRaceAndEthnicityFieldWithOtherRaceOrEthnicityAndMENASelected() throws Exception {
 				selectPrograms("CERTAIN_POPS");
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity",
-								List.of("SOME_OTHER_RACE_OR_ETHNICITY", "MIDDLE_EASTERN_OR_NORTH_AFRICAN"),
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"), 
+								"race", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "MIDDLE_EASTERN_OR_NORTH_AFRICAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "Middle Eastern / N. African, SomeOtherRaceOrEthnicity", certainPops);
@@ -1141,8 +1148,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			@Test
 			void shouldWriteToApplicantRaceAndEthnicityFieldWithOtherRaceOrEthnicityAndWHITESelected() throws Exception {
 				selectPrograms("CERTAIN_POPS");
-				postExpectingSuccess("raceAndEthnicity",
-						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "WHITE"),
+				postExpectingSuccess("raceAndEthnicity", 
+						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"), 
+								"race", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "WHITE"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "White, SomeOtherRaceOrEthnicity", certainPops);
