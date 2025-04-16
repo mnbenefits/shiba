@@ -30,13 +30,18 @@ jobs:
         SENTRY_PROJECT: shiba
       with:
         environment: production
-        version: ${{ steps.fetch-latest-release.outputs.tag_name }}
+        release: ${{ steps.fetch-latest-release.outputs.tag_name }}
     - name: Authenticate and set context for prod
       uses: redhat-actions/oc-login@v1
       with:
         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_PROD }}
         openshift_token: ${{ secrets.OPENSHIFT_TOKEN_PROD }}
         namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
+    - name : Authenticate and login with podman for image import 
+      uses: redhat-actions/podman-login@v1
+        with:
+          podman_password: ${{ secrets.PODMAN_REGISTRY_PASSWORD }}
+          podman_registry: ${{ secrets.PODMAN_IMAGE_REGISTRY }}
     - name: import and deploy to prod
       run: |
         oc import-image mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} --from=${{ secrets.OPENSHIFT_IMAGE_LOCATION }}/mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} -n ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
