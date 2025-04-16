@@ -40,7 +40,7 @@ jobs:
     - name : Authenticate and login with podman for image import 
       uses: redhat-actions/podman-login@v1
       with:
-        username: ""
+        username: ${{ secrets.PODMAN_REGISTRY_USERNAME }}
         password: ${{ secrets.PODMAN_REGISTRY_PASSWORD }}
         registry: ${{ secrets.PODMAN_IMAGE_REGISTRY }}
     - name: import and deploy to prod
