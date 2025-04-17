@@ -1049,7 +1049,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				var ccap = submitAndDownloadCcap();
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
 				assertPdfFieldEquals("ASIAN", "Yes", ccap);
-				assertPdfFieldEquals("MIDDLE_EASTERN_OR_NORTH_AFRICAN", "Yes", ccap);
+				// TODO: There is no checkbox for MIDDLE_EASTERN_OR_NORTH_AFRICAN on the ccap 
+				//assertPdfFieldEquals("MIDDLE_EASTERN_OR_NORTH_AFRICAN", "Yes", ccap);
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Off", ccap);
 				assertPdfFieldEquals("CLIENT_REPORTED", "", ccap);
 			}
