@@ -2,6 +2,7 @@ package org.codeforamerica.shiba.output.documentfieldpreparers;
 
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.RACE;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ETHNICITY;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -22,33 +23,34 @@ public class RaceAndEthnicityTextfieldPreparer implements DocumentFieldPreparer 
       Recipient recipient) {
 	  
     PagesData pagesData = application.getApplicationData().getPagesData();
-    List<String> raceAndEthnicityValues = getValues(pagesData, RACE);
+    List<String> ethnicityValues = getValues(pagesData, ETHNICITY);
+    List<String> raceValues = getValues(pagesData, RACE);
     List<DocumentField> results = new ArrayList<DocumentField>();
     StringJoiner joiner = new StringJoiner(", ");
     
     if (pagesData.containsKey("raceAndEthnicity")) {
-        if (raceAndEthnicityValues.contains("MIDDLE_EASTERN_OR_NORTH_AFRICAN")) {
-        	joiner.add("Middle Eastern / N. African");
-        }
-        if (raceAndEthnicityValues.contains("WHITE")) {
-        	joiner.add("White");
-        }
-        if (raceAndEthnicityValues.contains("ASIAN")) {
-        	joiner.add("Asian");
-        }
-        if (raceAndEthnicityValues.contains("AMERICAN_INDIAN_OR_ALASKA_NATIVE")) {
-        	joiner.add("American Indian or Alaska Native");
-        }
-        if (raceAndEthnicityValues.contains("BLACK_OR_AFRICAN_AMERICAN")) {
-        	joiner.add("Black or African American");
-        }
-        if (raceAndEthnicityValues.contains("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER")) {
-        	joiner.add("Native Hawaiian or Pacific Islander");
-        }
-        if (raceAndEthnicityValues.contains("HISPANIC_LATINO_OR_SPANISH")) {
+    	if (ethnicityValues.contains("HISPANIC_OR_LATINO")) {
         	joiner.add("Hispanic, Latino, or Spanish");
         }
-        if (raceAndEthnicityValues.contains("SOME_OTHER_RACE_OR_ETHNICITY") ) {
+        if (raceValues.contains("MIDDLE_EASTERN_OR_NORTH_AFRICAN")) {
+        	joiner.add("Middle Eastern / N. African");
+        }
+        if (raceValues.contains("WHITE")) {
+        	joiner.add("White");
+        }
+        if (raceValues.contains("ASIAN")) {
+        	joiner.add("Asian");
+        }
+        if (raceValues.contains("AMERICAN_INDIAN_OR_ALASKA_NATIVE")) {
+        	joiner.add("American Indian or Alaska Native");
+        }
+        if (raceValues.contains("BLACK_OR_AFRICAN_AMERICAN")) {
+        	joiner.add("Black or African American");
+        }
+        if (raceValues.contains("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER")) {
+        	joiner.add("Native Hawaiian or Pacific Islander");
+        }
+        if (raceValues.contains("SOME_OTHER_RACE_OR_ETHNICITY") ) {
         	joiner.add(pagesData.getPageInputFirstValue("raceAndEthnicity", "otherRaceOrEthnicity"));
         } 
       }

@@ -4435,6 +4435,9 @@ pageDefinitions:
         promptMessage:
           promptMessageKey: race-and-ethnicity.identify-ethnicity
         helpMessageKey: race-and-ethnicity.select-one
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:
             - value: HISPANIC_OR_LATINO
