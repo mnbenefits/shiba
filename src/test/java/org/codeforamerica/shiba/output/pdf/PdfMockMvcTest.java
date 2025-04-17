@@ -1033,7 +1033,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				var ccap = submitAndDownloadCcap();
 				assertPdfFieldEquals("ASIAN", "Yes", ccap);
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
-				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Yes", ccap);
+				assertPdfFieldEquals("HISPANIC_OR_LATINO", "Yes", ccap);
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Off", ccap);
 			}
 
@@ -1047,7 +1047,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				var ccap = submitAndDownloadCcap();
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
 				assertPdfFieldEquals("ASIAN", "Yes", ccap);
-				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Off", ccap);
+				assertPdfFieldEquals("MIDDLE_EASTERN_OR_NORTH_AFRICAN", "Yes", ccap);
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Off", ccap);
 				assertPdfFieldEquals("CLIENT_REPORTED", "", ccap);
 			}
@@ -1110,18 +1110,18 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity", 
 						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
-								"race", List.of("HISPANIC_LATINO_OR_SPANISH")));
+								"race", List.of("SOME_OTHER_RACE_OR_ETHNICITY")));
 
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "Hispanic, Latino, or Spanish", certainPops);
 			}
 
 			@Test
-			void shouldWriteToApplicantRaceAndEthnicityFieldWithHispanicLatinoOrSpanishAndAsianSelected() throws Exception {
+			void shouldWriteToApplicantRaceAndEthnicityFieldWithSomeOtherRaceAndAsianAndWhiteSelected() throws Exception {
 				selectPrograms("CERTAIN_POPS");
 				postExpectingSuccess("raceAndEthnicity", 
 						Map.of("ethnicity", List.of("NOT_HISPANIC_OR_LATINO"),
-								"race", List.of("ASIAN", "HISPANIC_LATINO_OR_SPANISH", "WHITE")));
+								"race", List.of("ASIAN", "SOME_OTHER_RACE_OR_ETHNICITY", "WHITE")));
 				var certainPops = submitAndDownloadCertainPops();
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "White, Asian, Hispanic, Latino, or Spanish", certainPops);
 			}
