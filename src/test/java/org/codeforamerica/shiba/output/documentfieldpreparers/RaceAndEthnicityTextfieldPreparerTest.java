@@ -25,7 +25,7 @@ class RaceAndEthnicityTextfieldPreparerTest {
     @Test
     void shouldOnlyShowSelectedOption() {
       application.setApplicationData(testApplicationDataBuilder
-          .withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN"))
+          .withPageData("raceAndEthnicity", "race", List.of("ASIAN"))
           .build());
       
       assertThat(preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT)).isEqualTo(
@@ -36,7 +36,7 @@ class RaceAndEthnicityTextfieldPreparerTest {
     @Test
     void shouldOnlyShowWriteOption() {
       application.setApplicationData(testApplicationDataBuilder
-    	  .withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY"))
+    	  .withPageData("raceAndEthnicity", "race", List.of("SOME_OTHER_RACE_OR_ETHNICITY"))
           .withPageData("raceAndEthnicity", "otherRaceOrEthnicity", "SomeOtherRaceOrEthnicity")
           .build());
       
@@ -48,7 +48,7 @@ class RaceAndEthnicityTextfieldPreparerTest {
     @Test
     void shouldCombineSelectedOptionAndWriteOption() {
       application.setApplicationData(testApplicationDataBuilder
-          .withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("MIDDLE_EASTERN_OR_NORTH_AFRICAN","SOME_OTHER_RACE_OR_ETHNICITY"))
+          .withPageData("raceAndEthnicity", "race", List.of("MIDDLE_EASTERN_OR_NORTH_AFRICAN","SOME_OTHER_RACE_OR_ETHNICITY"))
           .withPageData("raceAndEthnicity", "otherRaceOrEthnicity", "SomeOtherRaceOrEthnicity")
           .build());
       
@@ -60,19 +60,20 @@ class RaceAndEthnicityTextfieldPreparerTest {
     @Test
     void shouldCombineSelectedOptionsAndWriteOption() {
     	application.setApplicationData(testApplicationDataBuilder
-          .withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN", "HISPANIC_LATINO_OR_SPANISH", "SOME_OTHER_RACE_OR_ETHNICITY"))
+	      .withPageData("raceAndEthnicity", "race", List.of("ASIAN", "SOME_OTHER_RACE_OR_ETHNICITY"))
+	      .withPageData("raceAndEthnicity", "ethnicity", List.of("HISPANIC_OR_LATINO"))
           .withPageData("raceAndEthnicity", "otherRaceOrEthnicity", "SomeOtherRaceOrEthnicity")
           .build());
       
       assertThat(preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT)).isEqualTo(
-          List.of(new DocumentField("raceAndEthnicity", "applicantRaceAndEthnicity", "Asian, Hispanic, Latino, or Spanish, SomeOtherRaceOrEthnicity", SINGLE_VALUE))
+          List.of(new DocumentField("raceAndEthnicity", "applicantRaceAndEthnicity", "Hispanic, Latino, or Spanish, Asian, SomeOtherRaceOrEthnicity", SINGLE_VALUE))
       );
     }
     
     @Test
     void shouldCombineSelectedOptions() {
     	application.setApplicationData(testApplicationDataBuilder
-          .withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("AMERICAN_INDIAN_OR_ALASKA_NATIVE", "BLACK_OR_AFRICAN_AMERICAN", "NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER"))
+          .withPageData("raceAndEthnicity", "race", List.of("AMERICAN_INDIAN_OR_ALASKA_NATIVE", "BLACK_OR_AFRICAN_AMERICAN", "NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER"))
           .build());
       
       assertThat(preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT)).isEqualTo(

@@ -26,7 +26,7 @@ class MiddleEasternNorthAfricanWhiteAndOthersPreparerTest {
     @Test
     void shouldWriteToClientReportedFieldWhenMENAAndOtherSelected() {
       application.setApplicationData(testApplicationDataBuilder
-          .withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("MIDDLE_EASTERN_OR_NORTH_AFRICAN","SOME_OTHER_RACE_OR_ETHNICITY"))
+          .withPageData("raceAndEthnicity", "race", List.of("MIDDLE_EASTERN_OR_NORTH_AFRICAN","SOME_OTHER_RACE_OR_ETHNICITY"))
           .withPageData("raceAndEthnicity", "otherRaceOrEthnicity", "SomeOtherRaceOrEthnicity")
           .build());
       assertThat(preparer.prepareDocumentFields(application, Document.CAF, Recipient.CASEWORKER)).isEqualTo(
@@ -36,7 +36,7 @@ class MiddleEasternNorthAfricanWhiteAndOthersPreparerTest {
 
     @Test
     void shouldWriteToClientReportedFieldWhenMENASelectedOnly() {
-        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("MIDDLE_EASTERN_OR_NORTH_AFRICAN")).build());
+        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "race", List.of("MIDDLE_EASTERN_OR_NORTH_AFRICAN")).build());
         assertThat(preparer.prepareDocumentFields(application, Document.CAF, Recipient.CASEWORKER)).isEqualTo(
             List.of(new DocumentField("raceAndEthnicity", "CLIENT_REPORTED", "Middle Eastern / N. African", SINGLE_VALUE),
                 new DocumentField("raceAndEthnicity", "WHITE", "true", ENUMERATED_SINGLE_VALUE) )
@@ -45,7 +45,7 @@ class MiddleEasternNorthAfricanWhiteAndOthersPreparerTest {
     
     @Test
     void shouldNotWriteToClientReportedFieldWhenMENAAndAsianSelected() {
-        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN","MIDDLE_EASTERN_OR_NORTH_AFRICAN")).build());
+        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "race", List.of("ASIAN","MIDDLE_EASTERN_OR_NORTH_AFRICAN")).build());
         assertThat(preparer.prepareDocumentFields(application, Document.CAF, Recipient.CASEWORKER)).isEqualTo(
             List.of()
         );
@@ -53,7 +53,7 @@ class MiddleEasternNorthAfricanWhiteAndOthersPreparerTest {
     
     @Test
     void shouldWriteToClientReportedFieldWhenOthersSelected() {
-        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN","SOME_OTHER_RACE_OR_ETHNICITY"))
+        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "race", List.of("ASIAN","SOME_OTHER_RACE_OR_ETHNICITY"))
             .withPageData("raceAndEthnicity", "otherRaceOrEthnicity", "SomeOtherRaceOrEthnicity")
             .build());
         assertThat(preparer.prepareDocumentFields(application, Document.CAF, Recipient.CASEWORKER)).isEqualTo(
@@ -63,7 +63,7 @@ class MiddleEasternNorthAfricanWhiteAndOthersPreparerTest {
     
     @Test
     void shouldMarkWhiteFieldWhenWhiteSelected() {
-        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN","SOME_OTHER_RACE_OR_ETHNICITY","WHITE"))
+        application.setApplicationData(testApplicationDataBuilder.withPageData("raceAndEthnicity", "race", List.of("ASIAN","SOME_OTHER_RACE_OR_ETHNICITY","WHITE"))
             .withPageData("raceAndEthnicity", "otherRaceOrEthnicity", "SomeOtherRaceOrEthnicity")
             .build());
         assertThat(preparer.prepareDocumentFields(application, Document.CAF, Recipient.CASEWORKER)).isEqualTo(
