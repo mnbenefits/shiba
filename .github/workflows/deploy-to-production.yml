@@ -35,14 +35,8 @@ jobs:
       uses: redhat-actions/oc-login@v1
       with:
         openshift_server_url: ${{ secrets.OPENSHIFT_SERVER_PROD }}
-        openshift_token: ${{ secrets.OPENSHIFT_TOKEN_PROD }}
+        openshift_token: "eyJhbGciOiJSUzI1NiIsImtpZCI6IkhSV3k5b0lwemNGRVU4b3prMUJDMnRtM2J0T0lXTzZZYVNYSm13RzB3Zm8ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtbi1iZW5lZml0cy1wcm9kIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6Im1uYmVuZWZpdHMtZGVwbG95LXNlY3JldCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJtbmJlbmVmaXRzLWRlcGxveS1zYSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjNmYzEyNjNjLTEzNzctNGI5YS1hNWYxLTEwZDhjYzJkYTMxYiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptbi1iZW5lZml0cy1wcm9kOm1uYmVuZWZpdHMtZGVwbG95LXNhIn0.B7XqG0Wc8r-0claugseWSBJtDto8NYvCkXeOADyJ2ejUEr9lnCOe8dUkwFRkczVtJGAlu9IOO_mNA77-BdzJs3hmZuq6FWmgge04qRlMDH8w1OVerxLIXCS7J-cswqDHLO3nsneldvUP-wEUvYO8zRosnUl_BbrNKBhfnUvGME5orb57ud0yFHTm_GNEU6RoSdvD1XSaLCyu-JQZKBDLnIklx686exeA3g-LGxBo_2fNfLtkagEXrdO_lEr5OtVWsJnEueXUzQT_6J9SExOc7Bpabho4DdASRdGq0kPe48mXRKA44MIV4XETsbdWUGxERnA-KQSq8mtCqwyXuvD-KQ"
         namespace: ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
-    - name : Authenticate and login with podman for image import 
-      uses: redhat-actions/podman-login@v1
-      with:
-        username: ${{ secrets.PODMAN_REGISTRY_USERNAME }}
-        password: ${{ secrets.PODMAN_REGISTRY_PASSWORD }}
-        registry: ${{ secrets.PODMAN_IMAGE_REGISTRY }}
     - name: import and deploy to prod
       run: |
         oc import-image mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} --from=${{ secrets.OPENSHIFT_IMAGE_LOCATION }}/mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} --confirm -n ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
