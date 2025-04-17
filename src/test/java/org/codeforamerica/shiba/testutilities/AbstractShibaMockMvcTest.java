@@ -1008,8 +1008,9 @@ public class AbstractShibaMockMvcTest {
         "Some additional information about my application",
         "canWeAsk");
     postWithQueryParam("canWeAsk", "option", "0");
-    postExpectingRedirect("raceAndEthnicity", "raceAndEthnicity",
-        List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICANS"), "legalStuff");
+	postExpectingRedirect("raceAndEthnicity", 
+		Map.of("ethnicity", List.of("NON_HISPANIC_OR_LATINO"), "race", List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICAN")), 
+		"legalStuff");
     postExpectingRedirect("legalStuff",
         Map.of("agreeToTerms", List.of("true"), "drugFelony", List.of("false")),
         "signThisApplication");
