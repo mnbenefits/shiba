@@ -432,7 +432,9 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickLink("Yes, continue");
 
     // What races or ethnicities do you identify with?
-    testPage.enter("raceAndEthnicity", List.of("Black or African American"));
+    testPage.enter("ethnicity", "Not Hispanic or Latino");
+    testPage.enter("race", List.of("Black or African American"));
+    takeSnapShot("snapshot1.png");
     testPage.clickContinue();
 
     // The legal stuff.
@@ -642,7 +644,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCcapFieldEquals("ADDITIONAL_APPLICATION_INFO",
         "I need you to contact my work for proof of termination");
     assertCcapFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
-    assertCcapFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
+    assertCcapFieldEquals("NOT_HISPANIC_OR_LATINO", "Yes");
     assertCcapFieldEquals("REGISTER_TO_VOTE", "Yes");
 
     // CAF
@@ -788,7 +790,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
     assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.00");
     assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
-    assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
+    assertCafFieldEquals("NOT_HISPANIC_OR_LATINO", "Yes");
     
     // CERTAIN POPS
     assertCertainPopsFieldEquals("APPLICATION_ID", applicationId);
@@ -1049,7 +1051,9 @@ public class FullFlowJourneyTest extends JourneyTest {
     testPage.clickLink("Yes, continue");
 
     // What races or ethnicities do you identify with?
-    testPage.enter("raceAndEthnicity", List.of("Black or African American"));
+    testPage.enter("ethnicity", "Not Hispanic or Latino");
+    testPage.enter("race", List.of("Black or African American"));
+    takeSnapShot("snapshot2.png");
     testPage.clickContinue();
 
     // The legal stuff.

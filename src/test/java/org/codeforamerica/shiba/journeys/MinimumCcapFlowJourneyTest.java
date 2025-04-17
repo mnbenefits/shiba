@@ -189,7 +189,8 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     testPage.clickLink("Yes, continue");
 
     // What races or ethnicities do you identify with?
-    testPage.enter("raceAndEthnicity", List.of("Middle Eastern or North African"));
+    testPage.enter("ethnicity", "Not Hispanic or Latino");
+    testPage.enter("race", List.of("Middle Eastern or North African"));
     testPage.clickContinue();
 
     // The legal stuff.
