@@ -45,7 +45,7 @@ jobs:
         registry: ${{ secrets.PODMAN_IMAGE_REGISTRY }}
     - name: import and deploy to prod
       run: |
-        oc import-image mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} --from=${{ secrets.OPENSHIFT_IMAGE_LOCATION }}/mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} -n ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
+        oc import-image mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} --from=${{ secrets.OPENSHIFT_IMAGE_LOCATION }}/mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }} --confirm -n ${{ secrets.OPENSHIFT_NAMESPACE_PROD }}
         # These commands are changed with the migration from DeploymentConfig to Deployment
         # Replace these commands:
         # oc patch dc mn-benefits-prod -p '{"spec":{"triggers":[{"type": "ImageChange", "imageChangeParams":{"from":{"name":"mn-benefits:${{ steps.fetch-latest-release.outputs.tag_name }}"}, "containerNames":["mn-benefits-prod"]}}]}}'
