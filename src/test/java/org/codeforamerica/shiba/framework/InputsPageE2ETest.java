@@ -38,6 +38,7 @@ public class InputsPageE2ETest extends AbstractExistingStartTimePageTest {
   @BeforeEach
   protected void setUp() throws IOException {
     super.setUp();
+    staticMessageSource.addMessage("landing.page-description", Locale.ENGLISH, "landingPageDescription");
     staticMessageSource.addMessage("first-page-title", Locale.ENGLISH, "firstPageTitle");
     staticMessageSource.addMessage("next-page-title", Locale.ENGLISH, "nextPageTitle");
     staticMessageSource.addMessage("radio-option-1", Locale.ENGLISH, radioOption1);
