@@ -75,7 +75,7 @@ public class Page {
 			if (retryCount > 0) { // try again...
 				this.clickButton(buttonText, retryCount-1);
 			} else { // we tried... but we can't ignore the exception
-				throw new RuntimeException("No button found containing text: " + buttonText);
+				throw new RuntimeException("No button found containing text: " + buttonText + " page title: " + driver.getTitle());
 			}
 	    }
 	} catch(StaleElementReferenceException e) {
