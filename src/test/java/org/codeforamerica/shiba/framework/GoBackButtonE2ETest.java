@@ -39,7 +39,6 @@ public class GoBackButtonE2ETest extends AbstractExistingStartTimePageTest {
     staticMessageSource.addMessage("last-page-title", ENGLISH, "lastPageTitle");
   }
 
-  //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void shouldBeAbleToNavigateBackMoreThanOnePage() {
     // should be able to navigate back more than one page
