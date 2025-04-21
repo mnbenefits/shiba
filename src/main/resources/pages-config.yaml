@@ -1342,16 +1342,7 @@ pageDefinitions:
              - pageName: childrenAtThisProvider
                inputName: childrenNames
       - type: HIDDEN
-        name: childIdMap # This input is controlled by startDate
-  - &childCareAdditionalInfo
-# TODO add this page in a later sprint, or remove if not used
-    name: childCareAdditionalInfo
-    pageTitle: additional-info.title
-    headerKey: additional-info.is-there-anything-else-you-want-to-share
-    headerHelpMessageKey: additional-info.this-is-optional
-    inputs:
-      - name: childCareAdditionalInfo
-        type: TEXTAREA        
+        name: childIdMap # This input is controlled by startDate       
   - &childCareProviderList
     name: childCareProviderList
     pageTitle: child-care-provider-list.title
@@ -1363,15 +1354,6 @@ pageDefinitions:
     name: childCareProviderDeleteWarningPage
     pageTitle: child-care-provider-delete.title
     usingPageTemplateFragment: false
-  - &noChildCareAdditionalInfo
-# TODO add this page in a later sprint
-    name: noChildCareAdditionalInfo
-    pageTitle: additional-info.title
-    headerKey: additional-info.is-there-anything-else-you-want-to-share
-    headerHelpMessageKey: additional-info.this-is-optional
-    inputs:
-      - name: noChildCareAdditionalInfo
-        type: TEXTAREA
   - &childCareProviderRedirectPage
 # TODO add messages customized for this page
     name: childCareProviderRedirectPage
@@ -5515,8 +5497,6 @@ workflow:
           pageName: doYouHaveChildCareProvider
           input: hasChildCareProvider
           value: "true"
-## TODO change to noChildCareAdditionalInfo in later sprint
-#      - pageName: noChildCareAdditionalInfo
       - pageName: whoHasParentNotAtHome
         condition:
             pageName: doYouHaveChildCareProvider
@@ -5554,21 +5534,12 @@ workflow:
 #    pageConfiguration: *childCareProviderStartDate
 #    skipCondition: *noOneChoseCCAP?
 #    groupName: childCareProviders
-#    nextPages:
-#      - pageName: childCareAdditionalInfo
 # datasources is a List of PageDatasource objects that refer to the JSON data
 #    datasources:
 #      - pageName: choosePrograms
 #keep commented      - groupName: childCareProviders
 #      - pageName: childrenAtThisProvider
 #keep commented        inputName: childrenNames
-##TODO add childCareAdditionalInfo in later sprint
-#  childCareAdditionalInfo:
-#    pageConfiguration: *childCareAdditionalInfo
-#    skipCondition: *noOneChoseCCAP?
-#    groupName: childCareProviders
-#    nextPages:
-#      - pageName: childCareProviderList
   childCareProviderList:
     pageConfiguration: *childCareProviderList
     skipCondition: *noOneChoseCCAP?
@@ -5579,12 +5550,6 @@ workflow:
     datasources:
       - groupName: childCareProviders
       - pageName: childCareProviderInfo
-##TODO add noChildCareAdditionalInfo in a later sprint
-#  noChildCareAdditionalInfo:
-#    pageConfiguration: *noChildCareAdditionalInfo
-#    skipCondition: *noOneChoseCCAP?
-#    nextPages:
-#      - pageName: whoHasParentNotAtHome
   childCareProviderDeleteWarningPage:
     pageConfiguration: *childCareProviderDeleteWarningPage
     appliesToGroup: childCareProviders
@@ -7611,12 +7576,10 @@ pageGroups:
       - childCareProviderInfo
 #      - childrenAtThisProvider
 #      - childCareProviderStartDate
-#      - childCareAdditionalInfo
     completePages:
 #TODO change the completePages to the current last page of the flow
       - childrenAtThisProvider
 #      - childCareProviderStartDate
-#      - childCareAdditionalInfo
     reviewPage: childCareProviderList
     redirectPage: childCareProviderRedirectPage
     deleteWarningPage: childCareProviderDeleteWarningPage
