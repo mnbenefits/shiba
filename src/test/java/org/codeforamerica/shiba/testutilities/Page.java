@@ -3,6 +3,7 @@ package org.codeforamerica.shiba.testutilities;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -65,11 +66,18 @@ public class Page {
   private void clickButton(String buttonText, int retryCount) {
 	try {  
 	    checkForBadMessageKeys();
-	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
+	    Optional<WebElement> buttonToClick = driver.findElements(By.className("button")).stream()
 	        .filter(button -> button.getText().contains(buttonText))
-	        .findFirst()
-	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-	    buttonToClick.click();
+	        .findFirst();
+	    if (buttonToClick.isPresent()) {
+	    	buttonToClick.get().click();
+	    } else {
+			if (retryCount > 0) { // try again...
+				this.clickButton(buttonText, retryCount-1);
+			} else { // we tried... but we can't ignore the exception
+				throw new RuntimeException("No button found containing text: " + buttonText);
+			}
+	    }
 	} catch(StaleElementReferenceException e) {
 		if (retryCount > 0) { // try again...
 			this.clickButton(buttonText, retryCount-1);
