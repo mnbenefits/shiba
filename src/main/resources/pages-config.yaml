@@ -531,19 +531,17 @@ pageDefinitions:
     headerKey: language-preferences.language-preferences
     contextFragment: languagePreferencesContextFragment
     inputs:
-#- name: samelanguage
-#type: CHECKBOX
-#promptMessage:
-#promptMessageKey: language-preferences.same-language
-#options:
-#selectableOptions:
-#- value: SAME_LANGUAGE
-#messageKey: speak-language-preferences.Same-language
-      - name: spokenLanguage
-        type: RADIO
+      - name: samelanguage
+        type: CHECKBOX
         promptMessage:
           promptMessageKey: language-preferences.what-language-do-you-prefer-to-speak
         helpMessageKey: language-preferences.the-county-will-do-their-best-to-connect-you-with-someone-who-speaks-your
+        options:
+          selectableOptions:
+            - value: SAME_LANGUAGE
+              messageKey: same-language-preferences.to-read-or-write
+      - name: spokenLanguage
+        type: RADIO
         options:
           selectableOptions:
             - value: AMERICAN_SIGN_LANGUAGE
