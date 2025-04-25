@@ -48,8 +48,10 @@ public class CertainPopsPilotCountyTest extends JourneyTest {
     testPage.clickContinue();
     testPage.clickContinue();
 
-    // Language Preferences
+    // Written Language Preferences
     testPage.enter("writtenLanguage", "English");
+    testPage.clickContinue();
+    // Spoken Language Preferences
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue();
@@ -90,6 +92,8 @@ public class CertainPopsPilotCountyTest extends JourneyTest {
 
     // Language Preferences
     testPage.enter("writtenLanguage", "English");
+    testPage.clickContinue();
+    // Spoken Language Preferences
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue();
