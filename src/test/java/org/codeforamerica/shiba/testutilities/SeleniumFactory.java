@@ -1,13 +1,17 @@
 package org.codeforamerica.shiba.testutilities;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.FactoryBean;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
 
@@ -42,6 +46,8 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
     options.addArguments("--window-size=1280,1600");
     options.addArguments("--headless=new");
     options.addArguments("--remote-allow-origins=*");
+	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+	options.setImplicitWaitTimeout(duration);
     driver = new ChromeDriver(options);
   }
 

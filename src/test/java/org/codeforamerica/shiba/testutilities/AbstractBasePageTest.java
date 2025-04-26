@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.codeforamerica.shiba.DocumentRepositoryTestConfig;
@@ -80,7 +81,7 @@ public abstract class AbstractBasePageTest {
   @BeforeEach
   protected void setUp() throws IOException {
     baseUrl = "http://localhost:%s".formatted(localServerPort);
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
+    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
     driver.navigate().to(baseUrl);
     initTestPage();
   }
@@ -169,7 +170,7 @@ public abstract class AbstractBasePageTest {
 
   protected void waitForDocumentUploadToComplete() {
     await().atMost(15, TimeUnit.SECONDS)
-    .until(() -> driver.findElements(By.linkText("cancel")).isEmpty());
+    .until(() -> !driver.findElements(By.linkText("delete")).isEmpty());
   }
 
   /**

@@ -12,6 +12,7 @@ public class LandmarkPagesConfiguration {
   private List<String> startTimerPages = new ArrayList<>();
   private List<String> landingPages = new ArrayList<>();
   private List<String> postSubmitPages = new ArrayList<>();
+  private List<String> laterDocsPostSubmitExcludePages = new ArrayList<>();
   private HashSet<String> completed = new HashSet<>();
   private String programDocumentsPage;
   private String nextStepsPage;
@@ -52,6 +53,10 @@ public class LandmarkPagesConfiguration {
 
   public boolean isPostSubmitPage(String pageName) {
     return postSubmitPages.contains(pageName);
+  }
+  
+  public boolean isLaterDocsPostSubmitExcludePage(String pageName) {
+	 return laterDocsPostSubmitExcludePages.contains(pageName);
   }
   
   public void addCompleted(String pageName) {

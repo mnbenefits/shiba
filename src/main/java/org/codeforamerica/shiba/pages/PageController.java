@@ -532,7 +532,7 @@ public class PageController {
     }
     model.put("totalMilestones", programs.contains(Program.CERTAIN_POPS) ? "7" : "6");
 
-    if (landmarkPagesConfiguration.isPostSubmitPage(pageName)) {
+	if (landmarkPagesConfiguration.isPostSubmitPage(pageName)) {
       model.put("docRecommendations", docRecommendationMessageService
           .getPageSpecificRecommendationsMessage(applicationData, locale));
       model.put("nextStepSections", nextStepsContentService
@@ -729,18 +729,19 @@ public class PageController {
     	   !landmarkPagesConfiguration.isHealthcareRenewalLandingPage(pageName) &&
     	   !landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName) &&
            applicationData.getFlow() != LATER_DOCS
-           && hasSubmittedDocuments(pageName, "shouldRedirectToProgramDocumentsPage");
+			&& hasSubmittedDocuments();
   }
 
   private boolean shouldRedirectToLaterDocsTerminalPage(String pageName) {
-    LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
-        .getLandmarkPages();
-    // Documents have been submitted in later docs flow and applicant is attempting to navigate back to a previous page in this flow
-    return !landmarkPagesConfiguration.isLaterDocsTerminalPage(pageName)
-        && landmarkPagesConfiguration.isPostSubmitPage(pageName)
-        && applicationData.getFlow() == LATER_DOCS
-        && hasSubmittedDocuments(pageName, "shouldRedirectToLaterDocsTerminalPage");
-  }
+LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
+    .getLandmarkPages();
+// Documents have been submitted in later docs flow and applicant is attempting to navigate back to a previous page in this flow
+boolean isNotLaterDocsTerminalPage =  !landmarkPagesConfiguration.isLaterDocsTerminalPage(pageName); //documentsSent is the laterDocs terminal page
+boolean isLaterDocsPostSubmitExcludePage = landmarkPagesConfiguration.isLaterDocsPostSubmitExcludePage(pageName);
+boolean isLaterDocsFlow = applicationData.getFlow() == LATER_DOCS;
+boolean hasSubmittedDocuments = hasSubmittedDocuments();
+return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLaterDocsFlow && hasSubmittedDocuments ;
+}
   
   private boolean shouldRedirectToHealthcareRenewalTerminalPage(String pageName) {
     LandmarkPagesConfiguration landmarkPagesConfiguration = applicationConfiguration
@@ -749,7 +750,7 @@ public class PageController {
     return !landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)
         && landmarkPagesConfiguration.isPostSubmitPage(pageName)
         && applicationData.getFlow() == HEALTHCARE_RENEWAL
-        && hasSubmittedDocuments(pageName, "shouldRedirectToHealthcareRenewalTerminalPage");
+			&& hasSubmittedDocuments();
   }
   
   private boolean shouldRedirectToHealthcareRenewalLandingPage(String pageName) {
@@ -757,7 +758,7 @@ public class PageController {
 	        .getLandmarkPages();
 	    return landmarkPagesConfiguration.isHealthcareRenewalLandingPage(pageName)
 	        && applicationData.getFlow() == HEALTHCARE_RENEWAL
-	        && hasSubmittedDocuments(pageName, "shouldRedirectToHealthcareRenewalLandingPage");
+				&& hasSubmittedDocuments();
 	  }
 
   @PostMapping("/groups/{groupName}/delete")
@@ -1089,7 +1090,7 @@ public class PageController {
 	    return writer;
 	}
 
-  private boolean hasSubmittedDocuments(String pageName, String invokedBy) {
+	private boolean hasSubmittedDocuments() {
     Application application;
     String id = applicationData.getId();
 
