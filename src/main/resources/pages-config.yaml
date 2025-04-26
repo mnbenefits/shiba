@@ -7645,13 +7645,13 @@ landmarkPages:
     - healthcareRenewalUpload
   landingPages: # the home page of the app
     - landing
-  postSubmitPages: # pages which are accessible after submitting an application, also all pages of the laterdocs flow
+  postSubmitPages: # pages which are accessible after submitting an application
     - addingDocuments
-    - howToAddDocuments
     - documentRecommendation
     - uploadDocuments
     - uploadDocumentsDeleteWarningPage
     - programDocuments
+    - howToAddDocuments
     - documentOffboarding
     - documentSubmitConfirmation
     - nextSteps
@@ -7659,7 +7659,6 @@ landmarkPages:
     - success
     - recommendations
     - feedback
-    - matchInfo
     - documentsSent
     #For healthcare renewal
     - healthcareRenewalAddingDocuments
@@ -7672,6 +7671,20 @@ landmarkPages:
     - healthcareRenewalSubmissionConfirmation
     - healthcareRenewalMatchInfo
     - healthcareRenewalDocumentsSent
+#  all pages of the laterdocs flow to restrict them from back navigation
+  laterDocsPostSubmitExcludePages:
+    - matchInfo
+    - tribalNationMember
+    - selectTheTribe
+    - identifyCounty
+    - nationOfResidence
+    - nationsBoundary
+    - readyToUploadDocuments
+    - howToAddDocuments
+    - documentSubmitConfirmation
+    - uploadDocuments
+    - uploadDocumentsDeleteWarningPage
+    - programDocuments
   nextStepsPage: nextSteps
   programDocumentsPage: programDocuments
   terminalPage: success # the final page of the main flow ("Done! Your application has been submitted.")
