@@ -486,6 +486,60 @@ pageDefinitions:
     headerKey: ready-to-upload-documents.header
     headerHelpMessageKey: ready-to-upload-documents.first-we'll-ask-you
     contextFragment: readyToUploadContextFragment
+  - &languagePreferences
+    name: languagePreferences
+    pageTitle: language-preferences.title
+    headerKey: language-preferences.language-preferences
+    contextFragment: languagePreferencesContextFragment
+    inputs:
+      - name: writtenLanguage
+        type: SELECT
+        promptMessage:
+          promptMessageKey: language-preferences.what-language-do-you-prefer-to-read-or-write
+        helpMessageKey: language-preferences.the-county-will-do-their-best-to-provide-documents-in-your-preferred-language
+        options:
+          selectableOptions:
+            - value: ENGLISH
+              messageKey: language-preferences.english
+            - value: SPANISH
+              messageKey: language-preferences.spanish
+            - value: SOOMAALI
+              messageKey: language-preferences.soomaali
+            - value: VIETNAMESE
+              messageKey: language-preferences.vietnamese
+            - value: RUSSIAN
+              messageKey: language-preferences.russian
+            - value: HMOOB
+              messageKey: language-preferences.hmoob
+      - name: spokenLanguage
+        type: SELECT
+        promptMessage:
+          promptMessageKey: language-preferences.what-language-do-you-prefer-to-speak
+        helpMessageKey: language-preferences.the-county-will-do-their-best-to-connect-you-with-someone-who-speaks-your
+        options:
+          selectableOptions:
+            - value: ENGLISH
+              messageKey: language-preferences.english
+            - value: SPANISH
+              messageKey: language-preferences.spanish
+            - value: SOOMAALI
+              messageKey: language-preferences.soomaali
+            - value: VIETNAMESE
+              messageKey: language-preferences.vietnamese
+            - value: RUSSIAN
+              messageKey: language-preferences.russian
+            - value: HMOOB
+              messageKey: language-preferences.hmoob
+      - name: needInterpreter
+        type: RADIO
+        promptMessage:
+          promptMessageKey: language-preferences.do-you-need-an-interpreter
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: general.inputs.yes
+            - value: "false"
+              messageKey: general.inputs.no
   - &writtenLanguage
     name: writtenLanguage
     pageTitle: language-preferences.title
@@ -494,84 +548,88 @@ pageDefinitions:
     inputs:
       - name: writtenLanguage
         type: RADIO
-        promptMessage:
-          promptMessageKey: language-preferences.what-language-do-you-prefer-to-read-or-write
+#        promptMessage:
+#          promptMessageKey: language-preferences.what-language-do-you-prefer-to-read-or-write
         helpMessageKey: language-preferences.the-county-will-do-their-best-to-provide-documents-in-your-preferred-language
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:
             - value: ARABIC
-              messageKey: read-write-language-preferences.Arabic
+              messageKey: language-preferences.Arabic
             - value: AMHARIC
-              messageKey: read-write-language-preferences.Amharic
+              messageKey: language-preferences.Amharic
             - value: ENGLISH
-              messageKey: read-write-language-preferences.english
+              messageKey: language-preferences.english
             - value: SPANISH
-              messageKey: read-write-language-preferences.spanish
-            - value: RUSSIAN
-              messageKey: read-write-language-preferences.hmoob
-            - value: HMOOB
-              messageKey: read-write-language-preferences.hmoob
+              messageKey: language-preferences.Spanish
+            - value: HMONG
+              messageKey: language-preferences.hmoob
             - value: KAREN
-              messageKey: read-write-language-preferences.Karen
-            - value: KOREAN
-              messageKey: read-write-language-preferences.Korean
+              messageKey: language-preferences.Karen
+            - value: NEPAL
+              messageKey: language-preferences.Nepali
             - value: OROMO
-              messageKey: read-write-language-preferences.Oromo
+              messageKey: language-preferences.Oromo
             - value: SOOMAALI
-              messageKey: read-write-language-preferences.soomaali
+              messageKey: language-preferences.soomaali
             - value: RUSSIAN
-              messageKey: read-write-language-preferences.russian
-            - value: HMOOB
-              messageKey: read-write-language-preferences.vietnamese
+              messageKey: language-preferences.russian
+            - value: UKRAINIAN
+              messageKey: language-preferences.Ukrainian
+            - value: VIETNAMI
+              messageKey: language-preferences.vietnamese
             - value: OTHER
-              messageKey: read-write-language-preferences.different-language
+              messageKey: language-preferences.different-language
   - &spokenLanguage
     name: spokenLanguage
     pageTitle: language-preferences.title
-    headerKey: language-preferences.language-preferences
+    headerKey: language-preferences.what-language-do-you-prefer-to-speak
     contextFragment: languagePreferencesContextFragment
     inputs:
       - name: samelanguage
         type: CHECKBOX
-        promptMessage:
-          promptMessageKey: language-preferences.what-language-do-you-prefer-to-speak
-        helpMessageKey: language-preferences.the-county-will-do-their-best-to-connect-you-with-someone-who-speaks-your
+        helpMessageKey: language-preferences.the-county-will-do-their-best-to-connect-you-with-someone-who-speak-your-language
         options:
           selectableOptions:
             - value: SAME_LANGUAGE
               messageKey: same-language-preferences.to-read-or-write
       - name: spokenLanguage
         type: RADIO
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:
             - value: AMERICAN_SIGN_LANGUAGE
-              messageKey: speak-language-preferences.American-sign-language
+              messageKey: language-preferences.American-sign-language
             - value: ARABIC
-              messageKey: speak-language-preferences.Arabic
+              messageKey: language-preferences.Arabic
             - value: AMHARIC
-              messageKey: speak-language-preferences.Amharic
+              messageKey: language-preferences.Amharic
             - value: ENGLISH
-              messageKey: speak-language-preferences.english
+              messageKey: language-preferences.english
             - value: SPANISH
-              messageKey: speak-language-preferences.spanish
-            - value: RUSSIAN
-              messageKey: speak-language-preferences.russian
+              messageKey: language-preferences.Spanish
             - value: HMOOB
-              messageKey: speak-language-preferences.hmoob
+              messageKey: language-preferences.hmoob
             - value: KAREN
-              messageKey: speak-language-preferences.Karen
-            - value: KOREAN
-              messageKey: speak-language-preferences.Korean
+              messageKey: language-preferences.Karen
+            - value: NEPALI
+              messageKey: language-preferences.Nepali
             - value: OROMO
-              messageKey: speak-language-preferences.Oromo
+              messageKey: language-preferences.Oromo
             - value: SOOMAALI
-              messageKey: speak-language-preferences.soomaali
+              messageKey: language-preferences.soomaali
             - value: RUSSIAN
-              messageKey: speak-language-preferences.russian
+              messageKey: language-preferences.russian 
+            - value: UKRAINIAN
+              messageKey: language-preferences.Ukrainian
             - value: HMOOB
-              messageKey: speak-language-preferences.vietnamese
+              messageKey: language-preferences.vietnamese 
             - value: OTHER
-              messageKey: speak-language-preferences.different-language
+              messageKey: language-preferences.different-language
       - name: needInterpreter
         type: RADIO
         promptMessage:
