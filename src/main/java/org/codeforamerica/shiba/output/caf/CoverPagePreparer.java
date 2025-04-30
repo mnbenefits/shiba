@@ -13,6 +13,7 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.TRIBAL_NATION;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.NATION_OF_RESIDENCE;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.LIVING_IN_TRIBAL_NATION_BOUNDARY;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.SPOKEN_LANGUAGE;
 import static org.codeforamerica.shiba.TribalNation.WhiteEarthNation;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
@@ -80,12 +81,13 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
     var fullNameInput = getFullName(application);
     var tribalAffiliationInput = getTribalAffiliation(application);
     var tribalNationBoundary = getTribalNationBoundary(application);
+    var languagePrefrance = getLanguagePrefrance(application);
     var householdMemberInputs = getHouseholdMembers(application);
     var countyInstructionsInput = getCountyInstructions(application, recipient, document);
     var utmSourceInput = getUtmSource(application, document);
     var documentDestinations = getDocumentDestinations(application, recipient, document);
     return combineCoverPageInputs(programsInput, emergencyInput, fullNameInput, countyInstructionsInput,
-        utmSourceInput, householdMemberInputs, tribalAffiliationInput, tribalNationBoundary, documentDestinations);
+        utmSourceInput, householdMemberInputs, tribalAffiliationInput, tribalNationBoundary, languagePrefrance, documentDestinations);
   }
 
 	private List<DocumentField> getEmergencyAssistance(Application application) {
@@ -151,13 +153,14 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
   private List<DocumentField> combineCoverPageInputs(DocumentField programsInput, List<DocumentField> emergencyInput,
       DocumentField fullNameInput, DocumentField countyInstructionsInput,
       DocumentField utmSourceInput, List<DocumentField> householdMemberInputs,
-      DocumentField tribalAffiliationInput, DocumentField tribalNationBoundary, DocumentField documentDestinationsInput) {
+      DocumentField tribalAffiliationInput, DocumentField tribalNationBoundary, List<DocumentField> languagePrefrance, DocumentField documentDestinationsInput) {
     var everythingExceptHouseholdMembers = new ArrayList<DocumentField>();
     everythingExceptHouseholdMembers.add(programsInput);
     everythingExceptHouseholdMembers.addAll(emergencyInput);
     everythingExceptHouseholdMembers.add(fullNameInput);
     everythingExceptHouseholdMembers.add(tribalAffiliationInput);
     everythingExceptHouseholdMembers.add(tribalNationBoundary);
+    everythingExceptHouseholdMembers.addAll(languagePrefrance);
     everythingExceptHouseholdMembers.add(countyInstructionsInput);
     everythingExceptHouseholdMembers.add(utmSourceInput);
     everythingExceptHouseholdMembers.add(documentDestinationsInput);
@@ -207,6 +210,15 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
 		}
 
 		return new DocumentField("coverPage", "nationOfResidence", value, SINGLE_VALUE);
+	}
+    
+    private List<DocumentField> getLanguagePrefrance(Application application) {
+        List<DocumentField> inputsForSubworkflow = new ArrayList<>();
+	    var spokenLanguage = getFirstValue(application.getApplicationData().getPagesData(), SPOKEN_LANGUAGE);
+	    
+	    inputsForSubworkflow.add(new DocumentField("spokenLanguage", "spokenLanguage", spokenLanguage, SINGLE_VALUE));
+
+		return inputsForSubworkflow;
 	}
 
   private List<DocumentField> getHouseholdMembers(Application application) {

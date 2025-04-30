@@ -1,7 +1,8 @@
 mappings:
-  languagePreferences:
-    spokenLanguage: APPLICANT_SPOKEN_LANGUAGE_PREFERENCE
+  writtenLanguage:
     writtenLanguage: APPLICANT_WRITTEN_LANGUAGE_PREFERENCE
+  spokenLanguage:
+    spokenLanguage: APPLICANT_SPOKEN_LANGUAGE_PREFERENCE
     needInterpreter: NEED_INTERPRETER
   personalInfo:
     firstName: APPLICANT_FIRST_NAME
