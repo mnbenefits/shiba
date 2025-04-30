@@ -21,7 +21,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag("documentUploadJourney")
-@Disabled
+//@Disabled
 public class DocumentUploadJourneyTest extends JourneyTest {
 
   @Test

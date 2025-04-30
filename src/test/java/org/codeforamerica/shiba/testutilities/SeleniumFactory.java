@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -38,10 +39,12 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
   }
 
   public void start() throws IOException {
+	//System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");//TODO emj testing this
     WebDriverManager.chromedriver().setup();
     ChromeOptions options = new ChromeOptions();
     HashMap<String, Object> chromePrefs = new HashMap<>();
     chromePrefs.put("download.default_directory", tempdir.toString());
+    options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
     options.setExperimentalOption("prefs", chromePrefs);
     options.addArguments("--window-size=1280,1600");
     options.addArguments("--headless=new");

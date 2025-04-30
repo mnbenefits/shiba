@@ -15,7 +15,7 @@ import org.openqa.selenium.By;
 public class LaterDocsJourneyTest extends JourneyTest {
 
   
-  @Disabled("This test passes on VDIs but fails on GitHub")
+  //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void laterDocsFlow() {
     testPage.clickButton("Upload documents");
@@ -193,7 +193,7 @@ public class LaterDocsJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
   }
   
-  @Disabled("This test randomly fails on VDIs")
+  //@Disabled("This test randomly fails on VDIs")
   @Test
   void laterDocsTribalNationFlow() {
     testPage.clickButton("Upload documents");
