@@ -1,0 +1,51 @@
+<!-- This is a custom input for language preferences with additional functionality to hide and show portions of the inputs -->
+<div th:fragment="languagePreferenceInputFragment(input, data)">
+  <!-- Declare isChecked once -->
+  <div th:with="isChecked=${data.get(input.name) != null and data.get(input.name).value == 'true'}">
+    
+    <!-- Always render the checkbox -->
+    <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
+
+    <!-- Conditionally hide the spokenLanguage follow-up only -->
+    <div id="language-questions" th:class="${isChecked} ? 'hide' : ''">
+      <th:block th:each="followUp : ${input.followUps}">
+        <th:block th:if="${followUp.name == 'spokenLanguage'}">
+          <div class="spacing-above-60">
+           <div th:replace="~{fragments/inputs/__${followUp.fragment()}__ :: __${followUp.fragment()}__(${followUp}, ${data})}"></div>
+          </div>
+        </th:block>
+      </th:block>
+    </div>
+
+    <!-- Always show the needInterpreter follow-up -->
+    <th:block th:each="followUp : ${input.followUps}">
+      <th:block th:if="${followUp.name == 'needInterpreter'}">
+        <div class="spacing-above-60">
+          <div th:replace="~{fragments/inputs/__${followUp.fragment()}__ :: __${followUp.fragment()}__(${followUp}, ${data})}"></div>
+        </div>
+      </th:block>
+    </th:block>
+
+    <!-- JavaScript to toggle spoken language section -->
+    <script th:inline="javascript">
+      $(document).ready(function () {
+        var checkbox = document.getElementsByName('same_spoken_language[]')[0];
+
+        // Initial load: hide section if already checked
+        if (checkbox && checkbox.checked) {
+          $('#language-questions').hide();
+        }
+
+        checkbox.addEventListener('change', function () {
+          if (this.checked) {
+            $('#language-questions').hide();
+            document.querySelector("input:text:not([readonly='readonly'])").value = 'true';
+          } else {
+            $('#language-questions').show();
+            document.querySelector("input:text:not([readonly='readonly'])").value = '';
+          }
+        });
+      });
+    </script>
+  </div>
+</div>
