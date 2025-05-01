@@ -19,28 +19,12 @@ public class LaterDocsJourneyTest extends JourneyTest {
   //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void laterDocsFlow() {
-    testPage.clickButton("Upload documents");
+    testPage.clickButton("Upload documents", "Ready to upload documents");
 
     assertThat(driver.getTitle()).isEqualTo("Ready to upload documents");
     assertNotNull(testPage.findElementById("headerMNbenefits"));
     assertNotNull(testPage.findElementById("footerMNbenefits"));
-    testPage.clickContinue();
-//    testPage.clickLink("Enter my zip code instead.");
-//    assertThat(driver.getTitle()).isEqualTo("Identify zip");
-//
-//    // should direct me to email the county if my zipcode is unrecognized or unsupported
-//    testPage.enter("zipCode", "11111");
-//    testPage.clickContinue();
-//    assertThat(driver.getTitle()).isEqualTo("Email Docs To Your County");
-//
-//    // should allow me to proceed with the flow if I enter a zip code for an active county
-//    testPage.clickLink("< Go Back");
-//    testPage.enter("zipCode", "55444");
-//    testPage.clickContinue();
-//    assertThat(driver.getTitle()).isEqualTo("Match Info");
-//
-//    // should direct me to email docs to my county if my county is not supported
-//    navigateTo("identifyCounty");
+    testPage.clickContinue("Match Info");
 
     assertThat(driver.getTitle()).isEqualTo("Match Info");
     // verify that the header & footer are the MNbenefits header & footer
@@ -54,62 +38,58 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.enter("ssn", "123456789");
     testPage.enter("caseNumber", "1234567");
     testPage.enter("phoneNumber", "7041234567");
-    testPage.clickContinue();
+    testPage.clickContinue("Identify County");
     
     // Identify County
     assertThat(driver.getTitle()).isEqualTo("Identify County");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Tribal Nation member");
 
     // Tribal Nation Member
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
-    testPage.clickButton("Yes");
+    testPage.clickButton("Yes", "Select a Tribal Nation");
     
     // Select Tribal Nation
     assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
     testPage.enter("selectedTribe", "Red Lake Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
     
     // when the county is Clearwater, the page after selectTheTribe is Nations Boundary
-    //navigateTo("identifyCounty");
     testPage.goBack();
     testPage.goBack();
     testPage.goBack();
     testPage.enter("county", "Clearwater");
-    testPage.clickContinue();
+    testPage.clickContinue("Tribal Nation member");
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
-    testPage.clickButton("Yes");
+    testPage.clickButton("Yes", "Select a Tribal Nation");
     testPage.enter("selectedTribe", "Red Lake Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Nations Boundary");
     assertThat(driver.getTitle()).isEqualTo("Nations Boundary");
-    testPage.clickButton("Yes");
+    testPage.clickButton("Yes", "Tribal Nation of residence");
     testPage.enter("selectedNationOfResidence", "Red Lake Nation");
-    assertThat(testPage.getHeader()).isEqualTo("Tell us which Tribal Nation you live in.");
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
 
     // when White Earth Nation is selected, Nations Boundary is not displayed
-   // navigateTo("selectTheTribe");
     testPage.goBack();
     testPage.goBack();
     testPage.goBack();
+    assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
     testPage.enter("selectedTribe", "White Earth Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
 
     //when the answer to live in nationsBoundary question is No, then next page is HowToAddDocuments
-    //navigateTo("selectTheTribe");
     testPage.goBack();
+    assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
     testPage.enter("selectedTribe", "Red Lake Nation");
-    testPage.clickContinue();
-    //at this point we should be on the nations boundary page
-    testPage.clickButton("No");
+    testPage.clickContinue("Nations Boundary");
+    assertThat(driver.getTitle()).isEqualTo("Nations Boundary");
+    testPage.clickButton("No", "How to add documents");
     
     // How to add documents
-    assertThat(driver.getTitle()).isEqualTo("How to add documents");
     testPage.clickContinue();
-    
     // should allow me to upload documents and those documents should be sent to the ESB
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
     assertNotNull(testPage.findElementById("headerMNbenefits"));
@@ -118,13 +98,13 @@ public class LaterDocsJourneyTest extends JourneyTest {
 
     uploadPdfFile();
     waitForDocumentUploadToComplete();
-    testPage.clickButton("Submit my documents");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
     assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
-    testPage.clickButton("No, add more documents"); // Go back
+    testPage.clickButton("No, add more documents", "Upload documents"); // Go back
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
 
-    testPage.clickButton("Submit my documents");
-    testPage.clickButton("Yes, submit and finish");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
+    testPage.clickButton("Yes, submit and finish", "Documents Sent");
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
     assertNotNull(testPage.findElementById("headerMNbenefits"));
     assertNotNull(testPage.findElementById("footerMNbenefits"));
@@ -140,12 +120,12 @@ public class LaterDocsJourneyTest extends JourneyTest {
   
   @Test
   void laterDocsMinimumFlow() {
-     testPage.clickButton("Upload documents");
+     testPage.clickButton("Upload documents", "Ready to upload documents");
 
     assertThat(driver.getTitle()).isEqualTo("Ready to upload documents");
     assertNotNull(testPage.findElementById("headerMNbenefits"));
     assertNotNull(testPage.findElementById("footerMNbenefits"));
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
 
     assertThat(driver.getTitle()).isEqualTo("Match Info");
     // verify that the header & footer are the MNbenefits header & footer
@@ -159,19 +139,19 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.enter("ssn", "123456789");
     testPage.enter("caseNumber", "1234567");
     testPage.enter("phoneNumber", "7041234567");
-    testPage.clickContinue();
+    testPage.clickContinue("Identify County");
 
     // Identify County
     assertThat(driver.getTitle()).isEqualTo("Identify County");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Tribal Nation member");
 
     // Tribal Nation Member
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
-    testPage.clickButton("No");
+    testPage.clickButton("No", "How to add documents");
 
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
-    testPage.clickContinue();
+    testPage.clickContinue("Upload documents");
     
     // should allow me to upload documents and those documents should be sent to the ESB
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
@@ -181,13 +161,13 @@ public class LaterDocsJourneyTest extends JourneyTest {
 
     uploadPdfFile();
     waitForDocumentUploadToComplete();
-    testPage.clickButton("Submit my documents");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
     assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
-    testPage.clickButton("No, add more documents"); // Go back
+    testPage.clickButton("No, add more documents", "Upload documents"); // Go back
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
 
-    testPage.clickButton("Submit my documents");
-    testPage.clickButton("Yes, submit and finish");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
+    testPage.clickButton("Yes, submit and finish", "Documents Sent");
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
     assertNotNull(testPage.findElementById("headerMNbenefits"));
     assertNotNull(testPage.findElementById("footerMNbenefits"));
@@ -209,7 +189,7 @@ public class LaterDocsJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Ready to upload documents");
     assertNotNull(testPage.findElementById("headerMNbenefits"));
     assertNotNull(testPage.findElementById("footerMNbenefits"));
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
 
     assertThat(driver.getTitle()).isEqualTo("Match Info");
     // verify that the header & footer are the MNbenefits header & footer
@@ -223,38 +203,37 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.enter("ssn", "123456789");
     testPage.enter("caseNumber", "1234567");
     testPage.enter("phoneNumber", "7041234567");
-    testPage.clickContinue();
+    testPage.clickContinue("Identify County");
 
     // Identify County
     assertThat(driver.getTitle()).isEqualTo("Identify County");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Tribal Nation member");
 
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
-    testPage.clickButton("Yes");
+    testPage.clickButton("Yes", "Select a Tribal Nation");
     assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
     testPage.enter("selectedTribe", "Red Lake Nation");
 
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
     testPage.goBack();
     testPage.goBack();
     testPage.goBack();
     testPage.enter("county", "Clearwater");
-    testPage.clickContinue();
+    testPage.clickContinue("Tribal Nation member");
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
-    testPage.clickButton("Yes");
+    testPage.clickButton("Yes", "Select a Tribal Nation");
     
     assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
     testPage.enter("selectedTribe", "Red Lake Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Nations Boundary");
 
     assertThat(driver.getTitle()).isEqualTo("Nations Boundary");
-    testPage.clickButton("Yes");
+    testPage.clickButton("Yes", "Tribal Nation of residence");
     testPage.enter("selectedNationOfResidence", "Red Lake Nation");
     assertThat(testPage.getHeader()).isEqualTo("Tell us which Tribal Nation you live in.");
-   // testPage.enter("selectedTribe", "Red Lake Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
 
     // when White Earth Nation is selected, Nations Boundary is not displayed
@@ -262,19 +241,19 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.goBack();
     testPage.goBack();
     testPage.enter("selectedTribe", "White Earth Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
 
     //when the answer to live in nationsBoundary question is No, then next page is HowToAddDocuments
     testPage.goBack();
     testPage.enter("selectedTribe", "Red Lake Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Nations Boundary");
     //at this point we should be on the nations boundary page
-    testPage.clickButton("No");
+    testPage.clickButton("No", "How to add documents");
     
     // How to add documents
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
-    testPage.clickContinue();
+    testPage.clickContinue("Upload documents");
     
     // should allow me to upload documents and those documents should be sent to the ESB
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
