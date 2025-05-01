@@ -54,6 +54,9 @@ public class Page {
 
   public void goBack() {
     driver.findElement(By.partialLinkText("Go Back")).click();
+	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+	WebDriverWait wait = new WebDriverWait(driver, duration);
+	wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Go Back")));
   }
 
   public void clickLink(String linkText) {
