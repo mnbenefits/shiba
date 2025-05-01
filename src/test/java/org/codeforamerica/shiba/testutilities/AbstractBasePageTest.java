@@ -38,10 +38,14 @@ import org.codeforamerica.shiba.pages.enrichment.smartystreets.SmartyStreetClien
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -73,23 +77,29 @@ public abstract class AbstractBasePageTest {
 
   protected String baseUrl;
 
+
   @LocalServerPort
   protected String localServerPort;
 
   protected Page testPage;
 
-  @BeforeEach
-  protected void setUp() throws IOException {
-    baseUrl = "http://localhost:%s".formatted(localServerPort);
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
-    driver.navigate().to(baseUrl);
-    initTestPage();
-  }
+	@BeforeEach
+	protected void setUp() throws IOException {
+		baseUrl = "http://localhost:%s".formatted(localServerPort);
+		driver.navigate().to(baseUrl);
+		initTestPage();
+	}
 
   protected void initTestPage() {
     testPage = new Page(driver);
   }
 
+  /**
+   * This method is the equivalent of using the browser's back history.
+   * Like holding the browser back arrow down to see history. 
+   * Right click on the back arrow does the same thing.
+   * @param pageName
+   */
   protected void navigateTo(String pageName) {
     driver.navigate().to(baseUrl + "/pages/" + pageName);
   }

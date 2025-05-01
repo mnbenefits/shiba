@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 @Tag("laterDocsJourney")
 public class LaterDocsJourneyTest extends JourneyTest {
@@ -71,7 +72,10 @@ public class LaterDocsJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
     
     // when the county is Clearwater, the page after selectTheTribe is Nations Boundary
-    navigateTo("identifyCounty");
+    //navigateTo("identifyCounty");
+    testPage.goBack();
+    testPage.goBack();
+    testPage.goBack();
     testPage.enter("county", "Clearwater");
     testPage.clickContinue();
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
@@ -86,13 +90,17 @@ public class LaterDocsJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
 
     // when White Earth Nation is selected, Nations Boundary is not displayed
-    navigateTo("selectTheTribe");
+   // navigateTo("selectTheTribe");
+    testPage.goBack();
+    testPage.goBack();
+    testPage.goBack();
     testPage.enter("selectedTribe", "White Earth Nation");
     testPage.clickContinue();
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
 
     //when the answer to live in nationsBoundary question is No, then next page is HowToAddDocuments
-    navigateTo("selectTheTribe");
+    //navigateTo("selectTheTribe");
+    testPage.goBack();
     testPage.enter("selectedTribe", "Red Lake Nation");
     testPage.clickContinue();
     //at this point we should be on the nations boundary page
@@ -123,7 +131,7 @@ public class LaterDocsJourneyTest extends JourneyTest {
     verify(pageEventPublisher).publish(any());
 
     // Assert that applicant can't resubmit docs at this point
-    navigateTo("uploadDocuments");
+    navigateTo("uploadDocuments");//There is no back link on the Documents Sent page, so use the browser back arrow.
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
 
     navigateTo("documentSubmitConfirmation");
@@ -152,7 +160,7 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.enter("caseNumber", "1234567");
     testPage.enter("phoneNumber", "7041234567");
     testPage.clickContinue();
-    
+
     // Identify County
     assertThat(driver.getTitle()).isEqualTo("Identify County");
     testPage.enter("county", "Hennepin");
@@ -236,13 +244,16 @@ public class LaterDocsJourneyTest extends JourneyTest {
     testPage.clickContinue();
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
     testPage.clickButton("Yes");
-
+    
+    assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
+    testPage.enter("selectedTribe", "Red Lake Nation");
     testPage.clickContinue();
 
     assertThat(driver.getTitle()).isEqualTo("Nations Boundary");
     testPage.clickButton("Yes");
     testPage.enter("selectedNationOfResidence", "Red Lake Nation");
     assertThat(testPage.getHeader()).isEqualTo("Tell us which Tribal Nation you live in.");
+   // testPage.enter("selectedTribe", "Red Lake Nation");
     testPage.clickContinue();
     assertThat(driver.getTitle()).isEqualTo("How to add documents");
 
