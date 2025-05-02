@@ -2,16 +2,12 @@ package org.codeforamerica.shiba.testutilities;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.FactoryBean;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
