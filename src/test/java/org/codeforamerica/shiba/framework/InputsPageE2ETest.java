@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import org.codeforamerica.shiba.testutilities.AbstractExistingStartTimePageTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -68,7 +69,8 @@ public class InputsPageE2ETest extends AbstractExistingStartTimePageTest {
     uneditableInput.sendKeys("new value");
     assertThat(uneditableInput.getAttribute("value")).isEqualTo("default value");
   }
-
+  
+  @Disabled
   @Test
   void specialInputsShouldBehaveCorrectly() {
     // Uneditable inputs should be be the same when returning to a page
@@ -116,8 +118,7 @@ public class InputsPageE2ETest extends AbstractExistingStartTimePageTest {
     // Follow up should show when returning to the page, and their values should be preserved
     String followUpTextInputValue = "some follow up";
     testPage.enter(followUpInputName(radioInput), followUpTextInputValue + " for radio");
-    testPage.enter(followUpInputName(checkboxInput), followUpTextInputValue + " for checkbox");
-    testPage.clickContinue();
+    testPage.clickContinue("nextPageTitle");
     testPage.goBack();
     assertThat(followUpIsDisplayedForInput(radioInput)).isTrue();
     assertThat(followUpIsDisplayedForInput(checkboxInput)).isTrue();

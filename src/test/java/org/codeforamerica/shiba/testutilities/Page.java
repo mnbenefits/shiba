@@ -52,6 +52,9 @@ public class Page {
     return driver.findElement(By.tagName("h1")).getText();
   }
 
+  /**
+   * Click the Go Back link and wait for the previous page to load and Go Back link to be clickable.
+   */
   public void goBack() {
     driver.findElement(By.partialLinkText("Go Back")).click();
 	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
