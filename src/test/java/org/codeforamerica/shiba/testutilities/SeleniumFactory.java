@@ -40,19 +40,25 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
     return true;
   }
 
+  /**
+   * Set up the driver without implicit timeouts because they don't seem to work
+   * as of April 2025. Journey tests started failing in August 2024.
+   * @throws IOException
+   */
   public void start() throws IOException {
     WebDriverManager.chromedriver().setup();
     ChromeOptions options = new ChromeOptions();
     HashMap<String, Object> chromePrefs = new HashMap<>();
     chromePrefs.put("download.default_directory", tempdir.toString());
-    //options.setPageLoadStrategy(PageLoadStrategy.NORMAL);  //TODO emj remove these options if not needed
+    options.setPageLoadStrategy(PageLoadStrategy.NORMAL); 
     options.setExperimentalOption("prefs", chromePrefs);
     options.addArguments("--window-size=1280,1600");//needed for snapshots
     options.addArguments("--headless=new");
     options.addArguments("--remote-allow-origins=*");//prevents session errors
-	//Duration duration = Duration.of(35, ChronoUnit.SECONDS);
+	//Duration duration = Duration.of(2, ChronoUnit.SECONDS);
 	//options.setImplicitWaitTimeout(duration);
     driver = new ChromeDriver(options);
+    //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
   }
 
   public void stop() {
