@@ -42,9 +42,9 @@ public class SessionScopedApplicationDataTest extends AbstractStaticMessageSourc
   void shouldClearTheSessionWhenUserNavigatesToALandingPage() {
     navigateTo("testStaticLandingPage");
 
-    testPage.clickContinue();
+    testPage.clickContinue("second page title");
     testPage.enter("foo", "someInput");
-    testPage.clickContinue();
+    testPage.clickContinue("third page title");
 
     navigateTo("testStaticLandingPage");
     driver.navigate().to(baseUrl + "/captureApplicationDataFromSession");
