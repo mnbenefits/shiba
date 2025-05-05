@@ -68,7 +68,7 @@ public class InputsPageE2ETest extends AbstractExistingStartTimePageTest {
     uneditableInput.sendKeys("new value");
     assertThat(uneditableInput.getAttribute("value")).isEqualTo("default value");
   }
-
+  
   @Test
   void specialInputsShouldBehaveCorrectly() {
     // Uneditable inputs should be be the same when returning to a page
@@ -117,7 +117,7 @@ public class InputsPageE2ETest extends AbstractExistingStartTimePageTest {
     String followUpTextInputValue = "some follow up";
     testPage.enter(followUpInputName(radioInput), followUpTextInputValue + " for radio");
     testPage.enter(followUpInputName(checkboxInput), followUpTextInputValue + " for checkbox");
-    testPage.clickContinue();
+    testPage.clickContinue("nextPageTitle");
     testPage.goBack();
     assertThat(followUpIsDisplayedForInput(radioInput)).isTrue();
     assertThat(followUpIsDisplayedForInput(checkboxInput)).isTrue();

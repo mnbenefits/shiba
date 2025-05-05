@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,23 +72,29 @@ public abstract class AbstractBasePageTest {
 
   protected String baseUrl;
 
+
   @LocalServerPort
   protected String localServerPort;
 
   protected Page testPage;
 
-  @BeforeEach
-  protected void setUp() throws IOException {
-    baseUrl = "http://localhost:%s".formatted(localServerPort);
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
-    driver.navigate().to(baseUrl);
-    initTestPage();
-  }
+	@BeforeEach
+	protected void setUp() throws IOException {
+		baseUrl = "http://localhost:%s".formatted(localServerPort);
+		driver.navigate().to(baseUrl);
+		initTestPage();
+	}
 
   protected void initTestPage() {
     testPage = new Page(driver);
   }
 
+  /**
+   * This method is the equivalent of using the browser's back history.
+   * Like holding the browser back arrow down to see history. 
+   * Right click on the back arrow does the same thing.
+   * @param pageName
+   */
   protected void navigateTo(String pageName) {
     driver.navigate().to(baseUrl + "/pages/" + pageName);
   }

@@ -2,6 +2,8 @@ package org.codeforamerica.shiba.testutilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,6 +14,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 public class Page {
@@ -49,8 +53,14 @@ public class Page {
     return driver.findElement(By.tagName("h1")).getText();
   }
 
+  /**
+   * Click the Go Back link and wait for the previous page to load and Go Back link to be clickable.
+   */
   public void goBack() {
     driver.findElement(By.partialLinkText("Go Back")).click();
+	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+	WebDriverWait wait = new WebDriverWait(driver, duration);
+	wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Go Back")));
   }
 
   public void clickLink(String linkText) {
@@ -107,9 +117,36 @@ public class Page {
   public void clickContinue() {
     clickButton("Continue");
   }
+  
+  /**
+   * Click the Continue button, then wait for the next page to load.
+   * @param nextPage
+   */
+  public void clickContinue(String nextPage) {
+	  clickButton("Continue", nextPage);
+	}
 
-  public void enter(String inputName, String value) {
+  /**
+   * Click button, then waits for the next page to load.
+   * @param buttonText
+   * @param nextPage
+   */
+	public void clickButton(String buttonText, String nextPage) {
+		checkForBadMessageKeys();
+		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
+				.filter(button -> button.getText().contains(buttonText)).findFirst()
+				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+		buttonToClick.click();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	}
+  
+public void enter(String inputName, String value) {
     checkForBadMessageKeys();
+	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+	WebDriverWait wait = new WebDriverWait(driver, duration);
+	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
     List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
     WebElement firstElement = formInputElements.get(0);
     FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
@@ -359,4 +396,5 @@ public class Page {
     checkbox,
     tel
   }
+
 }
