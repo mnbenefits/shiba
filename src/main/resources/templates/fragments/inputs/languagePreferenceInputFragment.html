@@ -1,51 +1,63 @@
-<!-- This is a custom input for language preferences with additional functionality to hide and show portions of the inputs -->
-<div th:fragment="languagePreferenceInputFragment(input, data)">
-  <!-- Declare isChecked once -->
-  <div th:with="isChecked=${data.get(input.name) != null and data.get(input.name).value == 'true'}">
-    
-    <!-- Always render the checkbox -->
-    <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
+<div th:fragment="languagePreferenceInputFragment(input, data)"
+     th:with="
+       writtenLangValue=${applicationData.getPagesData().getPage('writtenLanguage').get('writtenLanguage') != null ? 
+                         applicationData.getPagesData().getPage('writtenLanguage').get('writtenLanguage').value : ''},
+       isChecked=${data.get(input.name) != null and data.get(input.name).value == 'true'}
+     ">
 
-    <!-- Conditionally hide the spokenLanguage follow-up only -->
-    <div id="language-questions" th:class="${isChecked} ? 'hide' : ''">
-      <th:block th:each="followUp : ${input.followUps}">
-        <th:block th:if="${followUp.name == 'spokenLanguage'}">
-          <div class="spacing-above-60">
-           <div th:replace="~{fragments/inputs/__${followUp.fragment()}__ :: __${followUp.fragment()}__(${followUp}, ${data})}"></div>
-          </div>
-        </th:block>
-      </th:block>
-    </div>
+  <!-- Always render the checkbox -->
+  <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
 
-    <!-- Always show the needInterpreter follow-up -->
+  <!-- Conditionally hide the spokenLanguage follow-up only -->
+  <div th:class="${isChecked} ? 'hide' : ''" id="language-questions">
     <th:block th:each="followUp : ${input.followUps}">
-      <th:block th:if="${followUp.name == 'needInterpreter'}">
-        <div class="spacing-above-60">
-          <div th:replace="~{fragments/inputs/__${followUp.fragment()}__ :: __${followUp.fragment()}__(${followUp}, ${data})}"></div>
-        </div>
-      </th:block>
+      <div class="spacing-above-60">
+        <div th:replace="~{fragments/inputs/__${followUp.fragment()}__ :: __${followUp.fragment()}__(${followUp}, ${data})}"></div>
+      </div>
     </th:block>
+  </div>
 
-    <!-- JavaScript to toggle spoken language section -->
-    <script th:inline="javascript">
+  <!-- JavaScript to toggle spoken language section -->
+  <script th:inline="javascript">
       $(document).ready(function () {
-        var checkbox = document.getElementsByName('same_spoken_language[]')[0];
+       var checkbox = document.getElementsByName('spokenSameAsWritten[]')[0];
+       var container = $('#language-questions');
+	   //alert("checkbox value" + checkbox.value);
 
-        // Initial load: hide section if already checked
-        if (checkbox && checkbox.checked) {
-          $('#language-questions').hide();
+        // Injected written language value directly from Thymeleaf
+        var writtenLangValue = /*[[${writtenLangValue}]]*/ '';
+		//alert("WRITEVALUE" + writtenLangValue);
+
+        function setSpokenLanguageValue(lang) {
+          var radios = document.getElementsByName('spokenLanguage.spokenLanguage');
+          for (let r of radios) {
+            if (r.value === lang) {
+              r.checked = true;
+			  break;
+            }
+          }
         }
 
+        // Initial auto-fill on load
+        if (checkbox && checkbox.checked && writtenLangValue) {
+          setSpokenLanguageValue(writtenLangValue);
+          container.hide();
+        }
+
+        // On checkbox toggle
         checkbox.addEventListener('change', function () {
-          if (this.checked) {
-            $('#language-questions').hide();
-            document.querySelector("input:text:not([readonly='readonly'])").value = 'true';
+          if (this.checked && writtenLangValue) {
+            setSpokenLanguageValue(writtenLangValue);
+  		  //injectHiddenSpokenLanguage(writtenLangValue);
+            container.hide();
           } else {
-            $('#language-questions').show();
-            document.querySelector("input:text:not([readonly='readonly'])").value = '';
+  			$("input[name='spokenLanguage.spokenLanguage' ]").remove
+            container.show();
           }
         });
       });
     </script>
   </div>
-</div>
+  
+  
+    

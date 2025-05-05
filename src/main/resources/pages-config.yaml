@@ -582,16 +582,18 @@ pageDefinitions:
                 messageKey: language-preferences.vietnamese
               - value: OTHER
                 messageKey: language-preferences.different-language
+           datasources:
+             - pageName: writtenLanguage				
   - &spokenLanguage
     name: spokenLanguage
     pageTitle: language-preferences.title
-    headerKey: language-preferences.language-preferences
+    headerKey: language-preferences.what-language-do-you-prefer-to-speak
     contextFragment: languagePreferencesContextFragment
     inputs:
-      - name: same_spoken_language
+      - name: spokenSameAsWritten
         type: CUSTOM
         customInputFragment: languagePreferenceInputFragment
-        helpMessageKey: language-preferences.the-county-will-do-their-best-to-connect-you-with-someone-who-speaks-your
+        helpMessageKey: language-preferences.the-county-will-do-their-best-to-connect-you-with-someone-who-speak-your-language
         options:
           selectableOptions:
              - value: "true"
@@ -599,13 +601,11 @@ pageDefinitions:
         followUps:   
           - name: spokenLanguage
             type: RADIO
-            promptMessage:
-              promptMessageKey: language-preferences.what-language-do-you-prefer-to-speak
             validators:
                - validation: SELECT_AT_LEAST_ONE
                  errorMessageKey: general.validation.make-sure-you-answer-this-question
                  condition:
-                    input: same_spoken_language
+                    input: spokenSameAsWritten
                     matcher: DOES_NOT_EQUAL
                     value: "true"
             options:
@@ -620,34 +620,36 @@ pageDefinitions:
                   messageKey: language-preferences.english
                 - value: SPANISH
                   messageKey: language-preferences.spanish
-                - value: RUSSIAN
-                  messageKey: language-preferences.russian
                 - value: HMOOB
                   messageKey: language-preferences.hmoob
                 - value: KAREN
                   messageKey: language-preferences.Karen
-                - value: KOREAN
-                  messageKey: language-preferences.Korean
+                - value: NEPALI
+                  messageKey: language-preferences.Nepali
                 - value: OROMO
                   messageKey: language-preferences.Oromo
                 - value: SOOMAALI
                   messageKey: language-preferences.soomaali
                 - value: RUSSIAN
                   messageKey: language-preferences.russian
-                - value: HMOOB
+                - value: UKRAINIAN
+                  messageKey: language-preferences.Ukrainian
+                - value: VIETNAMI
                   messageKey: language-preferences.vietnamese
                 - value: OTHER
-                  messageKey: language-preferences.different-language
-          - name: needInterpreter
-            type: RADIO
-            promptMessage:
-              promptMessageKey: language-preferences.do-you-need-an-interpreter
-            options:
-              selectableOptions:
-                - value: "true"
-                  messageKey: general.inputs.yes
-                - value: "false"
-                  messageKey: general.inputs.no
+                  messageKey: speak-language-preferences.different-language
+              datasources:
+                 - pageName: writtenLanguage	
+      - name: needInterpreter
+        type: RADIO
+        promptMessage:
+           promptMessageKey: language-preferences.do-you-need-an-interpreter
+        options:
+           selectableOptions:
+              - value: "true"
+                messageKey: general.inputs.yes
+              - value: "false"
+                messageKey: general.inputs.no
   - &choosePrograms
     name: choosePrograms
     pageTitle: choose-programs.title
