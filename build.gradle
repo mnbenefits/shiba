@@ -170,7 +170,7 @@ dependencies {
     testImplementation("io.github.bonigarcia:webdrivermanager:6.1.0")
     testImplementation("org.springframework.ws:spring-ws-test")
     testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.seleniumhq.selenium:selenium-api:4.31.0")
+    testImplementation("org.seleniumhq.selenium:selenium-api:4.32.0")
     testImplementation("org.seleniumhq.selenium:selenium-bom:4.32.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver:4.32.0")
     testImplementation("org.seleniumhq.selenium:selenium-chromium-driver:4.32.0")
