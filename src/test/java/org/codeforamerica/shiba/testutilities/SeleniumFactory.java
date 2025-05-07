@@ -53,10 +53,10 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
     options.addArguments("--window-size=1280,1600");//needed for snapshots
     options.addArguments("--headless=new");
     options.addArguments("--remote-allow-origins=*");//prevents session errors
-	Duration duration = Duration.of(2, ChronoUnit.SECONDS);
-	options.setImplicitWaitTimeout(duration);
+	//Duration duration = Duration.of(2, ChronoUnit.SECONDS);
+	//options.setImplicitWaitTimeout(duration);
     driver = new ChromeDriver(options);
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+    //driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
   }
 
   public void stop() {
