@@ -548,8 +548,6 @@ pageDefinitions:
     inputs:
       - name: writtenLanguage
         type: RADIO
-  #        promptMessage:
-  #          promptMessageKey: language-preferences.what-language-do-you-prefer-to-read-or-write
         helpMessageKey: language-preferences.the-county-will-do-their-best-to-provide-documents-in-your-preferred-language
         validators:
            - validation: SELECT_AT_LEAST_ONE
@@ -621,7 +619,7 @@ pageDefinitions:
                 - value: ENGLISH
                   messageKey: language-preferences.english
                 - value: SPANISH
-                  messageKey: language-preferences.spanish
+                  messageKey: language-preferences.Spanish
                 - value: HMONG
                   messageKey: language-preferences.hmoob
                 - value: KAREN

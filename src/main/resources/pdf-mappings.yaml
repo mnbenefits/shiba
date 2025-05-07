@@ -1,4 +1,8 @@
 mappings:
+  languagePreferences:
+    spokenLanguage: APPLICANT_SPOKEN_LANGUAGE_PREFERENCE
+    writtenLanguage: APPLICANT_WRITTEN_LANGUAGE_PREFERENCE
+    needInterpreter: NEED_INTERPRETER
   writtenLanguage:
     writtenLanguage: APPLICANT_WRITTEN_LANGUAGE_PREFERENCE
   spokenLanguage:

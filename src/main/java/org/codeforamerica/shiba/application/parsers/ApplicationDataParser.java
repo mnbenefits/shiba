@@ -25,10 +25,6 @@ public class ApplicationDataParser {
   static {
     coordinatesMap.put(Field.WRITTEN_LANGUAGE_PREFERENCES,
         new ParsingCoordinate("writtenLanguage", "writtenLanguage"));
-    coordinatesMap.put(Field.SPOKEN_LANGUAGE,
-            new ParsingCoordinate("spokenLanguage", "spokenLanguage"));
-    coordinatesMap.put(Field.NEED_INTERPRETER,
-            new ParsingCoordinate("spokenLanguage", "needInterpreter"));
     coordinatesMap.put(Field.BASIC_CRITERIA_CERTAIN_POPS,
         new ParsingCoordinate("basicCriteria", "basicCriteria"));
     coordinatesMap.put(Field.MEDICAL_EXPENSES,
@@ -485,8 +481,6 @@ public class ApplicationDataParser {
    */
   public enum Field {
     WRITTEN_LANGUAGE_PREFERENCES,
-    SPOKEN_LANGUAGE,
-    NEED_INTERPRETER,
 
     BASIC_CRITERIA_CERTAIN_POPS,
 
