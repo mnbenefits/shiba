@@ -568,17 +568,17 @@ pageDefinitions:
                 messageKey: language-preferences.hmoob
               - value: KAREN
                 messageKey: language-preferences.Karen
-              - value: NEPAL
+              - value: NEPALI
                 messageKey: language-preferences.Nepali
               - value: OROMO
                 messageKey: language-preferences.Oromo
-              - value: SOOMAALI
+              - value: SOMALI
                 messageKey: language-preferences.soomaali
               - value: RUSSIAN
                 messageKey: language-preferences.russian
               - value: UKRAINIAN
                 messageKey: language-preferences.Ukrainian
-              - value: VIETNAMI
+              - value: VIETNAMESE
                 messageKey: language-preferences.vietnamese
               - value: OTHER
                 messageKey: language-preferences.different-language
@@ -598,6 +598,8 @@ pageDefinitions:
           selectableOptions:
              - value: "true"
                messageKey: same-language-preferences.to-read-or-write
+          datasources:
+             - pageName: writtenLanguage  
         followUps:   
           - name: spokenLanguage
             type: RADIO
@@ -620,7 +622,7 @@ pageDefinitions:
                   messageKey: language-preferences.english
                 - value: SPANISH
                   messageKey: language-preferences.spanish
-                - value: HMOOB
+                - value: HMONG
                   messageKey: language-preferences.hmoob
                 - value: KAREN
                   messageKey: language-preferences.Karen
@@ -628,13 +630,13 @@ pageDefinitions:
                   messageKey: language-preferences.Nepali
                 - value: OROMO
                   messageKey: language-preferences.Oromo
-                - value: SOOMAALI
+                - value: SOMALI
                   messageKey: language-preferences.soomaali
                 - value: RUSSIAN
                   messageKey: language-preferences.russian
                 - value: UKRAINIAN
                   messageKey: language-preferences.Ukrainian
-                - value: VIETNAMI
+                - value: VIETNAMESE
                   messageKey: language-preferences.vietnamese
                 - value: OTHER
                   messageKey: speak-language-preferences.different-language

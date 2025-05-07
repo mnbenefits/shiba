@@ -2,13 +2,13 @@
      th:with="
        writtenLangValue=${applicationData.getPagesData().getPage('writtenLanguage').get('writtenLanguage') != null ? 
                          applicationData.getPagesData().getPage('writtenLanguage').get('writtenLanguage').value : ''},
-       isChecked=${data.get(input.name) != null and data.get(input.name).value == 'true'}
+       isChecked=${data.get(input.name) != null and data.get(input.name).value.size>0 and data.get(input.name).value[0]== 'true' ? true : false}
      ">
 
-  <!-- Always render the checkbox -->
+  <!-- The "same spoken as written" checkbox is always visible -->
   <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
 
-  <!-- Conditionally hide the spokenLanguage follow-up only -->
+  <!-- Conditionally hide the spokenLanguage follow-up -->
   <div th:class="${isChecked} ? 'hide' : ''" id="language-questions">
     <th:block th:each="followUp : ${input.followUps}">
       <div class="spacing-above-60">
@@ -17,26 +17,15 @@
     </th:block>
   </div>
 
-  <!-- JavaScript to toggle spoken language section -->
+  <!-- Provide JavaScript to toggle the spoken language section -->
   <script th:inline="javascript">
+      // This function is automatically executed whenr the page loads
       $(document).ready(function () {
        var checkbox = document.getElementsByName('spokenSameAsWritten[]')[0];
        var container = $('#language-questions');
-	   //alert("checkbox value" + checkbox.value);
 
         // Injected written language value directly from Thymeleaf
         var writtenLangValue = /*[[${writtenLangValue}]]*/ '';
-		//alert("WRITEVALUE" + writtenLangValue);
-
-        function setSpokenLanguageValue(lang) {
-          var radios = document.getElementsByName('spokenLanguage.spokenLanguage');
-          for (let r of radios) {
-            if (r.value === lang) {
-              r.checked = true;
-			  break;
-            }
-          }
-        }
 
         // Initial auto-fill on load
         if (checkbox && checkbox.checked && writtenLangValue) {
@@ -44,14 +33,25 @@
           container.hide();
         }
 
-        // On checkbox toggle
+        // This function will set the spoken language to the value provided
+        function setSpokenLanguageValue(lang) {
+          var radios = document.getElementsByName('spokenLanguage[]');
+          for (let r of radios) {
+            if (r.value == lang) {
+	          r.click();
+              r.checked = true;
+			  break;
+            }
+          }
+        }
+
+        // This function executes when the checkbox is toggled
         checkbox.addEventListener('change', function () {
-          if (this.checked && writtenLangValue) {
+	      var checked = this.parentElement.classList.contains('is-selected');
+          if (checked) {
             setSpokenLanguageValue(writtenLangValue);
-  		  //injectHiddenSpokenLanguage(writtenLangValue);
             container.hide();
           } else {
-  			$("input[name='spokenLanguage.spokenLanguage' ]").remove
             container.show();
           }
         });

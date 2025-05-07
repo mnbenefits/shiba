@@ -404,7 +404,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     String sex = "Female";
     assertCafFieldEquals("APPLICANT_SEX", sex.toUpperCase(ENGLISH));
     assertCafFieldEquals("MARITAL_STATUS", "NEVER_MARRIED");
-    String needsInterpreter = "Off";  // TODO:  This will need to be modified once the preparer class is implemented
+    String needsInterpreter = "Yes";
     assertCafFieldEquals("NEED_INTERPRETER", needsInterpreter);
     assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "");  // TODO:  This will need to be modified once the preparer class is implemented
     assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", ""); // TODO:  This will need to be modified once the preparer class is implemented
