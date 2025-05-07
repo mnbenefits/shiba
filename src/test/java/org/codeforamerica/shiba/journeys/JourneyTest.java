@@ -277,7 +277,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     when(smartyStreetClient.validateAddress(any())).thenReturn(
         Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
     );
-    testPage.clickContinue();
+    testPage.clickContinue("Mailing address");
 
     // Where can the county send your mail? (accept the smarty streets enriched address)
     testPage.enter("zipCode", "23456");
@@ -289,12 +289,12 @@ abstract class JourneyTest extends AbstractBasePageTest {
         Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
     );
     
-    testPage.clickContinue();
+    testPage.clickContinue("Address Validation");
     
     testPage.clickElementById("enriched-address");
-    testPage.clickContinue();
+    testPage.clickContinue("County Validation");
     testPage.clickElementById("original-county");
-    testPage.clickContinue();
+    testPage.clickContinue("Contact Info");
   }
   
   protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,

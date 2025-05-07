@@ -82,9 +82,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
   @Test
   void laterDocsFlow() {
-    testPage.clickButton("Upload documents");
+    testPage.clickButton("Upload documents", "Ready to upload documents");
     // Ready to upload documents page
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
     
     // Match Info page
     // Enter incorrect information to get validation errors to check against aria-properties
@@ -97,7 +97,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("dateOfBirth", "01/40/1999");
     testPage.enter("ssn", "12345");
     testPage.enter("caseNumber", "1234567");
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
     assertThat(testPage.hasInputError("firstName")).isTrue();
     assertThat(testPage.hasInputError("ssn")).isTrue();
     assertThat(testPage.inputIsValid("firstName")).isFalse();
@@ -124,49 +124,49 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("ssn", "123456789");
     testPage.enter("caseNumber", "1234567");
     testPage.enter("phoneNumber", "7041234567");
-    testPage.clickContinue();
+	testPage.clickContinue( "Identify County" ); 
     
     // Identify County page
     assertThat(driver.getTitle()).isEqualTo("Identify County");
-    testPage.clickContinue();
+    testPage.clickContinue("Identify County");
     assertThat(testPage.selectHasInputError("county")).isTrue();
     assertThat(testPage.getSelectAriaLabel("county")).isEqualTo("Error county");
     assertThat(testPage.getSelectAriaDescribedBy("county")).isEqualTo("county-error-message-1");
     testPage.enter("county", "Dakota");
-    testPage.clickContinue();
+    testPage.clickContinue("Tribal Nation member");
 
     // Tribal Nation Member page
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
-    testPage.clickButton("Yes");
+    testPage.clickButton("Yes", "Select a Tribal Nation");
     
     // Select Tribal Nation
     assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Select a Tribal Nation");
     assertThat(testPage.selectHasInputError("selectedTribe")).isTrue();
     assertThat(testPage.getSelectAriaLabel("selectedTribe")).isEqualTo("Error selectedTribe");
     assertThat(testPage.getSelectAriaDescribedBy("selectedTribe")).isEqualTo("selectedTribe-error-message-1");
     
     // go back to isTribalNationMember
-    testPage.clickLink("< Go Back"); // this Go Back just takes you the selectTribalNation page that appeared before there was an error
-    testPage.clickLink("< Go Back"); 
+    testPage.goBack(); // this Go Back just takes you the selectTribalNation page that appeared before there was an error
+    testPage.goBack();
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
     
     // go back to identifyCounty
-    testPage.clickLink("< Go Back");
+    testPage.goBack(); 
     assertThat(driver.getTitle()).isEqualTo("Identify County");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Tribal Nation member");
     
     // isTribalNationMember
-    testPage.clickButton("No");
+    testPage.clickButton("No", "How to add documents");
     
     // howToAddDocuments page
-    testPage.clickContinue();
+    testPage.clickContinue("Upload documents");
     
     // should allow me to upload documents and those documents should be sent to the ESB
     uploadPdfFile();
     await().until(uploadCompletes());
-    testPage.clickButton("Submit my documents");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
   }
   
   @Test
@@ -178,15 +178,15 @@ public class AccessibilityJourneyTest extends JourneyTest {
     // should allow me to enter personal info and continue the flow if my county is supported
     testPage.enter("county", "Select your county");
     testPage.enter("tribalNation", "Select a Tribal Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Health Care Renewal Document Upload");
     assertThat(driver.getTitle()).isEqualTo("Health Care Renewal Document Upload");
     testPage.enter("county", "Hennepin");
     testPage.enter("tribalNation", "White Earth Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Health Care Renewal Document Upload");
     assertThat(driver.getTitle()).isEqualTo("Health Care Renewal Document Upload");
     testPage.enter("county", "Hennepin");
     testPage.enter("tribalNation", "Select a Tribal Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
 
     assertThat(driver.getTitle()).isEqualTo("Match Info");
     testPage.enter("firstName", "defaultFirstName");
@@ -195,14 +195,14 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("caseNumber", "123456789");//9 digits will cause error
     testPage.enter("phoneNumber", "7041234567");
     assertThat(testPage.getHeader()).isEqualTo("Before you start, we need to match your documents to your health care case");
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
     assertThat(driver.getTitle()).isEqualTo("Match Info");//stays on match info page
     testPage.enter("caseNumber", "123");//too short
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
     assertThat(driver.getTitle()).isEqualTo("Match Info");//stays on match info page
     testPage.enter("caseNumber", "12345678");
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
+    testPage.clickContinue("Upload documents");
 
     // should allow me to upload documents and those documents should be sent to the ESB
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
@@ -210,13 +210,13 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     uploadPdfFile();
     waitForDocumentUploadToComplete();
-    testPage.clickButton("Submit my documents");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
     assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
-    testPage.clickButton("No, add more documents"); // Go back
+    testPage.clickButton("No, add more documents", "Upload documents"); // Go back
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
 
-    testPage.clickButton("Submit my documents");
-    testPage.clickButton("Yes, submit and finish");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
+    testPage.clickButton("Yes, submit and finish", "Documents Sent");
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
     verify(pageEventPublisher).publish(any());
 
@@ -234,7 +234,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     WebElement selectedOption = testPage.getSelectedOption("county");
     assertThat(selectedOption.getText()).isEqualTo("Select your county");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
 
     assertThat(driver.getTitle()).isEqualTo("Match Info");
     testPage.enter("firstName", "defaultFirstName");
@@ -243,23 +243,23 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("phoneNumber", "7041234567");
     assertThat(testPage.getHeader()).isEqualTo("Before you start, we need to match your documents to your health care case");
     testPage.enter("caseNumber", "12345678");
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
+    testPage.clickContinue("Upload documents");
     navigateTo("healthcareRenewalUpload");
     WebElement selectedOption2 = testPage.getSelectedOption("county");
     assertThat(selectedOption2.getText()).isEqualTo("Hennepin");
-    testPage.clickContinue();
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
+    testPage.clickContinue("How to add documents");
+    testPage.clickContinue("Upload documents");
     // should allow me to upload documents and those documents should be sent to the ESB
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
     assertThat(driver.findElements(By.className("reveal")).size()).isEqualTo(0);
 
     uploadPdfFile();
     waitForDocumentUploadToComplete();
-    testPage.clickButton("Submit my documents");
+    testPage.clickButton("Submit my documents", "Doc submit confirmation");
     assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
-    testPage.clickButton("Yes, submit and finish");
+    testPage.clickButton("Yes, submit and finish", "Documents Sent");
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
 
     // Assert that applicant can't resubmit docs at this point
@@ -270,26 +270,25 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
   }
 
-  @Disabled("This test passes on VDIs but fails on GitHub")
+  //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void userCanCompleteTheNonExpeditedHouseholdFlow() {
     List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP);
 
-    testPage.clickButton("Apply now");
+    testPage.clickButton("Apply now", "Identify County");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Prepare To Apply");
 
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickContinue("Timeout notice");
+    testPage.clickContinue("Language Preferences");
     testPage.enter("writtenLanguage", "English");
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
-    testPage.clickContinue();
+    testPage.clickContinue("Choose Programs");
     programSelections.forEach(program -> testPage.enter("programs", program));
-    testPage.clickContinue();
-    testPage.clickContinue();
-    testPage.clickContinue();//for Expedited Notice page
-
+    testPage.clickContinue("Expedited Notice");
+    testPage.clickContinue("Intro: Basic Info");//for Expedited Notice page
+    testPage.clickContinue("Personal Info");
     testPage.enter("firstName", "defaultFirstName");
     testPage.enter("lastName", "defaultLastName");
     testPage.enter("otherName", "defaultOtherName");
@@ -300,14 +299,13 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("livedInMnWholeLife", "Yes");
     testPage.enter("moveToMnDate", "02/18/1776");
     testPage.enter("moveToMnPreviousCity", "Chicago");
-    testPage.clickContinue();
+    testPage.clickContinue("Home Address");
     
     fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
             
     // Enter incorrect phone number to throw error and check aria properties
     testPage.enter("phoneNumber", "134567890");
-    //testPage.enter("phoneOrEmail", "It's okay to text me");
-    testPage.clickContinue();
+    testPage.clickContinue("Contact Info");
     assertThat(testPage.hasInputError("phoneNumber")).isTrue();
     assertThat(testPage.getInputAriaLabelledBy("phoneNumber")).isEqualTo(
         "phoneNumber-error-p phoneNumber-label");
@@ -316,12 +314,12 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("phoneNumber", "7234567890");
     testPage.enter("email", "some@example.com");
     testPage.enter("phoneOrEmail", "It's okay to text me");
-    testPage.clickContinue();   
+    testPage.clickContinue("Review info");   
     
-    testPage.clickLink("This looks correct");
+    testPage.clickLink("This looks correct", "Do you want to add household members?");
     
     testPage.enter("addHouseholdMembers", YES.getDisplayValue());
-    testPage.clickContinue();
+    testPage.clickContinue("Housemate: Personal Info");
     
     testPage.enter("relationship", "Other");
     testPage.enter("programs", PROGRAM_CCAP);
@@ -335,43 +333,42 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("livedInMnWholeLife", "Yes");
     testPage.enter("moveToMnDate", "02/18/1950");
     testPage.enter("moveToMnPreviousState", "Illinois");
-    testPage.clickContinue();
+    testPage.clickContinue("Household members");
     
-    testPage.clickButton("Yes, that's everyone");
+    testPage.clickButton("Yes, that's everyone", "Who are the children in need of care?");
     testPage.enter("whoNeedsChildCare", "householdMemberFirstName householdMemberLastName");
-    testPage.clickContinue();
-    
+    testPage.clickContinue("Who are the children that have a parent not living in the home?");
     testPage.enter("whoHasAParentNotLivingAtHome",
         "None of the children have parents living outside the home");
-    testPage.clickContinue();
+    testPage.clickContinue("Preparing meals together");
     testPage.enter("isPreparingMealsTogether", YES.getDisplayValue());
     testPage.enter("hasHousingSubsidy", NO.getDisplayValue());
     testPage.enter("livingSituation", "None of these");
-    testPage.clickContinue();
+    testPage.clickContinue("Going to school");
     testPage.enter("goingToSchool", NO.getDisplayValue());
     testPage.enter("isPregnant", YES.getDisplayValue());
     testPage.enter("whoIsPregnant", "Me");
-    testPage.clickContinue();
+    testPage.clickContinue("Expedited Migrant Farm Worker, Household");
     testPage.enter("migrantOrSeasonalFarmWorker", NO.getDisplayValue());
     testPage.enter("isUsCitizen", NO.getDisplayValue());
     testPage.enter("whoIsNonCitizen", "Me");
-    testPage.clickContinue();
+    testPage.clickContinue("Disability");
     testPage.enter("hasDisability", NO.getDisplayValue());
     testPage.enter("hasWorkSituation", NO.getDisplayValue());
     testPage.enter("isTribalNationMember", YES.getDisplayValue());
     testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
-    testPage.clickContinue();
+    testPage.clickContinue("Nations Boundary");
     testPage.enter("livingInNationBoundary", NO.getDisplayValue());
-    testPage.clickContinue();
+    testPage.clickContinue("Employment status");
     testPage.enter("areYouWorking", YES.getDisplayValue());
-    testPage.clickButton("Add a job");
+    testPage.clickButton("Add a job", "Household selection for income");
     testPage.enter("whoseJobIsIt", "householdMemberFirstName householdMemberLastName");
-    testPage.clickContinue();
+    testPage.clickContinue("Employer's Name");
 
-    // Leave black to trigger error and check aria properties
+    // Leave blank to trigger error and check aria properties
     assertThat(testPage.inputIsValid("employersName")).isTrue();
     assertThat(testPage.getInputAriaLabelledBy("employersName")).isEqualTo("employersName-label");
-    testPage.clickContinue();
+    testPage.clickContinue("Employer's Name");
     assertThat(testPage.inputIsValid("employersName")).isFalse();
     assertThat(testPage.getInputAriaLabelledBy("employersName")).isEqualTo(
         "employersName-error-p employersName-label");
@@ -379,40 +376,40 @@ public class AccessibilityJourneyTest extends JourneyTest {
         "employersName-error-message-1");
 
     testPage.enter("employersName", "some employer");
-    testPage.clickContinue();
+    testPage.clickContinue("Self-employment");
     testPage.enter("selfEmployment", YES.getDisplayValue());
     testPage.enter("paidByTheHour", YES.getDisplayValue());
 
     // Check aria-label is correct then enter incorrect value to throw error and check all aria properties have updated
     testPage.enter("hourlyWage", "-10");
-    testPage.clickContinue();
-    assertThat(testPage.inputIsValid("hourlyWage")).isFalse();
+    testPage.clickContinue("Hourly wage");
+    //takeSnapShot("hourlyWage1.png");//TODO emj delete
+    assertThat(testPage.inputIsValid("hourlyWage")).isFalse();//TODO emj fails here randomly
     assertThat(testPage.getInputAriaLabel("hourlyWage")).isEqualTo("Error hourlyWage");
     assertThat(testPage.getInputAriaDescribedBy("hourlyWage")).isEqualTo(
         "hourlyWage-error-message-1");
 
     testPage.enter("hourlyWage", "1");
-    testPage.clickContinue();
-
+    testPage.clickContinue("Hours a week");
     // Enter an incorrect value to trigger an error and check aria properties
-    assertThat(testPage.inputIsValid("hoursAWeek")).isTrue();
     testPage.enter("hoursAWeek", "-30");
-    testPage.clickContinue();
-    assertThat(testPage.inputIsValid("hoursAWeek")).isFalse();
+    testPage.clickContinue("Hours a week");
+    //takeSnapShot("hoursAweek1.png");//TODO emj delete
+    assertThat(testPage.inputIsValid("hoursAWeek")).isFalse();//TODO emj this still fails randomly
     assertThat(testPage.getInputAriaLabel("hoursAWeek")).isEqualTo("Error hoursAWeek");
     assertThat(testPage.getInputAriaDescribedBy("hoursAWeek")).isEqualTo(
         "hoursAWeek-error-message-1");
 
     testPage.enter("hoursAWeek", "30");
-    testPage.clickContinue();
-    testPage.clickButton("No, that's it.");
+    testPage.clickContinue("Job Builder");
+    testPage.clickButton("No, that's it.", "Job Search");
     // drill down to futureIncome page
-    testPage.clickButton("No");
-    testPage.clickButton("Continue");
+    testPage.clickButton("No", "Income Up Next");
+    testPage.clickButton("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "None of the above");
-    testPage.clickButton("Continue");
+    testPage.clickButton("Continue", "Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
-    testPage.clickButton("Continue");
+    testPage.clickButton("Continue", "Future Income");
     assertThat(testPage.getInputAriaLabelledBy("div", "earnLessMoneyThisMonth-div")).isEqualTo("page-header page-header-help-message");
     // now back up to jobBuilder page
     testPage.goBack();
@@ -421,15 +418,16 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.goBack();
     testPage.goBack();
     
-    testPage.clickButton("No, that's it.");
+    testPage.clickButton("No, that's it.", "Job Search");
     testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
-    testPage.clickContinue();
+    testPage.clickContinue("Unearned Income");
     testPage.enter("unearnedIncome", "Social Security");
-    testPage.clickContinue();
+
+    testPage.clickContinue("Unearned Income Sources");
 
     // Enter incorrect social security amount to trigger error and check aria properties
     testPage.enter("socialSecurityAmount", "-200");
-    testPage.clickContinue();
+    testPage.clickContinue("Unearned Income Sources");
     testPage.hasInputError("socialSecurityAmount");
     assertThat(testPage.inputIsValid("socialSecurityAmount")).isFalse();
     assertThat(testPage.getInputAriaDescribedBy("socialSecurityAmount")).isEqualTo(
@@ -438,33 +436,38 @@ public class AccessibilityJourneyTest extends JourneyTest {
         "socialSecurityAmount-error-p socialSecurityAmount-label");
 
     testPage.enter("socialSecurityAmount", "200");
-    testPage.clickContinue();
-    driver.navigate().to(baseUrl + "/pages/futureIncome");
+	testPage.clickContinue("Unearned Income");
+
+    testPage.enter("otherUnearnedIncome", "None of the above");
+    testPage.clickContinue("Unearned Income");
+    testPage.enter("otherUnearnedIncome", "None of the above");
+    testPage.clickContinue("Future Income");
+
     testPage.enter("earnLessMoneyThisMonth", "Yes");
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickContinue("Start Expenses");
+    testPage.clickContinue("Home Expenses");
     testPage.enter("homeExpenses", "Rent");
-    testPage.clickContinue();
+    testPage.clickContinue("Home expenses amount");
     testPage.enter("homeExpensesAmount", "123321");
-    testPage.clickContinue();
+    testPage.clickContinue("Expedited Utility Payments, Household");
     testPage.enter("payForUtilities", "Heating");
-    testPage.clickContinue();
+    testPage.clickContinue("Energy Assistance");
     testPage.enter("energyAssistance", YES.getDisplayValue());
     testPage.enter("energyAssistanceMoreThan20", YES.getDisplayValue());
     testPage.enter("medicalExpenses", "None of the above");
-    testPage.clickContinue();
+    testPage.clickContinue("Support and Care");
     testPage.enter("supportAndCare", YES.getDisplayValue());
     testPage.enter("assets", "A vehicle");
     testPage.enter("assets", "Real estate (not including your own home)");
-    testPage.clickContinue();
+    testPage.clickContinue("Savings");
     testPage.enter("haveSavings", YES.getDisplayValue());
     testPage.enter("liquidAssets", "1234");
-    testPage.clickContinue();
+    testPage.clickContinue("Sold assets");
     testPage.enter("haveSoldAssets", NO.getDisplayValue());
-    testPage.clickContinue();
-    testPage.clickButton("Yes, send me more info");
+    testPage.clickContinue("Register to vote");
+    testPage.clickButton("Yes, send me more info", "Healthcare Coverage");
     testPage.enter("healthcareCoverage", YES.getDisplayValue());
-    testPage.clickContinue();
+    testPage.clickContinue("Authorized Rep");
     testPage.enter("helpWithBenefits", YES.getDisplayValue());
     testPage.enter("communicateOnYourBehalf", YES.getDisplayValue());
     testPage.enter("getMailNotices", YES.getDisplayValue());
@@ -474,19 +477,19 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("authorizedRepCity", "someCity");
     testPage.enter("authorizedRepZipCode", "12345");
     testPage.enter("authorizedRepPhoneNumber", "7234567890");
-    testPage.clickContinue();
+    testPage.clickContinue("Additional Info");
     driver.findElement(By.id("additionalInfo"))
         .sendKeys("Some additional information about my application");
-    testPage.clickContinue();
-    testPage.clickLink("Yes, continue");
+    testPage.clickContinue("Can we ask");
+    testPage.clickLink("Yes, continue", "Race and Ethnicity");
     testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
-    testPage.clickContinue();
+    testPage.clickContinue("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
     testPage.enter("drugFelony", NO.getDisplayValue());
-    testPage.clickContinue();
+    testPage.clickContinue("Sign this application");
     testPage.enter("applicantSignature", "some name");
-    testPage.clickButton("Continue");
-    testPage.clickButton("Submit");
+    testPage.clickButton("Continue", "Submit application");
+    testPage.clickButton("Submit", "Submission Confirmation");
     
   }
 }

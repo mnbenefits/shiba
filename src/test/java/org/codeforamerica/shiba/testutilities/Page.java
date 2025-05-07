@@ -51,6 +51,16 @@ public class Page {
   public String getHeader() {
     return driver.findElement(By.tagName("h1")).getText();
   }
+  
+  /**
+   * TODO emj test this method
+   * @param duration
+   */
+  public void pause(int time) {
+		Duration duration = Duration.of(time, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Go Back")));
+  }
 
   /**
    * Click the Go Back link and wait for the previous page to load and Go Back link to be clickable.
@@ -62,11 +72,30 @@ public class Page {
 	wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Go Back")));
   }
 
+  /**
+   * Use clickLink(String linkText, String nextPage)
+   * @param linkText
+   */
+  @Deprecated()
   public void clickLink(String linkText) {
     checkForBadMessageKeys();
     driver.findElement(By.linkText(linkText)).click();
   }
+  
+  /**
+   * Click link, then waits for the next page to load.
+   * @param linkText
+   * @param nextPage
+   */
+  public void clickLink(String linkText, String nextPage) {
+	    checkForBadMessageKeys();
+	    driver.findElement(By.linkText(linkText)).click();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	  }
 
+  @Deprecated
   public void clickButton(String buttonText) {
 	  clickButton(buttonText, 10);
   }
@@ -89,6 +118,7 @@ public class Page {
 	}
   }
 
+ 
   public void clickButtonLink(String buttonLinkText) {
     checkForBadMessageKeys();
     WebElement buttonToClick = driver.findElements(By.className("button--link")).stream()
@@ -106,6 +136,7 @@ public class Page {
 		buttonToClick.click();
 	}
 
+	@Deprecated
   public void clickContinue() {
     clickButton("Continue");
   }
@@ -312,7 +343,7 @@ public void enter(String inputName, String value) {
 
   public boolean inputIsValid(String inputName) {
     return driver.findElement(By.cssSelector(String.format("input[name='%s[]']", inputName)))
-        .getAttribute("aria-invalid").equals("false");
+        .getDomAttribute("aria-invalid").equals("false");
   }
 
   public String getInputAriaLabel(String inputName) {
