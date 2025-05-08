@@ -167,6 +167,7 @@ public class Page {
   
 public void enter(String inputName, String value) {
     checkForBadMessageKeys();
+    //TODO emj moved wait to end of method
 	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 	WebDriverWait wait = new WebDriverWait(driver, duration);
 	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
@@ -192,6 +193,10 @@ public void enter(String inputName, String value) {
       }
       default -> throw new IllegalArgumentException("Cannot find element");
     }
+//	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+//	WebDriverWait wait = new WebDriverWait(driver, duration);
+//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
+    
   }
 
   public void enter(String inputName, List<String> value) {
@@ -341,6 +346,15 @@ public void enter(String inputName, String value) {
         .map(WebElement::getText).orElse(null);
   }
 
+  /**
+   * TODO emj 
+   * Javadoc for findElement: Find the first WebElement using the given method. This method is affected by the'implicit wait' times in force at the time of execution. The findElement(..) invocation willreturn a matching row, or try again repeatedly until the configured timeout is reached. 
+
+<b>findElement should not be used to look for non-present elements, use findElements(By) and assert zero length response instead. </b>
+
+   * @param inputName
+   * @return
+   */
   public boolean inputIsValid(String inputName) {
     return driver.findElement(By.cssSelector(String.format("input[name='%s[]']", inputName)))
         .getDomAttribute("aria-invalid").equals("false");
