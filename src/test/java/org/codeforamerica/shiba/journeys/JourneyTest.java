@@ -274,27 +274,32 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("apartmentNumber", homeApartmentNumber);
-    when(smartyStreetClient.validateAddress(any())).thenReturn(
-        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
-    );
+//    when(smartyStreetClient.validateAddress(any())).thenReturn(
+//        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+//    );
     testPage.clickContinue("Mailing address");
-
+//TODO emj on GitHub it fails on line 280 with this error:
+    // org.openqa.selenium.TimeoutException: Expected condition failed: waiting for title to contain "Mailing address". 
+    //Current title: "Home Address" (tried for 5 second(s) with 500 milliseconds interval)
+    // This is run before this method gets called : testPage.clickContinue("Home Address");
+    
     // Where can the county send your mail? (accept the smarty streets enriched address)
     testPage.enter("zipCode", "23456");
     testPage.enter("city", "someCity");
     testPage.enter("streetAddress", "someStreetAddress");
     testPage.enter("state", "IL");
     testPage.enter("apartmentNumber", "someApartmentNumber");
-    when(smartyStreetClient.validateAddress(any())).thenReturn(
-        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
-    );
-    
+//    when(smartyStreetClient.validateAddress(any())).thenReturn(
+//        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+//    );
     testPage.clickContinue("Address Validation");
-    
-    testPage.clickElementById("enriched-address");
-    testPage.clickContinue("County Validation");
-    testPage.clickElementById("original-county");
-    testPage.clickContinue("Contact Info");
+    testPage.clickButton("Use this address", "County Validation");
+    //testPage.clickContinue("Address Validation");
+    testPage.clickButton("Use this county", "Contact Info");
+   // testPage.clickElementById("enriched-address");
+  //  testPage.clickContinue("County Validation");
+   // testPage.clickElementById("original-county");
+  //  testPage.clickContinue("Contact Info");
   }
   
   protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,
