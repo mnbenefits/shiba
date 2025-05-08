@@ -303,7 +303,26 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("moveToMnPreviousCity", "Chicago");
     testPage.clickContinue("Home Address");
     
-    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
+    //fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
+    // START FILLING ADDRESS
+    testPage.enter("zipCode", "12345");
+    testPage.enter("city", "someCity");
+    testPage.enter("streetAddress", "someStreetAddress");
+    testPage.enter("apartmentNumber", "123");
+    
+    testPage.clickContinue("Mailing address");
+    testPage.enter("zipCode", "23456");
+    testPage.enter("city", "someCity");
+    testPage.enter("streetAddress", "someStreetAddress");
+    testPage.enter("state", "IL");
+    testPage.enter("apartmentNumber", "someApartmentNumber");
+    
+    testPage.clickContinue("Address Validation");
+    testPage.clickButton("Use this address", "County Validation");
+    
+    testPage.clickButton("Use this county", "Contact Info");
+    
+    // END ADDRESS PAGES
             
     // Enter incorrect phone number to throw error and check aria properties
     testPage.enter("phoneNumber", "134567890");
