@@ -79,7 +79,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     driver.navigate().to(baseUrl);
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
-    when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
+   // TODO emj testing this when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
     caf = null;
     ccap = null;
     certainPops = null;
@@ -274,6 +274,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("apartmentNumber", homeApartmentNumber);
+    //The smarty client is already mocked in the setUp method, why do it again here?
 //    when(smartyStreetClient.validateAddress(any())).thenReturn(
 //        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
 //    );
