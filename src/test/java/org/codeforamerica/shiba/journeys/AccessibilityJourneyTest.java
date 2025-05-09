@@ -331,7 +331,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     // END ADDRESS PAGES
             
     // Enter incorrect phone number to throw error and check aria properties
-    takeSnapShot("whatPageIsThis.png");//TODO emj delete
+  //  takeSnapShot("whatPageIsThis.png");//TODO emj delete
     testPage.enter("phoneNumber", "134567890");
     testPage.clickContinue("Contact Info");
     assertThat(testPage.hasInputError("phoneNumber")).isTrue();//TODO emj failed here

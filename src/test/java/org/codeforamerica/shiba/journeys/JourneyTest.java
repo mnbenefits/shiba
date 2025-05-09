@@ -81,9 +81,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
     smartyStreetClient = mock(SmartyStreetClient.class);
-    String smartyName = smartyStreetClient.getClass().getName(); //before mock it was MailGunEmailClient
-    System.out.println("======= smarty class Name: " + smartyName);
-   // TODO emj testing this when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
+    //String smartyName = smartyStreetClient.getClass().getName(); //before mock it was MailGunEmailClient
+    //System.out.println("======= smarty class Name: " + smartyName);
+   // TODO emj testing this 
+    when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
    // when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.of(new Address("street", "city", "state", "zip", "apt", "county"))); FAILED
     caf = null;
     ccap = null;
