@@ -79,7 +79,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
     driver.navigate().to(baseUrl);
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+   // String smartyName = smartyStreetClient.getClass().getName(); MailGunEmailClient
+    //System.out.println("======= smarty class Name: " + smartyName);
    // TODO emj testing this when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
+   // when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.of(new Address("street", "city", "state", "zip", "apt", "county"))); FAILED
     caf = null;
     ccap = null;
     certainPops = null;
