@@ -304,14 +304,15 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Home Address");
     
     //fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
+    fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
     // START FILLING ADDRESS
-    assertThat(driver.getTitle()).isEqualTo("Home Address");
-    testPage.enter("zipCode", "12345");
-    testPage.enter("city", "someCity");
-    testPage.enter("streetAddress", "someStreetAddress");
+//    assertThat(driver.getTitle()).isEqualTo("Home Address");
+//    testPage.enter("zipCode", "12345");
+//    testPage.enter("city", "someCity");
+//    testPage.enter("streetAddress", "someStreetAddress");
     //testPage.enter("apartmentNumber", "123");
     
-    testPage.clickContinue("Mailing address");
+//    testPage.clickContinue("Mailing address");
     // TODO emj GitHub fails on 313 : org.openqa.selenium.TimeoutException: Expected condition failed: waiting for title to contain "Mailing address".
     //Current title: "Home Address" (tried for 5 second(s) with 500 milliseconds interval)
 //    testPage.enter("zipCode", "23456");
@@ -320,16 +321,17 @@ public class AccessibilityJourneyTest extends JourneyTest {
 //    testPage.enter("state", "IL");
 //    testPage.enter("apartmentNumber", "someApartmentNumber");
     
-    testPage.enter("sameMailingAddress", "Same as my current living address");
-    
-    testPage.clickContinue("Address Validation");
-    testPage.clickButton("Use this address", "County Validation");
-    
-    testPage.clickButton("Use this county", "Contact Info");
+//    testPage.enter("sameMailingAddress", "Same as my current living address");
+//    
+//    testPage.clickContinue("Address Validation");
+//    testPage.clickButton("Use this address", "County Validation");
+//    
+//    testPage.clickButton("Use this county", "Contact Info");
     
     // END ADDRESS PAGES
             
     // Enter incorrect phone number to throw error and check aria properties
+    takeSnapShot("whatPageIsThis.png");//TODO emj delete
     testPage.enter("phoneNumber", "134567890");
     testPage.clickContinue("Contact Info");
     assertThat(testPage.hasInputError("phoneNumber")).isTrue();//TODO emj failed here

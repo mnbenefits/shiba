@@ -7,6 +7,7 @@ import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
 import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,8 +80,9 @@ abstract class JourneyTest extends AbstractBasePageTest {
     driver.navigate().to(baseUrl);
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
-   // String smartyName = smartyStreetClient.getClass().getName(); MailGunEmailClient
-    //System.out.println("======= smarty class Name: " + smartyName);
+    smartyStreetClient = mock(SmartyStreetClient.class);
+    String smartyName = smartyStreetClient.getClass().getName(); //before mock it was MailGunEmailClient
+    System.out.println("======= smarty class Name: " + smartyName);
    // TODO emj testing this when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
    // when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.of(new Address("street", "city", "state", "zip", "apt", "county"))); FAILED
     caf = null;
@@ -312,22 +314,22 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("apartmentNumber", homeApartmentNumber);
-    testPage.clickContinue();
+    testPage.clickContinue("Mailing address");
     testPage.enter("zipCode", "23456");
     testPage.enter("city", "someCity");
     testPage.enter("streetAddress", "someStreetAddress");
     testPage.enter("state", "IL");
     testPage.enter("apartmentNumber", "someApartmentNumber");
-    testPage.clickContinue();
-    testPage.clickButton("Use this address");
-    testPage.clickButton("Edit my county");
+    testPage.clickContinue("Address Validation");
+    testPage.clickButton("Use this address", "County Validation");
+    testPage.clickButton("Edit my county", "Identify County");
     testPage.enter("county", "Chisago");
-    testPage.clickContinue();
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
+    testPage.clickContinue("Contact Info");
+//    testPage.goBack();
+//    testPage.goBack();
+//    testPage.goBack();
+//    testPage.goBack();
+//    testPage.goBack();
   }
   
   
