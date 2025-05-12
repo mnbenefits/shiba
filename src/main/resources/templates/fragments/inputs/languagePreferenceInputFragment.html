@@ -27,17 +27,12 @@
         // Injected written language value directly from Thymeleaf
         var writtenLangValue = /*[[${writtenLangValue}]]*/ '';
 
-        // Initial auto-fill on load
-        if (checkbox && checkbox.checked && writtenLangValue) {
-          setSpokenLanguageValue(writtenLangValue);
-          container.hide();
-        }
-
         // This function will set the spoken language to the value provided
-        function setSpokenLanguageValue(lang) {
+        function setSpokenLanguageValue(writtenLang) {
+			alert( writtenLang +  "language");
           var radios = document.getElementsByName('spokenLanguage[]');
           for (let r of radios) {
-            if (r.value == lang) {
+            if (r.value == writtenLang) {
 	          r.click();
               r.checked = true;
 			  break;
