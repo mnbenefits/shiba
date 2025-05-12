@@ -47,17 +47,13 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
     testPage.clickContinue();
     testPage.clickContinue();
     testPage.clickContinue();
-    // TODO:  This test expects the flow to be changed to Spanish when Spanish is selected as the writtenLanguage
     testPage.enter("writtenLanguage", "Español");
 
-    //testPage.clickButton("Continuar");
-    testPage.clickButton("Continue");
+    testPage.clickButton("Continuar");
     
-    //assertThat(driver.getTitle()).isEqualTo("Preferencias de idioma");
-    assertThat(driver.getTitle()).isEqualTo("Language Preferences");
+    assertThat(driver.getTitle()).isEqualTo("Preferencias de idioma");
     
     WebElement selectedOption = testPage.getSelectedOption("locales");
-    //assertThat(selectedOption.getText()).isEqualTo("Español");
-    assertThat(selectedOption.getText()).isEqualTo("English");
+    assertThat(selectedOption.getText()).isEqualTo("Español");
   }
 }
