@@ -33,7 +33,6 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.codeforamerica.shiba.DocumentRepositoryTestConfig;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.enrichment.Address;
-import org.codeforamerica.shiba.pages.enrichment.smartstreets.OverrideSmartyStreetsBeanTestConfig;
 import org.codeforamerica.shiba.pages.enrichment.smartstreets.SmartyStreetClientMock;
 import org.codeforamerica.shiba.pages.enrichment.smartystreets.SmartyStreetClient;
 import org.jetbrains.annotations.NotNull;
