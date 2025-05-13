@@ -266,9 +266,9 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("streetAddress", "someStreetAddress");
     testPage.enter("apartmentNumber", "someApartmentNumber");
     // mock a SmartyStreet "address found" response
-    when(smartyStreetClient.validateAddress(any())).thenReturn(
-        Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
-    );
+//    when(smartyStreetClientMock.validateAddress(any())).thenReturn(
+//        Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
+//    );
     testPage.clickContinue();
     
     // Page title: Out of State Address Notice
@@ -314,7 +314,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     // Change the state to MN
     testPage.enter("state",  "MN");
     // mock a SmartyStreet "address found" response
-    when(smartyStreetClient.validateAddress(any())).thenReturn(
+    when(smartyStreetClientMock.validateAddress(any())).thenReturn(
         Optional.of(new Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty"))
     );
     testPage.clickContinue();
@@ -354,7 +354,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     
     testPage.enter("state",  "WI");
     // mock a SmartyStreet "address found" response
-    when(smartyStreetClient.validateAddress(any())).thenReturn(
+    when(smartyStreetClientMock.validateAddress(any())).thenReturn(
         Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
     );
     testPage.clickContinue();

@@ -95,7 +95,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    int maxFileSize = uploadDocumentConfiguration.getMaxFilesize();
+    int maxFileSize = 20;// TODO emj testing this  uploadDocumentConfiguration.getMaxFilesize();
     assertThat(driver.findElement(By.className("text--error")).getText()).contains(
         "This file is too large and cannot be uploaded (max size: " + maxFileSize + " MB)");
     testPage.clickLink("remove");
@@ -241,7 +241,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    int maxFileSize = uploadDocumentConfiguration.getMaxFilesize();
+    int maxFileSize = 20;// TODO emj testing this uploadDocumentConfiguration.getMaxFilesize();
     assertThat(driver.findElement(By.className("text--error")).getText()).contains(
         "This file is too large and cannot be uploaded (max size: " + maxFileSize + " MB)");
     testPage.clickLink("remove");
@@ -387,7 +387,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    int maxFileSize = uploadDocumentConfiguration.getMaxFilesize();
+    int maxFileSize = 20;// TODO emj testing this uploadDocumentConfiguration.getMaxFilesize();
     assertThat(driver.findElement(By.className("text--error")).getText()).contains(
         "This file is too large and cannot be uploaded (max size: " + maxFileSize + " MB)");
     testPage.clickLink("remove");

@@ -32,6 +32,7 @@ import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.emails.MailGunEmailClient;
 import org.codeforamerica.shiba.pages.enrichment.Address;
+import org.codeforamerica.shiba.pages.enrichment.smartstreets.SmartyStreetClientMock;
 import org.codeforamerica.shiba.pages.enrichment.smartystreets.SmartyStreetClient;
 import org.codeforamerica.shiba.pages.events.ApplicationSubmittedEvent;
 import org.codeforamerica.shiba.pages.events.PageEvent;
@@ -46,6 +47,7 @@ import org.mockito.ArgumentCaptor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.test.context.bean.override.convention.TestBean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
@@ -58,8 +60,9 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   @MockitoBean
   protected Clock clock;
-  @MockitoBean
-  protected SmartyStreetClient smartyStreetClient;
+ // @MockitoBean
+  @TestBean(name = "locationClient", methodName = "smartyStreetClientMock")
+  protected SmartyStreetClientMock smartyStreetClientMock;
   @MockitoSpyBean
   protected DocumentRepository documentRepository;
   @MockitoBean
@@ -70,8 +73,13 @@ abstract class JourneyTest extends AbstractBasePageTest {
   protected MailGunEmailClient mailGunEmailClient;
   @MockitoBean
   protected FeatureFlagConfiguration featureFlagConfiguration;
-  @MockitoSpyBean
-  protected UploadDocumentConfiguration uploadDocumentConfiguration;
+  //@MockitoSpyBean
+ //protected UploadDocumentConfiguration uploadDocumentConfiguration;
+  
+  public static SmartyStreetClientMock smartyStreetClientMock() {
+	  //System.out.println("++++++ returning SmartyStreetsClientMock +++++++++");//TODO emj delete
+	  return SmartyStreetClientMock.buildMock();
+  }
 
   @Override
   @BeforeEach
@@ -80,11 +88,11 @@ abstract class JourneyTest extends AbstractBasePageTest {
     driver.navigate().to(baseUrl);
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
-    smartyStreetClient = mock(SmartyStreetClient.class);
+   // smartyStreetClientMock = mock(SmartyStreetsClientMock.class);
     //String smartyName = smartyStreetClient.getClass().getName(); //before mock it was MailGunEmailClient
     //System.out.println("======= smarty class Name: " + smartyName);
    // TODO emj testing this 
-    when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
+   // when(smartyStreetClientMock.validateAddress(any())).thenReturn(Optional.empty());
    // when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.of(new Address("street", "city", "state", "zip", "apt", "county"))); FAILED
     caf = null;
     ccap = null;
