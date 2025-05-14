@@ -138,7 +138,7 @@ smarty-street-url: "https://us-street.api.smartystreets.com/street-address"
 encryption-key: ${ENCRYPTION_KEY}
 logging:
   level:
-    org.springframework.web: DEBUG
+    org.springframework.web: ERROR
     org.springframework.ws.client.MessageTracing.sent: DEBUG
     org.springframework.ws.server.MessageTracing.sent: DEBUG
     org.springframework.ws.client.MessageTracing.received: DEBUG
