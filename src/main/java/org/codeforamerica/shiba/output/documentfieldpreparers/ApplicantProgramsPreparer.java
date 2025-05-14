@@ -29,6 +29,8 @@ public class ApplicantProgramsPreparer implements DocumentFieldPreparer {
           new DocumentField("applicantPrograms", program, List.of("Yes"),
               DocumentFieldType.SINGLE_VALUE)
       );
+      programSelections.add(
+  			new DocumentField("housingSupport", "mnHousingSupport", program.equals("GRH")?"Yes":"No", DocumentFieldType.SINGLE_VALUE));
     });
 
     return programSelections;

@@ -34,6 +34,8 @@ mappings:
     GRH: GRH
     EA: EMERGENCY
     NONE: PROGRAM_NONE
+  housingSupport:
+    mnHousingSupport: MN_HOUSING_SUPPORT
   householdMemberInfo:
     firstName: FIRST_NAME
     lastName: LAST_NAME
