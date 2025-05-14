@@ -815,7 +815,7 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       HttpSession httpSession
   ) {
     PageWorkflowConfiguration pageWorkflow = applicationConfiguration.getWorkflow().get(pageName);
-
+    log.info("@@@@@@@@ PageController postFormPage for " + pageName);//TODO emj delete
     PageConfiguration page = pageWorkflow.getPageConfiguration();
     PageData pageData = PageData.fillOut(page, model);
 
@@ -858,6 +858,7 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       
       String id = applicationData.getId();
       MDC.put("applicationId", id);
+      log.info("@@@@@@@@ PageController start enrichment process");//TODO emj delete
       ofNullable(pageWorkflow.getEnrichment())
           .map(applicationEnrichment::getEnrichment)
           .map(enrichment -> enrichment.process(pagesData))
