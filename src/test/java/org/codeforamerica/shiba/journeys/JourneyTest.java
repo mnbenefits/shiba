@@ -88,6 +88,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     driver.navigate().to(baseUrl);
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+   // when(smartyStreetClientMock.validateAddress(any())).thenThrow(new RuntimeException("THROW EXCEPTION FROM SETUP"));
    // smartyStreetClientMock = mock(SmartyStreetsClientMock.class);
     //String smartyName = smartyStreetClient.getClass().getName(); //before mock it was MailGunEmailClient
     //System.out.println("======= smarty class Name: " + smartyName);
