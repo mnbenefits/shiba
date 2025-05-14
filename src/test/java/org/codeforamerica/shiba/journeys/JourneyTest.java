@@ -320,6 +320,9 @@ abstract class JourneyTest extends AbstractBasePageTest {
   
   protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,
       String homeStreetAddress, String homeApartmentNumber) {
+	  //TODO emj testing this if this matters on GitHub
+	testPage.enter("isHomeless", "I don't have a permanent address"); // check
+	testPage.enter("isHomeless", "I don't have a permanent address"); // uncheck
     testPage.enter("zipCode", homeZip);
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
