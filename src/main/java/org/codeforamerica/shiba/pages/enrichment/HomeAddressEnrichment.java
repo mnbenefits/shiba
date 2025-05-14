@@ -12,7 +12,10 @@ import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class HomeAddressEnrichment extends AddressEnrichment {
 
   public HomeAddressEnrichment(
@@ -24,6 +27,7 @@ public class HomeAddressEnrichment extends AddressEnrichment {
 
   @Override
   protected Address parseAddress(PagesData pagesData) {
+	  log.info("HomeAddressEnrichment parseAddress");//TODO emj delete
     return new Address(
         getFirstValue(pagesData, HOME_STREET),
         getFirstValue(pagesData, HOME_CITY),

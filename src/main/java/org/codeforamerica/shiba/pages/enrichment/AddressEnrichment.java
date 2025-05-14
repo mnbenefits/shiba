@@ -4,10 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.codeforamerica.shiba.County;
+import org.codeforamerica.shiba.pages.PageController;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public abstract class AddressEnrichment implements Enrichment {
 
   LocationClient locationClient;
@@ -17,8 +21,11 @@ public abstract class AddressEnrichment implements Enrichment {
 
   @Override
   public PageData process(PagesData pagesData) {
+	log.info("AddressEnrichment process pagesData: " + pagesData.entrySet().toString());//TODO emj delete
     Address address = parseAddress(pagesData);
+    log.info("AddressEnrichment process address is parsed");
     if (address.getStreet() == null) {
+    	log.info("AddressEnrichment process street is null");
       return new PageData();
     }
     return locationClient.validateAddress(address)
