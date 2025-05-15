@@ -1122,7 +1122,6 @@ public class FullFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("CASH", "Yes");
     assertCafFieldEquals("CCAP", "Off");
     assertCafFieldEquals("EMERGENCY", "Off");
-    //assertCafFieldEquals("GRH", "Off"); // TODO: Verify the GRH does not exist on the CAF anymore
     assertCafFieldEquals("MN_HOUSING_SUPPORT", "No");
     assertCafFieldEquals("TANF", "Off");
     assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
