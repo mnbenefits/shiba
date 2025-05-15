@@ -1,3 +1,9 @@
+<!-- 
+	This fragment implements the spokenSameAsWritten (custom) input on the spokenLanguage page.
+	It consists of a "spoken same a written language" checkbox that, when NOT checked, displays a set of spoken language radio buttons.
+	  writtenLangValue - the value choosen for written language preference (from the writtenLanguage page)
+	  isChecked - the boolean that indicates whether the input was or was not checked at the time that the spokenLanguage page is loaded.
+-->
 <div th:fragment="languagePreferenceInputFragment(input, data)"
      th:with="
        writtenLangValue=${applicationData.getPagesData().getPage('writtenLanguage').get('writtenLanguage') != null ? 
@@ -5,10 +11,11 @@
        isChecked=${data.get(input.name) != null and data.get(input.name).value.size>0 and data.get(input.name).value[0]== 'true' ? true : false}
      ">
 
-  <!-- The "same spoken as written" checkbox is always visible -->
+  <!-- The spokenSameAsWritten checkbox -->
   <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
 
-  <!-- Conditionally hide the spokenLanguage follow-up -->
+  <!-- The spokenLanguage follow-up (i.e., the radio buttons)
+       This is not displayed when the checkbox is checked -->
   <div th:class="${isChecked} ? 'hide' : ''" id="language-questions">
     <th:block th:each="followUp : ${input.followUps}">
       <div class="spacing-above-60">
@@ -17,9 +24,9 @@
     </th:block>
   </div>
 
-  <!-- Provide JavaScript to toggle the spoken language section -->
+  <!-- JavaScript -->
   <script th:inline="javascript">
-      // This function is automatically executed whenr the page loads
+      // This function executes when the page has loaded (i.e., when the "ready" event is triggered).
       $(document).ready(function () {
        var checkbox = document.getElementsByName('spokenSameAsWritten[]')[0];
        var container = $('#language-questions');
@@ -27,19 +34,41 @@
         // Injected written language value directly from Thymeleaf
         var writtenLangValue = /*[[${writtenLangValue}]]*/ '';
 
-        // This function will set the spoken language to the value provided
-        function setSpokenLanguageValue(writtenLang) {
+        // Add a "change" event listener to each radio label element.
+        // The assumption is that this event only fires when the radio is selected.
+        const radioLabels = document.querySelectorAll('label[for^="spokenLanguage"]');
+        radioLabels.forEach(radioLabel => {
+          radioLabel.addEventListener('change', function() {
+	        clearIsSelectedFromAllRadioLabels();
+            this.classList.add('is-selected');
+          });
+        });        
+
+        // Add a "change" event listener to each radio input element
+        // The assumptions is that this event only fires when the radio is selected.
+        const radioInputs = document.querySelectorAll('input[id^="spokenLanguage"]');
+        radioInputs.forEach(radioInput => {
+          radioInput.addEventListener('change', function() {
+	        // First clear any previous selected radio
+	        clearCheckedAttributeFromAllRadioInputs();
+	        this.setAttribute('checked', 'checked');
+          });
+        }); 
+
+        // Functions
+        
+        // This function is used to set the spoken language to a given value
+        function setSpokenLanguageValue(language) {
           var radios = document.getElementsByName('spokenLanguage[]');
           for (let r of radios) {
-            if (r.value == writtenLang) {
+            if (r.value == language) {
 	          r.click();
-              r.checked = true;
 			  break;
             }
           }
         }
-
-        // This function executes when the checkbox is toggled
+ 
+        // This function executes when the spokenSameAsWritten checkbox is toggled (i.e., "change" event)
         checkbox.addEventListener('change', function () {
 	      var checked = this.parentElement.classList.contains('is-selected');
           if (checked) {
@@ -49,9 +78,23 @@
             container.show();
           }
         });
-      });
-    </script>
-  </div>
+        
+        // This function removes the "is-selected" style from the class list on every radio label element
+        function clearIsSelectedFromAllRadioLabels() {
+	      radioLabels.forEach(function(radioLabel) {
+		    radioLabel.classList.remove('is-selected');
+		  })
+	    }	
+
+        // This function removes the "checked" attribute from every radio input element
+        function clearCheckedAttributeFromAllRadioInputs() {
+	      radioInputs.forEach(function(radioInput) {
+	        radioInput.removeAttribute('checked');
+	      })
+	    }
+    });
+  </script>
+</div>
   
   
     
