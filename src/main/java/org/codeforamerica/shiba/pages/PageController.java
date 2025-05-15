@@ -269,6 +269,7 @@ public class PageController {
       @PathVariable String pageName,
       @RequestParam(required = false, defaultValue = "0") Integer option
   ) {
+	  log.info("@@@@@@@@ PageController navigation START for " + pageName);//TODO emj delete
     PageWorkflowConfiguration currentPage = applicationConfiguration.getWorkflow().get(pageName);
     if (currentPage == null) {
     	log.error("navigation error for pageName " + pageName);
@@ -280,7 +281,7 @@ public class PageController {
     ofNullable(nextPage.getFlow()).ifPresent(applicationData::setFlow);
     PageWorkflowConfiguration nextPageWorkflow = applicationConfiguration.getWorkflow()
         .get(nextPage.getPageName());
-
+    log.info("@@@@@@@@ PageController navigation END for " + pageName);//TODO emj delete
     if (shouldSkip(nextPageWorkflow)) {
       pagesData.remove(nextPageWorkflow.getPageConfiguration().getName());
       return new RedirectView(String.format("/pages/%s/navigation", nextPage.getPageName()));
