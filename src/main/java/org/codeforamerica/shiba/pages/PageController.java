@@ -312,6 +312,7 @@ public class PageController {
       HttpSession httpSession,
       Locale locale
   ) {
+	  log.info("@@@@@@@@ PageController getPage START for " + pageName);//TODO emj delete
 	  // Temporary cookie indicating user page
       Cookie pageNameCookie = new Cookie("page_name", StringEscapeUtils.escapeJava(pageName));
       pageNameCookie.setPath("/");
@@ -445,6 +446,7 @@ public class PageController {
     var view =
         pageWorkflowConfig.getPageConfiguration().isUsingPageTemplateFragment() ? "pageTemplate"
             : pageName;
+    log.info("@@@@@@@@ PageController getPage END for " + pageName);//TODO emj delete
     return new ModelAndView(view, model);
   }
 
@@ -500,6 +502,7 @@ public class PageController {
   private Map<String, Object> buildModelForThymeleaf(String pageName, Locale locale,
       LandmarkPagesConfiguration landmarkPagesConfiguration, PageTemplate pageTemplate,
       PageWorkflowConfiguration pageWorkflow, PagesData pagesData, String iterationIndex) {
+	  log.info("@@@@@@@@ PageController buildModelForThymeleaf START for " + pageName);//TODO emj delete
     Map<String, Object> model = new HashMap<>();
     model.put("page", pageTemplate);
     model.put("pageName", pageName);
@@ -650,7 +653,7 @@ public class PageController {
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
     }
     model.put("applicationData", applicationData);
-
+    log.info("@@@@@@@@ PageController buildModelForThymeleaf END for " + pageName);//TODO emj delete
     return model;
   }
 
