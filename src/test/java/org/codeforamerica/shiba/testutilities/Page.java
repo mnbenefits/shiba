@@ -99,8 +99,9 @@ public class Page {
   public void clickButton(String buttonText) {
 	  clickButton(buttonText, 10);
   }
-  // An attempt to get past StaleElementReferenceException that frequently occurs.
-  // We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
+  /** An attempt to get past StaleElementReferenceException that frequently occurs.
+  We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
+  */ 
   public void clickButton(String buttonText, int retryCount) {
 	try {  
 	    checkForBadMessageKeys();
