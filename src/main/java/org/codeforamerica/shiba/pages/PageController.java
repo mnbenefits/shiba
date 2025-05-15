@@ -817,8 +817,8 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       @PathVariable String pageName,
       HttpSession httpSession
   ) {
+	    log.info("@@@@@@@@ PageController postFormPage for " + pageName);//TODO emj delete
     PageWorkflowConfiguration pageWorkflow = applicationConfiguration.getWorkflow().get(pageName);
-    log.info("@@@@@@@@ PageController postFormPage for " + pageName);//TODO emj delete
     PageConfiguration page = pageWorkflow.getPageConfiguration();
     PageData pageData = PageData.fillOut(page, model);
 
