@@ -97,10 +97,10 @@ public class Page {
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	  }
 
-  @Deprecated
-  public void clickButton(String buttonText) {
-	  clickButton(buttonText, 10);
-  }
+//  @Deprecated
+//  public void clickButton(String buttonText) {
+//	  clickButton(buttonText, 10);
+//  }
   /** An attempt to get past StaleElementReferenceException that frequently occurs.
   We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
   */ 
@@ -122,6 +122,34 @@ public class Page {
 		}
 	}catch(Exception e) {
 		log.error("--- clickButton Exception ----" + e);//TODO emj delete
+	}
+  }
+  
+  /** Overloaded method, added nextPage and wait.
+   * An attempt to get past StaleElementReferenceException that frequently occurs.
+  We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
+  */ 
+  public void clickButton(String buttonText, int retryCount, String nextPage) {
+	try {  
+		log.info("--- clickButton " + buttonText + " for nextPage " + nextPage + " ----");//TODO emj delete
+	    checkForBadMessageKeys();
+	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
+	        .filter(button -> button.getText().contains(buttonText))
+	        .findFirst()
+	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+	    buttonToClick.click();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	} catch(StaleElementReferenceException e) {
+		log.error("--- clickButton NP StaleElementReferenceException ----");//TODO emj delete
+		if (retryCount > 0) { // try again...
+			this.clickButton(buttonText, retryCount-1);
+		} else { // we tried... but we can't ignore the exception
+			throw e;
+		}
+	}catch(Exception e) {
+		log.error("--- clickButton NP Exception ----" + e);//TODO emj delete
 	}
   }
 
@@ -147,6 +175,15 @@ public class Page {
   public void clickContinue() {
     clickButton("Continue");
   }
+	
+	public void clickButton(String buttonText) {
+		checkForBadMessageKeys();
+		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
+				.filter(button -> button.getText().contains(buttonText)).findFirst()
+				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+		buttonToClick.click();
+
+	}
   
   /**
    * Click the Continue button, then wait for the next page to load.

@@ -330,7 +330,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("apartmentNumber", homeApartmentNumber);
     //testPage.clickContinue();
     //testPage.clickContinue("Mailing address");
-    testPage.clickButton("Continue", 20);
+    testPage.clickButton("Continue", 20, "Mailing address");
     assertThat(testPage.getTitle()).isEqualTo("Mailing address");
     testPage.enter("zipCode", "23456");
     testPage.enter("city", "someCity");
