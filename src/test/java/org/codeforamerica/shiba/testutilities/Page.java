@@ -101,7 +101,7 @@ public class Page {
   }
   // An attempt to get past StaleElementReferenceException that frequently occurs.
   // We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
-  private void clickButton(String buttonText, int retryCount) {
+  public void clickButton(String buttonText, int retryCount) {
 	try {  
 	    checkForBadMessageKeys();
 	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
