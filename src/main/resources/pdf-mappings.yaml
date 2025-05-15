@@ -349,7 +349,9 @@ mappings:
   authorizedRep:
     helpWithBenefits: WANT_AUTHORIZED_REP
   authorizedRepCommunicate:
-    communicateOnYourBehalf: AUTHORIZED_REP_FILL_OUT_FORM
+    communicateOnYourBehalf: 
+       - AUTHORIZED_REP_FILL_OUT_FORM
+       - AUTHORIZED_REP_COMMUNICATE
   authorizedRepMailNotices:
     getMailNotices: AUTHORIZED_REP_GET_NOTICES
   authorizedRepSpendOnYourBehalf:
