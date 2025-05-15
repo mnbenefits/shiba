@@ -1,8 +1,9 @@
 <!-- 
-	This fragment implements the spokenSameAsWritten (custom) input on the spokenLanguage page.
-	It consists of a "spoken same a written language" checkbox that, when NOT checked, displays a set of spoken language radio buttons.
-	  writtenLangValue - the value choosen for written language preference (from the writtenLanguage page)
-	  isChecked - the boolean that indicates whether the input was or was not checked at the time that the spokenLanguage page is loaded.
+	This fragment implements the (custom) spokenSameAsWritten input for the spokenLanguage page.
+	It consists of a "spokenSameAsWritten" checkbox that, when NOT checked, displays a set of spoken language radio buttons.
+	Variables:
+	  writtenLangValue - the chosen value for written language preference (from the writtenLanguage page)
+	  isChecked - the boolean that indicates whether the checkbox was or was not checked at the time that the spokenLanguage page is loaded.
 -->
 <div th:fragment="languagePreferenceInputFragment(input, data)"
      th:with="
@@ -15,7 +16,8 @@
   <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
 
   <!-- The spokenLanguage follow-up (i.e., the radio buttons)
-       This is not displayed when the checkbox is checked -->
+       This is not displayed when the checkbox is checked 
+  -->
   <div th:class="${isChecked} ? 'hide' : ''" id="language-questions">
     <th:block th:each="followUp : ${input.followUps}">
       <div class="spacing-above-60">
@@ -28,14 +30,14 @@
   <script th:inline="javascript">
       // This function executes when the page has loaded (i.e., when the "ready" event is triggered).
       $(document).ready(function () {
-       var checkbox = document.getElementsByName('spokenSameAsWritten[]')[0];
-       var container = $('#language-questions');
+        var checkbox = document.getElementsByName('spokenSameAsWritten[]')[0];
+        var container = $('#language-questions');
 
         // Injected written language value directly from Thymeleaf
         var writtenLangValue = /*[[${writtenLangValue}]]*/ '';
 
-        // Add a "change" event listener to each radio label element.
-        // The assumption is that this event only fires when the radio is selected.
+        // Add a "change" event listener to each radio button label element.
+        // This event fires when the radio button is selected.
         const radioLabels = document.querySelectorAll('label[for^="spokenLanguage"]');
         radioLabels.forEach(radioLabel => {
           radioLabel.addEventListener('change', function() {
@@ -44,8 +46,8 @@
           });
         });        
 
-        // Add a "change" event listener to each radio input element
-        // The assumptions is that this event only fires when the radio is selected.
+        // Add a "change" event listener to each radio button input element
+        // This event fires when the radio button is selected.
         const radioInputs = document.querySelectorAll('input[id^="spokenLanguage"]');
         radioInputs.forEach(radioInput => {
           radioInput.addEventListener('change', function() {
@@ -54,30 +56,27 @@
 	        this.setAttribute('checked', 'checked');
           });
         }); 
-
-        // Functions
         
-        // This function is used to set the spoken language to a given value
-        function setSpokenLanguageValue(language) {
-          var radios = document.getElementsByName('spokenLanguage[]');
-          for (let r of radios) {
-            if (r.value == language) {
-	          r.click();
-			  break;
-            }
-          }
-        }
- 
-        // This function executes when the spokenSameAsWritten checkbox is toggled (i.e., "change" event)
+        // Add a "change" event listener to the spokenSameAsWritten checkbox element.
+        // This event fires when the checkbox is toggled.
         checkbox.addEventListener('change', function () {
 	      var checked = this.parentElement.classList.contains('is-selected');
           if (checked) {
-            setSpokenLanguageValue(writtenLangValue);
+	        // Find the radio button corresponding to the written language selected and click it.
+            var radios = document.getElementsByName('spokenLanguage[]');
+            for (let r of radios) {
+              if (r.value == writtenLangValue) {
+	            r.click();
+			    break;
+              }
+            }
             container.hide();
           } else {
             container.show();
           }
         });
+
+        // Functions
         
         // This function removes the "is-selected" style from the class list on every radio label element
         function clearIsSelectedFromAllRadioLabels() {
@@ -95,6 +94,4 @@
     });
   </script>
 </div>
-  
-  
     
