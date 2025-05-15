@@ -16,7 +16,9 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j //TODO emj delete this annotation
 public class Page {
 
   protected final RemoteWebDriver driver;
@@ -104,6 +106,7 @@ public class Page {
   */ 
   public void clickButton(String buttonText, int retryCount) {
 	try {  
+		log.info("--- clickButton ----");//TODO emj delete
 	    checkForBadMessageKeys();
 	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 	        .filter(button -> button.getText().contains(buttonText))
@@ -111,11 +114,14 @@ public class Page {
 	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 	    buttonToClick.click();
 	} catch(StaleElementReferenceException e) {
+		log.error("--- clickButton StaleElementReferenceException ----");//TODO emj delete
 		if (retryCount > 0) { // try again...
 			this.clickButton(buttonText, retryCount-1);
 		} else { // we tried... but we can't ignore the exception
 			throw e;
 		}
+	}catch(Exception e) {
+		log.error("--- clickButton Exception ----" + e);//TODO emj delete
 	}
   }
 
