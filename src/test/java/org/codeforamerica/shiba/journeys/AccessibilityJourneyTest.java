@@ -497,8 +497,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Sold assets");
     testPage.enter("haveSoldAssets", NO.getDisplayValue());
     testPage.clickButtonLink("Continue", "Register to vote");
-    takeSnapShot("registerToVOte.png");//TODO emj delete
-   // testPage.clickContinue("Register to vote");
+
     testPage.clickCustomButton("Yes, send me more info", 10, "Healthcare Coverage");
     testPage.enter("healthcareCoverage", YES.getDisplayValue());
     testPage.clickContinue("Authorized Rep");

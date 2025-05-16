@@ -145,6 +145,10 @@ public class Page {
 		        .filter(button -> button.getText().contains(buttonText))
 		        .findFirst()
 		        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+	    boolean isButtonVisible = buttonToClick.isDisplayed(); // driver.findElement(By.name("email_input")).isDisplayed();
+	    log.info("Button is displayed: " + isButtonVisible);
+	    boolean isButtonEnabled = buttonToClick.isEnabled();
+	    log.info("Button is enabled: " + isButtonEnabled);
 		    buttonToClick.click();
 	    
 //	    new Actions(driver).moveToElement(driver.findElement(By.id("form-submit-button"))).click(); //perform(); 
