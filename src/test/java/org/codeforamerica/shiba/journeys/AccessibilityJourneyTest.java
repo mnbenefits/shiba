@@ -82,9 +82,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
   @Test
   void laterDocsFlow() {
-    testPage.clickButton("Upload documents", "Ready to upload documents");
+    testPage.clickButtonLink("Upload documents", "Ready to upload documents");
     // Ready to upload documents page
-    testPage.clickContinue("Match Info");
+    testPage.clickButtonLink("Continue", "Match Info");
     
     // Match Info page
     // Enter incorrect information to get validation errors to check against aria-properties
@@ -277,20 +277,19 @@ public class AccessibilityJourneyTest extends JourneyTest {
   void userCanCompleteTheNonExpeditedHouseholdFlow() {
     List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP);
 
-    testPage.clickButton("Apply now", "Identify County");
+    testPage.clickButtonLink("Apply now", "Identify County");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue("Prepare To Apply");
-
-    testPage.clickContinue("Timeout notice");
-    testPage.clickContinue("Language Preferences");
+    testPage.clickButtonLink("Continue", "Prepare To Apply");
+    testPage.clickButtonLink("Continue", "Timeout notice");
+    testPage.clickButtonLink("Continue", "Language Preferences");
     testPage.enter("writtenLanguage", "English");
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue("Choose Programs");
     programSelections.forEach(program -> testPage.enter("programs", program));
     testPage.clickContinue("Expedited Notice");
-    testPage.clickContinue("Intro: Basic Info");//for Expedited Notice page
-    testPage.clickContinue("Personal Info");
+    testPage.clickButtonLink("Continue", "Intro: Basic Info");//for Expedited Notice page
+    testPage.clickButtonLink("Continue", "Personal Info");
     testPage.enter("firstName", "defaultFirstName");
     testPage.enter("lastName", "defaultLastName");
     testPage.enter("otherName", "defaultOtherName");
@@ -344,10 +343,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("phoneOrEmail", "It's okay to text me");
     testPage.clickContinue("Review info");   
     
-    testPage.clickLink("This looks correct", "Do you want to add household members?");
+    testPage.clickButtonLink("This looks correct", "Do you want to add household members?");
     
     testPage.enter("addHouseholdMembers", YES.getDisplayValue());
-    testPage.clickContinue("Housemate: Personal Info");
+    testPage.clickButtonLink("Continue", "Housemate: Personal Info");
     
     testPage.enter("relationship", "Other");
     testPage.enter("programs", PROGRAM_CCAP);
@@ -363,7 +362,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("moveToMnPreviousState", "Illinois");
     testPage.clickContinue("Household members");
     
-    testPage.clickButton("Yes, that's everyone", "Who are the children in need of care?");
+    testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
     testPage.enter("whoNeedsChildCare", "householdMemberFirstName householdMemberLastName");
     testPage.clickContinue("Who are the children that have a parent not living in the home?");
     testPage.enter("whoHasAParentNotLivingAtHome",
@@ -387,9 +386,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
     testPage.clickContinue("Nations Boundary");
     testPage.enter("livingInNationBoundary", NO.getDisplayValue());
-    testPage.clickContinue("Employment status");
+    testPage.clickButtonLink("Continue", "Employment status");
     testPage.enter("areYouWorking", YES.getDisplayValue());
-    testPage.clickButton("Add a job", "Household selection for income");
+    testPage.clickButtonLink("Add a job", "Household selection for income");
     testPage.enter("whoseJobIsIt", "householdMemberFirstName householdMemberLastName");
     testPage.clickContinue("Employer's Name");
 
@@ -433,10 +432,11 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     testPage.enter("hoursAWeek", "30");
     testPage.clickContinue("Job Builder");
-    testPage.clickButton("No, that's it.", "Job Search");
+    testPage.clickButtonLink("No, that's it.", "Job Search");
     // drill down to futureIncome page
-    testPage.clickButton("No", "Income Up Next");
-    testPage.clickButton("Continue", "Unearned Income");
+    //testPage.clickYesNoButton("currentlyLookingForJob[]", "false", "Income Up Next");
+    testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
+    testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "None of the above");
     testPage.clickButton("Continue", "Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
@@ -449,9 +449,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.goBack();
     testPage.goBack();
     
-    testPage.clickButton("No, that's it.", "Job Search");
+    testPage.clickButtonLink("No, that's it.", "Job Search");
     testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
-    testPage.clickContinue("Unearned Income");
+    testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "Social Security");
 
     testPage.clickContinue("Unearned Income Sources");
@@ -476,8 +476,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Future Income");
 
     testPage.enter("earnLessMoneyThisMonth", "Yes");
-    testPage.clickContinue("Start Expenses");
-    testPage.clickContinue("Home Expenses");
+    testPage.clickButtonLink("Continue", "Start Expenses");
+    testPage.clickButtonLink("Continue", "Home Expenses");
     testPage.enter("homeExpenses", "Rent");
     testPage.clickContinue("Home expenses amount");
     testPage.enter("homeExpensesAmount", "123321");
@@ -496,8 +496,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("liquidAssets", "1234");
     testPage.clickContinue("Sold assets");
     testPage.enter("haveSoldAssets", NO.getDisplayValue());
-    testPage.clickContinue("Register to vote");
-    testPage.clickButton("Yes, send me more info", "Healthcare Coverage");
+    testPage.clickButtonLink("Continue", "Register to vote");
+    takeSnapShot("registerToVOte.png");//TODO emj delete
+   // testPage.clickContinue("Register to vote");
+    testPage.clickCustomButton("Yes, send me more info", 10, "Healthcare Coverage");
     testPage.enter("healthcareCoverage", YES.getDisplayValue());
     testPage.clickContinue("Authorized Rep");
     testPage.enter("helpWithBenefits", YES.getDisplayValue());

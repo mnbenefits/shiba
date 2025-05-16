@@ -145,7 +145,7 @@ logging:
     org.springframework.ws.server.MessageTracing.received: DEBUG
     org.springframework.web.client.RestTemplate: INFO
     org.springframework.context.event.EventListener: TRACE
-    org.springframework.web.servlet.DispatcherServlet: DEBUG
+    #org.springframework.web.servlet.DispatcherServlet: DEBUG
     
 pagesConfig: pages-config.yaml
 

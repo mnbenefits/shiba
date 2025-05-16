@@ -340,7 +340,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("apartmentNumber", "someApartmentNumber");
     testPage.clickContinue("Address Validation");
     testPage.clickButton("Use this address", "County Validation");
-    testPage.clickButton("Edit my county", "Identify County");
+    testPage.clickButtonLink("Edit my county", "Identify County");
     testPage.enter("county", "Chisago");
     testPage.clickContinue("Contact Info");
 //    testPage.goBack();
