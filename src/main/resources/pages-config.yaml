@@ -542,7 +542,7 @@ pageDefinitions:
               messageKey: general.inputs.no
   - &writtenLanguage
     name: writtenLanguage
-    pageTitle: language-preferences.title
+    pageTitle: written-language.title
     headerKey: language-preferences.language-preferences
     contextFragment: languagePreferencesContextFragment
     inputs:
@@ -596,7 +596,7 @@ pageDefinitions:
              - pageName: writtenLanguage				
   - &spokenLanguage
     name: spokenLanguage
-    pageTitle: language-preferences.title
+    pageTitle: spoken-language.title
     headerKey: language-preferences.what-language-do-you-prefer-to-speak
     contextFragment: languagePreferencesContextFragment
     inputs:
