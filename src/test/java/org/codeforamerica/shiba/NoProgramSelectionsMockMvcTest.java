@@ -15,10 +15,8 @@ public class NoProgramSelectionsMockMvcTest extends AbstractShibaMockMvcTest {
     super.setUp();
     mockMvc.perform(get("/pages/identifyCountyBeforeApplying").session(session)); // start timer
     postExpectingSuccess("identifyCountyBeforeApplying", "county", "Hennepin");
-    postExpectingSuccess("languagePreferences", Map.of(
-        "writtenLanguage", List.of("ENGLISH"),
-        "spokenLanguage", List.of("ENGLISH"))
-    );
+    postExpectingSuccess("writtenLanguage", Map.of("writtenLanguage", List.of("ENGLISH")));
+    postExpectingSuccess("spokenLanguage", Map.of("spokenLanguage", List.of("ENGLISH")));
   }
 
   @Test

@@ -22,13 +22,14 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 @Tag("minimumFlowJourney")
+@Disabled("This test passes on VDIs but fails on GitHub")
 public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
   private final String signature = "some signature";
   
-  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void nonExpeditedFlow() {
 	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
@@ -134,7 +135,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "56510-9999");
   }
   
-  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void expeditedFlow() {
 	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
@@ -251,7 +251,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
   }
 
-  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void outOfStateApplicantFlow() {
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
@@ -380,6 +379,108 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     // Page title: Landing
     assertTrue(testPage.getTitle().equals("MNbenefits"));
   }
+
+  /**
+   * This test verifies the operations of the language preferences pages.
+   */
+  @Test
+  void languagePreferencesSameLanguageFlow() {
+	// Landing page
+	testPage.clickButton("Apply now");
+
+	// Select county
+	testPage.enter("county", "Hennepin");
+	testPage.clickContinue();
+
+	// Informational pages
+	testPage.clickContinue();
+	testPage.clickContinue();
+
+	// Written Language Preference page
+	String title = testPage.getTitle();
+	assertThat(title).isEqualTo("Language Preferences - Written");
+	
+	// Verify that no written language preference is selected by default
+	List<WebElement> writtenLanguageRadioInputs = driver.findElements(By.name("writtenLanguage[]"));
+	String writtenLanguage = "";
+	for (WebElement radioInput : writtenLanguageRadioInputs) {
+		if (radioInput.isSelected()) {
+			writtenLanguage = radioInput.getDomAttribute("value");
+			break;
+		};
+	}
+	assertThat(writtenLanguage).isEmpty();
+
+	// Set written language preference to English
+	testPage.enter("writtenLanguage", "English");
+	writtenLanguageRadioInputs = driver.findElements(By.name("writtenLanguage[]"));
+	writtenLanguage = "";
+	for (WebElement radioInput : writtenLanguageRadioInputs) {
+		if (radioInput.isSelected()) {
+			writtenLanguage = radioInput.getDomAttribute("value");
+			break;
+		};
+	}
+	assertThat(writtenLanguage).isEqualTo("ENGLISH");
+	
+	// Continue to spoken language preference page
+	testPage.clickContinue();
+	
+	title = testPage.getTitle();
+	assertThat(title).isEqualTo("Language Preferences - Spoken");
+
+	// Verify that the spokenSameAsWritten checkbox is not checked by default
+	WebElement spokenSameAsWrittenCheckbox = driver.findElement(By.name("spokenSameAsWritten[]"));
+	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isFalse();
+
+	// Verify that the spoken language radios are displayed
+	WebElement languageQuestionsDiv = driver.findElement(By.id("language-questions"));
+	String languageQuestionsDivStyle = languageQuestionsDiv.getDomAttribute("style");
+	// The absence of a style attribute would mean that the radio div is not hidden
+	assertThat(languageQuestionsDivStyle).isNull();
+	
+	// Verify that no spoken language preference is selected by default
+	List<WebElement> spokenLanguageRadioInputs = driver.findElements(By.name("spokenLanguage[]"));
+	String spokenLanguage = "";
+	for (WebElement radioInput : spokenLanguageRadioInputs) {
+		if (radioInput.isSelected()) {
+			spokenLanguage = radioInput.getDomAttribute("value");
+			break;
+		};
+	}
+	assertThat(spokenLanguage).isEmpty();
+	
+	// Click the spokenSameAsWritten checkbox
+	testPage.clickElementById("true");
+	
+	// Verify that the checkbox is now checked.
+	spokenSameAsWrittenCheckbox = driver.findElement(By.name("spokenSameAsWritten[]"));
+	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isTrue();
+
+	// Verify that the spoken language radios are no longer displayed
+	languageQuestionsDiv = driver.findElement(By.id("language-questions"));
+	languageQuestionsDivStyle = languageQuestionsDiv.getDomAttribute("style");
+	assertThat(languageQuestionsDivStyle).contains("display: none");
+	
+	// Verify that the spoken language preference is now equal to the written language preference
+	spokenLanguageRadioInputs = driver.findElements(By.name("spokenLanguage[]"));
+	spokenLanguage = "";
+	for (WebElement radioInput : spokenLanguageRadioInputs) {
+		if (radioInput.isSelected()) {
+			spokenLanguage = radioInput.getDomAttribute("value");
+			break;
+		};
+	}
+	assertThat(spokenLanguage).isEqualTo(writtenLanguage);
+	
+	testPage.enter("needInterpreter", "Yes");
+
+	// Continue
+	testPage.clickContinue();
+	title = testPage.getTitle();
+	assertThat(title).isEqualTo("Choose Programs");
+  }  
+  
 
   private void assertCafContainsAllFieldsForMinimumSnapFlow(String applicationId,
       String countyInstructions) {
