@@ -19,7 +19,6 @@ import org.codeforamerica.shiba.testutilities.AccessibilityTestPage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -100,12 +99,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Match Info");
     assertThat(testPage.hasInputError("firstName")).isTrue();
     assertThat(testPage.hasInputError("ssn")).isTrue();
-    //assertThat(testPage.inputIsValid("firstName")).isFalse();//TODO emj fix this
-    assertThat(driver.findElements(By.className("firstName")).size()).isEqualTo(0);//TODO emj try this instead
+    assertThat(driver.findElements(By.className("firstName")).size()).isEqualTo(0);
     assertThat(driver.findElement(By.id("dateOfBirth-day")).getAttribute("aria-invalid")).isEqualTo(
         "true");
-    //assertThat(testPage.inputIsValid("ssn")).isFalse();//TODO emj fix this
-    assertThat(driver.findElements(By.className("ssn")).size()).isEqualTo(0);//TODO emj try this instead
+    assertThat(driver.findElements(By.className("ssn")).size()).isEqualTo(0);
     assertThat(testPage.getInputAriaLabelledBy("firstName")).isEqualTo(
         "firstName-error-p firstName-label");
     assertThat(testPage.getInputAriaDescribedBy("firstName")).isEqualTo(
@@ -273,7 +270,6 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
   }
 
-  //@Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void userCanCompleteTheNonExpeditedHouseholdFlow() {
     List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP);
@@ -304,37 +300,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Home Address");
     
     fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
-   // fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
-    // START FILLING ADDRESS
-//    assertThat(driver.getTitle()).isEqualTo("Home Address");
-//    testPage.enter("zipCode", "12345");
-//    testPage.enter("city", "someCity");
-//    testPage.enter("streetAddress", "someStreetAddress");
-    //testPage.enter("apartmentNumber", "123");
-    
-//    testPage.clickContinue("Mailing address");
-    // TODO emj GitHub fails on 313 : org.openqa.selenium.TimeoutException: Expected condition failed: waiting for title to contain "Mailing address".
-    //Current title: "Home Address" (tried for 5 second(s) with 500 milliseconds interval)
-//    testPage.enter("zipCode", "23456");
-//    testPage.enter("city", "someCity");
-//    testPage.enter("streetAddress", "someStreetAddress");
-//    testPage.enter("state", "IL");
-//    testPage.enter("apartmentNumber", "someApartmentNumber");
-    
-//    testPage.enter("sameMailingAddress", "Same as my current living address");
-//    
-//    testPage.clickContinue("Address Validation");
-//    testPage.clickButton("Use this address", "County Validation");
-//    
-//    testPage.clickButton("Use this county", "Contact Info");
-    
-    // END ADDRESS PAGES
-            
-    // Enter incorrect phone number to throw error and check aria properties
-  //  takeSnapShot("whatPageIsThis.png");//TODO emj delete
     testPage.enter("phoneNumber", "134567890");
     testPage.clickContinue("Contact Info");
-    assertThat(testPage.hasInputError("phoneNumber")).isTrue();//TODO emj failed here
+    assertThat(testPage.hasInputError("phoneNumber")).isTrue();
     assertThat(testPage.getInputAriaLabelledBy("phoneNumber")).isEqualTo(
         "phoneNumber-error-p phoneNumber-label");
     assertThat(testPage.getInputAriaDescribedBy("phoneNumber")).isEqualTo(
@@ -397,8 +365,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(testPage.inputIsValid("employersName")).isTrue();
     assertThat(testPage.getInputAriaLabelledBy("employersName")).isEqualTo("employersName-label");
     testPage.clickContinue("Employer's Name");
-   // assertThat(testPage.inputIsValid("employersName")).isFalse();//TODO emj fix this
-    assertThat(driver.findElements(By.className("employersName")).size()).isEqualTo(0);//TODO emj try this instead
+    assertThat(driver.findElements(By.className("employersName")).size()).isEqualTo(0);
     assertThat(testPage.getInputAriaLabelledBy("employersName")).isEqualTo(
         "employersName-error-p employersName-label");
     assertThat(testPage.getInputAriaDescribedBy("employersName")).isEqualTo(
@@ -412,9 +379,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     // Check aria-label is correct then enter incorrect value to throw error and check all aria properties have updated
     testPage.enter("hourlyWage", "-10");
     testPage.clickContinue("Hourly wage");
-    //takeSnapShot("hourlyWage1.png");//TODO emj delete
-    //assertThat(testPage.inputIsValid("hourlyWage")).isFalse();//TODO emj fails here randomly
-    assertThat(driver.findElements(By.className("hourlyWage")).size()).isEqualTo(0);//TODO emj try this instead
+    assertThat(driver.findElements(By.className("hourlyWage")).size()).isEqualTo(0);
     assertThat(testPage.getInputAriaLabel("hourlyWage")).isEqualTo("Error hourlyWage");
     assertThat(testPage.getInputAriaDescribedBy("hourlyWage")).isEqualTo(
         "hourlyWage-error-message-1");
@@ -424,9 +389,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     // Enter an incorrect value to trigger an error and check aria properties
     testPage.enter("hoursAWeek", "-30");
     testPage.clickContinue("Hours a week");
-    //takeSnapShot("hoursAweek1.png");//TODO emj delete
-    //assertThat(testPage.inputIsValid("hoursAWeek")).isFalse();//TODO emj this still fails randomly
-    assertThat(driver.findElements(By.className("hoursAWeek")).size()).isEqualTo(0);//TODO emj try this instead
+    assertThat(driver.findElements(By.className("hoursAWeek")).size()).isEqualTo(0);
     assertThat(testPage.getInputAriaLabel("hoursAWeek")).isEqualTo("Error hoursAWeek");
     assertThat(testPage.getInputAriaDescribedBy("hoursAWeek")).isEqualTo(
         "hoursAWeek-error-message-1");
@@ -435,7 +398,6 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Job Builder");
     testPage.clickButtonLink("No, that's it.", "Job Search");
     // drill down to futureIncome page
-    //testPage.clickYesNoButton("currentlyLookingForJob[]", "false", "Income Up Next");
     testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
     testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "None of the above");
@@ -452,7 +414,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     testPage.clickButtonLink("No, that's it.", "Job Search");
     testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
-    testPage.clickButtonLink("Continue", "Unearned Income");//TODO emj failed here stale element
+    testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "Social Security");
 
     testPage.clickContinue("Unearned Income Sources");
@@ -461,8 +423,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("socialSecurityAmount", "-200");
     testPage.clickContinue("Unearned Income Sources");
     testPage.hasInputError("socialSecurityAmount");
-    //assertThat(testPage.inputIsValid("socialSecurityAmount")).isFalse();//TODO emj fix this
-    assertThat(driver.findElements(By.className("socialSecurityAmount")).size()).isEqualTo(0);//TODO emj try this instead
+
+    assertThat(driver.findElements(By.className("socialSecurityAmount")).size()).isEqualTo(0);
     assertThat(testPage.getInputAriaDescribedBy("socialSecurityAmount")).isEqualTo(
         "socialSecurityAmount-error-message-1 socialSecurityAmount-help-message");
     assertThat(testPage.getInputAriaLabelledBy("socialSecurityAmount")).isEqualTo(

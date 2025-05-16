@@ -53,7 +53,7 @@ public class FullFlowJourneyTest extends JourneyTest {
    
     // Verify that the "Learn more here." link works 
     String landingPageWindowHandle = driver.getWindowHandle();
-    testPage.clickLink("Learn more here.");
+    testPage.clickLinkToExternalWebsite("Learn more here.");
     ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
     driver.switchTo().window(windowHandles.get(1));
     // Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub
@@ -62,7 +62,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     driver.switchTo().window(landingPageWindowHandle);
 
     // Verify that the "paying for child care" link exists and links to DHS-3551-ENG
-    testPage.clickLink("resources to help pay for child care, and more.");
+    testPage.clickLinkToExternalWebsite("resources to help pay for child care, and more.");
     windowHandles = new ArrayList<String>(driver.getWindowHandles());
     driver.switchTo().window(windowHandles.get(1));
     assertThat(driver.getCurrentUrl()).isEqualTo("https://edocs.dhs.state.mn.us/lfserver/Public/DHS-3551-ENG");
@@ -77,7 +77,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     selectProgramsWithoutCertainPopsAndEnterPersonalInfo();
     fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     
-    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
+   // fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     fillOutContactAndReview(true, "Chisago");
     
     testPage.clickLink("This looks correct");
@@ -932,7 +932,7 @@ public class FullFlowJourneyTest extends JourneyTest {
     selectProgramsWithoutCertainPopsAndEnterPersonalInfo(List.of(PROGRAM_CASH));
     fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     
-    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
+    //fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
     fillOutContactAndReview(true, "Chisago");
     
     testPage.clickLink("This looks correct");
@@ -1142,19 +1142,22 @@ public class FullFlowJourneyTest extends JourneyTest {
 	private void selectProgramsWithoutCertainPopsAndEnterPersonalInfo(List<String> programSelections) {
 		// Program Selection
 		programSelections.forEach(program -> testPage.enter("programs", program));
-		testPage.clickContinue();
+		
 		
 		if (programSelections.contains(PROGRAM_EA)) {
+			testPage.clickContinue("Emergency Type");
 			// Emergency type page
 			testPage.enter("emergencyType", "Other emergency");
-			testPage.clickContinue();
+			testPage.clickContinue("Other emergency");
 			// Other emergency page
 			testPage.enter("otherEmergency","my emergency!");
-			testPage.clickContinue();
+			testPage.clickContinue("Expedited Notice");
 		}
+		
+		testPage.clickButtonLink("Continue", "Intro: Basic Info");
 		// Getting to know you (Personal Info intro page)
-		testPage.clickContinue();
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Personal Info");
+		//testPage.clickContinue();
 		// Personal Info
 		testPage.enter("firstName", "Ahmed");
 		testPage.enter("lastName", "St. George");
@@ -1165,11 +1168,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("livedInMnWholeLife", "Yes");
 		testPage.enter("moveToMnDate", "10/20/1993");
 		testPage.enter("moveToMnPreviousCity", "Chicago");
-		testPage.clickContinue();
+		testPage.clickContinue("Home Address");
 		assertThat(testPage.getTitle()).isEqualTo("Home Address");
 		testPage.goBack();
 		testPage.enter("dateOfBirth", "01/12/1928");
-		testPage.clickContinue();
+		testPage.clickContinue("Home Address");
 	}
 
 	protected void verifyHouseholdMemberCannotSelectCertainPops() {

@@ -185,44 +185,46 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   protected void goToPageBeforeSelectPrograms(String county) {
 	    // Landing page
-	    testPage.clickButton("Apply now");
+	    //testPage.clickButton("Apply now");
+	    testPage.clickButtonLink("Apply now", "Identify County");
 
 	    // Select county
 	    testPage.enter("county", county);
-	    testPage.clickContinue();
+	    testPage.clickContinue("Prepare To Apply");
 
 	    // Informational pages
-	    testPage.clickContinue();
-	    testPage.clickContinue();
+	    testPage.clickButtonLink("Continue","Timeout notice");
+	    testPage.clickButtonLink("Continue", "Language Preferences");
 
 	    // Language Preferences
 	    testPage.enter("writtenLanguage", "English");
 	    testPage.enter("spokenLanguage", "English");
 	    testPage.enter("needInterpreter", "Yes");
-	    testPage.clickContinue();
+	    testPage.clickContinue("Choose Programs");
   }
   
   protected void getToHomeAddress(String county, List<String> programSelections) {
     // Landing page
-    testPage.clickButton("Apply now");
+    //testPage.clickButton("Apply now");
+    testPage.clickButtonLink("Apply now", "Identify County");
 
     // Select county
     testPage.enter("county", county);
-    testPage.clickContinue();
+    testPage.clickContinue("Prepare To Apply");
 
     // Informational pages
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue","Timeout notice");
+    testPage.clickButtonLink("Continue", "Language Preferences");
 
     // Language Preferences
     testPage.enter("writtenLanguage", "English");
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
-    testPage.clickContinue();
+    testPage.clickContinue("Choose Programs");
 
     // Program Selection
     programSelections.forEach(program -> testPage.enter("programs", program));
-    testPage.clickContinue();
+    testPage.clickContinue("Intro: Basic Info");
 
     if (programSelections.contains(PROGRAM_CERTAIN_POPS)) {
       // Test Certain pops offboarding flow first by selecting None of the above
@@ -318,16 +320,13 @@ abstract class JourneyTest extends AbstractBasePageTest {
   
   protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,
       String homeStreetAddress, String homeApartmentNumber) {
-	  //TODO emj testing this if this matters on GitHub
-	  assertThat(testPage.getTitle()).isEqualTo("Home Address");
+    assertThat(testPage.getTitle()).isEqualTo("Home Address");
 	testPage.enter("isHomeless", "I don't have a permanent address"); // check
 	testPage.enter("isHomeless", "I don't have a permanent address"); // uncheck
     testPage.enter("zipCode", homeZip);
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("apartmentNumber", homeApartmentNumber);
-    //testPage.clickContinue();
-    //testPage.clickContinue("Mailing address");
     assertThat(testPage.findElementTextById("form-submit-button").equalsIgnoreCase("Continue"));
     testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
     assertThat(testPage.getTitle()).isEqualTo("Mailing address");
@@ -352,16 +351,17 @@ abstract class JourneyTest extends AbstractBasePageTest {
   protected void fillOutContactAndReview(boolean isReview, String county) {   
     // Check that we get the no phone number confirmation screen if no phone number is entered
     testPage.enter("email", "some@example.com");
-    testPage.clickContinue();
+    testPage.clickContinue("No phone number confirmation");
     assertThat(testPage.getTitle()).contains("No phone number confirmation");
-    testPage.goBack();
+    //testPage.goBack();
+    testPage.clickButtonLink("Add a phone number", "Contact Info");
 
     // How can we get in touch with you?
     testPage.enter("phoneNumber", "7234567890");
     testPage.enter("email", "some@example.com");
     assertThat(testPage.getCheckboxValues("phoneOrEmail")).contains("It's okay to text me",
         "It's okay to email me");
-    testPage.clickContinue();
+    testPage.clickContinue("Review info");
     
     if (isReview)
     {

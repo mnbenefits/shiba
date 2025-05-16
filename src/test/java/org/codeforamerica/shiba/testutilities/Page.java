@@ -75,8 +75,17 @@ public class Page {
   @Deprecated()
   public void clickLink(String linkText) {
     checkForBadMessageKeys();
-    driver.findElement(By.linkText(linkText)).sendKeys(Keys.RETURN);//click(); TODO emj testing this
+    driver.findElement(By.linkText(linkText)).click(); 
   }
+  
+  /**
+   * Same functionality as deprecated method clickLink, but only to be used for external links.
+   * @param linkText
+   */
+  public void clickLinkToExternalWebsite(String linkText) {
+	    checkForBadMessageKeys();
+	    driver.findElement(By.linkText(linkText)).click(); 
+	  }
   
   /**
    * Click link, then waits for the next page to load.
@@ -91,30 +100,6 @@ public class Page {
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	  }
 
-  /** An attempt to get past StaleElementReferenceException that frequently occurs.
-  We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
-  */ 
-//  public void clickZZZButton(String buttonText, int retryCount) {
-//	try {  
-//		log.info("--- clickButton ----");//TODO emj delete
-//	    checkForBadMessageKeys();
-//	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
-//	        .filter(button -> button.getText().contains(buttonText))
-//	        .findFirst()
-//	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-//	    buttonToClick.click();
-//	} catch(StaleElementReferenceException e) {
-//		log.error("--- clickButton StaleElementReferenceException ----");//TODO emj delete
-//		if (retryCount > 0) { // try again...
-//			this.clickZZZButton(buttonText, retryCount-1);
-//		} else { // we tried... but we can't ignore the exception
-//			throw e;
-//		}
-//	}catch(Exception e) {
-//		log.error("--- clickButton Exception ----" + e);//TODO emj delete
-//	}
-//  }
-  
 
   /**
    * Click button with sendKeys() method instead of click method.<br>
@@ -135,7 +120,7 @@ public class Page {
 		        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 
 		   // buttonToClick.click();
-	    // Instead of click(), sendKeys(Keys.RETURN) is supposed to be more reliable.
+	    // Instead of click(), sendKeys(Keys.RETURN) is supposed to be more reliable. This may work too: .sendKeys(Keys.ENTER); 
 		    buttonToClick.sendKeys(Keys.RETURN);
 	    
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
