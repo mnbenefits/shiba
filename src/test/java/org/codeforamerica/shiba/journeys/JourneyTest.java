@@ -289,11 +289,8 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("apartmentNumber", homeApartmentNumber);
-    //The smarty client is already mocked in the setUp method, why do it again here?
-//    when(smartyStreetClient.validateAddress(any())).thenReturn(
-//        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
-//    );
-    testPage.clickButton("Continue", 20, "Mailing address");
+
+    testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
    // testPage.clickContinue("Mailing address");
 //TODO emj on GitHub it fails on line 280 with this error:
     // org.openqa.selenium.TimeoutException: Expected condition failed: waiting for title to contain "Mailing address". 
@@ -332,7 +329,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     //testPage.clickContinue();
     //testPage.clickContinue("Mailing address");
     assertThat(testPage.findElementTextById("form-submit-button").equalsIgnoreCase("Continue"));
-    testPage.clickButton("Continue", 20, "Mailing address");
+    testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
     assertThat(testPage.getTitle()).isEqualTo("Mailing address");
     testPage.enter("zipCode", "23456");
     testPage.enter("city", "someCity");

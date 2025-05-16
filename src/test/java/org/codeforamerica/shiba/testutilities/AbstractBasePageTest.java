@@ -228,7 +228,7 @@ public abstract class AbstractBasePageTest {
   }
 
   protected void getToPersonalInfoScreen(List<String> programSelections) {
-    testPage.clickButton("Apply now", 10);
+    testPage.clickButtonLink("Apply now", "Identify County");
 
     testPage.enter("county", "Hennepin");
     testPage.clickContinue();

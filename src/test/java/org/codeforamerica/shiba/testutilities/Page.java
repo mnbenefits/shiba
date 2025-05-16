@@ -57,16 +57,7 @@ public class Page {
     return driver.findElement(By.tagName("h1")).getText();
   }
   
-  /**
-   * TODO emj test this method
-   * @param duration
-   */
-  public void pause(int time) {
-		Duration duration = Duration.of(time, ChronoUnit.SECONDS);
-		WebDriverWait wait = new WebDriverWait(driver, duration);
-		wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Go Back")));
-  }
-
+ 
   /**
    * Click the Go Back link and wait for the previous page to load and Go Back link to be clickable.
    */
@@ -84,7 +75,7 @@ public class Page {
   @Deprecated()
   public void clickLink(String linkText) {
     checkForBadMessageKeys();
-    driver.findElement(By.linkText(linkText)).click();
+    driver.findElement(By.linkText(linkText)).sendKeys(Keys.RETURN);//click(); TODO emj testing this
   }
   
   /**
@@ -100,73 +91,65 @@ public class Page {
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	  }
 
-//  @Deprecated
-//  public void clickButton(String buttonText) {
-//	  clickButton(buttonText, 10);
-//  }
   /** An attempt to get past StaleElementReferenceException that frequently occurs.
   We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
   */ 
-  public void clickButton(String buttonText, int retryCount) {
-	try {  
-		log.info("--- clickButton ----");//TODO emj delete
-	    checkForBadMessageKeys();
-	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
-	        .filter(button -> button.getText().contains(buttonText))
-	        .findFirst()
-	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-	    buttonToClick.click();
-	} catch(StaleElementReferenceException e) {
-		log.error("--- clickButton StaleElementReferenceException ----");//TODO emj delete
-		if (retryCount > 0) { // try again...
-			this.clickButton(buttonText, retryCount-1);
-		} else { // we tried... but we can't ignore the exception
-			throw e;
-		}
-	}catch(Exception e) {
-		log.error("--- clickButton Exception ----" + e);//TODO emj delete
-	}
-  }
-  
-  /** Overloaded method, added nextPage and wait.
-   * An attempt to get past StaleElementReferenceException that frequently occurs.
-  We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
-  */ 
-  public void clickButton(String buttonText, int retryCount, String nextPage) {
-	try {  
-		log.info("--- clickButton " + buttonText + " for nextPage " + nextPage + " ----");//TODO emj delete
-	    checkForBadMessageKeys();
+//  public void clickZZZButton(String buttonText, int retryCount) {
+//	try {  
+//		log.info("--- clickButton ----");//TODO emj delete
+//	    checkForBadMessageKeys();
 //	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 //	        .filter(button -> button.getText().contains(buttonText))
 //	        .findFirst()
 //	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 //	    buttonToClick.click();
+//	} catch(StaleElementReferenceException e) {
+//		log.error("--- clickButton StaleElementReferenceException ----");//TODO emj delete
+//		if (retryCount > 0) { // try again...
+//			this.clickZZZButton(buttonText, retryCount-1);
+//		} else { // we tried... but we can't ignore the exception
+//			throw e;
+//		}
+//	}catch(Exception e) {
+//		log.error("--- clickButton Exception ----" + e);//TODO emj delete
+//	}
+//  }
+  
+
+  /**
+   * Click button with sendKeys() method instead of click method.<br>
+   * Will retry if stale element exception occurs. <br>
+   * Waits until next page is loaded.
+   * @param buttonText
+   * @param retryCount
+   * @param nextPage
+   */
+  public void clickButtonWithRetry(String buttonText, int retryCount, String nextPage) {
+	try {  
+		log.info("--- clickButtonWithRetry " + buttonText + " for nextPage " + nextPage + " ----");//TODO emj delete
+	    checkForBadMessageKeys();
 	    
 	    WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
 		        .filter(button -> button.getText().contains(buttonText))
 		        .findFirst()
 		        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-	    boolean isButtonVisible = buttonToClick.isDisplayed(); //TODO emj delete all this
-	    log.info("Button is displayed: " + isButtonVisible);
-	    boolean isButtonEnabled = buttonToClick.isEnabled();
-	    log.info("Button is enabled: " + isButtonEnabled);
-		    //buttonToClick.click();
+
+		   // buttonToClick.click();
+	    // Instead of click(), sendKeys(Keys.RETURN) is supposed to be more reliable.
 		    buttonToClick.sendKeys(Keys.RETURN);
 	    
-//	    new Actions(driver).moveToElement(driver.findElement(By.id("form-submit-button"))).click(); //perform(); 
-	    //element.click();
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	} catch(StaleElementReferenceException e) {
-		log.error("--- clickButton NP StaleElementReferenceException ----");//TODO emj delete
+		log.error("--- clickButtonWithRetry StaleElementReferenceException ----");//TODO emj delete
 		if (retryCount > 0) { // try again...
-			this.clickButton(buttonText, retryCount-1);
+			this.clickButtonWithRetry(buttonText, retryCount-1, nextPage);
 		} else { // we tried... but we can't ignore the exception
 			throw e;
 		}
 	}catch(Exception e) {
-		log.error("--- clickButton NP Exception ----" + e);//TODO emj delete
+		log.error("--- clickButtonWithRetry Exception ----" + e);//TODO emj delete
 	}
   }
   
@@ -186,26 +169,18 @@ public class Page {
 	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 	    buttonToClick.click();
 	    
-//	    WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
-//		        .filter(button -> button.getText().contains(buttonText))
-//		        .findFirst()
-//		        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-//		    buttonToClick.click();
-	    
-//	    new Actions(driver).moveToElement(driver.findElement(By.id("form-submit-button"))).click(); //perform(); 
-	    //element.click();
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	} catch(StaleElementReferenceException e) {
-		log.error("--- clickButton NextPage StaleElementReferenceException ----");//TODO emj delete
+		log.error("--- clickCustomButton StaleElementReferenceException ----");//TODO emj delete
 		if (retryCount > 0) { // try again...
-			this.clickButton(buttonText, retryCount-1);
+			this.clickCustomButton(buttonText, retryCount-1, nextPage);
 		} else { // we tried... but we can't ignore the exception
 			throw e;
 		}
 	}catch(Exception e) {
-		log.error("--- clickButton NextPage Exception ----" + e);//TODO emj delete
+		log.error("--- clickCustomButton Exception ----" + e);//TODO emj delete
 	}
   }
 
@@ -221,7 +196,7 @@ public class Page {
         .findFirst()
         .orElseThrow(
             () -> new RuntimeException("No button link found containing text: " + buttonLinkText));
-    buttonToClick.click();
+    buttonToClick.sendKeys(Keys.RETURN);//click(); //TODO emj testing this
   }
   
 	public void clickAccordianButton(String buttonattributeText) {
@@ -241,7 +216,7 @@ public class Page {
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.click();
+		buttonToClick.sendKeys(Keys.RETURN); //click();  TODO emj testing this
 
 	}
   
@@ -279,17 +254,10 @@ public class Page {
    */
 	public void clickButton(String buttonText, String nextPage) {
 		checkForBadMessageKeys();
-//		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
-//				.filter(button -> button.getText().contains(buttonText)).findFirst()
-//				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-//		buttonToClick.click();
 		WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 		buttonToClick.click();
-//		System.out.println("########### clicking form submit button ########");
-//		new Actions(driver).moveToElement(driver.findElement(By.id("form-submit-button"))).click(); //perform(); 
-//		System.out.println("########### CLICKED form submit button ########");
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
