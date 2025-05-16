@@ -15,4 +15,5 @@ public class Option {
   private boolean limitSelection = false;
   private String flag;
   private Condition condition;
+  private String lang;
 }
