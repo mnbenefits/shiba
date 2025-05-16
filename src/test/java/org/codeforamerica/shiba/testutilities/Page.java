@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -145,11 +146,12 @@ public class Page {
 		        .filter(button -> button.getText().contains(buttonText))
 		        .findFirst()
 		        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-	    boolean isButtonVisible = buttonToClick.isDisplayed(); // driver.findElement(By.name("email_input")).isDisplayed();
+	    boolean isButtonVisible = buttonToClick.isDisplayed(); //TODO emj delete all this
 	    log.info("Button is displayed: " + isButtonVisible);
 	    boolean isButtonEnabled = buttonToClick.isEnabled();
 	    log.info("Button is enabled: " + isButtonEnabled);
-		    buttonToClick.click();
+		    //buttonToClick.click();
+		    buttonToClick.sendKeys(Keys.RETURN);
 	    
 //	    new Actions(driver).moveToElement(driver.findElement(By.id("form-submit-button"))).click(); //perform(); 
 	    //element.click();
@@ -293,7 +295,7 @@ public class Page {
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	}
 	
-	/**
+	/** TODO emj needs work. Need to find by value attribute, may need to use xpath.
 	 * Pages with Yes and No buttons may have different names for the buttons.
 	 * Use this method to submit pages with Yes/No buttons.
 	 * @param buttonName

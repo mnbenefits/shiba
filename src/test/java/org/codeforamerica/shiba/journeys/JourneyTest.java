@@ -293,7 +293,8 @@ abstract class JourneyTest extends AbstractBasePageTest {
 //    when(smartyStreetClient.validateAddress(any())).thenReturn(
 //        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
 //    );
-    testPage.clickContinue("Mailing address");
+    testPage.clickButton("Continue", 20, "Mailing address");
+   // testPage.clickContinue("Mailing address");
 //TODO emj on GitHub it fails on line 280 with this error:
     // org.openqa.selenium.TimeoutException: Expected condition failed: waiting for title to contain "Mailing address". 
     //Current title: "Home Address" (tried for 5 second(s) with 500 milliseconds interval)

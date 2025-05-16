@@ -139,7 +139,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     // Tribal Nation Member page
     assertThat(driver.getTitle()).isEqualTo("Tribal Nation member");
-    testPage.clickButton("Yes", "Select a Tribal Nation");
+    testPage.clickCustomButton("Yes", 10,  "Select a Tribal Nation");
     
     // Select Tribal Nation
     assertThat(driver.getTitle()).isEqualTo("Select a Tribal Nation");
@@ -160,15 +160,15 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Tribal Nation member");
     
     // isTribalNationMember
-    testPage.clickButton("No", "How to add documents");
+    testPage.clickCustomButton("No", 10, "How to add documents");
     
     // howToAddDocuments page
-    testPage.clickContinue("Upload documents");
+    testPage.clickButtonLink("Continue", "Upload documents");
     
     // should allow me to upload documents and those documents should be sent to the ESB
     uploadPdfFile();
     await().until(uploadCompletes());
-    testPage.clickButton("Submit my documents", "Doc submit confirmation");
+    testPage.clickButtonLink("Submit my documents", "Doc submit confirmation");
   }
   
   @Test
@@ -204,7 +204,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Match Info");//stays on match info page
     testPage.enter("caseNumber", "12345678");
     testPage.clickContinue("How to add documents");
-    testPage.clickContinue("Upload documents");
+    testPage.clickButtonLink("Continue", "Upload documents");
+    
 
     // should allow me to upload documents and those documents should be sent to the ESB
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
@@ -212,13 +213,13 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     uploadPdfFile();
     waitForDocumentUploadToComplete();
-    testPage.clickButton("Submit my documents", "Doc submit confirmation");
+    testPage.clickButtonLink("Submit my documents", "Doc submit confirmation");
     assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
-    testPage.clickButton("No, add more documents", "Upload documents"); // Go back
+    testPage.clickButtonLink("No, add more documents", "Upload documents"); // Go back
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
 
-    testPage.clickButton("Submit my documents", "Doc submit confirmation");
-    testPage.clickButton("Yes, submit and finish", "Documents Sent");
+    testPage.clickButtonLink("Submit my documents", "Doc submit confirmation");
+    testPage.clickCustomButton("Yes, submit and finish",10,  "Documents Sent");
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
     verify(pageEventPublisher).publish(any());
 
@@ -246,22 +247,22 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(testPage.getHeader()).isEqualTo("Before you start, we need to match your documents to your health care case");
     testPage.enter("caseNumber", "12345678");
     testPage.clickContinue("How to add documents");
-    testPage.clickContinue("Upload documents");
+    testPage.clickButtonLink("Continue", "Upload documents");
     navigateTo("healthcareRenewalUpload");
     WebElement selectedOption2 = testPage.getSelectedOption("county");
     assertThat(selectedOption2.getText()).isEqualTo("Hennepin");
     testPage.clickContinue("Match Info");
     testPage.clickContinue("How to add documents");
-    testPage.clickContinue("Upload documents");
+    testPage.clickButtonLink("Continue", "Upload documents");
     // should allow me to upload documents and those documents should be sent to the ESB
     assertThat(driver.getTitle()).isEqualTo("Upload documents");
     assertThat(driver.findElements(By.className("reveal")).size()).isEqualTo(0);
 
     uploadPdfFile();
     waitForDocumentUploadToComplete();
-    testPage.clickButton("Submit my documents", "Doc submit confirmation");
+    testPage.clickButtonLink("Submit my documents", "Doc submit confirmation");
     assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
-    testPage.clickButton("Yes, submit and finish", "Documents Sent");
+    testPage.clickCustomButton("Yes, submit and finish", 10, "Documents Sent");
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
 
     // Assert that applicant can't resubmit docs at this point
@@ -302,8 +303,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("moveToMnPreviousCity", "Chicago");
     testPage.clickContinue("Home Address");
     
-    //fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
-    fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
+    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
+   // fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
     // START FILLING ADDRESS
 //    assertThat(driver.getTitle()).isEqualTo("Home Address");
 //    testPage.enter("zipCode", "12345");
@@ -451,7 +452,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     testPage.clickButtonLink("No, that's it.", "Job Search");
     testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
-    testPage.clickButtonLink("Continue", "Unearned Income");
+    testPage.clickButtonLink("Continue", "Unearned Income");//TODO emj failed here stale element
     testPage.enter("unearnedIncome", "Social Security");
 
     testPage.clickContinue("Unearned Income Sources");

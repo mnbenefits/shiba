@@ -269,7 +269,6 @@ public class PageController {
       @PathVariable String pageName,
       @RequestParam(required = false, defaultValue = "0") Integer option
   ) {
-	  log.info("@@@@@@@@ PageController navigation START for " + pageName);//TODO emj delete
     PageWorkflowConfiguration currentPage = applicationConfiguration.getWorkflow().get(pageName);
     if (currentPage == null) {
     	log.error("navigation error for pageName " + pageName);
@@ -281,7 +280,7 @@ public class PageController {
     ofNullable(nextPage.getFlow()).ifPresent(applicationData::setFlow);
     PageWorkflowConfiguration nextPageWorkflow = applicationConfiguration.getWorkflow()
         .get(nextPage.getPageName());
-    log.info("@@@@@@@@ PageController navigation END for " + pageName);//TODO emj delete
+
     if (shouldSkip(nextPageWorkflow)) {
       pagesData.remove(nextPageWorkflow.getPageConfiguration().getName());
       return new RedirectView(String.format("/pages/%s/navigation", nextPage.getPageName()));
@@ -313,7 +312,6 @@ public class PageController {
       HttpSession httpSession,
       Locale locale
   ) {
-	  log.info("@@@@@@@@ PageController getPage START for " + pageName);//TODO emj delete
 	  // Temporary cookie indicating user page
       Cookie pageNameCookie = new Cookie("page_name", StringEscapeUtils.escapeJava(pageName));
       pageNameCookie.setPath("/");
@@ -447,7 +445,6 @@ public class PageController {
     var view =
         pageWorkflowConfig.getPageConfiguration().isUsingPageTemplateFragment() ? "pageTemplate"
             : pageName;
-    log.info("@@@@@@@@ PageController getPage END for " + pageName);//TODO emj delete
     return new ModelAndView(view, model);
   }
 
@@ -503,7 +500,6 @@ public class PageController {
   private Map<String, Object> buildModelForThymeleaf(String pageName, Locale locale,
       LandmarkPagesConfiguration landmarkPagesConfiguration, PageTemplate pageTemplate,
       PageWorkflowConfiguration pageWorkflow, PagesData pagesData, String iterationIndex) {
-	  log.info("@@@@@@@@ PageController buildModelForThymeleaf START for " + pageName);//TODO emj delete
     Map<String, Object> model = new HashMap<>();
     model.put("page", pageTemplate);
     model.put("pageName", pageName);
@@ -654,7 +650,7 @@ public class PageController {
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
     }
     model.put("applicationData", applicationData);
-    log.info("@@@@@@@@ PageController buildModelForThymeleaf END for " + pageName);//TODO emj delete
+
     return model;
   }
 
@@ -818,8 +814,8 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       @PathVariable String pageName,
       HttpSession httpSession
   ) {
-	    log.info("@@@@@@@@ PageController postFormPage for " + pageName);//TODO emj delete
     PageWorkflowConfiguration pageWorkflow = applicationConfiguration.getWorkflow().get(pageName);
+
     PageConfiguration page = pageWorkflow.getPageConfiguration();
     PageData pageData = PageData.fillOut(page, model);
 
@@ -862,7 +858,6 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       
       String id = applicationData.getId();
       MDC.put("applicationId", id);
-      log.info("@@@@@@@@ PageController start enrichment process");//TODO emj delete
       ofNullable(pageWorkflow.getEnrichment())
           .map(applicationEnrichment::getEnrichment)
           .map(enrichment -> enrichment.process(pagesData))
