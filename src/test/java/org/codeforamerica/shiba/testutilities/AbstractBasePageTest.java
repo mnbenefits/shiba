@@ -532,8 +532,10 @@ public abstract class AbstractBasePageTest {
 	    testPage.clickContinue();
 	    // timeoutNotice
 	    testPage.clickContinue();
-	    // languagePreferences
+	    // writtenLanguage
 	    testPage.enter("writtenLanguage", "English");
+	    testPage.clickContinue();
+	    // spokenLanguage
 	    testPage.enter("spokenLanguage", "English");
 	    testPage.enter("needInterpreter", "Yes");
 	    testPage.clickContinue();

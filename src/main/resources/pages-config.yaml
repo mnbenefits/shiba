@@ -540,6 +540,141 @@ pageDefinitions:
               messageKey: general.inputs.yes
             - value: "false"
               messageKey: general.inputs.no
+  - &writtenLanguage
+    name: writtenLanguage
+    pageTitle: written-language.title
+    headerKey: language-preferences.language-preferences
+    contextFragment: languagePreferencesContextFragment
+    inputs:
+      - name: writtenLanguage
+        type: RADIO
+        helpMessageKey: language-preferences.the-county-will-do-their-best-to-provide-documents-in-your-preferred-language
+        validators:
+           - validation: SELECT_AT_LEAST_ONE
+             errorMessageKey: general.validation.make-sure-you-answer-this-question
+        options:
+           selectableOptions:
+              - value: ARABIC
+                messageKey: language-preferences.Arabic
+                lang: ar
+              - value: AMHARIC
+                messageKey: language-preferences.Amharic
+                lang: am
+              - value: ENGLISH
+                messageKey: language-preferences.english
+                lang: en
+              - value: SPANISH
+                messageKey: language-preferences.Spanish
+                lang: es
+              - value: HMONG
+                messageKey: language-preferences.hmoob
+                lang: hmn
+              - value: KAREN
+                messageKey: language-preferences.Karen
+                lang: ksw
+              - value: NEPALI
+                messageKey: language-preferences.Nepali
+                lang: ne
+              - value: OROMO
+                messageKey: language-preferences.Oromo
+                lang: om
+              - value: SOMALI
+                messageKey: language-preferences.soomaali
+                lang: so
+              - value: RUSSIAN
+                messageKey: language-preferences.russian
+                lang: ru
+              - value: UKRAINIAN
+                messageKey: language-preferences.Ukrainian
+                lang: uk
+              - value: VIETNAMESE
+                messageKey: language-preferences.vietnamese
+                lang: vi
+              - value: OTHER
+                messageKey: language-preferences.different-language
+           datasources:
+             - pageName: writtenLanguage				
+  - &spokenLanguage
+    name: spokenLanguage
+    pageTitle: spoken-language.title
+    headerKey: language-preferences.what-language-do-you-prefer-to-speak
+    contextFragment: languagePreferencesContextFragment
+    inputs:
+      - name: spokenSameAsWritten
+        type: CUSTOM
+        customInputFragment: languagePreferenceInputFragment
+        helpMessageKey: language-preferences.the-county-will-do-their-best-to-connect-you-with-someone-who-speaks-your
+        options:
+          selectableOptions:
+             - value: "true"
+               messageKey: same-language-preferences.to-read-or-write
+          datasources:
+             - pageName: writtenLanguage  
+        followUps:   
+          - name: spokenLanguage
+            type: RADIO
+            validators:
+               - validation: SELECT_AT_LEAST_ONE
+                 errorMessageKey: general.validation.make-sure-you-answer-this-question
+                 condition:
+                    input: spokenSameAsWritten
+                    matcher: DOES_NOT_EQUAL
+                    value: "true"
+            options:
+              selectableOptions:
+                - value: AMERICAN_SIGN_LANGUAGE
+                  messageKey: language-preferences.American-sign-language
+                  lang: ase
+                - value: ARABIC
+                  messageKey: language-preferences.Arabic
+                  lang: ar
+                - value: AMHARIC
+                  messageKey: language-preferences.Amharic
+                  lang: am				  
+                - value: ENGLISH
+                  messageKey: language-preferences.english
+                  lang: en
+                - value: SPANISH
+                  messageKey: language-preferences.Spanish
+                  lang: es
+                - value: HMONG
+                  messageKey: language-preferences.hmoob
+                  lang: hmn
+                - value: KAREN
+                  messageKey: language-preferences.Karen
+                  lang: ksw
+                - value: NEPALI
+                  messageKey: language-preferences.Nepali
+                  lang: ne
+                - value: OROMO
+                  messageKey: language-preferences.Oromo
+                  lang: om
+                - value: SOMALI
+                  messageKey: language-preferences.soomaali
+                  lang: so
+                - value: RUSSIAN
+                  messageKey: language-preferences.russian
+                  lang: ru
+                - value: UKRAINIAN
+                  messageKey: language-preferences.Ukrainian
+                  lang: uk
+                - value: VIETNAMESE
+                  messageKey: language-preferences.vietnamese
+                  lang: vi
+                - value: OTHER
+                  messageKey: speak-language-preferences.different-language
+              datasources:
+                 - pageName: writtenLanguage	
+      - name: needInterpreter
+        type: RADIO
+        promptMessage:
+           promptMessageKey: language-preferences.do-you-need-an-interpreter
+        options:
+           selectableOptions:
+              - value: "true"
+                messageKey: general.inputs.yes
+              - value: "false"
+                messageKey: general.inputs.no
   - &choosePrograms
     name: choosePrograms
     pageTitle: choose-programs.title
@@ -5095,9 +5230,13 @@ workflow:
   timeoutNotice:
     pageConfiguration: *timeoutNotice
     nextPages:
-      - pageName: languagePreferences
-  languagePreferences:
-    pageConfiguration: *languagePreferences
+      - pageName: writtenLanguage
+  writtenLanguage:
+    pageConfiguration: *writtenLanguage
+    nextPages:
+      - pageName: spokenLanguage
+  spokenLanguage:
+    pageConfiguration: *spokenLanguage
     nextPages:
       - pageName: choosePrograms
   choosePrograms:

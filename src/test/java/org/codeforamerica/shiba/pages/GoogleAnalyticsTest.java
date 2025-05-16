@@ -43,8 +43,8 @@ public class GoogleAnalyticsTest extends AbstractShibaMockMvcTest {
 		// Navigate to the outOfStateAddressNotice page
 		mockMvc.perform(get("/pages/identifyCountyBeforeApplying").session(session)); // start timer
 		postExpectingSuccess("identifyCountyBeforeApplying", "county", "Hennepin");
-		postExpectingSuccess("languagePreferences",
-				Map.of("writtenLanguage", List.of("ENGLISH"), "spokenLanguage", List.of("ENGLISH")));
+		postExpectingSuccess("writtenLanguage",	Map.of("writtenLanguage", List.of("ENGLISH")));
+		postExpectingSuccess("spokenLanguage",	Map.of("spokenLanguage", List.of("ENGLISH")));
 		postExpectingSuccess("choosePrograms", "programs", List.of("CASH"));
 		postExpectingSuccess("personalInfo",
 				Map.of("firstName", List.of("Jane"), "lastName", List.of("Doe"), "otherName", List.of(""),
