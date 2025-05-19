@@ -7,6 +7,7 @@ import java.io.IOException;
 import org.codeforamerica.shiba.testutilities.AbstractBasePageTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -40,6 +41,7 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
     assertTrue(selectedOption==null);
   }
 
+  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void userCanSeeSpanishWhenReadOrWriteSpanishIsSelectedOnLanguagePreferences() {
     testPage.clickButton("Apply now");
