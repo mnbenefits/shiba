@@ -278,9 +278,13 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("county", "Hennepin");
     testPage.clickButtonLink("Continue", "Prepare To Apply");
     testPage.clickButtonLink("Continue", "Timeout notice");
-    testPage.clickButtonLink("Continue", "Language Preferences");
+    testPage.clickButtonLink("Continue", "Language Preferences - Written");
     testPage.enter("writtenLanguage", "English");
-    testPage.enter("spokenLanguage", "English");
+   // testPage.enter("spokenLanguage", "English");
+   // testPage.enter("needInterpreter", "Yes");
+    testPage.clickContinue("Language Preferences - Spoken");
+    // spokenSameAsWritten[]
+    testPage.enter("spokenSameAsWritten", "Same as the language I read or write");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue("Choose Programs");
     programSelections.forEach(program -> testPage.enter("programs", program));
