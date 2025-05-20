@@ -196,8 +196,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
 	    testPage.clickButtonLink("Continue","Timeout notice");
 	    testPage.clickButtonLink("Continue", "Language Preferences");
 
-	    // Language Preferences
+	    // Written Language Preferences
 	    testPage.enter("writtenLanguage", "English");
+	    testPage.clickContinue();
+	    // Spoken Language Preferences
 	    testPage.enter("spokenLanguage", "English");
 	    testPage.enter("needInterpreter", "Yes");
 	    testPage.clickContinue("Choose Programs");
@@ -216,8 +218,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickButtonLink("Continue","Timeout notice");
     testPage.clickButtonLink("Continue", "Language Preferences");
 
-    // Language Preferences
+    // Written Language Preferences
     testPage.enter("writtenLanguage", "English");
+    testPage.clickContinue();
+    // Spoken Language Preferences
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue("Choose Programs");

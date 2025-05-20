@@ -16,7 +16,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
-import org.codeforamerica.shiba.TribalNation;
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
@@ -38,7 +36,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
@@ -55,9 +52,8 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     new TestApplicationDataBuilder(applicationData)
         .withPageData("identifyCounty", "county", "Hennepin");
     mockMvc.perform(get("/pages/identifyCountyBeforeApplying").session(session)); // start timer
-    postExpectingSuccess("languagePreferences",
-        Map.of("writtenLanguage", List.of("ENGLISH"), "spokenLanguage", List.of("ENGLISH"))
-    );
+    postExpectingSuccess("writtenLanguage", Map.of("writtenLanguage", List.of("ENGLISH")));
+    postExpectingSuccess("spokenLanguage", Map.of("spokenLanguage", List.of("ENGLISH")));
   }
 
   @ParameterizedTest

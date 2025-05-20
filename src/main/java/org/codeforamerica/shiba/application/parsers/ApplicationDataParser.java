@@ -24,7 +24,7 @@ public class ApplicationDataParser {
   
   static {
     coordinatesMap.put(Field.WRITTEN_LANGUAGE_PREFERENCES,
-        new ParsingCoordinate("languagePreferences", "writtenLanguage"));
+        new ParsingCoordinate("writtenLanguage", "writtenLanguage"));
     coordinatesMap.put(Field.BASIC_CRITERIA_CERTAIN_POPS,
         new ParsingCoordinate("basicCriteria", "basicCriteria"));
     coordinatesMap.put(Field.MEDICAL_EXPENSES,
