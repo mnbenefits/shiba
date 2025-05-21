@@ -5584,6 +5584,7 @@ workflow:
     nextPages:
       - pageName: doYouHaveChildCareProvider
         condition:
+          name: childrenSelectedNotEmpty
           pageName: childrenInNeedOfCare
           input: whoNeedsChildCare
           matcher: NOT_EMPTY
@@ -5599,12 +5600,14 @@ workflow:
     skipCondition: *noOneChoseCCAP?
     nextPages:
       - pageName: childCareProviderInfo
-        condition: 
+        condition:
+          name: yesHasChildCareProvider
           pageName: doYouHaveChildCareProvider
           input: hasChildCareProvider
           value: "true"
       - pageName: whoHasParentNotAtHome
         condition:
+            name: noDoesNotHaveChildCareProvider
             pageName: doYouHaveChildCareProvider
             input: hasChildCareProvider
             value: "false"

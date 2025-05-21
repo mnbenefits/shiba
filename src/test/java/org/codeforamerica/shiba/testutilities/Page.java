@@ -152,7 +152,7 @@ public class Page {
 	        .filter(button -> button.getText().contains(buttonText))
 	        .findFirst()
 	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-	    buttonToClick.click();
+	    buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test thi
 	    
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
@@ -170,7 +170,8 @@ public class Page {
   }
 
  /**
-  * For links that look like buttons. Old original method without the wait.
+  * For links that look like buttons. Old original method without the wait.<br>
+  * Use clickButtonLink(String buttonText, String nextPageTitle).
   * @param buttonLinkText
   */
   @Deprecated
@@ -188,7 +189,7 @@ public class Page {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver
 				.findElement(By.xpath("//button[@aria-controls=\"" + buttonattributeText + "\"]"));
-		buttonToClick.click();
+		buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test thi
 	}
 
 	@Deprecated
@@ -196,6 +197,11 @@ public class Page {
     clickButton("Continue");
   }
 	
+	/**
+	 * Use clickButtonLink(String buttonText, String nextPageTitle)
+	 * @param buttonText
+	 */
+	@Deprecated
 	public void clickButton(String buttonText) {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
@@ -224,7 +230,7 @@ public class Page {
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.click();
+		buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test this
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPageTitle));
@@ -242,9 +248,11 @@ public class Page {
 		WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.click();
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.elementToBeClickable(buttonToClick));
+		buttonToClick.sendKeys(Keys.ENTER);  //.click();//TODO emj test this RETURN works too
+
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	}
 	
@@ -272,7 +280,7 @@ public class Page {
 //				.peek(x -> System.out.println("x=|" + x + "|"))
 //				.filter(button -> button.findElement(By.xpath("value")).getText().contains(buttonValue)).findFirst()
 //				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonValue));
-		buttonToClick.click();
+		buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test this
 //		System.out.println("########### clicking form submit button ########");
 //		new Actions(driver).moveToElement(driver.findElement(By.id("form-submit-button"))).click(); //perform(); 
 //		System.out.println("########### CLICKED form submit button ########");
@@ -284,7 +292,6 @@ public class Page {
   
 public void enter(String inputName, String value) {
     checkForBadMessageKeys();
-    //TODO emj moved wait to end of method
 	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 	WebDriverWait wait = new WebDriverWait(driver, duration);
 	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
@@ -309,11 +316,7 @@ public void enter(String inputName, String value) {
         }
       }
       default -> throw new IllegalArgumentException("Cannot find element");
-    }
-//	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
-//	WebDriverWait wait = new WebDriverWait(driver, duration);
-//	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
-    
+    }    
   }
 
   public void enter(String inputName, List<String> value) {

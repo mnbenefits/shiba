@@ -194,13 +194,13 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
 	    // Informational pages
 	    testPage.clickButtonLink("Continue","Timeout notice");
-	    testPage.clickButtonLink("Continue", "Language Preferences");
+	    testPage.clickButtonLink("Continue", "Language Preferences - Written");
 
 	    // Written Language Preferences
 	    testPage.enter("writtenLanguage", "English");
-	    testPage.clickContinue();
+	    testPage.clickContinue("Language Preferences - Spoken");
 	    // Spoken Language Preferences
-	    testPage.enter("spokenLanguage", "English");
+	    testPage.enter("spokenSameAsWritten", "Same as the language I read or write");
 	    testPage.enter("needInterpreter", "Yes");
 	    testPage.clickContinue("Choose Programs");
   }
@@ -371,7 +371,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     {
       // Let's review your info
       assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
-          .isEqualTo("smarty street");  
+          .isEqualTo("someStreetAddress");  
       assertThat(driver.findElement(By.id("home-address_county")).getText())
       .isEqualTo(county); 
     }
@@ -395,7 +395,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     await().until(
 		  () -> driver.findElements(By.className("dz-remove")).get(0).getAttribute("innerHTML")
 		  .contains("delete"));
-    testPage.clickLink("delete");
+    testPage.clickLink("delete", "Delete a file");
 
     assertThat(testPage.getTitle()).isEqualTo("Delete a file");
     testPage.clickButton("Yes, delete the file");
