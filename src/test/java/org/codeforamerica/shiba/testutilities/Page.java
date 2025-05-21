@@ -67,6 +67,18 @@ public class Page {
 	WebDriverWait wait = new WebDriverWait(driver, duration);
 	wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Go Back")));
   }
+  
+  /**
+   * Use this method for tests that go back to the terminal page.
+   * The terminal page has no Go Back link.
+   * @param terminalPage
+   */
+  public void goBackToTerminalPage(String terminalPage) {
+	    driver.findElement(By.partialLinkText("Go Back")).click();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(terminalPage));
+	  }
 
   /**
    * Use clickLink(String linkText, String nextPage)
@@ -111,9 +123,7 @@ public class Page {
    */
   public void clickButtonWithRetry(String buttonText, int retryCount, String nextPage) {
 	try {  
-		log.info("--- clickButtonWithRetry " + buttonText + " for nextPage " + nextPage + " ----");//TODO emj delete
 	    checkForBadMessageKeys();
-	    
 	    WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
 		        .filter(button -> button.getText().contains(buttonText))
 		        .findFirst()
@@ -127,14 +137,11 @@ public class Page {
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	} catch(StaleElementReferenceException e) {
-		log.error("--- clickButtonWithRetry StaleElementReferenceException ----");//TODO emj delete
 		if (retryCount > 0) { // try again...
 			this.clickButtonWithRetry(buttonText, retryCount-1, nextPage);
 		} else { // we tried... but we can't ignore the exception
 			throw e;
 		}
-	}catch(Exception e) {
-		log.error("--- clickButtonWithRetry Exception ----" + e);//TODO emj delete
 	}
   }
   
@@ -146,7 +153,6 @@ public class Page {
    */
   public void clickCustomButton(String buttonText, int retryCount, String nextPage) {
 	try {  
-		log.info("--- clickButton " + buttonText + " for nextPage " + nextPage + " ----");//TODO emj delete
 	    checkForBadMessageKeys();
 	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 	        .filter(button -> button.getText().contains(buttonText))
@@ -158,14 +164,11 @@ public class Page {
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	} catch(StaleElementReferenceException e) {
-		log.error("--- clickCustomButton StaleElementReferenceException ----");//TODO emj delete
 		if (retryCount > 0) { // try again...
 			this.clickCustomButton(buttonText, retryCount-1, nextPage);
 		} else { // we tried... but we can't ignore the exception
 			throw e;
 		}
-	}catch(Exception e) {
-		log.error("--- clickCustomButton Exception ----" + e);//TODO emj delete
 	}
   }
 
@@ -208,7 +211,6 @@ public class Page {
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 		buttonToClick.sendKeys(Keys.RETURN); //click();  TODO emj testing this
-
 	}
   
   /**
@@ -230,7 +232,7 @@ public class Page {
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test this
+		buttonToClick.sendKeys(Keys.ENTER);  //.click();//TODO emj test this
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPageTitle));
@@ -265,25 +267,12 @@ public class Page {
 	 */
 	public void clickYesNoButton(String buttonName, String buttonValue, String nextPage) {
 		checkForBadMessageKeys();
-//		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
-//				.filter(button -> button.getText().contains(buttonText)).findFirst()
-//				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-//		buttonToClick.click();
-		// "//button[@id='AddNewProfile']"
-		//x=|[[ChromeDriver: chrome on windows (05ae1538c89c8535419429fa30349b60)] -> xpath: //button[@value]]|
+
 		WebElement buttonToClick = driver.findElements(By.xpath("//button[@value='" + buttonValue + "']")).stream()
-				.peek(x -> System.out.println("x=|" + x + "|"))
 				.filter(button -> button.findElement(By.xpath("value")).getText().contains(buttonValue)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonValue));
-		
-//		WebElement buttonToClick = driver.findElements(By.name(buttonName)).stream()
-//				.peek(x -> System.out.println("x=|" + x + "|"))
-//				.filter(button -> button.findElement(By.xpath("value")).getText().contains(buttonValue)).findFirst()
-//				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonValue));
+
 		buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test this
-//		System.out.println("########### clicking form submit button ########");
-//		new Actions(driver).moveToElement(driver.findElement(By.id("form-submit-button"))).click(); //perform(); 
-//		System.out.println("########### CLICKED form submit button ########");
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
@@ -468,7 +457,9 @@ public void enter(String inputName, String value) {
 
   /**
    * TODO emj 
-   * Javadoc for findElement: Find the first WebElement using the given method. This method is affected by the'implicit wait' times in force at the time of execution. The findElement(..) invocation willreturn a matching row, or try again repeatedly until the configured timeout is reached. 
+   * Javadoc for findElement: Find the first WebElement using the given method. 
+   * This method is affected by the'implicit wait' times in force at the time of execution. 
+   * The findElement(..) invocation will return a matching row, or try again repeatedly until the configured timeout is reached. 
 
 <b>findElement should not be used to look for non-present elements, use findElements(By) and assert zero length response instead. </b>
 

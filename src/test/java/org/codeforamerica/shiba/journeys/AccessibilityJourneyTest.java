@@ -164,8 +164,12 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     // should allow me to upload documents and those documents should be sent to the ESB
     uploadPdfFile();
-    await().until(uploadCompletes());
+    waitForDocumentUploadToComplete();
     testPage.clickButtonLink("Submit my documents", "Doc submit confirmation");
+    assertThat(driver.getTitle()).isEqualTo("Doc submit confirmation");
+    testPage.clickCustomButton("Yes, submit and finish", 10, "Documents Sent");
+    assertThat(driver.getTitle()).isEqualTo("Documents Sent");
+    
   }
   
   @Test

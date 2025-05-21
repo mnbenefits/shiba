@@ -77,7 +77,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
  //protected UploadDocumentConfiguration uploadDocumentConfiguration;
   
   public static SmartyStreetClientMock smartyStreetClientMock() {
-	  //System.out.println("++++++ returning SmartyStreetsClientMock +++++++++");//TODO emj delete
 	  return SmartyStreetClientMock.buildMock();
   }
 
@@ -88,13 +87,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     driver.navigate().to(baseUrl);
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
-   // when(smartyStreetClientMock.validateAddress(any())).thenThrow(new RuntimeException("THROW EXCEPTION FROM SETUP"));
-   // smartyStreetClientMock = mock(SmartyStreetsClientMock.class);
-    //String smartyName = smartyStreetClient.getClass().getName(); //before mock it was MailGunEmailClient
-    //System.out.println("======= smarty class Name: " + smartyName);
-   // TODO emj testing this 
-   // when(smartyStreetClientMock.validateAddress(any())).thenReturn(Optional.empty());
-   // when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.of(new Address("street", "city", "state", "zip", "apt", "county"))); FAILED
     caf = null;
     ccap = null;
     certainPops = null;
@@ -335,10 +327,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
     assertThat(testPage.getTitle()).isEqualTo("Mailing address");
     testPage.enter("zipCode", "23456");
-    testPage.enter("city", "someCity");
-    testPage.enter("streetAddress", "someStreetAddress");
+    testPage.enter("city", "Mail City");
+    testPage.enter("streetAddress", "Mail Street");
     testPage.enter("state", "IL");
-    testPage.enter("apartmentNumber", "someApartmentNumber");
+    testPage.enter("apartmentNumber", "pi");
     testPage.clickContinue("Address Validation");
     testPage.clickButton("Use this address", "County Validation");
     testPage.clickButtonLink("Edit my county", "Identify County");
@@ -371,7 +363,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     {
       // Let's review your info
       assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
-          .isEqualTo("someStreetAddress");  
+          .isEqualTo("Mail Street");  
       assertThat(driver.findElement(By.id("home-address_county")).getText())
       .isEqualTo(county); 
     }
@@ -398,7 +390,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickLink("delete", "Delete a file");
 
     assertThat(testPage.getTitle()).isEqualTo("Delete a file");
-    testPage.clickButton("Yes, delete the file");
+    testPage.clickButton("Yes, delete the file", "Upload documents");
   }
 
   protected void waitForErrorMessage() {

@@ -23,26 +23,11 @@ public class SmartyStreetClientMock implements LocationClient {
 
 	@Override
 	public Optional<Address> validateAddress(Address address){
-//		if(true) {
-//			try {
-//				FakeException.makeException();
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			};
-//		}
 		return Optional.empty();
 	}
 	
 	public static SmartyStreetClientMock buildMock() {
 		return new SmartyStreetClientMock("someId", "someToken", "someUrl");
 	}
-//	
-//	private class FakeException{
-//		
-//		public static void makeException() throws Exception {
-//			throw new Exception("SmartyStreetClientMock");
-//		}
-//	}
 
 }
