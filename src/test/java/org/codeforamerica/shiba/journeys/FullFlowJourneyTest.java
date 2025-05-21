@@ -1348,7 +1348,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 	protected void removeSpouseAndVerifySpouseCanBeSelectedForNewHouseholdMember() {
 		// You are about to delete householdMember0 as a household member.
 		driver.findElement(By.id("iteration0-delete")).click();
-		testPage.clickButton("Yes, remove them");
+		testPage.clickButton("Yes, remove them", "Household members");
 		// Check that My Spouse is now an option again after deleting the spouse
 		testPage.clickButtonLink("Add a person", "Housemate: Personal Info");
 		Select relationshipSelectWithSpouseOption = new Select(driver.findElement(By.id("relationship")));
@@ -1398,14 +1398,15 @@ public class FullFlowJourneyTest extends JourneyTest {
 		uploadFile(getAbsoluteFilepathString("pdf-without-acroform.pdf")); // Assert that we can still upload PDFs
 		waitForDocumentUploadToComplete();																	// without acroforms
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).isEqualTo("3 files added");
-
+		//The delete link doesn't consistently show for the pdf-without-acroform.pdf.
+		//takeSnapShot shows the cancel link is usually present, so test for either of them here.
 		int numberOfDeleteLinks = driver.findElements(By.linkText("delete")).size();
 		if(numberOfDeleteLinks == 2) {
 			assertThat(driver.findElements(By.linkText("cancel")).size()).isEqualTo(1);
-			System.out.println("@@ WE HAVE A CANCEL LINK @@");//TODO emj delete
+			//System.out.println("@@ WE HAVE A CANCEL LINK @@");//TODO emj delete
 		}else {
 			assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(3);
-			System.out.println("@@ WE HAVE THREE DELETE LINKS @@");//TODO emj delete
+			//System.out.println("@@ WE HAVE THREE DELETE LINKS @@");//TODO emj delete
 		}
 
 		// After deleting a file, the order of the remaining files should be maintained
