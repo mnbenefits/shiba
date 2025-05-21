@@ -116,7 +116,7 @@ dependencies {
     implementation("org.springframework.ws:spring-ws-core")
 
     implementation("org.springframework.session:spring-session-core:3.4.3")
-    implementation("org.springframework.session:spring-session-jdbc:3.4.3")
+    implementation("org.springframework.session:spring-session-jdbc:3.5.0")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web:3.4.5")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
