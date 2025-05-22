@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.PercyTestPage;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -32,7 +31,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage = new PercyTestPage(driver);
 	}
 
-	// @Disabled("This test passes on VDIs but fails on GitHub")
 	@Test
 	void fullApplicationWithDocumentUploads() {
 		when(clock.instant()).thenReturn(LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
@@ -45,8 +43,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Assert intercom button is present on landing page
 		await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
 		assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
-		// Assert that the Delayed Processing Time Notice is displayed on the landing
-		// page.
+		// Assert that the Delayed Processing Time Notice is displayed on the landing page.
 		// assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
 		assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
 		// Assert that the EBT Scam Alert is displayed on the landing page.
@@ -57,8 +54,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickLinkToExternalWebsite("Learn more here.");
 		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
 		driver.switchTo().window(windowHandles.get(1));
-		// Temporarily commenting this out to workaround Radware Captcha issue when test
-		// run in GitHub
+		// Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub
 		// assertThat(driver.getTitle()).isEqualTo("Recent reports of card skimming
 		// affecting EBT card users");
 		driver.close(); // close the tab
@@ -195,8 +191,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Is anyone in your household a member of a tribal nation?
 		testPage.chooseYesOrNo("isTribalNationMember", YES.getDisplayValue(), "Select a Tribal Nation");
 
-		//navigateTo("selectTheTribe");//TODO emj why navigate to page we are on? commented this because Bois Forte wasn't being put on the PDF
-		// Go back and select a tribe that routes to Mille Lacs
 		testPage.selectFromDropdown("selectedTribe[]", "Bois Forte");
 		testPage.clickContinue("Nations Boundary");
 
@@ -872,7 +866,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCertainPopsFieldEquals("APPLICANT_MAILING_CITY", "someCity");
 		assertCertainPopsFieldEquals("APPLICANT_MAILING_STATE", "IL");
 		assertCertainPopsFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "");//TODO this is blank, should be someCounty
+		assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "");
 		assertCertainPopsFieldEquals("MEDICAL_IN_OTHER_STATE", "Off");
 		assertCertainPopsFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
 		assertCertainPopsFieldEquals("HH_HEALTHCARE_COVERAGE_0", "Yes");
@@ -943,7 +937,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 	 * Light(er) weight version of the full flow journey test which verifies the
 	 * full flow when CASH is the only program selected.
 	 */
-	// @Disabled("This test passes on VDIs but fails on GitHub")
 	@Test
 	void fullCashApplication() {
 		when(clock.instant()).thenReturn(LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),

@@ -177,7 +177,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   protected void goToPageBeforeSelectPrograms(String county) {
 	    // Landing page
-	    //testPage.clickButton("Apply now");
 	    testPage.clickButtonLink("Apply now", "Identify County");
 
 	    // Select county
@@ -199,7 +198,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
   
   protected void getToHomeAddress(String county, List<String> programSelections) {
     // Landing page
-    //testPage.clickButton("Apply now");
     testPage.clickButtonLink("Apply now", "Identify County");
 
     // Select county

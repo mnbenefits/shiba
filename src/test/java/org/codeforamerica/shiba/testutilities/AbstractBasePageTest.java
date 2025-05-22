@@ -200,7 +200,7 @@ public abstract class AbstractBasePageTest {
   }
 
   protected void fillOutPersonalInfo() {
-    navigateTo("personalInfo");
+    //navigateTo("personalInfo");//TODO emj commented this, seems redundant
     fillOutPersonInfo();
     testPage.enter("moveToMnPreviousCity", "Chicago");
   }
@@ -526,41 +526,41 @@ public abstract class AbstractBasePageTest {
 
   protected void getToDocumentUploadScreen() {
 	    // landing page
-		testPage.clickButton("Apply now");
+		testPage.clickButtonLink("Apply now", "Identify County");
 		// identifyCountyBeforeApplying
 	    testPage.enter("county", "Hennepin");
-	    testPage.clickContinue();
+	    testPage.clickContinue("Prepare To Apply");
 	    // prepareToApply
-	    testPage.clickContinue();
+	    testPage.clickButtonLink("Continue", "Timeout notice");
 	    // timeoutNotice
-	    testPage.clickContinue();
+	    testPage.clickButtonLink("Continue", "Language Preferences - Written");
 	    // writtenLanguage
 	    testPage.enter("writtenLanguage", "English");
-	    testPage.clickContinue();
+	    testPage.clickContinue("Language Preferences - Spoken");
 	    // spokenLanguage
 	    testPage.enter("spokenLanguage", "English");
 	    testPage.enter("needInterpreter", "Yes");
-	    testPage.clickContinue();
+	    testPage.clickContinue("Choose Programs");
 	    // choosePrograms
 	    testPage.enter("programs", PROGRAM_EA);
-	    testPage.clickContinue();
+	    testPage.clickContinue("Emergency Type");
 	    // emergencyType
 	    testPage.enter("emergencyType", "Utility shut-off");
-	    testPage.clickContinue();
+	    testPage.clickContinue("Intro: Basic Info");
 	    // introBasicInfo
-	    testPage.clickContinue();
+	    testPage.clickButtonLink("Continue", "Personal Info");
 	    // personalInfo
 	    fillOutPersonalInfo();
-	    testPage.clickContinue();
+	    testPage.clickContinue("Home Address");
 	    // homeAddress
 	    navigateTo("signThisApplication");
 	    testPage.enter("applicantSignature", "some name");
-	    testPage.clickButton("Continue");
-	    testPage.clickButton("Submit application");
-	    testPage.clickContinue();
-	    testPage.clickContinue();
-	    testPage.clickButton("Add documents now");
-	    testPage.clickContinue();
+	    testPage.clickButton("Continue", "Submit application");
+	    testPage.clickCustomButton("Submit application", 3, "Submission Confirmation");
+	    testPage.clickButtonLink("Continue", "Adding Documents");
+	    testPage.clickButtonLink("Continue", "Document Recommendation");
+	    testPage.clickButtonLink("Add documents now", "How to add documents");
+	    testPage.clickButtonLink("Continue", "Upload documents");
 	  }
 
   protected void getToLaterDocsUploadScreen() {
