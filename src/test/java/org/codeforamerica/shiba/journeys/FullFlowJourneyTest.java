@@ -109,7 +109,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("whoNeedsChildCare", householdMemberFullName);
 		testPage.clickButton("Continue", "Do you have a child care provider?");
 
-		testPage.enter("hasChildCareProvider", NO.getDisplayValue());
+		testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who are the children that have a parent not living in the home?");
 
 		// Who are the children that have a parent not living at home?
 		testPage.enter("whoHasAParentNotLivingAtHome", "None of the children have parents living outside the home");
@@ -141,7 +141,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Is anyone in your household going to school right now, either full or
 		// part-time?
-		testPage.enter("goingToSchool", YES.getDisplayValue());
+		testPage.chooseYesOrNo("goingToSchool", YES.getDisplayValue(), "Who is going to school?");
 
 		// Who is going to school?
 		testPage.enter("whoIsGoingToSchool", List.of(householdMemberFullName));
@@ -162,17 +162,17 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Pregnant");
 
 		// Is anyone in your household pregnant?
-		testPage.enter("isPregnant", YES.getDisplayValue());
+		testPage.chooseYesOrNo("isPregnant", YES.getDisplayValue(), "Household: pregnant");
 
 		// Who is pregnant?
 		testPage.enter("whoIsPregnant", "me");
 		testPage.clickContinue("Expedited Migrant Farm Worker, Household");
 
 		// Is anyone in your household a migrant or seasonal farm worker?
-		testPage.enter("migrantOrSeasonalFarmWorker", NO.getDisplayValue());
+		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
 
 		// Is everyone in your household a U.S. Citizen?
-		testPage.enter("isUsCitizen", NO.getDisplayValue());
+		testPage.chooseYesOrNo("isUsCitizen", NO.getDisplayValue(), "Non Citizen");
 
 		// Who is not a U.S Citizen?
 		testPage.enter("whoIsNonCitizen", "me");
@@ -183,26 +183,26 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
-		testPage.enter("hasDisability", YES.getDisplayValue());
+		testPage.chooseYesOrNo("hasDisability", YES.getDisplayValue(), "Who Has Disability");
 
 		// Who has Disability?
 		testPage.enter("whoHasDisability", "me");
 		testPage.clickContinue("Work situation");
 
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.enter("hasWorkSituation", NO.getDisplayValue());
+		testPage.chooseYesOrNo("hasWorkSituation", NO.getDisplayValue(), "Tribal Nation member");
 
 		// Is anyone in your household a member of a tribal nation?
-		testPage.enter("isTribalNationMember", YES.getDisplayValue());
+		testPage.chooseYesOrNo("isTribalNationMember", YES.getDisplayValue(), "Select a Tribal Nation");
 
-		navigateTo("selectTheTribe");
+		//navigateTo("selectTheTribe");//TODO emj why navigate to page we are on? commented this because Bois Forte wasn't being put on the PDF
 		// Go back and select a tribe that routes to Mille Lacs
 		testPage.selectFromDropdown("selectedTribe[]", "Bois Forte");
 		testPage.clickContinue("Nations Boundary");
 
 		// Are any of the tribal members in your household living in or near the
 		// Nation's boundaries?
-		testPage.enter("livingInNationBoundary", YES.getDisplayValue());
+		testPage.chooseYesOrNo("livingInNationBoundary", YES.getDisplayValue(), "Tribal Nation of residence");
 
 		// Residence is in what Nation's boundaries?
 		testPage.selectFromDropdown("selectedNationOfResidence[]", "Bois Forte");
@@ -214,7 +214,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("Continue", "Employment status");
 
 		// Is anyone in your household making money from a job?
-		testPage.enter("areYouWorking", YES.getDisplayValue());
+		testPage.chooseYesOrNo("areYouWorking", YES.getDisplayValue(), "Income by job");
 
 		// Add a job for the household
 		testPage.clickButtonLink("Add a job", "Household selection for income");
@@ -222,8 +222,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Employer's Name");
 		testPage.enter("employersName", "some employer");
 		testPage.clickContinue("Self-employment");
-		testPage.enter("selfEmployment", YES.getDisplayValue());
-		testPage.enter("paidByTheHour", YES.getDisplayValue());
+		testPage.chooseYesOrNo("selfEmployment", YES.getDisplayValue(), "Paid by the hour");
+		testPage.chooseYesOrNo("paidByTheHour", YES.getDisplayValue(), "Hourly wage");
 		testPage.enter("hourlyWage", "1.00");
 		testPage.clickContinue("Hours a week");
 		testPage.enter("hoursAWeek", "30");
@@ -237,8 +237,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Employer's Name");
 		testPage.enter("employersName", "some employer");
 		testPage.clickContinue("Self-employment");
-		testPage.enter("selfEmployment", YES.getDisplayValue());
-		testPage.enter("paidByTheHour", YES.getDisplayValue());
+		testPage.chooseYesOrNo("selfEmployment", YES.getDisplayValue(), "Paid by the hour");
+		testPage.chooseYesOrNo("paidByTheHour", YES.getDisplayValue(), "Hourly wage");
 		testPage.enter("hourlyWage", "1.00");
 		testPage.clickContinue("Hours a week");
 		testPage.enter("hoursAWeek", "30");
@@ -251,7 +251,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("No, that's it.", "Job Search");
 
 		// Is anyone in the household currently looking for a job?
-		testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
+		testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
 
 		// Got it! You're almost done with the income section.
 		testPage.clickButtonLink("Continue", "Unearned Income");
@@ -339,10 +339,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Has your household received money for energy assistance (LIHEAP) in the last
 		// 12 months?
-		testPage.enter("energyAssistance", YES.getDisplayValue());
+		testPage.chooseYesOrNo("energyAssistance", YES.getDisplayValue(), "Energy Assistance More Than 20");
 
 		// Has your household received more than $20 in energy assistance this year?
-		testPage.enter("energyAssistanceMoreThan20", YES.getDisplayValue());
+		testPage.chooseYesOrNo("energyAssistanceMoreThan20", YES.getDisplayValue(), "Medical expenses");
 		testPage.enter("medicalExpenses", "Dental insurance premiums");
 		testPage.enter("medicalExpenses", "Vision insurance premiums");
 		testPage.enter("medicalExpenses", "Medical insurance premiums");
@@ -357,7 +357,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
-		testPage.enter("supportAndCare", YES.getDisplayValue());
+		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "A vehicle");
@@ -386,7 +386,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Savings");
 
 		// Does anyone in the household have money in a bank account or debit card?
-		testPage.enter("haveSavings", YES.getDisplayValue());
+		testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Cash Amount, Household");
 
 		// How much cash does your household have available?
 		testPage.enter("cashAmount", "1234");
@@ -406,27 +406,30 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// In the last 12 months, has anyone in the household given away or sold any
 		// assets?
-		testPage.enter("haveSoldAssets", NO.getDisplayValue());
+		//testPage.enter("haveSoldAssets", NO.getDisplayValue());
+		testPage.chooseYesOrNo("haveSoldAssets", NO.getDisplayValue(), "Submitting Application");
 
 		// Submitting your Application
 		testPage.clickButtonLink("Continue", "Register to vote");
-		testPage.clickCustomButton("Yes, send me more info", 3,  "Healthcare Coverage");
+	
+		//Register to vote
+		testPage.clickCustomButton("Yes, send me more info", 3, "Healthcare Coverage");
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
 		testPage.clickContinue("Authorized Rep");
 
 		// Do you want to assign someone to help with your benefits?
-		testPage.enter("helpWithBenefits", YES.getDisplayValue());
+		testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
 
 		// Do you want your helper to communicate with the county on your behalf?
-		testPage.enter("communicateOnYourBehalf", YES.getDisplayValue());
+		testPage.chooseYesOrNo("communicateOnYourBehalf", YES.getDisplayValue(), "Authorized Rep mail and notices");
 
 		// Do you want your helper to get mail and notices for you?
-		testPage.enter("getMailNotices", YES.getDisplayValue());
+		testPage.chooseYesOrNo("getMailNotices", YES.getDisplayValue(), "Authorized Rep spend on your behalf");
 
 		// Do you want your helper to spend your benefits on your behalf?
-		testPage.enter("authorizedRepSpendOnYourBehalf", YES.getDisplayValue());
+		testPage.chooseYesOrNo("authorizedRepSpendOnYourBehalf", YES.getDisplayValue(), "Authorized Rep contact info");
 
 		// Let's get your helpers contact information
 		testPage.enter("authorizedRepFullName", "defaultFirstName defaultLastName");
@@ -454,8 +457,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Upload documents
 		testPage.enter("applicantSignature", "this is my signature");
-		//testPage.clickButton("Continue", "Signature notification"); //TODO 2nd signature doesn't show?
-		//testPage.clickButtonLink("Continue without it",  "Submit application");
 		testPage.clickButtonLink("Continue",  "Submit application");
 		testPage.clickButton("Submit application", "Submission Confirmation");
 		testPage.clickButtonLink("Continue", "Adding Documents");
@@ -572,7 +573,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("FULL_NAME", "Ahmed St. George");
 		assertCcapFieldEquals("UTM_SOURCE", "");
 		assertCcapFieldEquals("FULL_NAME_0", householdMemberFullName);
-		assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");//TODO why is this blank? Supposed to be Bois Forte
+		assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
 		assertCcapFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
 		assertCcapFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
 		assertCcapFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
@@ -963,11 +964,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// "someApartmentNumber");
 		fillOutContactAndReview(true, "Chisago");
 
-		testPage.clickLink("This looks correct");
+		testPage.clickButtonLink("This looks correct", "Do you want to add household members?");
 
 		// add a spouse
-		testPage.enter("addHouseholdMembers", YES.getDisplayValue());
-		testPage.clickContinue();
+		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
+		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
 		testPage.enter("firstName", "Celia");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("dateOfBirth", "10/15/1950");
@@ -981,167 +982,167 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// the scroll clickContinue doesn't seem to advance to the next page.
 		JavascriptExecutor js = ((JavascriptExecutor) driver);
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-		testPage.clickContinue();
+		testPage.clickContinue("Household members");
 
-		testPage.clickButton("Yes, that's everyone");
+		testPage.clickButtonLink("Yes, that's everyone", "Housing subsidy");
 
 		// Are you getting a housing subsidy?
-		testPage.enter("hasHousingSubsidy", NO.getDisplayValue());
+		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Going to school");
 
 		// Is anyone in your household going to school right now, either full or
 		// part-time?
-		testPage.enter("goingToSchool", NO.getDisplayValue());
+		testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Pregnant");
 
 		// Is anyone in your household pregnant?
-		testPage.enter("isPregnant", NO.getDisplayValue());
+		testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 
 		// Is anyone in your household a migrant or seasonal farm worker?
-		testPage.enter("migrantOrSeasonalFarmWorker", NO.getDisplayValue());
+		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
 
 		// Is everyone in your household a U.S. Citizen?
-		testPage.enter("isUsCitizen", YES.getDisplayValue());
+		testPage.chooseYesOrNo("isUsCitizen", YES.getDisplayValue(), "Disability");
 
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
-		testPage.enter("hasDisability", NO.getDisplayValue());
+		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work situation");
 
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.enter("hasWorkSituation", NO.getDisplayValue());
+		testPage.chooseYesOrNo("hasWorkSituation", NO.getDisplayValue(), "Tribal Nation member");
 
 		// Is anyone in your household a member of a tribal nation?
-		testPage.enter("isTribalNationMember", NO.getDisplayValue());
+		testPage.chooseYesOrNo("isTribalNationMember", NO.getDisplayValue(), "Intro: Income");
 
 		// Income & Employment
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Employment status");
 
 		// Is anyone in your household making money from a job?
-		testPage.enter("areYouWorking", NO.getDisplayValue());
+		testPage.chooseYesOrNo("areYouWorking", NO.getDisplayValue(), "Income Up Next");
 
 		// Got it! unearned income is next.
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Unearned Income");
 
 		// Income and Employment
-		testPage.clickContinue();
+		//testPage.clickContinue();
 
 		// Unearned income
 		testPage.enter("unearnedIncome", "None");
-		testPage.clickContinue();
+		testPage.clickContinue("Future Income");
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "No");
-		testPage.clickContinue();
+		testPage.clickContinue("Start Expenses");
 
 		// Expenses & Deductions
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Home Expenses");
 
 		// Does anyone in your household pay for room and board?
 		testPage.enter("homeExpenses", "None");
-		testPage.clickContinue();
+		testPage.clickContinue("Expedited Utility Payments, Household");
 
 		// Does anyone in your household pay for utilities?
 		testPage.enter("payForUtilities", "None");
-		testPage.clickContinue();
+		testPage.clickContinue("Energy Assistance");
 
 		// Has your household received money for energy assistance (LIHEAP) in the last
 		// 12 months?
-		testPage.enter("energyAssistance", NO.getDisplayValue());
+		testPage.chooseYesOrNo("energyAssistance", NO.getDisplayValue(), "Support and Care");
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
-		testPage.enter("supportAndCare", NO.getDisplayValue());
+		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "None");
-		testPage.clickContinue();
+		testPage.clickContinue("Savings");
 
 		// Does anyone in the household have money in a bank account or debit card?
-		testPage.enter("haveSavings", NO.getDisplayValue());
+		testPage.chooseYesOrNo("haveSavings", NO.getDisplayValue(), "Sold assets");
 
 		// In the last 12 months, has anyone in the household given away or sold any
 		// assets?
-		testPage.enter("haveSoldAssets", NO.getDisplayValue());
+		testPage.chooseYesOrNo("haveSoldAssets", NO.getDisplayValue(), "Submitting Application");
 
 		// Submitting your Application
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Register to vote");
 
 		// Register to vote
-		testPage.clickButton("Yes, send me more info");
+		testPage.clickCustomButton("Yes, send me more info", 3,  "Healthcare Coverage");
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue();
+		testPage.clickContinue("Authorized Rep");
 
 		// Do you want to assign someone to help with your benefits?
-		testPage.enter("helpWithBenefits", NO.getDisplayValue());
+		testPage.chooseYesOrNo("helpWithBenefits", NO.getDisplayValue(), "Additional Info");
 
 		// Is there anything else you want to share?
 		driver.findElement(By.id("additionalInfo")).sendKeys("I have nothing else to share");
-		testPage.clickContinue();
+		testPage.clickContinue("Can we ask");
 
 		// Can we ask about your race and ethnicity?
-		testPage.clickLink("Yes, continue");
+		testPage.clickButtonLink("Yes, continue", "Race and Ethnicity");
 
 		// What races or ethnicities do you identify with?
 		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
-		testPage.clickContinue();
+		testPage.clickContinue("Legal Stuff");
 
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
 		testPage.enter("drugFelony", NO.getDisplayValue());
-		testPage.clickContinue();
+		testPage.clickContinue("Sign this application");
 
 		// Sign this application (applicant)
 		testPage.enter("applicantSignature", "this is my signature");
-		testPage.clickContinue();
+		testPage.clickContinue("Signature notification");
 
 		// Second signature notification
-		testPage.clickButton("Continue without it");
+		testPage.clickButtonLink("Continue without it", "Submit application");
 		// Ready to submit, but just go back
 		testPage.goBack();
 		// Back to second signature notification page
-		testPage.clickButton("Add another signature");
+		testPage.clickButtonLink("Add another signature", "Legal stuff - Additional adult");
 
 		// The legal stuff (for second signature)
-		testPage.clickLink("Continue without another signature");
+		testPage.clickLink("Continue without another signature", "Submit application");
 
 		// Ready to submit
 		testPage.goBack();
 		// Back on the legal stuff (for second signature)
 		testPage.enter("agreeToTerms", "I agree");
-		testPage.clickContinue();
+		testPage.clickCustomButton("Continue", 3, "Additional Adult Signature");
 
 		// Sign this application (second signature)
-		testPage.clickLink("Continue without another signature");
+		testPage.clickLink("Continue without another signature", "Submit application");
 		// Submit
 		testPage.goBack();
 		// Sign this application (second signature)
 		testPage.enter("secondSignature", "second person signature");
-		testPage.clickContinue();
+		testPage.clickCustomButton("Continue", 3, "Submit application");
 
 		// Submit
-		testPage.clickButton("Submit application");
+		testPage.clickCustomButton("Submit application", 3, "Submission Confirmation");
 
 		// Submission confirmation, your application has been submitted
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Adding Documents");
 
 		// Adding documents
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Document Recommendation");
 
 		// Document recommendation
-		testPage.clickButton("I'll do this later");
+		testPage.clickButtonLink("I'll do this later", "Document offboarding");
 
 		// document off boarding
 		// Verify that we navigated to the documentOffboarding page.
 		assertThat(driver.getTitle()).isEqualTo("Document offboarding");
-		testPage.clickButton("Finish application");
+		testPage.clickButtonLink("Finish application", "Additional Program Documents");
 
 		// program documents
 		// Verify that we navigated to the programDocuments page.
 		assertThat(driver.getTitle()).isEqualTo("Additional Program Documents");
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Your next steps");
 
 		// next steps
-		testPage.clickContinue();
+		testPage.clickButtonLink("Continue", "Success");
 
 		// success page
 		applicationId = downloadPdfs();
@@ -1213,8 +1214,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 	protected void verifyHouseholdMemberCannotSelectCertainPops() {
 		// Add 1 Household Member
 		assertThat(testPage.getElementText("page-form")).contains("Roommates that you buy and prepare food with");
-		testPage.enter("addHouseholdMembers", YES.getDisplayValue());
-		testPage.clickContinue();
+		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
+		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
 		assertThat(!(testPage.getElementText("page-form"))
 				.contains("Healthcare for Seniors and People with Disabilities"));
 	}
@@ -1291,7 +1292,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 	}
 
 	private void addSpouseAndVerifySpouseCanSelectCertainPops() {
-		testPage.enter("addHouseholdMembers", YES.getDisplayValue());
+		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
 		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
 		assertThat(testPage.getElementText("page-form"))
 				.contains("Healthcare for Seniors and People with Disabilities");
@@ -1403,10 +1404,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		int numberOfDeleteLinks = driver.findElements(By.linkText("delete")).size();
 		if(numberOfDeleteLinks == 2) {
 			assertThat(driver.findElements(By.linkText("cancel")).size()).isEqualTo(1);
-			//System.out.println("@@ WE HAVE A CANCEL LINK @@");//TODO emj delete
 		}else {
 			assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(3);
-			//System.out.println("@@ WE HAVE THREE DELETE LINKS @@");//TODO emj delete
 		}
 
 		// After deleting a file, the order of the remaining files should be maintained

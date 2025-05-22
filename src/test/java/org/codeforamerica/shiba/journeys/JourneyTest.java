@@ -336,11 +336,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickButtonLink("Edit my county", "Identify County");
     testPage.enter("county", "Chisago");
     testPage.clickContinue("Contact Info");
-//    testPage.goBack();
-//    testPage.goBack();
-//    testPage.goBack();
-//    testPage.goBack();
-//    testPage.goBack();
   }
   
   

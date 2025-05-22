@@ -223,7 +223,7 @@ public class Page {
   
   /**
    * This is for links (anchors) that look like buttons.
-   * Click button/links, then wait for the next page to load.
+   * Click the button/link, then wait for the next page to load.
    * @param buttonText
    * @param nextPageTitle
    */
@@ -308,6 +308,25 @@ public void enter(String inputName, String value) {
     }    
   }
 
+/**
+ * Yes and No buttons perform their own page submit action and need their own
+ * wait period for the next page to load.
+ * @param inputName
+ * @param value
+ * @param nextPage
+ */
+public void chooseYesOrNo(String inputName, String value, String nextPage) {
+	  List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+    WebElement buttonToClick = formInputElements.stream()
+        .filter(button -> button.getText().contains(value))
+        .findFirst()
+        .orElseThrow();
+    buttonToClick.sendKeys(Keys.ENTER);//click();TODO emj test this
+	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+	WebDriverWait wait = new WebDriverWait(driver, duration);
+	wait.until(ExpectedConditions.titleContains(nextPage));
+  }
+
   public void enter(String inputName, List<String> value) {
     checkForBadMessageKeys();
     List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
@@ -360,7 +379,7 @@ public void enter(String inputName, String value) {
         .filter(button -> button.getText().contains(value))
         .findFirst()
         .orElseThrow();
-    buttonToClick.click();
+    buttonToClick.sendKeys(Keys.ENTER);//click();TODO emj test this
   }
 
   public void selectFromDropdown(String inputName, String optionText) {
@@ -375,7 +394,7 @@ public void enter(String inputName, String value) {
         .filter(option -> option.getText().equals(optionText))
         .findFirst()
         .orElseThrow();
-    optionToSelect.click();
+    optionToSelect.click();// sendKeys(Keys.ENTER) doesn't work here
   }
 
   public WebElement getSelectedOption(String elementId) {
