@@ -564,35 +564,35 @@ public abstract class AbstractBasePageTest {
 	  }
 
   protected void getToLaterDocsUploadScreen() {
-    testPage.clickButton("Upload documents");
+    testPage.clickButtonLink("Upload documents", "Ready to upload documents");
     
     // Ready to upload documents?
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue", "Match Info");
     
     // Match Info
     fillOutMatchInfo();
-    testPage.clickContinue();
+    testPage.clickContinue("Identify County");
     
     // Identify County
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
-    
+    testPage.clickContinue("Tribal Nation member");
+
     // Tribal Nation Member
-    testPage.clickButton("No"); 
+    testPage.chooseYesOrNo("isTribalNationMember", "No", "How to add documents"); 
     
     // How to add documents
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue", "Upload documents");
   }
   
   protected void getToHealthcareRenewalUploadScreen() {
 	navigateTo("healthcareRenewalUpload");
 	testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Match Info");
     
     fillOutMatchInfo();
-    testPage.clickContinue();
+    testPage.clickContinue("How to add documents");
     
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue", "Upload documents");
   }
 
   protected String getAttributeForElementAtIndex(List<WebElement> elementList, int index,
