@@ -214,9 +214,9 @@ mappings:
     socialSecurityAmount: SOCIAL_SECURITY_AMOUNT
     supplementalSecurityIncomeAmount: SUPPLEMENTAL_SECURITY_INCOME_AMOUNT
     veteransBenefitsAmount: VETERANS_BENEFITS_AMOUNT
-    unemploymentAmount: UNEMPLOYMENT_INSURANCE_AMOUNT
+    unemploymentAmount: UNEMPLOYMENT_AMOUNT
     workersCompensationAmount: WORKERS_COMPENSATION_AMOUNT
-    retirementAmount: RETIREMENT_BENEFITS_AMOUNT
+    retirementAmount: RETIREMENT_AMOUNT
     childOrSpousalSupportAmount: CHILD_OR_SPOUSAL_SUPPORT_AMOUNT
     tribalPaymentsAmount: TRIBAL_PAYMENTS_AMOUNT
     benefitsAmount: BENEFITS_AMOUNT
