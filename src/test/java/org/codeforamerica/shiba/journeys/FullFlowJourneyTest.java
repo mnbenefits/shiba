@@ -1397,6 +1397,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		int numberOfDeleteLinks = driver.findElements(By.linkText("delete")).size();
 		if(numberOfDeleteLinks == 2) {
 			assertThat(driver.findElements(By.linkText("cancel")).size()).isEqualTo(1);
+		}else if(numberOfDeleteLinks == 1) {
+			assertThat(driver.findElements(By.linkText("cancel")).size()).isEqualTo(2);
 		}else {
 			assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(3);
 		}

@@ -188,6 +188,24 @@ public class Page {
     buttonToClick.sendKeys(Keys.RETURN);//click(); //TODO emj testing this
   }
   
+  /**
+   * This is for buttons that look like links on the web page. They use the "button--link" class to appear as links.
+   * @param buttonLinkText
+   * @param nextPage
+   */
+  public void clickCustomLink(String buttonLinkText, String nextPage) {
+	    checkForBadMessageKeys();
+	    WebElement buttonToClick = driver.findElements(By.className("button--link")).stream()
+	        .filter(button -> button.getText().contains(buttonLinkText))
+	        .findFirst()
+	        .orElseThrow(
+	            () -> new RuntimeException("No link found containing text: " + buttonLinkText));
+	    buttonToClick.sendKeys(Keys.RETURN);//click(); //TODO emj testing this
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	  }
+  
 	public void clickAccordianButton(String buttonattributeText) {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver
@@ -230,6 +248,22 @@ public class Page {
 	public void clickButtonLink(String buttonText, String nextPageTitle) {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
+				.filter(button -> button.getText().contains(buttonText)).findFirst()
+				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+		buttonToClick.sendKeys(Keys.ENTER);  //.click();//TODO emj test this
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPageTitle));
+	}
+	
+	/**
+	 * This is for clicking subtle links, anchors that use the "link--subtle" class.
+	 * @param buttonText
+	 * @param nextPageTitle
+	 */
+	public void clickSubtleLink(String buttonText, String nextPageTitle) {
+		checkForBadMessageKeys();
+		WebElement buttonToClick = driver.findElements(By.className("link--subtle")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 		buttonToClick.sendKeys(Keys.ENTER);  //.click();//TODO emj test this

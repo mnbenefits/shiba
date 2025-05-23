@@ -115,15 +115,15 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   protected String signApplicationAndDownloadApplicationZipFiles(String signature,List<String> expectedMessages) {
     testPage.enter("applicantSignature", signature);
-    testPage.clickContinue();
-    testPage.clickButton("Submit");
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickContinue("Submit application");
+    testPage.clickCustomButton("Submit application", 3, "Submission Confirmation");
+    testPage.clickButtonLink("Continue", "Adding Documents");
+    testPage.clickButtonLink("Continue", "Document Recommendation");
 
     // No document upload
-    testPage.clickButton("I'll do this later");
-    testPage.clickButton("Finish application");
-    testPage.clickContinue(); // on programDocuments page
+    testPage.clickButtonLink("I'll do this later", "Document offboarding");
+    testPage.clickButtonLink("Finish application", "Additional Program Documents");
+    testPage.clickButtonLink("Continue", "Your next steps"); // on programDocuments page
 
     // Next steps screen
     List<WebElement> pageElements = driver.findElements(By.id("original-next-steps"));
@@ -135,7 +135,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     	assertThat(nextStepSections).containsExactly(expectedMessages.toArray(new String[0]));
     }
     
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue", "Success");
     return downloadPdfs();
   }
 
@@ -218,9 +218,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
     // Program Selection
     programSelections.forEach(program -> testPage.enter("programs", program));
-    testPage.clickContinue("Intro: Basic Info");
+    
 
     if (programSelections.contains(PROGRAM_CERTAIN_POPS)) {
+      testPage.clickContinue("Intro: Basic Info");//TODO emj fix this
       // Test Certain pops offboarding flow first by selecting None of the above
       testPage.enter("basicCriteria", "None of the above");
       testPage.clickContinue();
@@ -246,9 +247,11 @@ abstract class JourneyTest extends AbstractBasePageTest {
       testPage.clickContinue();
     }
     if(programSelections.contains(PROGRAM_SNAP)) {
+      testPage.clickContinue("Expedited Notice");
       assertThat(testPage.getTitle()).isEqualTo("Expedited Notice");
-      testPage.clickContinue();
+      testPage.clickButtonLink("Continue", "Intro: Basic Info");
     }
+    //testPage.clickContinue("Intro: Basic Info");
     // Getting to know you (Personal Info intro page)
     testPage.clickButtonLink("Continue", "Personal Info");
 
@@ -287,29 +290,21 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("apartmentNumber", homeApartmentNumber);
 
     testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
-   // testPage.clickContinue("Mailing address");
-//TODO emj on GitHub it fails on line 280 with this error:
-    // org.openqa.selenium.TimeoutException: Expected condition failed: waiting for title to contain "Mailing address". 
-    //Current title: "Home Address" (tried for 5 second(s) with 500 milliseconds interval)
-    // This is run before this method gets called : testPage.clickContinue("Home Address");
-    
+   
     // Where can the county send your mail? (accept the smarty streets enriched address)
     testPage.enter("zipCode", "23456");
     testPage.enter("city", "someCity");
     testPage.enter("streetAddress", "someStreetAddress");
     testPage.enter("state", "IL");
     testPage.enter("apartmentNumber", "someApartmentNumber");
-//    when(smartyStreetClient.validateAddress(any())).thenReturn(
-//        Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
-//    );
+
     testPage.clickContinue("Address Validation");
-    testPage.clickButton("Use this address", "County Validation");
-    //testPage.clickContinue("Address Validation");
+    //The mock Address is this that is configured in SmartyStreetClientMock:
+    // ("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"));
+    //TODO emj fix the mock address and page flow from here
+    //takeSnapShot("address.png");//TODO emj delete
+    testPage.clickCustomButton("Use this address", 3, "County Validation");
     testPage.clickButton("Use this county", "Contact Info");
-   // testPage.clickElementById("enriched-address");
-  //  testPage.clickContinue("County Validation");
-   // testPage.clickElementById("original-county");
-  //  testPage.clickContinue("Contact Info");
   }
   
   protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,
