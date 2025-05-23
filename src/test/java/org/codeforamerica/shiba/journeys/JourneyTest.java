@@ -206,11 +206,11 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
     // Informational pages
     testPage.clickButtonLink("Continue","Timeout notice");
-    testPage.clickButtonLink("Continue", "Language Preferences");
+    testPage.clickButtonLink("Continue", "Language Preferences - Written");
 
     // Written Language Preferences
     testPage.enter("writtenLanguage", "English");
-    testPage.clickContinue();
+    testPage.clickContinue("Language Preferences - Spoken");
     // Spoken Language Preferences
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
@@ -250,7 +250,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
       testPage.clickContinue();
     }
     // Getting to know you (Personal Info intro page)
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue", "Personal Info");
 
     // Personal Info
     testPage.enter("firstName", "Ahmed");
@@ -272,11 +272,11 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("livedInMnWholeLife", "Yes");
     testPage.enter("moveToMnDate", "10/20/1993");
     testPage.enter("moveToMnPreviousCity", "Chicago");
-    testPage.clickContinue();
+    testPage.clickContinue("Home Address");
     assertThat(testPage.getTitle()).isEqualTo("Home Address");
     testPage.goBack();
     testPage.enter("dateOfBirth", "01/12/1928");
-    testPage.clickContinue();
+    testPage.clickContinue("Home Address");
   }
   
   protected void fillOutHomeAndMailingAddress(String homeZip, String homeCity,
@@ -356,7 +356,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     {
       // Let's review your info
       assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
-          .isEqualTo("Mail Street");  
+          .isEqualTo("someStreetAddress");  
       assertThat(driver.findElement(By.id("home-address_county")).getText())
       .isEqualTo(county); 
     }
