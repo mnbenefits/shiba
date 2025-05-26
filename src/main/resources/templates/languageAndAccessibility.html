@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="format-detection" content="telephone=no">
+  <title th:text="#{language-and-accessibility.title}"></title>
+  <link href="/honeycrisp.min.css" rel="stylesheet"/>
+  <link href="/shiba.css" rel="stylesheet"/>
+  <script src="/honeycrisp.min.js"></script>
+  <!-- Google Tag Manager -->
+  <script th:if="${@environment.getProperty('mnb-enable-google-analytics')}">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','[[${@environment.getProperty("google-tag-manager-id")}]]');</script>
+  <!-- End Google Tag Manager -->
+
+</head>
+<body class="locale-en" id="landing-page">
+<div th:replace="~{fragments/google-analytics-body-snippet :: google-analytics-body-snippet}"></div>
+<div class="page-wrapper slab--shiba">
+  <div th:replace="~{fragments/toolbar :: toolbar}"></div>
+  <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
+  <div th:replace="~{fragments/info-pages-toolbar :: info-pages-toolbar}"></div>
+  <section class="slab spacing-above-35">
+    <div class="grid">
+      <div class="grid__item">
+        <h1 class="spacing-below-35" th:text="#{language-and-accessibility.language-and-accessibility}"></h1>
+        <p class="text-25 spacing-below-35" th:text="#{landing.apply-now}"></p>
+      </div>
+    </div>
+  </section>
+  <main id="content" role="main" class="slab slab--white">
+    <div class="grid">
+      <nav class="grid__item width-one-third">
+        <h2 class="h3">Table of Contents</h2>
+		<div class="spacing-below-35"><a lang="am" xml:lang="am" href="#amharic-content" th:utext="#{language-preferences.Amharic}"></a></div>
+		<div class="spacing-below-35"><a lang="ar" xml:lang="ar" href="#arabic-content" th:utext="#{language-preferences.Arabic}"></a></div>
+		<div class="spacing-below-35"><a lang="my" xml:lang="my" href="#burmese-content" th:utext="#{language-preferences.Burmese}"></a></div>
+		<div class="spacing-below-35"><a lang="zh" xml:lang="zh" href="#cantonese-content" th:utext="#{language-preferences.Cantonese}"></a></div>
+		<div class="spacing-below-35"><a lang="fr" xml:lang="fre" href="#french-content" th:utext="#{language-preferences.French}"></a></div>
+		<div class="spacing-below-35"><a lang="hmn" xml:lang="hmn" href="#hmoob-content" th:utext="#{language-preferences.hmoob}"></a></div>
+		<div class="spacing-below-35"><a lang="kar" xml:lang="kar" href="#karen-content" th:utext="#{language-preferences.Karen}"></a></div>
+		<div class="spacing-below-35"><a lang="km" xml:lang="km" href="#khmer-content" th:utext="#{language-preferences.Khmer}"></a></div>
+		<div class="spacing-below-35"><a lang="ko" xml:lang="ko" href="#korean-content" th:utext="#{language-preferences.Korean}"></a></div>
+		<div class="spacing-below-35"><a lang="lo" xml:lang="lo" href="#lao-content" th:utext="#{language-preferences.Lao}"></a></div>
+		<div class="spacing-below-35"><a lang="om" xml:lang="om" href="#oromo-content" th:utext="#{language-preferences.Oromo}"></a></div>
+		<div class="spacing-below-35"><a lang="ru" xml:lang="ru" href="#russian-content" th:utext="#{language-preferences.russian}"></a></div>
+		<div class="spacing-below-35"><a lang="so" xml:lang="so" href="#soomaali-content" th:utext="#{language-preferences.soomaali}"></a></div>
+		<div class="spacing-below-35"><a lang="es" xml:lang="es" href="#spanish-content" th:utext="#{language-preferences.Spanish}"></a></div>
+		<div class="spacing-below-35"><a lang="vi" xml:lang="vi" href="#vietnamese-content" th:utext="#{language-preferences.vietnamese}"></a></div>
+      </nav>
+      <div class="grid__item shift-one-twelfth width-seven-twelfths">
+        <div class="grid">
+          <div class="grid__item">
+            <div class="grid__item spacing-below-35">
+              <h2 class="h3" id="english-content" th:utext="#{language-and-accessibility.english}"></h2>
+              <p th:utext="#{language-and-accessibility.content.english}"></p>
+              <h2 id="amharic-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Amharic}"></h2>
+              <p th:utext="#{language-and-accessibility.content.amharic}"></p>
+              <h2 id="arabic-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Arabic}"></h2>
+              <p th:utext="#{language-and-accessibility.content.arabic}"></p>
+              <h2 id="burmese-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Burmese}"></h2>
+              <p th:utext="#{language-and-accessibility.content.burmese}"></p>
+              <h2 id="cantonese-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Cantonese}"></h2>
+              <p th:utext="#{language-and-accessibility.content.cantonese}"></p>
+              <h2 id="french-content" class="h3 spacing-above-60" th:utext="#{language-preferences.French}"></h2>
+              <p th:utext="#{language-and-accessibility.content.french}"></p>
+              <h2 id="hmoob-content" class="h3 spacing-above-60" th:utext="#{language-preferences.hmoob}"></h2>
+              <p th:utext="#{language-and-accessibility.content.hmoob}"></p>
+              <h2 id="karen-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Karen}"></h2>
+              <p th:utext="#{language-and-accessibility.content.karen}"></p>
+              <h2 id="khmer-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Khmer}"></h2>
+              <p th:utext="#{language-and-accessibility.content.khmer}"></p>
+              <h2 id="korean-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Korean}"></h2>
+              <p th:utext="#{language-and-accessibility.content.korean}"></p>
+              <h2 id="lao-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Lao}"></h2>
+              <p th:utext="#{language-and-accessibility.content.lao}"></p>
+              <h2 id="oromo-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Oromo}"></h2>
+              <p th:utext="#{language-and-accessibility.content.oromo}"></p>
+              <h2 id="russian-content" class="h3 spacing-above-60" th:utext="#{language-preferences.russian}"></h2>
+              <p th:utext="#{language-and-accessibility.content.russian}"></p>
+              <h2 id="soomaali-content" class="h3 spacing-above-60" th:utext="#{language-preferences.soomaali}"></h2>
+              <p th:utext="#{language-and-accessibility.content.soomaali}"></p>
+              <h2 id="spanish-content" class="h3 spacing-above-60" th:utext="#{language-preferences.Spanish}"></h2>
+              <p th:utext="#{language-and-accessibility.content.spanish}"></p>
+              <h2 id="vietnamese-content" class="h3 spacing-above-60" th:utext="#{language-preferences.vietnamese}"></h2>
+              <p th:utext="#{language-and-accessibility.content.vietnamese}"></p>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

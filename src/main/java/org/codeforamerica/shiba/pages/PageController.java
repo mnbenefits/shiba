@@ -240,6 +240,11 @@ public class PageController {
     return "snapNDS";
   }
 
+  @GetMapping("/languageAndAccessibility")
+  String getLanguageAndAccessibility() {
+    return "languageAndAccessibility";
+  }
+
   @GetMapping("/errorTimeout")
   String getErrorTimeout(@CookieValue(value = "application_id", defaultValue = "") String submittedAppId,
 		  @CookieValue(value = "flow_type", defaultValue = "") String flowType,

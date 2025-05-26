@@ -796,6 +796,24 @@ input[type=number] {
   font-size: 1.6rem;
 }
 
+.info-pages-toolbar__wrapper {
+  background: #FFFFFF;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  max-width: 100vw;
+  height: 6rem;
+  font-size: 1.6rem;
+}
+
+.info-pages-toolbar-link {
+  color: #003865;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0 0.5rem;
+}
+
 @media screen and (min-width: 601px) {
   .toolbar__wrapper {
     margin-left: -3.5rem;
@@ -840,6 +858,17 @@ input[type=number] {
 
 .toolbar__wrapper .toolbar__left, .toolbar__wrapper .toolbar__right {
   margin-top: 0.1rem;
+}
+
+.logo, .logo:hover, .logo:visited, .logo:active {
+  color: #E9F6FF;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0 0.5rem;
+}
+
+.logo:focus {
+  box-shadow: inset 0 0 0 5px #ffae00;
 }
 
 .logo, .logo:hover, .logo:visited, .logo:active {
