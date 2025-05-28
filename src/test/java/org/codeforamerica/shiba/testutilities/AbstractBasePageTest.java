@@ -263,7 +263,7 @@ public abstract class AbstractBasePageTest {
     fillOutAddress();
     testPage.enter("sameMailingAddress", "No, use a different address for mail");
     testPage.clickContinue();
-
+    // "Use this address" button is shown when Smarty Streets can't find the address
     testPage.clickButton("Use this address");
     testPage.enter("zipCode", "12345");
     testPage.enter("city", "someCity");

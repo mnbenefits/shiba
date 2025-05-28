@@ -23,7 +23,7 @@ public class SmartyStreetClientMock implements LocationClient {
 
 	@Override
 	public Optional<Address> validateAddress(Address address){
-		return Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"));
+		return Optional.of(new Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty"));
 	}
 	
 	public static SmartyStreetClientMock buildMock() {

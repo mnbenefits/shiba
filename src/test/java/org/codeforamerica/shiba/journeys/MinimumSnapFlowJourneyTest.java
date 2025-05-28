@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -40,8 +41,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("MN"); // home address page default state is MN
     testPage.enter("state", "WI"); // user can set state to something besides MN
     testPage.clickContinue("Out of State Address Notice"); // go to out of state address page, then back
-    //testPage.goBack();
-    //testPage.clickCustomButton("Edit my address", 3, "Home Address");//this is a button that looks like a link
     testPage.clickCustomLink("Edit my address", "Home Address");
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("WI");
     testPage.enter("state", "MN");
@@ -139,12 +138,14 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
     // Where are you currently Living?
-    String homeZip = "12345";
-    String homeCity = "someCity";
-    String homeStreetAddress = "someStreetAddress";
-    String homeApartmentNumber = "someApartmentNumber";
-    fillOutHomeAndMailingAddress(homeZip, homeCity, homeStreetAddress, homeApartmentNumber);
-    fillOutContactAndReview(true, "Hennepin");
+    //Smarty mock client object Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty")
+    String homeZip = "03104";
+    String homeCity = "Cooltown";
+    String homeStreetAddress = "smarty street";
+    String homeApartmentNumber = "1b";
+    String state = "MN";
+    fillOutHomeAndMailingAddress(homeZip, homeCity, homeStreetAddress, homeApartmentNumber, state);
+    fillOutContactAndReview(true, "someCounty");
 
     testPage.clickLink("Submit an incomplete application now with only the above information.", "Do you need help immediately?");
 
@@ -242,11 +243,11 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_HOME_CITY", homeCity);
     assertCafFieldEquals("APPLICANT_HOME_STATE", "MN");
     assertCafFieldEquals("APPLICANT_HOME_ZIPCODE", homeZip);
-    assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
-    assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "someApartmentNumber");
-    assertCafFieldEquals("APPLICANT_MAILING_CITY", "someCity");
-    assertCafFieldEquals("APPLICANT_MAILING_STATE", "IL");
-    assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "23456");
+    assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+    assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "1b");
+    assertCafFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
+    assertCafFieldEquals("APPLICANT_MAILING_STATE", "MN");
+    assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
   }
 
   @Test

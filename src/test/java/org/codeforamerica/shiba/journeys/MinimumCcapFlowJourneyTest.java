@@ -35,7 +35,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     getToHomeAddress("Hennepin", programSelections);
 
     // Where are you currently Living?
-    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
+    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber", "WI");
     
     fillOutContactAndReview(true, "Hennepin");
     

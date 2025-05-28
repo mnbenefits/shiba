@@ -282,31 +282,51 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickContinue("Home Address");
   }
   
+  /**
+   * 
+   * @param homeZip
+   * @param homeCity
+   * @param homeStreetAddress
+   * @param homeApartmentNumber
+   * @param homeState
+   */
   protected void fillOutHomeAndMailingAddress(String homeZip, String homeCity,
-      String homeStreetAddress, String homeApartmentNumber) {
+      String homeStreetAddress, String homeApartmentNumber, String homeState) {
     testPage.enter("zipCode", homeZip);
     testPage.enter("city", homeCity);
     testPage.enter("streetAddress", homeStreetAddress);
+    testPage.enter("state", homeState);
     testPage.enter("apartmentNumber", homeApartmentNumber);
 
     testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
    
-    // Where can the county send your mail? (accept the smarty streets enriched address)
-    testPage.enter("zipCode", "23456");
-    testPage.enter("city", "someCity");
-    testPage.enter("streetAddress", "someStreetAddress");
-    testPage.enter("state", "IL");
-    testPage.enter("apartmentNumber", "someApartmentNumber");
-
+    // Original comment: Where can the county send your mail? (accept the smarty streets enriched address)
+    //Address the Smarty mock object returns("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty")
+    testPage.enter("zipCode", "03104");
+    testPage.enter("city", "Cooltown");
+    testPage.enter("streetAddress", "smarty street");
+    testPage.enter("state", "MN");
+    testPage.enter("apartmentNumber", "1b");
+    //takeSnapShot("address.png");//TODO emj delete
     testPage.clickContinue("Address Validation");
     //The mock Address is this that is configured in SmartyStreetClientMock:
     // ("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"));
     //TODO emj fix the mock address and page flow from here
-    //takeSnapShot("address.png");//TODO emj delete
-    testPage.clickCustomButton("Use this address", 3, "County Validation");
-    testPage.clickButton("Use this county", "Contact Info");
+    //takeSnapShot("addressValidation.png");//TODO emj delete
+ // "Use this address" button is shown when Smarty Streets can't find the address
+    testPage.clickButton("Continue", "County Validation");
+    testPage.clickButton("Continue", "Contact Info");
   }
   
+  /**
+   * This method is looking for the "Use this address" button which is on the verifyMailingAddress page. <br>
+   * "Use this address" button is shown when Smarty Streets can't find the address, which means there <br>
+   * is no enrichment.
+   * @param homeZip
+   * @param homeCity
+   * @param homeStreetAddress
+   * @param homeApartmentNumber
+   */
   protected void fillOutHomeAndMailingAddressWithoutEnrich(String homeZip, String homeCity,
       String homeStreetAddress, String homeApartmentNumber) {
     assertThat(testPage.getTitle()).isEqualTo("Home Address");
@@ -320,11 +340,12 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
     assertThat(testPage.getTitle()).isEqualTo("Mailing address");
     testPage.enter("zipCode", "23456");
-    testPage.enter("city", "Mail City");
-    testPage.enter("streetAddress", "Mail Street");
+    testPage.enter("city", "someCity");
+    testPage.enter("streetAddress", "someStreetAddress");
     testPage.enter("state", "IL");
-    testPage.enter("apartmentNumber", "pi");
+    testPage.enter("apartmentNumber", "someApartmentNumber");
     testPage.clickContinue("Address Validation");
+ // "Use this address" button is shown when Smarty Streets can't find the address
     testPage.clickButton("Use this address", "County Validation");
     testPage.clickButtonLink("Edit my county", "Identify County");
     testPage.enter("county", "Chisago");
@@ -347,11 +368,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
         "It's okay to email me");
     testPage.clickContinue("Review info");
     
-    if (isReview)
-    {
+    if (isReview){
       // Let's review your info
       assertThat(driver.findElement(By.id("mailingAddress-address_street")).getText())
-          .isEqualTo("someStreetAddress");  
+          .isEqualTo("smarty street");  
       assertThat(driver.findElement(By.id("home-address_county")).getText())
       .isEqualTo(county); 
     }

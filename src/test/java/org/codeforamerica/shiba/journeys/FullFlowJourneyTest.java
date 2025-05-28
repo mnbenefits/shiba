@@ -87,7 +87,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops();
 
-		fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber");
+		fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber", "WI");
 		goToContactAndReview();
 
 		addSpouseAndVerifySpouseCanSelectCertainPops();

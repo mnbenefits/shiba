@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AccessibilityTestPage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -306,8 +307,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("moveToMnDate", "02/18/1776");
     testPage.enter("moveToMnPreviousCity", "Chicago");
     testPage.clickContinue("Home Address");
-    
-    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "homeApartmentNumber");
+    // use the address the Smarty Mock object returns: Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty")
+    fillOutHomeAndMailingAddress("03104", "Cooltown", "smarty street", "1b", "MN"); //TODO failed here using the original address
     testPage.enter("phoneNumber", "134567890");
     testPage.clickContinue("Contact Info");
     assertThat(testPage.hasInputError("phoneNumber")).isTrue();
