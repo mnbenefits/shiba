@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -35,7 +36,8 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     getToHomeAddress("Hennepin", programSelections);
 
     // Where are you currently Living?
-    fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber", "WI");
+    //Use smarty mock object Address("smarty street", "Cooltown", "MN", "03104", "1b", "Hennepin")
+    fillOutHomeAndMailingAddress("03104", "Cooltown", "smarty street", "1b", "MN");
     
     fillOutContactAndReview(true, "Hennepin");
     

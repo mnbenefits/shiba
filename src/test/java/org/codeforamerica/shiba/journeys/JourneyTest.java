@@ -250,10 +250,16 @@ abstract class JourneyTest extends AbstractBasePageTest {
       testPage.clickContinue("Expedited Notice");
       assertThat(testPage.getTitle()).isEqualTo("Expedited Notice");
       testPage.clickButtonLink("Continue", "Intro: Basic Info");
+      testPage.clickButtonLink("Continue", "Personal Info");
     }
-    //testPage.clickContinue("Intro: Basic Info");
+    
+    if (programSelections.contains(PROGRAM_CCAP)) {
+    	testPage.clickButtonLink("Continue", "Intro: Basic Info");
+    	testPage.clickButtonLink("Continue", "Personal Info");
+    }
+   // testPage.clickContinue("Intro: Basic Info");
     // Getting to know you (Personal Info intro page)
-    testPage.clickButtonLink("Continue", "Personal Info");
+    //testPage.clickButtonLink("Continue", "Personal Info");
 
     // Personal Info
     testPage.enter("firstName", "Ahmed");
@@ -265,7 +271,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
       testPage.enter("noSSNCheck", "I don't have a social security number.");
       assertThat(testPage.getCheckboxValues("noSSNCheck")).contains("I don't have a social security number.", "I don't have a social security number.");
       testPage.enter("appliedForSSN", "Yes");
-      testPage.clickContinue();
+      testPage.clickContinue();//TODO emj fix this for Certain Pops
       //SSN textbox is filled and Checkbox is checked, so page won't advance and error shows 
       assertThat(testPage.getTitle()).contains("Personal Info");
       testPage.enter("noSSNCheck", "I don't have a social security number.");//deselect the SSN checkbox
@@ -314,7 +320,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     //TODO emj fix the mock address and page flow from here
     //takeSnapShot("addressValidation.png");//TODO emj delete
  // "Use this address" button is shown when Smarty Streets can't find the address
-    testPage.clickButton("Continue", "County Validation");
+    //testPage.clickButton("Continue", "County Validation");
     testPage.clickButton("Continue", "Contact Info");
   }
   

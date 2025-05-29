@@ -145,7 +145,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     String homeApartmentNumber = "1b";
     String state = "MN";
     fillOutHomeAndMailingAddress(homeZip, homeCity, homeStreetAddress, homeApartmentNumber, state);
-    fillOutContactAndReview(true, "someCounty");
+    fillOutContactAndReview(true, "Hennepin");
 
     testPage.clickLink("Submit an incomplete application now with only the above information.", "Do you need help immediately?");
 
@@ -252,7 +252,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
   @Test
   void outOfStateApplicantFlow() {
-    getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
+    getToHomeAddress("Anoka", List.of(PROGRAM_SNAP));
     
     // Page title: Home Address
     assertTrue(testPage.getTitle().equals("Home Address"));
@@ -319,13 +319,13 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     // Page title: Address Validation
     assertTrue(testPage.getTitle().equals("Address Validation"));
     testPage.clickElementById("enriched-address");
-    testPage.clickContinue("County Validation");
-    
+    testPage.clickContinue("County Validation"); 
+
     // Page title: County Validation
     assertTrue(testPage.getTitle().equals("County Validation"));
-    // The original county "Hennepin" should be displayed on this page
+    // The original county "Anoka" should be displayed on this page
     assertNotNull(testPage.findElementById("original-county"));
-    // The enriched county "someCounty" should be displayed on this page
+    // The enriched county "Hennepin" should be displayed on this page
     assertNotNull(testPage.findElementById("enriched-county"));
     testPage.clickContinue("Contact Info");
     

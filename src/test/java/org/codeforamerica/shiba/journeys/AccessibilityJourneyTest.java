@@ -324,7 +324,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickButtonLink("This looks correct", "Do you want to add household members?");
     
     testPage.enter("addHouseholdMembers", YES.getDisplayValue());
-    testPage.clickButtonLink("Continue", "Housemate: Personal Info");
+    testPage.clickButtonLink("Continue", "Housemate: Personal Info");//TODO emj failed here random
     
     testPage.enter("relationship", "Other");
     testPage.enter("programs", PROGRAM_CCAP);
@@ -364,7 +364,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
     testPage.clickContinue("Nations Boundary");
     testPage.enter("livingInNationBoundary", NO.getDisplayValue());
-    testPage.clickButtonLink("Continue", "Employment status");
+    testPage.clickButtonLink("Continue", "Employment status");//TODO emj failed here random
     testPage.enter("areYouWorking", YES.getDisplayValue());
     testPage.clickButtonLink("Add a job", "Household selection for income");
     testPage.enter("whoseJobIsIt", "householdMemberFirstName householdMemberLastName");
