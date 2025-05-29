@@ -902,8 +902,11 @@ input[type=number] {
   url(/fonts/MaterialIcons-Regular.svg?ia7soh#MaterialIcons-Regular) format("svg");
   font-weight: normal;
   font-style: normal;
-  
 }
+
+.lang-translate{
+  font-weight: normal;
+  }
 
 .select:after,
 .scroller:before,
