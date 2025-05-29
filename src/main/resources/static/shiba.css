@@ -161,7 +161,9 @@
 .slab--minnesota-light-blue {
   background-color: #EFF6FF;
 }
-
+.tagline-foot-blue {
+  background-color: #cce8ff;
+}
 
 .footer-minnesota-blue {
   color: #FFF;
@@ -1754,6 +1756,12 @@ legend.form-question {
   .grid-ignore-mobile .end-row + .grid__item {
     clear: left;
   }
+}
+.language-link {
+	color: #113163;
+	font-weight: bold;
+  margin: 10px;
+  display: inline-block;
 }
 
 @media screen and (-ms-high-contrast: white-on-black) {
