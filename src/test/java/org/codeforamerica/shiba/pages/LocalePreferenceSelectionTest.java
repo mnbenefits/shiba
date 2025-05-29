@@ -43,7 +43,7 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
 
   @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
-  void userCanSeeSpanishWhenReadOrWriteSpanishIsSelectedOnLanguagePreferences() {
+  void selectingSpanishForWrittenLanguagePreferenceDoesNotChangeFlowLocaleToSpanish() {
     testPage.clickButton("Apply now");
     testPage.enter("county", "Hennepin");
     testPage.clickContinue();
@@ -51,12 +51,11 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
     testPage.clickContinue();
     testPage.enter("writtenLanguage", "Español");
 
-    testPage.clickButton("Continuar");
+    testPage.clickButton("Continue");
 
-    //TODO: uncomment the following line after the Spanish translation is provided
-    //assertThat(driver.getTitle()).isEqualTo("Preferencias de idioma - Hablado");
+    assertThat(driver.getTitle()).isEqualTo("Language Preferences - Spoken");
     
     WebElement selectedOption = testPage.getSelectedOption("locales");
-    assertThat(selectedOption.getText()).isEqualTo("Español");
+    assertThat(selectedOption.getText()).isEqualTo("English");
   }
 }

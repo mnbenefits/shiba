@@ -561,7 +561,7 @@ pageDefinitions:
                 messageKey: language-preferences.Amharic
                 lang: am
               - value: ENGLISH
-                messageKey: language-preferences.english
+                messageKey: language-preferences.English
                 lang: en
               - value: SPANISH
                 messageKey: language-preferences.Spanish
@@ -622,7 +622,7 @@ pageDefinitions:
                     value: "true"
             options:
               selectableOptions:
-                - value: AMERICAN_SIGN_LANGUAGE
+                - value: AMERICAN SIGN LANGUAGE
                   messageKey: language-preferences.American-sign-language
                   lang: ase
                 - value: ARABIC
@@ -632,7 +632,7 @@ pageDefinitions:
                   messageKey: language-preferences.Amharic
                   lang: am				  
                 - value: ENGLISH
-                  messageKey: language-preferences.english
+                  messageKey: language-preferences.English
                   lang: en
                 - value: SPANISH
                   messageKey: language-preferences.Spanish
