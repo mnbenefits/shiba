@@ -336,25 +336,26 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
     testPage.enter("whoNeedsChildCare", "householdMemberFirstName householdMemberLastName");
+    //TODO emj this test seems to skip the doYouHaveChildCareProvider page
     testPage.clickContinue("Who are the children that have a parent not living in the home?");
     testPage.enter("whoHasAParentNotLivingAtHome",
         "None of the children have parents living outside the home");
     testPage.clickContinue("Preparing meals together");
-    testPage.enter("isPreparingMealsTogether", YES.getDisplayValue());
-    testPage.enter("hasHousingSubsidy", NO.getDisplayValue());
+    testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Housing subsidy");
+    testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
     testPage.enter("livingSituation", "None of these");
     testPage.clickContinue("Going to school");
-    testPage.enter("goingToSchool", NO.getDisplayValue());
-    testPage.enter("isPregnant", YES.getDisplayValue());
+    testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Pregnant");
+    testPage.chooseYesOrNo("isPregnant", YES.getDisplayValue(), "Household: pregnant");
     testPage.enter("whoIsPregnant", "Me");
     testPage.clickContinue("Expedited Migrant Farm Worker, Household");
     testPage.enter("migrantOrSeasonalFarmWorker", NO.getDisplayValue());
-    testPage.enter("isUsCitizen", NO.getDisplayValue());
+    testPage.chooseYesOrNo("isUsCitizen", NO.getDisplayValue(), "U.S. Citizen");
     testPage.enter("whoIsNonCitizen", "Me");
     testPage.clickContinue("Disability");
-    testPage.enter("hasDisability", NO.getDisplayValue());
-    testPage.enter("hasWorkSituation", NO.getDisplayValue());
-    testPage.enter("isTribalNationMember", YES.getDisplayValue());
+    testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work situation");
+    testPage.chooseYesOrNo("hasWorkSituation", NO.getDisplayValue(), "Tribal Nation member");
+    testPage.chooseYesOrNo("isTribalNationMember", YES.getDisplayValue(), "Select a Tribal Nation");
     testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
     testPage.clickContinue("Nations Boundary");
     testPage.chooseYesOrNo("livingInNationBoundary", NO.getDisplayValue(),"Intro: Income");
@@ -376,8 +377,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     testPage.enter("employersName", "some employer");
     testPage.clickContinue("Self-employment");
-    testPage.enter("selfEmployment", YES.getDisplayValue());
-    testPage.enter("paidByTheHour", YES.getDisplayValue());
+    testPage.chooseYesOrNo("selfEmployment", YES.getDisplayValue(), "Paid by the hour");
+    testPage.chooseYesOrNo("paidByTheHour", YES.getDisplayValue(), "Hourly wage");
 
     // Check aria-label is correct then enter incorrect value to throw error and check all aria properties have updated
     testPage.enter("hourlyWage", "-10");
@@ -401,7 +402,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Job Builder");
     testPage.clickButtonLink("No, that's it.", "Job Search");
     // drill down to futureIncome page
-    testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
+    testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
     testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "None of the above");
     testPage.clickButton("Continue", "Unearned Income");
@@ -416,7 +417,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.goBack();
     
     testPage.clickButtonLink("No, that's it.", "Job Search");
-    testPage.enter("currentlyLookingForJob", NO.getDisplayValue());
+    testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
     testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "Social Security");
 
@@ -450,27 +451,27 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Expedited Utility Payments, Household");
     testPage.enter("payForUtilities", "Heating");
     testPage.clickContinue("Energy Assistance");
-    testPage.enter("energyAssistance", YES.getDisplayValue());
-    testPage.enter("energyAssistanceMoreThan20", YES.getDisplayValue());
+    testPage.chooseYesOrNo("energyAssistance", YES.getDisplayValue(), "Energy Assistance More Than 20");
+    testPage.chooseYesOrNo("energyAssistanceMoreThan20", YES.getDisplayValue(), "Medical expenses");
     testPage.enter("medicalExpenses", "None of the above");
     testPage.clickContinue("Support and Care");
-    testPage.enter("supportAndCare", YES.getDisplayValue());
+    testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Assets");
     testPage.enter("assets", "A vehicle");
     testPage.enter("assets", "Real estate (not including your own home)");
     testPage.clickContinue("Savings");
-    testPage.enter("haveSavings", YES.getDisplayValue());
+    testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Expedited Cash, Household");
     testPage.enter("liquidAssets", "1234");
     testPage.clickContinue("Sold assets");
-    testPage.enter("haveSoldAssets", NO.getDisplayValue());
+    testPage.chooseYesOrNo("haveSoldAssets", NO.getDisplayValue(), "Submitting Application");
     testPage.clickButtonLink("Continue", "Register to vote");
 
     testPage.clickCustomButton("Yes, send me more info", 10, "Healthcare Coverage");
     testPage.enter("healthcareCoverage", YES.getDisplayValue());
     testPage.clickContinue("Authorized Rep");
-    testPage.enter("helpWithBenefits", YES.getDisplayValue());
-    testPage.enter("communicateOnYourBehalf", YES.getDisplayValue());
-    testPage.enter("getMailNotices", YES.getDisplayValue());
-    testPage.enter("authorizedRepSpendOnYourBehalf", YES.getDisplayValue());
+    testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
+    testPage.chooseYesOrNo("communicateOnYourBehalf", YES.getDisplayValue(), "Authorized Rep mail and notices");
+    testPage.chooseYesOrNo("getMailNotices", YES.getDisplayValue(), "Authorized Rep spend on your behalf");
+    testPage.chooseYesOrNo("authorizedRepSpendOnYourBehalf", YES.getDisplayValue(), "Authorized Rep contact info");
     testPage.enter("authorizedRepFullName", "defaultFirstName defaultLastName");
     testPage.enter("authorizedRepStreetAddress", "someStreetAddress");
     testPage.enter("authorizedRepCity", "someCity");
