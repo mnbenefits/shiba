@@ -181,7 +181,7 @@ public class LaterDocsJourneyTest extends JourneyTest {
   
   @Test
   void laterDocsTribalNationFlow() {
-	  testPage.clickButtonLink("Upload documents", "Ready to upload documents");//TODO emj fails here on Github
+	  testPage.clickButtonLink("Upload documents", "Ready to upload documents");
 
     assertThat(driver.getTitle()).isEqualTo("Ready to upload documents");
     assertNotNull(testPage.findElementById("headerMNbenefits"));

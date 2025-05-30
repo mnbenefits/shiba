@@ -86,8 +86,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		goBackToPage("Choose Programs");
 
 		selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops();
-
-		fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber", "WI");
+		enterOutOfStateHomeAndMailingAddress();
+		//fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber", "WI");
 		goToContactAndReview();
 
 		addSpouseAndVerifySpouseCanSelectCertainPops();
@@ -572,13 +572,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
 		assertCcapFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
 		assertCcapFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
-		assertCcapFieldEquals("APPLICANT_MAILING_ZIPCODE", "23456");
-		assertCcapFieldEquals("APPLICANT_MAILING_CITY", "someCity");
-		assertCcapFieldEquals("APPLICANT_MAILING_STATE", "IL");
-		assertCcapFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
-		assertCcapFieldEquals("APPLICANT_HOME_CITY", "someCity");
+		assertCcapFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
+		assertCcapFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
+		assertCcapFieldEquals("APPLICANT_MAILING_STATE", "MN");
+		assertCcapFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+		assertCcapFieldEquals("APPLICANT_HOME_CITY", "OutOfState City");
 		assertCcapFieldEquals("APPLICANT_HOME_STATE", "MN");
-		assertCcapFieldEquals("APPLICANT_HOME_ZIPCODE", "12345");
+		assertCcapFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
 		assertCcapFieldEquals("HOUSING_SUBSIDY", "Yes");
 		assertCcapFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
 		assertCcapFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH"); // TODO: Fix this when the preparer change
@@ -595,7 +595,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_SEX", "FEMALE");
 		assertCcapFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
 		assertCcapFieldEquals("APPLICANT_EMAIL", "some@example.com");
-		assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
+		assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME_0", "");
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_GOING_TO_SCHOOL_FULL_NAME_0", "");
 		assertCcapFieldEquals("STUDENT_FULL_NAME_0", householdMemberFullName);
@@ -705,11 +705,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("GARBAGE_REMOVAL", "No");
 		assertCafFieldEquals("COOKING_FUEL", "No");
 		assertCafFieldEquals("PHONE", "No");
-		assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "23456");
-		assertCafFieldEquals("APPLICANT_MAILING_CITY", "someCity");
-		assertCafFieldEquals("APPLICANT_MAILING_STATE", "IL");
-		assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
-		assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "someApartmentNumber");
+		assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
+		assertCafFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
+		assertCafFieldEquals("APPLICANT_MAILING_STATE", "MN");
+		assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+		assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "1b");
 		assertCafFieldEquals("SSI", "No");
 		assertCafFieldEquals("VETERANS_BENEFITS", "No");
 		assertCafFieldEquals("UNEMPLOYMENT", "No");
@@ -726,10 +726,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("SELF_EMPLOYED", "Yes");
 		assertCafFieldEquals("SELF_EMPLOYED_GROSS_MONTHLY_EARNINGS", "see question 9");
 		assertCafFieldEquals("PAY_FREQUENCY_0", "Hourly");
-		assertCafFieldEquals("APPLICANT_HOME_APT_NUMBER", "someApartmentNumber");
-		assertCafFieldEquals("APPLICANT_HOME_CITY", "someCity");
+		assertCafFieldEquals("APPLICANT_HOME_APT_NUMBER", "1b");
+		assertCafFieldEquals("APPLICANT_HOME_CITY", "OutOfState City");
 		assertCafFieldEquals("APPLICANT_HOME_STATE", "MN");
-		assertCafFieldEquals("APPLICANT_HOME_ZIPCODE", "12345");
+		assertCafFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
 		assertCafFieldEquals("HOUSING_SUBSIDY", "Yes");
 		assertCafFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
 		assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "ONE_SELECTED");
@@ -806,7 +806,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("RELATIONSHIP_0", "child");
 		assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED");
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
-		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
+		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
 		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.00");
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
@@ -858,15 +858,15 @@ public class FullFlowJourneyTest extends JourneyTest {
 																					// change is implemented
 		assertCertainPopsFieldEquals("NEED_INTERPRETER", "Yes"); // TODO: Fix this when the preparer change is
 																	// implemented
-		assertCertainPopsFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
-		assertCertainPopsFieldEquals("APPLICANT_HOME_CITY", "someCity");
+		assertCertainPopsFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
+		assertCertainPopsFieldEquals("APPLICANT_HOME_CITY", "OutOfState City");
 		assertCertainPopsFieldEquals("APPLICANT_HOME_STATE", "MN");
-		assertCertainPopsFieldEquals("APPLICANT_HOME_ZIPCODE", "12345");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_ZIPCODE", "23456");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_CITY", "someCity");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_STATE", "IL");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "");
+		assertCertainPopsFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
+		assertCertainPopsFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
+		assertCertainPopsFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
+		assertCertainPopsFieldEquals("APPLICANT_MAILING_STATE", "MN");
+		assertCertainPopsFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+		assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "Chisago");
 		assertCertainPopsFieldEquals("MEDICAL_IN_OTHER_STATE", "Off");
 		assertCertainPopsFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
 		assertCertainPopsFieldEquals("HH_HEALTHCARE_COVERAGE_0", "Yes");
@@ -951,10 +951,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		goToPageBeforeSelectPrograms("Chisago");
 
 		selectProgramsWithoutCertainPopsAndEnterPersonalInfo(List.of(PROGRAM_CASH));
-		fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "someApartmentNumber");
+		fillOutHomeAndMailingAddressWithoutEnrich("03104", "Cooltown", "smarty street", "1b");
 
-		// fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress",
-		// "someApartmentNumber");
 		fillOutContactAndReview(true, "Chisago");
 
 		testPage.clickButtonLink("This looks correct", "Do you want to add household members?");

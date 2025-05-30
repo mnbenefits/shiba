@@ -36,7 +36,6 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     getToHomeAddress("Hennepin", programSelections);
 
     // Where are you currently Living?
-    //Use smarty mock object Address("smarty street", "Cooltown", "MN", "03104", "1b", "Hennepin")
     fillOutHomeAndMailingAddress("03104", "Cooltown", "smarty street", "1b", "MN");
     
     fillOutContactAndReview(true, "Hennepin");

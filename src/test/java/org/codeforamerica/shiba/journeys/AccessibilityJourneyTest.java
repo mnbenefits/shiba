@@ -1,7 +1,6 @@
 package org.codeforamerica.shiba.journeys;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,7 +14,6 @@ import java.util.Map;
 
 import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
-import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AccessibilityTestPage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -285,10 +283,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickButtonLink("Continue", "Timeout notice");
     testPage.clickButtonLink("Continue", "Language Preferences - Written");
     testPage.enter("writtenLanguage", "English");
-   // testPage.enter("spokenLanguage", "English");
-   // testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue("Language Preferences - Spoken");
-    // spokenSameAsWritten[]
     testPage.enter("spokenSameAsWritten", "Same as the language I read or write");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue("Choose Programs");
@@ -307,8 +302,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("moveToMnDate", "02/18/1776");
     testPage.enter("moveToMnPreviousCity", "Chicago");
     testPage.clickContinue("Home Address");
-    // use the address the Smarty Mock object returns: Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty")
-    fillOutHomeAndMailingAddress("03104", "Cooltown", "smarty street", "1b", "MN"); //TODO failed here using the original address
+    fillOutHomeAndMailingAddress("03104", "Cooltown", "smarty street", "1b", "MN"); 
     testPage.enter("phoneNumber", "134567890");
     testPage.clickContinue("Contact Info");
     assertThat(testPage.hasInputError("phoneNumber")).isTrue();
@@ -323,8 +317,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     testPage.clickButtonLink("This looks correct", "Do you want to add household members?");
     
-    testPage.enter("addHouseholdMembers", YES.getDisplayValue());
-    testPage.clickButtonLink("Continue", "Housemate: Personal Info");//TODO emj failed here random
+    testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
+    testPage.clickButtonLink("Continue", "Housemate: Personal Info");
     
     testPage.enter("relationship", "Other");
     testPage.enter("programs", PROGRAM_CCAP);
@@ -363,8 +357,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("isTribalNationMember", YES.getDisplayValue());
     testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
     testPage.clickContinue("Nations Boundary");
-    testPage.enter("livingInNationBoundary", NO.getDisplayValue());
-    testPage.clickButtonLink("Continue", "Employment status");//TODO emj failed here random
+    testPage.chooseYesOrNo("livingInNationBoundary", NO.getDisplayValue(),"Intro: Income");
+    testPage.clickButtonLink("Continue", "Employment status");
     testPage.enter("areYouWorking", YES.getDisplayValue());
     testPage.clickButtonLink("Add a job", "Household selection for income");
     testPage.enter("whoseJobIsIt", "householdMemberFirstName householdMemberLastName");

@@ -8,9 +8,11 @@ import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
@@ -138,7 +140,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
     // Where are you currently Living?
-    //Smarty mock client object Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty")
     String homeZip = "03104";
     String homeCity = "Cooltown";
     String homeStreetAddress = "smarty street";
@@ -246,7 +247,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
     assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "1b");
     assertCafFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
-    assertCafFieldEquals("APPLICANT_MAILING_STATE", "MN");
+    assertCafFieldEquals("APPLICANT_MAILING_STATE", "CA");
     assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
   }
 
@@ -263,8 +264,9 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("city", "someCity");
     testPage.enter("streetAddress", "someStreetAddress");
     testPage.enter("apartmentNumber", "someApartmentNumber");
-    // The SmartyStreet "address found" response is mocked in the SmartyStreetClientMock class
-
+    when(smartyStreetClient.validateAddress(any())).thenReturn(
+            Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
+        );
     testPage.clickContinue("Out of State Address Notice");
     
     // Page title: Out of State Address Notice
@@ -309,6 +311,10 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     
     // Change the state to MN
     testPage.enter("state",  "MN");
+    // mock a SmartyStreet "address found" response
+    when(smartyStreetClient.validateAddress(any())).thenReturn(
+        Optional.of(new Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty"))
+    );
     testPage.clickContinue("Mailing address");
     
     // Page title: Mailing address
@@ -345,6 +351,10 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.goBack(); // to the Home address page
     
     testPage.enter("state",  "WI");
+    // mock a SmartyStreet "address found" response
+    when(smartyStreetClient.validateAddress(any())).thenReturn(
+        Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
+    );
     testPage.clickContinue("Out of State Address Notice");
     
     // Page title: Out of State Address Notice

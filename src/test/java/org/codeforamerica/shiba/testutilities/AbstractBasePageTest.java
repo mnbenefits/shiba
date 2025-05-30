@@ -33,7 +33,6 @@ import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.codeforamerica.shiba.DocumentRepositoryTestConfig;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.enrichment.Address;
-import org.codeforamerica.shiba.pages.enrichment.smartstreets.SmartyStreetClientMock;
 import org.codeforamerica.shiba.pages.enrichment.smartystreets.SmartyStreetClient;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,8 +47,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT) //, classes = { SmartyStreetClient.class, SmartyStreetsClientMock.class, OverrideSmartyStreetsBeanTestConfig.class }, 
-//properties = "spring.main.allow-bean-definition-overriding=true")
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @Import({WebDriverConfiguration.class, DocumentRepositoryTestConfig.class})
 @ActiveProfiles("test")
 public abstract class AbstractBasePageTest {
@@ -200,7 +198,6 @@ public abstract class AbstractBasePageTest {
   }
 
   protected void fillOutPersonalInfo() {
-    //navigateTo("personalInfo");//TODO emj commented this, seems redundant
     fillOutPersonInfo();
     testPage.enter("moveToMnPreviousCity", "Chicago");
   }

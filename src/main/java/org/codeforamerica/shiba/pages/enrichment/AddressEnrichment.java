@@ -21,11 +21,8 @@ public abstract class AddressEnrichment implements Enrichment {
 
   @Override
   public PageData process(PagesData pagesData) {
-	log.info("AddressEnrichment process pagesData: " + pagesData.entrySet().toString());//TODO emj delete
     Address address = parseAddress(pagesData);
-    log.info("AddressEnrichment process address is parsed");
     if (address.getStreet() == null) {
-    	log.info("AddressEnrichment process street is null");
       return new PageData();
     }
     return locationClient.validateAddress(address)

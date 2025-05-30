@@ -27,7 +27,6 @@ public class HomeAddressEnrichment extends AddressEnrichment {
 
   @Override
   protected Address parseAddress(PagesData pagesData) {
-	  log.info("HomeAddressEnrichment parseAddress");//TODO emj delete
     return new Address(
         getFirstValue(pagesData, HOME_STREET),
         getFirstValue(pagesData, HOME_CITY),

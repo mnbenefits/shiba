@@ -5451,6 +5451,7 @@ workflow:
     nextPages:
       - pageName: verifyCounty
         condition:
+          name: homeStateIsMN
           pageName: homeAddress
           input: state
           matcher: CONTAINS_ONLY

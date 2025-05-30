@@ -17,11 +17,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import org.openqa.selenium.interactions.Actions;
-
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j //TODO emj delete this annotation
 public class Page {
 
   protected final RemoteWebDriver driver;
@@ -129,8 +124,7 @@ public class Page {
 		        .findFirst()
 		        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
 
-		   // buttonToClick.click();
-	    // Instead of click(), sendKeys(Keys.RETURN) is supposed to be more reliable. This may work too: .sendKeys(Keys.ENTER); 
+	    // Instead of click(), sendKeys(Keys.RETURN) is supposed to be more reliable. This works too: .sendKeys(Keys.ENTER); 
 		    buttonToClick.sendKeys(Keys.RETURN);
 	    
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
@@ -158,7 +152,7 @@ public class Page {
 	        .filter(button -> button.getText().contains(buttonText))
 	        .findFirst()
 	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-	    buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test thi
+	    buttonToClick.sendKeys(Keys.RETURN); 
 	    
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
@@ -185,7 +179,7 @@ public class Page {
         .findFirst()
         .orElseThrow(
             () -> new RuntimeException("No button link found containing text: " + buttonLinkText));
-    buttonToClick.sendKeys(Keys.RETURN);//click(); //TODO emj testing this
+    buttonToClick.sendKeys(Keys.RETURN);
   }
   
   /**
@@ -200,7 +194,7 @@ public class Page {
 	        .findFirst()
 	        .orElseThrow(
 	            () -> new RuntimeException("No link found containing text: " + buttonLinkText));
-	    buttonToClick.sendKeys(Keys.RETURN);//click(); //TODO emj testing this
+	    buttonToClick.sendKeys(Keys.RETURN);
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
@@ -210,7 +204,7 @@ public class Page {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver
 				.findElement(By.xpath("//button[@aria-controls=\"" + buttonattributeText + "\"]"));
-		buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test thi
+		buttonToClick.sendKeys(Keys.RETURN); 
 	}
 
 	@Deprecated
@@ -228,7 +222,7 @@ public class Page {
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.sendKeys(Keys.RETURN); //click();  TODO emj testing this
+		buttonToClick.sendKeys(Keys.RETURN); 
 	}
   
   /**
@@ -250,7 +244,7 @@ public class Page {
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.sendKeys(Keys.ENTER);  //.click();//TODO emj test this
+		buttonToClick.sendKeys(Keys.ENTER);
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPageTitle));
@@ -266,7 +260,7 @@ public class Page {
 		WebElement buttonToClick = driver.findElements(By.className("link--subtle")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.sendKeys(Keys.ENTER);  //.click();//TODO emj test this
+		buttonToClick.sendKeys(Keys.ENTER);
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPageTitle));
@@ -287,12 +281,11 @@ public class Page {
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.elementToBeClickable(buttonToClick));
-		buttonToClick.sendKeys(Keys.ENTER);  //.click();//TODO emj test this RETURN works too
-
+		buttonToClick.sendKeys(Keys.ENTER);
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	}
 	
-	/** TODO emj needs work. Need to find by value attribute, may need to use xpath.
+	/** 
 	 * Pages with Yes and No buttons may have different names for the buttons.
 	 * Use this method to submit pages with Yes/No buttons.
 	 * @param buttonName
@@ -306,7 +299,7 @@ public class Page {
 				.filter(button -> button.findElement(By.xpath("value")).getText().contains(buttonValue)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonValue));
 
-		buttonToClick.sendKeys(Keys.RETURN);  //.click();//TODO emj test this
+		buttonToClick.sendKeys(Keys.RETURN); 
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
@@ -355,7 +348,7 @@ public void chooseYesOrNo(String inputName, String value, String nextPage) {
         .filter(button -> button.getText().contains(value))
         .findFirst()
         .orElseThrow();
-    buttonToClick.sendKeys(Keys.ENTER);//click();TODO emj test this
+    buttonToClick.sendKeys(Keys.ENTER);
 	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 	WebDriverWait wait = new WebDriverWait(driver, duration);
 	wait.until(ExpectedConditions.titleContains(nextPage));
@@ -413,7 +406,7 @@ public void chooseYesOrNo(String inputName, String value, String nextPage) {
         .filter(button -> button.getText().contains(value))
         .findFirst()
         .orElseThrow();
-    buttonToClick.sendKeys(Keys.ENTER);//click();TODO emj test this
+    buttonToClick.sendKeys(Keys.ENTER);
   }
 
   public void selectFromDropdown(String inputName, String optionText) {
@@ -509,13 +502,11 @@ public void chooseYesOrNo(String inputName, String value, String nextPage) {
   }
 
   /**
-   * TODO emj 
-   * Javadoc for findElement: Find the first WebElement using the given method. 
+   * 
+   * Javadoc for findElement tells us: Find the first WebElement using the given method. 
    * This method is affected by the'implicit wait' times in force at the time of execution. 
    * The findElement(..) invocation will return a matching row, or try again repeatedly until the configured timeout is reached. 
-
 <b>findElement should not be used to look for non-present elements, use findElements(By) and assert zero length response instead. </b>
-
    * @param inputName
    * @return
    */

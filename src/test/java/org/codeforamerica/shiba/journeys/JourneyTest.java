@@ -7,7 +7,6 @@ import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
 import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -26,13 +25,11 @@ import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
-import org.codeforamerica.shiba.UploadDocumentConfiguration;
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.emails.MailGunEmailClient;
 import org.codeforamerica.shiba.pages.enrichment.Address;
-import org.codeforamerica.shiba.pages.enrichment.smartstreets.SmartyStreetClientMock;
 import org.codeforamerica.shiba.pages.enrichment.smartystreets.SmartyStreetClient;
 import org.codeforamerica.shiba.pages.events.ApplicationSubmittedEvent;
 import org.codeforamerica.shiba.pages.events.PageEvent;
@@ -47,7 +44,6 @@ import org.mockito.ArgumentCaptor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.test.context.bean.override.convention.TestBean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
@@ -60,9 +56,8 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   @MockitoBean
   protected Clock clock;
- // @MockitoBean
-  @TestBean(name = "locationClient", methodName = "smartyStreetClientMock")
-  protected SmartyStreetClientMock smartyStreetClientMock;
+  @MockitoBean
+  protected SmartyStreetClient smartyStreetClient;
   @MockitoSpyBean
   protected DocumentRepository documentRepository;
   @MockitoBean
@@ -73,12 +68,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
   protected MailGunEmailClient mailGunEmailClient;
   @MockitoBean
   protected FeatureFlagConfiguration featureFlagConfiguration;
-  //@MockitoSpyBean
- //protected UploadDocumentConfiguration uploadDocumentConfiguration;
-  
-  public static SmartyStreetClientMock smartyStreetClientMock() {
-	  return SmartyStreetClientMock.buildMock();
-  }
 
   @Override
   @BeforeEach
@@ -87,6 +76,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     driver.navigate().to(baseUrl);
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
+    when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
     caf = null;
     ccap = null;
     certainPops = null;
@@ -221,10 +211,10 @@ abstract class JourneyTest extends AbstractBasePageTest {
     
 
     if (programSelections.contains(PROGRAM_CERTAIN_POPS)) {
-      testPage.clickContinue("Intro: Basic Info");//TODO emj fix this
+      testPage.clickContinue("Intro: Basic Info");
       // Test Certain pops offboarding flow first by selecting None of the above
       testPage.enter("basicCriteria", "None of the above");
-      testPage.clickContinue();
+      testPage.clickContinue();//TODO emj change this and others below
       assertThat(testPage.getTitle()).isEqualTo("Certain Pops Offboarding");
       testPage.clickContinue();
       assertThat(testPage.getTitle()).isEqualTo("Add other programs");
@@ -257,9 +247,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     	testPage.clickButtonLink("Continue", "Intro: Basic Info");
     	testPage.clickButtonLink("Continue", "Personal Info");
     }
-   // testPage.clickContinue("Intro: Basic Info");
-    // Getting to know you (Personal Info intro page)
-    //testPage.clickButtonLink("Continue", "Personal Info");
 
     // Personal Info
     testPage.enter("firstName", "Ahmed");
@@ -303,25 +290,50 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("streetAddress", homeStreetAddress);
     testPage.enter("state", homeState);
     testPage.enter("apartmentNumber", homeApartmentNumber);
-
     testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
-   
-    // Original comment: Where can the county send your mail? (accept the smarty streets enriched address)
-    //Address the Smarty mock object returns("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty")
     testPage.enter("zipCode", "03104");
     testPage.enter("city", "Cooltown");
     testPage.enter("streetAddress", "smarty street");
     testPage.enter("state", "MN");
     testPage.enter("apartmentNumber", "1b");
-    //takeSnapShot("address.png");//TODO emj delete
+    when(smartyStreetClient.validateAddress(any())).thenReturn(
+            Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+        );
+
     testPage.clickContinue("Address Validation");
-    //The mock Address is this that is configured in SmartyStreetClientMock:
-    // ("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"));
-    //TODO emj fix the mock address and page flow from here
-    //takeSnapShot("addressValidation.png");//TODO emj delete
- // "Use this address" button is shown when Smarty Streets can't find the address
-    //testPage.clickButton("Continue", "County Validation");
-    testPage.clickButton("Continue", "Contact Info");
+    testPage.clickButton("Continue", "County Validation");
+    testPage.clickButtonLink("Use this county", "Contact Info");
+  }
+  
+  /**
+   * Enter out of state address and confirm it can be changed with "Edit my address" link.
+   */
+  protected void enterOutOfStateHomeAndMailingAddress(){
+	    testPage.enter("zipCode", "88888");
+	    testPage.enter("city", "OutOfState City");
+	    testPage.enter("streetAddress", "123 Some Street");
+	    testPage.enter("state", "CA");
+	    testPage.enter("apartmentNumber", "1b");
+	    when(smartyStreetClient.validateAddress(any())).thenReturn(
+	            Optional.of(new Address("smarty street", "Cooltown", "CA", "03104", "1b", "someCounty"))
+	        );
+	    testPage.clickButtonWithRetry("Continue", 10, "Out of State Address Notice");
+	    testPage.clickCustomLink("Edit my address", "Home Address");
+	    assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("CA");
+	    testPage.enter("state", "MN");
+	    when(smartyStreetClient.validateAddress(any())).thenReturn(
+	            Optional.of(new Address("smarty street", "Cooltown", "MN", "03104", "1b", "Chisago"))
+	        );
+	    testPage.clickContinue("Mailing address"); // go to the mailing address page
+	    assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("MN"); // mailing address page default state is MN
+	    assertThat(testPage.getTitle()).isEqualTo("Mailing address");    
+	    testPage.enter("zipCode", "03104");
+	    testPage.enter("city", "Cooltown");
+	    testPage.enter("streetAddress", "smarty street");
+	    testPage.enter("state", "MN");
+	    testPage.enter("apartmentNumber", "1b");
+	    testPage.clickButtonWithRetry("Continue", 10, "Address Validation");
+	    testPage.clickContinue("Contact Info");
   }
   
   /**
@@ -345,12 +357,13 @@ abstract class JourneyTest extends AbstractBasePageTest {
     assertThat(testPage.findElementTextById("form-submit-button").equalsIgnoreCase("Continue"));
     testPage.clickButtonWithRetry("Continue", 20, "Mailing address");
     assertThat(testPage.getTitle()).isEqualTo("Mailing address");
-    testPage.enter("zipCode", "23456");
-    testPage.enter("city", "someCity");
-    testPage.enter("streetAddress", "someStreetAddress");
-    testPage.enter("state", "IL");
-    testPage.enter("apartmentNumber", "someApartmentNumber");
+    testPage.enter("zipCode", "03104");
+    testPage.enter("city", "Cooltown");
+    testPage.enter("streetAddress", "smarty street");
+    testPage.enter("state", "MN");
+    testPage.enter("apartmentNumber", "1b");
     testPage.clickContinue("Address Validation");
+   
  // "Use this address" button is shown when Smarty Streets can't find the address
     testPage.clickButton("Use this address", "County Validation");
     testPage.clickButtonLink("Edit my county", "Identify County");
@@ -364,7 +377,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("email", "some@example.com");
     testPage.clickContinue("No phone number confirmation");
     assertThat(testPage.getTitle()).contains("No phone number confirmation");
-    //testPage.goBack();
     testPage.clickButtonLink("Add a phone number", "Contact Info");
 
     // How can we get in touch with you?
