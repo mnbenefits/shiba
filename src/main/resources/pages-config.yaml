@@ -613,6 +613,7 @@ pageDefinitions:
         followUps:   
           - name: spokenLanguage
             type: RADIO
+            ariaDescribedbyInput: spokenSameAsWritten
             validators:
                - validation: SELECT_AT_LEAST_ONE
                  errorMessageKey: general.validation.make-sure-you-answer-this-question
