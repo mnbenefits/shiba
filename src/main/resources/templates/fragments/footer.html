@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<footer id="footerMNbenefits" th:fragment="footer" class="main-footer footer-minnesota-blue">
+<div th:fragment="footer">
+    <div th:unless="${noTagline}">
+        <div th:replace="~{fragments/tagline-footer :: tagline-footer}">
+        </div>
+    </div>
+<footer id="footerMNbenefits" class="main-footer footer-minnesota-blue">
     <div class="grid">
         <div class="grid__item">
             <div class="width-one-half grid__item">
@@ -18,4 +23,5 @@
         </div>
     </div>
 </footer>
+</div>
 </html>
