@@ -625,7 +625,23 @@ form .drag-and-drop-box-compact {
 .textarea {
   resize: none;
 }
-
+@media (max-width: 768px) {
+  .tagline-center-horizontally {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  } 
+}
+.tagline-spacing {
+	margin-top: 15px;
+	}
+@media (max-width: 768px) {
+  .tagline-spacing {
+    margin-bottom: 15px;
+	font-weight: bold;
+  } 
+}
 input:checked + .feedback-buttons {
   border: 2px solid #000000;
 }
@@ -1763,8 +1779,8 @@ legend.form-question {
 .language-link {
 	color: #113163;
 	font-weight: bold;
-  margin: 10px;
-  display: inline-block;
+    margin: 10px;
+    display: inline-block;
 }
 
 @media screen and (-ms-high-contrast: white-on-black) {
