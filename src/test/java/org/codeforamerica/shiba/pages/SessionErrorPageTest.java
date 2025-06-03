@@ -22,19 +22,19 @@ public class SessionErrorPageTest extends AbstractBasePageTest {
 
     @Test
     void shouldDisplaySessionTimeoutPage() throws InterruptedException {
-        testPage.clickButton("Apply now");
+        testPage.clickButtonLink("Apply now", "Identify County");
         TimeUnit time = TimeUnit.SECONDS;
         time.sleep(6); // Sleep for 5 seconds + a margin
-        testPage.clickButton("Continue");
+        testPage.clickButton("Continue", "Timeout");
         assertThat(driver.getTitle()).isEqualTo("Timeout");
     }
     
     @Test
     void shouldDisplayErrorUploadTimeoutPage() throws InterruptedException {
-        testPage.clickButton("Upload documents");
+        testPage.clickButtonLink("Upload documents", "Ready to upload documents");
         TimeUnit time = TimeUnit.SECONDS;
         time.sleep(6); // Sleep for 5 seconds + a margin
-        testPage.clickButton("Continue");
+        testPage.clickButtonLink("Continue", "Doc Upload Timeout");
         assertThat(driver.getTitle()).isEqualTo("Doc Upload Timeout");
     }
 }
