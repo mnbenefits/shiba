@@ -6,7 +6,6 @@
               hasError=${!data.isValid() && !inputData.valid(data)},
               hasHelpMessage=${input.helpMessageKey != null},
               hasHelpMessageBelow=${input.helpMessageKeyBelow != null},
-              needsAriaLabel=${input.needsAriaLabel()},
               hasAriaDescribedbyInput=${input.ariaDescribedbyInput != null},
               ariaDescribedbyId=${hasAriaDescribedbyInput ? input.ariaDescribedbyInput + '-help-message' : (hasHelpMessage ? input.name + '-help-message' : '')}"
      class="form-group">
@@ -29,8 +28,7 @@
                                th:name="${formInputName}"
                                th:checked="${inputData.value.contains(option.value)}"
                                th:attr="aria-describedby=${ariaDescribedbyId},
-                                        aria-invalid=${hasError},
-                                        aria-label=${needsAriaLabel ? input.name : ''}"
+                                        aria-invalid=${hasError}"
                                th:attrappend="data-follow-up=${input.followUpValues.contains(option.value)} ? |#${input.name}-follow-up| : ''">
                         <div th:if="${option.getHelpIcon() != null}"
                              class="checkbox-icons">
