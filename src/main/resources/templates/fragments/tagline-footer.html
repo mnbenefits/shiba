@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="tagline-footer">
-<footer id="taglineMNbenefits" class="main-footer slab--minnesota-light-blue">
-    <div class="grid">
-		<div class="tagline-center-horizontally tagline-spacing grid__item width-auto-left">
+<footer id="taglineMNbenefits" class="main-footer tagline-foot-blue">
+    <div class="grid tagline-footer-no-english">
+		<div class="tagline-center-horizontally tagline-spacing width-auto-left">
 			<span> <strong>No English? </strong></span>		
     	</div>
     	<div class="tagline-center-horizontally grid__item width-auto-left">
-			<a class="button button--small button-width ">
+			<a class="button button--small button-width">
     		<span th:replace="~{fragments/contextFragments :: noEnglishTelephoneFragment}"></span>
     		<span> Call: <strong>651-431-2000</strong></span>
 			</a>
     	</div>
 		<div class="tagline-center-horizontally tagline-spacing grid__item width-auto-left">
-			<span> <strong> Or </strong></span>	
+			<span> <strong> or </strong></span>	
 		</div>
     	<div class="tagline-center-horizontally grid__item width-auto-left">
 			<a class="button button--small button-width ">
-			<span class="grid__item width-auto-left" th:replace="~{fragments/contextFragments :: noEnglishTextFragment}"></span>
+			<span th:replace="~{fragments/contextFragments :: noEnglishTextFragment}"></span>
     		
 			<span> TTY: <strong>7-1-1</strong></span>
 			</a>
-    	</div>
+    	</div>						
 	</div>
-	<div class="grid">
-		<a class="grid__item width-auto-left language-link" lang="am" href="/languageAndAccessibility"
+	<div class="grid text--centered">
+		<a class="grid__item language-link" lang="am" href="/languageAndAccessibility#amharic-content"
 			th:utext="#{language-and-accessibility.amharic}"></a>
-		<a class="grid__item width-auto-left language-link" lang="ar" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="ar" href="/languageAndAccessibility#arabic-content"
 			th:utext="#{language-and-accessibility.arabic}"></a>
-		<a class="grid__item width-auto-left language-link" lang="my" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="my" href="/languageAndAccessibility#burmese-content"
 			th:utext="#{language-and-accessibility.burmese}"></a>
-		<a class="grid__item width-auto-left language-link" lang="zh" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="zh" href="/languageAndAccessibility#cantonese-content"
 			th:utext="#{language-and-accessibility.cantonese}"></a>
-		<a class="grid__item width-auto-left language-link" lang="fr" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="fr" href="/languageAndAccessibility#french-content"
 			th:utext="#{language-and-accessibility.french}"></a>
-		<a class="grid__item width-auto-left language-link" lang="hmn" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="hmn" href="/languageAndAccessibility#hmoob-content"
 			th:utext="#{language-and-accessibility.hmoob}"></a>
-		<a class="grid__item width-auto-left language-link" lang="kar" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="kar" href="/languageAndAccessibility#karen-content"
 			th:utext="#{language-and-accessibility.karen}"></a>
-		<a class="grid__item width-auto-left language-link" lang="km" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="km" href="/languageAndAccessibility#khmer-content"
 			th:utext="#{language-and-accessibility.khmer}"></a>
-		<a class="grid__item width-auto-left language-link" lang="ko" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="ko" href="/languageAndAccessibility#korean-content"
 			th:utext="#{language-and-accessibility.korean}"></a>
-		<a class="grid__item width-auto-left language-link" lang="lo" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="lo" href="/languageAndAccessibility#lao-content"
 			th:utext="#{language-and-accessibility.lao}"></a>
-		<a class="grid__item width-auto-left language-link" lang="om" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="om" href="/languageAndAccessibility#oromo-content"
 			th:utext="#{language-and-accessibility.oromo}"></a>
-		<a class="grid__item width-auto-left language-link" lang="ru" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="ru" href="/languageAndAccessibility#russian-content"
 			th:utext="#{language-and-accessibility.russian}"></a>
-		<a class="grid__item width-auto-left language-link" lang="so" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="so" href="/languageAndAccessibility#soomaali-content"
 			th:utext="#{language-and-accessibility.soomaali}"></a>
-		<a class="grid__item width-auto-left language-link" lang="es" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="es" href="/languageAndAccessibility#spanish-content"
 			th:utext="#{language-and-accessibility.spanish}"></a>
-		<a class="grid__item width-auto-left language-link" lang="vi" href="/languageAndAccessibility"
+		<a class="grid__item language-link" lang="vi" href="/languageAndAccessibility#vietnamese-content"
 			th:utext="#{language-and-accessibility.vietnamese}"></a>
 	</div>
 </footer>

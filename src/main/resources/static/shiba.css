@@ -625,6 +625,14 @@ form .drag-and-drop-box-compact {
 .textarea {
   resize: none;
 }
+
+@media (min-width: 768px) {
+	.tagline-footer-no-english{
+		display: flex;
+		justify-content: center;
+	}
+  }
+ 
 @media (max-width: 768px) {
   .tagline-center-horizontally {
     width: 100% !important;
@@ -638,7 +646,8 @@ form .drag-and-drop-box-compact {
 	}
 @media (max-width: 768px) {
   .tagline-spacing {
-    margin-bottom: 15px;
+	margin-bottom: 10px;
+    margin-top: 0px;
 	font-weight: bold;
   } 
 }
@@ -1777,7 +1786,7 @@ legend.form-question {
   }
 }
 .language-link {
-	color: #113163;
+	color: #003865;
 	font-weight: bold;
     margin: 10px;
     display: inline-block;
