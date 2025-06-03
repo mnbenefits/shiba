@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.io.IOException;
+import java.util.Locale;
+
 import org.codeforamerica.shiba.testutilities.AbstractExistingStartTimePageTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -37,6 +39,21 @@ public class GoBackButtonE2ETest extends AbstractExistingStartTimePageTest {
     staticMessageSource.addMessage("not-skip-message-key", ENGLISH, "NOT SKIP PAGE");
     staticMessageSource.addMessage("page-to-skip-title", ENGLISH, "pageToSkip");
     staticMessageSource.addMessage("last-page-title", ENGLISH, "lastPageTitle");
+    staticMessageSource.addMessage("language-and-accessibility.amharic", Locale.ENGLISH, "Amharic");
+    staticMessageSource.addMessage("language-and-accessibility.arabic", Locale.ENGLISH, "Arabic");
+    staticMessageSource.addMessage("language-and-accessibility.burmese", Locale.ENGLISH, "Burmese");
+    staticMessageSource.addMessage("language-and-accessibility.cantonese", Locale.ENGLISH, "Cantonese");
+    staticMessageSource.addMessage("language-and-accessibility.french", Locale.ENGLISH, "French");
+    staticMessageSource.addMessage("language-and-accessibility.hmoob", Locale.ENGLISH, "Hmoob");
+    staticMessageSource.addMessage("language-and-accessibility.karen", Locale.ENGLISH, "Karen");
+    staticMessageSource.addMessage("language-and-accessibility.khmer", Locale.ENGLISH, "Khmer");
+    staticMessageSource.addMessage("language-and-accessibility.korean", Locale.ENGLISH, "Korean");
+    staticMessageSource.addMessage("language-and-accessibility.lao", Locale.ENGLISH, "Lao");
+    staticMessageSource.addMessage("language-and-accessibility.oromo", Locale.ENGLISH, "Oromo");
+    staticMessageSource.addMessage("language-and-accessibility.russian", Locale.ENGLISH, "Russian");
+    staticMessageSource.addMessage("language-and-accessibility.soomaali", Locale.ENGLISH, "Soomaali");
+    staticMessageSource.addMessage("language-and-accessibility.spanish", Locale.ENGLISH, "Spanish");
+    staticMessageSource.addMessage("language-and-accessibility.vietnamese", Locale.ENGLISH, "Vietnamese");
   }
 
   @Disabled("This test passes on VDIs but fails on GitHub")
