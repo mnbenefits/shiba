@@ -8,12 +8,11 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
-import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

@@ -1495,8 +1495,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("NO_CP_UNEARNED_INCOME", "Yes", pdf);
 		}
 
-		// The applicant has unearned income, there are no additional household members
-		@Disabled("This test fails at random spots.")//TODO emj write story to fix this test
+		// (original comment) The applicant has unearned income, there are no additional household members
+		@Disabled("This test fails at random spots.")//TODO Story 189948 has been written to fix this test
 		@Test
 		void shouldMapFieldsForApplicantOnlyUnearnedIncomeSelections() throws Exception {
 			fillInRequiredPages();

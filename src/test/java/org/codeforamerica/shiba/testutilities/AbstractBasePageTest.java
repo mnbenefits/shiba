@@ -2,10 +2,6 @@ package org.codeforamerica.shiba.testutilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
-import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 import java.io.BufferedOutputStream;
@@ -21,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -32,8 +27,6 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.codeforamerica.shiba.DocumentRepositoryTestConfig;
 import org.codeforamerica.shiba.output.Document;
-import org.codeforamerica.shiba.pages.enrichment.Address;
-import org.codeforamerica.shiba.pages.enrichment.smartystreets.SmartyStreetClient;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.By;

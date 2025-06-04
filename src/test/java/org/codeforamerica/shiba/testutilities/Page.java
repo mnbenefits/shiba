@@ -166,11 +166,11 @@ public class Page {
 	}
   }
 
- /**
-  * For links that look like buttons. Old original method without the wait.<br>
-  * Use clickButtonLink(String buttonText, String nextPageTitle).
-  * @param buttonLinkText
-  */
+	 /**
+	  * For links that look like buttons. Old original method without the wait.<br>
+	  * Use clickButtonLink(String buttonText, String nextPageTitle).
+	  * @param buttonLinkText
+	  */
   @Deprecated
   public void clickButtonLink(String buttonLinkText) {
     checkForBadMessageKeys();
@@ -233,12 +233,12 @@ public class Page {
 	  clickButton("Continue", nextPage);
 	}
   
-  /**
-   * This is for links (anchors) that look like buttons.
-   * Click the button/link, then wait for the next page to load.
-   * @param buttonText
-   * @param nextPageTitle
-   */
+	  /**
+	   * This is for links (anchors) that look like buttons.
+	   * Click the button/link, then wait for the next page to load.
+	   * @param buttonText
+	   * @param nextPageTitle
+	   */
 	public void clickButtonLink(String buttonText, String nextPageTitle) {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
@@ -266,13 +266,13 @@ public class Page {
 		wait.until(ExpectedConditions.titleContains(nextPageTitle));
 	}
 
-  /**
-   * Click form submit button, then waits for the next page to load.<br>
-   * This method is to be used on pages created by the framework where the submit button has<br>
-   * the id "form-submit-button".
-   * @param buttonText
-   * @param nextPage
-   */
+	  /**
+	   * Click form submit button, then waits for the next page to load.<br>
+	   * This method is to be used on pages created by the framework where the submit button has<br>
+	   * the id "form-submit-button".
+	   * @param buttonText
+	   * @param nextPage
+	   */
 	public void clickButton(String buttonText, String nextPage) {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
@@ -285,74 +285,54 @@ public class Page {
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	}
 	
-	/** 
-	 * Pages with Yes and No buttons may have different names for the buttons.
-	 * Use this method to submit pages with Yes/No buttons.
-	 * @param buttonName
-	 * @param buttonValue true or false
+ 
+  
+	public void enter(String inputName, String value) {
+		checkForBadMessageKeys();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
+		List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+		WebElement firstElement = formInputElements.get(0);
+		FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
+		switch (formInputHtmlTag) {
+		case select -> selectFromDropdown(firstElement, value);
+		case button -> choose(formInputElements, value);
+		case textarea -> enterInput(firstElement, value);
+		case input -> {
+			switch (InputTypeHtmlAttribute.valueOf(firstElement.getAttribute("type"))) {
+			case text -> {
+				if (firstElement.getAttribute("class").contains("dob-input")) {
+					enterDateInput(inputName, value);
+				} else {
+					enterInput(firstElement, value);
+				}
+			}
+			case radio, checkbox -> selectEnumeratedInput(formInputElements, value);
+			default -> enterInput(firstElement, value);
+			}
+		}
+		default -> throw new IllegalArgumentException("Cannot find element");
+		}
+	}
+
+	/**
+	 * Yes and No buttons perform their own page submit action and need their own
+	 * wait period for the next page to load.
+	 * 
+	 * @param inputName
+	 * @param value
 	 * @param nextPage
 	 */
-	public void clickYesNoButton(String buttonName, String buttonValue, String nextPage) {
-		checkForBadMessageKeys();
-
-		WebElement buttonToClick = driver.findElements(By.xpath("//button[@value='" + buttonValue + "']")).stream()
-				.filter(button -> button.findElement(By.xpath("value")).getText().contains(buttonValue)).findFirst()
-				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonValue));
-
-		buttonToClick.sendKeys(Keys.RETURN); 
+	public void chooseYesOrNo(String inputName, String value, String nextPage) {
+		List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+		WebElement buttonToClick = formInputElements.stream().filter(button -> button.getText().contains(value))
+				.findFirst().orElseThrow();
+		buttonToClick.sendKeys(Keys.ENTER);
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	}
-  
-  
-public void enter(String inputName, String value) {
-    checkForBadMessageKeys();
-	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
-	WebDriverWait wait = new WebDriverWait(driver, duration);
-	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
-    List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
-    WebElement firstElement = formInputElements.get(0);
-    FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
-    switch (formInputHtmlTag) {
-      case select -> selectFromDropdown(firstElement, value);
-      case button -> choose(formInputElements, value);
-      case textarea -> enterInput(firstElement, value);
-      case input -> {
-        switch (InputTypeHtmlAttribute.valueOf(firstElement.getAttribute("type"))) {
-          case text -> {
-            if (firstElement.getAttribute("class").contains("dob-input")) {
-              enterDateInput(inputName, value);
-            } else {
-              enterInput(firstElement, value);
-            }
-          }
-          case radio, checkbox -> selectEnumeratedInput(formInputElements, value);
-          default -> enterInput(firstElement, value);
-        }
-      }
-      default -> throw new IllegalArgumentException("Cannot find element");
-    }    
-  }
-
-/**
- * Yes and No buttons perform their own page submit action and need their own
- * wait period for the next page to load.
- * @param inputName
- * @param value
- * @param nextPage
- */
-public void chooseYesOrNo(String inputName, String value, String nextPage) {
-	  List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
-    WebElement buttonToClick = formInputElements.stream()
-        .filter(button -> button.getText().contains(value))
-        .findFirst()
-        .orElseThrow();
-    buttonToClick.sendKeys(Keys.ENTER);
-	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
-	WebDriverWait wait = new WebDriverWait(driver, duration);
-	wait.until(ExpectedConditions.titleContains(nextPage));
-  }
 
   public void enter(String inputName, List<String> value) {
     checkForBadMessageKeys();
