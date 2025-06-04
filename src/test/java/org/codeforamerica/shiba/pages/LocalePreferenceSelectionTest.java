@@ -49,8 +49,8 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
     testPage.clickButtonLink("Continue", "Timeout notice");
     testPage.clickButtonLink("Continue", "Language Preferences - Written");
     testPage.enter("writtenLanguage", "Español");
-    testPage.clickButton("Continuar", "Preferencia de idioma – Hablado");
-    assertThat(driver.getTitle()).isEqualTo("Preferencia de idioma – Hablado");
+    testPage.clickButton("Continue", "Language Preferences - Spoken");
+    assertThat(driver.getTitle()).isEqualTo("Language Preferences - Spoken");
     
     WebElement selectedOption = testPage.getSelectedOption("locales");
     assertThat(selectedOption.getText()).isEqualTo("English");
