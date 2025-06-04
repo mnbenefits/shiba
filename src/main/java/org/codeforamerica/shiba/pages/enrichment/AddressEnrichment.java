@@ -3,15 +3,11 @@ package org.codeforamerica.shiba.pages.enrichment;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public abstract class AddressEnrichment implements Enrichment {
 
   LocationClient locationClient;
