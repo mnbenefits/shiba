@@ -360,7 +360,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Nations Boundary");
     testPage.chooseYesOrNo("livingInNationBoundary", NO.getDisplayValue(),"Intro: Income");
     testPage.clickButtonLink("Continue", "Employment status");
-    testPage.enter("areYouWorking", YES.getDisplayValue());
+    testPage.chooseYesOrNo("areYouWorking", YES.getDisplayValue(), "Income by job");
     testPage.clickButtonLink("Add a job", "Household selection for income");
     testPage.enter("whoseJobIsIt", "householdMemberFirstName householdMemberLastName");
     testPage.clickContinue("Employer's Name");

@@ -208,11 +208,9 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
     // Program Selection
     programSelections.forEach(program -> testPage.enter("programs", program));
-    
 
     if (programSelections.contains(PROGRAM_CERTAIN_POPS)) {
-    	//TODO emj test if this gets called
-    	assertThat("PROGRAM_CERTAIN_POPS".length() == 4);
+    	//TODO emj this is never used in current tests
       testPage.clickContinue("Intro: Basic Info");
       // Test Certain pops offboarding flow first by selecting None of the above
       testPage.enter("basicCriteria", "None of the above");
