@@ -6,42 +6,29 @@
     </select>
 	
 	<script>
+		// Add a page "ready event" handler. It fires when the page is loaded.
 		$(document).ready(function () {
-				$("#locales").change(function () {
-					if ($("#locales").val() !== '') {
-						window.location.replace('?lang=' + $("#locales").val());
+			// Add a "change event" handler for localeSelect. It fires when the localeSelect is manipulated.
+			$("#locales").change(function () {
+				var currentLocale = $("#locales").val();
+				if (currentLocale !== '') {
+					// we are changing the local which will cause a page reload
+					var writtenLanguageValue = $('input[name="writtenLanguage[]"]:checked').val();
+					if (writtenLanguageValue != null) {
+						sessionStorage.setItem('lastSelectedWrittenLanguagePreference', writtenLanguageValue);
 					}
-				});
-
-
-				var radios = document.getElementsByName('writtenLanguage[]');
-				var localeToLanguage = {'es': 'SPANISH', 'en': 'ENGLISH'}
-				var languageToLocale = {'SPANISH': 'es', 'ENGLISH': 'en'}
-
-				var urlParams = new URLSearchParams(window.location.search);
-				var currentLocale = urlParams.get('lang');
-
-				var checkedRadio = localeToLanguage[currentLocale];
-
-				if (checkedRadio) {
-					$('input[name="writtenLanguage[]"][value="' + checkedRadio + '"]').prop('checked', true)
+					window.location.replace('?lang=' + currentLocale);
 				}
-
-				$('input[name="writtenLanguage[]"]').on('change', function () {
-					if (this.checked) {
-						var writtenLanguageSelected = $('input[name="writtenLanguage[]"]:checked').val()
-						var languagePreference = languageToLocale[writtenLanguageSelected]
-						if (languagePreference) {
-							window.location.replace('?lang=' + languagePreference + '')
-						} else if ($("#locales").val() !== 'en') {
-							window.location.replace('?lang=en')
-						}
-					}
-				}
-
-				);
-
-
 			});
+
+			// If lastSelectedWrittenLanguageValue is not null it means this is a page load that is cause by a locale change.
+			// We will use lastSelectedWrittenLanguageValue to restore the selected radio. 
+			var lastSelectedWrittenLanguageValue = sessionStorage.getItem('lastSelectedWrittenLanguagePreference');
+			if (lastSelectedWrittenLanguageValue != null) {
+				var lastSelectedRadioInput = $('input[value="' + lastSelectedWrittenLanguageValue + '"]');
+				sessionStorage.removeItem('lastSelectedWrittenLanguagePreference');
+				lastSelectedRadioInput.click();
+			}
+		});
 	</script>
 </div>

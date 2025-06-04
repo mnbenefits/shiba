@@ -77,8 +77,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		selectProgramsWithoutCertainPopsAndEnterPersonalInfo();
 		fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "someApartmentNumber");
 
-		// fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress",
-		// "someApartmentNumber");
 		fillOutContactAndReview(true, "Chisago");
 
 		testPage.clickLink("This looks correct", "Do you want to add household members?");

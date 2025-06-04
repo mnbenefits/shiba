@@ -28,6 +28,7 @@ public class FormInputTemplate {
   String noticeMessage;
   Boolean validationIcon;
   String noneCheckboxText; //for PEOPLE_CHECKBOX_WITH_NONE
+  String ariaDescribedbyInput;
   
   public String fragment() {
     return switch (type) {

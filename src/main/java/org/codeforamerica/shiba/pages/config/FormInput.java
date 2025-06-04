@@ -31,4 +31,5 @@ public class FormInput{
   private String cssClass;
   private Boolean validationIcon = true;
   private String noneCheckboxText;
+  private String ariaDescribedbyInput;
 }

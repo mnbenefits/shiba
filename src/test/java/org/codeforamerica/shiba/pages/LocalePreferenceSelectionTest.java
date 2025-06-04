@@ -42,7 +42,7 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
 
   
   @Test
-  void userCanSeeSpanishWhenReadOrWriteSpanishIsSelectedOnLanguagePreferences() {
+  void selectingSpanishForWrittenLanguagePreferenceDoesNotChangeFlowLocaleToSpanish() {
 	testPage.clickButtonLink("Apply now", "Identify County");
 	testPage.enter("county", "Hennepin");
 	testPage.clickContinue("Prepare To Apply");
@@ -53,6 +53,6 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
     assertThat(driver.getTitle()).isEqualTo("Preferencia de idioma – Hablado");
     
     WebElement selectedOption = testPage.getSelectedOption("locales");
-    assertThat(selectedOption.getText()).isEqualTo("Español");
+    assertThat(selectedOption.getText()).isEqualTo("English");
   }
 }
