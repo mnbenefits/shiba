@@ -39,8 +39,9 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
   }
 
   /**
-   * The implicit timeouts don't seem to work. I am leaving them in for now, until the explicit timeouts in Page.java clickButton method are used for all tests.
-   * Journey tests started failing in August 2024.
+   * The implicit timeouts don't seem to work by themselves. After adding explicit timeouts in Page.java methods
+   * the tests are waiting for new pages to load.
+   * 
    * @throws IOException
    */
   public void start() throws IOException {
@@ -53,8 +54,8 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
     options.addArguments("--window-size=1280,1600");//needed for snapshots
     options.addArguments("--headless=new");
     options.addArguments("--remote-allow-origins=*");//prevents session errors
-//	Duration duration = Duration.of(2, ChronoUnit.SECONDS);
-//	options.setImplicitWaitTimeout(duration);
+	Duration duration = Duration.of(2, ChronoUnit.SECONDS);
+	options.setImplicitWaitTimeout(duration);
     driver = new ChromeDriver(options);
     driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
   }
