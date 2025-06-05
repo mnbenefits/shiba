@@ -85,7 +85,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops();
 		enterOutOfStateHomeAndMailingAddress();
-		//fillOutHomeAndMailingAddress("12345", "someCity", "someStreetAddress", "someApartmentNumber", "WI");
+
 		goToContactAndReview();
 
 		addSpouseAndVerifySpouseCanSelectCertainPops();
@@ -1182,7 +1182,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("Continue", "Intro: Basic Info");
 		// Getting to know you (Personal Info intro page)
 		testPage.clickButtonLink("Continue", "Personal Info");
-		// testPage.clickContinue();
 		// Personal Info
 		testPage.enter("firstName", "Ahmed");
 		testPage.enter("lastName", "St. George");
