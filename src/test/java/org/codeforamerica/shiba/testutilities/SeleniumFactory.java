@@ -39,9 +39,9 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
   }
 
   /**
-   * The implicit timeouts don't seem to work by themselves. After adding explicit timeouts in Page.java methods
-   * the tests are waiting for new pages to load.
-   * 
+   * The implicit timeouts don't seem to work by themselves on GitHub. 
+   * After adding explicit timeouts in Page.java methods the tests are more stable.
+   * As long as tests remain stable, keep the implicit timeouts here.
    * @throws IOException
    */
   public void start() throws IOException {
