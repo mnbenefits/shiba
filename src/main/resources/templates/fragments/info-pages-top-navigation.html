@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html th:lang="${locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
+  <div th:fragment="info-pages-top-navigation">
+    <div  class="top-nav-container">
+      <nav class="top-nav">
+        <div class="grid">
+
+          <a class="nav-link grid_item" data-active="faq" target="_blank"rel="noopener noreferrer" href="/faq" th:utext="#{faq.faq}">
+            <span class="sr-only-on-mobile">Frequently Asked Questions (FAQs)</span>
+          </a>
+
+          <a class="nav-link grid_item"  data-active="snapNDS" target="_blank"rel="noopener noreferrer" href="/snapNDS" th:utext="#{snap-nds.header}">
+            <span class="sr-only-on-mobile">SNAP non-discrimination statement</span>
+          </a>
+
+          <a class="nav-link grid_item" target="_blank"rel="noopener noreferrer" href="/privacy" th:utext="#{privacy-policy.privacy-policy}">
+            <span class="sr-only-on-mobile">Privacy Policy</span>
+          </a>
+
+          <a class="nav-link grid_item"  target="_blank"rel="noopener noreferrer" href="/languageAndAccessibility"th:utext="#{language-and-accessibility.language-and-accessibility}">
+            <span class="sr-only-on-mobile">Language and Accessibility</span>
+          </a>
+
+        </div>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>
