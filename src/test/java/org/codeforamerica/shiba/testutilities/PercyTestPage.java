@@ -11,20 +11,4 @@ public class PercyTestPage extends Page {
     super(driver);
     this.percy = new Percy(driver);
   }
-
-  public void clickLink(String linkText) {
-    percy.snapshot(driver.getTitle());
-    super.clickLink(linkText);
-  }
-
-  public void clickButton(String buttonText) {
-    percy.snapshot(driver.getTitle());
-    super.clickButton(buttonText);
-  }
-
-  public void clickButtonLink(String buttonLinkText) {
-    percy.snapshot(driver.getTitle());
-    super.clickButtonLink(buttonLinkText);
-  }
-
 }
