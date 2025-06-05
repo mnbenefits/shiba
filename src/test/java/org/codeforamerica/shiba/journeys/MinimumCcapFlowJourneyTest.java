@@ -45,7 +45,6 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     assertThat(testPage.getElementText("page-form")).doesNotContain(
         "Roommates that you buy and prepare food with");
 
-    //testPage.enter("addHouseholdMembers", NO.getDisplayValue());
     testPage.chooseYesOrNo("addHouseholdMembers", NO.getDisplayValue(), "Add Children confirmation");
     // "add child nudge" page
     assertThat(testPage.getTitle()).contains("Add Children confirmation");
@@ -90,7 +89,6 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
     // Tell us the name of any parent living outside the home.
     String parentNotAtHomeName = "My child's parent";
-    //driver.findElementByName("whatAreTheParentsNames[]").sendKeys(parentNotAtHomeName);
     driver.findElement(By.name("whatAreTheParentsNames[]")).sendKeys(parentNotAtHomeName);
     testPage.clickContinue("Child support payments");
     

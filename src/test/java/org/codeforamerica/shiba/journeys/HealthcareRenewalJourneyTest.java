@@ -30,7 +30,7 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     assertNotNull(testPage.findElementById("footerHealthcareRenewal"));
     WebElement logoElement = testPage.findElementById("mn-healthcare-renewal-logo");
     assertTrue(logoElement.getAttribute("href").equalsIgnoreCase("https://mn.gov/dhs/renewmycoverage/"));
-    // Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub
+    // Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub - Story 144389
     //testPage.clickLink("Renew my MN health care coverage");
     //assertThat(driver.getTitle()).isEqualTo("Renew my coverage / Minnesota Department of Human Services");
     //driver.navigate().back();

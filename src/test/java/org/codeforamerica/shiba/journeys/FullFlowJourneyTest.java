@@ -43,8 +43,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Assert intercom button is present on landing page
 		await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
 		assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
-		// Assert that the Delayed Processing Time Notice is displayed on the landing page.
-		// assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
 		assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
 		// Assert that the EBT Scam Alert is displayed on the landing page.
 		assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
@@ -54,7 +52,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickLinkToExternalWebsite("Learn more here.");
 		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
 		driver.switchTo().window(windowHandles.get(1));
-		// Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub
+		// Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub, Story 144389
 		// assertThat(driver.getTitle()).isEqualTo("Recent reports of card skimming
 		// affecting EBT card users");
 		driver.close(); // close the tab
@@ -398,7 +396,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// In the last 12 months, has anyone in the household given away or sold any
 		// assets?
-		//testPage.enter("haveSoldAssets", NO.getDisplayValue());
 		testPage.chooseYesOrNo("haveSoldAssets", NO.getDisplayValue(), "Submitting Application");
 
 		// Submitting your Application
@@ -520,10 +517,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// navigateTo("documentSubmitConfirmation");
 		// assertThat(driver.getTitle()).isEqualTo("Your next steps");
 
-		// Assert that the Delayed Processing Time Notice is displayed on the nextSteps
-		// page.
-		// assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
-		// assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
 		testPage.clickButtonLink("Continue", "Success");
 		testPage.clickButtonLink("View more programs", "Recommendations");
 		assertThat(driver.getTitle()).isEqualTo("Recommendations");
@@ -1009,9 +1002,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Got it! unearned income is next.
 		testPage.clickButtonLink("Continue", "Unearned Income");
-
-		// Income and Employment
-		//testPage.clickContinue();
 
 		// Unearned income
 		testPage.enter("unearnedIncome", "None");
