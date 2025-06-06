@@ -9,10 +9,8 @@ import java.util.Locale;
 
 import org.codeforamerica.shiba.testutilities.AbstractExistingStartTimePageTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT, properties = {
@@ -56,30 +54,23 @@ public class GoBackButtonE2ETest extends AbstractExistingStartTimePageTest {
     staticMessageSource.addMessage("language-and-accessibility.vietnamese", Locale.ENGLISH, "Vietnamese");
   }
 
-  @Disabled("This test passes on VDIs but fails on GitHub")
   @Test
   void shouldBeAbleToNavigateBackMoreThanOnePage() {
     // should be able to navigate back more than one page
     driver.navigate().to(baseUrl + "/pages/firstPage");
-    driver.findElement(By.tagName("button")).click();
+    testPage.clickContinue("secondPageTitle");
     assertThat(driver.getTitle()).isEqualTo(secondPageTitle);
-
-    driver.findElement(By.tagName("button")).click();
+    testPage.clickContinue("thirdPageTitle");
     assertThat(driver.getTitle()).isEqualTo(thirdPageTitle);
-
-    driver.findElement(By.partialLinkText("Back")).click();
-    driver.findElement(By.partialLinkText("Back")).click();
+    testPage.goBack();
+    testPage.goBack();
     assertThat(driver.getTitle()).isEqualTo(firstPageTitle);
 
     // should skip going backwards over skip condition pages
     testPage.enter("someRadioInputName", "SKIP PAGE");
-
-    driver.findElement(By.tagName("button")).click();
-
+    testPage.clickContinue("thirdPageTitle");
     assertThat(driver.getTitle()).isEqualTo(thirdPageTitle);
-    driver.findElement(By.partialLinkText("Back")).click();
-
+    testPage.goBack();
     assertThat(driver.getTitle()).isEqualTo(firstPageTitle);
-
   }
 }

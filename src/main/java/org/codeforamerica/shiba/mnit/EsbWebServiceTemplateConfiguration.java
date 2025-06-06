@@ -22,6 +22,7 @@ import org.apache.hc.client5.http.ssl.HostnameVerificationPolicy;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.utils.Base64;
 import org.apache.hc.core5.http.HttpHeaders;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
 import org.apache.hc.core5.http.io.SocketConfig;
 import org.apache.hc.core5.http.message.BasicHeader;
 import org.apache.hc.core5.pool.PoolConcurrencyPolicy;
@@ -33,8 +34,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.webservices.client.WebServiceTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
+import org.springframework.ws.transport.http.HttpComponents5ClientFactory;
 import org.springframework.ws.transport.http.HttpComponents5MessageSender;
 
 @Configuration
@@ -79,9 +82,11 @@ public class EsbWebServiceTemplateConfiguration {
 				.build();
 
 		Collection<String> targetPreferredAuthSchemes = Arrays.asList(StandardAuthScheme.BASIC);
+		
+		HttpRequestInterceptor interceptor = new HttpComponents5ClientFactory.RemoveSoapHeadersInterceptor();
 
 		CloseableHttpClient client = HttpClients.custom()
-				.addRequestInterceptorFirst(new HttpComponents5MessageSender.RemoveSoapHeadersInterceptor())
+				.addRequestInterceptorFirst(interceptor)
 				.setConnectionManager(poolingConnectionManager)
 				.setDefaultHeaders(
 						List.of(new BasicHeader(HttpHeaders.AUTHORIZATION, "Basic " + new String(encodedAuth))))

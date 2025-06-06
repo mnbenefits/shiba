@@ -20,21 +20,6 @@ public class AccessibilityTestPage extends Page {
     super(driver);
   }
 
-  public void clickLink(String linkText) {
-    super.clickLink(linkText);
-    testAccessibility();
-  }
-
-  public void clickButton(String buttonText) {
-    super.clickButton(buttonText);
-    testAccessibility();
-  }
-
-  public void clickButtonLink(String buttonLinkText) {
-    super.clickButtonLink(buttonLinkText);
-    testAccessibility();
-  }
-
   public void testAccessibility() {
     AxeRunOptions options = new AxeRunOptions();
     options.setResultTypes(List.of("violations"));

@@ -18,14 +18,13 @@ import org.codeforamerica.shiba.pages.Sentiment;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 @Tag("minimumFlowJourney")
-@Disabled("This test passes on VDIs but fails on GitHub")
+
 public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
   private final String signature = "some signature";
@@ -43,11 +42,11 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("apartmentNumber", "someApartmentNumber");
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("MN"); // home address page default state is MN
     testPage.enter("state", "WI"); // user can set state to something besides MN
-    testPage.clickContinue(); // go to mailing address page, then back
-    testPage.goBack();
+    testPage.clickContinue("Out of State Address Notice"); // go to out of state address page, then back
+    testPage.clickCustomLink("Edit my address", "Home Address");
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("WI");
     testPage.enter("state", "MN");
-    testPage.clickContinue(); // go to the mailing address page
+    testPage.clickContinue("Mailing address"); // go to the mailing address page
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("MN"); // mailing address page default state is MN
     assertThat(testPage.getTitle()).isEqualTo("Mailing address");
     testPage.goBack();
@@ -55,25 +54,25 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     // Where are you currently Living? (without address)
     testPage.enter("isHomeless", "I don't have a permanent address"); // check
     testPage.enter("isHomeless", "I don't have a permanent address"); // uncheck
-    testPage.clickContinue();
+    testPage.clickContinue("Home Address");
     assertThat(testPage.hasInputError("streetAddress")).isTrue(); // verify cleared previous inputs but state is MN by default
     assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("MN"); 
     testPage.enter("isHomeless", "I don't have a permanent address"); // check
-    testPage.clickContinue();
+    testPage.clickContinue("Where to send mail");
 
     // General Delivery
-    testPage.clickLink("I will pick up mail at a General Delivery post office near me.");
+    testPage.clickSubtleLink("I will pick up mail at a General Delivery post office near me.", "City for General Delivery");
     assertThat(testPage.getTitle()).isEqualTo("City for General Delivery");
-    testPage.clickContinue(); // Error on "Continue" without selecting a city
+    testPage.clickContinue("City for General Delivery"); // Error on "Continue" without selecting a city
     assertThat(testPage.hasErrorText("Make sure to provide a city")).isTrue();
     testPage.selectFromDropdown("whatIsTheCity[]", "Ada");
-    testPage.clickContinue();
+    testPage.clickContinue("General Delivery address");
 
     // General Delivery address
     assertThat(testPage.getTitle()).isEqualTo("General Delivery address");
     String generalDeliveryText = testPage.getElementText("general-delivery");
     assertThat(generalDeliveryText).contains("General Delivery");
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue", "Contact Info");
 
     // Contact
     fillOutContactAndReview(false, "Hennepin");
@@ -84,10 +83,10 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertThat(testPage.findElementById("generalDelivery_streetAddress").getText())
         .isEqualTo("Ada, MN");
 
-    testPage.clickLink("Submit an incomplete application now with only the above information.");
+    testPage.clickLink("Submit an incomplete application now with only the above information.", "Do you need help immediately?");
 
     // Opt not to answer expedited questions
-    testPage.clickButton("Finish application now");
+    testPage.clickCustomButton("Finish application now", 3, "Additional Info");
 
     // Additional Info
     assertThat(testPage.getTitle()).isEqualTo("Additional Info");
@@ -95,14 +94,14 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     String caseNumber = "654321";
     driver.findElement(By.id("additionalInfo")).sendKeys(additionalInfo);
     testPage.enter("caseNumber", caseNumber);
-    testPage.clickContinue();
-    testPage.clickLink("No, skip this question");
+    testPage.clickContinue("Can we ask");
+    testPage.clickButtonLink("No, skip this question", "Legal Stuff");
 
     // Legal Stuff
     assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
     testPage.enter("drugFelony", NO.getDisplayValue());
-    testPage.clickContinue();
+    testPage.clickContinue("Sign this application");
     List<String> expectedMessages = List.of(
     		"You did not upload documents with your application today.",
     		"To upload documents later, you can return to our homepage and click on ‘Upload documents’ to get started.",
@@ -141,58 +140,59 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
     // Where are you currently Living?
-    String homeZip = "12345";
-    String homeCity = "someCity";
-    String homeStreetAddress = "someStreetAddress";
-    String homeApartmentNumber = "someApartmentNumber";
-    fillOutHomeAndMailingAddress(homeZip, homeCity, homeStreetAddress, homeApartmentNumber);
+    String homeZip = "03104";
+    String homeCity = "Cooltown";
+    String homeStreetAddress = "smarty street";
+    String homeApartmentNumber = "1b";
+    String state = "MN";
+    fillOutHomeAndMailingAddress(homeZip, homeCity, homeStreetAddress, homeApartmentNumber, state);
     fillOutContactAndReview(true, "Hennepin");
 
-    testPage.clickLink("Submit an incomplete application now with only the above information.");
+    testPage.clickLink("Submit an incomplete application now with only the above information.", "Do you need help immediately?");
 
     // Answer expedited questions such that we will be expedited
-    testPage.clickButton("Yes, I want to see if I qualify");
+    testPage.clickCustomButton("Yes, I want to see if I qualify", 3, "Do you want to add household members?");
 
     // Add Household Members
-    testPage.enter("addHouseholdMembers", YES.getDisplayValue());
+    testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Thirty Day Income, Household");
 
     // How much money has your household made in the last 30 days?
     assertThat(driver.findElement(By.cssSelector("h1")).getText())
         .isEqualTo("How much money has your household made in the last 30 days?");
     String moneyMadeLast30Days = "1";
     testPage.enter("moneyMadeLast30Days", moneyMadeLast30Days);
-    testPage.clickContinue();
+    testPage.clickContinue("Savings");
 
     // Do you have savings?
-    testPage.enter("haveSavings", YES.getDisplayValue());
+    testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Expedited Cash, Household");
     String liquidAssets = "1.00";
     testPage.enter("liquidAssets", liquidAssets);
-    testPage.clickContinue();
+    testPage.clickContinue("Expedited Expense, Household");
 
     // Home expenses
-    testPage.enter("payRentOrMortgage", YES.getDisplayValue());
+    testPage.chooseYesOrNo("payRentOrMortgage", YES.getDisplayValue(), "Expedited Expenses Amount, Household");
     String homeExpensesAmount = "333";
     testPage.enter("homeExpensesAmount", homeExpensesAmount);
-    testPage.clickContinue();
+    testPage.clickContinue("Expedited Utility Payments, Household");
 
     // Utilities
     testPage.enter("payForUtilities", "Cooling");
-    testPage.clickContinue();
+    testPage.clickContinue("Expedited Migrant Farm Worker, Household");
 
     // Migrant or Seasonal worker
     String migrantOrSeasonalFarmWorker = NO.getDisplayValue();
-    testPage.enter("migrantOrSeasonalFarmWorker", migrantOrSeasonalFarmWorker);
+    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", migrantOrSeasonalFarmWorker, "Qualify for Expedited Service");
 
     // You are expedited!
     assertThat(driver.findElement(By.tagName("p")).getText()).contains(
         "Your county or Tribal Nation should reach out to you to discuss your application within 24 hours.");
-    testPage.clickButton("Finish application");
+    testPage.clickButtonLink("Finish application", "Legal Stuff");
 
     // Legal Stuff
     assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
     testPage.enter("drugFelony", YES.getDisplayValue());
-    testPage.clickContinue();
+    testPage.clickContinue("Sign this application");
 
     // Finish Application
     List<String> expectedMessages = List.of(
@@ -208,7 +208,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
         "You were recommended for expedited food assistance (SNAP).");
     assertApplicationSubmittedEventWasPublished(applicationId, EXPEDITED, 1);
     // continue to the recommendations page
-    testPage.clickButton("View more programs");
+    testPage.clickButtonLink("View more programs", "Recommendations");
     // verify that the recommendations page does contain the "apply for healthcare coverage" item
     assertThat(testPage.elementDoesNotExistById("healthcareCoverage")).isFalse();
     // verify that the recommendations page does not contain the "paying for child care" item
@@ -253,7 +253,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
   @Test
   void outOfStateApplicantFlow() {
-    getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
+    getToHomeAddress("Anoka", List.of(PROGRAM_SNAP));
     
     // Page title: Home Address
     assertTrue(testPage.getTitle().equals("Home Address"));
@@ -264,11 +264,10 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("city", "someCity");
     testPage.enter("streetAddress", "someStreetAddress");
     testPage.enter("apartmentNumber", "someApartmentNumber");
-    // mock a SmartyStreet "address found" response
     when(smartyStreetClient.validateAddress(any())).thenReturn(
-        Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
-    );
-    testPage.clickContinue();
+            Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
+        );
+    testPage.clickContinue("Out of State Address Notice");
     
     // Page title: Out of State Address Notice
     assertTrue(testPage.getTitle().equals("Out of State Address Notice"));
@@ -277,24 +276,24 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertTrue(testPage.findElementById("given-address-apt").getText().equals("someApartmentNumber"));
     assertTrue(testPage.findElementById("given-address-city-state").getText().equals("someCity, WI"));
     assertTrue(testPage.findElementById("given-address-zip").getText().equals("12345"));
-    testPage.clickButton("Yes, continue");
+    testPage.clickCustomButton("Yes, continue", 3, "Mailing address");
 
     // Page title: Mailing address
     assertTrue(testPage.getTitle().equals("Mailing address"));
     testPage.clickElementById("true");
-    testPage.clickContinue();
+    testPage.clickContinue("Address Validation");
     
     // Page title: Address Validation
     assertTrue(testPage.getTitle().equals("Address Validation"));
     testPage.clickElementById("enriched-address");
-    testPage.clickContinue();
+    testPage.clickContinue("Contact Info");
     
     // County Validation is skipped for out of state address
     // Page title: Contact Info
     assertTrue(testPage.getTitle().equals("Contact Info"));
     testPage.enter("phoneNumber", "(651) 555-1234");
     testPage.enter("email", "something@something.test");
-    testPage.clickContinue();
+    testPage.clickContinue("Review info");
     
     // Page title: Do you need help immediately?
     assertTrue(testPage.getTitle().equals("Review info"));
@@ -305,7 +304,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.goBack(); // to the Address validation page
     testPage.goBack(); // to the Mailing address page
     testPage.goBack(); // to the Out of State Address Notice page
-    testPage.clickButtonLink("Edit my address");
+    testPage.clickCustomLink("Edit my address", "Home Address");
     
     // Page title: Home Address
     assertTrue(testPage.getTitle().equals("Home Address"));
@@ -316,29 +315,29 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     when(smartyStreetClient.validateAddress(any())).thenReturn(
         Optional.of(new Address("smarty street", "Cooltown", "MN", "03104", "1b", "someCounty"))
     );
-    testPage.clickContinue();
+    testPage.clickContinue("Mailing address");
     
     // Page title: Mailing address
     assertTrue(testPage.getTitle().equals("Mailing address"));
     // testPage.clickElementById("true"); Don't click this, it would uncheck the checkbox.
-    testPage.clickContinue();
+    testPage.clickContinue("Address Validation");
     
     // Page title: Address Validation
     assertTrue(testPage.getTitle().equals("Address Validation"));
     testPage.clickElementById("enriched-address");
-    testPage.clickContinue();
-    
+    testPage.clickContinue("County Validation"); 
+
     // Page title: County Validation
     assertTrue(testPage.getTitle().equals("County Validation"));
-    // The original county "Hennepin" should be displayed on this page
+    // The original county "Anoka" should be displayed on this page
     assertNotNull(testPage.findElementById("original-county"));
-    // The enriched county "someCounty" should be displayed on this page
+    // The enriched county "Hennepin" should be displayed on this page
     assertNotNull(testPage.findElementById("enriched-county"));
-    testPage.clickContinue();
+    testPage.clickContinue("Contact Info");
     
     // Page title: Contact Info
     assertTrue(testPage.getTitle().equals("Contact Info"));
-    testPage.clickContinue();
+    testPage.clickContinue("Review info");
     
     // Page title: Do you need help immediately?
     assertTrue(testPage.getTitle().equals("Review info"));
@@ -356,25 +355,24 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     when(smartyStreetClient.validateAddress(any())).thenReturn(
         Optional.of(new Address("smarty street", "Cooltown", "WI", "03104", "1b", "someCounty"))
     );
-    testPage.clickContinue();
+    testPage.clickContinue("Out of State Address Notice");
     
     // Page title: Out of State Address Notice
     assertTrue(testPage.getTitle().equals("Out of State Address Notice"));
-    testPage.clickButton("No, quit application");
+    testPage.clickCustomButton("No, quit application", 3, "Quit confirmation");
 
     //Page title: Are you sure you want to quit
     assertTrue(testPage.getTitle().equals("Quit confirmation"));
     
     // Page Verify that clicking  'No, take me back' returns the user to the previous page
-    testPage.clickButton("Go back");
+    testPage.clickButtonLink("Go back", "Out of State Address Notice");
     assertTrue(testPage.getTitle().equals("Out of State Address Notice"));
      
     //user returns to Out of State Address Notice page
-    testPage.clickButton("No, quit application");
+    testPage.clickCustomButton("No, quit application", 3, "Quit confirmation");
     
     // Verify that clicking 'Yes,Quit application' ends the application process&routes user back to landing page
-    testPage.clickButton("Quit application");
-    assertTrue(testPage.getTitle().equals("MNbenefits"));
+    testPage.clickButtonLink("Quit application", "MNbenefits");
    
     // Page title: Landing
     assertTrue(testPage.getTitle().equals("MNbenefits"));
@@ -386,15 +384,15 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   @Test
   void languagePreferencesSameLanguageFlow() {
 	// Landing page
-	testPage.clickButton("Apply now");
+	  testPage.clickButtonLink("Apply now", "Identify County");
 
 	// Select county
 	testPage.enter("county", "Hennepin");
-	testPage.clickContinue();
+    testPage.clickContinue("Prepare To Apply");
 
-	// Informational pages
-	testPage.clickContinue();
-	testPage.clickContinue();
+    // Informational pages
+    testPage.clickButtonLink("Continue","Timeout notice");
+    testPage.clickButtonLink("Continue", "Language Preferences - Written");
 
 	// Written Language Preference page
 	String title = testPage.getTitle();
@@ -424,7 +422,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 	assertThat(writtenLanguage).isEqualTo("ENGLISH");
 	
 	// Continue to spoken language preference page
-	testPage.clickContinue();
+	testPage.clickContinue("Language Preferences - Spoken");
 	
 	title = testPage.getTitle();
 	assertThat(title).isEqualTo("Language Preferences - Spoken");
@@ -476,7 +474,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 	testPage.enter("needInterpreter", "Yes");
 
 	// Continue
-	testPage.clickContinue();
+	testPage.clickContinue("Choose Programs");
 	title = testPage.getTitle();
 	assertThat(title).isEqualTo("Choose Programs");
   }  
@@ -522,12 +520,12 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   }
 
   private void testFeedbackScreen() {
-    testPage.clickLink("Give us feedback");
+    testPage.clickLink("Give us feedback", "Feedback");
     assertThat(testPage.getTitle()).isEqualTo("Feedback");
     assertThat(driver.findElement(By.id("happy"))).isNotNull();
     assertThat(driver.findElement(By.id("meh"))).isNotNull();
     assertThat(driver.findElement(By.id("sad"))).isNotNull();
     testPage.chooseSentiment(Sentiment.MEH);
-    testPage.clickButton("Submit feedback");
+    testPage.clickButton("Submit feedback", "Success");
   }
 }

@@ -30,31 +30,29 @@ public class CertainPopsPilotCountyTest extends JourneyTest {
     // Assert intercom button is present on landing page
     await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
     assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
-    // Assert that the Delayed Processing Time Notice is displayed on the landing page.
-    //assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
     assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
     // Assert that the EBT Scam Alert is displayed on the landing page.
     assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
 
    
  // Landing page
-    testPage.clickButton("Apply now");
+    testPage.clickButtonLink("Apply now", "Identify County");
 
     // Select other than pilot county
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Prepare To Apply");
 
     // Informational pages
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue","Timeout notice");
+    testPage.clickButtonLink("Continue", "Language Preferences - Written");
 
     // Written Language Preferences
     testPage.enter("writtenLanguage", "English");
-    testPage.clickContinue();
+    testPage.clickContinue("Language Preferences - Spoken");
     // Spoken Language Preferences
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
-    testPage.clickContinue();
+    testPage.clickContinue("Choose Programs");
     // Program Selection
     assertThat(testPage.getCheckboxDisplays("programs")).doesNotContain(PROGRAM_CERTAIN_POPS);
     
@@ -72,31 +70,29 @@ public class CertainPopsPilotCountyTest extends JourneyTest {
     // Assert intercom button is present on landing page
     await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
     assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
-    // Assert that the Delayed Processing Time Notice is displayed on the landing page.
-    //assertThat(driver.findElement(By.id("delayed-processing-time-notice"))).isNotNull();
     assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
     // Assert that the EBT Scam Alert is displayed on the landing page.
     assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
 
    
  // Landing page
-    testPage.clickButton("Apply now");
+    testPage.clickButtonLink("Apply now", "Identify County");
 
-    // Select other than pilot county
+    // Select pilot county
     testPage.enter("county", "Chisago");
-    testPage.clickContinue();
+    testPage.clickContinue("Prepare To Apply");
 
     // Informational pages
-    testPage.clickContinue();
-    testPage.clickContinue();
+    testPage.clickButtonLink("Continue","Timeout notice");
+    testPage.clickButtonLink("Continue", "Language Preferences - Written");
 
     // Language Preferences
     testPage.enter("writtenLanguage", "English");
-    testPage.clickContinue();
+    testPage.clickContinue("Language Preferences - Spoken");
     // Spoken Language Preferences
     testPage.enter("spokenLanguage", "English");
     testPage.enter("needInterpreter", "Yes");
-    testPage.clickContinue();
+    testPage.clickContinue("Choose Programs");
        // Program Selection
     assertThat(testPage.getCheckboxDisplays("programs")).contains(PROGRAM_CERTAIN_POPS);
     
