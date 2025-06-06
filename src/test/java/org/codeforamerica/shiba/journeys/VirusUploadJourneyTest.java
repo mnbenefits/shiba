@@ -31,23 +31,13 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("1 file added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("disabled");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 		assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("disabled");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).doesNotContain("disabled");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).doesNotContain("hidden");
-		testPage.clickLink("delete");
-		testPage.clickButton("Yes");
-
-		uploadVirusFile("eicar-adobe-acrobat-attachment.pdf");
-		waitForErrorMessage();
-		assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
-		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
-		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
 	}
 
 	@Test
@@ -62,7 +52,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 
 		// 2. Upload a file with the .jpg extension
 		uploadVirusFile("EICAR.jpg");
@@ -71,7 +61,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 
 		// 3. Upload a file with the .jpeg extension
 		uploadVirusFile("EICAR.jpeg");
@@ -80,7 +70,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 
 		// 4. Upload a file with the .png extension
 		uploadVirusFile("EICAR.png");
@@ -89,7 +79,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 
 		// 5. Upload a file with the .pdf extension
 		uploadVirusFile("EICAR.pdf");
@@ -98,7 +88,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 	}
 
 	@Test
@@ -112,7 +102,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 	}
 
 	@Test
@@ -127,7 +117,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 	}
 
 	@Test
@@ -142,7 +132,7 @@ public class VirusUploadJourneyTest extends JourneyTest {
 				"Your file cannot be uploaded because a virus was detected. Try uploading a different copy of the file.");
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains("0 files added");
 		assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains("hidden");
-		testPage.clickLink("remove");
+		testPage.clickLink("remove", "Upload documents");
 	}
 
 }

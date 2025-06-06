@@ -10,12 +10,12 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.codeforamerica.shiba.pages.Sentiment;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 
 public class Page {
 
@@ -51,7 +51,8 @@ public class Page {
   public String getHeader() {
     return driver.findElement(By.tagName("h1")).getText();
   }
-
+  
+ 
   /**
    * Click the Go Back link and wait for the previous page to load and Go Back link to be clickable.
    */
@@ -61,34 +62,116 @@ public class Page {
 	WebDriverWait wait = new WebDriverWait(driver, duration);
 	wait.until(ExpectedConditions.elementToBeClickable(By.partialLinkText("Go Back")));
   }
+  
+  /**
+   * Use this method for tests that go back to the terminal page.
+   * The terminal page has no Go Back link.
+   * @param terminalPage
+   */
+  public void goBackToTerminalPage(String terminalPage) {
+	    driver.findElement(By.partialLinkText("Go Back")).click();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(terminalPage));
+	  }
 
+  /**
+   * Use clickLink(String linkText, String nextPage)
+   * @param linkText
+   */
+  @Deprecated()
   public void clickLink(String linkText) {
     checkForBadMessageKeys();
-    driver.findElement(By.linkText(linkText)).click();
+    driver.findElement(By.linkText(linkText)).click(); 
   }
+  
+  /**
+   * Same functionality as deprecated method clickLink, but only to be used for external links.
+   * @param linkText
+   */
+  public void clickLinkToExternalWebsite(String linkText) {
+	    checkForBadMessageKeys();
+	    driver.findElement(By.linkText(linkText)).click(); 
+	  }
+  
+  /**
+   * Click link, then waits for the next page to load.
+   * @param linkText
+   * @param nextPage
+   */
+  public void clickLink(String linkText, String nextPage) {
+	    checkForBadMessageKeys();
+	    driver.findElement(By.linkText(linkText)).click();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	  }
 
-  public void clickButton(String buttonText) {
-	  clickButton(buttonText, 10);
+
+  /**
+   * Click button with sendKeys() method instead of click method.<br>
+   * Will retry if stale element exception occurs. <br>
+   * Waits until next page is loaded.
+   * @param buttonText
+   * @param retryCount
+   * @param nextPage
+   */
+  public void clickButtonWithRetry(String buttonText, int retryCount, String nextPage) {
+	try {  
+	    checkForBadMessageKeys();
+	    WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
+		        .filter(button -> button.getText().contains(buttonText))
+		        .findFirst()
+		        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+
+	    // Instead of click(), sendKeys(Keys.RETURN) is supposed to be more reliable. This works too: .sendKeys(Keys.ENTER); 
+		    buttonToClick.sendKeys(Keys.RETURN);
+	    
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	} catch(StaleElementReferenceException e) {
+		if (retryCount > 0) { // try again...
+			this.clickButtonWithRetry(buttonText, retryCount-1, nextPage);
+		} else { // we tried... but we can't ignore the exception
+			throw e;
+		}
+	}
   }
-  // An attempt to get past StaleElementReferenceException that frequently occurs.
-  // We are finding the button (i.e., the WebElement) but the DOM gets updated before we can click it.
-  private void clickButton(String buttonText, int retryCount) {
+  
+  /**
+   * This is for custom pages with submit buttons that DO NOT have the id = "form-submit-button".
+   * @param buttonText
+   * @param retryCount
+   * @param nextPage
+   */
+  public void clickCustomButton(String buttonText, int retryCount, String nextPage) {
 	try {  
 	    checkForBadMessageKeys();
 	    WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 	        .filter(button -> button.getText().contains(buttonText))
 	        .findFirst()
 	        .orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-	    buttonToClick.click();
+	    buttonToClick.sendKeys(Keys.RETURN); 
+	    
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
 	} catch(StaleElementReferenceException e) {
 		if (retryCount > 0) { // try again...
-			this.clickButton(buttonText, retryCount-1);
+			this.clickCustomButton(buttonText, retryCount-1, nextPage);
 		} else { // we tried... but we can't ignore the exception
 			throw e;
 		}
 	}
   }
 
+	 /**
+	  * For links that look like buttons. Old original method without the wait.<br>
+	  * Use clickButtonLink(String buttonText, String nextPageTitle).
+	  * @param buttonLinkText
+	  */
+  @Deprecated
   public void clickButtonLink(String buttonLinkText) {
     checkForBadMessageKeys();
     WebElement buttonToClick = driver.findElements(By.className("button--link")).stream()
@@ -96,19 +179,51 @@ public class Page {
         .findFirst()
         .orElseThrow(
             () -> new RuntimeException("No button link found containing text: " + buttonLinkText));
-    buttonToClick.click();
+    buttonToClick.sendKeys(Keys.RETURN);
   }
+  
+  /**
+   * This is for buttons that look like links on the web page. They use the "button--link" class to appear as links.
+   * @param buttonLinkText
+   * @param nextPage
+   */
+  public void clickCustomLink(String buttonLinkText, String nextPage) {
+	    checkForBadMessageKeys();
+	    WebElement buttonToClick = driver.findElements(By.className("button--link")).stream()
+	        .filter(button -> button.getText().contains(buttonLinkText))
+	        .findFirst()
+	        .orElseThrow(
+	            () -> new RuntimeException("No link found containing text: " + buttonLinkText));
+	    buttonToClick.sendKeys(Keys.RETURN);
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	  }
   
 	public void clickAccordianButton(String buttonattributeText) {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver
 				.findElement(By.xpath("//button[@aria-controls=\"" + buttonattributeText + "\"]"));
-		buttonToClick.click();
+		buttonToClick.sendKeys(Keys.RETURN); 
 	}
 
+	@Deprecated
   public void clickContinue() {
     clickButton("Continue");
   }
+	
+	/**
+	 * Use clickButtonLink(String buttonText, String nextPageTitle)
+	 * @param buttonText
+	 */
+	@Deprecated
+	public void clickButton(String buttonText) {
+		checkForBadMessageKeys();
+		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
+				.filter(button -> button.getText().contains(buttonText)).findFirst()
+				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+		buttonToClick.sendKeys(Keys.RETURN); 
+	}
   
   /**
    * Click the Continue button, then wait for the next page to load.
@@ -117,51 +232,107 @@ public class Page {
   public void clickContinue(String nextPage) {
 	  clickButton("Continue", nextPage);
 	}
-
-  /**
-   * Click button, then waits for the next page to load.
-   * @param buttonText
-   * @param nextPage
-   */
-	public void clickButton(String buttonText, String nextPage) {
+  
+	  /**
+	   * This is for links (anchors) that look like buttons.
+	   * Click the button/link, then wait for the next page to load.
+	   * @param buttonText
+	   * @param nextPageTitle
+	   */
+	public void clickButtonLink(String buttonText, String nextPageTitle) {
 		checkForBadMessageKeys();
 		WebElement buttonToClick = driver.findElements(By.className("button")).stream()
 				.filter(button -> button.getText().contains(buttonText)).findFirst()
 				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
-		buttonToClick.click();
+		buttonToClick.sendKeys(Keys.ENTER);
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPageTitle));
+	}
+	
+	/**
+	 * This is for clicking subtle links, anchors that use the "link--subtle" class.
+	 * @param buttonText
+	 * @param nextPageTitle
+	 */
+	public void clickSubtleLink(String buttonText, String nextPageTitle) {
+		checkForBadMessageKeys();
+		WebElement buttonToClick = driver.findElements(By.className("link--subtle")).stream()
+				.filter(button -> button.getText().contains(buttonText)).findFirst()
+				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+		buttonToClick.sendKeys(Keys.ENTER);
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.titleContains(nextPageTitle));
+	}
+
+	  /**
+	   * Click form submit button, then waits for the next page to load.<br>
+	   * This method is to be used on pages created by the framework where the submit button has<br>
+	   * the id "form-submit-button".
+	   * @param buttonText
+	   * @param nextPage
+	   */
+	public void clickButton(String buttonText, String nextPage) {
+		checkForBadMessageKeys();
+		WebElement buttonToClick = driver.findElements(By.id("form-submit-button")).stream()
+				.filter(button -> button.getText().contains(buttonText)).findFirst()
+				.orElseThrow(() -> new RuntimeException("No button found containing text: " + buttonText));
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.elementToBeClickable(buttonToClick));
+		buttonToClick.sendKeys(Keys.ENTER);
+		wait.until(ExpectedConditions.titleContains(nextPage));
+	}
+	
+ 
+  
+	public void enter(String inputName, String value) {
+		checkForBadMessageKeys();
+		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+		WebDriverWait wait = new WebDriverWait(driver, duration);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
+		List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+		WebElement firstElement = formInputElements.get(0);
+		FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
+		switch (formInputHtmlTag) {
+		case select -> selectFromDropdown(firstElement, value);
+		case button -> choose(formInputElements, value);
+		case textarea -> enterInput(firstElement, value);
+		case input -> {
+			switch (InputTypeHtmlAttribute.valueOf(firstElement.getAttribute("type"))) {
+			case text -> {
+				if (firstElement.getAttribute("class").contains("dob-input")) {
+					enterDateInput(inputName, value);
+				} else {
+					enterInput(firstElement, value);
+				}
+			}
+			case radio, checkbox -> selectEnumeratedInput(formInputElements, value);
+			default -> enterInput(firstElement, value);
+			}
+		}
+		default -> throw new IllegalArgumentException("Cannot find element");
+		}
+	}
+
+	/**
+	 * Yes and No buttons perform their own page submit action and need their own
+	 * wait period for the next page to load.
+	 * 
+	 * @param inputName
+	 * @param value
+	 * @param nextPage
+	 */
+	public void chooseYesOrNo(String inputName, String value, String nextPage) {
+		List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+		WebElement buttonToClick = formInputElements.stream().filter(button -> button.getText().contains(value))
+				.findFirst().orElseThrow();
+		buttonToClick.sendKeys(Keys.ENTER);
 		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
 		WebDriverWait wait = new WebDriverWait(driver, duration);
 		wait.until(ExpectedConditions.titleContains(nextPage));
 	}
-  
-public void enter(String inputName, String value) {
-    checkForBadMessageKeys();
-	Duration duration = Duration.of(5, ChronoUnit.SECONDS);
-	WebDriverWait wait = new WebDriverWait(driver, duration);
-	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
-    List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
-    WebElement firstElement = formInputElements.get(0);
-    FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
-    switch (formInputHtmlTag) {
-      case select -> selectFromDropdown(firstElement, value);
-      case button -> choose(formInputElements, value);
-      case textarea -> enterInput(firstElement, value);
-      case input -> {
-        switch (InputTypeHtmlAttribute.valueOf(firstElement.getAttribute("type"))) {
-          case text -> {
-            if (firstElement.getAttribute("class").contains("dob-input")) {
-              enterDateInput(inputName, value);
-            } else {
-              enterInput(firstElement, value);
-            }
-          }
-          case radio, checkbox -> selectEnumeratedInput(formInputElements, value);
-          default -> enterInput(firstElement, value);
-        }
-      }
-      default -> throw new IllegalArgumentException("Cannot find element");
-    }
-  }
 
   public void enter(String inputName, List<String> value) {
     checkForBadMessageKeys();
@@ -215,7 +386,7 @@ public void enter(String inputName, String value) {
         .filter(button -> button.getText().contains(value))
         .findFirst()
         .orElseThrow();
-    buttonToClick.click();
+    buttonToClick.sendKeys(Keys.ENTER);
   }
 
   public void selectFromDropdown(String inputName, String optionText) {
@@ -230,7 +401,7 @@ public void enter(String inputName, String value) {
         .filter(option -> option.getText().equals(optionText))
         .findFirst()
         .orElseThrow();
-    optionToSelect.click();
+    optionToSelect.click();// sendKeys(Keys.ENTER) doesn't work here
   }
 
   public WebElement getSelectedOption(String elementId) {
@@ -310,9 +481,18 @@ public void enter(String inputName, String value) {
         .map(WebElement::getText).orElse(null);
   }
 
+  /**
+   * 
+   * Javadoc for findElement tells us: Find the first WebElement using the given method. 
+   * This method is affected by the'implicit wait' times in force at the time of execution. 
+   * The findElement(..) invocation will return a matching row, or try again repeatedly until the configured timeout is reached. 
+<b>findElement should not be used to look for non-present elements, use findElements(By) and assert zero length response instead. </b>
+   * @param inputName
+   * @return
+   */
   public boolean inputIsValid(String inputName) {
     return driver.findElement(By.cssSelector(String.format("input[name='%s[]']", inputName)))
-        .getAttribute("aria-invalid").equals("false");
+        .getDomAttribute("aria-invalid").equals("false");
   }
 
   public String getInputAriaLabel(String inputName) {

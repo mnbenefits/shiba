@@ -28,31 +28,29 @@ public class LocalePreferenceSelectionTest extends AbstractBasePageTest {
 
   @Test
   void noDefaultWrittenLanguageSelection() {
-    testPage.clickButton("Apply now");
+	testPage.clickButtonLink("Apply now", "Identify County");
     testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
+    testPage.clickContinue("Prepare To Apply");
     testPage.selectFromDropdown("locales", "Español");
     assertThat(driver.findElements(By.tagName("h1")).get(0).getText()).isEqualTo("Como funciona");
 
-    testPage.clickButton("Continuar");
-    testPage.clickButton("Continuar");
+    testPage.clickCustomButton("Continuar", 3, "Aviso de tiempo de espera");
+    testPage.clickButtonLink("Continuar", "Preferencia de idioma – Escrito");
     // Verify that there is no default writtenLanguage selection.
     String selectedOption = testPage.getRadioValue("writtenLanguage");
     assertTrue(selectedOption==null);
   }
 
-  @Disabled("This test passes on VDIs but fails on GitHub")
+  
   @Test
   void selectingSpanishForWrittenLanguagePreferenceDoesNotChangeFlowLocaleToSpanish() {
-    testPage.clickButton("Apply now");
-    testPage.enter("county", "Hennepin");
-    testPage.clickContinue();
-    testPage.clickContinue();
-    testPage.clickContinue();
+	testPage.clickButtonLink("Apply now", "Identify County");
+	testPage.enter("county", "Hennepin");
+	testPage.clickContinue("Prepare To Apply");
+    testPage.clickButtonLink("Continue", "Timeout notice");
+    testPage.clickButtonLink("Continue", "Language Preferences - Written");
     testPage.enter("writtenLanguage", "Español");
-
-    testPage.clickButton("Continue");
-
+    testPage.clickButton("Continue", "Language Preferences - Spoken");
     assertThat(driver.getTitle()).isEqualTo("Language Preferences - Spoken");
     
     WebElement selectedOption = testPage.getSelectedOption("locales");
