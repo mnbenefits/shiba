@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -32,7 +31,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "This PDF is in an old format. Try converting it to an image or uploading a screenshot instead.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     uploadPasswordProtectedPdf();
     waitForErrorMessage();
@@ -42,7 +41,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains(
         "hidden");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     uploadInvalidJpg();
     waitForErrorMessage();
@@ -52,7 +51,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         .getText()).contains("0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
         .contains("hidden");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     doThrow(new InterruptedException())
         .when(documentRepository).upload(any(String.class), any(MultipartFile.class));
@@ -76,7 +75,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.xyz', size: 1000, type: 'not-an-image'})");
     assertThat(driver.findElements(By.className("text--error")).get(0).getText())
         .contains("You can't upload files of this type");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -85,7 +84,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.heic', size: 1000, type: 'not-an-image'})");
     assertThat(driver.findElements(By.className("text--error")).get(0).getText())
         .contains("HEIC files, an iPhone file type, are not accepted.");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -94,10 +93,10 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    int maxFileSize = uploadDocumentConfiguration.getMaxFilesize();
+    int maxFileSize = 20;
     assertThat(driver.findElement(By.className("text--error")).getText()).contains(
         "This file is too large and cannot be uploaded (max size: " + maxFileSize + " MB)");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -178,7 +177,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "This PDF is in an old format. Try converting it to an image or uploading a screenshot instead.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     uploadPasswordProtectedPdf();
     waitForErrorMessage();
@@ -188,7 +187,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains(
         "hidden");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     uploadInvalidJpg();
     waitForErrorMessage();
@@ -198,7 +197,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         .getText()).contains("0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
         .contains("hidden");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     doThrow(new InterruptedException())
         .when(documentRepository).upload(any(String.class), any(MultipartFile.class));
@@ -222,7 +221,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.xyz', size: 1000, type: 'not-an-image'})");
     assertThat(driver.findElements(By.className("text--error")).get(0).getText())
         .contains("You can't upload files of this type");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -231,7 +230,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.heic', size: 1000, type: 'not-an-image'})");
     assertThat(driver.findElements(By.className("text--error")).get(0).getText())
         .contains("HEIC files, an iPhone file type, are not accepted.");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -240,10 +239,10 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    int maxFileSize = uploadDocumentConfiguration.getMaxFilesize();
+    int maxFileSize = 20;
     assertThat(driver.findElement(By.className("text--error")).getText()).contains(
         "This file is too large and cannot be uploaded (max size: " + maxFileSize + " MB)");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -324,7 +323,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "This PDF is in an old format. Try converting it to an image or uploading a screenshot instead.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     uploadPasswordProtectedPdf();
     waitForErrorMessage();
@@ -334,7 +333,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class")).contains(
         "hidden");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     uploadInvalidJpg();
     waitForErrorMessage();
@@ -344,7 +343,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         .getText()).contains("0 files added");
     assertThat(driver.findElement(By.id("submit-my-documents")).getAttribute("class"))
         .contains("hidden");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
 
     doThrow(new InterruptedException())
         .when(documentRepository).upload(any(String.class), any(MultipartFile.class));
@@ -368,7 +367,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.xyz', size: 1000, type: 'not-an-image'})");
     assertThat(driver.findElements(By.className("text--error")).get(0).getText())
         .contains("You can't upload files of this type");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -377,7 +376,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.heic', size: 1000, type: 'not-an-image'})");
     assertThat(driver.findElements(By.className("text--error")).get(0).getText())
         .contains("HEIC files, an iPhone file type, are not accepted.");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -386,10 +385,10 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     driver.executeScript(
         "$('#document-upload').get(0).dropzone.addFile({name: 'testFile.pdf', size: "
         + largeFilesize + ", type: 'not-an-image'})");
-    int maxFileSize = uploadDocumentConfiguration.getMaxFilesize();
+    int maxFileSize = 20;
     assertThat(driver.findElement(By.className("text--error")).getText()).contains(
         "This file is too large and cannot be uploaded (max size: " + maxFileSize + " MB)");
-    testPage.clickLink("remove");
+    testPage.clickLink("remove", "Upload documents");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText())
         .isEqualTo("1 file added");
 
@@ -500,15 +499,10 @@ public class DocumentUploadJourneyTest extends JourneyTest {
 		anchor.click();
 		// Click the confirmation
 		driver.findElement(By.id("form-submit-button")).click();
-		// TODO monitor this on GitHub, Defect 118827
-		//new wait object, watch to see if intermittent wait failures still occur
+		// wait object to stop intermittent wait failures
 		var wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		WebElement newUploadedFilesMessage = driver.findElement(By.id("number-of-uploaded-files"));
 		wait.until(ExpectedConditions.textToBePresentInElement(newUploadedFilesMessage, "3 files added"));
-		
-		//OLD METHOD THAT FAILS INTERMITTANTLY: 
-		//await().atMost(Duration.ofSeconds(30)).until(() -> newUploadedFilesMessage.getText().equals("3 files added"));
-
 		webElements = driver.findElements(By.id("file"));
 		assert (webElements.size() == 3);
 		fileNames = new ArrayList<String>();

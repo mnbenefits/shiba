@@ -39,8 +39,9 @@ public class SeleniumFactory implements FactoryBean<RemoteWebDriver> {
   }
 
   /**
-   * The implicit timeouts don't seem to work. I am leaving them in for now, until the explicit timeouts in Page.java clickButton method are used for all tests.
-   * Journey tests started failing in August 2024.
+   * The implicit timeouts don't seem to work by themselves on GitHub. 
+   * After adding explicit timeouts in Page.java methods the tests are more stable.
+   * As long as tests remain stable, keep the implicit timeouts here.
    * @throws IOException
    */
   public void start() throws IOException {
