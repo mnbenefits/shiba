@@ -42,7 +42,7 @@ public class SessionScopedApplicationDataTest extends AbstractStaticMessageSourc
   void shouldClearTheSessionWhenUserNavigatesToALandingPage() {
     navigateTo("testStaticLandingPage");
 
-    testPage.clickContinue("second page title");
+    testPage.clickCustomButton("Continue", 3, "second page title");
     testPage.enter("foo", "someInput");
     testPage.clickContinue("third page title");
 

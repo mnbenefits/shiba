@@ -5450,6 +5450,7 @@ workflow:
     nextPages:
       - pageName: verifyCounty
         condition:
+          name: homeStateIsMN
           pageName: homeAddress
           input: state
           matcher: CONTAINS_ONLY
@@ -5583,6 +5584,7 @@ workflow:
     nextPages:
       - pageName: doYouHaveChildCareProvider
         condition:
+          name: childrenSelectedNotEmpty
           pageName: childrenInNeedOfCare
           input: whoNeedsChildCare
           matcher: NOT_EMPTY
@@ -5598,12 +5600,14 @@ workflow:
     skipCondition: *noOneChoseCCAP?
     nextPages:
       - pageName: childCareProviderInfo
-        condition: 
+        condition:
+          name: yesHasChildCareProvider
           pageName: doYouHaveChildCareProvider
           input: hasChildCareProvider
           value: "true"
       - pageName: whoHasParentNotAtHome
         condition:
+            name: noDoesNotHaveChildCareProvider
             pageName: doYouHaveChildCareProvider
             input: hasChildCareProvider
             value: "false"
