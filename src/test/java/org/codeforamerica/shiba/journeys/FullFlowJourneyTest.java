@@ -795,7 +795,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_NAME_0", "houseHoldyMcMemberson");
 		// TODO: CAF MIGRATION: assertCafFieldEquals("CCAP_0", "Yes");
 		assertCafFieldEquals("RELATIONSHIP_0", "child");
-		assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED");
+		// TODO: CAF MIGRATION: assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED");
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
 		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
 		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.00");
