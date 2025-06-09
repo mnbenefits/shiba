@@ -58,6 +58,10 @@ public class InputsPageE2ETest extends AbstractExistingStartTimePageTest {
     staticMessageSource.addMessage("general.month", Locale.ENGLISH, "month");
     staticMessageSource.addMessage("general.day", Locale.ENGLISH, "day");
     staticMessageSource.addMessage("general.year", Locale.ENGLISH, "year");
+    staticMessageSource.addMessage("generic.footer.about", Locale.ENGLISH, "About");
+    staticMessageSource.addMessage("generic.footer.help-and-resources", Locale.ENGLISH, "Help & Resources");
+    staticMessageSource.addMessage("generic.footer.mn-official-website", Locale.ENGLISH, "State of Minnesota Official Website");
+    staticMessageSource.addMessage("language-and-accessibility.language-and-accessibility", Locale.ENGLISH, "Language and Accessibility");
     staticMessageSource.addMessage("language-and-accessibility.amharic", Locale.ENGLISH, "Amharic");
     staticMessageSource.addMessage("language-and-accessibility.arabic", Locale.ENGLISH, "Arabic");
     staticMessageSource.addMessage("language-and-accessibility.burmese", Locale.ENGLISH, "Burmese");
