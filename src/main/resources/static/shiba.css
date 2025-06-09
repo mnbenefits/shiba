@@ -249,58 +249,67 @@ html {
 	border-color: black;
 }
 
-.top-nav-container{
-	background-color:#ffffff;
-	border-bottom: 1px solid #ccc;
-	position:relative;
-	margin-left:-1.5rem;
-	margin-right:-1.5rem;
-	padding:1.5rem;
-
+.navigation_wrapper {
+  background: #ffffff;
+  margin-left: -1.5rem ;
+  margin-right: -1.5rem ;
+  padding-left: 1.5rem ;
+  padding-right: 1.5rem ;
+  max-width: 100vw ;
+  height: 6rem ;
+  font-size: 1.6rem ;
+  border-bottom: 1px solid #ffffff;
+  position: relative ;
+	}
+        
+.nav-tabs {
+  display: flex;
+  margin: 0;
+  padding: 0px;
+  list-style: none;
+  align-items: center;
+  background: transparent;
+  padding-left: 23%; 
+  gap: 0px; /* Add spacing between tabs */
+  }
+        
+ .nav-tab {
+    position: relative;
+    margin: 0;
+    display: flex; /* Make each tab independent */
+  }
+ .nav-link:first-child{
+  	margin-left: 0px;
+  }
+ .nav-link:last-child{
+  	margin-right: 0px;
+  }
+        
+ .nav-link {
+  display: inline-block;
+  font-weight: bold;
+  font-size: 14px;
+  margin-left: 16px;
+  padding: 15px 25px 18px 25px; /* Increased bottom padding to create space */
+  color:  #005599 !important;
+  text-decoration: none;
+  position: relative;
+  line-height: 16px;
+  }
+        
+/* Show green line only when active */
+ .nav-link.active {
+  border-bottom: 3px solid #28a745; /* Green line for active page */
 }
-
-.top-nav{
-	margin-top: 0 auto;
-	justify-content: space-between;
-	align-items: center;
-	padding: 16px 14px;
-	display: flex;
-	max-width: 100%
-}
-
-.nav-link{
-	font-size: 16px;
-	font-weight: bold;
-	color: #005599 !important;
-	text-decoration:none;
-	padding: 0.0.5rem;
-	line-height: 16px;
-	position: relative;
-	margin-left: 16px;
-	display: inline-block;
-	
-}
-.nav-link:first-child{
-	margin-left: 0px;
-}
-.nav-link:last-child{
-	margin-right: 0px;
-}
-.nav-link:hover{
-	text-decoration: underline;
-
-}
-
-.nav-link.active::after{
-	content: "";
-	position: absolute;
-	width: 100%;
-	height: 3px;
-	background-color: #78be21;
-	left: 0;
-	bottom: 0;
-	border-radius: 1px;
-}
+        
+.nav-link:hover {
+  text-decoration: underline;
+        }
+        
+        /* This will be used later for conditional display */
+         .nav-tab.active .green-bar {
+            display: block;
+        } 
 
 .next-steps-accordion{
 	background-color: #E9F6FF; 
@@ -874,6 +883,10 @@ input[type=number] {
   max-width: 100vw;
   height: 6rem;
   font-size: 1.6rem;
+}
+
+.toolbar_wrapper.naviagtion-bg{
+	background: #ffffff;
 }
 
 .info-pages-toolbar__wrapper {
