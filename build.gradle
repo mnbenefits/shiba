@@ -173,7 +173,7 @@ dependencies {
     testImplementation("org.seleniumhq.selenium:selenium-api:4.33.0")
     testImplementation("org.seleniumhq.selenium:selenium-bom:4.32.0")
     testImplementation("org.seleniumhq.selenium:selenium-chrome-driver:4.33.0")
-    testImplementation("org.seleniumhq.selenium:selenium-chromium-driver:4.32.0")
+    testImplementation("org.seleniumhq.selenium:selenium-chromium-driver:4.33.0")
     testImplementation("org.seleniumhq.selenium:selenium-devtools-v135:4.33.0")
     testImplementation("org.seleniumhq.selenium:selenium-edge-driver:4.32.0")
     testImplementation("org.seleniumhq.selenium:selenium-firefox-driver:4.33.0")
