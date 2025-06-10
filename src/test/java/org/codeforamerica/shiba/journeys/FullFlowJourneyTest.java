@@ -690,11 +690,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
 		assertCafFieldEquals("CREATED_DATE", "2020-01-01");
-		// TODO: CAF MIGRATION: assertCafFieldEquals("HEATING_COOLING_SELECTION", "ONE_SELECTED");
+		assertCafFieldEquals("HEAT", "Yes");
 		assertCafFieldEquals("WATER_SEWER_SELECTION", "NEITHER_SELECTED");
 		assertCafFieldEquals("ELECTRICITY", "No");
 		assertCafFieldEquals("GARBAGE_REMOVAL", "No");
-		// TODO: CAF MIGRATION: assertCafFieldEquals("COOKING_FUEL", "No");
 		assertCafFieldEquals("PHONE", "No");
 		assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
 		assertCafFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
@@ -737,7 +736,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CASH", "Off");
 		assertCafFieldEquals("CCAP", "Yes");
 		assertCafFieldEquals("EMERGENCY", "Yes");
-		// TODO: CAF MIGRATION: assertCafFieldEquals("GRH", "Yes");
+		assertCafFieldEquals("MN_HOUSING_SUPPORT", "Yes");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
 		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
@@ -793,9 +792,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("FIRST_NAME_0", "householdMemberFirstName");
 		assertCafFieldEquals("PREVIOUS_STATE_0", "Illinois");
 		assertCafFieldEquals("OTHER_NAME_0", "houseHoldyMcMemberson");
-		// TODO: CAF MIGRATION: assertCafFieldEquals("CCAP_0", "Yes");
+		assertCafFieldEquals("CCAP_0", "Yes");
 		assertCafFieldEquals("RELATIONSHIP_0", "child");
-		// TODO: CAF MIGRATION: assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED");
+		assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED"); 
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
 		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
 		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.00");
