@@ -736,7 +736,7 @@ form .drag-and-drop-box-compact {
   } 
 }
 .tagline-spacing {
-	margin-top: 15px;
+	margin-top: 10px;
 	}
 @media (max-width: 768px) {
   .tagline-spacing {
@@ -880,7 +880,11 @@ input[type=number] {
 .button--link:active {
   color: #741078;
 }
-
+.tagline-button{
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
 .language-select {
   background: transparent;
   margin-left: auto;
