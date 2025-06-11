@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 
 /**
  * PDF generator interprets ENUMERATED_MULTI_VALUE as "Yes" if the field is
- * there, so it will do the "COOKING_FUEL" -> "Yes" on the acroform. XML doesn't
+ * there, so it will do the "GARBAGE_REMOVAL" -> "Yes" on the acroform. XML doesn't
  * do that but it replaces the values with the enums it has listed in
- * xml-mappings, "COOKING_FUEL" -> "Cooking Fuel". Having multiple application
+ * xml-mappings, "GARBAGE_REMOVAL" -> "Garbage Removal". Having multiple application
  * inputs with different values is needed because the XML doesn't have the radio
  * buttons to write "Yes".
  */
@@ -29,7 +29,6 @@ public class UtilityPaymentsPreparer extends OneToManyDocumentFieldPreparer {
 
 	private static final List<String> EXPEDITED_UTILITY_PAYMENTS = List.of("HEATING", "COOLING", "ELECTRICITY",
 			"PHONE");
-	private static final List<String> HEATING_OR_COOLING = List.of("HEATING", "COOLING");
 	private static final List<String> WATER_OR_SEWER = List.of("WATER", "SEWER");
 
 	@Override
@@ -68,25 +67,17 @@ public class UtilityPaymentsPreparer extends OneToManyDocumentFieldPreparer {
 		boolean waterOrSewer = utilityPayments.stream().anyMatch(WATER_OR_SEWER::contains);
 
 		// Mark these radio buttons on the PDF
-
-		results.add(new DocumentField("utilityPayments", "heatingSelection",
-selectedHeating ? "Yes" : "No",
-				ENUMERATED_SINGLE_VALUE));
-		results.add(new DocumentField("utilityPayments", "coolingSelection",
-selectedCooling ? "Yes" : "No",
-				ENUMERATED_SINGLE_VALUE));
-		results.add(new DocumentField("utilityPayments", "waterOrSewerSelection",
-				waterOrSewer ? "ONE_SELECTED" : "NEITHER_SELECTED",
-				ENUMERATED_SINGLE_VALUE));
+		results.add(new DocumentField("utilityPayments", "HEATING", selectedHeating ? "Yes" : "No", ENUMERATED_SINGLE_VALUE));
+		results.add(new DocumentField("utilityPayments", "COOLING", selectedCooling ? "Yes" : "No", ENUMERATED_SINGLE_VALUE));
+		results.add(new DocumentField("utilityPayments", "waterOrSewerSelection", waterOrSewer ? "ONE_SELECTED" : "NEITHER_SELECTED", ENUMERATED_SINGLE_VALUE));
 
 		// Write these values explicitly on the XML
-
-		results.add(new DocumentField("utilityPayments", "heatingSelection", 
-				selectedHeating ? "Yes" : "No",
-				ENUMERATED_SINGLE_VALUE));
-		results.add(new DocumentField("utilityPayments", "coolingSelection", 
-				selectedCooling ? "Yes" : "No",
-				ENUMERATED_SINGLE_VALUE));
+	    if (selectedHeating || selectedCooling) {
+	        results.add(new DocumentField("utilityPayments", "heatingOrCooling",
+	            "HEATING_OR_COOLING",
+	            ENUMERATED_SINGLE_VALUE));
+	      }
+		
 		if (waterOrSewer) {
 			results.add(new DocumentField("utilityPayments", "waterOrSewer",
 					"WATER_OR_SEWER",
@@ -98,17 +89,11 @@ selectedCooling ? "Yes" : "No",
 					ENUMERATED_SINGLE_VALUE));
 		}
 
-		//Individual checkboxes for heating/cooling
-		  HEATING_OR_COOLING.stream() 
-		  .filter(utilityPayments::contains)
-		  .map(this::createApplicationInput) 
-		  .forEach(results::add);
-
 		return results;
 	}
 
-	@NotNull
-	private DocumentField createApplicationInput(String name) {
-		return new DocumentField("utilityPayments", name, "true", ENUMERATED_SINGLE_VALUE);
-	}
+//	@NotNull
+//	private DocumentField createApplicationInput(String name) {
+//		return new DocumentField("utilityPayments", name, "true", ENUMERATED_SINGLE_VALUE);
+//	}
 }

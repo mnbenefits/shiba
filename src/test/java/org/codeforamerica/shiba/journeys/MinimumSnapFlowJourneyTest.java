@@ -229,7 +229,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MONEY_MADE_LAST_MONTH", moneyMadeLast30Days + ".00");
     assertCafFieldEquals("EXPEDITED_QUESTION_2", liquidAssets);
     assertCafFieldEquals("HOUSING_EXPENSES", homeExpensesAmount);
-    assertCafFieldEquals("HEAT", "Off"); // TODO:  should this be "Off" or should it be "No"
+    assertCafFieldEquals("HEAT", "No"); 
     assertCafFieldEquals("AIR_CONDITIONING", "Yes");
     assertCafFieldEquals("ELECTRICITY", "No");
     assertCafFieldEquals("PHONE", "No");
