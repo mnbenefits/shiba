@@ -171,30 +171,39 @@
 }
 
 .footer-heading {
-	color: #89D926;
-	font-weight: 700;
-	size: 27px;
-	line-height: 35px;
+  color: #89D926;
+  font-weight: 700;
+  size: 27px;
+  line-height: 35px;
 }
 
 .footer-text {
-	margin-top: 0;
-	padding-top: 0;
-	font-weight: 400;
-	font-size: 14px;
-	line-height: 16px;
+  margin-top: 0;
+  padding-top: 0;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+}
+.footer-text:link {
+  color: #7AE3EB !important;
+}
+.footer-text:visited {
+  color: #CDCDCD !important;
+}
+.footer-text:hover {
+  color: #E6F2Fa !important;
 }
 
 .footer-column {
-	margin-right: 6% !important;
-	width: 30% !important;
+  margin-right: 6% !important;
+  width: 30% !important;
 }
 @media screen and (max-width: 600px) {
   .footer-column {
     margin-right: 0% !important;
-      margin-bottom: 35px !important;
-      width: 100% !important;
-	}
+    margin-bottom: 35px !important;
+    width: 100% !important;
+  }
 }
 
 .font-white {
