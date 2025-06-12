@@ -897,7 +897,7 @@ input[type=number] {
 	gap: 8px;
 	pointer-events: none;
 }
-@media (max-width: 767px) {
+@media (max-width: 912px) {
   .tagline-button {
     pointer-events: auto;
     cursor: pointer;
