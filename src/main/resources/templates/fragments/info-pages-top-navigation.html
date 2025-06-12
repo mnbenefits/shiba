@@ -3,10 +3,10 @@
 
 <body>
 	<div th:fragment="info-pages-top-navigation(currentPage)">
-		<header id="header-info-pages-top-navigation" class="main-header  navigation_wrapper">
-			<ul class="nav-tabs">
+		<header id="header-info-pages-top-navigation" class="main-header navigation_wrapper">
+			<ul class="nav-tabs  nav-horizontal-scroll">
 				<li class="nav-tab">
-					<a id="nav-faq" th:class="${currentPage== 'faq' ? ' nav-link grid_item active' : 'nav-link grid_item'}"
+					<a id="nav-faq" th:class="${currentPage== 'faq' ? ' nav-link grid_item active' : 'nav-link grid_item '}"
 					target="_blank" rel="noopener noreferrer"
 						href="/faq" th:utext="#{faq.faq}">
 						<span class="sr-only-on-mobile">Frequently Asked Questions (FAQs)</span>

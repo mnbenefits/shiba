@@ -287,12 +287,9 @@ html {
 
 .navigation_wrapper {
   background: #ffffff;
-  margin-left: -3.5rem;
-  margin-right: -3.5rem;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-  max-width: 100vw;
-
+  margin-right: calc(-50vw + 50% );
+  padding:  0.7rem;
+  width: 100vw;
 }
   
 .nav-tabs {
@@ -305,13 +302,14 @@ html {
   align-items: center;
   background: transparent;
   gap: 0px; /* Add spacing between tabs */
+  justify-content: center;
   }
         
 .nav-tab {
-	justify-content: flex-start;
-    position: relative;
-    margin: 0;
-    display: flex; /* Make each tab independent */
+  justify-content: flex-start;
+  position: relative;
+  margin: 0;
+  display: flex; /* Make each tab independent */
   }
 .nav-link:first-child{
   	margin-left: 0px;
@@ -319,7 +317,7 @@ html {
 .nav-link:last-child{
   	margin-right: 0px;
   }
-        
+     
 .nav-link {
   display: inline-block;
   font-weight: bold;
@@ -331,26 +329,30 @@ html {
   position: relative;
   line-height: 16px;
   white-space: nowrap;
+  text-align: center;
   }
         
  .nav-link.active {
-  border-bottom: 3px solid #78BE21; /* Green line for active page */
+  border-bottom: 3px solid #78BE21;  /*Green line for active page */
 }
-
-.nav-link.active::after{
-	content:"";
-	position:absolute;
-	bottom:0;
-	left: 0;
-	right: 0;
-
-}
-        
+     
 .nav-link:hover {
   text-decoration: none;
-        }
-        
+ }
 
+.nav-horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+ -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for cleaner look chrome/safari */
+.nav-horizontal-scroll::-webkit-scrollbar {
+   display: none;
+}
 			      
 .next-steps-accordion{
 	background-color: #E9F6FF; 
