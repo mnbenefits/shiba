@@ -290,6 +290,7 @@ html {
   margin-right: calc(-50vw + 50% );
   padding:  0.7rem;
   width: 100vw;
+  overflow-x: auto;  /* allow horizontal scrolling*/
 }
   
 .nav-tabs {
@@ -297,7 +298,7 @@ html {
   margin-right: 0;
   margin-top: 0;
   margin-bottom: 0;
-  padding-right: 0;
+  padding: 0;
   list-style: none;
   align-items: center;
   background: transparent;
@@ -306,10 +307,12 @@ html {
   }
         
 .nav-tab {
-  justify-content: flex-start;
-  position: relative;
-  margin: 0;
+  padding-left: 0 !important;
+  padding-right: 50px;
+  margin-left: 0px;
   display: flex; /* Make each tab independent */
+  flex-shrink: 0; /*prevent tabs from shrinking */
+  
   }
 .nav-link:first-child{
   	margin-left: 0px;
@@ -330,6 +333,8 @@ html {
   line-height: 16px;
   white-space: nowrap;
   text-align: center;
+  padding-left:0 ;
+  padding-right:0;
   }
         
  .nav-link.active {
@@ -342,11 +347,12 @@ html {
 
 .nav-horizontal-scroll {
   display: flex;
-  overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
   scrollbar-width: none; /* Firefox */
+  min-width: max-content; /* Ensure tabs don't compress or shrink below content width*/
+  flex-wrap:nowrap; /* prevent wrapping */
 }
 
 /* Hide scrollbar for cleaner look chrome/safari */
