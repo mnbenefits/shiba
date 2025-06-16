@@ -139,6 +139,15 @@ public class TestApplicationDataBuilder {
     return this;
   }
 
+  public TestApplicationDataBuilder withLanguagePreferences() {
+    PageData pageData = getPageData("writtenLanguage");
+    pageData.put("writtenLanguage", new InputData(List.of("SPANISH")));
+    pageData = getPageData("spokenLanguage");
+    pageData.put("spokenLanguage", new InputData(List.of("RUSSIAN")));
+    pageData.put("needInterpreter", new InputData(List.of("true")));  
+    return this;
+  }
+
   public TestApplicationDataBuilder withPageData(String pageName, String input, String value) {
     return withPageData(pageName, input, List.of(value));
   }

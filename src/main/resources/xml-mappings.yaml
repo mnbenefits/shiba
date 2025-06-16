@@ -9,10 +9,11 @@ xml:
       firstName: PERSONALINFO_FIRSTNAME
       lastName: PERSONALINFO_LASTNAME
       dateOfBirth: PERSONALINFO_DATE_OF_BIRTH
-    languagePreferences:
-      spokenLanguage: LANGUAGEPREFERENCES_SPOKENLANGUAGE
-      writtenLanguage: LANGUAGEPREFERENCES_WRITTENLANGUAGE
-      needInterpreter: LANGUAGEPREFERENCES_NEEDINTERPRETER
+    writtenLanguage:
+      writtenLanguage: WRITTENLANGUAGE_WRITTENLANGUAGE
+    spokenLanguage:
+      spokenLanguage: SPOKENLANGUAGE_SPOKENLANGUAGE
+      needInterpreter: SPOKENLANGUAGE_NEEDINTERPRETER
     personalInfo:
       firstName: PERSONALINFO_FIRSTNAME
       middleName: PERSONALINFO_MIDDLENAME

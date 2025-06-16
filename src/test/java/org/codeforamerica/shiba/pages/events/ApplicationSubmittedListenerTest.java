@@ -134,8 +134,8 @@ class ApplicationSubmittedListenerTest {
 					.thenReturn(new PagesDataBuilder().withPageData("contactInfo", "phoneOrEmail", "TEXT")
 							.withPageData("identifyCounty", "county", "Ramsey")
 							.withPageData("contactInfo", "phoneNumber", "(651)555-5555")
-							.withPageData("languagePreferences", "spokenLanguage", "English")
-							.withPageData("languagePreferences", "writtenLanguage", "English")
+							.withPageData("spokenlanguage", "spokenLanguage", "English")
+							.withPageData("writtenlanguage", "writtenLanguage", "English")
 							.withPageData("personalInfo", "lastName", "LastName")
 							.withPageData("personalInfo", "firstName", "FirstName").build());
 			Application application = Application.builder().id(applicationId).county(County.Ramsey)
@@ -182,8 +182,8 @@ class ApplicationSubmittedListenerTest {
 							.withPageData("identifyCounty", "county", "Olmsted")
 							.withPageData("selectTheTribe", "selectedTribe", "Red Lake Nation")
 							.withPageData("contactInfo", "phoneNumber", "(651)555-5555")
-							.withPageData("languagePreferences", "spokenLanguage", "English")
-							.withPageData("languagePreferences", "writtenLanguage", "English")
+							.withPageData("spokenlanguage", "spokenLanguage", "English")
+							.withPageData("writtenLanguage", "writtenLanguage", "English")
 							.withPageData("personalInfo", "lastName", "LastName")
 							.withPageData("personalInfo", "firstName", "FirstName").build());
 			Application application = Application.builder().id(applicationId).county(County.Olmsted)
@@ -232,8 +232,8 @@ class ApplicationSubmittedListenerTest {
 							.withPageData("identifyCounty", "county", "Becker")
 							.withPageData("selectTheTribe", "selectedTribe", "White Earth Nation")
 							.withPageData("contactInfo", "phoneNumber", "(651)555-5555")
-							.withPageData("languagePreferences", "spokenLanguage", "English")
-							.withPageData("languagePreferences", "writtenLanguage", "English")
+							.withPageData("spokenlanguage", "spokenLanguage", "English")
+							.withPageData("writtenlanguage", "writtenLanguage", "English")
 							.withPageData("personalInfo", "lastName", "LastName")
 							.withPageData("personalInfo", "firstName", "FirstName").build());
 			Application application = Application.builder().id(applicationId).county(County.Becker)
