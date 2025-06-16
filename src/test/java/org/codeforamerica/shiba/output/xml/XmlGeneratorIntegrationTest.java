@@ -246,6 +246,32 @@ public class XmlGeneratorIntegrationTest {
         """);
   }
 
+  @Test
+  void shouldMapLanguagePreferencesInfoForRegularFlow() {
+    ApplicationData applicationData = new TestApplicationDataBuilder()
+        .withLanguagePreferences()
+        .withPageData("additionalInfo","caseNumber","123456").build();
+    Application application = Application.builder()
+        .id("someId")
+        .completedAt(ZonedDateTime.now(clock))
+        .applicationData(applicationData)
+        .county(County.Hennepin)
+        .timeToComplete(Duration.ofSeconds(534))
+        .build();
+    applicationRepository.save(application);
+
+    ApplicationFile applicationFile = xmlGenerator
+        .generate("someId", Document.XML, CASEWORKER);
+
+    String xmlFile = new String(applicationFile.getFileBytes());
+    assertThat(xmlFile).containsIgnoringWhitespaces("""
+        <ns4:MiscellaneousInfo>
+            <ns4:PrimarySpokenLanguage>Russian</ns4:PrimarySpokenLanguage>
+            <ns4:PreferredWrittenLanguage>Spanish</ns4:PreferredWrittenLanguage>
+            <ns4:NeedInterpreterInd>true</ns4:NeedInterpreterInd>
+        </ns4:MiscellaneousInfo>""");
+  }
+
   private Node byteArrayToDocument(byte[] bytes)
       throws ParserConfigurationException, IOException, SAXException {
     DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

@@ -28,12 +28,12 @@ public class ContactInfoParser {
   
   public static String writtenLanguagePref(ApplicationData applicationData) {
     return applicationData.getPagesData()
-        .getPageInputFirstValue("languagePreferences", "writtenLanguage");
+        .getPageInputFirstValue("writtenLanguage", "writtenLanguage");
   }
   
   public static String spokenLanguagePref(ApplicationData applicationData) {
     return applicationData.getPagesData()
-        .getPageInputFirstValue("languagePreferences", "spokenLanguage");
+        .getPageInputFirstValue("spokenLanguage", "spokenLanguage");
   }
   
   public static String firstName(ApplicationData applicationData) {
