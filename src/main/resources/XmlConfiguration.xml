@@ -352,9 +352,9 @@
             <ns4:LIHEAPInd>{{RECEIVED_LIHEAP}}</ns4:LIHEAPInd>
         </ns4:HouseholdExpenseInfo>
         <ns4:MiscellaneousInfo>
-            <ns4:PrimarySpokenLanguage>{{LANGUAGEPREFERENCES_SPOKENLANGUAGE}}</ns4:PrimarySpokenLanguage>
-            <ns4:PreferredWrittenLanguage>{{LANGUAGEPREFERENCES_WRITTENLANGUAGE}}</ns4:PreferredWrittenLanguage>
-            <ns4:NeedInterpreterInd>{{LANGUAGEPREFERENCES_NEEDINTERPRETER}}</ns4:NeedInterpreterInd>
+            <ns4:PrimarySpokenLanguage>{{SPOKENLANGUAGE_SPOKENLANGUAGE}}</ns4:PrimarySpokenLanguage>
+            <ns4:PreferredWrittenLanguage>{{WRITTENLANGUAGE_WRITTENLANGUAGE}}</ns4:PreferredWrittenLanguage>
+            <ns4:NeedInterpreterInd>{{SPOKENLANGUAGE_NEEDINTERPRETER}}</ns4:NeedInterpreterInd>
         </ns4:MiscellaneousInfo>
         <ns4:AnyoneBuyOrFixFoodInd>{{PREPARING_MEALS_TOGETHER}}</ns4:AnyoneBuyOrFixFoodInd>
         <ns4:AnyonePregnantInd>{{IS_PREGNANT}}</ns4:AnyonePregnantInd>

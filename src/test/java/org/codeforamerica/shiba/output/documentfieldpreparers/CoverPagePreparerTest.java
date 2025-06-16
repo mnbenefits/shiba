@@ -410,7 +410,7 @@ class CoverPagePreparerTest {
             DocumentFieldType.SINGLE_VALUE
         ));
     new TestApplicationDataBuilder(applicationData)
-        .withPageData("languagePreferences", "writtenLanguage", "SPANISH");
+        .withPageData("writtenLanguage", "writtenLanguage", "SPANISH");
 
     documentFields = preparer.prepareDocumentFields(application, CAF, Recipient.CLIENT);
     assertThat(documentFields).contains(
