@@ -17,13 +17,13 @@
   <!-- End Google Tag Manager -->
 
 </head>
-<body class="locale-en" id="snapNDS">
+<body class="locale-en" id="top-nav">
 <div th:replace="~{fragments/google-analytics-body-snippet :: google-analytics-body-snippet}"></div>
 <div class="page-wrapper slab--shiba">
   <div th:replace="~{fragments/toolbar :: toolbar}"></div>
   <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
   <div th:replace="~{fragments/info-pages-top-navigation :: info-pages-top-navigation('snap')}"></div>
-  <section class="slab spacing-above-35">
+  <section class="slab">
     <div class="grid">
       <div class="grid__item">
         <h1 class="spacing-below-35" th:text="#{snap-nds.header}"></h1>
@@ -33,7 +33,7 @@
 				<div th:replace="~{fragments/icons/icon-arrow :: icon-arrow}"></div>
 			</a>
 			<!--Add button to apply now in Spanish-->
-			<div class="spacing-above-45">
+			<div class="spacing-above-15">
 				<a class="button button--small button-width" th:href="@{/pages/landing/navigation( lang='es')}" lang="es">
 					<span lang="es" th:text="#{landing.apply-now-espanol}"></span>
 					<div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>

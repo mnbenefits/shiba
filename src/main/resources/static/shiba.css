@@ -10,7 +10,7 @@
   flex: 1 0 auto;
 }
 
-#landing-page .grid {
+#landing-page, #top-nav .grid {
   max-width: 960px;
 }
 
