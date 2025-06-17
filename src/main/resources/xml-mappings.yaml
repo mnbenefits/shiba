@@ -80,10 +80,12 @@ xml:
         COOLING: COOLING
         ELECTRICITY: ELECTRICITY
         PHONE: PHONE
-        COOKING_FUEL: COOKING_FUEL
         GARBAGE_REMOVAL: GARBAGE_REMOVAL
       NO_EXPEDITED_UTILITIES_SELECTED: NO_EXPEDITED_UTILITIES_SELECTED
+#heatingOrCoolingSelection deprecated in CAF 2025 use heatingSelection and coolingSelection instead
       heatingOrCooling: HEATING_OR_COOLING
+      heatingSelection:  HEATING_SELECTION
+      coolingSelection: COOLING_SELECTION
       waterOrSewer: WATER_OR_SEWER
       phoneCellPhone: PHONE_CELL_PHONE
     migrantFarmWorker:

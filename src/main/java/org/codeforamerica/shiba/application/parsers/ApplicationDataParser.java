@@ -104,6 +104,15 @@ public class ApplicationDataParser {
         new ParsingCoordinate("cityForGeneralDelivery", "whatIsTheCity"));
     coordinatesMap.put(Field.GENERAL_DELIVERY_ZIPCODE,
         new ParsingCoordinate("cityForGeneralDelivery", "enrichedZipcode"));
+
+    coordinatesMap.put(Field.COMM_OPTIN_PHONE_NUMBER,
+            new ParsingCoordinate("communicationsOptIn", "commOptInPhoneNumber"));
+    coordinatesMap.put(Field.COMM_OPTIN_EMAIL_ADDRESS,
+            new ParsingCoordinate("communicationsOptIn", "commOptInEmailAddress"));
+    coordinatesMap.put(Field.COMM_OPTIN_PHONE,
+            new ParsingCoordinate("communicationsOptIn", "commOptInPhone"));
+    coordinatesMap.put(Field.COMM_OPTIN_EMAIL,
+            new ParsingCoordinate("communicationsOptIn", "commOptInEmail"));
     
     coordinatesMap.put(Field.TRIBAL_NATION,
             new ParsingCoordinate("tribalNationMember", "isTribalNationMember"));
@@ -535,6 +544,11 @@ public class ApplicationDataParser {
 
     GENERAL_DELIVERY_CITY,
     GENERAL_DELIVERY_ZIPCODE,
+
+    COMM_OPTIN_PHONE_NUMBER,
+    COMM_OPTIN_EMAIL_ADDRESS,
+    COMM_OPTIN_PHONE,
+    COMM_OPTIN_EMAIL,
 
     TRIBAL_NATION,
     NATION_OF_RESIDENCE,

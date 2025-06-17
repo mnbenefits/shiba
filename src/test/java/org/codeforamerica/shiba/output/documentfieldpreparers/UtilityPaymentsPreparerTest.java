@@ -29,12 +29,12 @@ public class UtilityPaymentsPreparerTest {
         createApplicationInput("utilityPayments", "PHONE", "false"),
         createApplicationInput("utilityPayments", "GARBAGE_REMOVAL", "false"),
         createApplicationInput("utilityPayments", "ELECTRICITY", "false"),
-        createApplicationInput("utilityPayments", "COOKING_FUEL", "false"),
 
         createApplicationInput("utilityPayments", "noExpeditedUtilitiesSelected", "true"),
         createApplicationInput("utilityPayments", "NO_EXPEDITED_UTILITIES_SELECTED",
             "NO_EXPEDITED_UTILITIES_SELECTED"),
-        createApplicationInput("utilityPayments", "heatingOrCoolingSelection", "NEITHER_SELECTED"),
+        createApplicationInput("utilityPayments", "COOLING", "No"),
+        createApplicationInput("utilityPayments", "HEATING", "No"),       
         createApplicationInput("utilityPayments", "waterOrSewer", "WATER_OR_SEWER"),
         createApplicationInput("utilityPayments", "waterOrSewerSelection", "ONE_SELECTED"
         )
@@ -56,12 +56,10 @@ public class UtilityPaymentsPreparerTest {
         createApplicationInput("utilityPayments", "PHONE", "false"),
         createApplicationInput("utilityPayments", "GARBAGE_REMOVAL", "false"),
         createApplicationInput("utilityPayments", "ELECTRICITY", "false"),
-        createApplicationInput("utilityPayments", "COOKING_FUEL", "false"),
-
-        createApplicationInput("utilityPayments", "heatingOrCoolingSelection", "ONE_SELECTED"),
+        createApplicationInput("utilityPayments", "COOLING", "No"),
         createApplicationInput("utilityPayments", "waterOrSewerSelection", "NEITHER_SELECTED"),
-        createApplicationInput("utilityPayments", "heatingOrCooling", "HEATING_OR_COOLING"),
-        createApplicationInput("utilityPayments", "HEATING", "true")
+        createApplicationInput("utilityPayments", "HEATING", "Yes"),
+        createApplicationInput("utilityPayments", "heatingOrCooling", "HEATING_OR_COOLING")
     );
   }
 
@@ -79,12 +77,12 @@ public class UtilityPaymentsPreparerTest {
         createApplicationInput("utilityPayments", "PHONE", "false"),
         createApplicationInput("utilityPayments", "GARBAGE_REMOVAL", "false"),
         createApplicationInput("utilityPayments", "ELECTRICITY", "false"),
-        createApplicationInput("utilityPayments", "COOKING_FUEL", "false"),
-
+        
         createApplicationInput("utilityPayments", "noExpeditedUtilitiesSelected", "true"),
         createApplicationInput("utilityPayments", "NO_EXPEDITED_UTILITIES_SELECTED",
             "NO_EXPEDITED_UTILITIES_SELECTED"),
-        createApplicationInput("utilityPayments", "heatingOrCoolingSelection", "NEITHER_SELECTED"),
+        createApplicationInput("utilityPayments", "HEATING", "No"),
+        createApplicationInput("utilityPayments", "COOLING", "No"),
         createApplicationInput("utilityPayments", "waterOrSewerSelection", "NEITHER_SELECTED")
     );
   }
@@ -103,11 +101,10 @@ public class UtilityPaymentsPreparerTest {
         createApplicationInput("utilityPayments", "PHONE", "true"),
         createApplicationInput("utilityPayments", "GARBAGE_REMOVAL", "false"),
         createApplicationInput("utilityPayments", "ELECTRICITY", "false"),
-        createApplicationInput("utilityPayments", "COOKING_FUEL", "false"),
 
-        createApplicationInput("utilityPayments", "HEATING", "true"),
-        createApplicationInput("utilityPayments", "heatingOrCoolingSelection", "ONE_SELECTED"),
+        createApplicationInput("utilityPayments", "HEATING", "Yes"),
         createApplicationInput("utilityPayments", "heatingOrCooling", "HEATING_OR_COOLING"),
+        createApplicationInput("utilityPayments", "COOLING", "No"),
         createApplicationInput("utilityPayments", "waterOrSewerSelection", "NEITHER_SELECTED"),
         createApplicationInput("utilityPayments", "phoneCellPhone", "PHONE_CELL_PHONE")
     );
