@@ -76,6 +76,11 @@ mappings:
     phoneOrEmail:
       TEXT: PHONE_OPTIN
       EMAIL: EMAIL_OPTIN
+  communicationsOptIn:
+    commOptInPhoneNumber: COMM_OPTIN_PHONE_NUMBER
+    commOptInEmailAddress: COMM_OPTIN_EMAIL_ADDRESS
+    commOptInPhone: COMM_OPTIN_PHONE
+    commOptInEmail: COMM_OPTIN_EMAIL
   homeAddress:
     selectedZipCode: APPLICANT_HOME_ZIPCODE
     selectedCity: APPLICANT_HOME_CITY
