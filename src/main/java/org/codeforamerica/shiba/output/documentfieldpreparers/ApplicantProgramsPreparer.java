@@ -30,6 +30,13 @@ public class ApplicantProgramsPreparer implements DocumentFieldPreparer {
               DocumentFieldType.SINGLE_VALUE)
       );
     });
+	if (programs.contains("GRH")) {
+		programSelections
+				.add(new DocumentField("housingSupport", "mnHousingSupport", "Yes", DocumentFieldType.SINGLE_VALUE));
+	} else {
+		programSelections
+				.add(new DocumentField("housingSupport", "mnHousingSupport", "No", DocumentFieldType.SINGLE_VALUE));
+	}
 
     return programSelections;
   }

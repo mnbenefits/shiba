@@ -1937,8 +1937,6 @@ pageDefinitions:
               messageKey: utility-payments.sewer
             - value: GARBAGE_REMOVAL
               messageKey: utility-payments.garbage-removal
-            - value: COOKING_FUEL
-              messageKey: utility-payments.cooking-fuel
             - value: NONE_OF_THE_ABOVE
               messageKey: general.inputs.none-of-the-above
               isNone: true
