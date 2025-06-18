@@ -10,7 +10,11 @@
   flex: 1 0 auto;
 }
 
-#landing-page, #top-nav .grid {
+#landing-page  .grid {
+  max-width: 960px;
+}
+
+#top-nav .grid {
   max-width: 960px;
 }
 
