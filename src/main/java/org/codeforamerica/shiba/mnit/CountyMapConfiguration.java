@@ -196,7 +196,7 @@ public class CountyMapConfiguration {
     updateCounty(Wabasha, "imuinterview@co.wabasha.mn.us", "A000079500");
     updateCounty(Wadena, "wchs.benefits@wcmn.us", "A000080900");
     updateCounty(Waseca, "OSS@MNPrairie.org", "A000081700");
-    updateCounty(Washington, "stephanie.schlageter@co.washington.mn.us", "1700969334");
+    updateCounty(Washington, "stephanie.schlageter@washingtoncountymn.gov", "1700969334");
     updateCounty(Watonwan, "randee.nelson@co.watonwan.mn.us", "1942539846");
     updateCounty(Wilkin, "intake@co.wilkin.mn.us", "1962567529");
     updateCounty(Winona, "dhs@co.winona.mn.us", "A000085000");
