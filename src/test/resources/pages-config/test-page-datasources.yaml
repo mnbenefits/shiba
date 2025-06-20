@@ -1,4 +1,4 @@
-pageDefinitions:
+pageConfigurations:
   - &employersName
     name: employersName
     pageTitle: first-page-title

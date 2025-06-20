@@ -463,7 +463,7 @@ conditionDefinitions:
           - *isTribalMemberLivingInUrbanTribalNationCounty?
           - *isTribalMemberNotLeechLakeLivingInBeltramiCounty?
           - *isLivingInRedLakeNationAndBeltramiOrClearwaterCounty?
-pageDefinitions:
+pageConfigurations:
   - &landing
     name: landing
     pageTitle: landing.title
