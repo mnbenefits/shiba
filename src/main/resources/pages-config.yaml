@@ -592,8 +592,15 @@ pageDefinitions:
                 lang: vi
               - value: OTHER
                 messageKey: language-preferences.different-language
-           datasources:
-             - pageName: writtenLanguage				
+        followUpValues:
+          - "OTHER"
+        followUps:
+          - name: otherWrittenLanguage
+            type: TEXT
+            promptMessage:
+              promptMessageKey: language-preferences.preferred.language
+        datasources:
+          - pageName: writtenLanguage				
   - &spokenLanguage
     name: spokenLanguage
     pageTitle: spoken-language.title
