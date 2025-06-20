@@ -14,9 +14,9 @@ public class ApplicationConfiguration {
   private List<Condition> conditionDefinitions;
 
   /**
-   * List of all defined pages.
+   * List of all page configurations.
    */
-  private List<PageConfiguration> pageDefinitions;
+  private List<PageConfiguration> pageConfigurations;
 
   /**
    * Pages with special functionality.

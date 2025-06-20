@@ -1,4 +1,4 @@
-pageDefinitions:
+pageConfigurations:
   - &firstPage
     name: firstPage
     pageTitle: dummy-page-title

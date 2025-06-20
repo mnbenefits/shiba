@@ -86,6 +86,10 @@ public class PageConfiguration {
    */
   private AlertBox alertBox;
 
+  /**
+   * Get all inputs including the followUp inputs which may be contained within other inputs.
+   * @return
+   */
   public List<FormInput> getFlattenedInputs() {
     return this.inputs.stream()
         .flatMap(
