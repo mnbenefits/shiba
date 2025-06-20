@@ -2,7 +2,7 @@ package org.codeforamerica.shiba.output.documentfieldpreparers;
 
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static org.codeforamerica.shiba.output.documentfieldpreparers.DocumentFieldPreparer.formInputTypeToApplicationInputType;
+import static org.codeforamerica.shiba.output.documentfieldpreparers.DocumentFieldPreparer.formInputTypeToDocumentFieldType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +66,7 @@ public class OneToOneDocumentFieldPreparer implements DocumentFieldPreparer {
               nameToInput.pageName(),
               formInput.getName(),
               valuesForInput,
-              formInputTypeToApplicationInputType(formInput.getType()));
+              formInputTypeToDocumentFieldType(formInput.getType()));
         })
         .collect(toList());
   }
@@ -78,7 +78,7 @@ public class OneToOneDocumentFieldPreparer implements DocumentFieldPreparer {
   @NotNull
   private List<PageNameToInput> getPageNameToInputList() {
     List<PageNameToInput> pageNameToInputList = new ArrayList<>();
-    applicationConfiguration.getPageDefinitions().forEach(pageConfiguration -> {
+    applicationConfiguration.getPageConfigurations().forEach(pageConfiguration -> {
           for (FormInput input : pageConfiguration.getFlattenedInputs()) {
             PageNameToInput pageNameToInput = new PageNameToInput(
                 pageConfiguration.getName(),

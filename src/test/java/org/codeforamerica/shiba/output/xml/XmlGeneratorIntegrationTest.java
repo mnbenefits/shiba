@@ -69,7 +69,7 @@ public class XmlGeneratorIntegrationTest {
   @Test
   void shouldProduceAValidDocument() throws Exception {
     String applicationId = applicationRepository.getNextId();
-    Map<String, PageData> data = applicationConfiguration.getPageDefinitions().stream()
+    Map<String, PageData> data = applicationConfiguration.getPageConfigurations().stream()
         .map(pageConfiguration -> {
           Map<String, InputData> inputDataMap = pageConfiguration.getFlattenedInputs().stream()
               .collect(toMap(

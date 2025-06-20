@@ -1,4 +1,4 @@
-pageDefinitions:
+pageConfigurations:
   - &textAreaPage
     name: textAreaPage
     pageTitle: text-area-page.title

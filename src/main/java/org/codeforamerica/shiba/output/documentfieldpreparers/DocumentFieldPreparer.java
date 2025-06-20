@@ -10,7 +10,7 @@ import org.codeforamerica.shiba.pages.config.FormInputType;
 
 public interface DocumentFieldPreparer {
 
-  static DocumentFieldType formInputTypeToApplicationInputType(FormInputType type) {
+  static DocumentFieldType formInputTypeToDocumentFieldType(FormInputType type) {
     return switch (type) {
       case CHECKBOX, PEOPLE_CHECKBOX, PEOPLE_CHECKBOX_WITH_NONE -> DocumentFieldType.ENUMERATED_MULTI_VALUE;
       case RADIO, SELECT -> DocumentFieldType.ENUMERATED_SINGLE_VALUE;
