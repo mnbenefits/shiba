@@ -1,4 +1,4 @@
-pageDefinitions:
+pageConfigurations:
   - &userDecisionNavigationPage
     name: userDecisionNavigationPage
     pageTitle: origin-page-title

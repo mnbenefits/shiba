@@ -1,4 +1,4 @@
-pageDefinitions:
+pageConfigurations:
   - &testStaticLandingPage
     name: testStaticLandingPage
     pageTitle: first-page-title

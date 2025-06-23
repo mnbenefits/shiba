@@ -746,7 +746,7 @@ public class ApplicationDataParser {
 
   /**
    * Java POJO record ParsingCoordinate(String pageName, String inputName) 
-   * corresponds to pages-config.yaml pageDefinitions for pageName and inputName.
+   * corresponds to pages-config.yaml pageConfigurations for pageName and inputName.
    **/
   private record ParsingCoordinate(String pageName, String inputName) {
 

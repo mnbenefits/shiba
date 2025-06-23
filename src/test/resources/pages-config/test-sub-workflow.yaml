@@ -1,4 +1,4 @@
-pageDefinitions:
+pageConfigurations:
   - &startPage
     name: startPage
     pageTitle: start-page-title

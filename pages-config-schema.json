@@ -5,10 +5,10 @@
     "^(shiba-configuration).*$": {
       "type": "object",
       "properties": {
-        "pageDefinitions": {
+        "pageConfigurations": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/page"
+            "$ref": "#/configurations/page"
           }
         },
         "landmarkPages": {
@@ -44,7 +44,7 @@
         }
       },
       "required": [
-        "pageDefinitions",
+        "pageConfigurations",
         "landmarkPages",
         "workflow"
       ]
