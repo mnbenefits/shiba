@@ -295,6 +295,7 @@ html {
   padding:  0.7rem;
   width: 100vw;
   overflow-x: auto;  /* allow horizontal scrolling*/
+  overflow-y: hidden;
 }
   
 .nav-tabs {
@@ -316,7 +317,6 @@ html {
   margin-left: 0px;
   display: flex; /* Make each tab independent */
   flex-shrink: 0; /*prevent tabs from shrinking */
-  
   }
 .nav-link:first-child{
   	margin-left: 0px;
@@ -351,7 +351,6 @@ html {
 
 .nav-horizontal-scroll {
   display: flex;
-  overflow-y: hidden;
   white-space: nowrap;
  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
   scrollbar-width: none; /* Firefox */
