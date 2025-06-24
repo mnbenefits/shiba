@@ -670,8 +670,15 @@ pageConfigurations:
               lang: vi
             - value: OTHER
               messageKey: speak-language-preferences.different-language
-          datasources:
-             - pageName: writtenLanguage	
+        followUpValues:
+          - "OTHER"
+        followUps:
+          - name: otherSpokenLanguage
+            type: TEXT
+            promptMessage:
+              promptMessageKey: language-preferences.preferred.language
+        datasources:
+          - pageName: writtenLanguage	
       - name: needInterpreter
         type: RADIO
         promptMessage:
