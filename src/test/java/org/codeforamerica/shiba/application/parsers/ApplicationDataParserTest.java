@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.application.parsers;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PAID_BY_THE_HOUR;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PAID_BY_HOUR;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Group.JOBS;
 
 import java.util.List;
@@ -27,7 +27,7 @@ class ApplicationDataParserTest {
         .build();
 
     String value = ApplicationDataParser
-        .getFirstValue(applicationData.getPagesData(), PAID_BY_THE_HOUR);
+        .getFirstValue(applicationData.getPagesData(), PAID_BY_HOUR);
 
     assertThat(value).isEqualTo(expectedValue);
   }
@@ -39,13 +39,13 @@ class ApplicationDataParserTest {
         .withPageData("shmaidByTheHour", "paidByTheHour", List.of(expectedValue))
         .build();
     String value = ApplicationDataParser
-        .getFirstValue(applicationData.getPagesData(), PAID_BY_THE_HOUR);
+        .getFirstValue(applicationData.getPagesData(), PAID_BY_HOUR);
     assertThat(value).isNull();
 
     applicationData = builder
         .withPageData("paidByTheHour", "shmaidByTheHour", List.of(expectedValue))
         .build();
-    value = ApplicationDataParser.getFirstValue(applicationData.getPagesData(), PAID_BY_THE_HOUR);
+    value = ApplicationDataParser.getFirstValue(applicationData.getPagesData(), PAID_BY_HOUR);
     assertThat(value).isNull();
   }
 

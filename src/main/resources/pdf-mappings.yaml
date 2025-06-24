@@ -310,6 +310,10 @@ mappings:
     selfEmployment: SELF_EMPLOYMENT
   hourlyWage:
     hourlyWage: [ HOURLY_WAGE, INCOME_PER_PAY_PERIOD ]
+  hoursAWeek:
+    hoursAWeek: HOURS_PER_WEEK
+  paidByTheHour:
+    paidByTheHour: PAID_BY_HOUR
   nonSelfEmployment_hourlyWage:
     hourlyWage: NON_SELF_EMPLOYMENT_HOURLY_WAGE
   payPeriod:
