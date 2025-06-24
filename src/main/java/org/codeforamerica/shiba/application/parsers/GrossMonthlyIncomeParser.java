@@ -1,10 +1,10 @@
 package org.codeforamerica.shiba.application.parsers;
 
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOURLY_WAGE;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOURS_A_WEEK;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOURS_PER_WEEK;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.INCOME_PER_PAY_PERIOD;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.LAST_THIRTY_DAYS_JOB_INCOME;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PAID_BY_THE_HOUR;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PAID_BY_HOUR;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PAY_PERIOD;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Group;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
@@ -52,10 +52,10 @@ public class GrossMonthlyIncomeParser {
         return new LastThirtyDaysJobIncomeInformation(lastThirtyDaysIncome,
             jobsGroup.indexOf(pagesData), iteration);
       } else {
-        boolean isHourlyJob = Boolean.parseBoolean(getFirstValue(pagesData, PAID_BY_THE_HOUR));
+        boolean isHourlyJob = Boolean.parseBoolean(getFirstValue(pagesData, PAID_BY_HOUR));
         if (isHourlyJob) {
           String hourlyWageInputValue = getFirstValue(pagesData, HOURLY_WAGE);
-          String hoursAWeekInputValue = getFirstValue(pagesData, HOURS_A_WEEK);
+          String hoursAWeekInputValue = getFirstValue(pagesData, HOURS_PER_WEEK);
           return new HourlyJobIncomeInformation(hourlyWageInputValue, hoursAWeekInputValue,
               jobsGroup.indexOf(pagesData), iteration);
         } else {
