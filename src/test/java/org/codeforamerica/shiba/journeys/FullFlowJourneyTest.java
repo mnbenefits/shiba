@@ -688,6 +688,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
 		assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
 		assertCafFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
+		assertCafFieldEquals("HOURS_PER_WEEK_0", "30");
+		assertCafFieldEquals("PAID_BY_HOUR_0", "Yes");
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
 		assertCafFieldEquals("CREATED_DATE", "2020-01-01");
 		assertCafFieldEquals("HEAT", "Yes");
