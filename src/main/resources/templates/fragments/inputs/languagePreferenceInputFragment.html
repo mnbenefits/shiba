@@ -15,23 +15,19 @@
   <!-- The spokenSameAsWritten checkbox -->
   <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
 
-  <!-- The spokenLanguage follow-up (i.e., the radio buttons)
-       This is not displayed when the checkbox is checked 
-  -->
-  <div th:class="${isChecked} ? 'hide' : ''" id="language-questions">
-    <th:block th:each="followUp : ${input.followUps}">
-      <div class="spacing-above-60">
-        <div th:replace="~{fragments/inputs/__${followUp.fragment()}__ :: __${followUp.fragment()}__(${followUp}, ${data})}"></div>
-      </div>
-    </th:block>
-  </div>
-
   <!-- JavaScript -->
   <script th:inline="javascript">
       // This function executes when the page has loaded (i.e., when the "ready" event is triggered).
       $(document).ready(function () {
         var checkbox = document.getElementsByName('spokenSameAsWritten[]')[0];
-        var container = $('#language-questions');
+        var checked = checkbox.parentElement.classList.contains('is-selected');
+
+        var container = $('div[name="spokenLanguage-div[]"]');
+        if (checked) {
+          container.hide();
+        } else {
+          container.show();
+        }
 
         // Injected written language value directly from Thymeleaf
         var writtenLangValue = /*[[${writtenLangValue}]]*/ '';

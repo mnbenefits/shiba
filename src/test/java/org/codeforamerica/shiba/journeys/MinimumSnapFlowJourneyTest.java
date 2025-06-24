@@ -432,10 +432,10 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isFalse();
 
 	// Verify that the spoken language radios are displayed
-	WebElement languageQuestionsDiv = driver.findElement(By.id("language-questions"));
-	String languageQuestionsDivStyle = languageQuestionsDiv.getDomAttribute("style");
+	WebElement spokenLanguageDiv = driver.findElement(By.name("spokenLanguage-div[]"));
+	String spokenLanguageDivStyle = spokenLanguageDiv.getDomAttribute("style");
 	// The absence of a style attribute would mean that the radio div is not hidden
-	assertThat(languageQuestionsDivStyle).isNull();
+	assertThat(spokenLanguageDivStyle).isNull();
 	
 	// Verify that no spoken language preference is selected by default
 	List<WebElement> spokenLanguageRadioInputs = driver.findElements(By.name("spokenLanguage[]"));
@@ -456,9 +456,9 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isTrue();
 
 	// Verify that the spoken language radios are no longer displayed
-	languageQuestionsDiv = driver.findElement(By.id("language-questions"));
-	languageQuestionsDivStyle = languageQuestionsDiv.getDomAttribute("style");
-	assertThat(languageQuestionsDivStyle).contains("display: none");
+	spokenLanguageDiv = driver.findElement(By.name("spokenLanguage-div[]"));
+	spokenLanguageDivStyle = spokenLanguageDiv.getDomAttribute("style");
+	assertThat(spokenLanguageDivStyle).contains("display: none");
 	
 	// Verify that the spoken language preference is now equal to the written language preference
 	spokenLanguageRadioInputs = driver.findElements(By.name("spokenLanguage[]"));
