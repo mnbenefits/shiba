@@ -758,6 +758,7 @@ form .drag-and-drop-box-compact {
 .tagline-spacing {
 	margin-top: 10px;
 	}
+	
 @media (max-width: 768px) {
   .tagline-spacing {
 	margin-bottom: 10px;
@@ -1922,6 +1923,13 @@ legend.form-question {
     display: inline-block;
 }
 
+.language-link:hover{
+	color:#741078;
+}	
+
+.language-link:visited  {
+	color:#741078 !important;	
+}
 @media screen and (-ms-high-contrast: white-on-black) {
   .radio-button input[type='radio']:checked:before {
     background-color: white;
