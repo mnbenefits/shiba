@@ -24,24 +24,26 @@
   <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
   <div th:replace="~{fragments/info-pages-top-navigation :: info-pages-top-navigation('privacy')}"></div>
   <section class="slab">
-    <div class="grid">
-      <div class="grid__item">
-        <h1 class="spacing-below-35" th:text="#{privacy-policy.privacy-policy}"></h1>
-		<div class="grid__item width-desktop-one-fourth">
-			<a class="button button--primary spacing-below-0" th:href="@{/pages/landing/navigation}" lang="en">
-				<span lang="en" th:text="#{landing.apply-now}"></span>
-				<div th:replace="~{fragments/icons/icon-arrow :: icon-arrow}"></div>
-			</a>
-			<!--Add button to apply now in Spanish-->
-			<div class="spacing-above-15">
-				<a class="button button--small button-width" th:href="@{/pages/landing/navigation( lang='es')}" lang="es">
-					<span lang="es" th:text="#{landing.apply-now-espanol}"></span>
-					<div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
+	<div class="grid">
+		<div class="grid__item">
+			<h1 class="spacing-below-35" th:text="#{privacy-policy.privacy-policy}"></h1>
+			<div class="grid__item width-desktop-one-fourth">
+				<a class="button button--primary spacing-below-0"
+					th:href="'/pages/landing/navigation?lang=' + ${#locale.language}" lang="en">
+					<span lang="en" th:text="#{landing.apply-now}"></span>
+					<div th:replace="~{fragments/icons/icon-arrow :: icon-arrow}"></div>
 				</a>
+				<!--Add button to apply now in Spanish-->
+				<div th:with="otherLocale=${#locale.toString().equals('en') ? 'es' : 'en'}" class="spacing-above-15">
+					<a class="button button--small button-width"
+						th:href="'/pages/landing/navigation?lang=' + ${otherLocale}" lang="es">
+						<span lang="es" th:text="#{landing.apply-now-espanol}"></span>
+						<div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
+					</a>
+				</div>
 			</div>
 		</div>
-      </div>
-    </div>
+	</div>
   </section>
   <main id="content" role="main" class="slab slab--white">
     <div class="grid">
