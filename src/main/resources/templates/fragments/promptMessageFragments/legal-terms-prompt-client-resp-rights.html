@@ -17,6 +17,9 @@
 					<p>
 						<span th:utext="#{legal-stuff.crr-yourResponsibilites1}"></span>
 					</p>
+					<p>
+						<span th:utext="#{legal-stuff.crr-yourResponsibilites2}"></span>
+					</p>					
 	            </div>
 				
 	            <div class="spacing-below-25">
@@ -71,13 +74,13 @@
 				</p>
 				
 				<div class="spacing-below-25">
-	               <h3 class="h4" th:text="#{legal-stuff.crr-SNAP}"></h3>
-	               <div th:text="|• #{legal-stuff.crr-EBTsign}|"></div>
-	               <div th:text="|• #{legal-stuff.crr-EBTused}|"></div>
+				   <h2 th:text="#{legal-stuff.crr-SNAP}" class="h3"></h2>
+	               <div th:utext="|• #{legal-stuff.crr-EBTsign}|"></div>
+	               <div th:utext="|• #{legal-stuff.crr-EBTused}|"></div>
 	            </div>
 				
 				<div class="spacing-below-25">
-	               <h3 class="h4" th:text="#{legal-stuff.crr-CCA}"></h3>
+				   <h2 th:text="#{legal-stuff.crr-CCA}" class="h3"></h2>
 	               <div th:utext="|• #{legal-stuff.crr-cofee}|"></div>
 	               <div th:utext="|• #{legal-stuff.crr-adCost}|"></div>
 				   <div th:utext="|• #{legal-stuff.crr-doc}|"></div>
