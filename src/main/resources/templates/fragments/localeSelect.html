@@ -23,6 +23,12 @@
 					if (spokenLanguageValue != null) {
 						sessionStorage.setItem('lastSelectedSpokenLanguagePreference', spokenLanguageValue);
 					}
+					
+					var otherWrittenLanguageValue = $('input[name="otherWrittenLanguage[]"]').val();
+					if (otherWrittenLanguageValue != null) {
+						sessionStorage.setItem('lastPreferredOtherWrittenLanguage', otherWrittenLanguageValue);
+					}
+					
 					window.location.replace('?lang=' + currentLocale);
 				}
 			});
@@ -35,7 +41,14 @@
 				sessionStorage.removeItem('lastSelectedWrittenLanguagePreference');
 				lastSelectedRadioInput.click();
 			}
-
+			
+			var lastPreferredOtherWrittenLanguageValue = sessionStorage.getItem('lastPreferredOtherWrittenLanguage');
+			if (lastPreferredOtherWrittenLanguageValue != null) {
+				var lastPreferredOtherLanguage = $('input[name="otherWrittenLanguage[]"]');	
+				sessionStorage.removeItem('lastPreferredOtherWrittenLanguage');
+				lastPreferredOtherLanguage.val(lastPreferredOtherWrittenLanguageValue);
+			}
+						
 			// If lastSelectedSpokenLanguageValue is not null it means this is a page load that is cause by a locale change.
 			// For writtenLanguage page, use lastSelectedSpokenLanguageValue to restore the selected radio. 
 			var lastSelectedSpokenLanguageValue = sessionStorage.getItem('lastSelectedSpokenLanguagePreference');
