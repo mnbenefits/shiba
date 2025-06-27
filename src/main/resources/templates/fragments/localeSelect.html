@@ -29,6 +29,11 @@
 						sessionStorage.setItem('lastPreferredOtherWrittenLanguage', otherWrittenLanguageValue);
 					}
 					
+					var otherSpokenLanguageValue = $('input[name="otherSpokenLanguage[]"]').val();
+					if (otherSpokenLanguageValue != null) {
+						sessionStorage.setItem('lastPreferredOtherSpokenLanguage', otherSpokenLanguageValue);
+					}
+
 					window.location.replace('?lang=' + currentLocale);
 				}
 			});
@@ -41,13 +46,6 @@
 				sessionStorage.removeItem('lastSelectedWrittenLanguagePreference');
 				lastSelectedRadioInput.click();
 			}
-			
-			var lastPreferredOtherWrittenLanguageValue = sessionStorage.getItem('lastPreferredOtherWrittenLanguage');
-			if (lastPreferredOtherWrittenLanguageValue != null) {
-				var lastPreferredOtherLanguage = $('input[name="otherWrittenLanguage[]"]');	
-				sessionStorage.removeItem('lastPreferredOtherWrittenLanguage');
-				lastPreferredOtherLanguage.val(lastPreferredOtherWrittenLanguageValue);
-			}
 						
 			// If lastSelectedSpokenLanguageValue is not null it means this is a page load that is cause by a locale change.
 			// For writtenLanguage page, use lastSelectedSpokenLanguageValue to restore the selected radio. 
@@ -56,6 +54,20 @@
 				var lastSelectedRadioInput = $('input[value="' + lastSelectedSpokenLanguageValue + '"]');
 				sessionStorage.removeItem('lastSelectedSpokenLanguagePreference');
 				lastSelectedRadioInput.click();
+			}
+
+			var lastPreferredOtherWrittenLanguageValue = sessionStorage.getItem('lastPreferredOtherWrittenLanguage');
+			if (lastPreferredOtherWrittenLanguageValue != null) {
+				var lastPreferredOtherWrittenLanguage = $('input[name="otherWrittenLanguage[]"]');	
+				sessionStorage.removeItem('lastPreferredOtherWrittenLanguage');
+				lastPreferredOtherWrittenLanguage.val(lastPreferredOtherWrittenLanguageValue);
+			}
+
+			var lastPreferredOtherSpokenLanguageValue = sessionStorage.getItem('lastPreferredOtherSpokenLanguage');
+			if (lastPreferredOtherSpokenLanguageValue != null) {
+				var lastPreferredOtherSpokenLanguage = $('input[name="otherSpokenLanguage[]"]');	
+				sessionStorage.removeItem('lastPreferredOtherSpokenLanguage');
+				lastPreferredOtherSpokenLanguage.val(lastPreferredOtherSpokenLanguageValue);
 			}
 		});
 	</script>

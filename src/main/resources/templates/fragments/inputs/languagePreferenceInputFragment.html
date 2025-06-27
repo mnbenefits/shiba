@@ -23,8 +23,10 @@
         var checked = checkbox.parentElement.classList.contains('is-selected');
 
         var container = $('div[name="spokenLanguage-div[]"]');
+		var followupDiv = $('div[id="spokenLanguage-follow-up"]');
         if (checked) {
           container.hide();
+		  followupDiv.hide();
         } else {
           container.show();
         }
@@ -56,7 +58,9 @@
         // Add a "change" event listener to the spokenSameAsWritten checkbox element.
         // This event fires when the checkbox is toggled.
         checkbox.addEventListener('change', function () {
-	      var checked = this.parentElement.classList.contains('is-selected');
+	     var checked = this.parentElement.classList.contains('is-selected');
+    	 const element = document.querySelector('input[value="OTHER"]');
+		 var otherLangChecked = element.getAttribute('checked') === 'checked';
           if (checked) {
 	        // Find the radio button corresponding to the written language selected and click it.
             var radios = document.getElementsByName('spokenLanguage[]');
@@ -67,8 +71,12 @@
               }
             }
             container.hide();
+			followupDiv.hide();
           } else {
             container.show();
+			if(otherLangChecked){
+				followupDiv.show();
+			}
           }
         });
 
