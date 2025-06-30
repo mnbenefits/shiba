@@ -3,108 +3,137 @@
 <div th:fragment="legal-terms-prompt-client-resp-rights">
 <div class="accordion legal-stuff-accordion  spacing-below-15" id="resp-rights-accordion">
         <button href="#" class="accordion__button" aria-expanded="true" aria-controls="a3" >
-            <span th:text="#{legal-stuff.client-responsibilities-and-rights}"></span>
+            <span th:text="#{legal-stuff.crr}"></span>
         </button>
          <div id="a3" class="accordion__content textarea-readonly legal-stuff-window spacing-below-35">
             <div class="spacing-below-35">
-	            <h2 class="h3" th:text="#{legal-stuff.changes}"></h2>
+	            <div style="font-weight: normal; font-size: 16px" th:text="#{legal-stuff.crr-effective}" class="spacing-below-25"></div>
 	            <p>
-	                <span th:text="#{legal-stuff.if-you-have-ma-you-must-report}"></span>
+	                <span th:utext="#{legal-stuff.crr-note}"></span>
 	            </p>
-	            <div class="spacing-below-25">
-	               <h3 class="h4" th:text="#{legal-stuff.income-changes-when-you}"></h3>
-	               <div th:text="|• #{legal-stuff.start-a-new-job-change-jobs-or-stop-a-job}|"></div>
-	               <div th:text="|• #{legal-stuff.start-to-get-or-receive-changes}|"></div>
+				
+				<div class="spacing-below-35">
+	                <h2 th:text="#{legal-stuff.crr-yourResponsibilites}" class="h3"></h2>
+					<p>
+						<span th:utext="#{legal-stuff.crr-yourResponsibilites1}"></span>
+					</p>
+					<p>
+						<span th:utext="#{legal-stuff.crr-yourResponsibilites2}"></span>
+					</p>					
 	            </div>
+				
 	            <div class="spacing-below-25">
-                   <h3 class="h4" th:text="#{legal-stuff.residence-changes-when-you}"></h3>
-                   <div th:text="|• #{legal-stuff.move-to-a-new-address}|"></div>
-                </div>
-                <div class="spacing-below-25">
-                   <h3 class="h4" th:text="#{legal-stuff.life-changes-in-your-household-when-someone}"></h3>
-                   <div th:text="|• #{legal-stuff.starts-or-stops-other-health-insurance-or-medicare}|"></div>
-                   <div th:text="|• #{legal-stuff.becomes-pregnant-or-has-a-baby}|"></div>
-                   <div th:text="|• #{legal-stuff.moves-in-or-out-of-your-home}|"></div>
-                   <div th:text="|• #{legal-stuff.changes-tax-filing-status}|"></div>
-                   <div th:text="|• #{legal-stuff.loses-minnesota-residency}|"></div>
-                   <div th:text="|• #{legal-stuff.changes-citizenship-or-lawful-presence-status}|"></div>
-                   <div th:text="|• #{legal-stuff.changes-incarceration-status}|"></div>
-                   <div th:text="|• #{legal-stuff.dies-gets-married-or-gets-a-divorce}|"></div>
-                   <div th:text="|• #{legal-stuff.becomes-disabled}|"></div>
-                </div>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.reviews}" class="h3"></h2>
-                <div th:text="#{legal-stuff.the-state-or-federal-agencys-health-care}"></div>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.consent-for-sharing-of-medical-information}" class="h3"></h2>
-                <div th:text="#{legal-stuff.in-your-application-for-minnesota-health-care-program}"></div>
-                <div th:text="|• #{legal-stuff.health-providers-including-health-plans}|"></div>
-                <div th:text="|• #{legal-stuff.to-determine-who-should-pay-for-your-health-care}|"></div>
-                <div th:text="|• #{legal-stuff.to-provide,-manage-and-coordinate-health-care-services}|"></div>
-                <div th:text="|• #{legal-stuff.all-other-agencies-or-people-listed-on-this-notice-of-privacy}|"></div>
-                <div th:text="|• #{legal-stuff.to-administer-minnesota-health-care-programs}|"></div>
-                <p>
-                   <span th:text="#{legal-stuff.this-consent-applies-to-medical-information}"></span> 
-                </p>
-                <p>
-                    <span th:text="#{legal-stuff.however-it-does-not-end-after-one-year}"></span>
-                </p>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.other-health-care}" class="h3"></h2>
-                <p>
-                   <span th:text="#{legal-stuff.you-and-your-household-members-enrolled-in-ma-must}"></span> 
-                </p>
-                <p>
-                    <span th:utext="#{legal-stuff.you-and-your-household-members-enrolled-in-ma-may}"></span>
-                </p>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.ma-medical-support}" class="h3"></h2>
-                <p>
-                   <span th:text="#{legal-stuff.if-you-are-applying-for-yourself-and-your-children}"></span> 
-                </p>
-                <p>
-                    <span th:text="#{legal-stuff.you-have-the-right-to-speak-with-a-legal-aid}"></span>
-                    <a th:text="#{legal-stuff.http-mn.gov-dhs-ma-estate-recovery}" href="http://mn.gov/dhs/ma-estate-recovery/" target="_blank" rel="noopener noreferrer"></a>
-                    <span th:text="#{legal-stuff.on-our-website}"></span>
-                </p>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.you-have-the-right-to-ask-for-a-hearing}" class="h3"></h2>
-                <p>
-                   <span th:text="#{legal-stuff.if-you-feel-your-health-care-eligibility-or-benefits}"></span>
-                   <a th:text="#{legal-stuff.www-dhs-state-mn-us-appeals-faqs}" href="http://www.dhs.state.mn.us/appeals/faqs" target="_blank" rel="noopener noreferrer">
-                        </a>
-                   <span th:text="#{legal-stuff.you-can-complete-and-submit-an-appeal-request}"></span>
-                   <a th:text="#{legal-stuff.https-edocs-dhs-state-mn-us-lfserver-Public-DHS-0033-ENG}" href="https://edocs.dhs.state.mn.us/lfserver/Public/DHS-0033-ENG" target="_blank" rel="noopener noreferrer">
-                   </a>
-                   <span th:text="#{legal-stuff.you-can-also-print-the-form-that}"></span>
-                </p>
-                <div th:text="#{legal-stuff.minnesota-department-of-human-services}" class="spacing-below-0"></div>
-                <div th:text="#{legal-stuff.appeals-division}" class="spacing-below-0"></div>
-                <div th:text="#{legal-stuff.po-box-64941}" class="spacing-below-0"></div>
-                <div th:text="#{legal-stuff.st-paul-mn-55164-0941}" class="spacing-below-0"></div>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.immigration}" class="h3"></h2>
-                <p>
-                   <span th:text="#{legal-stuff.immigration-information-you-give-to-us-is-private}"></span> 
-                </p>
-                <div th:text="|• #{legal-stuff.applying-for-emergency-medical-care-only}|"></div>
-                <div th:text="|• #{legal-stuff.helping-someone-else-apply}|"></div>
-                <div th:text="|• #{legal-stuff.not-applying-for-yourself}|"></div>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.genetic-information}" class="h3"></h2>
-                <div th:text="#{legal-stuff.dhs-does-not-collect-maintain-or-use-genetic}"></div>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.record-retention}" class="h3"></h2>
-                <div th:text="#{legal-stuff.information-provided-in-an-application-for-coverage}"></div>
-            </div>
+	               <h3 class="h4" th:text="#{legal-stuff.crr-ReportChanges}"></h3>
+	               <div th:utext="|• #{legal-stuff.crr-employment}|"></div>
+	               <div th:utext="|• #{legal-stuff.crr-income}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-property}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-household}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-citizenship}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-address}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-housing}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-utility}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-custody}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-marital}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-school}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-insurance}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-lottery}|"></div>
+	            </div>
+				
+				<p>
+					<span th:text="#{legal-stuff.crr-lawsuit}"></span>
+				</p>
+				
+				<p>
+					<span th:utext="#{legal-stuff.crr-ccaNote}"></span>
+				</p>
+				
+				<p>
+					<span th:utext="#{legal-stuff.crr-questions}"></span>
+				</p>
+
+				<p>
+					<span th:utext="#{legal-stuff.crr-consent}"></span>
+				</p>
+								
+				<p>
+					<span th:text="#{legal-stuff.crr-untrue}"></span>
+				</p>
+
+				<p>
+					<span th:utext="#{legal-stuff.crr-qc}"></span>
+				</p>
+				
+				<div class="spacing-below-25">
+	               <h3 class="h4" th:text="#{legal-stuff.crr-coopReq}"></h3>
+	               <div th:text="|• #{legal-stuff.crr-coopEmp}|"></div>
+	               <div th:text="|• #{legal-stuff.crr-coopChild}|"></div>
+	            </div>
+				
+				<p>
+					<span th:text="#{legal-stuff.crr-nonCust}"></span>
+				</p>
+				
+				<div class="spacing-below-25">
+				   <h2 th:text="#{legal-stuff.crr-SNAP}" class="h3"></h2>
+	               <div th:utext="|• #{legal-stuff.crr-EBTsign}|"></div>
+	               <div th:utext="|• #{legal-stuff.crr-EBTused}|"></div>
+	            </div>
+				
+				<div class="spacing-below-25">
+				   <h2 th:text="#{legal-stuff.crr-CCA}" class="h3"></h2>
+	               <div th:utext="|• #{legal-stuff.crr-cofee}|"></div>
+	               <div th:utext="|• #{legal-stuff.crr-adCost}|"></div>
+				   <div th:utext="|• #{legal-stuff.crr-doc}|"></div>
+	            </div>
+				
+				<p>
+					<span th:utext="#{legal-stuff.crr-authRepNote}"></span>
+				</p>
+				
+				<div class="spacing-below-35">
+	                <h2 th:text="#{legal-stuff.crr-yourRights}" class="h3"></h2>
+					<p>
+						<span th:utext="#{legal-stuff.crr-rightsPrivacy}"></span>
+					</p>
+	                <p>
+	                    <span th:utext="#{legal-stuff.crr-rightsReapply}"></span>
+	                </p>
+					<p>
+	                    <span th:utext="#{legal-stuff.crr-rightsCopy}"></span>
+	                </p>
+					<p>
+					    <span th:utext="#{legal-stuff.crr-rightsWhy}"></span>
+					</p>
+					<div th:text="|• #{legal-stuff.crr-seven}|"></div>
+		            <div th:text="|• #{legal-stuff.crr-thirty}|"></div>
+					<div th:text="|• #{legal-stuff.crr-sixty}|"></div>				
+	            </div>
+				
+				<p>
+					<span th:utext="#{legal-stuff.crr-SNAPonly}"></span>
+				</p>
+				<p>
+					<span th:utext="#{legal-stuff.crr-rules}"></span>
+				</p>
+				<p>
+					<span th:utext="#{legal-stuff.crr-choose}"></span>
+				</p>
+				<p>
+					<span th:utext="#{legal-stuff.crr-report}"></span>
+				</p>
+				<p>
+					<span th:utext="#{legal-stuff.crr-legal}"></span>
+				</p>
+				<p>
+					<span th:utext="#{legal-stuff.crr-appeal}"></span>
+				</p>
+				<p>
+					<span th:utext="#{legal-stuff.crr-stateAppeals}"></span>
+				</p>
+				<p>
+					<span th:utext="#{legal-stuff.crr-hearing}"></span>
+				</p>				
+
         </div>
         </div>
 </div>

@@ -1,4 +1,4 @@
-pageDefinitions:
+pageConfigurations:
   - &testEnrichmentPage
     name: testEnrichmentPage
     pageTitle: dummy-page-title

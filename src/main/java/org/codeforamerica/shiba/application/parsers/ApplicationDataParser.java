@@ -30,9 +30,9 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.MEDICAL_EXPENSES,
         new ParsingCoordinate("medicalExpenses", "medicalExpenses"));
     coordinatesMap
-        .put(Field.PAID_BY_THE_HOUR, new ParsingCoordinate("paidByTheHour", "paidByTheHour"));
+        .put(Field.PAID_BY_HOUR, new ParsingCoordinate("paidByTheHour", "paidByTheHour"));
     coordinatesMap.put(Field.HOURLY_WAGE, new ParsingCoordinate("hourlyWage", "hourlyWage"));
-    coordinatesMap.put(Field.HOURS_A_WEEK, new ParsingCoordinate("hoursAWeek", "hoursAWeek"));
+    coordinatesMap.put(Field.HOURS_PER_WEEK, new ParsingCoordinate("hoursAWeek", "hoursAWeek"));
     coordinatesMap.put(Field.PAY_PERIOD, new ParsingCoordinate("payPeriod", "payPeriod"));
     coordinatesMap.put(Field.INCOME_PER_PAY_PERIOD,
         new ParsingCoordinate("incomePerPayPeriod", "incomePerPayPeriod"));
@@ -104,6 +104,15 @@ public class ApplicationDataParser {
         new ParsingCoordinate("cityForGeneralDelivery", "whatIsTheCity"));
     coordinatesMap.put(Field.GENERAL_DELIVERY_ZIPCODE,
         new ParsingCoordinate("cityForGeneralDelivery", "enrichedZipcode"));
+
+    coordinatesMap.put(Field.COMM_OPTIN_PHONE_NUMBER,
+            new ParsingCoordinate("communicationsOptIn", "commOptInPhoneNumber"));
+    coordinatesMap.put(Field.COMM_OPTIN_EMAIL_ADDRESS,
+            new ParsingCoordinate("communicationsOptIn", "commOptInEmailAddress"));
+    coordinatesMap.put(Field.COMM_OPTIN_PHONE,
+            new ParsingCoordinate("communicationsOptIn", "commOptInPhone"));
+    coordinatesMap.put(Field.COMM_OPTIN_EMAIL,
+            new ParsingCoordinate("communicationsOptIn", "commOptInEmail"));
     
     coordinatesMap.put(Field.TRIBAL_NATION,
             new ParsingCoordinate("tribalNationMember", "isTribalNationMember"));
@@ -488,9 +497,9 @@ public class ApplicationDataParser {
 
     MEDICAL_EXPENSES,
 
-    PAID_BY_THE_HOUR,
+    PAID_BY_HOUR,
     HOURLY_WAGE,
-    HOURS_A_WEEK,
+    HOURS_PER_WEEK,
     PAY_PERIOD,
     INCOME_PER_PAY_PERIOD,
     LAST_THIRTY_DAYS_JOB_INCOME,
@@ -535,6 +544,11 @@ public class ApplicationDataParser {
 
     GENERAL_DELIVERY_CITY,
     GENERAL_DELIVERY_ZIPCODE,
+
+    COMM_OPTIN_PHONE_NUMBER,
+    COMM_OPTIN_EMAIL_ADDRESS,
+    COMM_OPTIN_PHONE,
+    COMM_OPTIN_EMAIL,
 
     TRIBAL_NATION,
     NATION_OF_RESIDENCE,
@@ -732,7 +746,7 @@ public class ApplicationDataParser {
 
   /**
    * Java POJO record ParsingCoordinate(String pageName, String inputName) 
-   * corresponds to pages-config.yaml pageDefinitions for pageName and inputName.
+   * corresponds to pages-config.yaml pageConfigurations for pageName and inputName.
    **/
   private record ParsingCoordinate(String pageName, String inputName) {
 
