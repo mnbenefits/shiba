@@ -42,7 +42,7 @@ public class SubworkflowPreparer implements DocumentFieldPreparer {
     ApplicationData data = application.getApplicationData();
     Map<String, PageGroupConfiguration> pageGroups = applicationConfiguration.getPageGroups();
 
-    List<DocumentField> fields = new ArrayList<>(getCount(data, pageGroups));
+    List<DocumentField> fields = new ArrayList<>(createDocumentFieldsWithSubworkflowCounts(data, pageGroups));
 
     data.getSubworkflows().forEach((groupName, subworkflow) ->
         // for each subworkflow
@@ -54,19 +54,19 @@ public class SubworkflowPreparer implements DocumentFieldPreparer {
             if (pageData == null) {
               return;
             }
-
-            List<FormInput> inputConfigurations = applicationConfiguration.getPageDefinitions()
+            //list of all form inputs on this page
+            List<FormInput> formInputList = applicationConfiguration.getPageConfigurations() 
                 .stream()
-                .filter(pageConfig -> pageConfig.getName().equals(pageName)).findAny()
-                .map(PageConfiguration::getInputs)
+                .filter(pageConfig -> pageConfig.getName().equals(pageName))
+                .findAny()
+                .map(PageConfiguration::getFlattenedInputs)
                 .orElse(emptyList());
 
             pageData.forEach((inputName, inputData) -> {
               // for each input on that page
               List<String> valuesForInput = getValuesForInput(recipient, inputName, inputData);
-              FormInputType inputType = getInputType(inputConfigurations, inputName);
-              DocumentFieldType documentFieldType = DocumentFieldPreparer.formInputTypeToApplicationInputType(
-                  inputType);
+              FormInputType inputType = getFormInputType(formInputList, inputName);
+              DocumentFieldType documentFieldType = DocumentFieldPreparer.formInputTypeToDocumentFieldType(inputType);
 
               // Add DocumentField to our final result for the input
               fields.add(new DocumentField(
@@ -80,16 +80,16 @@ public class SubworkflowPreparer implements DocumentFieldPreparer {
         }));
     return fields;
   }
-
+  
   @NotNull
-  private FormInputType getInputType(List<FormInput> inputConfigurations, String inputName) {
-    return inputConfigurations.stream()
-        .filter(inputConfiguration -> inputConfiguration.getName().equals(inputName))
-        .findAny()
-        .map(FormInput::getType)
-        .orElse(FormInputType.TEXT);
-  }
-
+	private FormInputType getFormInputType(List<FormInput> formInputs,  String inputName) {
+		return formInputs.stream()
+				.filter(inputConfiguration -> inputConfiguration.getName().equals(inputName))
+				.findAny()
+				.map(FormInput::getType)
+				.orElse(FormInputType.TEXT);
+	}
+  
   @NotNull
   private List<String> getValuesForInput(Recipient recipient, String inputName,
       InputData inputData) {
@@ -105,8 +105,14 @@ public class SubworkflowPreparer implements DocumentFieldPreparer {
         .collect(Collectors.toList());
   }
 
+  /**
+   * Create a DocumentField List that contains the number in each subworkflow.
+   * @param data
+   * @param pageGroups
+   * @return
+   */
   @NotNull
-  private List<DocumentField> getCount(ApplicationData data,
+  private List<DocumentField> createDocumentFieldsWithSubworkflowCounts(ApplicationData data,
       Map<String, PageGroupConfiguration> pageGroups) {
     return pageGroups.entrySet().stream().map(entry -> {
       String groupName = entry.getKey();

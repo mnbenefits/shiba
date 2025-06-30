@@ -41,7 +41,7 @@ class OneToOneDocumentFieldPreparerTest {
     page.setInputs(List.of(input1));
     String pageName = "screen1";
     page.setName(pageName);
-    applicationConfiguration.setPageDefinitions(List.of(page));
+    applicationConfiguration.setPageConfigurations(List.of(page));
 
     List<String> input1Value = List.of("input1Value");
     ApplicationData applicationData = new TestApplicationDataBuilder()
@@ -79,7 +79,7 @@ class OneToOneDocumentFieldPreparerTest {
     page.setInputs(List.of(input1));
     String pageName = "screen1";
     page.setName(pageName);
-    applicationConfiguration.setPageDefinitions(List.of(page));
+    applicationConfiguration.setPageConfigurations(List.of(page));
 
     ApplicationData applicationData = new TestApplicationDataBuilder()
         .withPageData(pageName, input1Name, "input1Value").build();
@@ -117,7 +117,7 @@ class OneToOneDocumentFieldPreparerTest {
     page.setInputs(List.of(input1));
     String pageName = "screen1";
     page.setName(pageName);
-    applicationConfiguration.setPageDefinitions(List.of(page));
+    applicationConfiguration.setPageConfigurations(List.of(page));
 
     ApplicationData applicationData = new TestApplicationDataBuilder()
         .withPageData(pageName, input1Name, "").build();
@@ -154,7 +154,7 @@ class OneToOneDocumentFieldPreparerTest {
     page.setInputs(List.of(input1));
     String pageName = "screen1";
     page.setName(pageName);
-    applicationConfiguration.setPageDefinitions(List.of(page));
+    applicationConfiguration.setPageConfigurations(List.of(page));
 
     List<String> input1Value = List.of("input1Value");
     ApplicationData applicationData = new TestApplicationDataBuilder()
@@ -194,7 +194,7 @@ class OneToOneDocumentFieldPreparerTest {
     page.setInputs(List.of(input2));
     String pageName = "screen1";
     page.setName(pageName);
-    applicationConfiguration.setPageDefinitions(List.of(page));
+    applicationConfiguration.setPageConfigurations(List.of(page));
 
     List<String> input2Value = List.of("input2Value");
     List<String> input3Value = List.of("input3Value");

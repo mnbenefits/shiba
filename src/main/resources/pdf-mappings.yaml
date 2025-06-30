@@ -39,6 +39,8 @@ mappings:
     GRH: GRH
     EA: EMERGENCY
     NONE: PROGRAM_NONE
+  housingSupport:
+    mnHousingSupport: MN_HOUSING_SUPPORT
   householdMemberInfo:
     firstName: FIRST_NAME
     lastName: LAST_NAME
@@ -74,6 +76,11 @@ mappings:
     phoneOrEmail:
       TEXT: PHONE_OPTIN
       EMAIL: EMAIL_OPTIN
+  communicationsOptIn:
+    commOptInPhoneNumber: COMM_OPTIN_PHONE_NUMBER
+    commOptInEmailAddress: COMM_OPTIN_EMAIL_ADDRESS
+    commOptInPhone: COMM_OPTIN_PHONE
+    commOptInEmail: COMM_OPTIN_EMAIL
   homeAddress:
     selectedZipCode: APPLICANT_HOME_ZIPCODE
     selectedCity: APPLICANT_HOME_CITY
@@ -100,9 +107,11 @@ mappings:
     ELECTRICITY: ELECTRICITY
     PHONE: PHONE
     GARBAGE_REMOVAL: GARBAGE_REMOVAL
-    COOKING_FUEL: COOKING_FUEL
     noExpeditedUtilitiesSelected: NO_EXPEDITED_UTILITIES_SELECTED
-    heatingOrCoolingSelection: HEATING_COOLING_SELECTION
+#heatingOrCoolingSelection deprecated in CAF 2025 use heatingSelection and coolingSelection instead
+    heatingOrCoolingSelection: HEATING_COOLING_SELECTION	
+    heatingSelection: HEATING_SELECTION
+    coolingSelection: COOLING_SELECTION
     waterOrSewerSelection: WATER_SEWER_SELECTION
   migrantFarmWorker:
     migrantOrSeasonalFarmWorker: MIGRANT_SEASONAL_FARM_WORKER
@@ -210,9 +219,9 @@ mappings:
     socialSecurityAmount: SOCIAL_SECURITY_AMOUNT
     supplementalSecurityIncomeAmount: SUPPLEMENTAL_SECURITY_INCOME_AMOUNT
     veteransBenefitsAmount: VETERANS_BENEFITS_AMOUNT
-    unemploymentAmount: UNEMPLOYMENT_INSURANCE_AMOUNT
+    unemploymentAmount: UNEMPLOYMENT_AMOUNT
     workersCompensationAmount: WORKERS_COMPENSATION_AMOUNT
-    retirementAmount: RETIREMENT_BENEFITS_AMOUNT
+    retirementAmount: RETIREMENT_AMOUNT
     childOrSpousalSupportAmount: CHILD_OR_SPOUSAL_SUPPORT_AMOUNT
     tribalPaymentsAmount: TRIBAL_PAYMENTS_AMOUNT
     benefitsAmount: BENEFITS_AMOUNT
@@ -301,6 +310,10 @@ mappings:
     selfEmployment: SELF_EMPLOYMENT
   hourlyWage:
     hourlyWage: [ HOURLY_WAGE, INCOME_PER_PAY_PERIOD ]
+  hoursAWeek:
+    hoursAWeek: HOURS_PER_WEEK
+  paidByTheHour:
+    paidByTheHour: PAID_BY_HOUR
   nonSelfEmployment_hourlyWage:
     hourlyWage: NON_SELF_EMPLOYMENT_HOURLY_WAGE
   payPeriod:
@@ -354,7 +367,9 @@ mappings:
   authorizedRep:
     helpWithBenefits: WANT_AUTHORIZED_REP
   authorizedRepCommunicate:
-    communicateOnYourBehalf: AUTHORIZED_REP_FILL_OUT_FORM
+    communicateOnYourBehalf: 
+       - AUTHORIZED_REP_FILL_OUT_FORM
+       - AUTHORIZED_REP_COMMUNICATE
   authorizedRepMailNotices:
     getMailNotices: AUTHORIZED_REP_GET_NOTICES
   authorizedRepSpendOnYourBehalf:

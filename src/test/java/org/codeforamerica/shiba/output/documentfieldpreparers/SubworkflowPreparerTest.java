@@ -81,7 +81,7 @@ class SubworkflowPreparerTest {
             "input1", "differentString"
         ).build();
 
-    applicationConfiguration.setPageDefinitions(List.of(
+    applicationConfiguration.setPageConfigurations(List.of(
         question1Page,
         question2Page
     ));
