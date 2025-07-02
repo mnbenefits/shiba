@@ -597,6 +597,7 @@ pageConfigurations:
         followUps:
           - name: otherWrittenLanguage
             type: TEXT
+            maxlength: 50
             promptMessage:
               promptMessageKey: language-preferences.preferred.language
         datasources:
@@ -675,6 +676,7 @@ pageConfigurations:
         followUps:
           - name: otherSpokenLanguage
             type: TEXT
+            maxlength: 50
             promptMessage:
               promptMessageKey: language-preferences.preferred.language
         datasources:
