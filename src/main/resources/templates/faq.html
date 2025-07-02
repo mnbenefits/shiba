@@ -17,22 +17,34 @@
     <!-- End Google Tag Manager -->
 
 </head>
-<body class="locale-en" id="faq">
+<body class="locale-en" id="top-nav">
 <div th:replace="~{fragments/google-analytics-body-snippet :: google-analytics-body-snippet}"></div>
-<div class="page-wrapper">
+<div class="page-wrapper slab--shiba">
     <div th:replace="~{fragments/toolbar :: toolbar}" ></div>
     <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
-    <section class="slab slab--shiba">
-        <div class="grid">
-            <div class="grid__item">
-                <h1 class="spacing-below-35" th:text="#{faq.frequently-asked-questions}"></h1>
-                <a class="button button--primary spacing-below-0" th:href="'/pages/landing/navigation'" lang="en">
-                    <span th:text="#{landing.apply-now}"></span>
-                    <div th:replace="~{fragments/icons/icon-arrow :: icon-arrow}"></div>
-                </a>
-            </div>
-        </div>
-    </section>
+	<div th:replace="~{fragments/info-pages-top-navigation :: info-pages-top-navigation('faq')}"></div>
+	<section class="slab slab--shiba">
+		<div class="grid">
+			<div class="grid__item">
+				<h1 class="spacing-below-35" th:text="#{faq.frequently-asked-questions}"></h1>
+				<div class="grid__item width-desktop-one-fourth">
+					<a class="button button--primary spacing-below-0"
+						th:href="'/pages/landing/navigation?lang=' + ${#locale.language}" lang="en">
+						<span lang="en" th:text="#{landing.apply-now}"></span>
+						<div th:replace="~{fragments/icons/icon-arrow :: icon-arrow}"></div>
+					</a>
+					<!--Add button to apply now in Spanish-->
+					<div th:with="otherLocale=${#locale.toString().equals('en') ? 'es' : 'en'}" class="spacing-above-15">
+						<a class="button button--small button-width"
+							th:href="'/pages/landing/navigation?lang=' + ${otherLocale}" lang="es">
+							<span lang="es" th:text="#{landing.apply-now-espanol}"></span>
+							<div th:replace="~{fragments/icons/icon-arrow-black :: icon-arrow-black}"></div>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
     <main id="content" role="main" class="slab slab--white">
         <div class="grid">
             <nav class="grid__item width-one-third">
@@ -136,6 +148,6 @@
     mixpanel.track('PAGE_VIEW');
 
 </script>
-<div th:replace="~{fragments/footer :: footer}"></div>
+<div th:replace="~{fragments/footer :: footer(tagline='true')}"></div>
 </body>
 </html>

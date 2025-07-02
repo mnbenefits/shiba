@@ -58,6 +58,25 @@ public class InputsPageE2ETest extends AbstractExistingStartTimePageTest {
     staticMessageSource.addMessage("general.month", Locale.ENGLISH, "month");
     staticMessageSource.addMessage("general.day", Locale.ENGLISH, "day");
     staticMessageSource.addMessage("general.year", Locale.ENGLISH, "year");
+    staticMessageSource.addMessage("generic.footer.about", Locale.ENGLISH, "About");
+    staticMessageSource.addMessage("generic.footer.help-and-resources", Locale.ENGLISH, "Help & Resources");
+    staticMessageSource.addMessage("generic.footer.mn-official-website", Locale.ENGLISH, "State of Minnesota Official Website");
+    staticMessageSource.addMessage("language-and-accessibility.language-and-accessibility", Locale.ENGLISH, "Language and Accessibility");
+    staticMessageSource.addMessage("language-and-accessibility.amharic", Locale.ENGLISH, "Amharic");
+    staticMessageSource.addMessage("language-and-accessibility.arabic", Locale.ENGLISH, "Arabic");
+    staticMessageSource.addMessage("language-and-accessibility.burmese", Locale.ENGLISH, "Burmese");
+    staticMessageSource.addMessage("language-and-accessibility.cantonese", Locale.ENGLISH, "Cantonese");
+    staticMessageSource.addMessage("language-and-accessibility.french", Locale.ENGLISH, "French");
+    staticMessageSource.addMessage("language-and-accessibility.hmoob", Locale.ENGLISH, "Hmoob");
+    staticMessageSource.addMessage("language-and-accessibility.karen", Locale.ENGLISH, "Karen");
+    staticMessageSource.addMessage("language-and-accessibility.khmer", Locale.ENGLISH, "Khmer");
+    staticMessageSource.addMessage("language-and-accessibility.korean", Locale.ENGLISH, "Korean");
+    staticMessageSource.addMessage("language-and-accessibility.lao", Locale.ENGLISH, "Lao");
+    staticMessageSource.addMessage("language-and-accessibility.oromo", Locale.ENGLISH, "Oromo");
+    staticMessageSource.addMessage("language-and-accessibility.russian", Locale.ENGLISH, "Russian");
+    staticMessageSource.addMessage("language-and-accessibility.soomaali", Locale.ENGLISH, "Soomaali");
+    staticMessageSource.addMessage("language-and-accessibility.spanish", Locale.ENGLISH, "Spanish");
+    staticMessageSource.addMessage("language-and-accessibility.vietnamese", Locale.ENGLISH, "Vietnamese");
   }
 
   @Test
