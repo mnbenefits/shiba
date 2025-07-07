@@ -3,12 +3,15 @@
 	It consists of a "spokenSameAsWritten" checkbox that, when NOT checked, displays a set of spoken language radio buttons.
 	Variables:
 	  writtenLangValue - the chosen value for written language preference (from the writtenLanguage page)
+	  writtenOtherValue - the custom value entered by user as their other written language preference (from the writtenLanguage page)
 	  isChecked - the boolean that indicates whether the checkbox was or was not checked at the time that the spokenLanguage page is loaded.
 -->
 <div th:fragment="languagePreferenceInputFragment(input, data)"
      th:with="
        writtenLangValue=${applicationData.getPagesData().getPage('writtenLanguage').get('writtenLanguage') != null ? 
                          applicationData.getPagesData().getPage('writtenLanguage').get('writtenLanguage').value : ''},
+	   writtenOtherValue=${applicationData.getPagesData().getPage('writtenLanguage').get('otherWrittenLanguage') != null ? 
+						 applicationData.getPagesData().getPage('writtenLanguage').get('otherWrittenLanguage').value : ''},						 
        isChecked=${data.get(input.name) != null and data.get(input.name).value.size>0 and data.get(input.name).value[0]== 'true' ? true : false}
      ">
 
@@ -31,8 +34,11 @@
           container.show();
         }
 
-        // Injected written language value directly from Thymeleaf
+        // Thymeleaf syntax for inserting variables into javascript
+		//Thymeleaf replaces everthing in the square brackets with server value here, falls back to empty string if null
+		//Get the writtenlanguage and custom text user entered if they selcted OTHER on written language page
         var writtenLangValue = /*[[${writtenLangValue}]]*/ '';
+		var otherWrittenLangValue = /*[[${writtenOtherValue}]]*/ '';
 
         // Add a "change" event listener to each radio button label element.
         // This event fires when the radio button is selected.
@@ -61,18 +67,24 @@
 	     var checked = this.parentElement.classList.contains('is-selected');
     	 const element = document.querySelector('input[value="OTHER"]');
 		 var otherLangChecked = element.getAttribute('checked') === 'checked';
-          if (checked) {
-	        // Find the radio button corresponding to the written language selected and click it.
-            var radios = document.getElementsByName('spokenLanguage[]');
-            for (let r of radios) {
-              if (r.value == writtenLangValue) {
-	            r.click();
-			    break;
-              }
-            }
-            container.hide();
-			followupDiv.hide();
-          } else {
+			if (checked) {
+				// Find the radio button corresponding to the written language selected and click it.
+				var radios = document.getElementsByName('spokenLanguage[]');
+				for (let r of radios) {
+					if (r.value == writtenLangValue) {
+						r.click();
+						if (r.value === 'OTHER') {
+							const spokenOtherInput = document.querySelector('input[name="otherSpokenLanguage[]"]');
+							if (spokenOtherInput && otherWrittenLangValue) {
+								$(spokenOtherInput).val(otherWrittenLangValue);
+							}
+						}
+						break;
+					}
+				}
+				container.hide();
+				followupDiv.hide();
+			} else {
             container.show();
 			if(otherLangChecked){
 				followupDiv.show();
