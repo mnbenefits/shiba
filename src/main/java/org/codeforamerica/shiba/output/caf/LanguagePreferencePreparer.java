@@ -38,16 +38,22 @@ public class LanguagePreferencePreparer implements DocumentFieldPreparer {
 		String otherSpokenLanguage = getFirstValue(application.getApplicationData().getPagesData(),
 				OTHER_SPOKEN_LANGUAGE_PREFERENCES);
 
-		if(otherWrittenLanguage !=null) {
+		if(otherWrittenLanguage !=null && !otherWrittenLanguage.isEmpty()) {
 		languagePreference.add(new DocumentField("writtenLanguage", "preferredWrittenLanguage",
-				otherWrittenLanguage.isEmpty()? writtenlanguage : otherWrittenLanguage, SINGLE_VALUE));
+				otherWrittenLanguage, SINGLE_VALUE));
+		} else {
+			languagePreference
+					.add(new DocumentField("writtenLanguage", "preferredWrittenLanguage", writtenlanguage, SINGLE_VALUE));
 		}
 		
-		if(otherSpokenLanguage !=null) {
+		if(otherSpokenLanguage !=null && !otherSpokenLanguage.isEmpty()) {
 		languagePreference.add(new DocumentField("spokenLanguage", "preferredSpokenLanguage",
-				otherSpokenLanguage.isEmpty()? spokenLanguage : otherSpokenLanguage, SINGLE_VALUE));
+				otherSpokenLanguage, SINGLE_VALUE));
+		} else  {
+			languagePreference
+					.add(new DocumentField("spokenLanguage", "preferredSpokenLanguage", spokenLanguage, SINGLE_VALUE));
 		}
-
+		
 		return languagePreference;
 	}
 }
