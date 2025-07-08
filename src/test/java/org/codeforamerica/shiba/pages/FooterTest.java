@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.codeforamerica.shiba.testutilities.AbstractBasePageTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -72,13 +70,9 @@ public class FooterTest extends AbstractBasePageTest {
 	    WebElement anchorElement = driver.findElement(By.id(anchorId));
 	    assertTrue(anchorElement != null);
 	    
-	    String landingPageWindowHandle = driver.getWindowHandle();
 	    anchorElement.click();
-		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
-		driver.switchTo().window(windowHandles.get(1));
 		assertThat(driver.getTitle()).isEqualTo(title);
-		driver.close(); // close the tab
-		driver.switchTo().window(landingPageWindowHandle);
+		driver.navigate().back();
 		// should be back on the landing page
 	    assertEquals("MNbenefits", driver.getTitle());
   }
@@ -113,13 +107,9 @@ public class FooterTest extends AbstractBasePageTest {
 	    WebElement anchorElement = driver.findElement(By.id(anchorId));
 	    assertTrue(anchorElement != null);
 	    
-	    String landingPageWindowHandle = driver.getWindowHandle();
 	    anchorElement.click();
-		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
-		driver.switchTo().window(windowHandles.get(1));
 		assertThat(driver.getTitle()).isEqualTo("Language and Accessibility");
-		driver.close(); // close the tab
-		driver.switchTo().window(landingPageWindowHandle);
+		driver.navigate().back();
 		// should be back on the landing page
 	    assertEquals("MNbenefits", driver.getTitle());
   }
@@ -145,15 +135,16 @@ public class FooterTest extends AbstractBasePageTest {
 	    WebElement anchorElement = driver.findElement(By.id(anchorId));
 	    assertTrue(anchorElement != null);
 	    
-	    String languageAndAccessibilityWindowHandle = driver.getWindowHandle();
 	    anchorElement.click();
-		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
-		driver.switchTo().window(windowHandles.get(1));
 		assertThat(driver.getTitle()).isEqualTo(title);
-		driver.close(); // close the tab
-		driver.switchTo().window(languageAndAccessibilityWindowHandle);
-		// should be back on the Language and Accessibility page
-	    assertEquals("Language and Accessibility", driver.getTitle());
+		driver.navigate().back();
+		// should be back on the Language and Accessibility page or the landing page in the case where we
+		// navigate to the Language and Accessibility page (i.e., the same page we were on).
+		if (anchorId.equals("nav-accessibility")) {
+			assertEquals("MNbenefits", driver.getTitle());
+		} else {
+			assertEquals("Language and Accessibility", driver.getTitle());
+		}
   }
   
 }
