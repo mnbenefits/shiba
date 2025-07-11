@@ -120,7 +120,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "Off");
     assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "");
     assertCafFieldEquals("DRUG_FELONY", "No");
-    //assertCafFieldEquals("ADDITIONAL_APPLICATION_INFO", additionalInfo); // TODO:  Verify that ADDITIONAL_APPLICATION_INFO is no longer on the CAF
+    assertCafFieldEquals("ADDITIONAL_APPLICATION_INFO", additionalInfo); 
     assertCafFieldEquals("ADDITIONAL_INFO_CASE_NUMBER", caseNumber);
     assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "No permanent address");
     assertCafFieldEquals("APPLICANT_HOME_APT_NUMBER", "");
@@ -133,6 +133,175 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("APPLICANT_MAILING_STATE", "MN");
     assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "56510-9999");
   }
+  
+  //Test if no language is entered for other, OTHER is printed to PDF.
+  @Test
+	void nonExpeditedFlowOtherLanguageTestBlankEntry() {
+		when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
+		// Landing page
+		testPage.clickButtonLink("Apply now", "Identify County");
+
+		// Select county
+		testPage.enter("county", "Aitkin");
+		testPage.clickContinue("Prepare To Apply");
+
+		// Informational pages
+		testPage.clickButtonLink("Continue", "Timeout notice");
+		testPage.clickButtonLink("Continue", "Language Preferences - Written");
+
+		// Written Language Preferences
+		testPage.enter("writtenLanguage", "I read or write in some other language");
+		testPage.enter("otherWrittenLanguage", ""); // blank
+		testPage.clickContinue("Language Preferences - Spoken");
+
+		// Spoken Language Preferences
+		testPage.enter("spokenLanguage", "I speak in some other language");
+		testPage.enter("otherSpokenLanguage", "");// blank
+		testPage.enter("needInterpreter", "Yes");
+		testPage.clickContinue("Choose Programs");
+
+		// Program Selection
+		testPage.enter("programs", List.of(PROGRAM_SNAP));
+
+		testPage.clickContinue("Expedited Notice");
+		assertThat(testPage.getTitle()).isEqualTo("Expedited Notice");
+		testPage.clickButtonLink("Continue", "Intro: Basic Info");
+		testPage.clickButtonLink("Continue", "Personal Info");
+
+		// Personal Info
+		testPage.enter("firstName", "Ahmed");
+		testPage.enter("lastName", "St. George");
+		testPage.enter("otherName", "defaultOtherName");
+		// DOB is optional
+		testPage.enter("ssn", "123456789");
+
+		testPage.enter("maritalStatus", "Never married");
+		testPage.enter("sex", "Female");
+		testPage.enter("livedInMnWholeLife", "Yes");
+		testPage.enter("moveToMnDate", "10/20/1993");
+		testPage.enter("moveToMnPreviousCity", "Chicago");
+		testPage.clickContinue("Home Address");
+		assertThat(testPage.getTitle()).isEqualTo("Home Address");
+		testPage.goBack();
+		testPage.enter("dateOfBirth", "01/12/1928");
+		testPage.clickContinue("Home Address");
+
+		// Where are you currently Living? (with home address)
+		testPage.enter("zipCode", "23456");
+		testPage.enter("city", "someCity");
+		testPage.enter("streetAddress", "someStreetAddress");
+		testPage.enter("apartmentNumber", "someApartmentNumber");
+		assertThat(driver.findElement(By.id("state")).getAttribute("value")).isEqualTo("MN"); // home address page
+																								// default state is MN
+		testPage.enter("state", "MN");
+
+		testPage.clickContinue("Mailing address"); // go to the mailing address page
+
+		testPage.clickElementById("true");// checkbox for Same as current living address
+		testPage.clickContinue("Address Validation");
+
+		testPage.clickButton("Use this address", "County Validation");
+		testPage.clickButtonLink("Use this county", "Contact Info");
+
+		// Contact
+		testPage.enter("email", "some@example.com");
+		testPage.clickContinue("No phone number confirmation");
+		assertThat(testPage.getTitle()).contains("No phone number confirmation");
+		testPage.clickButtonLink("Add a phone number", "Contact Info");
+
+		// How can we get in touch with you?
+		testPage.enter("phoneNumber", "7234567890");
+		testPage.enter("email", "some@example.com");
+		assertThat(testPage.getCheckboxValues("phoneOrEmail")).contains("It's okay to text me",
+				"It's okay to email me");
+		testPage.clickContinue("Review info");
+
+		assertThat(driver.findElement(By.id("home-address_county")).getText()).isEqualTo("Aitkin");
+
+		testPage.clickLink("Submit an incomplete application now with only the above information.",
+				"Do you need help immediately?");
+
+		// Opt not to answer expedited questions
+		testPage.clickCustomButton("Finish application now", 3, "Additional Info");
+
+		// Additional Info
+		assertThat(testPage.getTitle()).isEqualTo("Additional Info");
+		String additionalInfo = "Some additional information about my application";
+		String caseNumber = "654321";
+		driver.findElement(By.id("additionalInfo")).sendKeys(additionalInfo);
+		testPage.enter("caseNumber", caseNumber);
+		testPage.clickContinue("Can we ask");
+		testPage.clickButtonLink("No, skip this question", "Legal Stuff");
+
+		// Legal Stuff
+		assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
+		testPage.enter("agreeToTerms", "I agree");
+		testPage.enter("drugFelony", NO.getDisplayValue());
+		testPage.clickContinue("Sign this application");
+		List<String> expectedMessages = List.of("You did not upload documents with your application today.",
+				"To upload documents later, you can return to our homepage and click on ‘Upload documents’ to get started.",
+				"Expect an eligibility worker to contact you by phone or mail with information about your next steps.\n\n"
+						+ "The time it takes to review applications can vary.",
+				"Program(s) on your application may require you to talk with a worker about your application.",
+				"A worker from your county or Tribal Nation will contact you to schedule an interview. Your interview can be held over the phone or face-to-face.");
+
+		// Finish Application
+		applicationId = signApplicationAndDownloadApplicationZipFiles(signature, expectedMessages);
+		assertApplicationSubmittedEventWasPublished(applicationId, MINIMUM, 1);
+
+		// PDF assertions
+		assertCafFieldEquals("APPLICATION_ID", applicationId);
+		assertCafFieldEquals("COUNTY_INSTRUCTIONS",
+				"This application was submitted to Aitkin County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.\n\nFor more support, you can call Aitkin County (800-328-3744).");
+		assertCafFieldEquals("FULL_NAME", "Ahmed St. George");
+		assertCafFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "");
+		assertCafFieldEquals("APPLICANT_EMAIL", "some@example.com");
+		assertCafFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
+		assertCafFieldEquals("EMAIL_OPTIN", "Yes");
+		assertCafFieldEquals("PHONE_OPTIN", "Yes");
+		assertCafFieldEquals("DATE_OF_BIRTH", "01/12/1928");
+		assertCafFieldEquals("APPLICANT_SSN", "XXX-XX-XXXX");
+		assertCafFieldEquals("PROGRAMS", "SNAP");
+
+		// Page 5 and beyond
+		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
+		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
+		String otherName = "defaultOtherName";
+		assertCafFieldEquals("APPLICANT_OTHER_NAME", otherName);
+		String sex = "Female";
+		assertCafFieldEquals("APPLICANT_SEX", sex.toUpperCase(ENGLISH));
+		assertCafFieldEquals("MARITAL_STATUS", "NEVER_MARRIED");
+		String needsInterpreter = "Yes";
+		assertCafFieldEquals("NEED_INTERPRETER", needsInterpreter);
+		assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "OTHER");// nothing was entered for language, so
+																				// OTHER is printed on CAF
+		assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "OTHER");
+		String moveDate = "10/20/1993";
+		assertCafFieldEquals("DATE_OF_MOVING_TO_MN", moveDate);
+		String previousCity = "Chicago";
+		assertCafFieldEquals("APPLICANT_PREVIOUS_STATE", previousCity);
+		assertCafFieldEquals("FOOD", "Yes");
+		assertCafFieldEquals("CASH", "Off");
+		assertCafFieldEquals("EMERGENCY", "Off");
+		assertCafFieldEquals("CCAP", "Off");
+		assertCafFieldEquals("APPLICANT_SIGNATURE", signature);
+
+		assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "Off");
+		assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "");
+		assertCafFieldEquals("DRUG_FELONY", "No");
+		assertCafFieldEquals("ADDITIONAL_APPLICATION_INFO", additionalInfo);
+		assertCafFieldEquals("ADDITIONAL_INFO_CASE_NUMBER", caseNumber);
+		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
+		assertCafFieldEquals("APPLICANT_HOME_APT_NUMBER", "someApartmentNumber");
+		assertCafFieldEquals("APPLICANT_HOME_CITY", "someCity");
+		assertCafFieldEquals("APPLICANT_HOME_STATE", "MN");
+		assertCafFieldEquals("APPLICANT_HOME_ZIPCODE", "23456");
+		assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
+		assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "someApartmentNumber");
+		assertCafFieldEquals("APPLICANT_MAILING_CITY", "someCity");
+		assertCafFieldEquals("APPLICANT_MAILING_STATE", "MN");
+		assertCafFieldEquals("APPLICANT_MAILING_ZIPCODE", "23456");
+	}
   
   @Test
   void expeditedFlow() {
@@ -233,11 +402,9 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("AIR_CONDITIONING", "Yes");
     assertCafFieldEquals("ELECTRICITY", "No");
     assertCafFieldEquals("PHONE", "No");
-    assertCafFieldEquals("NO_EXPEDITED_UTILITIES_SELECTED", "Off");  // TODO:  should this be "Off" or should it be "No"
-    assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", migrantOrSeasonalFarmWorker);
-    // assertCafFieldEquals("HEATING_COOLING_SELECTION", "ONE_SELECTED"); // TODO: verify that HEATING_COOLING_SELECTION is no longer on the CAF
+    assertCafFieldEquals("NO_EXPEDITED_UTILITIES_SELECTED", "Off"); 
+    assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", migrantOrSeasonalFarmWorker);   
     assertCafFieldEquals("WATER_SEWER_SELECTION", "NEITHER_SELECTED");
-    // assertCafFieldEquals("COOKING_FUEL", "No"); // TODO: verify that COOKING_FUEL is no longer on the CAF
     assertCafFieldEquals("HAVE_SAVINGS", "Yes");
     assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", homeStreetAddress);
     assertCafFieldEquals("APPLICANT_HOME_APT_NUMBER", homeApartmentNumber);
@@ -432,10 +599,10 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isFalse();
 
 	// Verify that the spoken language radios are displayed
-	WebElement languageQuestionsDiv = driver.findElement(By.id("language-questions"));
-	String languageQuestionsDivStyle = languageQuestionsDiv.getDomAttribute("style");
+	WebElement spokenLanguageDiv = driver.findElement(By.name("spokenLanguage-div[]"));
+	String spokenLanguageDivStyle = spokenLanguageDiv.getDomAttribute("style");
 	// The absence of a style attribute would mean that the radio div is not hidden
-	assertThat(languageQuestionsDivStyle).isNull();
+	assertThat(spokenLanguageDivStyle).isNull();
 	
 	// Verify that no spoken language preference is selected by default
 	List<WebElement> spokenLanguageRadioInputs = driver.findElements(By.name("spokenLanguage[]"));
@@ -456,9 +623,9 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isTrue();
 
 	// Verify that the spoken language radios are no longer displayed
-	languageQuestionsDiv = driver.findElement(By.id("language-questions"));
-	languageQuestionsDivStyle = languageQuestionsDiv.getDomAttribute("style");
-	assertThat(languageQuestionsDivStyle).contains("display: none");
+	spokenLanguageDiv = driver.findElement(By.name("spokenLanguage-div[]"));
+	spokenLanguageDivStyle = spokenLanguageDiv.getDomAttribute("style");
+	assertThat(spokenLanguageDivStyle).contains("display: none");
 	
 	// Verify that the spoken language preference is now equal to the written language preference
 	spokenLanguageRadioInputs = driver.findElements(By.name("spokenLanguage[]"));
@@ -477,6 +644,113 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 	testPage.clickContinue("Choose Programs");
 	title = testPage.getTitle();
 	assertThat(title).isEqualTo("Choose Programs");
+  }  
+  
+  @Test
+  void languagePreferencesOtherLanguageFlow() {
+	// Landing page
+	  testPage.clickButtonLink("Apply now", "Identify County");
+
+	// Select county
+	testPage.enter("county", "Hennepin");
+    testPage.clickContinue("Prepare To Apply");
+
+    // Informational pages
+    testPage.clickButtonLink("Continue","Timeout notice");
+    testPage.clickButtonLink("Continue", "Language Preferences - Written");
+
+	// Written Language Preference page
+	String title = testPage.getTitle();
+	assertThat(title).isEqualTo("Language Preferences - Written");
+	
+	// Verify that no written language preference is selected by default
+	List<WebElement> writtenLanguageRadioInputs = driver.findElements(By.name("writtenLanguage[]"));
+	String writtenLanguage = "";
+	for (WebElement radioInput : writtenLanguageRadioInputs) {
+		if (radioInput.isSelected()) {
+			writtenLanguage = radioInput.getDomAttribute("value");
+			break;
+		};
+	}
+	assertThat(writtenLanguage).isEmpty();
+	
+	// Set written language preference to long string
+	testPage.enter("writtenLanguage", "I read or write in some other language");
+	testPage.enter("otherWrittenLanguage", "German Swedish French Japanese Portugese Hindi Bengali");
+	//verify other language input remains in textbox when locale is changed
+	testPage.selectFromDropdown("locales", "Español");
+	WebElement textBox = driver.findElement(By.id("otherWrittenLanguage"));
+	String inputValue = textBox.getAttribute("value");
+	assertThat(inputValue).isEqualTo("German Swedish French Japanese Portugese Hindi Ben");
+	testPage.selectFromDropdown("locales", "English");
+	
+	// Continue to spoken language preference page
+	testPage.clickContinue("Language Preferences - Spoken");
+
+	// Verify that the spokenSameAsWritten checkbox is not checked by default
+	WebElement spokenSameAsWrittenCheckbox = driver.findElement(By.name("spokenSameAsWritten[]"));
+	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isFalse();
+
+	// Verify that the spoken language radios are displayed
+	WebElement spokenLanguageDiv = driver.findElement(By.name("spokenLanguage-div[]"));
+	String spokenLanguageDivStyle = spokenLanguageDiv.getDomAttribute("style");
+	// The absence of a style attribute would mean that the radio div is not hidden
+	assertThat(spokenLanguageDivStyle).isNull();
+	
+	// Verify that no spoken language preference is selected by default
+	List<WebElement> spokenLanguageRadioInputs = driver.findElements(By.name("spokenLanguage[]"));
+	String spokenLanguage = "";
+	for (WebElement radioInput : spokenLanguageRadioInputs) {
+		if (radioInput.isSelected()) {
+			spokenLanguage = radioInput.getDomAttribute("value");
+			break;
+		};
+	}
+	assertThat(spokenLanguage).isEmpty();
+	testPage.enter("spokenLanguage", "I speak in some other language");
+	//more than 50 characters will get truncated
+	testPage.enter("otherSpokenLanguage", "German Swedish French Japanese Portugese Hindi Bengali");
+	testPage.enter("needInterpreter", "Yes");
+	testPage.clickContinue("Choose Programs");
+	
+	//go back to test character input limit
+	testPage.goBack();
+	textBox = driver.findElement(By.id("otherSpokenLanguage"));
+	inputValue = textBox.getAttribute("value");
+	//test the limit of 50 characters
+	assertThat(inputValue).isEqualTo("German Swedish French Japanese Portugese Hindi Ben");
+	testPage.goBack();
+	textBox = driver.findElement(By.id("otherWrittenLanguage"));
+	inputValue = textBox.getAttribute("value");
+	assertThat(inputValue).isEqualTo("German Swedish French Japanese Portugese Hindi Ben");
+	testPage.goBack();
+	title = testPage.getTitle();
+	assertThat(title).isEqualTo("Timeout notice");
+	testPage.clickButtonLink("Continue", "Language Preferences - Written");
+
+	testPage.enter("otherWrittenLanguage", "Malay");
+	// Continue to spoken language preference page
+	testPage.clickContinue("Language Preferences - Spoken");
+	
+	// Click the spokenSameAsWritten checkbox
+	testPage.clickElementById("true");
+	
+	// Verify that the checkbox is now checked.
+	spokenSameAsWrittenCheckbox = driver.findElement(By.name("spokenSameAsWritten[]"));
+	assertThat(spokenSameAsWrittenCheckbox.isSelected()).isTrue();
+	
+	testPage.clickContinue("Choose Programs");
+	
+	//go back to test 
+	testPage.goBack();
+	
+	// Click the spokenSameAsWritten checkbox
+	testPage.clickElementById("true");
+
+	textBox = driver.findElement(By.id("otherSpokenLanguage"));
+	inputValue = textBox.getAttribute("value");
+	//test the other spoken language has been populated
+	assertThat(inputValue).isEqualTo("Malay");
   }  
   
 
@@ -505,8 +779,8 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MARITAL_STATUS", "NEVER_MARRIED");
     String needsInterpreter = "Yes";
     assertCafFieldEquals("NEED_INTERPRETER", needsInterpreter);
-    assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH");
-    assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH");
+    assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "German");
+    assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "German");
     String moveDate = "10/20/1993";
     assertCafFieldEquals("DATE_OF_MOVING_TO_MN", moveDate);
     String previousCity = "Chicago";
@@ -515,7 +789,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("CASH", "Off");
     assertCafFieldEquals("EMERGENCY", "Off");
     assertCafFieldEquals("CCAP", "Off");
-    //assertCafFieldEquals("GRH", "Off"); // TODO: Verify that GRH is no longer on the CAF
     assertCafFieldEquals("APPLICANT_SIGNATURE", signature);
   }
 

@@ -74,7 +74,10 @@
               <h2 id="amharic-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.amharic}"></h2>
               <p th:utext="#{language-and-accessibility.content.amharic}"></p>
               <h2 id="arabic-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.arabic}"></h2>
-              <p th:utext="#{language-and-accessibility.content.arabic}"></p>
+			  <p dir="rtl">
+				<span dir="rtl" th:utext="#{language-and-accessibility.content.arabic}"></span>
+				<span dir="ltr" th:utext="#{language-and-accessibility.content.phone}"></span>
+			  </p>
               <h2 id="burmese-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.burmese}"></h2>
               <p th:utext="#{language-and-accessibility.content.burmese}"></p>
               <h2 id="cantonese-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.cantonese}"></h2>
