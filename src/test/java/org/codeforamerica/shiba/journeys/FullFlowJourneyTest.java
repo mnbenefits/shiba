@@ -282,7 +282,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Health Care Reimbursement");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("healthCareReimbursementAmount", "100.00");
-		testPage.clickContinue("Other Minnesota Benefits Programs");
+		testPage.clickContinue("Benefits Programs");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("benefitsAmount", "100.00");
 		testPage.clickContinue("Contract for Deed");
