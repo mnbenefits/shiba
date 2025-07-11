@@ -3547,7 +3547,7 @@ pageConfigurations:
           value: OTHER_PAYMENTS
   - &benefitsProgramsIncomeSource
     name: benefitsProgramsIncomeSource
-    pageTitle: unearned-income-other.benefits-programs
+    pageTitle: unearned-income-benefits-programs.title
     headerKey: unearned-income-benefits-programs.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
     inputs:

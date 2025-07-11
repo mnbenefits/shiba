@@ -48,7 +48,7 @@
   <main id="content" role="main" class="slab slab--white">
     <div class="grid">
       <nav class="grid__item width-one-third">
-        <h2 class="h3">Table of Contents</h2>
+      <h2 class="h3" th:text="#{help-resources.table.of.contents}"></h2>
 		<div class="spacing-below-35"><a lang="am" xml:lang="am" href="#amharic-content" th:utext="#{language-preferences.Amharic}"></a></div>
 		<div class="spacing-below-35"><a lang="ar" xml:lang="ar" href="#arabic-content" th:utext="#{language-preferences.Arabic}"></a></div>
 		<div class="spacing-below-35"><a lang="my" xml:lang="my" href="#burmese-content" th:utext="#{language-preferences.Burmese}"></a></div>
@@ -74,7 +74,10 @@
               <h2 id="amharic-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.amharic}"></h2>
               <p th:utext="#{language-and-accessibility.content.amharic}"></p>
               <h2 id="arabic-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.arabic}"></h2>
-			  <p th:utext="#{language-and-accessibility.content.arabic}"></p>
+			  <p dir="rtl">
+				<span dir="rtl" th:utext="#{language-and-accessibility.content.arabic}"></span>
+				<span dir="ltr" th:utext="#{language-and-accessibility.content.phone}"></span>
+			  </p>
               <h2 id="burmese-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.burmese}"></h2>
               <p th:utext="#{language-and-accessibility.content.burmese}"></p>
               <h2 id="cantonese-content" class="h3 spacing-below-10 spacing-above-60" th:utext="#{language-and-accessibility-content.cantonese}"></h2>
