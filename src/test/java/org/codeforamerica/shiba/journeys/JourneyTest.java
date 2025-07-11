@@ -199,10 +199,13 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.clickButtonLink("Continue", "Language Preferences - Written");
 
     // Written Language Preferences
-    testPage.enter("writtenLanguage", "English");
+    testPage.enter("writtenLanguage", "I read or write in some other language");
+    testPage.enter("otherWrittenLanguage", "German");
     testPage.clickContinue("Language Preferences - Spoken");
+    
     // Spoken Language Preferences
-    testPage.enter("spokenLanguage", "English");
+    testPage.enter("spokenLanguage", "I speak in some other language");
+    testPage.enter("otherSpokenLanguage", "German");
     testPage.enter("needInterpreter", "Yes");
     testPage.clickContinue("Choose Programs");
 

@@ -230,7 +230,8 @@ public class PagesData extends HashMap<String, PageData> {
         formInput.getNoticeMessage(),
         formInput.getValidationIcon(),
         formInput.getNoneCheckboxText(),
-        formInput.getAriaDescribedbyInput()
+        formInput.getAriaDescribedbyInput(),
+        formInput.getMaxlength()
     );
   }
 }

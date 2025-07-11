@@ -592,8 +592,16 @@ pageConfigurations:
                 lang: vi
               - value: OTHER
                 messageKey: language-preferences.different-language
-           datasources:
-             - pageName: writtenLanguage				
+        followUpValues:
+          - "OTHER"
+        followUps:
+          - name: otherWrittenLanguage
+            type: TEXT
+            maxlength: 50
+            promptMessage:
+              promptMessageKey: language-preferences.preferred.language
+        datasources:
+          - pageName: writtenLanguage				
   - &spokenLanguage
     name: spokenLanguage
     pageTitle: spoken-language.title
@@ -610,62 +618,69 @@ pageConfigurations:
                messageKey: same-language-preferences.to-read-or-write
           datasources:
              - pageName: writtenLanguage  
-        followUps:   
-          - name: spokenLanguage
-            type: RADIO
-            ariaDescribedbyInput: spokenSameAsWritten
-            validators:
-               - validation: SELECT_AT_LEAST_ONE
-                 errorMessageKey: general.validation.make-sure-you-answer-this-question
-                 condition:
-                    input: spokenSameAsWritten
-                    matcher: DOES_NOT_EQUAL
-                    value: "true"
-            options:
-              selectableOptions:
-                - value: AMERICAN SIGN LANGUAGE
-                  messageKey: language-preferences.American-sign-language
-                  lang: ase
-                - value: ARABIC
-                  messageKey: language-preferences.Arabic
-                  lang: ar
-                - value: AMHARIC
-                  messageKey: language-preferences.Amharic
-                  lang: am				  
-                - value: ENGLISH
-                  messageKey: language-preferences.English
-                  lang: en
-                - value: SPANISH
-                  messageKey: language-preferences.Spanish
-                  lang: es
-                - value: HMONG
-                  messageKey: language-preferences.hmoob
-                  lang: hmn
-                - value: KAREN
-                  messageKey: language-preferences.Karen
-                  lang: ksw
-                - value: NEPALI
-                  messageKey: language-preferences.Nepali
-                  lang: ne
-                - value: OROMO
-                  messageKey: language-preferences.Oromo
-                  lang: om
-                - value: SOMALI
-                  messageKey: language-preferences.soomaali
-                  lang: so
-                - value: RUSSIAN
-                  messageKey: language-preferences.russian
-                  lang: ru
-                - value: UKRAINIAN
-                  messageKey: language-preferences.Ukrainian
-                  lang: uk
-                - value: VIETNAMESE
-                  messageKey: language-preferences.vietnamese
-                  lang: vi
-                - value: OTHER
-                  messageKey: speak-language-preferences.different-language
-              datasources:
-                 - pageName: writtenLanguage	
+      - name: spokenLanguage
+        type: RADIO
+        ariaDescribedbyInput: spokenSameAsWritten
+        validators:
+           - validation: SELECT_AT_LEAST_ONE
+             errorMessageKey: general.validation.make-sure-you-answer-this-question
+             condition:
+                input: spokenSameAsWritten
+                matcher: DOES_NOT_EQUAL
+                value: "true"
+        options:
+          selectableOptions:
+            - value: AMERICAN SIGN LANGUAGE
+              messageKey: language-preferences.American-sign-language
+              lang: ase
+            - value: ARABIC
+              messageKey: language-preferences.Arabic
+              lang: ar
+            - value: AMHARIC
+              messageKey: language-preferences.Amharic
+              lang: am				  
+            - value: ENGLISH
+              messageKey: language-preferences.English
+              lang: en
+            - value: SPANISH
+              messageKey: language-preferences.Spanish
+              lang: es
+            - value: HMONG
+              messageKey: language-preferences.hmoob
+              lang: hmn
+            - value: KAREN
+              messageKey: language-preferences.Karen
+              lang: ksw
+            - value: NEPALI
+              messageKey: language-preferences.Nepali
+              lang: ne
+            - value: OROMO
+              messageKey: language-preferences.Oromo
+              lang: om
+            - value: SOMALI
+              messageKey: language-preferences.soomaali
+              lang: so
+            - value: RUSSIAN
+              messageKey: language-preferences.russian
+              lang: ru
+            - value: UKRAINIAN
+              messageKey: language-preferences.Ukrainian
+              lang: uk
+            - value: VIETNAMESE
+              messageKey: language-preferences.vietnamese
+              lang: vi
+            - value: OTHER
+              messageKey: speak-language-preferences.different-language
+        followUpValues:
+          - "OTHER"
+        followUps:
+          - name: otherSpokenLanguage
+            type: TEXT
+            maxlength: 50
+            promptMessage:
+              promptMessageKey: language-preferences.preferred.language
+        datasources:
+          - pageName: writtenLanguage	
       - name: needInterpreter
         type: RADIO
         promptMessage:

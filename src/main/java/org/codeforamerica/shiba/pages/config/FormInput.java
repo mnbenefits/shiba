@@ -32,4 +32,5 @@ public class FormInput{
   private Boolean validationIcon = true;
   private String noneCheckboxText;
   private String ariaDescribedbyInput;
+  private String maxlength;
 }
