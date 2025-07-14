@@ -21,7 +21,9 @@
                 <div th:text="|• #{legal-stuff.nopp-medical}|"></div>
                 <div th:text="|• #{legal-stuff.nopp-protective}|"></div>
                 <div th:text="|• #{legal-stuff.nopp-homecare}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-accuracy}|"></div>
+                <div th:text="|• #{legal-stuff.nopp-accuracy}|"></div>	
+            </div>
+			<div class="spacing-below-25">
                 <div th:text="|• #{legal-stuff.nopp-additional}|"></div>
                 <div th:text="|• #{legal-stuff.nopp-reports}|"></div>
 				<div th:text="|• #{legal-stuff.nopp-lie}|"></div>
@@ -63,7 +65,7 @@
                 <div th:text="|• #{legal-stuff.nopp-share-pa}|"></div>
 				<div th:text="|• #{legal-stuff.nopp-share-coroners}|"></div>
                 <div th:text="|• #{legal-stuff.nopp-share-credit}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-law}|"></div>
+                <div th:text="|• #{legal-stuff.nopp-share-anyone-law}|"></div>
             </div>
             <div class="spacing-below-35">
                 <h2 th:text="#{legal-stuff.nopp-rights}" class="h3"></h2>
@@ -77,7 +79,7 @@
 	                <h2 th:text="#{legal-stuff.nopp-ourResponsibilities}" class="h3"></h2>
 	                <div th:text="|• #{legal-stuff.nopp-protect}|"></div>
 	                <div th:text="|• #{legal-stuff.nopp-notuse}|"></div>
-					<div th:text="|• #{legal-stuff.nopp-follow}|"></div>
+					<div th:utext="|• #{legal-stuff.nopp-follow}|"></div>
             </div>
 			<div class="spacing-below-35">
                 <h2 th:text="#{legal-stuff.nopp-rightChildren}" class="h3"></h2>
