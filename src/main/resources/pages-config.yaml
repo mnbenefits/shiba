@@ -6356,7 +6356,6 @@ workflow:
         condition: 
           logicalOperator: OR
           conditions:
-            - *applicantDidNotChooseCERTAINPOPS?
             - *livesAlone? 
       - pageName: otherUnearnedIncome
         condition: 
@@ -6372,7 +6371,6 @@ workflow:
               input: unearnedIncome
               value: SOCIAL_SECURITY
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: supplementalSecurityIncomeSource
         condition:
           logicalOperator: AND
@@ -6381,7 +6379,6 @@ workflow:
               input: unearnedIncome
               value: SSI
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: veteransBenefitsIncomeSource
         condition:
           logicalOperator: AND
@@ -6390,7 +6387,6 @@ workflow:
               input: unearnedIncome
               value: VETERANS_BENEFITS
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: unemploymentIncomeSource
         condition:
           logicalOperator: AND
@@ -6399,7 +6395,6 @@ workflow:
               input: unearnedIncome
               value: UNEMPLOYMENT
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: workersCompIncomeSource
         condition:
           logicalOperator: AND
@@ -6408,7 +6403,6 @@ workflow:
               input: unearnedIncome
               value: WORKERS_COMPENSATION
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: retirementIncomeSource
         condition:
           logicalOperator: AND
@@ -6417,7 +6411,6 @@ workflow:
               input: unearnedIncome
               value: RETIREMENT
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: childOrSpousalSupportIncomeSource
         condition:
           logicalOperator: AND
@@ -6426,7 +6419,6 @@ workflow:
               input: unearnedIncome
               value: CHILD_OR_SPOUSAL_SUPPORT
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: tribalPaymentIncomeSource
         condition:
           logicalOperator: AND
@@ -6435,7 +6427,6 @@ workflow:
               input: unearnedIncome
               value: TRIBAL_PAYMENTS
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: choosePrograms
@@ -6466,7 +6457,6 @@ workflow:
       logicalOperator: OR
       conditions:
         - *noUnearnedIncomeSelected?
-        - *applicantDidNotChooseCERTAINPOPS?
         - pageName: unearnedIncome
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
@@ -6488,7 +6478,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: SSI
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6505,7 +6494,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: VETERANS_BENEFITS
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6522,7 +6510,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: UNEMPLOYMENT
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6539,7 +6526,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: WORKERS_COMPENSATION
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6556,7 +6542,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: RETIREMENT
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6573,7 +6558,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: CHILD_OR_SPOUSAL_SUPPORT
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6590,7 +6574,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: TRIBAL_PAYMENTS
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
