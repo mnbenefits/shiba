@@ -684,7 +684,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("RELATIONSHIP_4", "housemate", caf);
 			assertPdfFieldEquals("DATE_OF_BIRTH_4", "09/14/1950", caf);
 			assertPdfFieldEquals("SSN_4", "XXX-XX-XXXX", caf);
-			//assertPdfFieldEquals("MARITAL_STATUS_4", "NEVER_MARRIED", caf); //TODO change this when new CAF supplement marital status is fixed
+			assertPdfFieldEquals("MARITAL_STATUS_4", "NEVER_MARRIED", caf); 
 			assertPdfFieldEquals("SEX_4", "MALE", caf);
 			assertPdfFieldEquals("PREVIOUS_STATE_4", "Illinois", caf);
 
@@ -703,7 +703,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
             assertPdfFieldEquals("RELATIONSHIP_11", "housemate", caf);
             assertPdfFieldEquals("DATE_OF_BIRTH_11", "09/14/1950", caf);
             assertPdfFieldEquals("SSN_11", "XXX-XX-XXXX", caf);
-            //assertPdfFieldEquals("MARITAL_STATUS_11", "NEVER_MARRIED", caf); //TODO change this when marital status is fixed
+            assertPdfFieldEquals("MARITAL_STATUS_11", "NEVER_MARRIED", caf); 
             assertPdfFieldEquals("SEX_11", "MALE", caf);
             assertPdfFieldEquals("PREVIOUS_STATE_11", "Illinois", caf);
 
