@@ -973,10 +973,16 @@ public class AbstractShibaMockMvcTest {
       }
     }
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
-    postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
+    if (hasHousehold) {
+    	postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
+    	        "socialSecurityIncomeSource");
+    }
+    else {
+    	 postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
         "unearnedIncomeSources");
     postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
         "otherUnearnedIncome");
+    }      
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
         "futureIncome");
     postExpectingRedirect("futureIncome", "earnLessMoneyThisMonth", "true", "startExpenses");
