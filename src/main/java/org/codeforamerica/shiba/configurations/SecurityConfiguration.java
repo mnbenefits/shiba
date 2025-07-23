@@ -44,34 +44,29 @@ public class SecurityConfiguration {
 	@Autowired 
 	private HandlerMappingIntrospector handlerMappingIntrospector;
 	
-	@Bean
-	public MvcRequestMatcher.Builder mvc() {
-		return new MvcRequestMatcher.Builder(handlerMappingIntrospector);
-	}
 
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {
 		return authConfiguration.getAuthenticationManager();
 	}
 	 
 	@Bean
-	@SuppressWarnings("removal")
 	@Order(1)
-	public SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
+	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		EmailAuthorizationManager eam = new EmailAuthorizationManager();
 
 		http.authorizeHttpRequests(r -> {
-			r.requestMatchers(mvc.pattern("/pages/*"),
-					mvc.pattern("/groups/*"),
-					mvc.pattern("/document-upload"),
-					mvc.pattern("/remove-upload/*"),
-					mvc.pattern("/submit"),
-					mvc.pattern("/submit-feedback"),
-					mvc.pattern("/submit-documents")
+			r.requestMatchers("/pages/*",
+					"/groups/*",
+					"/document-upload",
+					"/remove-upload/*",
+					"/submit",
+					"/submit-feedback",
+					"/submit-documents"
 					)
 			.permitAll();
 			try {
-				r.requestMatchers(mvc.pattern("/download/??????????"),
-						mvc.pattern("/resend-confirmation-email/??????????"))
+				r.requestMatchers("/download/??????????",
+						"/resend-confirmation-email/??????????")
 				.access(eam)
 				.anyRequest()
 				.permitAll();
