@@ -425,7 +425,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     // Enter incorrect social security amount to trigger error and check aria properties
     testPage.enter("socialSecurityAmount", "-200");
-    testPage.clickContinue("Unearned Income Sources");
+    testPage.clickContinue("Unearned Income Source");
     testPage.hasInputError("socialSecurityAmount");
 
     assertThat(driver.findElements(By.className("socialSecurityAmount")).size()).isEqualTo(0);
