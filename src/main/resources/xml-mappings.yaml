@@ -162,6 +162,7 @@ xml:
       applicationId: APPLICATION_ID
       completedDate: COMPLETED_DATE
       completedDateTime: COMPLETED_DATE_TIME
+      flow: FLOW
   enums:
     true: true
     false: false

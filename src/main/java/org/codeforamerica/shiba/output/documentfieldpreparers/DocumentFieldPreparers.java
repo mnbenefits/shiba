@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.codeforamerica.shiba.application.Application;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.Recipient;
@@ -75,6 +76,11 @@ public class DocumentFieldPreparers {
 	            DateTimeFormatter.ofPattern("MM/dd/yyyy' at 'hh:mm a").format(
 	                application.getCompletedAt().withZoneSameInstant(ZoneId.of("America/Chicago")))),
 	            SINGLE_VALUE));
+		FlowType flowType = application.getFlow();
+		String flow = flowType != null ? flowType.name() : "";
+		returnDefaultFields.add(
+		        new DocumentField("nonPagesData", "flow", List.of(flow),
+		            SINGLE_VALUE));
 	}
 	
 	return returnDefaultFields;
