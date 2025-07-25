@@ -2597,13 +2597,28 @@ pageConfigurations:
       conditionalValues:
         - value: work-situation.in-the-last-2-months-did-you-do-any-of-these-things
           condition: *livesAlone?
-    hasPrimaryButton: false
+    headerHelpMessageKey: general.check-all-that-apply
+    #hasPrimaryButton: true
     contextFragment: briefcaseContextFragment
     inputs:
-      - name: hasWorkSituation
-        type: YES_NO
-        promptMessage:
-          promptMessageFragmentName: workSituationPrompt
+      - name: workSituation
+        type: CHECKBOX
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-answer-this-question		
+        options:
+          selectableOptions:
+            - value: STOP_WORKING
+              messageKey: work-situation.stop-working
+            - value: REFUSE_A_JOB OFFER
+              messageKey: work-situation.refuse-a-job-offer
+            - value: ASK_TO_WORK_FEWER_HOURS
+              messageKey: work-situation.ask-to-work-fewer-hours
+            - value: GO_ON_STRIKE
+              messageKey: work-situation.go-on-strike
+            - value: NONE_OF_THE_ABOVE
+              messageKey: general.inputs.none-of-the-above
+              isNone: true			  
   - &tribalNationMember
     name: tribalNationMember
     pageTitle: tribal-nation-member.title
