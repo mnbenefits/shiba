@@ -2610,7 +2610,7 @@ pageConfigurations:
           selectableOptions:
             - value: STOP_WORKING
               messageKey: work-situation.stop-working
-            - value: REFUSE_A_JOB OFFER
+            - value: REFUSE_A_JOB_OFFER
               messageKey: work-situation.refuse-a-job-offer
             - value: ASK_TO_WORK_FEWER_HOURS
               messageKey: work-situation.ask-to-work-fewer-hours
