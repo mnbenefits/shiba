@@ -421,8 +421,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "Social Security");
 
-    testPage.clickContinue("Unearned Income Sources");
-
+    testPage.clickContinue("Unearned Income Source");
+    testPage.clickElementById("householdMember-me");
+    
     // Enter incorrect social security amount to trigger error and check aria properties
     testPage.enter("socialSecurityAmount", "-200");
     testPage.clickContinue("Unearned Income Source");
@@ -430,13 +431,13 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     assertThat(driver.findElements(By.className("socialSecurityAmount")).size()).isEqualTo(0);
     assertThat(testPage.getInputAriaDescribedBy("socialSecurityAmount")).isEqualTo(
-        "socialSecurityAmount-error-message-1 socialSecurityAmount-help-message");
+        "socialSecurityAmount-help-message");
     assertThat(testPage.getInputAriaLabelledBy("socialSecurityAmount")).isEqualTo(
-        "socialSecurityAmount-error-p socialSecurityAmount-label");
+        "socialSecurityAmount-label");
 
     testPage.enter("socialSecurityAmount", "200");
 	testPage.clickContinue("Unearned Income");
-
+	
     testPage.enter("otherUnearnedIncome", "None of the above");
     testPage.clickContinue("Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
