@@ -317,7 +317,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("pregnant", "isPregnant", "false");
 		postExpectingSuccess("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false");
 		postExpectingSuccess("usCitizen", "isUsCitizen", "true");
-		postExpectingSuccess("workSituation", "hasWorkSituation", "false");
+		postExpectingSuccess("workSituation", "workSituation", "GO_ON_STRIKE");
 		postExpectingSuccess("tribalNationMember", "isTribalNationMember", "false");
 		postExpectingSuccess("employmentStatus", "areYouWorking", "false");
 		postExpectingSuccess("jobSearch", "currentlyLookingForJob", "false");

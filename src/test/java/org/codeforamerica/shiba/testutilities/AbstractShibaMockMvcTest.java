@@ -838,7 +838,7 @@ public class AbstractShibaMockMvcTest {
     	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
     	postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
     }
-    postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
+    postExpectingRedirect("workSituation", "workSituation", "STOP_WORKING", "tribalNationMember");
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }
 

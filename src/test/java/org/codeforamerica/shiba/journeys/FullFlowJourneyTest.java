@@ -182,7 +182,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Work situation");
 
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.chooseYesOrNo("hasWorkSituation", NO.getDisplayValue(), "Tribal Nation member");
+		testPage.enter("workSituation", "Go on strike");
+		testPage.clickContinue("Tribal Nation member");
 
 		// Is anyone in your household a member of a tribal nation?
 		testPage.chooseYesOrNo("isTribalNationMember", YES.getDisplayValue(), "Select a Tribal Nation");
@@ -758,7 +759,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("HAS_DISABILITY", "Yes");
-		assertCafFieldEquals("HAS_WORK_SITUATION", "No");
 		assertCafFieldEquals("IS_WORKING", "No");
 		assertCafFieldEquals("SOCIAL_SECURITY", "Yes");
 		assertCafFieldEquals("SOCIAL_SECURITY_AMOUNT", "200.30");
@@ -984,7 +984,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work situation");
 
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.chooseYesOrNo("hasWorkSituation", NO.getDisplayValue(), "Tribal Nation member");
+		testPage.enter("workSituation", "Go on strike");
+		testPage.clickContinue("Tribal Nation member");
+
 
 		// Is anyone in your household a member of a tribal nation?
 		testPage.chooseYesOrNo("isTribalNationMember", NO.getDisplayValue(), "Intro: Income");
