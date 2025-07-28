@@ -935,7 +935,7 @@ public class AbstractShibaMockMvcTest {
     }
 
     postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
-    postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
+    postExpectingRedirect("workSituation", "workSituation", "STOP_WORKING", "tribalNationMember");
 
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     if (isWorking) {

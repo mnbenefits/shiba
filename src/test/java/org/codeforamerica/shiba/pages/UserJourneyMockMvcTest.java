@@ -439,7 +439,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
 	  postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
 	  postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
-	  postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
+	  postExpectingRedirect("workSituation", "workSituation", "GO_ON_STRIKE", "tribalNationMember");
 	  postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }
 
