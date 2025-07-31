@@ -984,9 +984,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work situation");
 
 		// In the last 2 months, did anyone in your household do any of these things?
+		testPage.enter("workSituation", "None of the above");
+		testPage.clickContinue("Tribal Nation member");
+		testPage.goBack();
 		testPage.enter("workSituation", "Go on strike");
 		testPage.clickContinue("Tribal Nation member");
-
 
 		// Is anyone in your household a member of a tribal nation?
 		testPage.chooseYesOrNo("isTribalNationMember", NO.getDisplayValue(), "Intro: Income");
