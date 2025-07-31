@@ -2608,15 +2608,15 @@ pageConfigurations:
             errorMessageKey: general.validation.make-sure-you-answer-this-question		
         options:
           selectableOptions:
-            - value: STOP_WORKING
+            - value: STOP_WORK
               messageKey: work-situation.stop-working
-            - value: REFUSE_A_JOB_OFFER
+            - value: REFUSE_JOB
               messageKey: work-situation.refuse-a-job-offer
-            - value: ASK_TO_WORK_FEWER_HOURS
+            - value: FEWER_HOURS
               messageKey: work-situation.ask-to-work-fewer-hours
-            - value: GO_ON_STRIKE
+            - value: ON_STRIKE
               messageKey: work-situation.go-on-strike
-            - value: NONE_OF_THE_ABOVE
+            - value: NONE
               messageKey: general.inputs.none-of-the-above
               isNone: true			  
   - &tribalNationMember
