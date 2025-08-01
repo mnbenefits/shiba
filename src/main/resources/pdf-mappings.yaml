@@ -404,7 +404,6 @@ mappings:
     completedDate: CREATED_DATE
     submissionDateTime: SUBMISSION_DATETIME
     utmSource: UTM_SOURCE
-    flow: FLOW
   coverPage:
     programs: PROGRAMS
     countyInstructions: COUNTY_INSTRUCTIONS

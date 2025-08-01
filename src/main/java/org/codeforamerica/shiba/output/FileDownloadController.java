@@ -155,39 +155,6 @@ public class FileDownloadController {
     ApplicationFile applicationFile = xmlGenerator.generate(applicationData.getId(), CAF, CLIENT);
     return createResponse(applicationFile);
   }
- 
-  /*
-   * Uncomment this method to add an end point that will allow you to download XML documents.
-   * http://localhost:8080/download-xml/<applicationId>
-   */
-  /*
-  @GetMapping("/download-xml/{applicationId}")
-  ResponseEntity<byte[]> downloadXmlForApplicationId(@PathVariable String applicationId,
-      HttpSession httpSession)
-      throws Exception {
-    Application application;
-    try {
-      application = applicationRepository.find(applicationId);
-      if (application.getCompletedAt() == null) {
-        // The submitted time was not set - The application is still in progress or the time was
-        // cleared somehow
-        log.info(UNSUBMITTED_APPLICATION_MESSAGE + " for application id " + applicationId);
-        return ResponseEntity.ok().body(UNSUBMITTED_APPLICATION_MESSAGE.getBytes());
-      }
-      MDC.put("applicationId", application.getApplicationData().getId());
-      MDC.put("sessionId", httpSession.getId());
-      log.info("Client with session: " + httpSession.getId() + " Downloading application XML with id: "
-          + applicationId);
-
-      ApplicationFile applicationFile = xmlGenerator.generate(applicationId, Document.XML, CASEWORKER);
-
-      return createResponse(applicationFile);
-    } catch (EmptyResultDataAccessException e) {
-      log.info(NOT_FOUND_MESSAGE);
-      return ResponseEntity.ok().body(NOT_FOUND_MESSAGE.getBytes());
-    }
-  }
-  */
 
   private ResponseEntity<byte[]> createZipFileFromApplications(
       List<ApplicationFile> applicationFiles,

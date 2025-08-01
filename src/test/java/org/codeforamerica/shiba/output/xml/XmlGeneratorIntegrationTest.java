@@ -27,7 +27,6 @@ import javax.xml.validation.Validator;
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
-import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.config.ApplicationConfiguration;
@@ -115,7 +114,6 @@ public class XmlGeneratorIntegrationTest {
     applicationData.setPagesData(pagesData);
     Application application = Application.builder()
         .id(applicationId)
-        .flow(FlowType.UNDETERMINED)
         .completedAt(ZonedDateTime.now(clock))
         .applicationData(applicationData)
         .county(County.Other)
@@ -141,7 +139,6 @@ public class XmlGeneratorIntegrationTest {
         .withPageData("additionalInfo","caseNumber","123456").build();
     Application application = Application.builder()
         .id("someId")
-        .flow(FlowType.FULL)
         .completedAt(ZonedDateTime.now(clock))
         .applicationData(applicationData)
         .county(County.Hennepin)
@@ -153,10 +150,6 @@ public class XmlGeneratorIntegrationTest {
         .generate("someId", Document.XML, CASEWORKER);
 
     String xmlFile = new String(applicationFile.getFileBytes());
-    assertThat(xmlFile).containsIgnoringWhitespaces("<io4:ApplicationID>someId</io4:ApplicationID>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<io4:Flow>FULL</io4:Flow>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<ns4:CaseNumber>123456</ns4:CaseNumber>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<ns4:FilledBy>Self</ns4:FilledBy>");
     assertThat(xmlFile).containsIgnoringWhitespaces("""
                 <ns4:Person>
                     <ns4:FirstName>Jane</ns4:FirstName>
@@ -193,7 +186,6 @@ public class XmlGeneratorIntegrationTest {
         .build();
     Application application = Application.builder()
         .id("someId")
-        .flow(FlowType.LATER_DOCS)
         .completedAt(ZonedDateTime.now(clock))
         .applicationData(applicationData)
         .county(County.Hennepin)
@@ -205,10 +197,6 @@ public class XmlGeneratorIntegrationTest {
         .generate("someId", Document.XML, CASEWORKER);
 
     String xmlFile = new String(applicationFile.getFileBytes());
-    assertThat(xmlFile).containsIgnoringWhitespaces("<io4:ApplicationID>someId</io4:ApplicationID>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<io4:Flow>LATER_DOCS</io4:Flow>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<ns4:CaseNumber>123456</ns4:CaseNumber>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<ns4:FilledBy>Self</ns4:FilledBy>");
     assertThat(xmlFile).containsIgnoringWhitespaces("""
         <ns4:Person>
                     <ns4:FirstName>Judy</ns4:FirstName>
@@ -252,10 +240,6 @@ public class XmlGeneratorIntegrationTest {
         .generate("someId", Document.XML, CASEWORKER);
 
     String xmlFile = new String(applicationFile.getFileBytes());
-    assertThat(xmlFile).containsIgnoringWhitespaces("<io4:ApplicationID>someId</io4:ApplicationID>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<io4:Flow></io4:Flow>");
-    assertThat(xmlFile).doesNotContain("<ns4:CaseNumber>");
-    assertThat(xmlFile).containsIgnoringWhitespaces("<ns4:FilledBy>Self</ns4:FilledBy>");
     assertThat(xmlFile).containsIgnoringWhitespaces("""
                         <ns4:DOB>//</ns4:DOB>
                         <ns4:Relationship>Self</ns4:Relationship>
@@ -269,7 +253,6 @@ public class XmlGeneratorIntegrationTest {
         .withPageData("additionalInfo","caseNumber","123456").build();
     Application application = Application.builder()
         .id("someId")
-        .flow(FlowType.FULL)
         .completedAt(ZonedDateTime.now(clock))
         .applicationData(applicationData)
         .county(County.Hennepin)
