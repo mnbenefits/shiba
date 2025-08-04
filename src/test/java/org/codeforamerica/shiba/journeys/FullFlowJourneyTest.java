@@ -982,10 +982,21 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
 		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work situation");
-
+		testPage.clickContinue("Work situation");
+		assertThat(testPage.findElementById("workSituation-error-message-1").getText())
+		.contains("Make sure you answer this question.");
+		
 		// In the last 2 months, did anyone in your household do any of these things?
+		testPage.enter("workSituation", "Stop working, quit a job or end self employment");
+		testPage.enter("workSituation", "Refuse a job offer");
+		testPage.enter("workSituation", "Ask to work fewer hours");
+		testPage.enter("workSituation", "Go on strike");
+
+		testPage.clickContinue("Tribal Nation member");
+		testPage.goBack();
 		testPage.enter("workSituation", "None of the above");
 		testPage.clickContinue("Tribal Nation member");
+
 		testPage.goBack();
 		testPage.enter("workSituation", "Go on strike");
 		testPage.clickContinue("Tribal Nation member");
@@ -1143,6 +1154,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("PROGRAMS_0", "CASH");
 		assertCafFieldEquals("OTHER_ADULT_SIGNATURE", "second person signature");
 		assertCafFieldEquals("CREATED_DATE_SIGNATURE", "2020-01-01");
+		
+		// work situation fields 
+		assertCafFieldEquals("GO_ON_STRIKE", "Yes");
+		assertCafFieldEquals("END_WORK", "Off");
+		assertCafFieldEquals("REFUSE_A_JOB_OFFER", "Off");
+		assertCafFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Off");
 
 		// Expecting 2 events: 1.) SubworkflowCompletedEvent, 2.)
 		// ApplicationSubmittedEvent
