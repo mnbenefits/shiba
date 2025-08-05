@@ -180,10 +180,10 @@ public class DocRecommendationMessageService {
 
   private boolean proofOfJobLossPrograms(ApplicationData applicationData) {
     List<String> proofOfJobLossPrograms = List.of("SNAP", "CASH", "GRH");
-    boolean hasChangedWorkSituation = applicationData.getPagesData()
-        .safeGetPageInputValue("workSituation", "hasWorkSituation").contains("true");
+    boolean hasChangedWorkStatus = applicationData.getPagesData()
+        .safeGetPageInputValue("workStatus", "workStatus").contains("true");
 
-    return hasChangedWorkSituation && applicationData.isApplicationWith(proofOfJobLossPrograms);
+    return hasChangedWorkStatus && applicationData.isApplicationWith(proofOfJobLossPrograms);
   }
 
   private boolean proofOfMedicalExpenses(ApplicationData applicationData) {

@@ -2589,9 +2589,9 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
-  - &workSituation
-    name: workSituation
-    pageTitle: work-situation.title
+  - &workStatus
+    name: workStatus
+    pageTitle: work-status.title
     headerKey:
       defaultValue: work-situation.in-the-last-2-months-did-anyone-in-your-household-do-any-of-these-things
       conditionalValues:
@@ -2601,7 +2601,7 @@ pageConfigurations:
     #hasPrimaryButton: true
     contextFragment: briefcaseContextFragment
     inputs:
-      - name: workSituation
+      - name: workStatus
         type: CHECKBOX
         validators:
           - validation: SELECT_AT_LEAST_ONE
@@ -2609,13 +2609,13 @@ pageConfigurations:
         options:
           selectableOptions:
             - value: STOP_WORK
-              messageKey: work-situation.stop-working
+              messageKey: work-status.stop-working
             - value: REFUSE_JOB
-              messageKey: work-situation.refuse-a-job-offer
+              messageKey: work-status.refuse-a-job-offer
             - value: FEWER_HOURS
-              messageKey: work-situation.ask-to-work-fewer-hours
+              messageKey: work-status.ask-to-work-fewer-hours
             - value: ON_STRIKE
-              messageKey: work-situation.go-on-strike
+              messageKey: work-status.go-on-strike
             - value: NONE
               messageKey: general.inputs.none-of-the-above
               isNone: true			  
@@ -5981,16 +5981,16 @@ workflow:
               input: hasDisability
               value: "true"
             - *doesNotLiveAlone? 
-      - pageName: workSituation
+      - pageName: workStatus
   whoHasDisability:
     pageConfiguration: *whoHasDisability
     nextPages:
-      - pageName: workSituation
+      - pageName: workStatus
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: choosePrograms
-  workSituation:
-    pageConfiguration: *workSituation
+  workStatus:
+    pageConfiguration: *workStatus
     datasources:
       - pageName: addHouseholdMembers
     nextPages:
@@ -6329,7 +6329,7 @@ workflow:
       - pageName: addHouseholdMembers
   jobRedirectPage:
     pageConfiguration: *jobRedirectPage
-    dataMissingRedirect: workSituation
+    dataMissingRedirect: workStatus
     nextPages:
       - pageName: jobBuilder
     datasources:
@@ -7480,7 +7480,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workStatus
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7495,7 +7495,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workStatus
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7511,7 +7511,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workStatus
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7526,7 +7526,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workStatus
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7550,7 +7550,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workStatus
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7565,7 +7565,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workStatus
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo

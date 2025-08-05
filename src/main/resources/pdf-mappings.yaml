@@ -136,7 +136,8 @@ mappings:
     whoHasDisability: WHO_HAS_DISABILITY
   workSituation:
     hasWorkSituation: HAS_WORK_SITUATION
-    workSituation:
+  workStatus:
+    workStatus:
      STOP_WORK: END_WORK
      REFUSE_JOB: REFUSE_A_JOB_OFFER
      FEWER_HOURS: ASK_TO_WORK_FEWER_HOURS
