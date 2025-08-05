@@ -1494,7 +1494,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 
 		// (original comment) The applicant has unearned income, there are no additional household members
-		@Disabled("This test fails at random spots.")//TODO Story 189948 has been written to fix this test
+		//@Disabled("This test fails at random spots.")//TODO Story 189948 has been written to fix this test
 		@Test
 		void shouldMapFieldsForApplicantOnlyUnearnedIncomeSelections() throws Exception {
 			fillInRequiredPages();
