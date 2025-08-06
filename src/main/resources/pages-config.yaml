@@ -2593,11 +2593,11 @@ pageConfigurations:
     name: workStatus
     pageTitle: work-status.title
     headerKey:
-      defaultValue: work-situation.in-the-last-2-months-did-anyone-in-your-household-do-any-of-these-things
+      defaultValue: work-status.in-the-last-60-days-did-anyone-in-your-household-do-any-of-these-things
       conditionalValues:
-        - value: work-situation.in-the-last-2-months-did-you-do-any-of-these-things
+        - value: work-status.in-the-last-60-days-did-you-do-any-of-these-things
           condition: *livesAlone?
-    headerHelpMessageKey: general.check-all-that-apply
+    headerHelpMessageKey: work-status.check-all-that-apply
     #hasPrimaryButton: true
     contextFragment: briefcaseContextFragment
     inputs:
@@ -2605,7 +2605,7 @@ pageConfigurations:
         type: CHECKBOX
         validators:
           - validation: SELECT_AT_LEAST_ONE
-            errorMessageKey: general.validation.make-sure-you-answer-this-question		
+            errorMessageKey: work-status.make-sure-you-choose		
         options:
           selectableOptions:
             - value: STOP_WORK
