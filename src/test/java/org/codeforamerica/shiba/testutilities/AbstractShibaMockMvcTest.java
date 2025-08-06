@@ -832,13 +832,13 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
     
     if (containsOnly(Arrays.asList(programs), "CCAP")) {
-    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "workSituation");
+    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "workStatus");
     }
     else {
     	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
-    	postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
+    	postExpectingRedirect("disability", "hasDisability", "false", "workStatus");
     }
-    postExpectingRedirect("workSituation", "workSituation", "STOP_WORKING", "tribalNationMember");
+    postExpectingRedirect("workStatus", "workStatus", "STOP_WORKING", "tribalNationMember");
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }
 
@@ -934,8 +934,8 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
     }
 
-    postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
-    postExpectingRedirect("workSituation", "workSituation", "STOP_WORKING", "tribalNationMember");
+    postExpectingRedirect("disability", "hasDisability", "false", "workStatus");
+    postExpectingRedirect("workStatus", "workStatus", "STOP_WORKING", "tribalNationMember");
 
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     if (isWorking) {

@@ -185,7 +185,7 @@ public class DocRecommendationMessageServiceTest extends AbstractPageControllerT
         case proofOfHousingCost -> pagesDataBuilder
             .withPageData("homeExpenses", "homeExpenses", "RENT");
         case proofOfJobLoss -> pagesDataBuilder
-            .withPageData("workSituation", "hasWorkSituation", "true");
+            .withPageData("workStatus", "workStatus", "WENT_ON_STRIKE");
         case proofOfMedicalExpenses -> pagesDataBuilder
             .withPageData("medicalExpenses", "medicalExpenses", "MEDICAL_INSURANCE_PREMIUMS");
       }
