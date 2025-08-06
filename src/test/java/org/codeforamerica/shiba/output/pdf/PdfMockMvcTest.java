@@ -1516,9 +1516,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
 
 			// Section 11
-			assertPdfFieldEquals("NO_CP_UNEARNED_INCOME", "Yes", pdf);//TODO failed here on VDI
+			assertPdfFieldEquals("NO_CP_UNEARNED_INCOME", "Yes", pdf);//TODO failed here on VDI, expected Yes, but was Off
 
-			assertPdfFieldEquals("CP_UNEARNED_INCOME_TYPE_1_1", "Social Security", pdf);
+			assertPdfFieldEquals("CP_UNEARNED_INCOME_TYPE_1_1", "Social Security", pdf);//TODO failed here on VDI, field was SSI, not Social Security
 			assertPdfFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_1", "100", pdf);
 			assertPdfFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_1", "Monthly", pdf);
 			// TODO failed here on GitHub (PdfMockMvcTest.java:1525)  expected: "SSI" but was: ""
@@ -1526,7 +1526,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_2", "101", pdf);
 			assertPdfFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_2", "Monthly", pdf);
 			
-			assertPdfFieldEquals("CP_UNEARNED_INCOME_TYPE_1_3", "Veterans Benefits", pdf);//failed here on VDI
+			assertPdfFieldEquals("CP_UNEARNED_INCOME_TYPE_1_3", "Veterans Benefits", pdf);//failed here on VDI, was SSI, not Veterans Benefits
 			assertPdfFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_3", "102", pdf);
 			assertPdfFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_3", "Monthly", pdf);
 			
