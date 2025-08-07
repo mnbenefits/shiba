@@ -181,10 +181,10 @@ public class DocRecommendationMessageService {
   private boolean proofOfJobLossPrograms(ApplicationData applicationData) {
     List<String> proofOfJobLossPrograms = List.of("SNAP", "CASH", "GRH");
     List<String> pageInputValues = applicationData.getPagesData()
-            .safeGetPageInputValue("workStatus", "workStatus");
-    boolean hasChangedWorkStatus = 
+            .safeGetPageInputValue("workChanges", "workChanges");
+    boolean hasChangedWorkChanges = 
     		 !pageInputValues.isEmpty() && !pageInputValues.contains("NONE_OF_THE_ABOVE");
-    return hasChangedWorkStatus && applicationData.isApplicationWith(proofOfJobLossPrograms);
+    return hasChangedWorkChanges && applicationData.isApplicationWith(proofOfJobLossPrograms);
   }
 
   private boolean proofOfMedicalExpenses(ApplicationData applicationData) {

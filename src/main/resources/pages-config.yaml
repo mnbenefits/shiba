@@ -2605,8 +2605,8 @@ pageConfigurations:
         type: YES_NO
         promptMessage:
           promptMessageFragmentName: workSituationPrompt
-  - &workStatus
-    name: workStatus
+  - &workChanges
+    name: workChanges
     pageTitle: work-status.title
     headerKey:
       defaultValue: work-status.in-the-last-60-days-did-anyone-in-your-household-do-any-of-these-things
@@ -2617,7 +2617,7 @@ pageConfigurations:
     #hasPrimaryButton: true
     contextFragment: briefcaseContextFragment
     inputs:
-      - name: workStatus
+      - name: workChanges
         type: CHECKBOX
         validators:
           - validation: SELECT_AT_LEAST_ONE
@@ -5997,16 +5997,16 @@ workflow:
               input: hasDisability
               value: "true"
             - *doesNotLiveAlone? 
-      - pageName: workStatus
+      - pageName: workChanges
   whoHasDisability:
     pageConfiguration: *whoHasDisability
     nextPages:
-      - pageName: workStatus
+      - pageName: workChanges
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: choosePrograms
-  workStatus:
-    pageConfiguration: *workStatus
+  workChanges:
+    pageConfiguration: *workChanges
     skipCondition:
         logicalOperator: OR
         conditions:
@@ -6359,7 +6359,7 @@ workflow:
       - pageName: addHouseholdMembers
   jobRedirectPage:
     pageConfiguration: *jobRedirectPage
-    dataMissingRedirect: workStatus
+    dataMissingRedirect: workChanges
     nextPages:
       - pageName: jobBuilder
     datasources:
@@ -7510,7 +7510,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workStatus
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7525,7 +7525,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workStatus
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7541,7 +7541,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workStatus
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7556,7 +7556,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workStatus
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7580,7 +7580,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workStatus
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7595,7 +7595,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workStatus
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
