@@ -5991,8 +5991,22 @@ workflow:
       - pageName: choosePrograms
   workStatus:
     pageConfiguration: *workStatus
+    skipCondition:
+        logicalOperator: OR
+        conditions:
+          - logicalOperator: AND
+            conditions:
+              - *applicantOnlyChoseCCAP?
+              - *householdOnlyChoseCCAP?
+          - logicalOperator: AND
+            conditions:
+              - *livesAlone?
+              - *applicantOnlyChoseCCAP?
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+      - pageName: choosePrograms
     nextPages:
       - pageName: tribalNationMember
   tribalNationMember:
