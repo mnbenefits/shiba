@@ -832,14 +832,15 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
     
     if (containsOnly(Arrays.asList(programs), "CCAP")) {
-    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "workStatus");
+    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "tribalNationMember");
+    	postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
     else {
     	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
     	postExpectingRedirect("disability", "hasDisability", "false", "workStatus");
+        postExpectingRedirect("workStatus", "workStatus", "STOP_WORKING", "tribalNationMember");
+        postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
-    postExpectingRedirect("workStatus", "workStatus", "STOP_WORKING", "tribalNationMember");
-    postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }
 
   protected void getToPersonalInfoScreen(String... programSelections) throws Exception {
