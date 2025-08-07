@@ -364,7 +364,7 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.UTILITY_PAYMENTS,
         new ParsingCoordinate("utilityPayments", "payForUtilities"));
     coordinatesMap.put(Field.WORK_SITUATION,
-            new ParsingCoordinate("workStatus", "workStatus"));        
+            new ParsingCoordinate("workChanges", "workChanges"));        
     coordinatesMap.put(Field.ASSETS_TYPE,
         new ParsingCoordinate("assets", "assets"));
     coordinatesMap.put(Field.INVESTMENT_TYPE_INDIVIDUAL,

@@ -98,8 +98,8 @@ xml:
       hasDisability: HAS_DISABILITY
     workSituation:
       hasWorkSituation: HAS_WORK_SITUATION
-    workStatus:
-     workStatus:
+    workChanges:
+     workChanges:
        STOP_WORK: END_WORK
        REFUSE_JOB: REFUSE_A_JOB_OFFER
        FEWER_HOURS: ASK_TO_WORK_FEWER_HOURS
