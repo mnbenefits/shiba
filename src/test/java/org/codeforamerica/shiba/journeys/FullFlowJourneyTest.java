@@ -982,14 +982,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
 		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
-		testPage.clickContinue("Work status");
+		testPage.clickContinue("Work changes");
 		assertThat(testPage.findElementById("workStatus-error-message-1").getText())
-		.contains("Make sure you answer this question.");
+		.contains("Make sure you choose 'None of the above' or another option.");
 		
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.enter("workStatus", "Stop working, quit a job or end self employment");
-		testPage.enter("workStatus", "Refuse a job offer");
-		testPage.enter("workStatus", "Ask to work fewer hours");
+		testPage.enter("workStatus", "Stopped working, quit a job or ended self employment");
+		testPage.enter("workStatus", "Refused a job offer");
+		testPage.enter("workStatus", "Asked to work fewer hours");
 		testPage.enter("workStatus", "Went on strike");
 
 		testPage.clickContinue("Tribal Nation member");

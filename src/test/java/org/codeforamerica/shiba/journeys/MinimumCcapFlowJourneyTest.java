@@ -114,7 +114,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
 
     // Is everyone in your household a U.S. Citizen?
-    testPage.chooseYesOrNo("isUsCitizen", YES.getDisplayValue(), "Work status");
+    testPage.chooseYesOrNo("isUsCitizen", YES.getDisplayValue(), "Work changes");
 
     // In the last 2 months, did anyone in your household do any of these things?
     testPage.enter("workStatus", "Went on strike");
