@@ -2589,6 +2589,22 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+# workSituation page is no longer used. However, we keep def. for data-pipelines compatibility
+  - &workSituation
+    name: workSituation
+    pageTitle: work-situation.title
+    headerKey:
+      defaultValue: work-situation.in-the-last-2-months-did-anyone-in-your-household-do-any-of-these-things
+      conditionalValues:
+        - value: work-situation.in-the-last-2-months-did-you-do-any-of-these-things
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    contextFragment: briefcaseContextFragment
+    inputs:
+      - name: hasWorkSituation
+        type: YES_NO
+        promptMessage:
+          promptMessageFragmentName: workSituationPrompt
   - &workStatus
     name: workStatus
     pageTitle: work-status.title
