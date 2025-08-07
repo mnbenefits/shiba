@@ -1,4 +1,4 @@
-FROM registry.redhat.io/openjdk/openjdk-21-rhel8
+FROM openjdk:21
 COPY . .
 RUN ./gradlew assemble
 RUN cp build/libs/*.jar app.jar
