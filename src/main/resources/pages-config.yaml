@@ -2632,7 +2632,7 @@ pageConfigurations:
               messageKey: work-status.ask-to-work-fewer-hours
             - value: ON_STRIKE
               messageKey: work-status.go-on-strike
-            - value: NONE
+            - value: NONE_OF_THE_ABOVE
               messageKey: general.inputs.none-of-the-above
               isNone: true			  
   - &tribalNationMember
