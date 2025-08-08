@@ -328,7 +328,7 @@ class EmailContentCreatorTest {
         // Sow proof of housing cost
         .withPageData("homeExpenses", "homeExpenses", "RENT")
         // Show proof of job loss
-        .withPageData("workStatus", "workStatus", "GO_ON_STRIKE")
+        .withPageData("workChanges", "workChanges", "GO_ON_STRIKE")
         // Show proof of medical expenses
         .withPageData("medicalExpenses", "medicalExpenses", "MEDICAL_INSURANCE_PREMIUMS");
 

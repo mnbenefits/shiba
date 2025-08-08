@@ -317,7 +317,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("pregnant", "isPregnant", "false");
 		postExpectingSuccess("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false");
 		postExpectingSuccess("usCitizen", "isUsCitizen", "true");
-		postExpectingSuccess("workStatus", "workStatus", "GO_ON_STRIKE");
+		postExpectingSuccess("workChanges", "workChanges", "GO_ON_STRIKE");
 		postExpectingSuccess("tribalNationMember", "isTribalNationMember", "false");
 		postExpectingSuccess("employmentStatus", "areYouWorking", "false");
 		postExpectingSuccess("jobSearch", "currentlyLookingForJob", "false");
@@ -1824,7 +1824,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 					List.of("householdMemberFirstName0 householdMemberLastName0",
 							"householdMemberFirstName1 householdMemberLastName1",
 							"householdMemberFirstName2 householdMemberLastName2"),
-					"workStatus");
+					"workChanges");
 			submitApplication();
 			// var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
 			var pdf = downloadCertainPopsClientPDF();

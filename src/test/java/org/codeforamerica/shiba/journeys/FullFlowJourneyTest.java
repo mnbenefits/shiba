@@ -182,7 +182,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Work changes");
 
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.enter("workStatus", "Went on strike");
+		testPage.enter("workChanges", "Went on strike");
 		testPage.clickContinue("Tribal Nation member");
 
 		// Is anyone in your household a member of a tribal nation?
@@ -983,22 +983,22 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// prevents them from working?
 		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
 		testPage.clickContinue("Work changes");
-		assertThat(testPage.findElementById("workStatus-error-message-1").getText())
+		assertThat(testPage.findElementById("workChanges-error-message-1").getText())
 		.contains("Make sure you choose 'None of the above' or another option.");
 		
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.enter("workStatus", "Stopped working, quit a job or ended self employment");
-		testPage.enter("workStatus", "Refused a job offer");
-		testPage.enter("workStatus", "Asked to work fewer hours");
-		testPage.enter("workStatus", "Went on strike");
+		testPage.enter("workChanges", "Stopped working, quit a job or ended self employment");
+		testPage.enter("workChanges", "Refused a job offer");
+		testPage.enter("workChanges", "Asked to work fewer hours");
+		testPage.enter("workChanges", "Went on strike");
 
 		testPage.clickContinue("Tribal Nation member");
 		testPage.goBack();
-		testPage.enter("workStatus", "None of the above");
+		testPage.enter("workChanges", "None of the above");
 		testPage.clickContinue("Tribal Nation member");
 
 		testPage.goBack();
-		testPage.enter("workStatus", "Went on strike");
+		testPage.enter("workChanges", "Went on strike");
 		testPage.clickContinue("Tribal Nation member");
 
 		// Is anyone in your household a member of a tribal nation?
