@@ -73,6 +73,31 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		var caf = submitAndDownloadCaf();
 		assertPdfFieldEquals("RECEIVED_LIHEAP", "No", caf);
 	}
+	
+	@Test
+	void shouldMapForWorkChanges() throws Exception {
+		selectPrograms("CASH");
+		postExpectingSuccess("workChanges", "workChanges", List.of("STOP_WORK", "REFUSE_JOB", "FEWER_HOURS", "ON_STRIKE"));
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("END_WORK", "Yes", caf);
+		assertPdfFieldEquals("REFUSE_A_JOB_OFFER", "Yes", caf);
+		assertPdfFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Yes", caf);
+		assertPdfFieldEquals("GO_ON_STRIKE", "Yes", caf);
+	}
+	
+	@Test
+	void shouldMapForNoWorkChanges() throws Exception {
+		selectPrograms("CASH");
+		postExpectingSuccess("workChanges", "workChanges", "NONE");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("END_WORK", "Off", caf);
+		assertPdfFieldEquals("REFUSE_A_JOB_OFFER", "Off", caf);
+		assertPdfFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Off", caf);
+		assertPdfFieldEquals("GO_ON_STRIKE", "Off", caf);
+	}
+
 
 	@Test
 	void shouldMapEnergyAssistanceWhenUserReceivedNoAssistance() throws Exception {
@@ -456,7 +481,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("NON_SELF_EMPLOYMENT_PAY_FREQUENCY_0", "Every week", ccap);
 			assertPdfFieldEquals("NON_SELF_EMPLOYMENT_GROSS_MONTHLY_INCOME_0", "4.00", ccap);
 		}
-
+		
 		@Test
 		void shouldMapEnrichedAddressIfHomeAddressUsesEnrichedAddress() throws Exception {
 			String enrichedStreetValue = "testStreet";

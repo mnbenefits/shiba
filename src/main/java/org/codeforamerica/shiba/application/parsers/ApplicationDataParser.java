@@ -680,7 +680,7 @@ public class ApplicationDataParser {
     UNEARNED_OTHER_PAYMENTS_AMOUNT,
 
     HOME_EXPENSES,
-    WORK_SITUATION,
+    WORK_SITUATION,//TODO do we need this? keep for compatibility.
     UTILITY_PAYMENTS,
     ASSETS_TYPE,
     INVESTMENT_TYPE_INDIVIDUAL,
