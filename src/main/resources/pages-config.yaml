@@ -2607,13 +2607,13 @@ pageConfigurations:
           promptMessageFragmentName: workSituationPrompt
   - &workChanges
     name: workChanges
-    pageTitle: work-status.title
+    pageTitle: work-changes.title
     headerKey:
-      defaultValue: work-status.in-the-last-60-days-did-anyone-in-your-household-do-any-of-these-things
+      defaultValue: work-changes.in-the-last-60-days-did-anyone-in-your-household-do-any-of-these-things
       conditionalValues:
-        - value: work-status.in-the-last-60-days-did-you-do-any-of-these-things
+        - value: work-changes.in-the-last-60-days-did-you-do-any-of-these-things
           condition: *livesAlone?
-    headerHelpMessageKey: work-status.check-all-that-apply
+    headerHelpMessageKey: work-changes.check-all-that-apply
     #hasPrimaryButton: true
     contextFragment: briefcaseContextFragment
     inputs:
@@ -2621,17 +2621,17 @@ pageConfigurations:
         type: CHECKBOX
         validators:
           - validation: SELECT_AT_LEAST_ONE
-            errorMessageKey: work-status.make-sure-you-choose		
+            errorMessageKey: work-changes.make-sure-you-choose		
         options:
           selectableOptions:
             - value: STOP_WORK
-              messageKey: work-status.stop-working
+              messageKey: work-changes.stop-working
             - value: REFUSE_JOB
-              messageKey: work-status.refuse-a-job-offer
+              messageKey: work-changes.refuse-a-job-offer
             - value: FEWER_HOURS
-              messageKey: work-status.ask-to-work-fewer-hours
+              messageKey: work-changes.ask-to-work-fewer-hours
             - value: ON_STRIKE
-              messageKey: work-status.go-on-strike
+              messageKey: work-changes.go-on-strike
             - value: NONE
               messageKey: general.inputs.none-of-the-above
               isNone: true			  
