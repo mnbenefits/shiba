@@ -3,6 +3,8 @@ package org.codeforamerica.shiba.pages;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.internationalization.LocaleSpecificMessageSource;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.springframework.context.MessageSource;
@@ -179,9 +181,13 @@ public class DocRecommendationMessageService {
   }
 
   private boolean proofOfJobLossPrograms(ApplicationData applicationData) {
+	boolean isMinimumFlow = applicationData.getFlow().equals(FlowType.MINIMUM);
     List<String> proofOfJobLossPrograms = List.of("SNAP", "CASH", "GRH");
     List<String> pageInputValues = applicationData.getPagesData()
             .safeGetPageInputValue("workChanges", "workChanges");
+    if(isMinimumFlow && pageInputValues.isEmpty()) {
+    	return false;
+    }
     boolean hasWorkChanges = !pageInputValues.contains("NONE_OF_THE_ABOVE");
     return hasWorkChanges && applicationData.isApplicationWith(proofOfJobLossPrograms);
   }
