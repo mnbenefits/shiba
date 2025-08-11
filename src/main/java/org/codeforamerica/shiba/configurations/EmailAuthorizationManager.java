@@ -24,7 +24,6 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 		      "eric.m.johnson@state.mn.us",
 		      "taylor.johnson@state.mn.us",
 		      "touhid.khan@state.mn.us",
-		      "william.prew@state.mn.us",
 		      "ramesh.shakya@state.mn.us",
 		      "marlene.merwarth@state.mn.us",
 		      "ryan.b.smith@state.mn.us",

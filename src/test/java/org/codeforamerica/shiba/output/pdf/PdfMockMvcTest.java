@@ -653,7 +653,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("CASH", "Yes", caf);
 			assertPdfFieldEquals("EMERGENCY", "Yes", caf);
 			assertPdfFieldEquals("CCAP", "Off", caf);
-			//assertPdfFieldEquals("GRH", "Off", caf); // TODO: Verify that GRH is no longer on the CAF
 			assertPdfFieldEquals("PROGRAM_NONE", "Off", caf);
 		}
 
@@ -669,7 +668,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("CASH", "Off", caf);
 			assertPdfFieldEquals("EMERGENCY", "Off", caf);
 			assertPdfFieldEquals("CCAP", "Off", caf);
-			// assertPdfFieldEquals("GRH", "Off", caf); // TODO: Verify that GRH is no longer on the CAF
 			assertPdfFieldEquals("PROGRAM_NONE", "Yes", caf);
 		}
 
@@ -686,7 +684,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("RELATIONSHIP_4", "housemate", caf);
 			assertPdfFieldEquals("DATE_OF_BIRTH_4", "09/14/1950", caf);
 			assertPdfFieldEquals("SSN_4", "XXX-XX-XXXX", caf);
-			assertPdfFieldEquals("MARITAL_STATUS_4", "NEVER_MARRIED", caf);
+			assertPdfFieldEquals("MARITAL_STATUS_4", "NEVER_MARRIED", caf); 
 			assertPdfFieldEquals("SEX_4", "MALE", caf);
 			assertPdfFieldEquals("PREVIOUS_STATE_4", "Illinois", caf);
 
@@ -705,7 +703,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
             assertPdfFieldEquals("RELATIONSHIP_11", "housemate", caf);
             assertPdfFieldEquals("DATE_OF_BIRTH_11", "09/14/1950", caf);
             assertPdfFieldEquals("SSN_11", "XXX-XX-XXXX", caf);
-            assertPdfFieldEquals("MARITAL_STATUS_11", "NEVER_MARRIED", caf);
+            assertPdfFieldEquals("MARITAL_STATUS_11", "NEVER_MARRIED", caf); 
             assertPdfFieldEquals("SEX_11", "MALE", caf);
             assertPdfFieldEquals("PREVIOUS_STATE_11", "Illinois", caf);
 
@@ -799,10 +797,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				var caf = submitAndDownloadCaf();
 				var ccap = downloadCcapClientPDF();
-				//List.of(caf, ccap).forEach(pdf -> {  // TODO:  Verify that ADDITIONAL_INCOME_INFO is no longer on the CAF
-				//	assertPdfFieldEquals("ADDITIONAL_INCOME_INFO", additionalIncomeInfo, pdf);
-				//	assertPdfFieldEquals("ADDITIONAL_INCOME_INFO", additionalIncomeInfo, pdf);
-				//});
+				List.of(caf, ccap).forEach(pdf -> { 
+					assertPdfFieldEquals("ADDITIONAL_INCOME_INFO", additionalIncomeInfo, pdf);
+				});
 			}
 
 			@Test
@@ -1226,6 +1223,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		void allFieldsDoGetWrittenToPDF() throws Exception {
 			fillInRequiredPages();
 			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
+		    postExpectingSuccess("spokenLanguage", "spokenLanguage", List.of("ENGLISH"));
 			selectPrograms("CERTAIN_POPS");
 			postExpectingRedirect(
 					"basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER", "BLIND", "HAVE_DISABILITY_SSA",
@@ -1276,7 +1274,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("NO_SSN", "Yes", pdf);
 			assertPdfFieldEquals("MARITAL_STATUS", "NEVER_MARRIED", pdf);
 			assertPdfFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH", pdf);
-			assertPdfFieldEquals("NEED_INTERPRETER", "Yes", pdf);
+			assertPdfFieldEquals("NEED_INTERPRETER", "Off", pdf);
 
 			// Section 2
 			assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress", pdf);

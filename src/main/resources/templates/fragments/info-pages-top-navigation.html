@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html th:lang="${locale.language}" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+	<div th:fragment="info-pages-top-navigation(currentPage)">
+		<header id="header-info-pages-top-navigation" class="main-header navigation_wrapper">
+			<ul class="nav-tabs  nav-horizontal-scroll">
+				<li class="nav-tab">
+					<a id="nav-faq" th:class="${currentPage== 'faq' ? ' nav-link grid_item active' : 'nav-link grid_item '}"
+						href="/faq" th:utext="#{faq.faq}">
+					</a>
+				</li>
+
+				<li class="nav-tab">
+					<a id="nav-snapnds" th:class="${currentPage== 'snap' ? ' nav-link grid_item active' : 'nav-link grid_item'}"
+					 href="/snapNDS" th:utext="#{snap-nds.header}">
+					</a>
+				</li>
+
+				<li class="nav-tab">
+					<a id="nav-privacy" th:class="${currentPage== 'privacy' ? ' nav-link grid_item active' : 'nav-link grid_item'}"
+						href="/privacy" th:utext="#{privacy-policy.privacy-policy}">
+					</a>
+				</li>
+
+				<li class="nav-tab">
+					<a id="nav-accessibility" th:class="${currentPage== 'languageAndAccessibility' ? ' nav-link grid_item active' : 'nav-link grid_item'}"
+						href="/languageAndAccessibility"
+						th:utext="#{language-and-accessibility.language-and-accessibility}">
+					</a>
+				</li>
+			</ul>
+		</header>
+	</div>
+</body>
+</html>

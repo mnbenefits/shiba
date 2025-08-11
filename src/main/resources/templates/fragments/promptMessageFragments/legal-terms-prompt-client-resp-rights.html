@@ -1,140 +1,125 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="legal-terms-prompt-client-resp-rights">
-<div class="accordion legal-stuff-accordion  spacing-below-15" id="resp-rights-accordion">
-        <button href="#" class="accordion__button" aria-expanded="true" aria-controls="a3" >
-            <span th:text="#{legal-stuff.crr}"></span>
-        </button>
-         <div id="a3" class="accordion__content textarea-readonly legal-stuff-window spacing-below-35">
-            <div class="spacing-below-35">
-	            <div style="font-weight: normal; font-size: 16px" th:text="#{legal-stuff.crr-effective}" class="spacing-below-25"></div>
-	            <p>
-	                <span th:utext="#{legal-stuff.crr-note}"></span>
-	            </p>
-				
-				<div class="spacing-below-35">
-	                <h2 th:text="#{legal-stuff.crr-yourResponsibilites}" class="h3"></h2>
-					<p>
-						<span th:utext="#{legal-stuff.crr-yourResponsibilites1}"></span>
-					</p>
-					<p>
-						<span th:utext="#{legal-stuff.crr-yourResponsibilites2}"></span>
-					</p>					
-	            </div>
-				
-	            <div class="spacing-below-25">
-	               <h3 class="h4" th:text="#{legal-stuff.crr-ReportChanges}"></h3>
-	               <div th:utext="|• #{legal-stuff.crr-employment}|"></div>
-	               <div th:utext="|• #{legal-stuff.crr-income}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-property}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-household}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-citizenship}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-address}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-housing}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-utility}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-custody}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-marital}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-school}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-insurance}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-lottery}|"></div>
-	            </div>
-				
-				<p>
-					<span th:text="#{legal-stuff.crr-lawsuit}"></span>
-				</p>
-				
-				<p>
-					<span th:utext="#{legal-stuff.crr-ccaNote}"></span>
-				</p>
-				
-				<p>
-					<span th:utext="#{legal-stuff.crr-questions}"></span>
-				</p>
-
-				<p>
-					<span th:utext="#{legal-stuff.crr-consent}"></span>
-				</p>
-								
-				<p>
-					<span th:text="#{legal-stuff.crr-untrue}"></span>
-				</p>
-
-				<p>
-					<span th:utext="#{legal-stuff.crr-qc}"></span>
-				</p>
-				
-				<div class="spacing-below-25">
-	               <h3 class="h4" th:text="#{legal-stuff.crr-coopReq}"></h3>
-	               <div th:text="|• #{legal-stuff.crr-coopEmp}|"></div>
-	               <div th:text="|• #{legal-stuff.crr-coopChild}|"></div>
-	            </div>
-				
-				<p>
-					<span th:text="#{legal-stuff.crr-nonCust}"></span>
-				</p>
-				
-				<div class="spacing-below-25">
-				   <h2 th:text="#{legal-stuff.crr-SNAP}" class="h3"></h2>
-	               <div th:utext="|• #{legal-stuff.crr-EBTsign}|"></div>
-	               <div th:utext="|• #{legal-stuff.crr-EBTused}|"></div>
-	            </div>
-				
-				<div class="spacing-below-25">
-				   <h2 th:text="#{legal-stuff.crr-CCA}" class="h3"></h2>
-	               <div th:utext="|• #{legal-stuff.crr-cofee}|"></div>
-	               <div th:utext="|• #{legal-stuff.crr-adCost}|"></div>
-				   <div th:utext="|• #{legal-stuff.crr-doc}|"></div>
-	            </div>
-				
-				<p>
-					<span th:utext="#{legal-stuff.crr-authRepNote}"></span>
-				</p>
-				
-				<div class="spacing-below-35">
-	                <h2 th:text="#{legal-stuff.crr-yourRights}" class="h3"></h2>
-					<p>
-						<span th:utext="#{legal-stuff.crr-rightsPrivacy}"></span>
-					</p>
-	                <p>
-	                    <span th:utext="#{legal-stuff.crr-rightsReapply}"></span>
-	                </p>
-					<p>
-	                    <span th:utext="#{legal-stuff.crr-rightsCopy}"></span>
-	                </p>
-					<p>
-					    <span th:utext="#{legal-stuff.crr-rightsWhy}"></span>
-					</p>
-					<div th:text="|• #{legal-stuff.crr-seven}|"></div>
-		            <div th:text="|• #{legal-stuff.crr-thirty}|"></div>
-					<div th:text="|• #{legal-stuff.crr-sixty}|"></div>				
-	            </div>
-				
-				<p>
-					<span th:utext="#{legal-stuff.crr-SNAPonly}"></span>
-				</p>
-				<p>
-					<span th:utext="#{legal-stuff.crr-rules}"></span>
-				</p>
-				<p>
-					<span th:utext="#{legal-stuff.crr-choose}"></span>
-				</p>
-				<p>
-					<span th:utext="#{legal-stuff.crr-report}"></span>
-				</p>
-				<p>
-					<span th:utext="#{legal-stuff.crr-legal}"></span>
-				</p>
-				<p>
-					<span th:utext="#{legal-stuff.crr-appeal}"></span>
-				</p>
-				<p>
-					<span th:utext="#{legal-stuff.crr-stateAppeals}"></span>
-				</p>
-				<p>
-					<span th:utext="#{legal-stuff.crr-hearing}"></span>
-				</p>				
-
+  <div th:fragment="legal-terms-prompt-client-resp-rights">
+    <div class="accordion legal-stuff-accordion  spacing-below-15" id="resp-rights-accordion">
+      <button href="#" class="accordion__button" aria-expanded="true" aria-controls="a3" >
+      <span th:text="#{legal-stuff.crr}"></span>
+      </button>
+      <div id="a3" class="accordion__content textarea-readonly legal-stuff-window spacing-below-35">
+        <div class="spacing-below-35">
+          <div style="font-weight: normal; font-size: 16px" th:text="#{legal-stuff.crr-effective}" class="spacing-below-25"></div>
+          <p>
+            <span th:utext="#{legal-stuff.crr-note}"></span>
+          </p>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.crr-yourResponsibilites}" class="h3"></h2>
+            <p>
+              <span th:utext="#{legal-stuff.crr-yourResponsibilites1}"></span>
+            </p>
+            <p>
+              <span th:utext="#{legal-stuff.crr-yourResponsibilites2}"></span>
+            </p>
+          </div>
+          <div class="spacing-below-25">
+            <h3 class="h4" th:text="#{legal-stuff.crr-ReportChanges}"></h3>
+            <div th:utext="|• #{legal-stuff.crr-employment}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-income}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-property}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-household}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-citizenship}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-address}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-housing}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-utility}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-custody}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-marital}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-school}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-insurance}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-lottery}|"></div>
+          </div>
+          <p>
+            <span th:text="#{legal-stuff.crr-lawsuit}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-ccaNote}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-questions}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-consent}"></span>
+          </p>
+          <p>
+            <span th:text="#{legal-stuff.crr-untrue}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-qc}"></span>
+          </p>
+          <div class="spacing-below-25">
+            <h3 class="h4" th:text="#{legal-stuff.crr-coopReq}"></h3>
+            <div th:text="|• #{legal-stuff.crr-coopEmp}|"></div>
+            <div th:text="|• #{legal-stuff.crr-coopChild}|"></div>
+          </div>
+          <p>
+            <span th:text="#{legal-stuff.crr-nonCust}"></span>
+          </p>
+          <div class="spacing-below-25">
+            <h2 th:text="#{legal-stuff.crr-SNAP}" class="h3"></h2>
+            <div th:utext="|• #{legal-stuff.crr-EBTsign}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-EBTused}|"></div>
+          </div>
+          <div class="spacing-below-25">
+            <h2 th:text="#{legal-stuff.crr-CCA}" class="h3"></h2>
+            <div th:utext="|• #{legal-stuff.crr-cofee}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-adCost}|"></div>
+            <div th:utext="|• #{legal-stuff.crr-doc}|"></div>
+          </div>
+          <p>
+            <span th:utext="#{legal-stuff.crr-authRepNote}"></span>
+          </p>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.crr-yourRights}" class="h3"></h2>
+            <p>
+              <span th:utext="#{legal-stuff.crr-rightsPrivacy}"></span>
+            </p>
+            <p>
+              <span th:utext="#{legal-stuff.crr-rightsReapply}"></span>
+            </p>
+            <p>
+              <span th:utext="#{legal-stuff.crr-rightsCopy}"></span>
+            </p>
+            <p>
+              <span th:utext="#{legal-stuff.crr-rightsWhy}"></span>
+            </p>
+            <div th:text="|• #{legal-stuff.crr-seven}|"></div>
+            <div th:text="|• #{legal-stuff.crr-thirty}|"></div>
+            <div th:text="|• #{legal-stuff.crr-sixty}|"></div>
+          </div>
+          <p>
+            <span th:utext="#{legal-stuff.crr-SNAPonly}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-rules}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-choose}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-report}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-legal}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-appeal}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-stateAppeals}"></span>
+          </p>
+          <p>
+            <span th:utext="#{legal-stuff.crr-hearing}"></span>
+          </p>
         </div>
-        </div>
-</div>
+      </div>
+    </div>
+  </div>
 </html>

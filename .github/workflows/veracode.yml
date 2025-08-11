@@ -67,7 +67,7 @@ jobs:
 
     - run: zip -r veracode-scan-target.zip ./
     - name: Veracode Upload And Scan
-      uses: veracode/veracode-uploadandscan-action@0.2.7
+      uses: veracode/veracode-uploadandscan-action@0.2.8
       with:
         appname: DCYF - mnbenefits/shiba # default is ${{ github.repository }}
     # createprofile
@@ -75,6 +75,8 @@ jobs:
     # filepath
         filepath: veracode-scan-target.zip
         scanallnonfataltoplevelmodules: true
+    # deleteincompletescan - force deletion any in-progress (incomplete) Veracode scan
+        deleteincompletescan: 2
 
     # version
         version: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }} # default is Scan from Github job: ${{ github.run_id }}-${{ github.run_number }}-${{ github.run_attempt }}

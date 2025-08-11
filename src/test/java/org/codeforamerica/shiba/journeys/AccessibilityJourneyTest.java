@@ -421,8 +421,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "Social Security");
 
-    testPage.clickContinue("Unearned Income Sources");
-
+    testPage.clickContinue("Unearned Income Source");
     // Enter incorrect social security amount to trigger error and check aria properties
     testPage.enter("socialSecurityAmount", "-200");
     testPage.clickContinue("Unearned Income Sources");

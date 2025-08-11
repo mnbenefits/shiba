@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<footer id="footerMNbenefits" th:fragment="footer" class="main-footer footer-minnesota-blue">
+<div th:fragment="footer">
+    <div th:if="${tagline}">
+        <div th:replace="~{fragments/tagline-footer :: tagline-footer}">
+        </div>
+    </div>
+<footer id="footerMNbenefits" class="main-footer footer-minnesota-blue">
     <div class="grid">
         <div class="grid__item">
-            <div class="width-one-half grid__item">
-                <p class="font-white text--small--footer spacing-below-25"
-                   th:text="#{generic.footer}"></p>
-                <a class="capitalized footer__privacy-policy-link font-white text--small" target="_blank" rel="noopener noreferrer" href="/faq" th:text="#{faq.faq}"></a><br/>
-                <a id="link-snap-nds" class="footer__privacy-policy-link font-white text--small" target="_blank" rel="noopener noreferrer" href="/snapNDS" th:text="#{snap-nds.header}"></a><br/>
-                <a class="capitalized footer__privacy-policy-link font-white text--small" target="_blank" rel="noopener noreferrer" href="/privacy" th:text="#{general.privacy-policy}"></a>
+            <div class="width-one-third grid__item footer-column">
+            	<h2 class="footer-heading"
+            		th:text="#{generic.footer.about}"></h2>
+            	<div class="font-white footer-text">
+                <p th:text="#{generic.footer}"></p>
+                <p th:text="#{generic.footer.mn-official-website}"></p>
+                </div>
+            </div>
+            <div class="width-one-third grid__item footer-column">
+            	<h2 class="footer-heading"
+            		th:text="#{generic.footer.help-and-resources}"></h2>
+            	<div class="font-white footer-text">	
+                <a id="link-faq" class="capitalized footer-text" href="/faq" th:text="#{faq.faq}"></a><br/><br/>
+                <a id="link-snap-nds" class="capitalized footer-text" href="/snapNDS" th:text="#{snap-nds.header}"></a><br/><br/>
+                <a id="link-privacy-policy" class="capitalized footer-text" href="/privacy" th:text="#{general.privacy-policy}"></a><br/><br/>
+                <a id="link-language-and-accessibility" class="capitalized footer-text"
+                   href="/languageAndAccessibility" th:text="#{language-and-accessibility.language-and-accessibility}"></a>
+                </div>
             </div>
             <div class="main-footer__mn-logo grid__item">
                 <a th:href="#{general.mn-gov-portal}"
@@ -18,4 +35,5 @@
         </div>
     </div>
 </footer>
+</div>
 </html>
