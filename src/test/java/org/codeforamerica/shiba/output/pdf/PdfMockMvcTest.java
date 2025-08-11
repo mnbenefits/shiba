@@ -357,7 +357,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		// The CCAP PDF version for the caseworker should have 19 pages (based on viewing a real example)
 		int pageCount = pdDocument.getNumberOfPages();
-		assert (pageCount == 20);
+		assert (pageCount == 21);
 
 		// Strip out all text so that we can search it for specific strings
 		PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -397,13 +397,13 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 			// The CCAP PDF should have 29 pages (based on viewing a real example)
 			int pageCount = pdDocument.getNumberOfPages();
-			assert (pageCount == 30);
+			assert (pageCount == 34);
 
 			// Strip out all text so that we can search it for specific strings
 			PDFTextStripper pdfStripper = new PDFTextStripper();
 			String text = pdfStripper.getText(pdDocument);
 			
-			assertTrue(text.contains("This is the Minnesota Child Care Assistance Program (CCAP)")); // ccap-headers.pdf
+			assertTrue(text.contains("Read these instructions before you fill out the application.")); // ccap-headers.pdf
 			assertTrue(text.contains("Your responsibilities")); // ccap-footers.pdf
 			assertTrue(text.contains("Attached is a new MNbenefits Application")); // cover-pages.pdf
 			assertTrue(text.contains("Minnesota Child Care Assistance Program Application")); //HDR/ ccap-body-caseworker-page1.pdf
