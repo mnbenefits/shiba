@@ -181,11 +181,10 @@ public class DocRecommendationMessageService {
   }
 
   private boolean proofOfJobLossPrograms(ApplicationData applicationData) {
-	boolean isMinimumFlow = applicationData.getFlow().equals(FlowType.MINIMUM);
     List<String> proofOfJobLossPrograms = List.of("SNAP", "CASH", "GRH");
     List<String> pageInputValues = applicationData.getPagesData()
             .safeGetPageInputValue("workChanges", "workChanges");
-    if(isMinimumFlow && pageInputValues.isEmpty()) {
+    if( pageInputValues.isEmpty()) {
     	return false;
     }
     boolean hasWorkChanges = !pageInputValues.contains("NONE_OF_THE_ABOVE");
