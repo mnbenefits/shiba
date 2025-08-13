@@ -3272,7 +3272,7 @@ pageConfigurations:
     name: retirementIncomeSource
     pageTitle: unearned-income-source.title
     headerKey: retirement-income-source.who-receives
-    headerHelpMessageKey: unearned-income-source.you-can-select-more
+    headerHelpMessageKey: retirement-income-source.additional-help
     contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
@@ -3766,7 +3766,7 @@ pageConfigurations:
     name: otherPaymentsIncomeSource
     pageTitle: unearned-income-other.other-payments
     headerKey: unearned-income-other.other-payments.header
-    headerHelpMessageKey: unearned-income-source.you-can-select-more
+    headerHelpMessageKey: unearned-income-other.other-additional-help
     inputs:
       - type: CUSTOM
         name: monthlyIncomeOtherPayments
