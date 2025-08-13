@@ -1,97 +1,95 @@
 <!DOCTYPE html>
 <html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
-<div th:fragment="legal-terms-prompt-notice-privacy">
-<div class="accordion legal-stuff-accordion  spacing-below-15" id="notice-privacy-accordion">
-        <button href="#" class="accordion__button" aria-expanded="false" aria-controls="a2" >
-            <span th:text="#{legal-stuff.notice-of-privacy-practices}"></span>
-        </button>
-         <div id="a2" class="accordion__content textarea-readonly legal-stuff-window">
-            <div style="font-weight: normal; font-size: 16px" th:text="#{legal-stuff.nopp-date}" class="spacing-below-25"></div>
-            <div>
-            <p>
-                <span th:utext="#{legal-stuff.nopp-how-private}"></span>
-            </p>
-            </div>
-            <div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.nopp-why-ask}" class="h3"></h2>
-                <div th:text="|• #{legal-stuff.nopp-to-determine}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-similar-name}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-to-decide}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-medical}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-protective}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-homecare}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-accuracy}|"></div>	
-            </div>
-			<div class="spacing-below-25">
-                <div th:text="|• #{legal-stuff.nopp-additional}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-reports}|"></div>
-				<div th:text="|• #{legal-stuff.nopp-lie}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-insurance}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-state}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-circumstances}|"></div>		
-            </div>
-			
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.nopp-ask-ssn}" class="h3"></h2>
-                <div>
-	                <p>
-	                    <span th:text="#{legal-stuff.nopp-ssn-need}"></span>
-	                </p>
-	                <p>
-	                   <span th:text="#{legal-stuff.nopp-give-ssn}"></span>
-	                </p>
-	            </div>
-                <div th:text="|• #{legal-stuff.nopp-ssn-coverage}|"></div>
-				<div th:text="|• #{legal-stuff.nopp-ssn-religious}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-ssn-citizen}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-ssn-country}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-ssn-immigration}|"></div>
-            </div>			
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.nopp-answer}" class="h3"></h2>
-                <div th:text="#{legal-stuff.nopp-personalInfo}"></div>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.nopp-share-with}" class="h3"></h2>
-                <div th:text="#{legal-stuff.nopp-share-law}"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-emp}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-audit}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-court}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-human}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-gov}|"></div>
-				<div th:text="|• #{legal-stuff.nopp-share-providers}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-insurers}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-pa}|"></div>
-				<div th:text="|• #{legal-stuff.nopp-share-coroners}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-credit}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-share-anyone-law}|"></div>
-            </div>
-            <div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.nopp-rights}" class="h3"></h2>
-                <div th:text="|• #{legal-stuff.nopp-permission}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-question}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-askWriting}|"></div>
-				<div th:text="|• #{legal-stuff.nopp-limit}|"></div>
-                <div th:text="|• #{legal-stuff.nopp-explain}|"></div>
-            </div>
-			<div class="spacing-below-35">
-	                <h2 th:text="#{legal-stuff.nopp-ourResponsibilities}" class="h3"></h2>
-	                <div th:text="|• #{legal-stuff.nopp-protect}|"></div>
-	                <div th:text="|• #{legal-stuff.nopp-notuse}|"></div>
-					<div th:utext="|• #{legal-stuff.nopp-follow}|"></div>
-            </div>
-			<div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.nopp-rightChildren}" class="h3"></h2>
-                <div th:text="#{legal-stuff.nopp-under18}"></div>
-            </div>
-			<div class="spacing-below-35">
-                <h2 th:text="#{legal-stuff.nopp-violated}" class="h3"></h2>
-                <div th:text="#{legal-stuff.nopp-dhs}"></div>
-            </div>
-
-            </div>
+  <div th:fragment="legal-terms-prompt-notice-privacy">
+    <div class="accordion legal-stuff-accordion  spacing-below-15" id="notice-privacy-accordion">
+      <button href="#" class="accordion__button" aria-expanded="false" aria-controls="a2" >
+      <span th:text="#{legal-stuff.notice-of-privacy-practices}"></span>
+      </button>
+      <div id="a2" class="accordion__content textarea-readonly legal-stuff-window">
+        <div style="font-weight: normal; font-size: 16px" th:text="#{legal-stuff.nopp-date}" class="spacing-below-25"></div>
+        <div>
+          <p>
+            <span th:utext="#{legal-stuff.nopp-how-private}"></span>
+          </p>
         </div>
+        <div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-why-ask}" class="h3"></h2>
+            <div th:text="|• #{legal-stuff.nopp-to-determine}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-similar-name}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-to-decide}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-medical}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-protective}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-homecare}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-accuracy}|"></div>
+          </div>
+          <div class="spacing-below-25">
+            <div th:text="|• #{legal-stuff.nopp-additional}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-reports}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-lie}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-insurance}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-state}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-circumstances}|"></div>
+          </div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-ask-ssn}" class="h3"></h2>
+            <div>
+              <p>
+                <span th:text="#{legal-stuff.nopp-ssn-need}"></span>
+              </p>
+              <p>
+                <span th:text="#{legal-stuff.nopp-give-ssn}"></span>
+              </p>
+            </div>
+            <div th:text="|• #{legal-stuff.nopp-ssn-coverage}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-ssn-religious}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-ssn-citizen}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-ssn-country}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-ssn-immigration}|"></div>
+          </div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-answer}" class="h3"></h2>
+            <div th:text="#{legal-stuff.nopp-personalInfo}"></div>
+          </div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-share-with}" class="h3"></h2>
+            <div th:text="#{legal-stuff.nopp-share-law}"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-emp}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-audit}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-court}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-human}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-gov}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-providers}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-insurers}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-pa}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-coroners}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-credit}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-share-anyone-law}|"></div>
+          </div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-rights}" class="h3"></h2>
+            <div th:text="|• #{legal-stuff.nopp-permission}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-question}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-askWriting}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-limit}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-explain}|"></div>
+          </div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-ourResponsibilities}" class="h3"></h2>
+            <div th:text="|• #{legal-stuff.nopp-protect}|"></div>
+            <div th:text="|• #{legal-stuff.nopp-notuse}|"></div>
+            <div th:utext="|• #{legal-stuff.nopp-follow}|"></div>
+          </div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-rightChildren}" class="h3"></h2>
+            <div th:text="#{legal-stuff.nopp-under18}"></div>
+          </div>
+          <div class="spacing-below-35">
+            <h2 th:text="#{legal-stuff.nopp-violated}" class="h3"></h2>
+            <div th:text="#{legal-stuff.nopp-dhs}"></div>
+          </div>
         </div>
-</div>
+      </div>
+    </div>
+  </div>
 </html>
