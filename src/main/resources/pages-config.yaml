@@ -3367,6 +3367,7 @@ pageConfigurations:
   - &otherUnearnedIncome
     name: otherUnearnedIncome
     pageTitle: unearned-income.title
+    contextFragment: unearnedIncomeContextFragment
     headerKey:
       defaultValue: unearned-income-other.household-get-income-from-any-of-these-sources
       conditionalValues:
@@ -3550,6 +3551,7 @@ pageConfigurations:
     pageTitle: unearned-income-benefits-programs.title
     headerKey: unearned-income-benefits-programs.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeBenefitsPrograms
@@ -3581,6 +3583,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.insurance-payments
     headerKey: unearned-income-insurance-payments.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeInsurancePayments
@@ -3612,6 +3615,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.contract-for-deed
     headerKey: unearned-income-contract-for-deed.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeContractForDeed
@@ -3643,6 +3647,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.money-from-a-trust
     headerKey: unearned-income-money-from-a-trust.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeTrustMoney
@@ -3674,6 +3679,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.health-care-reimbursement
     headerKey: unearned-income-health-care-reimbursement.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeHealthcareReimbursement
@@ -3705,6 +3711,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.interest-dividends
     headerKey: unearned-income-interest-dividends.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeInterestDividends
@@ -3736,6 +3743,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.rental-income
     headerKey: unearned-income-rental-income.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeRental
