@@ -99,8 +99,8 @@ public class PDFBoxFieldFiller implements PdfFieldFiller {
       pdField.setValue(field);
     } catch (IllegalArgumentException e) {
       log.error(
-          "Error setting value '%s' for field %s".formatted(field,
-              pdField.getFullyQualifiedName()));
+          "Error setting value '%s' for field %s . Error message: %s".formatted(field,
+              pdField.getFullyQualifiedName(), e.getMessage()));
     }
   }
 }
