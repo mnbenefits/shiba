@@ -438,8 +438,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
 	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
 	  postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
-	  postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
-	  postExpectingRedirect("workSituation", "hasWorkSituation", "false", "tribalNationMember");
+	  postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+	  postExpectingRedirect("workChanges", "workChanges", "GO_ON_STRIKE", "tribalNationMember");
 	  postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }
 
@@ -459,6 +459,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
     postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
     postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
-    postExpectingRedirect("disability", "hasDisability", "false", "workSituation");
+    postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
   }
 }
