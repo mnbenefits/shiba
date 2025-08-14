@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.application.Application;
+import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.testutilities.AbstractPageControllerTest;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
@@ -166,7 +167,7 @@ public class DocRecommendationMessageServiceTest extends AbstractPageControllerT
   void displayNoDocumentRecommendationsForMinimumFlowSnapApplication() throws Exception {
     // passing no recommendations emulates minimum flow
     setPageInformation(List.of("SNAP"), emptyList());
-
+    applicationData.setFlow(FlowType.MINIMUM);
     var modelAndView = mockMvc.perform(get("/pages/uploadDocuments").session(new MockHttpSession()))
         .andReturn().getModelAndView();
     var recommendations = (ArrayList<?>) Objects.requireNonNull(modelAndView).getModel()
@@ -185,7 +186,7 @@ public class DocRecommendationMessageServiceTest extends AbstractPageControllerT
         case proofOfHousingCost -> pagesDataBuilder
             .withPageData("homeExpenses", "homeExpenses", "RENT");
         case proofOfJobLoss -> pagesDataBuilder
-            .withPageData("workSituation", "hasWorkSituation", "true");
+            .withPageData("workChanges", "workChanges", "ON_STRIKE");
         case proofOfMedicalExpenses -> pagesDataBuilder
             .withPageData("medicalExpenses", "medicalExpenses", "MEDICAL_INSURANCE_PREMIUMS");
       }

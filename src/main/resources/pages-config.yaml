@@ -2589,6 +2589,7 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+# workSituation page is no longer used. However, we keep def. for data-pipelines compatibility
   - &workSituation
     name: workSituation
     pageTitle: work-situation.title
@@ -2604,6 +2605,36 @@ pageConfigurations:
         type: YES_NO
         promptMessage:
           promptMessageFragmentName: workSituationPrompt
+  - &workChanges
+    name: workChanges
+    pageTitle: work-changes.title
+    headerKey:
+      defaultValue: work-changes.in-the-last-60-days-did-anyone-in-your-household-do-any-of-these-things
+      conditionalValues:
+        - value: work-changes.in-the-last-60-days-did-you-do-any-of-these-things
+          condition: *livesAlone?
+    headerHelpMessageKey: work-changes.check-all-that-apply
+    #hasPrimaryButton: true
+    contextFragment: briefcaseContextFragment
+    inputs:
+      - name: workChanges
+        type: CHECKBOX
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: work-changes.make-sure-you-choose		
+        options:
+          selectableOptions:
+            - value: STOP_WORK
+              messageKey: work-changes.stop-working
+            - value: REFUSE_JOB
+              messageKey: work-changes.refuse-a-job-offer
+            - value: FEWER_HOURS
+              messageKey: work-changes.ask-to-work-fewer-hours
+            - value: ON_STRIKE
+              messageKey: work-changes.go-on-strike
+            - value: NONE_OF_THE_ABOVE
+              messageKey: general.inputs.none-of-the-above
+              isNone: true			  
   - &tribalNationMember
     name: tribalNationMember
     pageTitle: tribal-nation-member.title
@@ -5974,18 +6005,32 @@ workflow:
               input: hasDisability
               value: "true"
             - *doesNotLiveAlone? 
-      - pageName: workSituation
+      - pageName: workChanges
   whoHasDisability:
     pageConfiguration: *whoHasDisability
     nextPages:
-      - pageName: workSituation
+      - pageName: workChanges
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: choosePrograms
-  workSituation:
-    pageConfiguration: *workSituation
+  workChanges:
+    pageConfiguration: *workChanges
+    skipCondition:
+        logicalOperator: OR
+        conditions:
+          - logicalOperator: AND
+            conditions:
+              - *applicantOnlyChoseCCAP?
+              - *householdOnlyChoseCCAP?
+          - logicalOperator: AND
+            conditions:
+              - *livesAlone?
+              - *applicantOnlyChoseCCAP?
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+      - pageName: choosePrograms
     nextPages:
       - pageName: tribalNationMember
   tribalNationMember:
@@ -6322,7 +6367,7 @@ workflow:
       - pageName: addHouseholdMembers
   jobRedirectPage:
     pageConfiguration: *jobRedirectPage
-    dataMissingRedirect: workSituation
+    dataMissingRedirect: workChanges
     nextPages:
       - pageName: jobBuilder
     datasources:
@@ -7456,7 +7501,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7471,7 +7516,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7487,7 +7532,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7502,7 +7547,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7526,7 +7571,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
@@ -7541,7 +7586,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: employmentStatus
       - pageName: homeExpenses
-      - pageName: workSituation
+      - pageName: workChanges
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
