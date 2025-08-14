@@ -987,7 +987,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		.contains("Make sure you choose 'None of the above' or another option.");
 		
 		// In the last 2 months, did anyone in your household do any of these things?
-		testPage.enter("workChanges", "Stopped working, quit a job or ended self employment");
+		testPage.enter("workChanges", "Stopped working, quit a job or ended self-employment");
 		testPage.enter("workChanges", "Refused a job offer");
 		testPage.enter("workChanges", "Asked to work fewer hours");
 		testPage.enter("workChanges", "Went on strike");
