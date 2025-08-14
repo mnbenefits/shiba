@@ -68,5 +68,8 @@ public class AbstractStaticMessageSourceFrameworkTest extends AbstractShibaMockM
 		staticMessageSource.addMessage("email.need-help-now", Locale.ENGLISH, "some message");
 		staticMessageSource.addMessage("email.visit-faqs", Locale.ENGLISH, "some message");
 		staticMessageSource.addMessage("email.have-other-questions", Locale.ENGLISH, "some message");
+		staticMessageSource.addMessage("document-recommendation.proof-of-job-loss", Locale.ENGLISH, "some message");
+		staticMessageSource.addMessage("document-recommendation.proof-of-job-loss-explanation", Locale.ENGLISH, "some message");
+		staticMessageSource.addMessage("document-recommendation.proof-of-job-loss-example", Locale.ENGLISH, "some message");
 	}
 }
