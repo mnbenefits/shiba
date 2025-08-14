@@ -363,6 +363,8 @@ public class ApplicationDataParser {
         new ParsingCoordinate("homeExpenses", "homeExpenses"));
     coordinatesMap.put(Field.UTILITY_PAYMENTS,
         new ParsingCoordinate("utilityPayments", "payForUtilities"));
+    coordinatesMap.put(Field.WORK_SITUATION,
+            new ParsingCoordinate("workChanges", "workChanges"));        
     coordinatesMap.put(Field.ASSETS_TYPE,
         new ParsingCoordinate("assets", "assets"));
     coordinatesMap.put(Field.INVESTMENT_TYPE_INDIVIDUAL,
@@ -678,6 +680,7 @@ public class ApplicationDataParser {
     UNEARNED_OTHER_PAYMENTS_AMOUNT,
 
     HOME_EXPENSES,
+    WORK_SITUATION,//TODO do we need this? keep for compatibility.
     UTILITY_PAYMENTS,
     ASSETS_TYPE,
     INVESTMENT_TYPE_INDIVIDUAL,
