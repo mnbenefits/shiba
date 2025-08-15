@@ -6638,12 +6638,10 @@ workflow:
       conditions:
         - logicalOperator: AND
           conditions:
-            - *applicantDidNotChooseCERTAINPOPS?
             - *applicantDidNotChooseCCAP?
             - *livesAlone?
         - logicalOperator: AND
           conditions:
-            - *applicantDidNotChooseCERTAINPOPS?
             - *applicantDidNotChooseCCAP?
             - *householdMemberDidNotChooseCCAP?
     nextPages:
@@ -6655,7 +6653,6 @@ workflow:
             - logicalOperator: OR
               conditions:
                 - *livesAlone?
-                - *applicantDidNotChooseCERTAINPOPS?
       - pageName: insurancePaymentsIncomeSource
         condition: *selectedOtherUnearnedIncome?
       - pageName: insurancePaymentsIncomeSource
@@ -6666,7 +6663,6 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
