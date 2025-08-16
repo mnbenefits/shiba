@@ -30,6 +30,9 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+      - name: Get IPv4 Address
+        run: |
+          curl ifconfig.me        
       - name: Test with Gradle
         run: ./gradlew fullFlowJourneyTest
       - name: Cleanup Gradle Cache
