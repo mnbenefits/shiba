@@ -136,6 +136,12 @@ mappings:
     whoHasDisability: WHO_HAS_DISABILITY
   workSituation:
     hasWorkSituation: HAS_WORK_SITUATION
+  workChanges:
+    workChanges:
+     STOP_WORK: END_WORK
+     REFUSE_JOB: REFUSE_A_JOB_OFFER
+     FEWER_HOURS: ASK_TO_WORK_FEWER_HOURS
+     ON_STRIKE: GO_ON_STRIKE	
   nationsBoundary:
     selectedNationBoundaryTribe: TRIBAL_NATION_BOUNDARY
     boundaryMember: BOUNDARY_MEMBER

@@ -14,7 +14,7 @@ jobs:
     name: Run unit tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@v2.3.0
     - name: Set up JDK
@@ -44,7 +44,7 @@ jobs:
     name: Run db tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -74,7 +74,7 @@ jobs:
     name: Run minimum SNAP flow journey test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -104,7 +104,7 @@ jobs:
     name: Run document upload journey test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -134,7 +134,7 @@ jobs:
     name: Run full flow journey test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -164,7 +164,7 @@ jobs:
     name: Run later docs journey test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -194,7 +194,7 @@ jobs:
     name: Run pdf tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -224,7 +224,7 @@ jobs:
     name: Run framework tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -254,7 +254,7 @@ jobs:
     name: Run ccap tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -284,7 +284,7 @@ jobs:
     name: Run validation tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -314,7 +314,7 @@ jobs:
     name: Run accessibility tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
@@ -344,7 +344,7 @@ jobs:
     name: Run Virus Upload tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
