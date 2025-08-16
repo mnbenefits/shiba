@@ -32,7 +32,7 @@ jobs:
         run: chmod +x gradlew
       - name: Get IPv4 Address
         run: |
-          curl ifconfig.me        
+          ifconfig     
       - name: Test with Gradle
         run: ./gradlew fullFlowJourneyTest
       - name: Cleanup Gradle Cache
