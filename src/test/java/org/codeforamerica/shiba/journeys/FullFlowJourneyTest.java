@@ -47,14 +47,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Assert that the EBT Scam Alert is displayed on the landing page.
 		assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
 
-		// Verify that the "Learn more here." link works
+		// Verify that the "Learn more here." link works, href="https://dcyf.mn.gov/ebt-card"
 		String landingPageWindowHandle = driver.getWindowHandle();
 		testPage.clickLinkToExternalWebsite("Learn more here.");
+		//takeSnapShot("snashot-ebt.png");
 		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
 		driver.switchTo().window(windowHandles.get(1));
 		// Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub, Story 144389
-		// assertThat(driver.getTitle()).isEqualTo("Recent reports of card skimming
-		// affecting EBT card users");
+		assertThat(driver.getTitle()).isEqualTo("Recent reports of card skimming affecting EBT card users");
 		driver.close(); // close the tab
 		driver.switchTo().window(landingPageWindowHandle);
 
