@@ -94,7 +94,12 @@ public class SessionLogFilter implements Filter {
 	Enumeration<String> allRequestHeaders = request.getHeaderNames(); 
 	String allRequestHeadersString = "";
 	while (allRequestHeaders.hasMoreElements()) {
-		allRequestHeadersString = String.format("%s%s %s ", allRequestHeadersString, allRequestHeadersString.length()>0?",":"", allRequestHeaders.nextElement());
+		String headerName = allRequestHeaders.nextElement();
+		String headerValue = Optional.ofNullable(request.getHeader(headerName)).orElse("");
+		headerValue = headerValue.trim();
+		allRequestHeadersString = String.format("%s\n%s=%s", allRequestHeadersString, headerName, headerValue);
+       
+		//allRequestHeadersString = String.format("%s%s %s ", allRequestHeadersString, allRequestHeadersString.length()>0?",":"", allRequestHeaders.nextElement());
 	}
 	log.info("All request headers: " + allRequestHeadersString);
 	
