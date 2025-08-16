@@ -11,6 +11,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
@@ -90,6 +91,13 @@ public class SessionLogFilter implements Filter {
 
   private String createRequestIp(HttpServletRequest request) {
 	// Note: X-RDWR-IP header will only be present when Radware is monitoring (ATST and Production)
+	Enumeration<String> allRequestHeaders = request.getHeaderNames(); 
+	String allRequestHeadersString = "";
+	while (allRequestHeaders.hasMoreElements()) {
+		allRequestHeadersString = String.format("%s%s %s ", allRequestHeadersString, allRequestHeadersString.length()>0?",":"", allRequestHeaders.nextElement());
+	}
+	log.info("All request headers: " + allRequestHeadersString);
+	
 	String clientIp = Optional.ofNullable(request.getHeader("X-RDWR-IP")).orElse("");
 	clientIp = clientIp.trim();
     if (clientIp.isBlank()) {  // No Radware? this might get us something.
