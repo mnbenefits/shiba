@@ -467,7 +467,6 @@ public class DocumentUploadJourneyTest extends JourneyTest {
 	 * the name is modified to make the file name unique. 2.) We can delete a
 	 * specific file that has been renamed.
 	 */
-    @Disabled("This test passes on VDIs but fails on GitHub")
 	@Test
 	void shouldDisplayUniqueNamesForUploadFilesWithTheSameName() {
 		getToLaterDocsUploadScreen();
