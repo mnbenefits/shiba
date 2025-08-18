@@ -6663,6 +6663,7 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
+            - *applicantChoseCERTAINPOPS?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
