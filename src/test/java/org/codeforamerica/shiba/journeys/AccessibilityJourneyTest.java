@@ -353,8 +353,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("isUsCitizen", NO.getDisplayValue(), "Non Citizen");
     testPage.enter("whoIsNonCitizen", "Me");
     testPage.clickContinue("Disability");
-    testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work situation");
-    testPage.chooseYesOrNo("hasWorkSituation", NO.getDisplayValue(), "Tribal Nation member");
+    testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
+    testPage.enter("workChanges", "None of the above");
+    testPage.clickContinue("Tribal Nation member");
     testPage.chooseYesOrNo("isTribalNationMember", YES.getDisplayValue(), "Select a Tribal Nation");
     testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
     testPage.clickContinue("Nations Boundary");
