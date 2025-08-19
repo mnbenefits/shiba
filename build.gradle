@@ -115,8 +115,8 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.ws:spring-ws-core")
 
-    implementation("org.springframework.session:spring-session-core:3.5.1")
-    implementation("org.springframework.session:spring-session-jdbc:3.5.1")
+    implementation("org.springframework.session:spring-session-core:3.5.2")
+    implementation("org.springframework.session:spring-session-jdbc:3.5.2")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web:3.5.4")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
