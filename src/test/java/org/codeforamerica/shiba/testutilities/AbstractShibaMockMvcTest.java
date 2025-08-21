@@ -221,6 +221,22 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
   }
   
+  protected void fillOutSpouseInfo(String... programSelections) throws Exception{
+	  Map<String, List<String>> householdMemberInfo = new HashMap<>();
+	    householdMemberInfo.put("firstName", List.of("Sam"));
+	    householdMemberInfo.put("lastName", List.of("Altman"));
+	    householdMemberInfo.put("otherName", List.of("houseHoldyMcMemberson"));
+	    householdMemberInfo.put("programs", List.of(programSelections));
+	    householdMemberInfo.put("relationship", List.of("spouse"));
+	    householdMemberInfo.put("dateOfBirth", List.of("09", "14", "1950"));
+	    householdMemberInfo.put("ssn", List.of("987654321"));
+	    householdMemberInfo.put("maritalStatus", List.of("MARRIED_LIVING_WITH_SPOUSE"));
+	    householdMemberInfo.put("sex", List.of("MALE"));
+	    householdMemberInfo.put("livedInMnWholeLife", List.of("true"));
+	    
+	    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+  }
+  
   protected void fillOutHousemateInfoMoreThanFiveLessThanTen(int HHCount) throws Exception {
     Map<String, List<String>> householdMemberInfo = new HashMap<>();
     for(int i=0; i<=HHCount; i++) {

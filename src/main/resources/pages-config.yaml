@@ -6406,12 +6406,10 @@ workflow:
     pageConfiguration: *unearnedIncome
     nextPages:
       - pageName: unearnedIncomeSources 
-        condition: 
-          logicalOperator: OR
-          conditions:
-            - *livesAlone? 
+        condition: *livesAlone? 
       - pageName: otherUnearnedIncome
         condition: 
+          name: doesNotLiveAloneANDnoUnearnedIncomeSelected
           logicalOperator: AND
           conditions:
             - *doesNotLiveAlone?
@@ -6442,9 +6440,11 @@ workflow:
             - *doesNotLiveAlone?
       - pageName: unemploymentIncomeSource
         condition:
+          name: selectedUnemploymentANDdoesNotLiveAlone
           logicalOperator: AND
           conditions:
             - pageName: unearnedIncome
+              name: selectedUnemployment
               input: unearnedIncome
               value: UNEMPLOYMENT
             - *doesNotLiveAlone?

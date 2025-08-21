@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
@@ -22,6 +23,29 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingSuccess("identifyCountyBeforeApplying", "county", "Hennepin");
     postExpectingSuccess("writtenLanguage", Map.of("writtenLanguage", List.of("ENGLISH")));
     postExpectingSuccess("spokenLanguage", Map.of("spokenLanguage", List.of("ENGLISH")));
+  }
+  
+  
+  @Test
+  void verifyUnearnedIncomeFlow() throws Exception {
+	  completeFlowFromLandingPageThroughReviewInfo("SNAP");
+	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
+	  assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
+	  fillOutSpouseInfo("SNAP");
+	  
+	  finishAddingHouseholdMembers("preparingMealsTogether");
+	  postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "true",
+		        "Housing subsidy");
+	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+	            "Going to school");
+	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
+	  completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
+	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
+	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+	  assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+	  postExpectingNextPageTitle("unearnedIncome", "unearnedIncome", List.of("UNEMPLOYMENT", "WORKERS_COMPENSATION"), "Unearned Income Source");
+	  postExpectingRedirect("unemploymentIncomeSource", "monthlyIncomeUnemployment", List.of("Dwight Schrute applicant"), "workersCompIncomeSource");
+	  postExpectingRedirect("workersCompIncomeSource", "monthlyIncomeWorkersComp", List.of("Dwight Schrute applicant"), "futureIncome");
   }
 
   @Test
@@ -275,6 +299,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "Who is looking for a job");
     fillUnearnedIncomeToLegalStuffCCAP("CCAP", "NONE");
   }
+  
 
   private void fillUnearnedIncomeToLegalStuffCCAP(String... Programs) throws Exception {
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
