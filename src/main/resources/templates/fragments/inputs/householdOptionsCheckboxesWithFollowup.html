@@ -13,7 +13,7 @@
                     hasHelpMessage=${input.helpMessageKey != null},
                     yourFullName=${input.options.datasources.get('personalInfo').get('firstName').value[0] + ' ' + input.options.datasources.get('personalInfo').get('lastName').value[0]},
                     needsAriaLabel=${input.needsAriaLabel()},
-                    youIsChecked=${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, yourFullName)},
+                    youIsChecked=${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, yourFullName + ' applicant')},
                     noPersonsChecked=${#arrays.isEmpty(sortedHouseholdMembers)}
                     ">
 	<div class="form-group" th:classappend="${hasError} ? 'form-group--error' : ''">
@@ -63,7 +63,7 @@
 						<label th:for="|${formInputName}${iterationStat.index}|" class="checkbox display-flex">
 							<input type="checkbox" th:id="|${formInputName}${iterationStat.index}|"
 								th:value="${fullName} + ' ' + ${iteration.id}" th:name="${formInputName}"
-								th:checked="${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, fullName)}"
+								th:checked="${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, fullName + ' ' + iteration.id)}"
 								th:attrappend="data-follow-up=|#${input.name}${iterationStat.index}-follow-up|">
 							<span th:text="${fullName}"></span>
 						</label>
