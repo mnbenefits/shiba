@@ -1519,6 +1519,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 
 		// (original comment) The applicant has unearned income, there are no additional household members
+		// Aug. 2025: This test is a Certain Pops test.  Certain Pops has never been activated in production and there has
+		// been no development for the Certain Pops feature for more than a year and there are currently no plans to do so.
+		// When we resume work on Certain Pops we should enable (and fix) this test.
 		@Disabled("This test fails at random spots.")//TODO Story 189948 has been written to fix this test
 		@Test
 		void shouldMapFieldsForApplicantOnlyUnearnedIncomeSelections() throws Exception {
