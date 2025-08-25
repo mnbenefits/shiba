@@ -259,34 +259,34 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in your household get income from these other sources?
 		testPage.enter("otherUnearnedIncome",
 				"Other Minnesota Benefits Programs (Benefits like GA, MFIP, Tribal TANF or others)");
-		testPage.enter("otherUnearnedIncome", "Insurance Payments");
-		testPage.enter("otherUnearnedIncome", "Contract for Deed");
-		testPage.enter("otherUnearnedIncome", "Money from a Trust");
+		testPage.enter("otherUnearnedIncome", "Insurance payments");
+		testPage.enter("otherUnearnedIncome", "Contract for deed");
+		testPage.enter("otherUnearnedIncome", "Money from a trust");
 		testPage.enter("otherUnearnedIncome", "Rental Income"); // Only Certain Pops
-		testPage.enter("otherUnearnedIncome", "Health Care Reimbursement");
-		testPage.enter("otherUnearnedIncome", "Interest / Dividends");
+		testPage.enter("otherUnearnedIncome", "Health care reimbursement");
+		testPage.enter("otherUnearnedIncome", "Interest or dividends");
 		testPage.enter("otherUnearnedIncome", "Other payments");
-		testPage.clickContinue("Insurance Payments");
+		testPage.clickContinue("Insurance payments");
 
 		// Choose who receives that income (CCAP and CERTAIN_POPS only)
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("insurancePaymentsAmount", "100.00");
-		testPage.clickContinue("Money from a Trust");
+		testPage.clickContinue("Money from a trust");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("trustMoneyAmount", "100.00");
 		testPage.clickContinue("Rental Income");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("rentalIncomeAmount", "100.00");
-		testPage.clickContinue("Interest / Dividends");
+		testPage.clickContinue("Interest or dividends");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("interestDividendsAmount", "100.00");
-		testPage.clickContinue("Health Care Reimbursement");
+		testPage.clickContinue("Health care reimbursement");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("healthCareReimbursementAmount", "100.00");
 		testPage.clickContinue("Benefits Programs");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("benefitsAmount", "100.00");
-		testPage.clickContinue("Contract for Deed");
+		testPage.clickContinue("Contract for deed");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("contractForDeedAmount", "100.00");
 		testPage.clickContinue("Other payments");

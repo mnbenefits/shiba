@@ -101,7 +101,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 				List.of("INSURANCE_PAYMENTS"), "insurancePaymentsIncomeSource");
 
 		// Verify first income source page is reached
-		assertCorrectPageTitle("insurancePaymentsIncomeSource", "Insurance Payments");
+		assertCorrectPageTitle("insurancePaymentsIncomeSource", "Insurance payments");
 
 		// Continue flow to futureIncome
 
