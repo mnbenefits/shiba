@@ -13,6 +13,27 @@ public class LiquidAssetsCalculatorTest {
 	private LiquidAssetsCalculator liquidAssetsCalculator = new LiquidAssetsCalculator();
 	private TestApplicationDataBuilder applicationDataBuilder;
 
+
+	@Test
+	void liquidAssetsHouseholdShouldCalculateTo500WithSpace() {
+		applicationDataBuilder = new TestApplicationDataBuilder()
+				.withPageData("cashAmount", "cashAmount", List.of("500 "))// 500 space
+				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+		ApplicationData applicationData = applicationDataBuilder.build();
+		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
+		assertThat(totalLiquidAssetsString).isEqualTo("500");
+	}
+	
+	@Test
+	void liquidAssetsHouseholdShouldCalculateTo500WithManySpaces() {
+		applicationDataBuilder = new TestApplicationDataBuilder()
+				.withPageData("cashAmount", "cashAmount", List.of(" 50 0 "))//space 50 space 0 space
+				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+		ApplicationData applicationData = applicationDataBuilder.build();
+		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
+		assertThat(totalLiquidAssetsString).isEqualTo("500");
+	}
+	
 	@Test
 	void liquidAssetsHouseholdShouldCalculateTo500() {
 		applicationDataBuilder = new TestApplicationDataBuilder()
@@ -21,6 +42,16 @@ public class LiquidAssetsCalculatorTest {
 		ApplicationData applicationData = applicationDataBuilder.build();
 		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
 		assertThat(totalLiquidAssetsString).isEqualTo("500");
+	}
+	
+	@Test
+	void liquidAssetsApplicantShouldCalculateTo300WithSpace() {
+		applicationDataBuilder = new TestApplicationDataBuilder()
+				.withPageData("liquidAssetsSingle", "liquidAssets", List.of("300 "))//300 space
+				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+		ApplicationData applicationData = applicationDataBuilder.build();
+		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
+		assertThat(totalLiquidAssetsString).isEqualTo("300");
 	}
 
 	@Test
