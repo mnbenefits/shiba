@@ -37,7 +37,7 @@ class LiquidAssetsPreparerTest {
     ApplicationData appData = new ApplicationData();
     PagesData pagesData =
         new PagesDataBuilder()
-            .withPageData("liquidAssetsSingle", Map.of("liquidAssets", "100"))
+            .withPageData("liquidAssetsSingle", Map.of("liquidAssets", "100 "))//Added space to test that it get removed
             .withPageData("cashAmount", Map.of("cashAmount","200")).build();
     appData.setPagesData(pagesData);
     Application application = Application.builder().applicationData(appData).build();
