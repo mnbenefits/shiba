@@ -3,6 +3,9 @@ package org.codeforamerica.shiba.pages.config;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -35,6 +38,7 @@ public enum Validation {
             || GenericValidator.isDate(String.join("/", strings), "MM/d/yyyy", true));
   }),
   MULTIPLE_DATES(strings -> {return validateMultipleDates(strings); }),
+  SCHOOL_START_DATES(strings -> {return checkSchoolStartDateRange(strings); }),
   DOB_VALID(strings -> {
     String dobString = String.join("/", strings);
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -124,5 +128,48 @@ public enum Validation {
 		}
 		return retVal;
 	}
+	private static boolean checkSchoolStartDateRange(List<String> stringList) {
+		//Collection<List<String>> stringList
+		Collection<List<String>> stringLists = partitionDateList(stringList);;
+		Iterator<List<String>> iterator = stringLists.iterator();
+	    boolean retVal = false;
 
+	    LocalDate today = LocalDate.now();
+	    LocalDate maxDate = today.plusYears(10);
+	    LocalDate minDate = today.minusYears(10);
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+
+	    while (iterator.hasNext()) {
+	        List<String> date = iterator.next();
+
+	        boolean isEmpty = date.stream().allMatch(String::isEmpty);
+	        if (isEmpty) {
+	            retVal = true;
+	            continue;
+	        }
+
+	        if (!DATE.apply(date)) {
+	            return false;
+	        }
+
+	        if (date.size() >= 3) {
+	            String dateStr = String.join("/", date); 
+	            try {
+	                LocalDate parsedDate = LocalDate.parse(dateStr, formatter);
+	                if (parsedDate.isBefore(minDate) || parsedDate.isAfter(maxDate)) {
+	                    return false;
+	                }
+	            } catch (DateTimeParseException e) {
+	                return false;
+	            }
+	        } else {
+	            return false;
+	        }
+
+	        retVal = true;
+	    }
+
+	    return retVal;
+	}
 }
