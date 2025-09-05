@@ -129,6 +129,7 @@ feature-flag:
   second-signature: on
   child-care: on
   show-wic-recommendation: on
+  caf-2025: off
   
 document-upload:
   max-files-uploaded: 50

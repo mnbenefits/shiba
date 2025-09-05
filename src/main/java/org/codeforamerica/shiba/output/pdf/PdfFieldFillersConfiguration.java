@@ -12,6 +12,8 @@ import java.util.Map;
 
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,11 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 public class PdfFieldFillersConfiguration {
+	private FeatureFlagConfiguration featureFlagConfiguration;
+	
+	public PdfFieldFillersConfiguration(FeatureFlagConfiguration featureFlagConfiguration){
+		this.featureFlagConfiguration = featureFlagConfiguration;
+	}
 
   @Bean
   public PdfFieldFiller caseworkerCafFiller(
@@ -139,6 +146,13 @@ public class PdfFieldFillersConfiguration {
       PdfFieldFiller clientCcapFiller,
       PdfFieldFiller uploadedDocCoverPageFilter,
       PdfFieldFiller healthcareRenewalCoverPageFilter) {
+	  
+	  //TODO emj if we update the CAF, this is where the old version and new versions will be used
+	  // depending if the feature flag is on or off. 
+	//  System.out.println("==== PdfFieldFillersConfiguration ====");//TODO emj delete
+	//  FeatureFlag updated2025Caf = featureFlagConfiguration.get("caf-2025");
+	//  System.out.println("--- updated2025Caf is " + updated2025Caf.isOn());
+	  
     return Map.of(
         CASEWORKER, Map.of(
             CAF, caseworkerCafFiller,

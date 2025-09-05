@@ -27,6 +27,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
   
   @Test
   void verifyUnearnedIncomeFlow() throws Exception {
+	  when(featureFlagConfiguration.get("caf-2025")).thenReturn(FeatureFlag.ON);
 	  completeFlowFromLandingPageThroughReviewInfo("SNAP");
 	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
 	  assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
