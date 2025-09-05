@@ -54,7 +54,9 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	@Override
 	public List<DocumentField> prepareDocumentFields(Application application, Document document, Recipient recipient) {
 		// No need to prepare fields if the document isn't Certain Pops.
-		//if (document != Document.CERTAIN_POPS) return new ArrayList<DocumentField>();
+		if (document != Document.CERTAIN_POPS) {
+			return new ArrayList<DocumentField>();
+		}
 		
 		cpAccountTypes = Stream.of("SAVINGS", "CHECKING", "MONEY_MARKET", "CERTIFICATE_OF_DEPOSIT").collect(Collectors.toCollection(HashSet::new));
 		applicationData = application.getApplicationData();
