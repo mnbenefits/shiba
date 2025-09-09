@@ -1662,8 +1662,8 @@ pageConfigurations:
         name: schoolStartDate
         customInputFragment: schoolStartDateInput
         validators:
-          - validation: MULTIPLE_DATES
-            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+          - validation: SCHOOL_START_DATES
+            errorMessageKey: general.validation.please-enter-valid-school-start-date
         options:
           datasources:
             - pageName: schoolGrade
