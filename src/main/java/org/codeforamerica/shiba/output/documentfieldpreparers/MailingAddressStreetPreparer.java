@@ -187,9 +187,23 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
     if (County.Other.toString().equals(countyValue)) {
       countyValue = "";
     }
+    
+ // Get the actual values from the Field types
+    String streetValue = getFirstValue(pagesData, street);
+    String apartmentValue = getFirstValue(pagesData, apartment);
+
+    // Concatenate apartment to street if provided
+    if (apartmentValue != null && !apartmentValue.trim().isEmpty()) {
+        streetValue = streetValue + " #" + apartmentValue;
+    }
+    
+ 
     return List.of(
-        createSingleMailingInput("selectedStreetAddress", getFirstValue(pagesData, street)),
-        createSingleMailingInput("selectedApartmentNumber", getFirstValue(pagesData, apartment)),
+    		createSingleMailingInput("selectedStreetAddress",streetValue ),
+            createSingleMailingInput("selectedApartmentNumber",apartmentValue),
+    		
+        //createSingleMailingInput("selectedStreetAddress", getFirstValue(pagesData, street)),
+        //createSingleMailingInput("selectedApartmentNumber", getFirstValue(pagesData, apartment)),
         createSingleMailingInput("selectedZipCode", getFirstValue(pagesData, zipcode)),
         createSingleMailingInput("selectedCity", getFirstValue(pagesData, city)),
         createSingleMailingInput("selectedState", getFirstValue(pagesData, state)),

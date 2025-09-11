@@ -53,6 +53,7 @@ public class HomeAddressStreetPreparer implements DocumentFieldPreparer {
     }
 
     if (parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_ADDRESS))) {
+    	
       return createAddressInputs(
           getFirstValue(pagesData, ENRICHED_HOME_STREET),
           getFirstValue(pagesData, ENRICHED_HOME_APARTMENT_NUMBER),
@@ -77,8 +78,15 @@ public class HomeAddressStreetPreparer implements DocumentFieldPreparer {
     if (County.Other.toString().equals(county)) {
       county = "";
     }
+    
+ // Combine street and apartment (only if apartment is not empty)
+    String fullStreet = street;
+    if (apartment != null && !apartment.trim().isEmpty()) {
+        fullStreet = street + " #" + apartment;
+    }
+    
     return List.of(
-        createSingleHomeAddressInput("streetAddressWithPermanentAddress", street),
+        createSingleHomeAddressInput("streetAddressWithPermanentAddress", fullStreet),
         createSingleHomeAddressInput("selectedApartmentNumber", apartment),
         createSingleHomeAddressInput("selectedZipCode", zipcode),
         createSingleHomeAddressInput("selectedCity", city),
