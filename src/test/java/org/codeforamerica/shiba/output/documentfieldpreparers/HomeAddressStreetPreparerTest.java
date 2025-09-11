@@ -50,8 +50,9 @@ class HomeAddressStreetPreparerTest {
     List<DocumentField> map = preparer.prepareDocumentFields(application, null, null);
 
     assertThat(map).containsOnly(
+    		// CHANGED: street + apt are concatenated
         createHomeAddressApplicationInput("streetAddressWithPermanentAddress",
-            "street"),
+            "street #ste 123"),
         createHomeAddressApplicationInput("selectedZipCode", "02103"),
         createHomeAddressApplicationInput("selectedCity", "city"),
         createHomeAddressApplicationInput("selectedState", "CA"),
@@ -73,8 +74,9 @@ class HomeAddressStreetPreparerTest {
     List<DocumentField> map = preparer.prepareDocumentFields(application, null, null);
 
     assertThat(map).containsOnly(
+    		 // CHANGED: enriched street + apt concatenated
         createHomeAddressApplicationInput("streetAddressWithPermanentAddress",
-            "smarty street"),
+            "smarty street #apt 123"),
         createHomeAddressApplicationInput("selectedZipCode", "02103-9999"),
         createHomeAddressApplicationInput("selectedCity", "smarty city"),
         createHomeAddressApplicationInput("selectedState", "CA"),

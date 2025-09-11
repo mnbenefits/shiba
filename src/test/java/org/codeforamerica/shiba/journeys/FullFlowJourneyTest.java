@@ -532,6 +532,21 @@ public class FullFlowJourneyTest extends JourneyTest {
 		applicationId = downloadPdfs();
 		assertThat(successPage.findElementById("confirmation-number").getText())
 				.contains("Confirmation # " + applicationId);
+		
+		
+		// build expected strings once for home and mailing address
+		String homeStreet = "123 Some Street";
+		String homeApt    = "1b";
+		String mailingStreet = "smarty street";
+		String mailingApt    = "1b"; 
+
+		String expectedHomeStreet    = (homeApt == null || homeApt.isBlank())
+		    ? homeStreet
+		    : homeStreet + " #" + homeApt;
+
+		String expectedMailingStreet = (mailingApt == null || mailingApt.isBlank())
+		    ? mailingStreet
+		    : mailingStreet + " #" + mailingApt;
 
 		// CCAP fields
 		assertCcapFieldEquals("APPLICATION_ID", applicationId);
@@ -567,7 +582,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
 		assertCcapFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
 		assertCcapFieldEquals("APPLICANT_MAILING_STATE", "MN");
-		assertCcapFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+		//assertCcapFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+		assertCcapFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", expectedMailingStreet);
 		assertCcapFieldEquals("APPLICANT_HOME_CITY", "OutOfState City");
 		assertCcapFieldEquals("APPLICANT_HOME_STATE", "MN");
 		assertCcapFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
@@ -586,6 +602,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
 		assertCcapFieldEquals("APPLICANT_EMAIL", "some@example.com");
 		assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
+		//assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedHomeStreet);
+
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME_0", "");
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_GOING_TO_SCHOOL_FULL_NAME_0", "");
 		assertCcapFieldEquals("STUDENT_FULL_NAME_0", householdMemberFullName);

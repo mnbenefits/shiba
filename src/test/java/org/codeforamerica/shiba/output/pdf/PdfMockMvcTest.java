@@ -463,7 +463,13 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
 
 			var ccap = submitAndDownloadCcap();
-			assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", originalStreetAddress, ccap);
+			// CCAP street includes apt with " #"
+			  String expectedStreetWithApt = originalStreetAddress + " #" + originalApt;
+
+			  assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedStreetWithApt, ccap);
+
+			
+			//assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", originalStreetAddress, ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_CITY", originalCity, ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_STATE", "MN", ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_ZIPCODE", originalZipCode, ccap);
@@ -501,8 +507,24 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 			var caf = submitAndDownloadCaf();
 			var ccap = downloadCcapClientPDF();
+			
+			String expectedStreetWithApt = enrichedStreetValue + " #" + enrichedApartmentNumber;
 
-			List.of(caf, ccap).forEach(pdf -> {
+			  // CAF: street includes apt, and apt is also in its own field
+			  assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedStreetWithApt, caf);
+			  assertPdfFieldEquals("APPLICANT_HOME_CITY", enrichedCityValue, caf);
+			  assertPdfFieldEquals("APPLICANT_HOME_STATE", enrichedState, caf);
+			  assertPdfFieldEquals("APPLICANT_HOME_ZIPCODE", enrichedZipCodeValue, caf);
+			  assertPdfFieldEquals("APPLICANT_HOME_APT_NUMBER", enrichedApartmentNumber, caf);
+
+			  // CCAP: street includes apt (no separate apt field assertion)
+			  assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedStreetWithApt, ccap);
+			  assertPdfFieldEquals("APPLICANT_HOME_CITY", enrichedCityValue, ccap);
+			  assertPdfFieldEquals("APPLICANT_HOME_STATE", enrichedState, ccap);
+			  assertPdfFieldEquals("APPLICANT_HOME_ZIPCODE", enrichedZipCodeValue, ccap);
+			}
+
+			/*List.of(caf, ccap).forEach(pdf -> {
 				assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", enrichedStreetValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_CITY", enrichedCityValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_STATE", enrichedState, pdf);
@@ -510,7 +532,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			});
 
 			assertPdfFieldEquals("APPLICANT_HOME_APT_NUMBER", enrichedApartmentNumber, caf);
-		}
+		}*/
 
 		@Test
 		void shouldMapFullEmployeeNames() throws Exception {
@@ -842,11 +864,21 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
 
 				var ccap = submitAndDownloadCcap();
-				assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", originalStreetAddress, ccap);
-				assertPdfFieldEquals("APPLICANT_MAILING_CITY", originalCity, ccap);
-				assertPdfFieldEquals("APPLICANT_MAILING_STATE", "MN", ccap);
-				assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", originalZipCode, ccap);
-			}
+				// CCAP street includes " #<apt>"
+				  String expectedStreetWithApt = originalStreetAddress + " #" + originalApt;
+
+				  assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", expectedStreetWithApt, ccap);
+				  assertPdfFieldEquals("APPLICANT_MAILING_CITY", originalCity, ccap);
+				  assertPdfFieldEquals("APPLICANT_MAILING_STATE", "MN", ccap);
+				  assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", originalZipCode, ccap);
+				}
+				/*
+				 * assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS",
+				 * originalStreetAddress, ccap); assertPdfFieldEquals("APPLICANT_MAILING_CITY",
+				 * originalCity, ccap); assertPdfFieldEquals("APPLICANT_MAILING_STATE", "MN",
+				 * ccap); assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", originalZipCode,
+				 * ccap); }
+				 */
 			
 			@Test
 			void shouldMapCoverPageSelfEmploymentField() throws Exception {
@@ -878,14 +910,33 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				var caf = submitAndDownloadCaf();
 				var ccap = downloadCcapClientPDF();
-				List.of(caf, ccap).forEach(pdf -> {
-					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", enrichedStreetValue, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_CITY", enrichedCityValue, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, pdf);
-				});
-				assertPdfFieldEquals("APPLICANT_MAILING_APT_NUMBER", enrichedApartmentNumber, caf);
-			}
+				
+				 String expectedMailingStreet = enrichedStreetValue + " #" + enrichedApartmentNumber;
+				
+				// CAF: mailing street includes apt, and apt also appears in its own field
+				  assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", expectedMailingStreet, caf);
+				  assertPdfFieldEquals("APPLICANT_MAILING_CITY",  enrichedCityValue, caf);
+				  assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, caf);
+				  assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, caf);
+				  assertPdfFieldEquals("APPLICANT_MAILING_APT_NUMBER", enrichedApartmentNumber, caf);
+
+				  // CCAP: mailing street includes apt (no separate apt field assertion)
+				  assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", expectedMailingStreet, ccap);
+				  assertPdfFieldEquals("APPLICANT_MAILING_CITY",  enrichedCityValue, ccap);
+				  assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, ccap);
+				  assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, ccap);
+				}
+				
+				/*
+				 * List.of(caf, ccap).forEach(pdf -> {
+				 * assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", enrichedStreetValue,
+				 * pdf); assertPdfFieldEquals("APPLICANT_MAILING_CITY", enrichedCityValue, pdf);
+				 * assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, pdf);
+				 * assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, pdf);
+				 * });
+				 */
+				//assertPdfFieldEquals("APPLICANT_MAILING_APT_NUMBER", enrichedApartmentNumber, caf);
+			//}
 
 			@Test
 			void shouldMapToOriginalMailingAddressIfSameMailingAddressIsFalseAndUseEnrichedAddressIsFalse()
@@ -911,12 +962,24 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				var caf = submitAndDownloadCaf();
 				var ccap = downloadCcapClientPDF();
-				List.of(caf, ccap).forEach(pdf -> {
-					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", originalStreetAddress, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_CITY", originalCity, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_STATE", originalState, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", "54321", pdf);
-				});
+				
+				// street now concatenates with " #"
+				  String expectedStreetWithApt = originalStreetAddress + " #" + originalApt;
+
+				  List.of(caf, ccap).forEach(pdf -> {
+				    assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", expectedStreetWithApt, pdf);
+				    assertPdfFieldEquals("APPLICANT_MAILING_CITY", originalCity, pdf);
+				    assertPdfFieldEquals("APPLICANT_MAILING_STATE", originalState, pdf);
+				    assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", "54321", pdf);
+				  });
+				/*
+				 * List.of(caf, ccap).forEach(pdf -> {
+				 * assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS",
+				 * originalStreetAddress, pdf); assertPdfFieldEquals("APPLICANT_MAILING_CITY",
+				 * originalCity, pdf); assertPdfFieldEquals("APPLICANT_MAILING_STATE",
+				 * originalState, pdf); assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE",
+				 * "54321", pdf); });
+				 */
 
 				assertPdfFieldEquals("APPLICANT_MAILING_APT_NUMBER", originalApt, caf);
 			}
@@ -1277,6 +1340,20 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			submitApplication();
 
 			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
+			
+			// build expected strings once
+			String homeStreet = "someStreetAddress";
+			String homeApt    = "someApartmentNumber";
+			String mailingStreet = "smarty street";
+			String mailingApt    = "1b"; // use the real value from your setup
+
+			String expectedHomeStreet    = (homeApt == null || homeApt.isBlank())
+			    ? homeStreet
+			    : homeStreet + " #" + homeApt;
+
+			String expectedMailingStreet = (mailingApt == null || mailingApt.isBlank())
+			    ? mailingStreet
+			    : mailingStreet + " #" + mailingApt;
 
 			// Assert that cover page is present
 			assertPdfFieldEquals("PROGRAMS", "CERTAIN_POPS", pdf);
@@ -1302,7 +1379,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("NEED_INTERPRETER", "Off", pdf);
 
 			// Section 2
-			assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress", pdf);
+			//assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress", pdf);
+			assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedHomeStreet, pdf);
+			
 			assertPdfFieldEquals("APPLICANT_HOME_CITY", "someCity", pdf);
 			assertPdfFieldEquals("APPLICANT_HOME_STATE", "MN", pdf);
 			assertPdfFieldEquals("APPLICANT_HOME_ZIPCODE", "12345", pdf);

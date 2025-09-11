@@ -81,9 +81,17 @@ class MailingAddressStreetPreparerTest {
     Application application = Application.builder().applicationData(applicationData).build();
 
     List<DocumentField> map = preparer.prepareDocumentFields(application, null, null);
+    
+   // NEW: build expected concatenated street inline
+    //String s = getFirstValue(pagesData, ENRICHED_HOME_STREET);
+    //String a = getFirstValue(pagesData, ENRICHED_HOME_APARTMENT_NUMBER);
+    //String expectedStreet = (a == null || a.isBlank()) ? s : (s + " " + a);
 
     assertThat(map).containsOnly(
-        createApplicationInput(pagesData, "selectedStreetAddress", ENRICHED_HOME_STREET),
+    	//createApplicationInput ("selectedStreetAddress", expectedStreet),
+    		createApplicationInput("selectedStreetAddress",
+    		        expectedFullStreet(pagesData, ENRICHED_HOME_STREET, ENRICHED_HOME_APARTMENT_NUMBER)),
+        //createApplicationInput(pagesData, "selectedStreetAddress", ENRICHED_HOME_STREET),
         createApplicationInput(pagesData, "selectedApartmentNumber",
             ENRICHED_HOME_APARTMENT_NUMBER),
         createApplicationInput(pagesData, "selectedCity", ENRICHED_HOME_CITY),
@@ -102,11 +110,17 @@ class MailingAddressStreetPreparerTest {
         .build();
     PagesData pagesData = applicationData.getPagesData();
     Application application = Application.builder().applicationData(applicationData).build();
+    // NEW
+    //String s = getFirstValue(pagesData, HOME_STREET);
+    //String a = getFirstValue(pagesData, HOME_APARTMENT_NUMBER);
+    //String expectedStreet = (a == null || a.isBlank()) ? s : (s + " #" + a);
 
     List<DocumentField> map = preparer.prepareDocumentFields(application, null, null);
 
     assertThat(map).containsOnly(
-        createApplicationInput(pagesData, "selectedStreetAddress", HOME_STREET),
+    		createApplicationInput("selectedStreetAddress",
+    		        expectedFullStreet(pagesData, HOME_STREET, HOME_APARTMENT_NUMBER)),
+       // createApplicationInput(pagesData, "selectedStreetAddress", HOME_STREET),
         createApplicationInput(pagesData, "selectedApartmentNumber", HOME_APARTMENT_NUMBER),
         createApplicationInput(pagesData, "selectedCity", HOME_CITY),
         createApplicationInput(pagesData, "selectedState", HOME_STATE),
@@ -130,7 +144,9 @@ class MailingAddressStreetPreparerTest {
     List<DocumentField> map = preparer.prepareDocumentFields(application, null, null);
 
     assertThat(map).containsOnly(
-        createApplicationInput(pagesData, "selectedStreetAddress", ENRICHED_MAILING_STREET),
+    		createApplicationInput("selectedStreetAddress",
+    		        expectedFullStreet(pagesData, ENRICHED_MAILING_STREET, ENRICHED_MAILING_APARTMENT_NUMBER)),
+        //createApplicationInput(pagesData, "selectedStreetAddress", ENRICHED_MAILING_STREET),
         createApplicationInput(pagesData, "selectedApartmentNumber",
             ENRICHED_MAILING_APARTMENT_NUMBER),
         createApplicationInput(pagesData, "selectedCity", ENRICHED_MAILING_CITY),
@@ -155,7 +171,9 @@ class MailingAddressStreetPreparerTest {
     List<DocumentField> map = preparer.prepareDocumentFields(application, null, null);
 
     assertThat(map).containsOnly(
-        createApplicationInput(pagesData, "selectedStreetAddress", MAILING_STREET),
+    		createApplicationInput("selectedStreetAddress",
+    		        expectedFullStreet(pagesData, MAILING_STREET, MAILING_APARTMENT_NUMBER)),
+        //createApplicationInput(pagesData, "selectedStreetAddress", MAILING_STREET),
         createApplicationInput(pagesData, "selectedApartmentNumber", MAILING_APARTMENT_NUMBER),
         createApplicationInput(pagesData, "selectedCity", MAILING_CITY),
         createApplicationInput(pagesData, "selectedState", MAILING_STATE),
@@ -214,4 +232,12 @@ class MailingAddressStreetPreparerTest {
   private DocumentField createApplicationInput(String name, String value) {
     return new DocumentField("mailingAddress", name, value, SINGLE_VALUE);
   }
+  //helper method
+  private String expectedFullStreet(PagesData pagesData, Field streetField, Field aptField) {
+	  String street = getFirstValue(pagesData, streetField);
+	  String apt = getFirstValue(pagesData, aptField);
+	  if (street == null) return "";
+	  if (apt == null || apt.trim().isEmpty()) return street;
+	  return street + " #" + apt.trim();
+	}
 }

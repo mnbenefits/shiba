@@ -248,6 +248,12 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		// Finish Application
 		applicationId = signApplicationAndDownloadApplicationZipFiles(signature, expectedMessages);
 		assertApplicationSubmittedEventWasPublished(applicationId, MINIMUM, 1);
+		
+		// build once at the top of the assertion block
+		String street = "someStreetAddress";
+		String apt = "someApartmentNumber";
+		String expectedStreet = (apt == null || apt.isBlank()) ? street : street + " #" + apt;
+		
 
 		// PDF assertions
 		assertCafFieldEquals("APPLICATION_ID", applicationId);
@@ -291,12 +297,14 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("ADDITIONAL_APPLICATION_INFO", additionalInfo);
 		assertCafFieldEquals("ADDITIONAL_INFO_CASE_NUMBER", caseNumber);
-		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
+		//assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "someStreetAddress");
+		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedStreet);
 		assertCafFieldEquals("APPLICANT_HOME_APT_NUMBER", "someApartmentNumber");
 		assertCafFieldEquals("APPLICANT_HOME_CITY", "someCity");
 		assertCafFieldEquals("APPLICANT_HOME_STATE", "MN");
 		assertCafFieldEquals("APPLICANT_HOME_ZIPCODE", "23456");
-		assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
+		//assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "someStreetAddress");
+		assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", expectedStreet);		
 		assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "someApartmentNumber");
 		assertCafFieldEquals("APPLICANT_MAILING_CITY", "someCity");
 		assertCafFieldEquals("APPLICANT_MAILING_STATE", "MN");
@@ -384,6 +392,17 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertThat(testPage.elementDoesNotExistById("ccapCoverage")).isTrue();
 
     testFeedbackScreen();
+    
+    // build once
+    String expectedHomeStreet    = (homeApartmentNumber == null || homeApartmentNumber.isBlank())
+        ? homeStreetAddress
+        : homeStreetAddress + " #" + homeApartmentNumber;
+
+    String expectedMailingStreet = "smarty street #1b"; // or compute similarly if you have vars
+    // String expectedMailingStreet = (mailingApt == null || mailingApt.isBlank())
+//         ? mailingStreet
+//         : mailingStreet + " #" + mailingApt;
+
 
     // PDF assertions
     assertCafContainsAllFieldsForMinimumSnapFlow(applicationId,
@@ -406,12 +425,14 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", migrantOrSeasonalFarmWorker);   
     assertCafFieldEquals("WATER_SEWER_SELECTION", "NEITHER_SELECTED");
     assertCafFieldEquals("HAVE_SAVINGS", "Yes");
-    assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", homeStreetAddress);
+    //assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", homeStreetAddress);
+    assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS",  expectedHomeStreet);
     assertCafFieldEquals("APPLICANT_HOME_APT_NUMBER", homeApartmentNumber);
     assertCafFieldEquals("APPLICANT_HOME_CITY", homeCity);
     assertCafFieldEquals("APPLICANT_HOME_STATE", "MN");
     assertCafFieldEquals("APPLICANT_HOME_ZIPCODE", homeZip);
-    assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+    //assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
+    assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", expectedMailingStreet);  
     assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "1b");
     assertCafFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
     assertCafFieldEquals("APPLICANT_MAILING_STATE", "CA");
