@@ -533,21 +533,18 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertThat(successPage.findElementById("confirmation-number").getText())
 				.contains("Confirmation # " + applicationId);
 		
-		
 		// build expected strings once for home and mailing address
-		String homeStreet = "123 Some Street";
-		String homeApt    = "1b";
 		String mailingStreet = "smarty street";
 		String mailingApt    = "1b"; 
-
-		String expectedHomeStreet    = (homeApt == null || homeApt.isBlank())
-		    ? homeStreet
-		    : homeStreet + " #" + homeApt;
-
 		String expectedMailingStreet = (mailingApt == null || mailingApt.isBlank())
-		    ? mailingStreet
-		    : mailingStreet + " #" + mailingApt;
+		    ? mailingStreet : mailingStreet + " #" + mailingApt;
+		
+		String homeStreet = "123 Some Street";
+		String homeApt    = "1b";
+		String expectedHomeStreet = (homeApt == null || homeApt.isBlank())
+		    ? homeStreet : homeStreet + " #" + homeApt;
 
+		
 		// CCAP fields
 		assertCcapFieldEquals("APPLICATION_ID", applicationId);
 		assertCcapFieldEquals("SUBMISSION_DATETIME", "01/01/2020 at 04:15 AM");
@@ -601,8 +598,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_SEX", "FEMALE");
 		assertCcapFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
 		assertCcapFieldEquals("APPLICANT_EMAIL", "some@example.com");
-		assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
-		//assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedHomeStreet);
+		//assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
+		assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedHomeStreet);
 
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME_0", "");
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_GOING_TO_SCHOOL_FULL_NAME_0", "");
@@ -812,7 +809,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("RELATIONSHIP_0", "child");
 		assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED"); 
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
-		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
+		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedHomeStreet);
 		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.00");
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
@@ -862,7 +859,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCertainPopsFieldEquals("NEED_LONG_TERM_CARE", "Off");
 		assertCertainPopsFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
 		assertCertainPopsFieldEquals("NEED_INTERPRETER", "Yes"); 
-		assertCertainPopsFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
+		assertCertainPopsFieldEquals("APPLICANT_HOME_STREET_ADDRESS", expectedHomeStreet);
 		assertCertainPopsFieldEquals("APPLICANT_HOME_CITY", "OutOfState City");
 		assertCertainPopsFieldEquals("APPLICANT_HOME_STATE", "MN");
 		assertCertainPopsFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
