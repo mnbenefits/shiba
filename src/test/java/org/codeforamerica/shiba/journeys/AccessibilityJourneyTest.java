@@ -275,6 +275,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
   @Test
   void userCanCompleteTheNonExpeditedHouseholdFlow() {
+	when(featureFlagConfiguration.get("caf-2025")).thenReturn(FeatureFlag.ON);	  
     List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP);
 
     testPage.clickButtonLink("Apply now", "Identify County");
