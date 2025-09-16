@@ -95,9 +95,9 @@ dependencies {
     )
    
     implementation("com.sun.xml.bind:jaxb-impl:4.0.5")
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.2")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.4")
     implementation("jakarta.activation:jakarta.activation-api:2.1.4")
-    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.4")
     implementation("jakarta.mail:jakarta.mail-api:2.1.4")
     implementation("org.apache.commons:commons-email:1.6.0")
     implementation("org.apache.chemistry.opencmis:chemistry-opencmis-client-api:1.1.0")

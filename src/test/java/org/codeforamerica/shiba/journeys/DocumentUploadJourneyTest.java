@@ -28,7 +28,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     uploadXfaFormatPdf();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "This PDF is in an old format. Try converting it to an image or uploading a screenshot instead.");
+        "We are not able to upload this PDF file. Try saving this file in another format or taking screenshots of the pages.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     testPage.clickLink("remove", "Upload documents");
@@ -174,7 +174,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     uploadXfaFormatPdf();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "This PDF is in an old format. Try converting it to an image or uploading a screenshot instead.");
+        "We are not able to upload this PDF file. Try saving this file in another format or taking screenshots of the pages.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     testPage.clickLink("remove", "Upload documents");
@@ -320,7 +320,7 @@ public class DocumentUploadJourneyTest extends JourneyTest {
     uploadXfaFormatPdf();
     waitForErrorMessage();
     assertThat(driver.findElements(By.className("text--error")).get(0).getText()).contains(
-        "This PDF is in an old format. Try converting it to an image or uploading a screenshot instead.");
+        "We are not able to upload this PDF file. Try saving this file in another format or taking screenshots of the pages.");
     assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).contains(
         "0 files added");
     testPage.clickLink("remove", "Upload documents");
