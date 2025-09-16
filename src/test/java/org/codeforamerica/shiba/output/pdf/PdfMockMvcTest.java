@@ -456,6 +456,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			String originalApt = "originalApt";
 			String originalCity = "originalCity";
 			String originalZipCode = "54321";
+			String acceptedAddress = "originalStreetAddress originalApt";
 			postExpectingSuccess("homeAddress",
 					Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),
 							"city", List.of(originalCity), "zipCode", List.of(originalZipCode), "state", List.of("MN"),
@@ -463,7 +464,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
 
 			var ccap = submitAndDownloadCcap();
-			assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", originalStreetAddress, ccap);
+			assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", acceptedAddress, ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_CITY", originalCity, ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_STATE", "MN", ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_ZIPCODE", originalZipCode, ccap);
@@ -503,6 +504,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			var ccap = downloadCcapClientPDF();
 
 			List.of(caf, ccap).forEach(pdf -> {
+				System.out.println(enrichedStreetValue + "==========================");
 				assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", enrichedStreetValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_CITY", enrichedCityValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_STATE", enrichedState, pdf);
