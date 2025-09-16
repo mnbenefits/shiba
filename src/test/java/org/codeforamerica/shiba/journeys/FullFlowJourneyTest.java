@@ -39,7 +39,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 		when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
 		when(featureFlagConfiguration.get("second-signature")).thenReturn(FeatureFlag.ON); 
-		when(featureFlagConfiguration.get("caf-2025")).thenReturn(FeatureFlag.ON); 
 
 		// Assert intercom button is present on landing page
 		await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());

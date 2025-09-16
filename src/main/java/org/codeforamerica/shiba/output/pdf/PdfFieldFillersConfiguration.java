@@ -147,12 +147,6 @@ public class PdfFieldFillersConfiguration {
       PdfFieldFiller uploadedDocCoverPageFilter,
       PdfFieldFiller healthcareRenewalCoverPageFilter) {
 	  
-	  //TODO emj if we update the CAF, this is where the old version and new versions will be used
-	  // depending if the feature flag is on or off. 
-	//  System.out.println("==== PdfFieldFillersConfiguration ====");//TODO emj delete
-	//  FeatureFlag updated2025Caf = featureFlagConfiguration.get("caf-2025");
-	//  System.out.println("--- updated2025Caf is " + updated2025Caf.isOn());
-	  
     return Map.of(
         CASEWORKER, Map.of(
             CAF, caseworkerCafFiller,

@@ -6422,7 +6422,6 @@ workflow:
               input: unearnedIncome
               value: SOCIAL_SECURITY
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: supplementalSecurityIncomeSource
         condition:
           logicalOperator: AND
@@ -6431,7 +6430,6 @@ workflow:
               input: unearnedIncome
               value: SSI
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: veteransBenefitsIncomeSource
         condition:
           logicalOperator: AND
@@ -6440,7 +6438,6 @@ workflow:
               input: unearnedIncome
               value: VETERANS_BENEFITS
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: unemploymentIncomeSource
         condition:
           name: selectedUnemploymentANDdoesNotLiveAlone
@@ -6451,7 +6448,6 @@ workflow:
               input: unearnedIncome
               value: UNEMPLOYMENT
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: workersCompIncomeSource
         condition:
           logicalOperator: AND
@@ -6460,7 +6456,6 @@ workflow:
               input: unearnedIncome
               value: WORKERS_COMPENSATION
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: retirementIncomeSource
         condition:
           logicalOperator: AND
@@ -6469,7 +6464,6 @@ workflow:
               input: unearnedIncome
               value: RETIREMENT
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: childOrSpousalSupportIncomeSource
         condition:
           logicalOperator: AND
@@ -6478,7 +6472,6 @@ workflow:
               input: unearnedIncome
               value: CHILD_OR_SPOUSAL_SUPPORT
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: tribalPaymentIncomeSource
         condition:
           logicalOperator: AND
@@ -6487,7 +6480,6 @@ workflow:
               input: unearnedIncome
               value: TRIBAL_PAYMENTS
             - *doesNotLiveAlone?
-        flag: caf-2025
       - pageName: unearnedIncomeSources
     datasources:
       - pageName: addHouseholdMembers

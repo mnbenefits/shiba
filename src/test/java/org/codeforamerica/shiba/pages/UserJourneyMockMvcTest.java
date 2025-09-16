@@ -38,7 +38,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void healthcareCoverageDoesNotDisplayOnSuccessPageWhenClientAlreadyHasHealthcare()
       throws Exception {
-	when(featureFlagConfiguration.get("caf-2025")).thenReturn(FeatureFlag.ON); 
     var successPage = nonExpeditedFlowToSuccessPage(true, true, true, true);
 	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 	// We expect to see the WIC recommendation because the pregnancy question response was "YES"
@@ -70,7 +69,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 
   @Test
   void userCanCompleteTheNonExpeditedHouseholdFlowWithNoEmployment() throws Exception {
-	when(featureFlagConfiguration.get("caf-2025")).thenReturn(FeatureFlag.ON); 
     nonExpeditedFlowToSuccessPage(true, false);
   }
 
