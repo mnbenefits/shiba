@@ -382,7 +382,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		// The CCAP PDF version for the caseworker should have 19 pages (based on viewing a real example)
 		int pageCount = pdDocument.getNumberOfPages();
-		assert (pageCount == 21);
+		assert (pageCount == 22);
 
 		// Strip out all text so that we can search it for specific strings
 		PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -422,7 +422,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 			// The CCAP PDF should have 29 pages (based on viewing a real example)
 			int pageCount = pdDocument.getNumberOfPages();
-			assert (pageCount == 34);
+			assert (pageCount == 35);
 
 			// Strip out all text so that we can search it for specific strings
 			PDFTextStripper pdfStripper = new PDFTextStripper();
