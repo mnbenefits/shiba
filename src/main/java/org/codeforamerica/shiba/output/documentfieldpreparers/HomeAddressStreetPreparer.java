@@ -50,7 +50,7 @@ public class HomeAddressStreetPreparer implements DocumentFieldPreparer {
 		// TODO YUVA
  
  
-		if (document == Document.CCAP) {
+		if (document == Document.CCAP && !(parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_ADDRESS)))) {
 			// TODO remove
 			System.out.println("yes this is a CCAP form ============================");
  
@@ -60,6 +60,20 @@ public class HomeAddressStreetPreparer implements DocumentFieldPreparer {
 					getFirstValue(pagesData, HOME_COUNTY));
  
 		}
+		
+		
+		if (document == Document.CCAP && (parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_ADDRESS)))) {
+			// TODO remove
+			System.out.println("yes this is a CCAP form ============================");
+ 
+			return createAddressInputsForCCAP(getFirstValue(pagesData, ENRICHED_HOME_STREET),
+					getFirstValue(pagesData, ENRICHED_HOME_APARTMENT_NUMBER),
+					getFirstValue(pagesData, ENRICHED_HOME_ZIPCODE), getFirstValue(pagesData, ENRICHED_HOME_CITY),
+					getFirstValue(pagesData, ENRICHED_HOME_STATE), getFirstValue(pagesData, ENRICHED_HOME_COUNTY));
+ 
+		}
+		
+		
  
 		if (parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_ADDRESS))) {
 			return createAddressInputs(getFirstValue(pagesData, ENRICHED_HOME_STREET),
