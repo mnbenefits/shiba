@@ -84,7 +84,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
     // Use home address for mailing
     boolean sameAsHomeAddress = parseBoolean(getFirstValue(pagesData, SAME_MAILING_ADDRESS));
     if (sameAsHomeAddress) {
-      return createAddressInputsFromHomeAddress(pagesData);
+      return createAddressInputsFromHomeAddress(pagesData, document);
     }
 
     boolean noPermanentAddress = parseBoolean(getFirstValue(pagesData, NO_PERMANENT_ADDRESS));
@@ -131,8 +131,36 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
    * @param pagesData application data to check
    * @return mailing address inputs
    */
-  private List<DocumentField> createAddressInputsFromHomeAddress(PagesData pagesData) {
+  private List<DocumentField> createAddressInputsFromHomeAddress(PagesData pagesData, Document document) {
     boolean usesEnriched = parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_ADDRESS));
+    
+    if (document == Document.CCAP && !(usesEnriched)) {
+		// TODO remove
+		System.out.println("yes this is a CCAP form not enriched  ============================");
+
+		return createMailingInputsForCCAP(pagesData,
+				  HOME_STREET,
+		          HOME_APARTMENT_NUMBER,
+		          HOME_ZIPCODE,
+		          HOME_CITY,
+		          HOME_STATE,
+		          HOME_COUNTY);
+	}
+	
+	
+	if (document == Document.CCAP && (usesEnriched)){
+		// TODO remove
+		System.out.println("yes this is a CCAP form ============================");
+
+		return createMailingInputsForCCAP(pagesData,
+				 ENRICHED_HOME_STREET,
+		          ENRICHED_HOME_APARTMENT_NUMBER,
+		          ENRICHED_HOME_ZIPCODE,
+		          ENRICHED_HOME_CITY,
+		          ENRICHED_HOME_STATE,
+		          ENRICHED_HOME_COUNTY);
+		}
+	
     if (usesEnriched) {
       return createMailingInputs(pagesData,
           ENRICHED_HOME_STREET,
@@ -166,7 +194,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
     
     if (document == Document.CCAP && !(usesEnriched)) {
 		// TODO remove
-		System.out.println("yes this is a CCAP form ============================");
+		System.out.println("yes this is a CCAP form not enriched  ============================");
 
 		return createMailingInputsForCCAP(pagesData,
 		          MAILING_STREET,

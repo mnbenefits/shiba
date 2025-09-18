@@ -853,6 +853,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String originalApt = "originalApt";
 				String originalCity = "originalCity";
 				String originalZipCode = "54321";
+				String originalStreetAddressCCAP = "originalStreetAddress originalApt";
+				
 				postExpectingSuccess("homeAddress",
 						Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),
 								"city", List.of(originalCity), "zipCode", List.of(originalZipCode), "state",
@@ -861,10 +863,12 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
 
 				var ccap = submitAndDownloadCcap();
-				assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", originalStreetAddress, ccap);
+				assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", originalStreetAddressCCAP, ccap);
 				assertPdfFieldEquals("APPLICANT_MAILING_CITY", originalCity, ccap);
 				assertPdfFieldEquals("APPLICANT_MAILING_STATE", "MN", ccap);
 				assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", originalZipCode, ccap);
+				
+				
 			}
 			
 			@Test
@@ -886,6 +890,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String enrichedZipCodeValue = "testZipCode";
 				String enrichedApartmentNumber = "someApt";
 				String enrichedState = "someState";
+				String enrichedStreetValueCCAP = "testStreet someApt";
+
 				when(locationClient.validateAddress(any())).thenReturn(Optional.of(new Address(enrichedStreetValue,
 						enrichedCityValue, enrichedState, enrichedZipCodeValue, enrichedApartmentNumber, "Hennepin")));
 				postExpectingSuccess("homeAddress",
@@ -897,8 +903,15 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				var caf = submitAndDownloadCaf();
 				var ccap = downloadCcapClientPDF();
-				List.of(caf, ccap).forEach(pdf -> {
+				List.of(caf).forEach(pdf -> {
 					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", enrichedStreetValue, pdf);
+					assertPdfFieldEquals("APPLICANT_MAILING_CITY", enrichedCityValue, pdf);
+					assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, pdf);
+					assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, pdf);
+				});
+				
+				List.of(ccap).forEach(pdf -> {
+					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", enrichedStreetValueCCAP, pdf);
 					assertPdfFieldEquals("APPLICANT_MAILING_CITY", enrichedCityValue, pdf);
 					assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, pdf);
 					assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, pdf);
