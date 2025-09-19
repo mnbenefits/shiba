@@ -135,9 +135,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
     boolean usesEnriched = parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_ADDRESS));
     
     if (document == Document.CCAP && !(usesEnriched)) {
-		// TODO remove
-		System.out.println("yes this is a CCAP form not enriched  ============================");
-
+		
 		return createMailingInputsForCCAP(pagesData,
 				  HOME_STREET,
 		          HOME_APARTMENT_NUMBER,
@@ -149,9 +147,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
 	
 	
 	if (document == Document.CCAP && (usesEnriched)){
-		// TODO remove
-		System.out.println("yes this is a CCAP form ============================");
-
+		
 		return createMailingInputs(pagesData,
 				 ENRICHED_HOME_STREET,
 		          ENRICHED_HOME_APARTMENT_NUMBER,
@@ -193,9 +189,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
     
     
     if (document == Document.CCAP && !(usesEnriched)) {
-		// TODO remove
-		System.out.println("yes this is a CCAP form not enriched  ============================");
-
+		
 		return createMailingInputsForCCAP(pagesData,
 		          MAILING_STREET,
 		          MAILING_APARTMENT_NUMBER,
@@ -207,9 +201,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
 	
 	
 	if (document == Document.CCAP && (usesEnriched)){
-		// TODO remove
-		System.out.println("yes this is a CCAP form ============================");
-
+		
 		return createMailingInputsForCCAP(pagesData,
 		          ENRICHED_MAILING_STREET,
 		          ENRICHED_MAILING_APARTMENT_NUMBER,

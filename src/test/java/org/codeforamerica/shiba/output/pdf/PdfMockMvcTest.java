@@ -490,7 +490,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			String enrichedZipCodeValue = "testZipCode";
 			String enrichedApartmentNumber = "someApt";
 			String enrichedState = "someState";
-			String enrichedCCAPStreetValue = "testStreet someApt";
 
 			when(locationClient.validateAddress(any())).thenReturn(Optional.of(new Address(enrichedStreetValue,
 					enrichedCityValue, enrichedState, enrichedZipCodeValue, enrichedApartmentNumber, "Hennepin")));
@@ -506,7 +505,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			var ccap = downloadCcapClientPDF();
 
 			List.of(caf).forEach(pdf -> {
-				System.out.println(enrichedStreetValue + "==========================");
 				assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", enrichedStreetValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_CITY", enrichedCityValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_STATE", enrichedState, pdf);
@@ -515,7 +513,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			
 			
 			List.of(ccap).forEach(pdf -> {
-				System.out.println(enrichedStreetValue + "==========================");
 				assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", enrichedStreetValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_CITY", enrichedCityValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_STATE", enrichedState, pdf);
