@@ -135,8 +135,8 @@ public enum Validation {
 	    boolean retVal = false;
 
 	    LocalDate today = LocalDate.now();
-	    LocalDate maxDate = today.plusYears(10);
-	    LocalDate minDate = today.minusYears(10);
+	    LocalDate maxDate = today.plusYears(4);
+	    LocalDate minDate = today.minusYears(4);
 
 	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
 

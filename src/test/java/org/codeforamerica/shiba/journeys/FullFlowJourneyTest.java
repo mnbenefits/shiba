@@ -150,7 +150,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("School start date");
 
 		// School Start Date?
-		testPage.enter("schoolStartDate", "01/01/2018");
+		testPage.enter("schoolStartDate", "01/01/2024");
 		testPage.clickContinue("Pregnant");
 
 		// Is anyone in your household pregnant?
@@ -591,7 +591,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("STUDENT_FULL_NAME_0", householdMemberFullName);
 		assertCcapFieldEquals("SCHOOL_NAME_0", "ABC School");
 		assertCcapFieldEquals("SCHOOL_GRADE_0", "Pre-K");
-		assertCcapFieldEquals("SCHOOL_START_DATE_0", "01/01/2018");
+		assertCcapFieldEquals("SCHOOL_START_DATE_0", "01/01/2024");
 		assertCcapFieldEquals("CHILDCARE_CHILD_NAME_0", householdMemberFullName);
 		assertCcapFieldEquals("SSI", "No");
 		assertCcapFieldEquals("VETERANS_BENEFITS", "No");
