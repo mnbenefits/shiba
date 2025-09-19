@@ -57,11 +57,11 @@ public class PdfEncoderTest {
 			when(pdfGenerator.generate(eq(applicationId), eq(doc2), any())).thenReturn(pdf2);
 
 			String result = pdfEncoder.createEncodedPdfString(application);
-			System.out.println(result);
+			
 			// Assert
 			String expectedPdf1 = "someFileName1.pdf|" + Base64.getEncoder().encodeToString("someContent1".getBytes());
 			String expectedPdf2 = "someFileName2.pdf|" + Base64.getEncoder().encodeToString("someContent2".getBytes());
-			System.out.println(expectedPdf1);
+			
 			String expected = expectedPdf1 + ", " + expectedPdf2;
 			assertEquals(expected, result);
 
