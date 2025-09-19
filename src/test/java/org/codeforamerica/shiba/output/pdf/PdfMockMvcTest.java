@@ -516,7 +516,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			
 			List.of(ccap).forEach(pdf -> {
 				System.out.println(enrichedStreetValue + "==========================");
-				assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", enrichedCCAPStreetValue, pdf);
+				assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", enrichedStreetValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_CITY", enrichedCityValue, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_STATE", enrichedState, pdf);
 				assertPdfFieldEquals("APPLICANT_HOME_ZIPCODE", enrichedZipCodeValue, pdf);
@@ -903,19 +903,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				var caf = submitAndDownloadCaf();
 				var ccap = downloadCcapClientPDF();
-				List.of(caf).forEach(pdf -> {
+				List.of(caf,ccap).forEach(pdf -> {
 					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", enrichedStreetValue, pdf);
 					assertPdfFieldEquals("APPLICANT_MAILING_CITY", enrichedCityValue, pdf);
 					assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, pdf);
 					assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, pdf);
 				});
 				
-				List.of(ccap).forEach(pdf -> {
-					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", enrichedStreetValueCCAP, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_CITY", enrichedCityValue, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_STATE", enrichedState, pdf);
-					assertPdfFieldEquals("APPLICANT_MAILING_ZIPCODE", enrichedZipCodeValue, pdf);
-				});
+				
 				assertPdfFieldEquals("APPLICANT_MAILING_APT_NUMBER", enrichedApartmentNumber, caf);
 			}
 

@@ -66,7 +66,7 @@ public class HomeAddressStreetPreparer implements DocumentFieldPreparer {
 			// TODO remove
 			System.out.println("yes this is a CCAP form ============================");
  
-			return createAddressInputsForCCAP(getFirstValue(pagesData, ENRICHED_HOME_STREET),
+			return createAddressInputs(getFirstValue(pagesData, ENRICHED_HOME_STREET),
 					getFirstValue(pagesData, ENRICHED_HOME_APARTMENT_NUMBER),
 					getFirstValue(pagesData, ENRICHED_HOME_ZIPCODE), getFirstValue(pagesData, ENRICHED_HOME_CITY),
 					getFirstValue(pagesData, ENRICHED_HOME_STATE), getFirstValue(pagesData, ENRICHED_HOME_COUNTY));

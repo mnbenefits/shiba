@@ -152,7 +152,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
 		// TODO remove
 		System.out.println("yes this is a CCAP form ============================");
 
-		return createMailingInputsForCCAP(pagesData,
+		return createMailingInputs(pagesData,
 				 ENRICHED_HOME_STREET,
 		          ENRICHED_HOME_APARTMENT_NUMBER,
 		          ENRICHED_HOME_ZIPCODE,
