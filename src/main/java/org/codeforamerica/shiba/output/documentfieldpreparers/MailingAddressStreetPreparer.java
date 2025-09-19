@@ -84,7 +84,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
     // Use home address for mailing
     boolean sameAsHomeAddress = parseBoolean(getFirstValue(pagesData, SAME_MAILING_ADDRESS));
     if (sameAsHomeAddress) {
-      return createAddressInputsFromHomeAddress(pagesData);
+      return createAddressInputsFromHomeAddress(pagesData, document);
     }
 
     boolean noPermanentAddress = parseBoolean(getFirstValue(pagesData, NO_PERMANENT_ADDRESS));
@@ -95,7 +95,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
     }
 
     // Use mailing address application data
-    return createAddressInputsFromMailingAddress(pagesData);
+    return createAddressInputsFromMailingAddress(pagesData, document);
   }
 
   private List<DocumentField> createGeneralDeliveryAddressInputs(PagesData pagesData) {
@@ -131,8 +131,32 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
    * @param pagesData application data to check
    * @return mailing address inputs
    */
-  private List<DocumentField> createAddressInputsFromHomeAddress(PagesData pagesData) {
+  private List<DocumentField> createAddressInputsFromHomeAddress(PagesData pagesData, Document document) {
     boolean usesEnriched = parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_ADDRESS));
+    
+    if (document == Document.CCAP && !(usesEnriched)) {
+		
+		return createMailingInputsForCCAP(pagesData,
+				  HOME_STREET,
+		          HOME_APARTMENT_NUMBER,
+		          HOME_ZIPCODE,
+		          HOME_CITY,
+		          HOME_STATE,
+		          HOME_COUNTY);
+	}
+	
+	
+	if (document == Document.CCAP && (usesEnriched)){
+		
+		return createMailingInputs(pagesData,
+				 ENRICHED_HOME_STREET,
+		          ENRICHED_HOME_APARTMENT_NUMBER,
+		          ENRICHED_HOME_ZIPCODE,
+		          ENRICHED_HOME_CITY,
+		          ENRICHED_HOME_STATE,
+		          ENRICHED_HOME_COUNTY);
+		}
+	
     if (usesEnriched) {
       return createMailingInputs(pagesData,
           ENRICHED_HOME_STREET,
@@ -159,8 +183,35 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
    * @param pagesData application data to check
    * @return mailing address inputs
    */
-  private List<DocumentField> createAddressInputsFromMailingAddress(PagesData pagesData) {
+  //private List<DocumentField> createAddressInputsFromMailingAddress(PagesData pagesData)
+  private List<DocumentField> createAddressInputsFromMailingAddress(PagesData pagesData, Document document){
     boolean usesEnriched = parseBoolean(getFirstValue(pagesData, USE_ENRICHED_MAILING_ADDRESS));
+    
+    
+    if (document == Document.CCAP && !(usesEnriched)) {
+		
+		return createMailingInputsForCCAP(pagesData,
+		          MAILING_STREET,
+		          MAILING_APARTMENT_NUMBER,
+		          MAILING_ZIPCODE,
+		          MAILING_CITY,
+		          MAILING_STATE,
+		          MAILING_COUNTY);
+	}
+	
+	
+	if (document == Document.CCAP && (usesEnriched)){
+		
+		return createMailingInputsForCCAP(pagesData,
+		          ENRICHED_MAILING_STREET,
+		          ENRICHED_MAILING_APARTMENT_NUMBER,
+		          ENRICHED_MAILING_ZIPCODE,
+		          ENRICHED_MAILING_CITY,
+		          ENRICHED_MAILING_STATE,
+		          ENRICHED_MAILING_COUNTY);
+	}
+	
+    
     if (usesEnriched) {
       return createMailingInputs(pagesData,
           ENRICHED_MAILING_STREET,
@@ -195,6 +246,41 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
         createSingleMailingInput("selectedState", getFirstValue(pagesData, state)),
         createSingleMailingInput("selectedCounty", countyValue));
   }
+  
+  private List<DocumentField> createMailingInputsForCCAP(PagesData pagesData, Field street,
+	      Field apartment, Field zipcode, Field city, Field state, Field county) {
+
+		  String myStreet = getFirstValue(pagesData, street);
+		  String myApartment = getFirstValue(pagesData, apartment);
+		  String myZipcode = getFirstValue(pagesData, zipcode);
+		  String myCity = getFirstValue(pagesData, city);
+		  String myState = getFirstValue(pagesData, state);
+		  String myCounty = getFirstValue(pagesData, county);
+
+		  if (County.Other.toString().equals(myCounty)) {
+		    myCounty = "";
+		  }
+
+		  // Combine street + apt
+		  String streetWithApt = myStreet;
+		  if (myApartment != null && !myApartment.isBlank()) {
+		    if (myApartment.matches("\\d+")) {
+		      streetWithApt = myStreet + " #" + myApartment;
+		    } else {
+		      streetWithApt = myStreet + " " + myApartment;
+		    }
+		  }
+
+		  return List.of(
+		      createSingleMailingInput("selectedStreetAddress", streetWithApt),
+		      createSingleMailingInput("selectedApartmentNumber", myApartment),
+		      createSingleMailingInput("selectedZipCode", myZipcode),
+		      createSingleMailingInput("selectedCity", myCity),
+		      createSingleMailingInput("selectedState", myState),
+		      createSingleMailingInput("selectedCounty", myCounty));
+		}
+
+  
 
   @NotNull
   private DocumentField createSingleMailingInput(String name, String value) {
