@@ -264,9 +264,14 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.OTHER_PAYMENTS_AMOUNT,
         new ParsingCoordinate("otherUnearnedIncomeSources", "otherPaymentsAmount"));
     
-    //TODO emj new fields for other unearned income
-    
-    
+    coordinatesMap.put(Field.OTHER_INCOME_TYPE,
+    	new ParsingCoordinate("otherIncome", "otherIncomeType"));
+    coordinatesMap.put(Field.OTHER_INCOME_FULL_NAME,
+    	new ParsingCoordinate("otherIncome", "otherIncomeFullName"));
+    coordinatesMap.put(Field.OTHER_INCOME_AMOUNT,
+    	new ParsingCoordinate("otherIncome", "otherIncomeAmount"));
+    coordinatesMap.put(Field.OTHER_INCOME_FREQUENCY,
+    	new ParsingCoordinate("otherIncome", "otherIncomeFrequency"));
 
     coordinatesMap.put(Field.NO_CP_UNEARNED_INCOME,
             new ParsingCoordinate("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome"));
@@ -625,6 +630,11 @@ public class ApplicationDataParser {
     INTEREST_DIVIDENDS_AMOUNT,
     RENTAL_AMOUNT,
     OTHER_PAYMENTS_AMOUNT,
+
+    OTHER_INCOME_TYPE,
+    OTHER_INCOME_FULL_NAME,
+    OTHER_INCOME_AMOUNT,
+    OTHER_INCOME_FREQUENCY,
 
     CP_SUPPLEMENT,
 
