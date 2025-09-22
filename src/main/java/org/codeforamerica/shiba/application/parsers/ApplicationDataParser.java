@@ -223,25 +223,30 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.UNEARNED_TRIBAL_PAYMENTS_AMOUNT,
         new ParsingCoordinate("tribalPaymentIncomeSource", "tribalPaymentsAmount"));
     
+  //TODO emj existing fields for other unearned income listed here in order in pages-config
+    // these will be used to find the values entered
+    coordinatesMap.put(Field.UNEARNED_INSURANCE_PAYMENTS_AMOUNT,
+            new ParsingCoordinate("insurancePaymentsIncomeSource", "insurancePaymentsAmount"));
+    coordinatesMap.put(Field.UNEARNED_TRUST_MONEY_AMOUNT,
+            new ParsingCoordinate("trustMoneyIncomeSource", "trustMoneyAmount"));
+    coordinatesMap.put(Field.UNEARNED_RENTAL_AMOUNT,
+            new ParsingCoordinate("rentalIncomeSource", "rentalIncomeAmount")); //CP only
+    coordinatesMap.put(Field.UNEARNED_INTEREST_DIVIDENDS_AMOUNT,
+            new ParsingCoordinate("interestDividendsIncomeSource", "interestDividendsAmount"));
+    coordinatesMap.put(Field.UNEARNED_HEALTHCARE_REIMBURSEMENT_AMOUNT,
+            new ParsingCoordinate("healthcareReimbursementIncomeSource",
+                "healthCareReimbursementAmount"));
+    coordinatesMap.put(Field.UNEARNED_CONTRACT_FOR_DEED_AMOUNT,
+            new ParsingCoordinate("contractForDeedIncomeSource", "contractForDeedAmount"));
+    coordinatesMap.put(Field.UNEARNED_BENEFITS_PROGRAMS_AMOUNT,
+            new ParsingCoordinate("benefitsProgramsIncomeSource", "benefitsAmount"));
+    coordinatesMap.put(Field.UNEARNED_OTHER_PAYMENTS_AMOUNT,
+            new ParsingCoordinate("otherPaymentsIncomeSource", "otherPaymentsAmount"));
+    
     coordinatesMap.put(Field.UNEARNED_INCOME_OTHER,
         new ParsingCoordinate("otherUnearnedIncome", "otherUnearnedIncome"));
-    coordinatesMap.put(Field.UNEARNED_BENEFITS_PROGRAMS_AMOUNT,
-        new ParsingCoordinate("benefitsProgramsIncomeSource", "benefitsAmount"));
-    coordinatesMap.put(Field.UNEARNED_INSURANCE_PAYMENTS_AMOUNT,
-        new ParsingCoordinate("insurancePaymentsIncomeSource", "insurancePaymentsAmount"));
-    coordinatesMap.put(Field.UNEARNED_CONTRACT_FOR_DEED_AMOUNT,
-        new ParsingCoordinate("contractForDeedIncomeSource", "contractForDeedAmount"));
-    coordinatesMap.put(Field.UNEARNED_TRUST_MONEY_AMOUNT,
-        new ParsingCoordinate("trustMoneyIncomeSource", "trustMoneyAmount"));
-    coordinatesMap.put(Field.UNEARNED_HEALTHCARE_REIMBURSEMENT_AMOUNT,
-        new ParsingCoordinate("healthcareReimbursementIncomeSource",
-            "healthCareReimbursementAmount"));
-    coordinatesMap.put(Field.UNEARNED_INTEREST_DIVIDENDS_AMOUNT,
-        new ParsingCoordinate("interestDividendsIncomeSource", "interestDividendsAmount"));
-    coordinatesMap.put(Field.UNEARNED_RENTAL_AMOUNT,
-        new ParsingCoordinate("rentalIncomeSource", "rentalIncomeAmount"));
-    coordinatesMap.put(Field.UNEARNED_OTHER_PAYMENTS_AMOUNT,
-        new ParsingCoordinate("otherPaymentsIncomeSource", "otherPaymentsAmount"));
+
+
     coordinatesMap.put(Field.BENEFITS_PROGRAMS_AMOUNT,
         new ParsingCoordinate("otherUnearnedIncomeSources", "benefitsAmount"));
     coordinatesMap.put(Field.INSURANCE_PAYMENTS_AMOUNT,
@@ -258,6 +263,15 @@ public class ApplicationDataParser {
         new ParsingCoordinate("otherUnearnedIncomeSources", "rentalIncomeAmount"));
     coordinatesMap.put(Field.OTHER_PAYMENTS_AMOUNT,
         new ParsingCoordinate("otherUnearnedIncomeSources", "otherPaymentsAmount"));
+    
+    coordinatesMap.put(Field.OTHER_INCOME_TYPE,
+    	new ParsingCoordinate("otherIncome", "otherIncomeType"));
+    coordinatesMap.put(Field.OTHER_INCOME_FULL_NAME,
+    	new ParsingCoordinate("otherIncome", "otherIncomeFullName"));
+    coordinatesMap.put(Field.OTHER_INCOME_AMOUNT,
+    	new ParsingCoordinate("otherIncome", "otherIncomeAmount"));
+    coordinatesMap.put(Field.OTHER_INCOME_FREQUENCY,
+    	new ParsingCoordinate("otherIncome", "otherIncomeFrequency"));
 
     coordinatesMap.put(Field.NO_CP_UNEARNED_INCOME,
             new ParsingCoordinate("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome"));
@@ -606,6 +620,7 @@ public class ApplicationDataParser {
     CHILD_OR_SPOUSAL_SUPPORT_AMOUNT,
     TRIBAL_PAYMENTS_AMOUNT,
 
+    // otherUnearnedIncome
     UNEARNED_INCOME_OTHER,
     BENEFITS_PROGRAMS_AMOUNT,
     INSURANCE_PAYMENTS_AMOUNT,
@@ -615,6 +630,11 @@ public class ApplicationDataParser {
     INTEREST_DIVIDENDS_AMOUNT,
     RENTAL_AMOUNT,
     OTHER_PAYMENTS_AMOUNT,
+
+    OTHER_INCOME_TYPE,
+    OTHER_INCOME_FULL_NAME,
+    OTHER_INCOME_AMOUNT,
+    OTHER_INCOME_FREQUENCY,
 
     CP_SUPPLEMENT,
 

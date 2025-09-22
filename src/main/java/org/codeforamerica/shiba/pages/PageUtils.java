@@ -102,7 +102,7 @@ public class PageUtils {
 	 * @return
 	 */
 	public static boolean listOfNamesContainsName(Collection<String> listOfNames, String name) {
-		return listOfNames.stream().filter(k -> k.contains(name)).collect(Collectors.toList()).size() > 0;
+		return listOfNames.stream().filter(k -> k.equals(name)).collect(Collectors.toList()).size() > 0;
 	}
 	
 	public static int findNumberOfHouseholdMembers(Subworkflow datasourcePages) {

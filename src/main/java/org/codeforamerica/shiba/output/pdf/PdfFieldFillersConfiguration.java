@@ -12,6 +12,8 @@ import java.util.Map;
 
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +21,11 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 public class PdfFieldFillersConfiguration {
+	private FeatureFlagConfiguration featureFlagConfiguration;
+	
+	public PdfFieldFillersConfiguration(FeatureFlagConfiguration featureFlagConfiguration){
+		this.featureFlagConfiguration = featureFlagConfiguration;
+	}
 
   @Bean
   public PdfFieldFiller caseworkerCafFiller(
@@ -139,6 +146,7 @@ public class PdfFieldFillersConfiguration {
       PdfFieldFiller clientCcapFiller,
       PdfFieldFiller uploadedDocCoverPageFilter,
       PdfFieldFiller healthcareRenewalCoverPageFilter) {
+	  
     return Map.of(
         CASEWORKER, Map.of(
             CAF, caseworkerCafFiller,

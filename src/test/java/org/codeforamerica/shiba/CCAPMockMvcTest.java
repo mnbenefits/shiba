@@ -23,6 +23,95 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingSuccess("writtenLanguage", Map.of("writtenLanguage", List.of("ENGLISH")));
     postExpectingSuccess("spokenLanguage", Map.of("spokenLanguage", List.of("ENGLISH")));
   }
+  
+  
+  @Test
+  void verifyUnearnedIncomeFlow() throws Exception {
+	  completeFlowFromLandingPageThroughReviewInfo("SNAP");
+	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
+	  assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
+	  fillOutSpouseInfo("SNAP");
+	  
+	  finishAddingHouseholdMembers("preparingMealsTogether");
+	  postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "true",
+		        "Housing subsidy");
+	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+	            "Going to school");
+	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
+	  completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
+	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
+	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+	  assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+	  postExpectingNextPageTitle("unearnedIncome", "unearnedIncome", List.of("UNEMPLOYMENT", "WORKERS_COMPENSATION"), "Unearned Income Source");
+	  postExpectingRedirect("unemploymentIncomeSource", "monthlyIncomeUnemployment", List.of("Dwight Schrute applicant"), "workersCompIncomeSource");
+	  postExpectingRedirect("workersCompIncomeSource", "monthlyIncomeWorkersComp", List.of("Dwight Schrute applicant"), "futureIncome");
+  }
+  
+	@Test
+	void verifyotherUnearnedIncomeFlow() throws Exception {
+
+		when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON);
+
+		// Initial add info for user
+		completeFlowFromLandingPageThroughReviewInfo("CCAP");
+
+		// Add a spouse NOT SURE
+		postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
+		assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
+		fillOutHousemateInfo("CCAP");
+
+		getNavigationPageWithQueryParamAndExpectRedirect("householdList", "option", "1", "householdMemberInfo");
+
+		// Add child (NONE for programs)
+
+		fillOutHousemateInfo("NONE");
+		finishAddingHouseholdMembers("childrenInNeedOfCare");
+
+		// Children in need of care flow
+		assertCorrectPageTitle("childrenInNeedOfCare", "Who are the children in need of care?");
+		postExpectingRedirect("childrenInNeedOfCare", "whoNeedsChildCare", List.of("child name"),
+				"doYouHaveChildCareProvider");
+
+		assertNavigationRedirectsToCorrectNextPage("childrenInNeedOfCare", "doYouHaveChildCareProvider");
+		// Say no provider, no parent not at home
+		postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
+
+		postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", List.of("NONE_OF_THE_ABOVE"),
+				"housingSubsidy");
+
+		// Minimal path through housing/school
+		postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+		postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
+		postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
+		completeFlowFromIsPregnantThroughTribalNations(false, "CCAP", "CCAP", "NONE");
+
+		// Income section
+		assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
+		postExpectingRedirect("employmentStatus", "areYouWorking", "false", "jobSearch");
+		postExpectingRedirect("jobSearch", "currentlyLookingForJob", "false", "incomeUpNext");
+
+		// Unearned income → None
+		assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+		postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED", "otherUnearnedIncome");
+
+		// Select 4 other unearned income sources
+		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome",
+				// List.of("INSURANCE_PAYMENTS", "TRUST_MONEY", "INTEREST_DIVIDENDS",
+				// "HEALTH_CARE_REIMBURSEMENT"),
+				List.of("INSURANCE_PAYMENTS"), "insurancePaymentsIncomeSource");
+
+		// Verify first income source page is reached
+		assertCorrectPageTitle("insurancePaymentsIncomeSource", "Insurance payments");
+
+		// Continue flow to futureIncome
+
+		postExpectingRedirect("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments",
+				List.of("Dwight Schrute applicant"), "futureIncome");
+
+		assertCorrectPageTitle("futureIncome", "Future Income");
+
+	}
+  
 
   @Test
   void verifyFlowWhenNoOneHasSelectedCCAPInHousehold() throws Exception {
@@ -275,6 +364,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "Who is looking for a job");
     fillUnearnedIncomeToLegalStuffCCAP("CCAP", "NONE");
   }
+  
 
   private void fillUnearnedIncomeToLegalStuffCCAP(String... Programs) throws Exception {
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
