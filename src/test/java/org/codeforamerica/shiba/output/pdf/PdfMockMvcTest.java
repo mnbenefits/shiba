@@ -456,7 +456,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			String originalApt = "originalApt";
 			String originalCity = "originalCity";
 			String originalZipCode = "54321";
-			String acceptedAddress = "originalStreetAddress originalApt";
+			String acceptedAddress = "originalStreetAddress, originalApt";
 			postExpectingSuccess("homeAddress",
 					Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),
 							"city", List.of(originalCity), "zipCode", List.of(originalZipCode), "state", List.of("MN"),
@@ -850,7 +850,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String originalApt = "originalApt";
 				String originalCity = "originalCity";
 				String originalZipCode = "54321";
-				String originalStreetAddressCCAP = "originalStreetAddress originalApt";
+				String originalStreetAddressCCAP = "originalStreetAddress, originalApt";
 				
 				postExpectingSuccess("homeAddress",
 						Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),
@@ -925,7 +925,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String originalApt = "originalApt";
 				String originalCity = "originalCity";
 				String originalState = "IL";
-				String originalStreetAddressCCAP = "originalStreetAddress originalApt";
+				String originalStreetAddressCCAP = "originalStreetAddress, originalApt";
 
 				postExpectingSuccess("mailingAddress",
 						Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),
