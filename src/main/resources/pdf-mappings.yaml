@@ -163,6 +163,12 @@ mappings:
   medicalInOtherState:
     medicalInOtherState: MEDICAL_IN_OTHER_STATE
 
+  otherIncome:
+    otherIncomeType: OTHER_INCOME_TYPE
+    otherIncomeFullName: OTHER_INCOME_FULL_NAME
+    otherIncomeAmount: OTHER_INCOME_AMOUNT
+    otherIncomeFrequency: OTHER_INCOME_FREQUENCY
+
   certainPops:
     certainPopsSupplement: CP_SUPPLEMENT
   

@@ -62,6 +62,13 @@
   }
 }
 
+.text-input-group__postfix {
+  white-space: nowrap; /* keeps "/per month" on one line */
+  text-align: right;
+}
+
+
+
 .boxed-content {
   padding: 2.5rem 1rem 2.5rem 1rem;
   margin: 2.5rem auto;

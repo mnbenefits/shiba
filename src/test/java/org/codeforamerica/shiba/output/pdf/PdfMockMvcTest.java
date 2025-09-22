@@ -382,7 +382,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		// The CCAP PDF version for the caseworker should have 19 pages (based on viewing a real example)
 		int pageCount = pdDocument.getNumberOfPages();
-		assert (pageCount == 21);
+		assert (pageCount == 22);
 
 		// Strip out all text so that we can search it for specific strings
 		PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -422,7 +422,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 			// The CCAP PDF should have 29 pages (based on viewing a real example)
 			int pageCount = pdDocument.getNumberOfPages();
-			assert (pageCount == 34);
+			assert (pageCount == 35);
 
 			// Strip out all text so that we can search it for specific strings
 			PDFTextStripper pdfStripper = new PDFTextStripper();
@@ -456,7 +456,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			String originalApt = "originalApt";
 			String originalCity = "originalCity";
 			String originalZipCode = "54321";
-			String acceptedAddress = "originalStreetAddress originalApt";
+			String acceptedAddress = "originalStreetAddress, originalApt";
 			postExpectingSuccess("homeAddress",
 					Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),
 							"city", List.of(originalCity), "zipCode", List.of(originalZipCode), "state", List.of("MN"),
@@ -850,7 +850,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String originalApt = "originalApt";
 				String originalCity = "originalCity";
 				String originalZipCode = "54321";
-				String originalStreetAddressCCAP = "originalStreetAddress originalApt";
+				String originalStreetAddressCCAP = "originalStreetAddress, originalApt";
 				
 				postExpectingSuccess("homeAddress",
 						Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),
@@ -925,7 +925,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String originalApt = "originalApt";
 				String originalCity = "originalCity";
 				String originalState = "IL";
-				String originalStreetAddressCCAP = "originalStreetAddress originalApt";
+				String originalStreetAddressCCAP = "originalStreetAddress, originalApt";
 
 				postExpectingSuccess("mailingAddress",
 						Map.of("streetAddress", List.of(originalStreetAddress), "apartmentNumber", List.of(originalApt),

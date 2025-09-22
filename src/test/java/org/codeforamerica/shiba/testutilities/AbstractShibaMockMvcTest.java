@@ -58,6 +58,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -72,7 +73,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = MOCK)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Import({SessionScopedApplicationDataTestConfiguration.class})
 public class AbstractShibaMockMvcTest {
 
@@ -219,6 +220,22 @@ public class AbstractShibaMockMvcTest {
     householdMemberInfo.put("moveToMnDate", List.of("02", "18", "1950"));
     householdMemberInfo.put("moveToMnPreviousState", List.of("Illinois"));
     postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+  }
+  
+  protected void fillOutSpouseInfo(String... programSelections) throws Exception{
+	  Map<String, List<String>> householdMemberInfo = new HashMap<>();
+	    householdMemberInfo.put("firstName", List.of("Sam"));
+	    householdMemberInfo.put("lastName", List.of("Altman"));
+	    householdMemberInfo.put("otherName", List.of("houseHoldyMcMemberson"));
+	    householdMemberInfo.put("programs", List.of(programSelections));
+	    householdMemberInfo.put("relationship", List.of("spouse"));
+	    householdMemberInfo.put("dateOfBirth", List.of("09", "14", "1950"));
+	    householdMemberInfo.put("ssn", List.of("987654321"));
+	    householdMemberInfo.put("maritalStatus", List.of("MARRIED_LIVING_WITH_SPOUSE"));
+	    householdMemberInfo.put("sex", List.of("MALE"));
+	    householdMemberInfo.put("livedInMnWholeLife", List.of("true"));
+	    
+	    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
   }
   
   protected void fillOutHousemateInfoMoreThanFiveLessThanTen(int HHCount) throws Exception {
@@ -974,10 +991,16 @@ public class AbstractShibaMockMvcTest {
       }
     }
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
-    postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
+    if (hasHousehold) {
+    	postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
+    	        "socialSecurityIncomeSource");
+    }
+    else {
+    	 postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
         "unearnedIncomeSources");
     postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
         "otherUnearnedIncome");
+    }      
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
         "futureIncome");
     postExpectingRedirect("futureIncome", "earnLessMoneyThisMonth", "true", "startExpenses");

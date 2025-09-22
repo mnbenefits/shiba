@@ -1,0 +1,262 @@
+package org.codeforamerica.shiba.output.documentfieldpreparers;
+
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getGroup;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PERSONAL_INFO_FIRST_NAME;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PERSONAL_INFO_LAST_NAME;
+import static org.codeforamerica.shiba.output.DocumentFieldType.ENUMERATED_SINGLE_VALUE;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import org.codeforamerica.shiba.application.Application;
+import org.codeforamerica.shiba.application.parsers.ApplicationDataParser;
+import org.codeforamerica.shiba.output.Document;
+import org.codeforamerica.shiba.output.DocumentField;
+import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.InputData;
+import org.codeforamerica.shiba.pages.data.Iteration;
+import org.codeforamerica.shiba.pages.data.PageData;
+import org.codeforamerica.shiba.pages.data.PagesData;
+import org.codeforamerica.shiba.pages.data.Subworkflow;
+import org.springframework.stereotype.Component;
+
+/**
+ * The OtherIncomePreparer class creates all of the DocumentField objects which map to the following PDF fields:
+ * <ul>
+ * <li>OTHER_INCOME_TYPE</li>
+ * <li>OTHER_INCOME_FULL_NAME</li>
+ * <li>OTHER_INCOME_AMOUNT</li>
+ * <li>OTHER_INCOME_FREQUENCY</li>
+ * <ul>
+ */
+@Component
+public class OtherIncomePreparer  implements DocumentFieldPreparer {
+	
+	ApplicationData applicationData = null;
+	PagesData pagesData = null;
+	List<UnearnedIncomeItem> unearnedIncomeItemsList = null; // list of all unearned income items for all persons
+	
+	ArrayList<Person> persons = null;  // person list generated from personalInfo and household subflow
+	HashMap<String, Integer> lookup = null; // person index lookup, used to index unearned income amount
+
+	@Override
+	public List<DocumentField> prepareDocumentFields(Application application, Document document, Recipient recipient) {
+		applicationData = application.getApplicationData();
+		pagesData = applicationData.getPagesData();
+		unearnedIncomeItemsList = new ArrayList<UnearnedIncomeItem>();
+		identifyAllPersons();
+		buildUnearnedIncomeItemsList();
+		return buildOtherIncomeDocumentFieldList();
+	}
+
+    /**
+     * Builds an ArrayList of UnearnedIncomeItem objects.
+     * Constructs the UnearnedIncomdeItem objects from the inputs collected on a variety of pages:
+     * <ul>
+     * <li>unearnedIncomeSources</li>
+     * <li>otherUnearnedIncomeSources</li>
+     * <li>xxxIncomeSource (e.g., "socialSecurityIncomeSource), unearned income is collected on individual pages when there is a household.</li>
+     * </ul>
+     * The pages that actually exist in the application is dependent on whether the application is for the applicant only or for the applicant and household.
+     * @return void
+     */
+	private void buildUnearnedIncomeItemsList() {
+		// Applicant only applications may have the unearndedIncomeSources page and otherUnearnedIncomeSources page
+		processUnearnedIncomeSourcesPage();
+		processOtherUnearnedIncomeSourcesPage();
+		
+		// Applicant with household applications - income identified on the unearnedIncome page
+		processUnearnedIncomeSource("socialSecurityIncomeSource", "monthlyIncomeSSorRSDI", "socialSecurityAmount", "Social Security");
+		processUnearnedIncomeSource("supplementalSecurityIncomeSource", "monthlyIncomeSSI", "supplementalSecurityIncomeAmount", "SSI");
+		processUnearnedIncomeSource("veteransBenefitsIncomeSource", "monthlyIncomeVeteransBenefits", "veteransBenefitsAmount", "Veterans Benefits");
+		processUnearnedIncomeSource("unemploymentIncomeSource", "monthlyIncomeUnemployment", "unemploymentAmount", "Unemployment");
+		processUnearnedIncomeSource("workersCompIncomeSource", "monthlyIncomeWorkersComp", "workersCompensationAmount", "Workers Compensation");
+		processUnearnedIncomeSource("retirementIncomeSource", "monthlyIncomeRetirement", "retirementAmount", "Retirement");
+		processUnearnedIncomeSource("childOrSpousalSupportIncomeSource", "monthlyIncomeChildOrSpousalSupport", "childOrSpousalSupportAmount", "Child or spousal support");
+		processUnearnedIncomeSource("tribalPaymentIncomeSource", "monthlyIncomeTribalPayment", "tribalPaymentsAmount", "Tribal payments");
+		
+		// Applicant with household applications - income identified on the otherUnearnedIncome page
+		processUnearnedIncomeSource("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", "insurancePaymentsAmount", "Insurance payments");
+		processUnearnedIncomeSource("trustMoneyIncomeSource", "monthlyIncomeTrustMoney", "trustMoneyAmount", "Trust money");
+		//processUnearnedIncomeSource("rentalIncomeSource", "monthlyIncomeRental", "rentalIncomeAmount", "Rental income"); //certain pops
+		processUnearnedIncomeSource("interestDividendsIncomeSource", "monthlyIncomeInterestDividends", "interestDividendsAmount", "Interest or dividends");
+		processUnearnedIncomeSource("healthcareReimbursementIncomeSource", "monthlyIncomeHealthcareReimbursement", "healthCareReimbursementAmount", "Healthcare reimbursement");
+		processUnearnedIncomeSource("contractForDeedIncomeSource", "monthlyIncomeContractForDeed", "contractForDeedAmount", "Contract for Deed");
+		processUnearnedIncomeSource("benefitsProgramsIncomeSource", "monthlyIncomeBenefitsPrograms", "benefitsAmount", "Benefits programs");
+		processUnearnedIncomeSource("otherPaymentsIncomeSource", "monthlyIncomeOtherPayments", "otherPaymentsAmount", "Other payments");
+		
+	}
+	
+	/**
+	 * Processes unearned income from inputs provided on the unearnedIncomeSources page
+	 */
+	private void processUnearnedIncomeSourcesPage() {
+		PageData pageData = pagesData.getPage("unearnedIncomeSources");
+		if (pageData != null) {
+			String applicantId = String.format("%s %s", persons.get(0).fullName, persons.get(0).id); // will alway be the applicant
+			processUnearnedIncomeSource(pageData.get("socialSecurityAmount"), applicantId, "Social Security");
+			processUnearnedIncomeSource(pageData.get("supplementalSecurityIncomeAmount"), applicantId, "SSI");
+			processUnearnedIncomeSource(pageData.get("veteransBenefitsAmount"), applicantId, "Veterans Benefits");
+			processUnearnedIncomeSource(pageData.get("unemploymentAmount"), applicantId, "Unemployment");
+			processUnearnedIncomeSource(pageData.get("workersCompensationAmount"), applicantId, "Workers Compensation");
+			processUnearnedIncomeSource(pageData.get("retirementAmount"), applicantId, "Retirement");
+			processUnearnedIncomeSource(pageData.get("childOrSpousalSupportAmount"), applicantId, "Child or spousal support");
+			processUnearnedIncomeSource(pageData.get("tribalPaymentsAmount"), applicantId, "Tribal payments");
+		}
+	}
+	
+	/**
+	 * Processes unearned income from inputs provided on the otherUnearnedIncomeSources page
+	 */
+	private void processOtherUnearnedIncomeSourcesPage() {
+		PageData pageData = pagesData.getPage("otherUnearnedIncomeSources");
+		if (pageData != null) {
+			String applicantId = String.format("%s %s", persons.get(0).fullName, persons.get(0).id); // will alway be the applicant
+			processUnearnedIncomeSource(pageData.get("insurancePaymentsAmount"), applicantId, "Insurance payments");
+			processUnearnedIncomeSource(pageData.get("trustMoneyAmount"), applicantId, "Trust money");
+			//processUnearnedIncomeSource(pageData.get("rentalIncomeAmount"), applicantId, "Rental income");
+			processUnearnedIncomeSource(pageData.get("interestDividendsAmount"), applicantId, "Interest or dividends");
+			processUnearnedIncomeSource(pageData.get("healthCareReimbursementAmount"), applicantId, "Healthcare reimbursement");
+			processUnearnedIncomeSource(pageData.get("contractForDeedAmount"), applicantId, "Contract for Deed");
+			processUnearnedIncomeSource(pageData.get("benefitsAmount"), applicantId, "Benefits programs");
+			processUnearnedIncomeSource(pageData.get("otherPaymentsAmount"), applicantId, "Other payments");
+		}
+	}
+
+	/**
+	 * Creates an UnearnedIncomeItem object from InputData that is found on the unearnedIncomeSources page or the otherUnearnedIncomeSources page.
+	 * @param inputData - an InputData object which holds unearned income data 
+	 * @param personId - a person ID e.g., "John Doe Applicant"
+	 * @param description - short description of the unearned income type e.g., "Social Security"
+	 */
+	private void processUnearnedIncomeSource(InputData inputData, String personId, String description) {
+		if (inputData.getValue().size() > 0) {
+			unearnedIncomeItemsList.add(new UnearnedIncomeItem(personId, description, inputData.getValue(0)));
+		}
+		
+	}
+
+	/**
+	 * Creates an UnearnedIncomeItem object from an "xxxIncomeSource page.
+	 * @param pageName - the specific xxxIncomeSource page name e.g., "socialSecurityIncomeSource"
+	 * @param personsIdKey - the specific key on the page for the persons input e.g., "monthlyIncomeSSorRSDI"
+	 * @param amountsKey - the specific key on the page for the amounts input e.g., "socialSecurityAmount"
+	 * @param description - the short description of the unearned income type e.g., "Social Security"
+	 * <br/>
+	 * JSON example for a socialSecurityIncomeSource page:<br/>
+	 * "socialSecurityIncomeSource" : {<br/>
+     *   "socialSecurityAmount" : {<br/>
+     *     "value" : [ "", "", "206" ]<br/>
+     *   },<br/>
+     *   "monthlyIncomeSSorRSDI" : {<br/>
+     *     "value" : [ "Colleen Walace 34df46a7-43ec-45c6-8738-c605178ec3a9" ]<br/>
+     *   }<br/>
+     * },<br/>
+	 */
+	private void processUnearnedIncomeSource(String pageName, String personsIdKey, String amountsKey, String description) {
+		PageData pageData = pagesData.getPage(pageName);
+		if (pageData != null) {
+			List<String> personIds = pageData.get(personsIdKey).getValue();
+			List<String> amounts = pageData.get(amountsKey).getValue();
+			for (int i=0; i<personIds.size(); i++) {
+				String personId = personIds.get(i);
+				int personIndex = lookup.get(personId);
+				String personIncomeAmount = amounts.get(personIndex);
+				unearnedIncomeItemsList.add(new UnearnedIncomeItem(personId, description, personIncomeAmount));
+			}
+		}
+	}
+	
+	/**
+	 * Generates an List of DocumentField objects from the UnearnedIncomeItems collected.
+	 * @return - List of DocumentField objects
+	 */
+	private List<DocumentField> buildOtherIncomeDocumentFieldList() {
+		List<DocumentField> otherIncomeDocumentFields = new ArrayList<DocumentField>();
+		for (int i=0; i<unearnedIncomeItemsList.size(); i++) {
+			UnearnedIncomeItem unearnedIncomeItem = unearnedIncomeItemsList.get(i);
+			otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeType", unearnedIncomeItem.type, ENUMERATED_SINGLE_VALUE, i));
+			otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeFullName", unearnedIncomeItem.personFullName, ENUMERATED_SINGLE_VALUE, i));
+			otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeAmount", unearnedIncomeItem.amount, ENUMERATED_SINGLE_VALUE, i));
+			otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeFrequency", unearnedIncomeItem.frequency, ENUMERATED_SINGLE_VALUE, i));
+		}
+
+		return otherIncomeDocumentFields;
+	}
+    
+	/**
+	 * Generates the applicant id by concatenating applicant's  "<firstName> <lastName> Applicant" 
+	 * @return - the applicant ID
+	 */
+	private String composeApplicantName() {
+		String person1FirstName = getFirstValue(pagesData, PERSONAL_INFO_FIRST_NAME);
+		String person1LastName = getFirstValue(pagesData, PERSONAL_INFO_LAST_NAME);
+		return String.format("%s %s", person1FirstName, person1LastName);
+	}
+
+	/**
+	 * Create the Person list (applicant and all household members) and a corresponding "lookup" table
+	 */
+	private void identifyAllPersons() {
+		persons = new ArrayList<Person>();
+		lookup = new HashMap<String, Integer>();
+		String applicantName = composeApplicantName();
+		Person applicant = new Person(applicantName, "applicant", 0);
+		String key = String.format("%s %s", applicantName, "applicant");
+		lookup.put(key, 0);
+		persons.add(0, applicant);
+
+		Subworkflow subWorkflow = getGroup(applicationData, ApplicationDataParser.Group.HOUSEHOLD);
+		if (subWorkflow != null) {
+			for (int i = 0; i < subWorkflow.size(); i++) {
+				Iteration iteration = subWorkflow.get(i);
+				String id = iteration.getId().toString();
+				PagesData pagesData = iteration.getPagesData();
+				PageData pageData = pagesData.getPage("householdMemberInfo");
+				String fullName = String.format("%s %s", pageData.get("firstName").getValue(0),
+						pageData.get("lastName").getValue(0));
+				key = String.format("%s %s", fullName, id);
+				lookup.put(key, i + 1);
+				persons.add(new Person(fullName, id, i + 1));
+			}
+		}
+	}
+	
+
+	/**
+	 * This internal class is used to identify one person, the applicant or a household member.
+	 */
+	private class Person {
+		private String fullName = "";
+		private String id = "";
+
+		private Person(String fullName, String id, int personIndex) {
+			this.fullName = fullName;
+			this.id = id;
+		}
+	}
+
+	/**
+	 * This internal class is used to keep the details of one unearned income item (for a person).
+	 */
+	private class UnearnedIncomeItem {
+		private String personFullName = "";
+		private String type = "";
+		private String amount = "";
+		private String frequency = "Monthly";
+
+		/**
+		 * Constructor
+		 * @param personId - format is "<full-name> GUID" or, "<full-name> applicant" for the applicant 
+		 * @param type - the short description for the unearned income type
+		 * @param amount - the (monthly) amount of the unearned income
+		 */
+		private UnearnedIncomeItem(String personId, String type, String amount) {
+			this.personFullName = personId.substring(0, personId.lastIndexOf(" ")).trim();
+			this.type = type;
+			this.amount = amount;
+		}
+	}
+}

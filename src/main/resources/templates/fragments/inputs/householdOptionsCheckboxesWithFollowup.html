@@ -13,7 +13,7 @@
                     hasHelpMessage=${input.helpMessageKey != null},
                     yourFullName=${input.options.datasources.get('personalInfo').get('firstName').value[0] + ' ' + input.options.datasources.get('personalInfo').get('lastName').value[0]},
                     needsAriaLabel=${input.needsAriaLabel()},
-                    youIsChecked=${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, yourFullName)},
+                    youIsChecked=${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, yourFullName + ' applicant')},
                     noPersonsChecked=${#arrays.isEmpty(sortedHouseholdMembers)}
                     ">
 	<div class="form-group" th:classappend="${hasError} ? 'form-group--error' : ''">
@@ -44,7 +44,7 @@
 			                            aria-labelledby=${needsAriaLabel ? youFollowUp.name+'-label' : ''},
 			                            aria-invalid=${hasError}" th:id="|${youFollowUp.name}|" th:name="${inputFollowupsName}"
 									th:value="${(!inputFollowupData.value.isEmpty()) ? inputFollowupData.value[0] : ''}">
-									<div class="text-input-group__postfix" style="width:35%; background-color:#FFFFFF" 
+									<div class="text-input-group__postfix" style="white-space: nowrap; background-color:#FFFFFF" 
 									 th:if="${input.followUps[0].inputPostfix != null}" th:text="#{${input.followUps[0].inputPostfix}}"></div>
 							</div>
 						</div>
@@ -63,7 +63,7 @@
 						<label th:for="|${formInputName}${iterationStat.index}|" class="checkbox display-flex">
 							<input type="checkbox" th:id="|${formInputName}${iterationStat.index}|"
 								th:value="${fullName} + ' ' + ${iteration.id}" th:name="${formInputName}"
-								th:checked="${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, fullName)}"
+								th:checked="${T(org.codeforamerica.shiba.pages.PageUtils).listOfNamesContainsName(sortedHouseholdMembers, fullName + ' ' + iteration.id)}"
 								th:attrappend="data-follow-up=|#${input.name}${iterationStat.index}-follow-up|">
 							<span th:text="${fullName}"></span>
 						</label>
@@ -86,7 +86,7 @@
                                         aria-invalid=${hasError}" th:id="|${followUp.name}${iterationStat.index}|"
 										th:name="${inputFollowupsName}"
 										th:value="${(iterationStat.count < inputFollowupData.value.size() && !inputFollowupData.value[iterationStat.count].isEmpty() ) ?inputFollowupData.value[iterationStat.count]:''}">
-										<div class="text-input-group__postfix" style="width:35%;background-color: #FFFFFF" 
+										<div class="text-input-group__postfix" style="white-space: nowrap;background-color: #FFFFFF" 
 											th:if="${input.followUps[0].inputPostfix != null}" th:text="#{${input.followUps[0].inputPostfix}}"></div>
 								</div>
 							</th:block>

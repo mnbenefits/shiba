@@ -20,6 +20,7 @@ public class DocumentListParser {
       documents.add(CCAP);
     }
     if (applicationData.isCAFApplication()) {
+    	//TODO emj use feature flag here to determine if old or new CAF will be used
       documents.add(CAF);
     }
     if (applicationData.isCertainPopsApplication()) {
