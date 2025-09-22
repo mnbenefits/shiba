@@ -567,7 +567,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
 		assertCcapFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
 		assertCcapFieldEquals("APPLICANT_MAILING_STATE", "MN");
-		assertCcapFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street 1b");
+		assertCcapFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street, 1b");
 		assertCcapFieldEquals("APPLICANT_HOME_CITY", "OutOfState City");
 		assertCcapFieldEquals("APPLICANT_HOME_STATE", "MN");
 		assertCcapFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
@@ -585,7 +585,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_SEX", "FEMALE");
 		assertCcapFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
 		assertCcapFieldEquals("APPLICANT_EMAIL", "some@example.com");
-		assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street 1b");
+		assertCcapFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street, 1b");
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME_0", "");
 		assertCcapFieldEquals("ADULT_REQUESTING_CHILDCARE_GOING_TO_SCHOOL_FULL_NAME_0", "");
 		assertCcapFieldEquals("STUDENT_FULL_NAME_0", householdMemberFullName);

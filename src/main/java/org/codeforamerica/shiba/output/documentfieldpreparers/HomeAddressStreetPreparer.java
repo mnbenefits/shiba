@@ -94,7 +94,7 @@ public class HomeAddressStreetPreparer implements DocumentFieldPreparer {
 			if (apartment.matches("\\d+")) {
 				streetWithApt = street + " #" + apartment;
 			} else {
-				streetWithApt = street + " " + apartment;
+				streetWithApt = street + ", " + apartment;
 			}
 		}
  
