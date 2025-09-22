@@ -267,7 +267,7 @@ public class MailingAddressStreetPreparer implements DocumentFieldPreparer {
 		    if (myApartment.matches("\\d+")) {
 		      streetWithApt = myStreet + " #" + myApartment;
 		    } else {
-		      streetWithApt = myStreet + " " + myApartment;
+		      streetWithApt = myStreet + ", " + myApartment;
 		    }
 		  }
 
