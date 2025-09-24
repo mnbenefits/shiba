@@ -94,7 +94,7 @@ dependencies {
            "org.glassfish.jaxb:jaxb-jxc"
     )
    
-    implementation("com.sun.xml.bind:jaxb-impl:4.0.5")
+    implementation("com.sun.xml.bind:jaxb-impl:4.0.6")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.4")
     implementation("jakarta.activation:jakarta.activation-api:2.1.4")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.4")
