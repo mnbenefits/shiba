@@ -164,9 +164,11 @@ conditionDefinitions:
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
+        name: applicantChooseCCAP
         input: programs
         value: CCAP
       - pageName: householdMemberInfo
+        name: hhMemberChooseCCAP
         input: programs
         value: CCAP
   - &applicantOnlyChoseCCAP?
@@ -1538,6 +1540,47 @@ pageConfigurations:
         datasources:
           - pageName: whoHasParentNotAtHome
             inputName: whoHasAParentNotLivingAtHome
+# TODO new child care mental health pages, change as needed
+  - &childCareMentalHealth
+    name: childCareMentalHealth
+    pageTitle: child-care-mental-health.title
+    headerKey: child-care-mental-health.do-any-caregivers-need-help
+    hasPrimaryButton: false
+    headerHelpMessageKey: child-care-mental-health.adults-and-caregivers
+    inputs:
+      - name: childCareMentalHealth
+        type: YES_NO
+  - &whoNeedsChildCareForMentalHealth
+    name: whoNeedsChildCareForMentalHealth
+    pageTitle: who-needs-child-care-mental-health.title
+    headerKey: who-needs-child-care-mental-health.who-needs-need-help
+    headerHelpMessageKey: who-needs-child-care-mental-health.check-all-that-apply
+    inputs:
+      - type: CUSTOM
+        name: whoNeedsChildCare
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+  - &mentalHealthDetails
+    name: mentalHealthDetails
+    pageTitle: mental-health-details.title
+    headerKey: mental-health-details.tell-us-how-much-time
+    headerHelpMessageKey: mental-health-details.you-can-request
+# TODO create custom input for hours per week
+    inputs:
+      - type: CUSTOM
+        name: realEstateAssetSource
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
   - &householdDeleteWarningPage
     name: householdDeleteWarningPage
     pageTitle: warning-page.delete-household-member-warning
@@ -5717,12 +5760,23 @@ workflow:
   whoHasParentNotAtHome:
     pageConfiguration: *whoHasParentNotAtHome
     nextPages:
+      - pageName: childCareMentalHealth
+        condition:
+          name: someoneChoseCCAP_AND_nobodyHasParentNotAtHome
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCCAP?
+            - pageName: whoHasParentNotAtHome
+              name: nobodyHasParentNotAtHome
+              input: whoHasAParentNotLivingAtHome
+              value: "NONE_OF_THE_ABOVE"
       - pageName: parentNotAtHomeNames
     datasources:
       - pageName: childrenInNeedOfCare
       - pageName: choosePrograms
       - groupName: household
         pageName: householdMemberInfo
+      - pageName: whoHasParentNotAtHome
     skipCondition:
       logicalOperator: OR
       conditions:
@@ -5734,6 +5788,7 @@ workflow:
     pageConfiguration: *parentNotAtHomeNames
     nextPages:
       - pageName: childCareChildSupport
+      - pageName: childCareMentalHealth
     datasources:
       - pageName: choosePrograms
       - groupName: household
@@ -5763,6 +5818,8 @@ workflow:
           input: whoHasAParentNotLivingAtHome
           value: NONE_OF_THE_ABOVE
     nextPages:
+      - pageName: childCareMentalHealth
+        condition: *someoneChoseCCAP?
       - pageName: housingSubsidy
         condition: *noOneChoseSNAP?
       - pageName: preparingMealsTogether
@@ -5772,6 +5829,35 @@ workflow:
       - pageName: householdMemberInfo
         groupName: household
       - pageName: childrenInNeedOfCare
+  childCareMentalHealth:
+    pageConfiguration: *childCareMentalHealth
+    nextPages:
+      - pageName: whoNeedsChildCareForMentalHealth
+      - pageName: housingSubsidy
+  whoNeedsChildCareForMentalHealth:
+    pageConfiguration: *whoNeedsChildCareForMentalHealth
+    skipCondition:
+      name: childCareMentalHealthSelectedNo
+      pageName: childCareMentalHealth
+      input: childCareMentalHealth
+      matcher: CONTAINS
+      value: "false"
+    nextPages:
+      - pageName: mentalHealthDetails
+    datasources:
+      - pageName: childCareMentalHealth
+  mentalHealthDetails:
+    pageConfiguration: *mentalHealthDetails
+    skipCondition:
+      name: childCareMentalHealthSelectedNo
+      pageName: childCareMentalHealth
+      input: childCareMentalHealth
+      matcher: CONTAINS
+      value: "false"
+    nextPages:
+      - pageName: housingSubsidy
+    datasources:
+      - pageName: childCareMentalHealth
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
