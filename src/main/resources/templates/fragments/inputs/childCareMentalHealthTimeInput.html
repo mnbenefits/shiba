@@ -1,4 +1,8 @@
-<!-- Custom input for displaying formatted data as well as storing additional hidden data which will be needed later for writing to the PDF -->
+<!-- Custom input for displaying formatted data as well as storing additional hidden data which will be needed later for writing to the PDF
+	Parameters:
+	  input - the input (as described in pages-config.yaml)
+	  data - the PageData for this page (useful when returning\navigating back to this page)
+ -->
 <th:block th:fragment="childCareMentalHealthTimeInput(input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
                     inputData=${data.get(input.name)},

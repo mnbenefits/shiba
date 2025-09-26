@@ -36,6 +36,7 @@ conditionDefinitions:
     conditions:
       - *onlyApplyingForOthers?
       - pageName: addHouseholdMembers
+        name: addHouseholdMembersTrue
         input: addHouseholdMembers
         value: "true"
   - &isHomeless?
@@ -1563,8 +1564,8 @@ pageConfigurations:
             - pageName: personalInfo
             - groupName: household
               pageName: householdMemberInfo
-  - &childCareMentalHealthTime
-    name: childCareMentalHealthTime
+  - &childCareMentalHealthTimes
+    name: childCareMentalHealthTimes
     pageTitle: child-care-mental-health-time.title
     headerKey: child-care-mental-health-time.tell-us-how-much-time
     headerHelpMessageKey: child-care-mental-health-time.you-can-request
@@ -1582,9 +1583,22 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+              pageName: householdMemberInfo
             - pageName: whoNeedsChildCareForMentalHealth
       - type: HIDDEN
         name: personIdMap
+  - &childCareMentalHealthTime
+    name: childCareMentalHealthTime
+    pageTitle: child-care-mental-health-time.title
+    headerKey: child-care-mental-health-time.tell-us-how-much-time
+    headerHelpMessageKey: child-care-mental-health-time.you-can-request
+    inputs:
+      - type: NUMBER
+        name: childCareHours
+        inputPostfix: general.input.postfix.hours-per-week
+ #       validators:
+ #         - validation: NOT_BLANK
+ #           errorMessageKey: general.validation.make-sure-to-enter-a-number-between-zero-and-twenty
   - &householdDeleteWarningPage
     name: householdDeleteWarningPage
     pageTitle: warning-page.delete-household-member-warning
@@ -5835,13 +5849,17 @@ workflow:
       - pageName: childrenInNeedOfCare
   childCareMentalHealth:
     pageConfiguration: *childCareMentalHealth
+# TODO determine if only applicant chooses CCAP or anybody in HH chooses CCAP
+#    skipCondition: *noOneChoseCCAP?
     skipCondition: *applicantDidNotChooseCCAP?
     nextPages:
+      - pageName: whoNeedsChildCareForMentalHealth
+        condition: *doesNotLiveAlone?
       - pageName: childCareMentalHealthTime
         condition: *livesAlone?
-      - pageName: whoNeedsChildCareForMentalHealth
       - pageName: housingSubsidy
     datasources:
+      - pageName: choosePrograms
       - pageName: addHouseholdMembers
   whoNeedsChildCareForMentalHealth:
     pageConfiguration: *whoNeedsChildCareForMentalHealth
@@ -5852,11 +5870,24 @@ workflow:
       matcher: CONTAINS
       value: "false"
     nextPages:
-      - pageName: childCareMentalHealthTime
+      - pageName: childCareMentalHealthTimes
     datasources:
       - pageName: childCareMentalHealth
   childCareMentalHealthTime:
     pageConfiguration: *childCareMentalHealthTime
+    skipCondition:
+      name: childCareMentalHealthSelectedNo
+      pageName: childCareMentalHealth
+      input: childCareMentalHealth
+      matcher: CONTAINS
+      value: "false"
+    nextPages:
+      - pageName: housingSubsidy
+    datasources:
+      - pageName: childCareMentalHealth
+      - pageName: personalInfo
+  childCareMentalHealthTimes:
+    pageConfiguration: *childCareMentalHealthTimes
     skipCondition:
       name: childCareMentalHealthSelectedNo
       pageName: childCareMentalHealth
