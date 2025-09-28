@@ -33,6 +33,24 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class OtherIncomePreparer  implements DocumentFieldPreparer {
+
+	// Define the unearned income "type" strings that we write to the PDFs
+	private static final String SOCIAL_SECURITY = "Social Security (RSDI/SSDI)";
+	private static final String SSI = "Supplemental Security Income (SSI)";
+	private static final String VETERANS_BENEFITS = "Veterans benefits";
+	private static final String UNEMPLOYMENT = "Unemployment";
+	private static final String WORKERS_COMPENSATION = "Workers' compensation";
+	private static final String RETIREMENT_INCOME = "Retirement or pension payments";
+	private static final String CHILD_OR_SPOUSAL_SUPPORT = "Child support or spousal support";
+	private static final String TRIBAL_PAYMENTS = "Tribal payments";
+	private static final String INSURANCE_PAYMENTS = "Insurance payments (settlements, short- or long-term disability, etc.)";
+	private static final String TRUST_MONEY = "Trusts";
+	private static final String INTEREST_OR_DIVIDENDS = "Interest or dividends";
+	private static final String HEALTHCARE_REIMBURSEMENT = "Health care reimbursement";
+	private static final String CONTRACT_FOR_DEED = "Contract for deed";
+	private static final String BENEFITS_PROGRAMS = "Public assistance (MFIP, DWP, GA, Tribal TANF)";
+	private static final String OTHER_PAYMENTS = "Other (lottery or gambling winnings, inheritance, capital gains, etc.)";
+
 	
 	ApplicationData applicationData = null;
 	PagesData pagesData = null;
@@ -68,24 +86,23 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 		processOtherUnearnedIncomeSourcesPage();
 		
 		// Applicant with household applications - income identified on the unearnedIncome page
-		processUnearnedIncomeSource("socialSecurityIncomeSource", "monthlyIncomeSSorRSDI", "socialSecurityAmount", "Social Security");
-		processUnearnedIncomeSource("supplementalSecurityIncomeSource", "monthlyIncomeSSI", "supplementalSecurityIncomeAmount", "SSI");
-		processUnearnedIncomeSource("veteransBenefitsIncomeSource", "monthlyIncomeVeteransBenefits", "veteransBenefitsAmount", "Veterans Benefits");
-		processUnearnedIncomeSource("unemploymentIncomeSource", "monthlyIncomeUnemployment", "unemploymentAmount", "Unemployment");
-		processUnearnedIncomeSource("workersCompIncomeSource", "monthlyIncomeWorkersComp", "workersCompensationAmount", "Workers Compensation");
-		processUnearnedIncomeSource("retirementIncomeSource", "monthlyIncomeRetirement", "retirementAmount", "Retirement");
-		processUnearnedIncomeSource("childOrSpousalSupportIncomeSource", "monthlyIncomeChildOrSpousalSupport", "childOrSpousalSupportAmount", "Child or spousal support");
-		processUnearnedIncomeSource("tribalPaymentIncomeSource", "monthlyIncomeTribalPayment", "tribalPaymentsAmount", "Tribal payments");
+		processUnearnedIncomeSource("socialSecurityIncomeSource", "monthlyIncomeSSorRSDI", "socialSecurityAmount", SOCIAL_SECURITY);
+		processUnearnedIncomeSource("supplementalSecurityIncomeSource", "monthlyIncomeSSI", "supplementalSecurityIncomeAmount", SSI);
+		processUnearnedIncomeSource("veteransBenefitsIncomeSource", "monthlyIncomeVeteransBenefits", "veteransBenefitsAmount", VETERANS_BENEFITS);
+		processUnearnedIncomeSource("unemploymentIncomeSource", "monthlyIncomeUnemployment", "unemploymentAmount", UNEMPLOYMENT);
+		processUnearnedIncomeSource("workersCompIncomeSource", "monthlyIncomeWorkersComp", "workersCompensationAmount", WORKERS_COMPENSATION);
+		processUnearnedIncomeSource("retirementIncomeSource", "monthlyIncomeRetirement", "retirementAmount", RETIREMENT_INCOME);
+		processUnearnedIncomeSource("childOrSpousalSupportIncomeSource", "monthlyIncomeChildOrSpousalSupport", "childOrSpousalSupportAmount", CHILD_OR_SPOUSAL_SUPPORT);
+		processUnearnedIncomeSource("tribalPaymentIncomeSource", "monthlyIncomeTribalPayment", "tribalPaymentsAmount", TRIBAL_PAYMENTS);
 		
 		// Applicant with household applications - income identified on the otherUnearnedIncome page
-		processUnearnedIncomeSource("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", "insurancePaymentsAmount", "Insurance payments");
-		processUnearnedIncomeSource("trustMoneyIncomeSource", "monthlyIncomeTrustMoney", "trustMoneyAmount", "Trust money");
-		//processUnearnedIncomeSource("rentalIncomeSource", "monthlyIncomeRental", "rentalIncomeAmount", "Rental income"); //certain pops
-		processUnearnedIncomeSource("interestDividendsIncomeSource", "monthlyIncomeInterestDividends", "interestDividendsAmount", "Interest or dividends");
-		processUnearnedIncomeSource("healthcareReimbursementIncomeSource", "monthlyIncomeHealthcareReimbursement", "healthCareReimbursementAmount", "Healthcare reimbursement");
-		processUnearnedIncomeSource("contractForDeedIncomeSource", "monthlyIncomeContractForDeed", "contractForDeedAmount", "Contract for Deed");
-		processUnearnedIncomeSource("benefitsProgramsIncomeSource", "monthlyIncomeBenefitsPrograms", "benefitsAmount", "Benefits programs");
-		processUnearnedIncomeSource("otherPaymentsIncomeSource", "monthlyIncomeOtherPayments", "otherPaymentsAmount", "Other payments");
+		processUnearnedIncomeSource("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", "insurancePaymentsAmount", INSURANCE_PAYMENTS);
+		processUnearnedIncomeSource("trustMoneyIncomeSource", "monthlyIncomeTrustMoney", "trustMoneyAmount", TRUST_MONEY);
+		processUnearnedIncomeSource("interestDividendsIncomeSource", "monthlyIncomeInterestDividends", "interestDividendsAmount", INTEREST_OR_DIVIDENDS);
+		processUnearnedIncomeSource("healthcareReimbursementIncomeSource", "monthlyIncomeHealthcareReimbursement", "healthCareReimbursementAmount", HEALTHCARE_REIMBURSEMENT);
+		processUnearnedIncomeSource("contractForDeedIncomeSource", "monthlyIncomeContractForDeed", "contractForDeedAmount", CONTRACT_FOR_DEED);
+		processUnearnedIncomeSource("benefitsProgramsIncomeSource", "monthlyIncomeBenefitsPrograms", "benefitsAmount", BENEFITS_PROGRAMS);
+		processUnearnedIncomeSource("otherPaymentsIncomeSource", "monthlyIncomeOtherPayments", "otherPaymentsAmount", OTHER_PAYMENTS);
 		
 	}
 	
@@ -95,15 +112,15 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 	private void processUnearnedIncomeSourcesPage() {
 		PageData pageData = pagesData.getPage("unearnedIncomeSources");
 		if (pageData != null) {
-			String applicantId = String.format("%s %s", persons.get(0).fullName, persons.get(0).id); // will alway be the applicant
-			processUnearnedIncomeSource(pageData.get("socialSecurityAmount"), applicantId, "Social Security");
-			processUnearnedIncomeSource(pageData.get("supplementalSecurityIncomeAmount"), applicantId, "SSI");
-			processUnearnedIncomeSource(pageData.get("veteransBenefitsAmount"), applicantId, "Veterans Benefits");
-			processUnearnedIncomeSource(pageData.get("unemploymentAmount"), applicantId, "Unemployment");
-			processUnearnedIncomeSource(pageData.get("workersCompensationAmount"), applicantId, "Workers Compensation");
-			processUnearnedIncomeSource(pageData.get("retirementAmount"), applicantId, "Retirement");
-			processUnearnedIncomeSource(pageData.get("childOrSpousalSupportAmount"), applicantId, "Child or spousal support");
-			processUnearnedIncomeSource(pageData.get("tribalPaymentsAmount"), applicantId, "Tribal payments");
+			String applicantId = String.format("%s %s", persons.get(0).fullName, persons.get(0).id); // will always be the applicant
+			processUnearnedIncomeSource(pageData.get("socialSecurityAmount"), applicantId, SOCIAL_SECURITY);
+			processUnearnedIncomeSource(pageData.get("supplementalSecurityIncomeAmount"), applicantId, SSI);
+			processUnearnedIncomeSource(pageData.get("veteransBenefitsAmount"), applicantId, VETERANS_BENEFITS);
+			processUnearnedIncomeSource(pageData.get("unemploymentAmount"), applicantId, UNEMPLOYMENT);
+			processUnearnedIncomeSource(pageData.get("workersCompensationAmount"), applicantId, WORKERS_COMPENSATION);
+			processUnearnedIncomeSource(pageData.get("retirementAmount"), applicantId, RETIREMENT_INCOME);
+			processUnearnedIncomeSource(pageData.get("childOrSpousalSupportAmount"), applicantId, CHILD_OR_SPOUSAL_SUPPORT);
+			processUnearnedIncomeSource(pageData.get("tribalPaymentsAmount"), applicantId, TRIBAL_PAYMENTS);
 		}
 	}
 	
@@ -114,14 +131,13 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 		PageData pageData = pagesData.getPage("otherUnearnedIncomeSources");
 		if (pageData != null) {
 			String applicantId = String.format("%s %s", persons.get(0).fullName, persons.get(0).id); // will alway be the applicant
-			processUnearnedIncomeSource(pageData.get("insurancePaymentsAmount"), applicantId, "Insurance payments");
-			processUnearnedIncomeSource(pageData.get("trustMoneyAmount"), applicantId, "Trust money");
-			//processUnearnedIncomeSource(pageData.get("rentalIncomeAmount"), applicantId, "Rental income");
-			processUnearnedIncomeSource(pageData.get("interestDividendsAmount"), applicantId, "Interest or dividends");
-			processUnearnedIncomeSource(pageData.get("healthCareReimbursementAmount"), applicantId, "Healthcare reimbursement");
-			processUnearnedIncomeSource(pageData.get("contractForDeedAmount"), applicantId, "Contract for Deed");
-			processUnearnedIncomeSource(pageData.get("benefitsAmount"), applicantId, "Benefits programs");
-			processUnearnedIncomeSource(pageData.get("otherPaymentsAmount"), applicantId, "Other payments");
+			processUnearnedIncomeSource(pageData.get("insurancePaymentsAmount"), applicantId, INSURANCE_PAYMENTS);
+			processUnearnedIncomeSource(pageData.get("trustMoneyAmount"), applicantId, TRUST_MONEY);
+			processUnearnedIncomeSource(pageData.get("interestDividendsAmount"), applicantId, INTEREST_OR_DIVIDENDS);
+			processUnearnedIncomeSource(pageData.get("healthCareReimbursementAmount"), applicantId, HEALTHCARE_REIMBURSEMENT);
+			processUnearnedIncomeSource(pageData.get("contractForDeedAmount"), applicantId, CONTRACT_FOR_DEED);
+			processUnearnedIncomeSource(pageData.get("benefitsAmount"), applicantId, BENEFITS_PROGRAMS);
+			processUnearnedIncomeSource(pageData.get("otherPaymentsAmount"), applicantId, OTHER_PAYMENTS);
 		}
 	}
 
@@ -129,7 +145,7 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 	 * Creates an UnearnedIncomeItem object from InputData that is found on the unearnedIncomeSources page or the otherUnearnedIncomeSources page.
 	 * @param inputData - an InputData object which holds unearned income data 
 	 * @param personId - a person ID e.g., "John Doe Applicant"
-	 * @param description - short description of the unearned income type e.g., "Social Security"
+	 * @param description - short description of the unearned income type e.g., "Social Security (RSDI/SSDI)"
 	 */
 	private void processUnearnedIncomeSource(InputData inputData, String personId, String description) {
 		if (inputData.getValue().size() > 0) {
@@ -143,7 +159,7 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 	 * @param pageName - the specific xxxIncomeSource page name e.g., "socialSecurityIncomeSource"
 	 * @param personsIdKey - the specific key on the page for the persons input e.g., "monthlyIncomeSSorRSDI"
 	 * @param amountsKey - the specific key on the page for the amounts input e.g., "socialSecurityAmount"
-	 * @param description - the short description of the unearned income type e.g., "Social Security"
+	 * @param description - the short description of the unearned income type e.g., "Social Security (RSDI/SSDI)"
 	 * <br/>
 	 * JSON example for a socialSecurityIncomeSource page:<br/>
 	 * "socialSecurityIncomeSource" : {<br/>

@@ -258,7 +258,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Does anyone in your household get income from these other sources?
 		testPage.enter("otherUnearnedIncome",
-				"Other Minnesota Benefits Programs (Benefits like GA, MFIP, Tribal TANF or others)");
+				"Other Minnesota benefits programs (Benefits like GA, MFIP, Tribal TANF or others)");
 		testPage.enter("otherUnearnedIncome", "Insurance payments");
 		testPage.enter("otherUnearnedIncome", "Contract for deed");
 		testPage.enter("otherUnearnedIncome", "Money from a trust");
@@ -701,30 +701,30 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("APPLICANT_MAILING_STATE", "MN");
 		assertCafFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
 		assertCafFieldEquals("APPLICANT_MAILING_APT_NUMBER", "1b");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_0", "Social Security");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_0", "Social Security (RSDI/SSDI)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_0", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_0", "200.30");
 		assertCafFieldEquals("OTHER_INCOME_FREQUENCY_0", "Monthly");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_1", "Insurance payments");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_1", "Insurance payments (settlements, short- or long-term disability, etc.)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_1", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_1", "100.00");
 		assertCafFieldEquals("OTHER_INCOME_FREQUENCY_1", "Monthly");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_2", "Trust money");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_2", "Trusts");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_2", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_2", "100.00");
 		assertCafFieldEquals("OTHER_INCOME_TYPE_3", "Interest or dividends");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_3", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_3", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_4", "Healthcare reimbursement");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_4", "Health care reimbursement");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_4", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_4", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_5", "Contract for Deed");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_5", "Contract for deed");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_5", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_5", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_6", "Benefits programs");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_6", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_6", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_6", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Other payments");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Other (lottery or gambling winnings, inheritance, capital gains, etc.)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_7", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_7", "100.00");
 		assertCafFieldEquals("HOMEOWNERS_INSURANCE", "No");
