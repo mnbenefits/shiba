@@ -395,4 +395,95 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	        "state", List.of("MN")
 	    ));
 	  }
+  
+  //test case: CCAP Applicant only and No to the ChildCareMentalHealth
+  @Test
+  void verifyChildCareMentalHealthFlowApplicantOnlyAndNoTochildCareMentalHealth() throws Exception {
+	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
+    completeFlowFromLandingPageThroughReviewInfo("CCAP");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "addChildrenConfirmation");
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
+    postExpectingRedirect("introPersonalDetails", "childCareMentalHealth");
+    assertCorrectPageTitle("childCareMentalHealth", "Mental health needs & child care");
+    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false",
+            "housingSubsidy");
+    assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
+    
+  }
+  
+  //test case: CCAP with Household and No to the ChildCareMentalHealth
+  @Test
+  void verifyChildCareMentalHealthFlowWithHouseholdAndNoTochildCareMentalHealth() throws Exception {
+	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
+    completeFlowFromLandingPageThroughReviewInfo("CCAP");
+	postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
+	assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
+	fillOutHousemateInfo("CCAP");
+	finishAddingHouseholdMembers("childrenInNeedOfCare");
+	postExpectingRedirect("childrenInNeedOfCare", "whoNeedsChildCare", List.of("child name"),
+			"doYouHaveChildCareProvider");
+	postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
+
+	postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", List.of("NONE_OF_THE_ABOVE"),
+			"childCareMentalHealth");
+    assertCorrectPageTitle("childCareMentalHealth", "Mental health needs & child care");
+    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false",
+            "housingSubsidy");
+    assertCorrectPageTitle("housingSubsidy", "Housing subsidy");
+    
+  }
+  
+  //test case: CCAP Applicant only and Yes to the ChildCareMentalHealth
+  @Test
+  void verifyChildCareMentalHealthFlowApplicantOnlyAndYesTochildCareMentalHealth() throws Exception {
+	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
+    completeFlowFromLandingPageThroughReviewInfo("CCAP");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "addChildrenConfirmation");
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
+    postExpectingRedirect("introPersonalDetails", "childCareMentalHealth");
+    assertCorrectPageTitle("childCareMentalHealth", "Mental health needs & child care");
+    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "true",
+            "childCareMentalHealthTime");
+
+    assertCorrectPageTitle("childCareMentalHealthTime", "Time needed for mental health & child care");
+    postExpectingRedirect("childCareMentalHealthTime", "childCareHours", "8",
+            "housingSubsidy");
+    assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
+    
+  }
+  
+  //test case: CCAP Household and Yes to the ChildCareMentalHealth
+  @Test
+  void verifyChildCareMentalHealthFlowWithHouseholdAndYesTochildCareMentalHealth() throws Exception {
+	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
+    completeFlowFromLandingPageThroughReviewInfo("CCAP");
+	postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
+	assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
+	fillOutHousemateInfo("CCAP");
+	finishAddingHouseholdMembers("childrenInNeedOfCare");
+	postExpectingRedirect("childrenInNeedOfCare", "whoNeedsChildCare", List.of("child name"),
+			"doYouHaveChildCareProvider");
+	postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
+
+	postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", List.of("NONE_OF_THE_ABOVE"),
+			"childCareMentalHealth");
+    assertCorrectPageTitle("childCareMentalHealth", "Mental health needs & child care");
+    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "true",
+            "whoNeedsChildCareForMentalHealth");
+    assertCorrectPageTitle("whoNeedsChildCareForMentalHealth", "Who needs mental health time");
+    
+    String householdMemberId = getFirstHouseholdMemberId();
+    postExpectingRedirect("whoNeedsChildCareForMentalHealth",
+            "whoNeedsChildCareForMentalHealth",
+            List.of("householdMemberFirstName householdMemberLastName" + householdMemberId),
+            "childCareMentalHealthTimes"
+        );
+    assertCorrectPageTitle("childCareMentalHealthTime", "Time needed for mental health & child care");
+    postExpectingRedirect("childCareMentalHealthTime", "childCareHours", "8",
+            "housingSubsidy");
+    assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
+
+    
+  }
+  
 }
