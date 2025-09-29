@@ -32,7 +32,8 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 		      "abdu.esmael@state.mn.us",
 		      "shamim.babirye@state.mn.us",
 		      "alex.cole@state.mn.us",
-		      "yuva.gottimukala@state.mn.us"
+		      "yuva.gottimukala@state.mn.us",
+		      "jared.may@state.mn.us"
 		      
 		  );
 
