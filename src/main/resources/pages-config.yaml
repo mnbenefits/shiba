@@ -1550,6 +1550,9 @@ pageConfigurations:
     inputs:
       - name: childCareMentalHealth
         type: YES_NO
+        promptMessage:
+          promptMessageFragmentName: childCareMentalHealthPrompt
+    
   - &whoNeedsChildCareForMentalHealth
     name: whoNeedsChildCareForMentalHealth
     pageTitle: who-needs-child-care-mental-health.title
