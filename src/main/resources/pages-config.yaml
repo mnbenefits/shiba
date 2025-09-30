@@ -1544,7 +1544,11 @@ pageConfigurations:
   - &childCareMentalHealth
     name: childCareMentalHealth
     pageTitle: child-care-mental-health.title
-    headerKey: child-care-mental-health.do-any-caregivers-need-help
+    headerKey: 
+      defaultValue: child-care-mental-health.do-any-caregivers-need-help
+      conditionalValues:
+        - value: child-care-mental-health.do-you-need-help
+          condition: *livesAlone?
     hasPrimaryButton: false
     headerHelpMessageKey: child-care-mental-health.adults-and-caregivers
     inputs:
@@ -1552,7 +1556,6 @@ pageConfigurations:
         type: YES_NO
         promptMessage:
           promptMessageFragmentName: childCareMentalHealthPrompt
-    
   - &whoNeedsChildCareForMentalHealth
     name: whoNeedsChildCareForMentalHealth
     pageTitle: who-needs-child-care-mental-health.title
@@ -1560,8 +1563,11 @@ pageConfigurations:
     headerHelpMessageKey: who-needs-child-care-mental-health.check-all-that-apply
     inputs:
       - type: CUSTOM
-        name: whoNeedsChildCare
+        name: whoNeedsChildCareMentalHealth
         customInputFragment: householdOptionsCheckboxes
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
         options:
           datasources:
             - pageName: personalInfo
@@ -1570,18 +1576,19 @@ pageConfigurations:
   - &childCareMentalHealthTimes
     name: childCareMentalHealthTimes
     pageTitle: child-care-mental-health-time.title
-    headerKey: child-care-mental-health-time.tell-us-how-much-time
+    headerKey: 
+      defaultValue: child-care-mental-health-time.tell-us-how-much-time-is-needed
+      conditionalValues:
+        - value: child-care-mental-health-time.tell-us-how-much-time-you-need
+          condition: *livesAlone?
     headerHelpMessageKey: child-care-mental-health-time.you-can-request
     inputs:
       - type: CUSTOM
-        name: childCareHours
+        name: childCareMentalHealthHours
         inputPostfix: general.input.postfix.hours-per-week
-        validators:
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-to-select-a-person
         customInputFragment: childCareMentalHealthTimeInput
         promptMessage:
-          promptMessageKey: child-care-mental-health-time.weekly.amount
+          promptMessageKey: child-care-mental-health-time.weekly-amount
         options:
           datasources:
             - pageName: personalInfo
@@ -1590,7 +1597,7 @@ pageConfigurations:
               optional: "true"
             - pageName: whoNeedsChildCareForMentalHealth
       - type: HIDDEN
-        name: personIdMap
+        name: childCareMentalHealthPersonIdMap
   - &householdDeleteWarningPage
     name: householdDeleteWarningPage
     pageTitle: warning-page.delete-household-member-warning
@@ -5878,6 +5885,7 @@ workflow:
     datasources:
       - pageName: childCareMentalHealth
       - pageName: whoNeedsChildCareForMentalHealth
+      - pageName: addHouseholdMembers
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
