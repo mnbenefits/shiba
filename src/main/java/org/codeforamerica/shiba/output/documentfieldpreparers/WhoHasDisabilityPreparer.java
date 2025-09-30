@@ -28,7 +28,11 @@ public class WhoHasDisabilityPreparer implements DocumentFieldPreparer {
     if(getBooleanValue(application.getApplicationData().getPagesData(),HAS_DISABILITY) 
         && (whoHasDisabilityHouseholdMembers.get(0).isEmpty())) {
       whoHasDisabilityHouseholdMembers.clear();
-      whoHasDisabilityHouseholdMembers.add(getFullName(application));
+      String applicantFullName = getFullName(application);
+      // protect against a null "full name" - Defect 136465
+      if (applicantFullName != null) {
+    	  whoHasDisabilityHouseholdMembers.add(applicantFullName);
+      }
     }
 
     List<DocumentField> result = new ArrayList<>();
