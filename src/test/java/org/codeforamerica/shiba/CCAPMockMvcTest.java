@@ -1,12 +1,10 @@
 package org.codeforamerica.shiba;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.util.List;
 import java.util.Map;
 
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -49,8 +47,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
   
 	@Test
 	void verifyotherUnearnedIncomeFlow() throws Exception {
-
-		when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON);
 
 		// Initial add info for user
 		completeFlowFromLandingPageThroughReviewInfo("CCAP");
@@ -204,7 +200,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void verifyFlowWhenApplicantSelectedCCAPAndHouseholdMemberDidNot() throws Exception {
     // Applicant selected CCAP for themselves and did not choose any program (i.e., None) for the household member
-	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
@@ -228,7 +223,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 
   @Test
   void verifyChildCareProviderAndChildSupportFlow() throws Exception {
-	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
@@ -271,7 +265,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
   
   @Test
   void verifySchoolInformationFlow() throws Exception {
-	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
@@ -331,8 +324,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "whoNeedsChildCare",
         List.of("defaultFirstName defaultLastName applicant",
             "householdMemberFirstName householdMemberLastName" + householdMemberId),
-        "Who are the children that have a parent not living in the home?"
+        "Do you have a child care provider?"
     );
+    postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
     postExpectingNextPageTitle("whoHasParentNotAtHome",
         "whoHasAParentNotLivingAtHome",
         List.of("NONE_OF_THE_ABOVE"),

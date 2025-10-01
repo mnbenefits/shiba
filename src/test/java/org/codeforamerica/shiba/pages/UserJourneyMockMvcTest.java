@@ -393,7 +393,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  case "CCAP": {
 					  assertNavigationRedirectsToCorrectNextPage("householdList", "childrenInNeedOfCare");
 					  postExpectingRedirect("childrenInNeedOfCare", "whoNeedsChildCare", "childFirstName childLastName",
-							  "whoHasParentNotAtHome");
+							  "doYouHaveChildCareProvider");
+					  postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
 					  postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", "NONE_OF_THE_ABOVE",
 							  "housingSubsidy");
 					  break;
