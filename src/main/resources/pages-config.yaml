@@ -5873,6 +5873,7 @@ workflow:
   schoolGrade:
     pageConfiguration: *schoolGrade
     datasources:
+      - pageName: personalInfo
       - pageName: schoolDetails
       - pageName: choosePrograms
       - pageName: childrenInNeedOfCare
