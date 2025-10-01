@@ -5848,15 +5848,13 @@ workflow:
       - pageName: childrenInNeedOfCare
   childCareMentalHealth:
     pageConfiguration: *childCareMentalHealth
-# TODO determine if only applicant chooses CCAP or anybody in HH chooses CCAP
-#    skipCondition: *noOneChoseCCAP?
-    skipCondition: *applicantDidNotChooseCCAP?
+    skipCondition: *noOneChoseCCAP?
     nextPages:
       - pageName: whoNeedsChildCareForMentalHealth
         condition: *doesNotLiveAlone?
       - pageName: childCareMentalHealthTimes
         condition: *livesAlone?
-      - pageName: housingSubsidy
+      - pageName: preparingMealsTogether
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
@@ -5875,31 +5873,41 @@ workflow:
   childCareMentalHealthTimes:
     pageConfiguration: *childCareMentalHealthTimes
     skipCondition:
-      name: childCareMentalHealthSelectedNo
-      pageName: childCareMentalHealth
-      input: childCareMentalHealth
-      matcher: CONTAINS
-      value: "false"
+      logicalOperator: OR
+      conditions:
+        - *noOneChoseCCAP?
+        - name: childCareMentalHealthSelectedNo
+          pageName: childCareMentalHealth
+          input: childCareMentalHealth
+          matcher: CONTAINS
+          value: "false"
     nextPages:
-      - pageName: housingSubsidy
+      - pageName: preparingMealsTogether
     datasources:
       - pageName: childCareMentalHealth
       - pageName: whoNeedsChildCareForMentalHealth
       - pageName: addHouseholdMembers
+      - pageName: choosePrograms
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
       - pageName: childCareMentalHealth
+          condition: *someoneChoseCCAP?
       - pageName: housingSubsidy
   preparingMealsTogether:
     pageConfiguration: *preparingMealsTogether
-    skipCondition: *noOneChoseSNAP?
+    skipCondition: 
+      logicalOperator: OR
+      conditions:
+        - *noOneChoseSNAP?
+        - *livesAlone?
     nextPages:
       - pageName: housingSubsidy 
     datasources:
       - pageName: choosePrograms
       - groupName: household
-        pageName: householdMemberInfo
+      - pageName: householdMemberInfo
+      - pageName: addHouseholdMembers
   housingSubsidy:
     pageConfiguration: *housingSubsidy
     datasources:

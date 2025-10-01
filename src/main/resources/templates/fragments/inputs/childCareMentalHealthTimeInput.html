@@ -1,7 +1,7 @@
 <!-- Custom input for displaying formatted data as well as storing additional hidden data which will be needed later for writing to the PDF
 	Parameters:
-	  input - the input (as described in pages-config.yaml)
-	  data - the PageData for this page (useful when returning\navigating back to this page)
+	  input - the inputs as described in pages-config.yaml
+	  data - the PageData for this page (used when returning\navigating back to this page)
  -->
 <th:block th:fragment="childCareMentalHealthTimeInput(input, data)"
           th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
@@ -24,9 +24,8 @@
 		childCareHoursExists=${!childCareHoursData.value.isEmpty()},
 		childCareHours=${childCareHoursExists? data.get('childCareMentalHealthHours').value[0] : ''}">
 
-			<!--p  class="text--help spacing-below-15" th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}"></p -->
 			<div class="text-input-group" >
-			<input type="text"
+			<input type="number"
 			       class="text-input form-width--medium spacing-below-30"
 			       th:readonly="${input.readOnly}"
 			       th:id="childCareMentalHealthHours"
@@ -56,7 +55,7 @@
 		        </label>
 		        <p  class="text--help spacing-below-15" th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
 				<div class="text-input-group" >
-		        <input type="text"
+		        <input type="number"
 		               class="text-input form-width--medium spacing-below-30"
 		               th:readonly="${input.readOnly}"
 		               th:id="|childCareMentalHealthHours-${index}|"
