@@ -25,7 +25,7 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("EA");
     finishAddingHouseholdMembers("childrenInNeedOfCare");
-    postExpectingNextPageTitle("childrenInNeedOfCare", "Housing subsidy");
+    postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
   }
 
   @Test
@@ -50,7 +50,7 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("CCAP");
     finishAddingHouseholdMembers("childrenInNeedOfCare");
-    postExpectingNextPageTitle("childrenInNeedOfCare", "Housing subsidy");
+    postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
   }
 
   @Test
