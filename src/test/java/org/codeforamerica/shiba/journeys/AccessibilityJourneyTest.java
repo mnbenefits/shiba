@@ -336,8 +336,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
     testPage.enter("whoNeedsChildCare", "householdMemberFirstName householdMemberLastName");
-    //TODO this test seems to skip the doYouHaveChildCareProvider page
-    testPage.clickContinue("Who are the children that have a parent not living in the home?");
+
+    testPage.clickContinue("Do you have a child care provider?");
+    testPage.chooseYesOrNo( "hasChildCareProvider", NO.getDisplayValue(), "Who are the children that have a parent not living in the home?");
+    
     testPage.enter("whoHasAParentNotLivingAtHome",
         "None of the children have parents living outside the home");
     testPage.clickContinue("Preparing meals together");
