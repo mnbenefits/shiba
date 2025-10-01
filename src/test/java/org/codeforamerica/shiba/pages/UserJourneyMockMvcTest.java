@@ -39,7 +39,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
   void healthcareCoverageDoesNotDisplayOnSuccessPageWhenClientAlreadyHasHealthcare()
       throws Exception {
     var successPage = nonExpeditedFlowToSuccessPage(true, true, true, true);
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 	// We expect to see the WIC recommendation because the pregnancy question response was "YES"
 	when(wicRecommendationService.showWicMessage(any())).thenReturn(true);	  
     assertThat(successPage.getElementById("showRecommendationLink")).isNotNull();
@@ -54,7 +53,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void healthcareCoverageDisplaysOnRecommendationsPageWhenClientDoesNotHaveHealthcare() throws Exception {
     var successPage = nonExpeditedFlowToSuccessPage(false, false, false, false);
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 	// We do not expect to see the WIC recommendation because hasHousehold is false thus
 	// the pregnancy question response was "NO" and no children under 5.
 	when(wicRecommendationService.showWicMessage(any())).thenReturn(false);	  

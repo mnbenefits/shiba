@@ -46,7 +46,6 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
   
   @Test
   void healthcareRenewalFlow() {
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     navigateTo("healthcareRenewalUpload");
     assertThat(driver.getTitle()).isEqualTo("Health Care Renewal Document Upload");
     assertNotNull(testPage.findElementById("headerHealthcareRenewal"));

@@ -5996,6 +5996,7 @@ workflow:
   schoolGrade:
     pageConfiguration: *schoolGrade
     datasources:
+      - pageName: personalInfo
       - pageName: schoolDetails
       - pageName: choosePrograms
       - pageName: childrenInNeedOfCare
@@ -7748,7 +7749,6 @@ workflow:
                 - *doesNotHaveHealthcare?
                 - *applicantDidNotChooseCERTAINPOPS?
       - pageName: recommendations
-        flag: show-wic-recommendation
         condition:
           logicalOperator: OR
           conditions:
