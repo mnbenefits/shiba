@@ -5642,7 +5642,6 @@ workflow:
           pageName: childrenInNeedOfCare
           input: whoNeedsChildCare
           matcher: NOT_EMPTY
-        flag: child-care
       - pageName: whoHasParentNotAtHome
     datasources:
       - pageName: choosePrograms

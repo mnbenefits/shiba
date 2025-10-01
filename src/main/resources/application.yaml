@@ -127,7 +127,6 @@ feature-flag:
   certain-pops: on
   enhanced-next-steps: on
   second-signature: on
-  child-care: on
   show-wic-recommendation: on
   
 document-upload:

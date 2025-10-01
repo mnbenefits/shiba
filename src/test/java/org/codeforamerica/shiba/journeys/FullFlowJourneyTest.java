@@ -37,7 +37,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 				LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
 		when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 		when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
-		when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
 		when(featureFlagConfiguration.get("second-signature")).thenReturn(FeatureFlag.ON); 
 
 		// Assert intercom button is present on landing page

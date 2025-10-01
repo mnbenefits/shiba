@@ -919,7 +919,7 @@ public class AbstractShibaMockMvcTest {
       postExpectingNextPageTitle("childrenInNeedOfCare",
           "whoNeedsChildCare",
           "householdMemberFirstName householdMemberLastName" + getFirstHouseholdMemberId(),
-          "Who are the children that have a parent not living in the home?"
+          "Do you have a child care provider?"
       );
       postExpectingRedirect("whoHasParentNotAtHome",
           "whoHasAParentNotLivingAtHome",
