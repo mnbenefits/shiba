@@ -13,8 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
-import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.Iteration;
 import org.codeforamerica.shiba.pages.data.PageData;
@@ -29,20 +27,15 @@ public class WicRecommendationService {
 
 	public static final int CHILD_AGE_MAXIMUM = 5;
 	private final DateOfBirthEnrichment dateOfBirthEnrichment = new HouseholdMemberDateOfBirthEnrichment();
-	private FeatureFlagConfiguration featureFlagConfiguration;
 	private List<String> wicPilotCounties;
 	
 
-	public WicRecommendationService(FeatureFlagConfiguration featureFlagConfiguration,
-			@Value("${wic-pilot-counties:}") List<String> wicPilotCounties) {
-		this.featureFlagConfiguration = featureFlagConfiguration;
+	public WicRecommendationService(@Value("${wic-pilot-counties:}") List<String> wicPilotCounties) {
 		this.wicPilotCounties = wicPilotCounties;
 	}
 	
 	public boolean showWicMessage(ApplicationData applicationData) {
-        FeatureFlag showWicRecommendation = featureFlagConfiguration.get("show-wic-recommendation");
-		return showWicRecommendation.isOn() 
-				&& (hasPregnantHouseholdMember(applicationData) || hasHouseholdMemberUpToAge5(applicationData))
+		return  (hasPregnantHouseholdMember(applicationData) || hasHouseholdMemberUpToAge5(applicationData))
 				&& showWicForThisCounty(applicationData);
 	}
 

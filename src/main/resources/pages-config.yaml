@@ -7625,7 +7625,6 @@ workflow:
                 - *doesNotHaveHealthcare?
                 - *applicantDidNotChooseCERTAINPOPS?
       - pageName: recommendations
-        flag: show-wic-recommendation
         condition:
           logicalOperator: OR
           conditions:

@@ -31,7 +31,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   
   @Test
   void nonExpeditedFlow() {
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     // No permanent address for this test
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
@@ -137,7 +136,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   //Test if no language is entered for other, OTHER is printed to PDF.
   @Test
 	void nonExpeditedFlowOtherLanguageTestBlankEntry() {
-		when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 		// Landing page
 		testPage.clickButtonLink("Apply now", "Identify County");
 
@@ -305,7 +303,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   
   @Test
   void expeditedFlow() {
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
     // Where are you currently Living?
