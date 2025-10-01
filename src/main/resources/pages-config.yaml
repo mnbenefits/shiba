@@ -7443,7 +7443,6 @@ workflow:
     pageConfiguration: *signThisApplication
     nextPages:
       - pageName: secondSignatureNotification
-        flag: second-signature
         condition:
           logicalOperator: AND
           conditions:
