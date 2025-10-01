@@ -5891,7 +5891,7 @@ workflow:
     pageConfiguration: *introPersonalDetails
     nextPages:
       - pageName: childCareMentalHealth
-          condition: *someoneChoseCCAP?
+        condition: *someoneChoseCCAP?
       - pageName: housingSubsidy
   preparingMealsTogether:
     pageConfiguration: *preparingMealsTogether
