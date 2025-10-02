@@ -94,7 +94,7 @@ dependencies {
            "org.glassfish.jaxb:jaxb-jxc"
     )
    
-    implementation("com.sun.xml.bind:jaxb-impl:4.0.5")
+    implementation("com.sun.xml.bind:jaxb-impl:4.0.6")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api-parent:4.0.4")
     implementation("jakarta.activation:jakarta.activation-api:2.1.4")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.4")
@@ -104,11 +104,11 @@ dependencies {
     implementation("org.apache.chemistry.opencmis:chemistry-opencmis-client-impl:1.1.0")
     // end of jaxb WS libraries
     
-    implementation("org.apache.commons:commons-lang3:3.18.0")
+    implementation("org.apache.commons:commons-lang3:3.19.0")
     implementation("org.apache.commons:commons-text:1.14.0")
     implementation("org.apache.httpcomponents.core5:httpcore5:5.3.6")
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.5")
-    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.5")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.5.1")
+    implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.5.1")
     implementation("org.apache.pdfbox:pdfbox:3.0.5")
 
     implementation("org.springframework:spring-aspects")
@@ -132,8 +132,8 @@ dependencies {
     
      //logging -->
     implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("io.sentry:sentry-spring-boot-starter-jakarta:8.21.1")
-    implementation("io.sentry:sentry-logback:8.21.1")
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:8.23.0")
+    implementation("io.sentry:sentry-logback:8.23.0")
     implementation("net.logstash.logback:logstash-logback-encoder:8.1")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
@@ -142,12 +142,12 @@ dependencies {
     implementation("ch.qos.logback:logback-parent:1.5.18")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.18.0")
-    implementation("com.azure:azure-storage-blob:12.31.2")
+    implementation("com.azure:azure-storage-blob:12.31.3")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2-1")
     implementation("commons-validator:commons-validator:1.10.0")
-    implementation("org.flywaydb:flyway-core:11.13.1")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.13.1")
+    implementation("org.flywaydb:flyway-core:11.13.2")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.13.2")
     implementation("com.mixpanel:mixpanel-java:1.5.3")
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.10.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.10.0")
@@ -163,7 +163,7 @@ dependencies {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
         exclude group: "com.vaadin.external.google", module: "android-json"
     }
-    testImplementation("com.h2database:h2:2.3.232")
+    testImplementation("com.h2database:h2:2.4.240")
     testImplementation("org.awaitility:awaitility:4.3.0")
     testImplementation("com.github.tomakehurst:wiremock-standalone:3.0.1")
     testImplementation("org.mockito:mockito-inline:5.2.0")
