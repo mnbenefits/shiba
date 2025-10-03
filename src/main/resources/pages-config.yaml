@@ -166,12 +166,14 @@ conditionDefinitions:
     conditions:
       - pageName: choosePrograms
         name: applicantChooseCCAP
-        input: programs
         value: CCAP
+        input: programs
+        matcher: CONTAINS
       - pageName: householdMemberInfo
         name: hhMemberChooseCCAP
-        input: programs
         value: CCAP
+        input: programs
+        matcher: CONTAINS
   - &applicantOnlyChoseCCAP?
     pageName: choosePrograms
     name: applicantOnlyChoseCCAP
@@ -244,11 +246,16 @@ conditionDefinitions:
     name: noOneChoseCCAP
     logicalOperator: AND
     conditions:
-      - *applicantDidNotChooseCCAP?
-      - logicalOperator: OR
-        conditions:
-          - *householdMemberDidNotChooseCCAP?
-          - *livesAlone?
+      - pageName: choosePrograms
+        name: applicantDidNotChooseCCAP
+        input: programs
+        matcher: DOES_NOT_CONTAIN
+        value: CCAP
+      - pageName: householdMemberInfo
+        name: hhMemberDidNotChooseCCAP
+        input: programs
+        matcher: DOES_NOT_CONTAIN
+        value: CCAP
   - &noOneChoseSNAP?
     name: noOneChoseSNAP
     logicalOperator: AND
@@ -260,6 +267,26 @@ conditionDefinitions:
           - <<: *householdMemberDidNotChooseProgram?
             value: SNAP
           - *livesAlone?
+  - &someoneChoseSNAP?
+    name: someoneChoseSnap
+    logicalOperator: OR
+    conditions:
+      - pageName: choosePrograms
+        name: applicantChooseSNAP
+        input: programs
+        matcher: CONTAINS
+        value: SNAP
+      - pageName: householdMemberInfo
+        name: hhMemberChooseSNAP
+        input: programs
+        matcher: CONTAINS
+        value: SNAP
+  - &applyingForSelfOrChildren?
+    name: applyingForSelfOrChildren
+    logicalOperator: OR
+    conditions:
+      - *applicantChoseAtLeastOneProgram?
+      - *householdMemberChoseAtLeastOneProgram?
   - &noOneChoseCASH?
     name: noOneChoseCASH
     logicalOperator: AND
@@ -5850,13 +5877,47 @@ workflow:
     skipCondition: *noOneChoseCCAP?
     nextPages:
       - pageName: whoNeedsChildCareForMentalHealth
-        condition: *doesNotLiveAlone?
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: childCareMentalHealth
+              input: childCareMentalHealth
+              matcher: CONTAINS
+              value: "true"
+            - *doesNotLiveAlone?
       - pageName: childCareMentalHealthTimes
-        condition: *livesAlone?
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: childCareMentalHealth
+              input: childCareMentalHealth
+              matcher: CONTAINS
+              value: "true"
+            - *livesAlone?
       - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: childCareMentalHealth
+              input: childCareMentalHealth
+              matcher: CONTAINS
+              value: "false"
+            - *someoneChoseSNAP? 
+            - *doesNotLiveAlone?
+      - pageName: introPersonalDetails
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *applicantChoseCCAPProgram?
+            - *livesAlone?
+      - pageName: housingSubsidy
     datasources:
+      - pageName: childCareMentalHealth
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+
   whoNeedsChildCareForMentalHealth:
     pageConfiguration: *whoNeedsChildCareForMentalHealth
     skipCondition:
@@ -5882,16 +5943,22 @@ workflow:
           value: "false"
     nextPages:
       - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseSNAP?
+      - pageName: introPersonalDetails
     datasources:
       - pageName: childCareMentalHealth
       - pageName: whoNeedsChildCareForMentalHealth
       - pageName: addHouseholdMembers
       - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
-      - pageName: childCareMentalHealth
-        condition: *someoneChoseCCAP?
       - pageName: housingSubsidy
   preparingMealsTogether:
     pageConfiguration: *preparingMealsTogether
