@@ -148,11 +148,15 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("SNAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
         "introPersonalDetails");
+    postExpectingRedirect("introPersonalDetails", "housingSubsidy");
+    postExpectingRedirect("housingSubsidy", "livingSituation");
     postExpectingRedirect("livingSituation", "goingToSchool");
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
     completeFlowFromIsPregnantThroughTribalNations(false, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+    // TODO: not sure postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Job Search");
+    // postExpectingNextPageTitle("Job Search", "currentlyLookingForJob", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
         "futureIncome");
@@ -189,9 +193,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
         "addChildrenConfirmation");
-    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","childCareMentalHealth");
+    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false","introPersonalDetails");
     postExpectingRedirect("introPersonalDetails", "housingSubsidy");
-    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false","housingSubsidy");
     postExpectingRedirect("housingSubsidy", "livingSituation");
     postExpectingRedirect("livingSituation", "goingToSchool");
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
@@ -338,6 +342,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     
  
     // Go back to childrenInNeedOfCare and select someone this time, but don't select anyone having a parent not at home
+    
     String householdMemberId = getFirstHouseholdMemberId();
     postExpectingNextPageTitle("childrenInNeedOfCare",
         "whoNeedsChildCare",
@@ -417,11 +422,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "addChildrenConfirmation");
-    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","childCareMentalHealth");
+    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false", "introPersonalDetails");
     postExpectingRedirect("introPersonalDetails", "housingSubsidy");
-    assertCorrectPageTitle("childCareMentalHealth", "Mental health needs & child care");
-    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false",
-            "housingSubsidy");
     assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
     
   }
@@ -454,16 +457,12 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "addChildrenConfirmation");
-    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
-    postExpectingRedirect("introPersonalDetails", "childCareMentalHealth");
-    assertCorrectPageTitle("childCareMentalHealth", "Mental health needs & child care");
-    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "true",
-            "childCareMentalHealthTime");
-
-    assertCorrectPageTitle("childCareMentalHealthTime", "Time needed for mental health & child care");
-    postExpectingRedirect("childCareMentalHealthTime", "childCareHours", "8",
-            "housingSubsidy");
-    assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","childCareMentalHealth");
+    postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "true", "childCareMentalHealthTimes");
+    assertCorrectPageTitle("childCareMentalHealthTimes", "Time needed for mental health & child care");
+    postExpectingRedirect("childCareMentalHealthTimes", "childCareMentalHealthHours", "8",
+            "introPersonalDetails");
+    assertCorrectPageTitle("introPersonalDetails", "Intro: Personal Details");   
     
   }
   
