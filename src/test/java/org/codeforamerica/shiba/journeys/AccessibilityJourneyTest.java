@@ -341,6 +341,11 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     testPage.enter("whoHasAParentNotLivingAtHome",
         "None of the children have parents living outside the home");
+    testPage.clickContinue("Mental health needs & child care");
+	testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Who needs mental health time");
+	testPage.enter("whoNeedsChildCareMentalHealth", "defaultFirstName defaultLastName (you)");
+	testPage.clickContinue("Time needed for mental health & child care");
+	testPage.enter("childCareMentalHealthHours", "20");
     testPage.clickContinue("Preparing meals together");
     testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Housing subsidy");
     testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
