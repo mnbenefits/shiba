@@ -151,7 +151,7 @@ dependencies {
     implementation("com.mixpanel:mixpanel-java:1.5.3")
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.10.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.10.0")
-    implementation("net.coobird:thumbnailator:0.4.20")
+    implementation("net.coobird:thumbnailator:0.4.21")
     implementation("mobi.openddr.client:openddr-classifier-client:1.4.1")
     implementation("mobi.openddr:openddr-data:1.34")
     implementation("com.google.guava:guava:33.5.0-jre")
