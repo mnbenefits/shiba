@@ -924,7 +924,8 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("whoHasParentNotAtHome",
           "whoHasAParentNotLivingAtHome",
           "NONE_OF_THE_ABOVE",
-          "housingSubsidy");
+          "childCareMentalHealth");
+      postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false", "housingSubsidy");
 
       postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");

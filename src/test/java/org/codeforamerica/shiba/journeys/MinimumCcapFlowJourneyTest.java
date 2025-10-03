@@ -71,8 +71,12 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
     // Who are the children in need of child care
     // First, verify proper navigation when no children are selected
-    testPage.clickContinue("Housing subsidy");
+    testPage.clickContinue("Mental health needs & child care");
+    assertThat(testPage.getTitle()).contains("Mental health needs & child care");
+    testPage.chooseYesOrNo("childCareMentalHealth", NO.getDisplayValue(), "Housing subsidy");
+   
     assertThat(testPage.getTitle()).contains("Housing subsidy");
+    testPage.goBack();
     testPage.goBack();
     // Now pick the household member (i.e., child) from the childrenWhoNeedCare page.
     testPage.enter("whoNeedsChildCare", householdMemberFullName);
@@ -92,8 +96,10 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     
     //child support
     testPage.enter("whoReceivesChildSupportPayments", householdMemberFullName);
-    testPage.clickContinue("Housing subsidy");
-
+    testPage.clickContinue("Mental health needs & child care");
+    assertThat(testPage.getTitle()).contains("Mental health needs & child care");
+    testPage.chooseYesOrNo("childCareMentalHealth", NO.getDisplayValue(), "Housing subsidy");
+   
     // Do you receive housing subsidy
     testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
     

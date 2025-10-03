@@ -394,7 +394,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 							  "doYouHaveChildCareProvider");
 					  postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
 					  postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", "NONE_OF_THE_ABOVE",
-							  "housingSubsidy");
+							  "childCareMentalHealth");
 					  break;
 				  }
 				  case "SNAP": {
