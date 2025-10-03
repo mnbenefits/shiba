@@ -5652,7 +5652,7 @@ workflow:
     pageConfiguration: *addChildrenConfirmation
     nextPages:
       - pageName: startHousehold
-      - pageName: introPersonalDetails
+      - pageName: childCareMentalHealth
   startHousehold:
     pageConfiguration: *startHousehold
     nextPages:
