@@ -149,14 +149,11 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
         "introPersonalDetails");
     postExpectingRedirect("introPersonalDetails", "housingSubsidy");
-    postExpectingRedirect("housingSubsidy", "livingSituation");
-    postExpectingRedirect("livingSituation", "goingToSchool");
+    postExpectingRedirect("housingSubsidy", "goingToSchool");
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
     completeFlowFromIsPregnantThroughTribalNations(false, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-    // TODO: not sure postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
-    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Job Search");
-    // postExpectingNextPageTitle("Job Search", "currentlyLookingForJob", "false", "Income Up Next");
+    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
         "futureIncome");
@@ -330,32 +327,31 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     selectPrograms("NONE");
     assertPageHasWarningMessage("choosePrograms",
         "You will be asked to share some information about yourself even though you're only applying for others.");
- 
+
     completeFlowFromLandingPageThroughReviewInfo("NONE");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
     fillOutHousemateInfo("CCAP");
- 
-    // Don't select any children in need of care,
+
+    // Don't select any children in need of care, should get redirected to preparing meals together
     assertCorrectPageTitle("childrenInNeedOfCare", "Who are the children in need of care?");
     postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
-    
- 
+
     // Go back to childrenInNeedOfCare and select someone this time, but don't select anyone having a parent not at home
-    
     String householdMemberId = getFirstHouseholdMemberId();
     postExpectingNextPageTitle("childrenInNeedOfCare",
         "whoNeedsChildCare",
         List.of("defaultFirstName defaultLastName applicant",
             "householdMemberFirstName householdMemberLastName" + householdMemberId),
-        "Who are the children that have a parent not living in the home?"
+        "Do you have a child care provider?"
     );
+    postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
     postExpectingNextPageTitle("whoHasParentNotAtHome",
         "whoHasAParentNotLivingAtHome",
         List.of("NONE_OF_THE_ABOVE"),
         "Mental health needs & child care");
- 
- 
+
+
     // Go back and select someone having a parent not at home
     postExpectingNextPageTitle("whoHasParentNotAtHome",
         "whoHasAParentNotLivingAtHome",
@@ -369,9 +365,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("childCareChildSupport",
             Map.of("whoReceivesChildSupportPayments", List.of("defaultFirstName defaultLastName applicant")),
             "Mental health needs & child care");
-    
-    
     postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false", "housingSubsidy");
+
     postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "true", "livingSituation");
     postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
@@ -488,12 +483,12 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     
     String householdMemberId = getFirstHouseholdMemberId();
     postExpectingRedirect("whoNeedsChildCareForMentalHealth",
-            "whoNeedsChildCareForMentalHealth",
-            List.of("householdMemberFirstName householdMemberLastName" + householdMemberId),
+            "whoNeedsChildCareMentalHealth",
+            List.of("householdMemberFirstName householdMemberLastName " + householdMemberId),
             "childCareMentalHealthTimes"
         );
-    assertCorrectPageTitle("childCareMentalHealthTime", "Time needed for mental health & child care");
-    postExpectingRedirect("childCareMentalHealthTime", "childCareHours", "8",
+    assertCorrectPageTitle("childCareMentalHealthTimes", "Time needed for mental health & child care");
+    postExpectingRedirect("childCareMentalHealthTimes", "childCareMentalHealthHours", "8",
             "housingSubsidy");
     assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
 

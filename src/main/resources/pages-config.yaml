@@ -166,14 +166,11 @@ conditionDefinitions:
     conditions:
       - pageName: choosePrograms
         name: applicantChooseCCAP
-        value: CCAP
         input: programs
-        matcher: CONTAINS
+        value: CCAP
       - pageName: householdMemberInfo
-        name: hhMemberChooseCCAP
-        value: CCAP
         input: programs
-        matcher: CONTAINS
+        value: CCAP
   - &applicantOnlyChoseCCAP?
     pageName: choosePrograms
     name: applicantOnlyChoseCCAP
@@ -246,16 +243,11 @@ conditionDefinitions:
     name: noOneChoseCCAP
     logicalOperator: AND
     conditions:
-      - pageName: choosePrograms
-        name: applicantDidNotChooseCCAP
-        input: programs
-        matcher: DOES_NOT_CONTAIN
-        value: CCAP
-      - pageName: householdMemberInfo
-        name: hhMemberDidNotChooseCCAP
-        input: programs
-        matcher: DOES_NOT_CONTAIN
-        value: CCAP
+      - *applicantDidNotChooseCCAP?
+      - logicalOperator: OR
+        conditions:
+          - *householdMemberDidNotChooseCCAP?
+          - *livesAlone?
   - &noOneChoseSNAP?
     name: noOneChoseSNAP
     logicalOperator: AND
@@ -281,12 +273,6 @@ conditionDefinitions:
         input: programs
         matcher: CONTAINS
         value: SNAP
-  - &applyingForSelfOrChildren?
-    name: applyingForSelfOrChildren
-    logicalOperator: OR
-    conditions:
-      - *applicantChoseAtLeastOneProgram?
-      - *householdMemberChoseAtLeastOneProgram?
   - &noOneChoseCASH?
     name: noOneChoseCASH
     logicalOperator: AND
@@ -5803,23 +5789,12 @@ workflow:
   whoHasParentNotAtHome:
     pageConfiguration: *whoHasParentNotAtHome
     nextPages:
-      - pageName: childCareMentalHealth
-        condition:
-          name: someoneChoseCCAP_AND_nobodyHasParentNotAtHome
-          logicalOperator: AND
-          conditions:
-            - *someoneChoseCCAP?
-            - pageName: whoHasParentNotAtHome
-              name: nobodyHasParentNotAtHome
-              input: whoHasAParentNotLivingAtHome
-              value: "NONE_OF_THE_ABOVE"
       - pageName: parentNotAtHomeNames
     datasources:
       - pageName: childrenInNeedOfCare
       - pageName: choosePrograms
       - groupName: household
         pageName: householdMemberInfo
-      - pageName: whoHasParentNotAtHome
     skipCondition:
       logicalOperator: OR
       conditions:
@@ -5831,7 +5806,6 @@ workflow:
     pageConfiguration: *parentNotAtHomeNames
     nextPages:
       - pageName: childCareChildSupport
-      - pageName: childCareMentalHealth
     datasources:
       - pageName: choosePrograms
       - groupName: household
@@ -5861,16 +5835,18 @@ workflow:
           input: whoHasAParentNotLivingAtHome
           value: NONE_OF_THE_ABOVE
     nextPages:
-      - pageName: childCareMentalHealth
-        condition: *someoneChoseCCAP?
       - pageName: housingSubsidy
-        condition: *noOneChoseSNAP?
-      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *noOneChoseSNAP?
+            - *noOneChoseCCAP?
+      - pageName: childCareMentalHealth
     datasources:
       - pageName: choosePrograms
       - pageName: whoHasParentNotAtHome
-      - pageName: householdMemberInfo
-        groupName: household
+      - groupName: household
+        pageName: householdMemberInfo
       - pageName: childrenInNeedOfCare
   childCareMentalHealth:
     pageConfiguration: *childCareMentalHealth
@@ -5898,10 +5874,6 @@ workflow:
         condition:
           logicalOperator: AND
           conditions:
-            - pageName: childCareMentalHealth
-              input: childCareMentalHealth
-              matcher: CONTAINS
-              value: "false"
             - *someoneChoseSNAP? 
             - *doesNotLiveAlone?
       - pageName: introPersonalDetails
@@ -5915,9 +5887,8 @@ workflow:
       - pageName: childCareMentalHealth
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
-      - pageName: householdMemberInfo
-        groupName: household
-
+      - groupName: household
+        pageName: householdMemberInfo
   whoNeedsChildCareForMentalHealth:
     pageConfiguration: *whoNeedsChildCareForMentalHealth
     skipCondition:
@@ -5949,13 +5920,15 @@ workflow:
             - *doesNotLiveAlone?
             - *someoneChoseSNAP?
       - pageName: introPersonalDetails
+        condition: *livesAlone?
+      - pageName: housingSubsidy
     datasources:
       - pageName: childCareMentalHealth
       - pageName: whoNeedsChildCareForMentalHealth
       - pageName: addHouseholdMembers
       - pageName: choosePrograms
-      - pageName: householdMemberInfo
-        groupName: household
+      - groupName: household
+        pageName: householdMemberInfo
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
@@ -5972,8 +5945,7 @@ workflow:
     datasources:
       - pageName: choosePrograms
       - groupName: household
-      - pageName: householdMemberInfo
-      - pageName: addHouseholdMembers
+        pageName: householdMemberInfo
   housingSubsidy:
     pageConfiguration: *housingSubsidy
     datasources:

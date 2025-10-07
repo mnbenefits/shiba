@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.FormPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -352,7 +351,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  case "CCAP": {
 					  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "addChildrenConfirmation");
 					  assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation", "false",
-							  "introPersonalDetails");
+							  "childCareMentalHealth");
 					  break;
 				  }
 				  default: {
