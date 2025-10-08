@@ -3985,6 +3985,8 @@ pageConfigurations:
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:
+            - value: EVERY_DAY
+              messageKey: pay-period.every-day 
             - value: EVERY_WEEK
               messageKey: pay-period.every-week
             - value: EVERY_TWO_WEEKS
@@ -4001,6 +4003,11 @@ pageConfigurations:
     pageTitle: income-per-pay-period.title
     headerKey:
       conditionalValues:
+        - value: income-per-pay-period.every-day
+          condition:
+            pageName: payPeriod
+            input: payPeriod
+            value: EVERY_DAY
         - value: income-per-pay-period.every-week
           condition:
             pageName: payPeriod
