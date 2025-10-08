@@ -4,7 +4,6 @@ import static org.codeforamerica.shiba.output.DocumentFieldType.SINGLE_VALUE;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
@@ -22,6 +21,8 @@ public class ChildCareMentalHealthPreparer implements DocumentFieldPreparer {
 		fields = new ArrayList<DocumentField>();
 
 		PageData whoNeedsCare = application.getApplicationData().getPageData("whoNeedsChildCareForMentalHealth");
+		PageData timesData = application.getApplicationData().getPageData("childCareMentalHealthTimes");
+
 		if (whoNeedsCare != null) {
 			InputData whoNeedsCareInputData = whoNeedsCare.get("whoNeedsChildCareMentalHealth");
 			if (whoNeedsCareInputData != null && !whoNeedsCareInputData.getValue().isEmpty()) {
@@ -35,9 +36,22 @@ public class ChildCareMentalHealthPreparer implements DocumentFieldPreparer {
 				}
 			}
 
+		} else {
+			PageData personalInfo = application.getApplicationData().getPageData("personalInfo");
+				if (personalInfo != null && timesData !=null) {
+					InputData firstName = personalInfo.get("firstName");
+					InputData lastName = personalInfo.get("lastName");
+					if (firstName != null && lastName != null && !firstName.getValue().isEmpty()
+							&& !lastName.getValue().isEmpty()) {
+						String fullName = firstName.getValue(0) + " " + lastName.getValue(0);
+						fields.add(new DocumentField("whoNeedsChildCareForMentalHealth", "fullName", fullName,
+								SINGLE_VALUE, 0));
+
+					}
+				}
+
 		}
 
-		PageData timesData = application.getApplicationData().getPageData("childCareMentalHealthTimes");
 		if (timesData != null) {
 			InputData hours = timesData.get("childCareMentalHealthHours");
 			if (hours != null && !hours.getValue().isEmpty()) {
