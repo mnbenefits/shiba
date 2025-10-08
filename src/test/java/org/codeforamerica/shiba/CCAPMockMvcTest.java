@@ -190,7 +190,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
         "addChildrenConfirmation");
-    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introBasicInfo");
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
     postExpectingRedirect("introPersonalDetails", "housingSubsidy");
     postExpectingRedirect("housingSubsidy", "livingSituation");
     postExpectingRedirect("livingSituation", "goingToSchool");
@@ -416,8 +416,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON); 
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "addChildrenConfirmation");
-    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introBasicInfo");
-    assertNavigationRedirectsToCorrectNextPage("introBasicInfo", "personalInfo"); 
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
+    assertNavigationRedirectsToCorrectNextPage("introPersonalDetails", "housingSubsidy"); 
   }
   
   //test case: CCAP with Household and No to the ChildCareMentalHealth

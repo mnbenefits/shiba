@@ -351,7 +351,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  case "CCAP": {
 					  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "addChildrenConfirmation");
 					  assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation", "false",
-							  "introBasicInfo");
+							  "introPersonalDetails");
 					  break;
 				  }
 				  default: {

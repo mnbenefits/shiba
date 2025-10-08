@@ -5665,7 +5665,7 @@ workflow:
     pageConfiguration: *addChildrenConfirmation
     nextPages:
       - pageName: startHousehold
-      - pageName: introBasicInfo
+      - pageName: introPersonalDetails
   startHousehold:
     pageConfiguration: *startHousehold
     nextPages:
