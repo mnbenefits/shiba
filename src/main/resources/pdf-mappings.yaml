@@ -506,6 +506,7 @@ mappings:
     businessOwnershipOwners: BUSINESS_OWNERSHIP_OWNER_FULL_NAME
     realEstateOwners: REAL_ESTATE_OWNER_FULL_NAME
 enums:
+  EVERY_DAY: Daily
   EVERY_WEEK: Every week
   EVERY_TWO_WEEKS: Every two weeks
   TWICE_A_MONTH: Twice a month
