@@ -1577,7 +1577,7 @@ pageConfigurations:
     inputs:
       - type: CUSTOM
         name: whoNeedsChildCareMentalHealth
-        customInputFragment: householdOptionsCheckboxes
+        customInputFragment: mentalHealthCheckboxes
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-select-a-person
@@ -1586,6 +1586,7 @@ pageConfigurations:
             - pageName: personalInfo
             - groupName: household
               pageName: householdMemberInfo
+            - pageName: childrenInNeedOfCare
   - &childCareMentalHealthTimes
     name: childCareMentalHealthTimes
     pageTitle: child-care-mental-health-time.title
