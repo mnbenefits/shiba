@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="childCareMentalHealthPrompt" class="reveal reveal-adjacent spacing-below-60">
+  <button th:text="#{child-care-mental-health.who-qualifies-for-benefits}"
+          type="button" class="reveal__link reveal__link-adjacent reveal__link__header-adjacent"
+          aria-expanded="false" aria-controls="reveal-content">
+  </button>
+  <div class="reveal__content reveal__content-adjacent" id="reveal-content">
+	<p th:text="#{child-care-mental-health.caregivers-can-get-help}"></p>
+    <ul class="left-justified-list">
+      <li th:text="#{child-care-mental-health.provide-proof-of-mental-health}"></li>
+      <li class="spacing-above-15"
+          th:text="#{child-care-mental-health.care-for-child-under-7}"></li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

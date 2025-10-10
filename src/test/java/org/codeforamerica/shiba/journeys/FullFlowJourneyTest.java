@@ -102,10 +102,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Who are the children that have a parent not living at home?
 		testPage.enter("whoHasAParentNotLivingAtHome", "None of the children have parents living outside the home");
-		testPage.clickContinue("Preparing meals together");
+	   
+		
+		testPage.clickContinue("Mental health needs & child care");
 		// check it skips over child support, then go back
-		assertThat(testPage.getTitle()).isEqualTo("Preparing meals together");
+		assertThat(testPage.getTitle()).isEqualTo("Mental health needs & child care");
 		testPage.goBack();
+		
 		testPage.enter("whoHasAParentNotLivingAtHome", householdMemberFullName);
 		testPage.clickContinue("Name of parent outside home");
 
@@ -116,8 +119,15 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// child support
 		testPage.enter("whoReceivesChildSupportPayments", householdMemberFullName);
+		
+		//Child care mental health section
+		testPage.clickContinue("Mental health needs & child care");
+		testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Who needs mental health time");
+		testPage.enter("whoNeedsChildCareMentalHealth", "Ahmed St. George (you)");
+		testPage.clickContinue("Time needed for mental health & child care");
+		testPage.enter("childCareMentalHealthHours", "20");
 		testPage.clickContinue("Preparing meals together");
-
+		
 		// Does everyone in your household buy and prepare food with you?
 		testPage.enter("isPreparingMealsTogether", YES.getDisplayValue());
 

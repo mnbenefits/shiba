@@ -1957,4 +1957,54 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
         }
         */
 	}
+	
+	@Nested
+	@Tag("pdf")
+	class ChildCareMentalHealthCCAP {
+		@Test
+		void shouldMapMentalHealthFieldToCCAP() throws Exception {
+			fillOutPersonalInfo();
+			selectPrograms("CCAP");
+			addHouseholdMembersWithProgram("CCAP");
+			String jimHalpertId = getFirstHouseholdMemberId();
+			postExpectingSuccess("childrenInNeedOfCare", "whoNeedsChildCare",
+					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId));
+			postExpectingSuccess("doYouHaveChildCareProvider", "hasChildCareProvider", "false");
+
+			postExpectingSuccess("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", "NONE_OF_THE_ABOVE");
+			postExpectingSuccess("childCareMentalHealth", "childCareMentalHealth", "true");
+
+			postExpectingSuccess("whoNeedsChildCareForMentalHealth", "whoNeedsChildCareMentalHealth",
+					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId));
+
+			postExpectingSuccess("childCareMentalHealthTimes", "childCareMentalHealthHours", List.of("5", "9"));
+
+			fillInRequiredPages();
+			var ccap = submitAndDownloadCcap();
+			assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_TO_SUPPORT_MENTAL_HEALTH_FULL_NAME_0", "Dwight Schrute",
+					ccap);
+			assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_TO_SUPPORT_MENTAL_HEALTH_FULL_NAME_1", "Jim Halpert",
+					ccap);
+			assertPdfFieldEquals("CHILDCARE_MENTAL_HEALTH_HOURS_A_WEEK_0", "5", ccap);
+			assertPdfFieldEquals("CHILDCARE_MENTAL_HEALTH_HOURS_A_WEEK_1", "9", ccap);
+		}
+		
+		//this test verifies that CCAP created properly when we answered yes to childCareMentalHealth question
+		// and applicant only
+		@Test
+		void shouldMapMentalHealthFieldWhenAnswerIsNo() throws Exception {
+			fillOutPersonalInfo();
+			selectPrograms("CCAP");
+			postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");			
+			postExpectingSuccess("childCareMentalHealth", "childCareMentalHealth", "true");
+			postExpectingSuccess("childCareMentalHealthTimes", "childCareMentalHealthHours",  "10");
+
+			fillInRequiredPages();
+			var ccap = submitAndDownloadCcap();
+			assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_TO_SUPPORT_MENTAL_HEALTH_FULL_NAME_0", "Dwight Schrute", ccap);
+			assertPdfFieldEquals("CHILDCARE_MENTAL_HEALTH_HOURS_A_WEEK_0", "10", ccap);
+		}
+	}
+	
+
 }
