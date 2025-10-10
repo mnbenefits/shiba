@@ -1,0 +1,78 @@
+<!-- Custom input for displaying formatted data as well as storing additional hidden data which will be needed later for writing to the PDF
+	Parameters:
+	  input - the inputs as described in pages-config.yaml
+	  data - the PageData for this page (used when returning\navigating back to this page)
+ -->
+<th:block th:fragment="childCareMentalHealthTimeInput(input, data)"
+          th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
+                    inputData=${data.get(input.name)},
+                    personIdMapData=${data.get('childCareMentalHealthPersonIdMap')},
+                    hasHelpMessage=${input.helpMessageKey != null},
+                    needsAriaLabel=${input.needsAriaLabel()},
+					householdData=${pageDatasources.get('whoNeedsChildCareForMentalHealth')},
+					householdDataExists=${!householdData.isEmpty()},
+					whoNeedsHelp=${householdDataExists ? input.options.datasources.get('whoNeedsChildCareForMentalHealth').get('whoNeedsChildCareMentalHealth').value : ''}
+                    ">
+
+  <div class="spacing-below-35 spacing-above-35" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+	  <div class="form-group">
+		
+	<th:block
+		th:if="${!householdDataExists}"
+		th:with="
+		childCareHoursData=${data.get('childCareMentalHealthHours')},
+		childCareHoursExists=${!childCareHoursData.value.isEmpty()},
+		childCareHours=${childCareHoursExists? data.get('childCareMentalHealthHours').value[0] : ''}">
+
+			<div class="text-input-group" >
+			<input type="number"
+			       class="text-input form-width--medium spacing-below-30"
+			       th:readonly="${input.readOnly}"
+			       th:id="childCareMentalHealthHours"
+			       th:value="${childCareHours}"
+			       th:name="${formInputName}"
+			       th:attr="aria-describedby=${hasHelpMessage ? NameId + '-help-message' : ''},
+			       aria-labelledby=${'label'}">
+				   <div class="text-input-group__postfix" 
+				   								 th:if="${input.inputPostfix != null}" th:text="#{${input.inputPostfix}}"></div>
+			</div>
+		</th:block>
+	    <th:block
+			th:if="${householdDataExists}"
+	        th:each="fullNameAndId, iterationStat: ${whoNeedsHelp}"
+	        th:with="fullNameAndIdArray=${#strings.arraySplit(fullNameAndId, ' ')},
+	                         index=${iterationStat.index},
+	                         NameId=${fullNameAndIdArray[#arrays.length(fullNameAndIdArray)-1]},
+	                         childName=${#strings.substringBefore(fullNameAndId, ' ' + NameId)},
+	                         you=#{general.you},
+	                         indexInInputData=${personIdMapData.value.indexOf(NameId)},
+							 childCareHours=${indexInInputData < 0 ? '' : inputData.value.get(indexInInputData)}">
+
+			<div style="margin-bottom: 1rem;">									               
+		        <label class="form-question" th:for="|childCareMentalHealthHours-${index}|"
+		               th:text="${T(org.codeforamerica.shiba.pages.PageUtils).householdMemberName(fullNameAndId, you)}"
+		               th:id="${'label-'+index}">
+		        </label>
+		        <p  class="text--help spacing-below-15" th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
+				<div class="text-input-group" >
+		        <input type="number"
+		               class="text-input form-width--medium spacing-below-30"
+		               th:readonly="${input.readOnly}"
+		               th:id="|childCareMentalHealthHours-${index}|"
+		               th:value="${childCareHours}"
+		               th:name="${formInputName}"
+		               th:attr="aria-describedby=${hasHelpMessage ? NameId + '-help-message' : ''},
+		               aria-labelledby=${'label-'+index}">
+					   <div class="text-input-group__postfix" 
+					   								 th:if="${input.inputPostfix != null}" th:text="#{${input.inputPostfix}}"></div>
+				</div>
+		        <input type="hidden"
+		               th:id="|id-${index}|"
+		               th:value="${NameId}"
+		               th:name="childCareMentalHealthPersonIdMap[]">
+	      </div>
+		  
+	    </th:block>
+	  </div>
+  </div>
+</th:block>

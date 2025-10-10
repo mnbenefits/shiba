@@ -36,6 +36,7 @@ conditionDefinitions:
     conditions:
       - *onlyApplyingForOthers?
       - pageName: addHouseholdMembers
+        name: addHouseholdMembersTrue
         input: addHouseholdMembers
         value: "true"
   - &isHomeless?
@@ -164,6 +165,7 @@ conditionDefinitions:
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
+        name: applicantChooseCCAP
         input: programs
         value: CCAP
       - pageName: householdMemberInfo
@@ -257,6 +259,20 @@ conditionDefinitions:
           - <<: *householdMemberDidNotChooseProgram?
             value: SNAP
           - *livesAlone?
+  - &someoneChoseSNAP?
+    name: someoneChoseSnap
+    logicalOperator: OR
+    conditions:
+      - pageName: choosePrograms
+        name: applicantChooseSNAP
+        input: programs
+        matcher: CONTAINS
+        value: SNAP
+      - pageName: householdMemberInfo
+        name: hhMemberChooseSNAP
+        input: programs
+        matcher: CONTAINS
+        value: SNAP
   - &noOneChoseCASH?
     name: noOneChoseCASH
     logicalOperator: AND
@@ -1538,6 +1554,64 @@ pageConfigurations:
         datasources:
           - pageName: whoHasParentNotAtHome
             inputName: whoHasAParentNotLivingAtHome
+  - &childCareMentalHealth
+    name: childCareMentalHealth
+    pageTitle: child-care-mental-health.title
+    headerKey: 
+      defaultValue: child-care-mental-health.do-any-caregivers-need-help
+      conditionalValues:
+        - value: child-care-mental-health.do-you-need-help
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    headerHelpMessageKey: child-care-mental-health.adults-and-caregivers
+    inputs:
+      - name: childCareMentalHealth
+        type: YES_NO
+        promptMessage:
+          promptMessageFragmentName: childCareMentalHealthPrompt
+  - &whoNeedsChildCareForMentalHealth
+    name: whoNeedsChildCareForMentalHealth
+    pageTitle: who-needs-child-care-mental-health.title
+    headerKey: who-needs-child-care-mental-health.who-needs-need-help
+    headerHelpMessageKey: who-needs-child-care-mental-health.check-all-that-apply
+    inputs:
+      - type: CUSTOM
+        name: whoNeedsChildCareMentalHealth
+        customInputFragment: mentalHealthCheckboxes
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+            - pageName: childrenInNeedOfCare
+  - &childCareMentalHealthTimes
+    name: childCareMentalHealthTimes
+    pageTitle: child-care-mental-health-time.title
+    headerKey: 
+      defaultValue: child-care-mental-health-time.tell-us-how-much-time-is-needed
+      conditionalValues:
+        - value: child-care-mental-health-time.tell-us-how-much-time-you-need
+          condition: *livesAlone?
+    headerHelpMessageKey: child-care-mental-health-time.you-can-request
+    inputs:
+      - type: CUSTOM
+        name: childCareMentalHealthHours
+        inputPostfix: general.input.postfix.hours-per-week
+        customInputFragment: childCareMentalHealthTimeInput
+        promptMessage:
+          promptMessageKey: child-care-mental-health-time.weekly-amount
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
+            - pageName: whoNeedsChildCareForMentalHealth
+      - type: HIDDEN
+        name: childCareMentalHealthPersonIdMap
   - &householdDeleteWarningPage
     name: householdDeleteWarningPage
     pageTitle: warning-page.delete-household-member-warning
@@ -5770,21 +5844,110 @@ workflow:
           value: NONE_OF_THE_ABOVE
     nextPages:
       - pageName: housingSubsidy
-        condition: *noOneChoseSNAP?
-      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *noOneChoseSNAP?
+            - *noOneChoseCCAP?
+      - pageName: childCareMentalHealth
     datasources:
       - pageName: choosePrograms
       - pageName: whoHasParentNotAtHome
-      - pageName: householdMemberInfo
-        groupName: household
+      - groupName: household
+        pageName: householdMemberInfo
       - pageName: childrenInNeedOfCare
+  childCareMentalHealth:
+    pageConfiguration: *childCareMentalHealth
+    skipCondition: *noOneChoseCCAP?
+    nextPages:
+      - pageName: whoNeedsChildCareForMentalHealth
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: childCareMentalHealth
+              input: childCareMentalHealth
+              matcher: CONTAINS
+              value: "true"
+            - *doesNotLiveAlone?
+      - pageName: childCareMentalHealthTimes
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: childCareMentalHealth
+              input: childCareMentalHealth
+              matcher: CONTAINS
+              value: "true"
+            - *livesAlone?
+      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseSNAP? 
+            - *doesNotLiveAlone?
+      - pageName: introPersonalDetails
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *applicantChoseCCAPProgram?
+            - *livesAlone?
+      - pageName: housingSubsidy
+    datasources:
+      - pageName: childCareMentalHealth
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - groupName: household
+        pageName: householdMemberInfo
+  whoNeedsChildCareForMentalHealth:
+    pageConfiguration: *whoNeedsChildCareForMentalHealth
+    skipCondition:
+      name: childCareMentalHealthSelectedNo
+      pageName: childCareMentalHealth
+      input: childCareMentalHealth
+      matcher: CONTAINS
+      value: "false"
+    nextPages:
+      - pageName: childCareMentalHealthTimes
+    datasources:
+      - pageName: childCareMentalHealth
+  childCareMentalHealthTimes:
+    pageConfiguration: *childCareMentalHealthTimes
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - *noOneChoseCCAP?
+        - name: childCareMentalHealthSelectedNo
+          pageName: childCareMentalHealth
+          input: childCareMentalHealth
+          matcher: CONTAINS
+          value: "false"
+    nextPages:
+      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseSNAP?
+      - pageName: introPersonalDetails
+        condition: *livesAlone?
+      - pageName: housingSubsidy
+    datasources:
+      - pageName: childCareMentalHealth
+      - pageName: whoNeedsChildCareForMentalHealth
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
       - pageName: housingSubsidy
   preparingMealsTogether:
     pageConfiguration: *preparingMealsTogether
-    skipCondition: *noOneChoseSNAP?
+    skipCondition: 
+      logicalOperator: OR
+      conditions:
+        - *noOneChoseSNAP?
+        - *livesAlone?
     nextPages:
       - pageName: housingSubsidy 
     datasources:
