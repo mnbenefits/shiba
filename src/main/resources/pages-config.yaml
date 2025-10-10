@@ -1788,9 +1788,9 @@ pageConfigurations:
     name: usCitizen
     pageTitle: us-citizen.title
     headerKey:
-      defaultValue: us-citizen-please-confirm-the-citizenship-status-of-your-househould
+      defaultValue: us-citizen.please-confirm-the-citizenship-status-of-your-househould
       conditionalValues:
-        - value: us-citizen-please-confirm-your-citizenship-status
+        - value: us-citizen.please-confirm-your-citizenship-status
           condition: *livesAlone?  
     headerHelpMessageKey: 
       defaultValue: us-citizen.members-of-your-household-may-still-be-eligible
@@ -1806,13 +1806,13 @@ pageConfigurations:
         options:
           selectableOptions:
             - value: BIRTH_RIGHT
-              messageKey: us-citizen-birthright-us-citizen-or-us-national
+              messageKey: us-citizen.birthright-us-citizen-or-us-national
             - value: NATURALIZED
-              messageKey: us-citizen-naturalized-us-citizen
+              messageKey: us-citizen.naturalized-us-citizen
             - value: DERIVED
-              messageKey: us-citizen-derived-us-citizen
+              messageKey: us-citizen.derived-us-citizen
             - value: NOT_CITIZEN
-              messageKey: us-citizen-not-a-us-citizen
+              messageKey: us-citizen.not-a-us-citizen
           datasources:
             - pageName: personalInfo
             - pageName: householdMemberInfo
