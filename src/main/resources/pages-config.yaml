@@ -1788,16 +1788,38 @@ pageConfigurations:
     name: usCitizen
     pageTitle: us-citizen.title
     headerKey:
-      defaultValue: us-citizen.is-everyone-us-citizen
+      defaultValue: us-citizen-please-confirm-the-citizenship-status-of-your-househould
       conditionalValues:
-        - value: us-citizen.are-you-a-us-citizen
-          condition: *livesAlone?
-    headerHelpMessageKey: us-citizen.most-immigrants-are-still-eligible-for-food-and-cash-benefits
-    hasPrimaryButton: false
+        - value: us-citizen-please-confirm-your-citizenship-status
+          condition: *livesAlone?  
+    headerHelpMessageKey: 
+      defaultValue: us-citizen.members-of-your-household-may-still-be-eligible
+      conditionalValues:
+        - value: us-citizen.most-immigrants-are-still-eligible-for-food-and-cash-benefits
+          condition: *livesAlone? 
+    hasPrimaryButton: true
     contextFragment: passportContextFragment
     inputs:
-      - name: isUsCitizen
-        type: YES_NO
+      - name: citizenshipStatus
+        type: CUSTOM
+        customInputFragment: citizenshipStatusInput
+        options:
+          selectableOptions:
+            - value: BIRTH_RIGHT
+              messageKey: us-citizen-birthright-us-citizen-or-us-national
+            - value: NATURALIZED
+              messageKey: us-citizen-naturalized-us-citizen
+            - value: DERIVED
+              messageKey: us-citizen-derived-us-citizen
+            - value: NOT_CITIZEN
+              messageKey: us-citizen-not-a-us-citizen
+          datasources:
+            - pageName: personalInfo
+            - pageName: householdMemberInfo
+              groupName: household
+              optional: "true"
+      - type: HIDDEN
+        name: citizenshipIdMap			
   - &whoIsNonCitizen
     name: whoIsNonCitizen
     pageTitle: who-is-non-citizen.title
@@ -6098,9 +6120,20 @@ workflow:
     nextPages:
       - pageName: disability
         condition: 
-          pageName: usCitizen
-          input: isUsCitizen
-          value: "true"
+          logicalOperator: OR
+          conditions:
+            - pageName: usCitizen
+              input: citizenshipStatus
+              value: BIRTH_RIGHT
+            - pageName: usCitizen
+              input: citizenshipStatus	
+              value: NATURALIZED
+            - pageName:  usCitizen
+              input: citizenshipStatus
+              value: DERIVED
+            - pageName:  usCitizen
+              input: citizenshipStatus
+              value: NOT_CITIZEN
       - pageName: whoIsNonCitizen
         condition:
           pageName: usCitizen
@@ -6109,6 +6142,8 @@ workflow:
       - pageName: usCitizen
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: personalInfo 
+      - groupName: household
   whoIsNonCitizen:
     pageConfiguration: *whoIsNonCitizen
     nextPages:
