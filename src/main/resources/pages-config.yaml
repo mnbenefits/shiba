@@ -1795,7 +1795,7 @@ pageConfigurations:
     headerHelpMessageKey: 
       defaultValue: us-citizen.members-of-your-household-may-still-be-eligible
       conditionalValues:
-        - value: us-citizen.most-immigrants-are-still-eligible-for-food-and-cash-benefits
+        - value: us-citizen.you-may-still-be-eligible-for-food-and-cash-benefits-if-you-are-not-a-us-citizen
           condition: *livesAlone? 
     hasPrimaryButton: true
     contextFragment: passportContextFragment
