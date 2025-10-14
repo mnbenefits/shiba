@@ -129,7 +129,8 @@ mappings:
     applicantIsPregnant: APPLICANT_IS_PREGNANT
   usCitizen:
     isUsCitizen: IS_US_CITIZEN
-    applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN
+   # applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN
+    citizenshipStatus: IS_US_CITIZEN
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:

@@ -1,5 +1,6 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
+import java.nio.channels.Pipe.SourceChannel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +11,7 @@ import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.pages.data.InputData;
+import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.data.Subworkflow;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,10 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 
 	@Override
 	public List<DocumentField> prepareDocumentFields(Application application, Document document, Recipient recipient) {
-
+		
+		List<DocumentField> result = new ArrayList<>();
+		
+		/*
 		List<String> nonUsCitizenHouseholdMembers = Optional
 				.ofNullable(application.getApplicationData().getPageData("whoIsNonCitizen"))
 				.map(pageData -> pageData.get("whoIsNonCitizen")).map(InputData::getValue).orElse(List.of(""));
@@ -32,7 +37,7 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 			return householdMemberParts[householdMemberParts.length - 1];
 		}).collect(Collectors.toList());
 
-		List<DocumentField> result = new ArrayList<>();
+		
 		boolean usCitizenAsked = application.getApplicationData().getPagesData().getPage("usCitizen") != null;
 		boolean whoIsNonCitizenAsked = application.getApplicationData().getPagesData().getPage("whoIsNonCitizen") != null;
 		Subworkflow householdMemberSubworkflow = application.getApplicationData().getSubworkflows().get("household");
@@ -49,7 +54,7 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 						isApplicantUsCitizen ? "true" : "false", DocumentFieldType.SINGLE_VALUE, null));
 			} else {
 				result.add(new DocumentField("usCitizen", "applicantIsUsCitizen",
-						List.of(householdMemberIDs.contains("applicant") ? "false" : "true"),
+						 "true",
 						DocumentFieldType.SINGLE_VALUE, null));
 			}
 
@@ -62,9 +67,40 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 									DocumentFieldType.SINGLE_VALUE, i));
 				}
 
+			}*/
+			
+			
+			// new citizenship flaw
+			
+		    PageData usCitizendata = application.getApplicationData().getPageData("usCitizen");
+		    
+			if (usCitizendata != null) {
+				InputData citizenshipStatus = usCitizendata.get("citizenshipStatus");
+				if (citizenshipStatus != null && !citizenshipStatus.getValue().isEmpty()) {
+					List<String> statuses = citizenshipStatus.getValue();
+					for (int i = 0; i < statuses.size(); i++) {
+						String status = statuses.get(i);
+						String statusText = mapCitizenshipStatus(status);
+						result.add(new DocumentField("usCitizen", "citizenshipStatus", statusText,
+								DocumentFieldType.SINGLE_VALUE, i));
+					}
+				}
 			}
-		}
+			
+		//}
 	    return result;
 		
 	}
+	
+	String mapCitizenshipStatus(String status) {
+		if (status == null) {
+			return "";
+		}
+		return switch (status) {
+		case "BIRTH_RIGHT" -> "Citizen";
+		case "NATURALIZED", "DERIVED" -> "Naturalized";
+		default -> "Not_Citizen";
+		};
+	}
+	
 }
