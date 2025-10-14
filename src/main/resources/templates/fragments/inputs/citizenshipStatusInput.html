@@ -17,7 +17,7 @@ It displays citizenship status options for each household member using radio but
         isLivingAlone=${householdSubFlow == null || householdSubFlow.isEmpty()},
         idList=${T(org.codeforamerica.shiba.pages.PageUtils).buildCitizenshipIdList(householdSubFlow)}
     ">
-	
+
 	<div class="spacing-below-35 spacing-above-35" th:lang="${#locale.language}">
 
 		<div class="form-group">
@@ -61,6 +61,9 @@ It displays citizenship status options for each household member using radio but
 					th:value="${id}" />
 
 			</th:block>
+
+			<!-- Include accordions -->
+			<div th:replace="~{fragments/citizenshipAccordions :: citizenshipAccordions}"></div>
 
 		</div>
 	</div>
