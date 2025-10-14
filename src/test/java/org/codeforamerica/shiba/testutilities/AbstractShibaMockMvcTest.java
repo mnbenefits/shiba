@@ -849,11 +849,11 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
     
     if (containsOnly(Arrays.asList(programs), "CCAP")) {
-    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "tribalNationMember");
+    	postExpectingRedirect("usCitizen", "citizenshipStatus", "BIRTH_RIGHT", "tribalNationMember");
     	postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
     else {
-    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+    	postExpectingRedirect("usCitizen", "citizenshipStatus", "NATURALIZED", "disability");
     	postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
         postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
         postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
@@ -947,10 +947,12 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
 
     if (hasHousehold) {
-      postExpectingRedirect("usCitizen", "isUsCitizen", "false", "whoIsNonCitizen");
-      postExpectingRedirect("whoIsNonCitizen", "whoIsNonCitizen", me, "disability");
+    	postExpectingRedirect("usCitizen", Map.of(
+    		    	    "citizenshipStatus", List.of("NATURALIZED", "BIRTH_RIGHT", "NOT_CITIZEN"),
+    	                "citizenshipIdMap", List.of("applicant", "uuid-1", "uuid-2") ),
+    		    "disability");
     } else {
-      postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+      postExpectingRedirect("usCitizen", "citizenshipStatus", "NATURALIZED", "disability");
     }
 
     postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
