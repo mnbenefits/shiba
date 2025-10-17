@@ -87,4 +87,22 @@ class GrossMonthlyIncomeParserTest {
             applicationData.getSubworkflows().get("jobs").get(0))
     );
   }
+  
+  
+  //YUVA G TEST BELOW
+  @Test
+  void shouldProvideNonHourlyJobInformationDaily() {
+    ApplicationData applicationData = new TestApplicationDataBuilder()
+        .withSubworkflow("jobs", new PagesDataBuilder()
+            .withNonHourlyJob("false", "100", "EVERY_DAY"))
+        .build();
+
+    List<JobIncomeInformation> jobIncomeInformation = grossMonthlyIncomeParser
+        .parse(applicationData);
+
+    assertThat(jobIncomeInformation).contains(
+        new NonHourlyJobIncomeInformation("EVERY_DAY", "100", 0,
+            applicationData.getSubworkflows().get("jobs").get(0))
+    );
+  }
 }

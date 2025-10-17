@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.Iteration;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.FormPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +35,30 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingSuccess("writtenLanguage", Map.of("writtenLanguage", List.of("ENGLISH")));
     postExpectingSuccess("spokenLanguage", Map.of("spokenLanguage", List.of("ENGLISH")));
   }
+  
+  @Test
+  void checkPayPeriodSelectionsData() throws Exception {
+	  
+	  List<String> payPeriods = List.of("EVERY_DAY", "EVERY_WEEK", "EVERY_TWO_WEEKS", "TWICE_A_MONTH", "EVERY_MONTH","IT_VARIES");
+	  String payPeriod;
+	  
+	  for(String period: payPeriods) {
+		  completeFlowFromLandingPageThroughReviewInfo("SNAP");
+		  postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+		  postExpectingSuccess("employmentStatus", "areYouWorking", "true");
+		  postExpectingSuccess("employersName", "employersName", "ABC");
+		  postExpectingSuccess("selfEmployment", "selfEmployment", "false");
+		  postExpectingSuccess("paidByTheHour", "paidByTheHour", "false");
+		  postExpectingSuccess("payPeriod", "payPeriod", period);
+		  assertNavigationRedirectsToCorrectNextPage("payPeriod", "incomePerPayPeriod");
+		  postExpectingSuccess("incomePerPayPeriod","incomePerPayPeriod", "1000");
+		  payPeriod = applicationData.getSubworkflows().get("jobs").get(0).getPagesData().safeGetPageInputValue("payPeriod", "payPeriod").get(0);
+		  assertThat(payPeriod).isEqualTo(period);
+		  applicationData.getSubworkflows().clear();
+	  }
+  }
+  
+  
 
   @Test
   void healthcareCoverageDoesNotDisplayOnSuccessPageWhenClientAlreadyHasHealthcare()

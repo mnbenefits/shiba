@@ -124,4 +124,37 @@ public class SelfEmploymentPreparerTest {
         new DocumentField("selfEmployment_employee","grossMonthlyIncome", "48.00", SINGLE_VALUE, 0));
   }
   
+  //YUVA G
+  // BOTTOM TEST
+  
+  @Test
+  void shouldMapValuesIfSelfEmployedJobExistsDaily() {
+    ApplicationData applicationData = new TestApplicationDataBuilder()
+        .withSubworkflow("jobs",
+            new PagesDataBuilder().withHourlyJob("false", "10", "10"),
+            new PagesDataBuilder().withNonHourlyJob("true", "12", "EVERY_DAY"))
+        .build();
+
+    Application application = Application.builder().applicationData(applicationData).build();
+
+    List<DocumentField> actual =
+        selfEmploymentPreparer.prepareDocumentFields(application, null, Recipient.CLIENT);
+    
+    assertThat(actual).containsExactlyInAnyOrder(
+        new DocumentField("employee", "selfEmployed", "true", SINGLE_VALUE),
+        new DocumentField("employee", "selfEmployedGrossMonthlyEarnings", "see question 9",
+            SINGLE_VALUE),
+        new DocumentField("selfEmployment_incomePerPayPeriod", "incomePerPayPeriod_EVERY_DAY", "12",
+            SINGLE_VALUE, 0),
+        new DocumentField("selfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "12",
+            SINGLE_VALUE, 0),
+        new DocumentField("selfEmployment_payPeriod", "payPeriod", "EVERY_DAY", SINGLE_VALUE, 0),
+        new DocumentField("selfEmployment_paidByTheHour", "paidByTheHour", "false", SINGLE_VALUE,
+            0),
+        new DocumentField("selfEmployment_selfEmployment", "selfEmployment", "true", SINGLE_VALUE,
+            0)
+    );
+  }
+
+  
 }
