@@ -21,7 +21,6 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 
 @Component
 public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
-
 	@Override
 	public List<DocumentField> prepareDocumentFields(Application application, Document document, Recipient recipient) {
 		
@@ -68,16 +67,18 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 				}
 
 			}*/
+		
+		// new citizenship flow
+		PageData usCitizendata = application.getApplicationData().getPageData("usCitizen");
+		
+		if (usCitizendata != null) {
+			InputData citizenshipStatus = usCitizendata.get("citizenshipStatus");
 			
-			
-			// new citizenship flaw
-			
-		    PageData usCitizendata = application.getApplicationData().getPageData("usCitizen");
-		    
-			if (usCitizendata != null) {
-				InputData citizenshipStatus = usCitizendata.get("citizenshipStatus");
-				if (citizenshipStatus != null && !citizenshipStatus.getValue().isEmpty()) {
-					List<String> statuses = citizenshipStatus.getValue();
+			if (citizenshipStatus != null && !citizenshipStatus.getValue().isEmpty()) {
+				List<String> statuses = citizenshipStatus.getValue();
+				
+				// CAF: include everyone
+				if (document == Document.CAF) {
 					for (int i = 0; i < statuses.size(); i++) {
 						String status = statuses.get(i);
 						String statusText = mapCitizenshipStatus(status);
@@ -85,11 +86,30 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 								DocumentFieldType.SINGLE_VALUE, i));
 					}
 				}
+				// CCAP: New logic - skip applicant, only household members
+				else if (document == Document.CCAP) {
+					InputData personIdMap = usCitizendata.get("citizenshipIdMap");
+					List<String> personIds = personIdMap != null ? personIdMap.getValue() : List.of();
+					
+					int ccapIndex = 0;
+					for (int i = 0; i < statuses.size(); i++) {
+						String status = statuses.get(i);
+						String personId = i < personIds.size() ? personIds.get(i) : "";
+						boolean isApplicant = "applicant".equals(personId);
+						
+						if (!isApplicant) {
+							String isUsCitizen = mapCitizenshipStatusForCCAP(status);
+							
+							result.add(new DocumentField("usCitizen", "citizenshipStatus", isUsCitizen,
+									DocumentFieldType.SINGLE_VALUE, ccapIndex));
+							ccapIndex++;
+						}
+					}
+				}
 			}
-			
-		//}
-	    return result;
+		}
 		
+		return result;
 	}
 	
 	String mapCitizenshipStatus(String status) {
@@ -97,10 +117,16 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 			return "";
 		}
 		return switch (status) {
-		case "BIRTH_RIGHT" -> "Citizen";
-		case "NATURALIZED", "DERIVED" -> "Naturalized";
-		default -> "Not_Citizen";
+			case "BIRTH_RIGHT" -> "Citizen";
+			case "NATURALIZED", "DERIVED" -> "Naturalized";
+			default -> "Not_Citizen";
 		};
 	}
 	
+	String mapCitizenshipStatusForCCAP(String status) {
+		if (status == null || "NOT_CITIZEN".equals(status)) {
+			return "No";
+		}
+		return "Yes";
+	}
 }

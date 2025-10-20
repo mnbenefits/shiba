@@ -356,8 +356,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("whoIsPregnant", "Me");
     testPage.clickContinue("Expedited Migrant Farm Worker, Household");
     testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
-    testPage.chooseYesOrNo("isUsCitizen", NO.getDisplayValue(), "Non Citizen");
-    testPage.enter("whoIsNonCitizen", "Me");
+    testPage.clickElementById("citizenshipStatus[]-1-NOT_CITIZEN");
     testPage.clickContinue("Disability");
     testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
     testPage.enter("workChanges", "None of the above");
