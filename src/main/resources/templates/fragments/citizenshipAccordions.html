@@ -4,22 +4,22 @@
 <div th:fragment="citizenshipAccordions">
 	
 	<!--Reveal box 1: U.S. citizenship types -->
-	<div class="reveal reveal-adjacent spacing-below-35">
+	<div class="reveal reveal-adjacent spacing-below-15">
 		<button th:text="#{us-citizen.reveal.citizenship-types.title}" type="button"
 			class="reveal__link reveal__link-adjacent reveal__link__header-adjacent" aria-expanded="false"
 			aria-controls="citizenship-types-content">
 		</button>
 		<div class="reveal__content reveal__content-adjacent" id="citizenship-types-content">
-			<p><strong th:text="#{us-citizen.reveal.birthright.title}"></strong></p>
+			<p class="spacing-below-0"><strong  th:text="#{us-citizen.reveal.birthright.title}"></strong></p>
 			<p th:text="#{us-citizen.reveal.birthright.description}"></p>
 
-			<p><strong th:text="#{us-citizen.reveal.us-national.title}"></strong></p>
+			<p class="spacing-below-0"><strong th:text="#{us-citizen.reveal.us-national.title}"></strong></p>
 			<p th:text="#{us-citizen.reveal.us-national.description}"></p>
 
-			<p><strong th:text="#{us-citizen.reveal.naturalized.title}"></strong></p>
+			<p class="spacing-below-0"><strong th:text="#{us-citizen.reveal.naturalized.title}"></strong></p>
 			<p th:text="#{us-citizen.reveal.naturalized.description}"></p>
 
-			<p><strong th:text="#{us-citizen.reveal.derived.title}"></strong></p>
+			<p class="spacing-below-0"><strong th:text="#{us-citizen.reveal.derived.title}"></strong></p>
 			<p th:text="#{us-citizen.reveal.derived.description}"></p>
 		</div>
 	</div>
@@ -33,11 +33,11 @@
 		<div class="reveal__content reveal__content-adjacent" id="citizenship-info-content">
 			<p th:text="#{us-citizen.reveal.how-we-use-info.description}"></p>
 			<p th:text="#{us-citizen.reveal.how-we-use-info.description.for.example}"></p>
-			<p th:text="#{us-citizen.reveal.how-we-use-info.description.additional}"></p>
-			<ul class="left-justified-list ">
-				<li th:text="#{us-citizen.reveal.how-we-use-info.description.additional.verify.our.identity}"></li>
-				<li th:text="#{us-citizen.reveal.how-we-use-info.description.additional.subpoena.response}"></li>
-				<li th:text="#{us-citizen.reveal.how-we-use-info.description.additional.law.enforcement.reasons}"></li>
+			<p style="margin-bottom: 0;" th:text="#{us-citizen.reveal.how-we-use-info.description.additional}"></p>
+			<ul class="left-justified-list " style="margin-top: 0; list-style-position: inside;">
+				<li  style=" padding-bottom: 0; padding-top: 0; margin-top: 0;" th:text="#{us-citizen.reveal.how-we-use-info.description.additional.verify.our.identity}"></li>
+				<li  style="padding-bottom: 0;" th:text="#{us-citizen.reveal.how-we-use-info.description.additional.subpoena.response}"></li>
+				<li  style=" padding-bottom: 0;" th:text="#{us-citizen.reveal.how-we-use-info.description.additional.law.enforcement.reasons}"></li>
 			</ul>
 			<p class="spacing-above-15"
 				th:text="#{us-citizen.reveal.how-we-use-info.description.additional.federal.government.access.all.information}">
