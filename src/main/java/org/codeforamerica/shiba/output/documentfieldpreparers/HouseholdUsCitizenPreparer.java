@@ -106,6 +106,15 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 						}
 					}
 				}
+				//CERTAIN_POPS: Yes if all citizens, No if any non-citizen
+				else if (document == Document.CERTAIN_POPS) {
+					boolean hasNonCitizen = statuses.stream()
+							.anyMatch(status -> "NOT_CITIZEN".equals(status));
+					
+					String isUsCitizen = hasNonCitizen ? "No" : "Yes";
+					result.add(new DocumentField("usCitizen", "citizenshipStatus", isUsCitizen,
+							DocumentFieldType.SINGLE_VALUE));
+				}
 			}
 		}
 		

@@ -5,17 +5,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.UUID;
 import org.codeforamerica.shiba.application.Application;
+import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class HouseholdUsCitizenPreparerTest {
 
   HouseholdUsCitizenPreparer preparer = new HouseholdUsCitizenPreparer();
 
+  @Disabled("Citizenship is now a mandatory question - cannot be skipped")
   @Test
   void shouldParseOffWhenUsCitizenshipNotAsked() {
     ApplicationData applicationData = new ApplicationData();
@@ -44,29 +47,28 @@ class HouseholdUsCitizenPreparerTest {
   UUID householdMemberID = applicationData.getSubworkflows().get("household").get(0).getId();
 
   new TestApplicationDataBuilder(applicationData)
-  	  .withPageData("usCitizen", "isUsCitizen", "false")
-      .withPageData("whoIsNonCitizen", "whoIsNonCitizen",
-          List.of("personAFirstName personALastName applicant",
-              "personBFirstName personBLastName " + householdMemberID));
-
-  List<DocumentField> result = preparer.prepareDocumentFields(Application.builder()
-      .applicationData(applicationData)
-      .build(), null, null);
+     .withPageData("usCitizen", "citizenshipStatus", List.of("NOT_CITIZEN", "BIRTH_RIGHT"))
+      .withPageData("usCitizen", "citizenshipIdMap", List.of("applicant", householdMemberID.toString()));
+ 
+  List<DocumentField> result = preparer.prepareDocumentFields(
+	        Application.builder().applicationData(applicationData).build(), 
+	        Document.CAF, 
+	        null);
 
   assertThat(result).isEqualTo(List.of(
       new DocumentField(
           "usCitizen",
-          "applicantIsUsCitizen",
-          List.of("false"),
+          "citizenshipStatus",
+          List.of("Not_Citizen"),
           DocumentFieldType.SINGLE_VALUE,
-          null
+          0
       ),
       new DocumentField(
           "usCitizen",
-          "isUsCitizen",
-          List.of("false"),
+          "citizenshipStatus",
+          List.of("Citizen"),
               DocumentFieldType.SINGLE_VALUE,
-              0
+              1
           )
       ));
   }

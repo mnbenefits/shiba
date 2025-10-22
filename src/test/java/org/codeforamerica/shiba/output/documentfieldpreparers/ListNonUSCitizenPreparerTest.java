@@ -3,194 +3,130 @@ package org.codeforamerica.shiba.output.documentfieldpreparers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.UUID;
+
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.InputData;
+import org.codeforamerica.shiba.pages.data.PageData;
+import org.codeforamerica.shiba.pages.data.Subworkflow;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 class ListNonUSCitizenPreparerTest {
 
-  ListNonUSCitizenPreparer preparer = new ListNonUSCitizenPreparer();
-  TestApplicationDataBuilder applicationDataTest = new TestApplicationDataBuilder();
+	ListNonUSCitizenPreparer preparer = new ListNonUSCitizenPreparer();
+	TestApplicationDataBuilder applicationDataTest = new TestApplicationDataBuilder();
 
-  @Test
-  void preparesFieldsForEveryoneInHouseNotUSCitizen() {
-    ApplicationData applicationData = applicationDataTest
-        .withPersonalInfo()
-        .withMultipleHouseholdMembers()
-        .withPageData("usCitizen", "isUsCitizen", "false")
-        .withPageData("whoIsNonCitizen", "whoIsNonCitizen", List.of(
-            "Daria Agàta someGuid",
-            "Jane Doe applicant",
-            "Other Person notSpouse"
-        ))
-        .build();
+	@Test
+	void preparesFieldsForEveryoneInHouseNotUSCitizen() {
 
-    List<DocumentField> result = preparer.prepareDocumentFields(Application.builder()
-        .applicationData(applicationData)
-        .build(), null, Recipient.CASEWORKER);
+		String dariaId = "11111111-1111-1111-1111-111111111111";
+		String otherPersonId = "22222222-2222-2222-2222-222222222222";
 
-    assertThat(result).isEqualTo(List.of(
-        
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "nameOfApplicantOrSpouse",
-            List.of("Daria Agàta"),
-            DocumentFieldType.SINGLE_VALUE,
-            0
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "alienId",
-            List.of(""),
-            DocumentFieldType.SINGLE_VALUE,
-            0
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "nameOfApplicantOrSpouse",
-            List.of("Jane Doe"),
-            DocumentFieldType.SINGLE_VALUE,
-            1
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "alienId",
-            List.of(""),
-            DocumentFieldType.SINGLE_VALUE,
-            1
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "nameOfApplicantOrSpouse",
-            List.of("Other Person"),
-            DocumentFieldType.SINGLE_VALUE,
-            2
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "alienId",
-            List.of(""),
-            DocumentFieldType.SINGLE_VALUE,
-            2
-        )));
-  }
-  
-  @Test
-  void preparesFieldsForApplicantOnlyNotUSCitizen() {
-    ApplicationData applicationData = applicationDataTest
-        .withPersonalInfo()
-        .withPageData("usCitizen", "isUsCitizen", "false")
-        .build();
+		ApplicationData applicationData = applicationDataTest
+				.withPersonalInfo()
+				.withMultipleHouseholdMembers().build();
 
-    List<DocumentField> result = preparer.prepareDocumentFields(Application.builder()
-        .applicationData(applicationData)
-        .build(), null, Recipient.CASEWORKER);
+		// Set the IDs
+		Subworkflow household = applicationData.getSubworkflows().get("household");
+		household.get(0).setId(UUID.fromString(otherPersonId));
+		household.get(1).setId(UUID.fromString(dariaId));
 
-    assertThat(result).isEqualTo(List.of(
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "nameOfApplicantOrSpouse",
-            List.of("Jane Doe"),
-            DocumentFieldType.SINGLE_VALUE,
-            0
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "alienId",
-            List.of(""),
-            DocumentFieldType.SINGLE_VALUE,
-            0
-        )));
-  }
+		// Now add citizenship data with matching IDs
+		PageData usCitizenPage = new PageData();
+		usCitizenPage.put("citizenshipStatus", new InputData(List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN")));
+		usCitizenPage.put("citizenshipIdMap", new InputData(List.of("applicant", dariaId, otherPersonId)));
+		applicationData.getPagesData().put("usCitizen", usCitizenPage);
 
-  @Test
-  void preparesNoFieldsIfEveryoneInHouseIsUsCitizen() {
-    ApplicationData applicationData = applicationDataTest
-        .withPersonalInfo()
-        .withMultipleHouseholdMembers()
-        .withPageData("usCitizen", "isUsCitizen", "true")
-        .build();
+		List<DocumentField> result = preparer.prepareDocumentFields(
+				Application.builder().applicationData(applicationData).build(), null, Recipient.CASEWORKER);
 
-    List<DocumentField> result = preparer.prepareDocumentFields(Application.builder()
-        .applicationData(applicationData)
-        .build(), null, Recipient.CASEWORKER);
+		assertThat(result).isEqualTo(List.of(
 
-    assertThat(result).isEqualTo(List.of());
-  }
-  
-  @Test
-  void preparesFieldsForAlienId() {
-    ApplicationData applicationData = applicationDataTest
-        .withPersonalInfo()
-        .withMultipleHouseholdMembers()
-        .withPageData("usCitizen", "isUsCitizen", "false")
-        .withPageData("whoIsNonCitizen", "whoIsNonCitizen", List.of(
-            "Daria Agàta someGuid",
-            "Jane Doe applicant",
-            "Other Person notSpouse"
-        ))
-        .withPageData("alienIdNumbers", "alienIdMap", List.of(
-            "someGuid",
-            "applicant",
-            "notSpouse"
-            ))
-        .withPageData("alienIdNumbers", "alienIdNumber", List.of(
-            "SpouseAlienId",
-            "AppAlienId",
-            ""
-            ))
-        .build();
+				new DocumentField("whoIsNonUsCitizen", "nameOfApplicantOrSpouse", List.of("Jane Doe"),
+						DocumentFieldType.SINGLE_VALUE, 0),
+				new DocumentField("whoIsNonUsCitizen", "alienId", "", DocumentFieldType.SINGLE_VALUE, 0),
+				new DocumentField("whoIsNonUsCitizen", "nameOfApplicantOrSpouse", List.of("Daria Agàta"),
+						DocumentFieldType.SINGLE_VALUE, 1),
+				new DocumentField("whoIsNonUsCitizen", "alienId", "", DocumentFieldType.SINGLE_VALUE, 1),
+				new DocumentField("whoIsNonUsCitizen", "nameOfApplicantOrSpouse", List.of("Other Person"),
+						DocumentFieldType.SINGLE_VALUE, 2),
+				new DocumentField("whoIsNonUsCitizen", "alienId", "", DocumentFieldType.SINGLE_VALUE, 2)));
+	}
 
-    List<DocumentField> result = preparer.prepareDocumentFields(Application.builder()
-        .applicationData(applicationData)
-        .build(), null, Recipient.CASEWORKER);
+	@Test
+	void preparesFieldsForApplicantOnlyNotUSCitizen() {
+		ApplicationData applicationData = applicationDataTest
+				.withPersonalInfo()
+				.withPageData("usCitizen", "citizenshipStatus", List.of("NOT_CITIZEN"))
+				.withPageData("usCitizen", "citizenshipIdMap", List.of("applicant")).build();
 
-    assertThat(result).isEqualTo(List.of(
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "nameOfApplicantOrSpouse",
-            List.of("Daria Agàta"),
-            DocumentFieldType.SINGLE_VALUE,
-            0
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "alienId",
-            List.of("SpouseAlienId"),
-            DocumentFieldType.SINGLE_VALUE,
-            0
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "nameOfApplicantOrSpouse",
-            List.of("Jane Doe"),
-            DocumentFieldType.SINGLE_VALUE,
-            1
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "alienId",
-            List.of("AppAlienId"),
-            DocumentFieldType.SINGLE_VALUE,
-            1
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "nameOfApplicantOrSpouse",
-            List.of("Other Person"),
-            DocumentFieldType.SINGLE_VALUE,
-            2
-        ),
-        new DocumentField(
-            "whoIsNonUsCitizen",
-            "alienId",
-            List.of(""),
-            DocumentFieldType.SINGLE_VALUE,
-            2
-        )));
-  }
+		List<DocumentField> result = preparer.prepareDocumentFields(
+				Application.builder().applicationData(applicationData).build(), null, Recipient.CASEWORKER);
+
+		assertThat(result).isEqualTo(List.of(
+				new DocumentField("whoIsNonUsCitizen", "nameOfApplicantOrSpouse", List.of("Jane Doe"),
+						DocumentFieldType.SINGLE_VALUE, 0),
+				new DocumentField("whoIsNonUsCitizen", "alienId", List.of(""), DocumentFieldType.SINGLE_VALUE, 0)));
+	}
+
+		@Test
+		void preparesNoFieldsIfEveryoneInHouseIsUsCitizen() {
+		    String member1Id = "11111111-1111-1111-1111-111111111111";
+		    String member2Id = "22222222-2222-2222-2222-222222222222";
+		    
+		    ApplicationData applicationData = applicationDataTest
+		        .withPersonalInfo()
+		        .withMultipleHouseholdMembers()
+		        // Everyone is a citizen (no NOT_CITIZEN)
+		        .withPageData("usCitizen", "citizenshipStatus", 
+		            List.of("BIRTH_RIGHT", "NATURALIZED", "DERIVED"))
+		        .withPageData("usCitizen", "citizenshipIdMap", 
+		            List.of("applicant", member1Id, member2Id))
+		        .build();
+		    
+		    // Set household member IDs to match
+		    Subworkflow household = applicationData.getSubworkflows().get("household");
+		    household.get(0).setId(UUID.fromString(member1Id));
+		    household.get(1).setId(UUID.fromString(member2Id));
+
+		    List<DocumentField> result = preparer.prepareDocumentFields(
+		        Application.builder().applicationData(applicationData).build(), 
+		        null, 
+		        Recipient.CASEWORKER);
+
+		    assertThat(result).isEmpty();  // ✅ No non-citizens = empty list
+		}
+
+	@Disabled("Alien ID collection is paused; re-enable when alienIdNumbers page data returns")
+	@Test
+	void preparesFieldsForAlienId() {
+		ApplicationData applicationData = applicationDataTest.withPersonalInfo().withMultipleHouseholdMembers()
+				.withPageData("usCitizen", "citizenshipStatus", List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN"))
+				.withPageData("usCitizen", "citizenshipIdMap", List.of("someGuid", "applicant", "notSpouse"))
+
+				.withPageData("alienIdNumbers", "alienIdMap", List.of("someGuid", "applicant", "notSpouse"))
+				.withPageData("alienIdNumbers", "alienIdNumber", List.of("SpouseAlienId", "AppAlienId", "")).build();
+
+		List<DocumentField> result = preparer.prepareDocumentFields(
+				Application.builder().applicationData(applicationData).build(), null, Recipient.CASEWORKER);
+
+		assertThat(result).isEqualTo(List.of(
+				new DocumentField("whoIsNonUsCitizen", "nameOfApplicantOrSpouse", List.of("Daria Agàta"),
+						DocumentFieldType.SINGLE_VALUE, 0),
+				new DocumentField("whoIsNonUsCitizen", "alienId", List.of("SpouseAlienId"),
+						DocumentFieldType.SINGLE_VALUE, 0),
+				new DocumentField("whoIsNonUsCitizen", "nameOfApplicantOrSpouse", List.of("Jane Doe"),
+						DocumentFieldType.SINGLE_VALUE, 1),
+				new DocumentField("whoIsNonUsCitizen", "alienId", List.of("AppAlienId"), DocumentFieldType.SINGLE_VALUE,
+						1),
+				new DocumentField("whoIsNonUsCitizen", "nameOfApplicantOrSpouse", List.of("Other Person"),
+						DocumentFieldType.SINGLE_VALUE, 2),
+				new DocumentField("whoIsNonUsCitizen", "alienId", List.of(""), DocumentFieldType.SINGLE_VALUE, 2)));
+	}
 }

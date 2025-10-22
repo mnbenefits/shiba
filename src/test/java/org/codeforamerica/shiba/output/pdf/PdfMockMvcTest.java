@@ -1289,7 +1289,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 					"certainPopsConfirm");
 			fillInPersonalInfoAndContactInfoAndAddress();
 			postExpectingSuccess("livingSituation", "livingSituation", "LIVING_IN_A_PLACE_NOT_MEANT_FOR_HOUSING");
-			postExpectingSuccess("usCitizen", "isUsCitizen", "true");
+			postExpectingSuccess("usCitizen", "citizenshipStatus", "true");
 			postExpectingSuccess("healthcareCoverage", "healthcareCoverage", "true");
 			postExpectingSuccess("employmentStatus", "areYouWorking", "true");
 			postExpectingSuccess("longTermCare", "doYouNeedLongTermCare", "true");
@@ -1426,7 +1426,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingRedirect("basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER"),
 					"certainPopsConfirm");
 			fillInPersonalInfoAndContactInfoAndAddress();
-			postExpectingSuccess("usCitizen", "isUsCitizen", "false");
+			postExpectingSuccess("usCitizen", "citizenshipStatus", "false");
 			submitApplication();
 
 			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
@@ -1451,25 +1451,26 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			applicationData.getSubworkflows().get("household").get(1)
 					.setId(UUID.fromString("11111111-1234-1234-1234-123456789012"));
 
-			postExpectingSuccess("usCitizen", "isUsCitizen", "false");
-			postExpectingSuccess("whoIsNonCitizen", "whoIsNonCitizen",
-					List.of("Dwight Schrute applicant",
-							"householdMemberFirstName0 householdMemberLastName0 00000000-1234-1234-1234-123456789012",
-							"householdMemberFirstName1 householdMemberLastName1 11111111-1234-1234-1234-123456789012"));
-			postExpectingSuccess("alienIdNumbers",
-					Map.of("alienIdMap",
-							List.of("applicant", "00000000-1234-1234-1234-123456789012",
-									"11111111-1234-1234-1234-123456789012"),
-							"alienIdNumber", List.of("A111A", "B222B", "C333C")));
-			submitApplication();
-
+			postExpectingSuccess("usCitizen", "citizenshipStatus", "false");
+			postExpectingSuccess("usCitizen", 
+			        Map.of(
+			            "citizenshipStatus", List.of("NOT_CITIZEN","NOT_CITIZEN", "NOT_CITIZEN"),
+			            "citizenshipIdMap", List.of("applicant","00000000-1234-1234-1234-123456789012", "11111111-1234-1234-1234-123456789012")));
+			
+			
+			  postExpectingSuccess("alienIdNumbers", Map.of("alienIdMap",
+			  List.of("applicant", "00000000-1234-1234-1234-123456789012",
+			  "11111111-1234-1234-1234-123456789012"),
+			  "alienIdNumber", List.of("A111A",
+			  "B222B", "C333C"))); 
+			  submitApplication();
+			  
 			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
 
 			// Section 6
 			assertPdfFieldEquals("IS_US_CITIZEN", "No", pdf);
 			assertPdfFieldContains("CP_SUPPLEMENT",
-					"QUESTION 6 continued:\nPerson 3: householdMemberFirstName1 householdMemberLastName1, Alien ID: C333C",
-					pdf);
+					"QUESTION 6 continued:\nPerson 3: householdMemberFirstName1 householdMemberLastName1",pdf);
 
 		}
 
@@ -1688,9 +1689,11 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 					"certainPopsConfirm");
 			addHouseholdMembersWithProgram("CCAP");
 			String jimHalpertId = getFirstHouseholdMemberId();
-			postExpectingSuccess("usCitizen", "isUsCitizen", "false");
-			postExpectingSuccess("whoIsNonCitizen", "whoIsNonCitizen",
-					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId));
+			postExpectingSuccess("usCitizen", 
+			        Map.of(
+			            "citizenshipStatus", List.of("NOT_CITIZEN", "NOT_CITIZEN"),
+			            "citizenshipIdMap", List.of("applicant", jimHalpertId) ));
+			
 			postExpectingSuccess("livingSituation", "livingSituation", "LIVING_IN_A_PLACE_NOT_MEANT_FOR_HOUSING");
 			postExpectingSuccess("healthcareCoverage", "healthcareCoverage", "true");
 			postExpectingSuccess("retroactiveCoverage", "retroactiveCoverageQuestion", "true");

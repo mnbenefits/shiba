@@ -123,8 +123,9 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
         supplementPageText = String.format("%sQUESTION 6 continued:", supplementPageText);
         int i = 2;
         for (NonUSCitizen nuc : nonCitizens.subList(2, nonCitizens.size())) {
-          supplementPageText = String.format("%s\nPerson %d: %s, Alien ID: %s", supplementPageText,
-              i + 1, nuc.fullName, nuc.alienId);
+        	//  Removed alien ID
+          supplementPageText = String.format("%s\nPerson %d: %s", supplementPageText,
+                  i + 1, nuc.fullName);  
           i++;
         }
       }
