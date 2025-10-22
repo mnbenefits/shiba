@@ -458,22 +458,14 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", List.of("NONE_OF_THE_ABOVE"),
 			"childCareMentalHealth");
     assertCorrectPageTitle("childCareMentalHealth", "Mental health needs & child care");
+    // We will skip the whoNeedsChildCareForMentalHealth page.  The skipCondition evaluates to "true" because
+    // We added one household member and then we put one child in the "whoNeedsChildCare" list so all thats left is the applicant.
     postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "true",
-            "whoNeedsChildCareForMentalHealth");
-    assertCorrectPageTitle("whoNeedsChildCareForMentalHealth", "Who needs mental health time");
-    
-    String householdMemberId = getFirstHouseholdMemberId();
-    postExpectingRedirect("whoNeedsChildCareForMentalHealth",
-            "whoNeedsChildCareMentalHealth",
-            List.of("householdMemberFirstName householdMemberLastName " + householdMemberId),
-            "childCareMentalHealthTimes"
-        );
+            "childCareMentalHealthTimes");
     assertCorrectPageTitle("childCareMentalHealthTimes", "Time needed for mental health & child care");
     postExpectingRedirect("childCareMentalHealthTimes", "childCareMentalHealthHours", "8",
             "housingSubsidy");
     assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
-
-    
   }
   
 }

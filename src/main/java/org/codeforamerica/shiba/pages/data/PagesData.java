@@ -134,7 +134,8 @@ public class PagesData extends HashMap<String, PageData> {
    */
   private String resolve(FeatureFlagConfiguration featureFlags,
       PageWorkflowConfiguration pageWorkflowConfiguration,
-      Value value) {
+      Value value,
+      ApplicationData applicationData) {
     if (value == null) {
       return "";
     }
@@ -144,6 +145,14 @@ public class PagesData extends HashMap<String, PageData> {
           String flag = conditionalValue.getFlag();
           if (flag != null && featureFlags.get(flag).isOff()) {
             return false;
+          }
+
+          // Check customCondition
+          Condition customCondition = conditionalValue.getCustomCondition();
+          if (customCondition != null) {
+        	  DatasourcePages datasourcePages = this.getDatasourcePagesBy(pageWorkflowConfiguration.getDatasources())
+                      .mergeDatasourcePages(this.getDatasourceGroupBy(pageWorkflowConfiguration.getDatasources(), applicationData.getSubworkflows()));
+        	  return datasourcePages.satisfies(customCondition);
           }
 
           // Check condition
@@ -187,14 +196,14 @@ public class PagesData extends HashMap<String, PageData> {
     return new PageTemplate(
         inputs,
         pageConfiguration.getName(),
-        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getPageTitle()),
-        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getHeaderKey()),
+        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getPageTitle(), applicationData),
+        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getHeaderKey(), applicationData),
         resolve(featureFlags, pageWorkflowConfiguration,
-            pageConfiguration.getHeaderHelpMessageKey()),
+            pageConfiguration.getHeaderHelpMessageKey(), applicationData),
         pageConfiguration.getPrimaryButtonTextKey(),
-        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getSubtleLinkTextKey()),
+        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getSubtleLinkTextKey(), applicationData),
         pageWorkflowConfiguration.getSubtleLinkTargetPage(),
-        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getCardFooterTextKey()),
+        resolve(featureFlags, pageWorkflowConfiguration, pageConfiguration.getCardFooterTextKey(), applicationData),
         pageConfiguration.getHasPrimaryButton(),
         pageConfiguration.getExcludeGoBack(),
         pageConfiguration.getContextFragment(),

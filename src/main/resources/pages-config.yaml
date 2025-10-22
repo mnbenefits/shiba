@@ -1561,7 +1561,7 @@ pageConfigurations:
       defaultValue: child-care-mental-health.do-any-caregivers-need-help
       conditionalValues:
         - value: child-care-mental-health.do-you-need-help
-          condition: *livesAlone?
+          customCondition: APPLICANT_IS_ONLY_ADULT
     hasPrimaryButton: false
     headerHelpMessageKey: child-care-mental-health.adults-and-caregivers
     inputs:
@@ -1594,7 +1594,7 @@ pageConfigurations:
       defaultValue: child-care-mental-health-time.tell-us-how-much-time-is-needed
       conditionalValues:
         - value: child-care-mental-health-time.tell-us-how-much-time-you-need
-          condition: *livesAlone?
+          customCondition: APPLICANT_IS_ONLY_ADULT
     headerHelpMessageKey: child-care-mental-health-time.you-can-request
     inputs:
       - type: CUSTOM
@@ -5861,23 +5861,10 @@ workflow:
     skipCondition: *noOneChoseCCAP?
     nextPages:
       - pageName: whoNeedsChildCareForMentalHealth
-        condition:
-          logicalOperator: AND
-          conditions:
-            - pageName: childCareMentalHealth
-              input: childCareMentalHealth
-              matcher: CONTAINS
-              value: "true"
-            - *doesNotLiveAlone?
-      - pageName: childCareMentalHealthTimes
-        condition:
-          logicalOperator: AND
-          conditions:
-            - pageName: childCareMentalHealth
-              input: childCareMentalHealth
-              matcher: CONTAINS
-              value: "true"
-            - *livesAlone?
+        condition: 
+          pageName: childCareMentalHealth
+          input: childCareMentalHealth
+          value: "true"
       - pageName: preparingMealsTogether
         condition:
           logicalOperator: AND
@@ -5892,6 +5879,7 @@ workflow:
             - *livesAlone?
       - pageName: housingSubsidy
     datasources:
+      - pageName: childrenInNeedOfCare
       - pageName: childCareMentalHealth
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
@@ -5900,15 +5888,15 @@ workflow:
   whoNeedsChildCareForMentalHealth:
     pageConfiguration: *whoNeedsChildCareForMentalHealth
     skipCondition:
+      customCondition: APPLICANT_IS_ONLY_ADULT
       name: childCareMentalHealthSelectedNo
-      pageName: childCareMentalHealth
-      input: childCareMentalHealth
-      matcher: CONTAINS
-      value: "false"
     nextPages:
       - pageName: childCareMentalHealthTimes
     datasources:
       - pageName: childCareMentalHealth
+      - pageName: childrenInNeedOfCare
+      - groupName: household
+        pageName: householdMemberInfo
   childCareMentalHealthTimes:
     pageConfiguration: *childCareMentalHealthTimes
     skipCondition:
@@ -5931,6 +5919,7 @@ workflow:
         condition: *livesAlone?
       - pageName: housingSubsidy
     datasources:
+      - pageName: childrenInNeedOfCare
       - pageName: childCareMentalHealth
       - pageName: whoNeedsChildCareForMentalHealth
       - pageName: addHouseholdMembers
