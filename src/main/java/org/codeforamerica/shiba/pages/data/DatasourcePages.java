@@ -55,6 +55,9 @@ public class DatasourcePages extends HashMap<String, PageData> {
 		case "SKIP_SCHOOL_START_DATE": {
 			return condition.satisfiesSkipSchoolStartDateCondition(this.get("schoolGrade"));
 		}
+		case "APPLICANT_IS_ONLY_ADULT": {
+			return condition.satisfiesApplicantIsOnlyAdultCondition(this.get("childrenInNeedOfCare"), this.get("householdMemberInfo"));
+		}
 		default:
 			return true;
 		}

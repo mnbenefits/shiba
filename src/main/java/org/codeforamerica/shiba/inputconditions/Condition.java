@@ -9,7 +9,6 @@ import java.util.Map;
 import org.codeforamerica.shiba.output.LogicalOperator;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.PageData;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -51,7 +50,7 @@ public class Condition implements Serializable {
   }
 
   // Constructor for a "customCondition"
-  // Takes one parameter, a string that identifies the custome condition.
+  // Takes one parameter, a string that identifies the custom condition.
   public Condition(String customCondition) {
     this.customCondition = customCondition;
   }
@@ -131,6 +130,34 @@ public class Condition implements Serializable {
 			}
 		}
 		return true;
+	}
+	 
+/**
+ * This method evaluates the APPLICANT_IS_ONLY_ADULT custom condition.
+ * @param childrenInNeedOfCarePageData - this is the PageData object for the childrenInNeedOfCare page  
+ * @param householdSubworkflow - this is the PageData object that represents the household subworkflow, all householdMemberInfo pages
+ * in the household workflow are merged into a single pageData object
+ * @return 
+*/
+	public boolean satisfiesApplicantIsOnlyAdultCondition(PageData childrenInNeedOfCarePageData, PageData householdMemberInfo) {
+
+		// Protect against null parameters
+		if (childrenInNeedOfCarePageData == null) return true;
+		if (householdMemberInfo == null) return true;
+
+		// All of the householdMemberInfo pages are merged into one householdMemberInfo page.
+		// We can get the number of household members by finding the size of the lastName input.
+		List<String> childrenInNeedOfCare = childrenInNeedOfCarePageData.get("whoNeedsChildCare").getValue();
+		int whoNeedsChildCareSize = childrenInNeedOfCare.size();
+		int householdSize = householdMemberInfo.get("lastName").getValue().size();
+		if (whoNeedsChildCareSize > householdSize) return true;
+		if (whoNeedsChildCareSize == householdSize) {
+			for (String child : childrenInNeedOfCare ) {
+				if (child.endsWith("applicant")) return false;
+			}
+			return true;
+		}
+		return false;  // whoNeedsChildCareSize < householdSize
 	}
 
   @SuppressWarnings("unused")

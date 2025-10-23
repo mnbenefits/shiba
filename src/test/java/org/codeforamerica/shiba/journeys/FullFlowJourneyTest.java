@@ -122,9 +122,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		
 		//Child care mental health section
 		testPage.clickContinue("Mental health needs & child care");
-		testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Who needs mental health time");
-		testPage.enter("whoNeedsChildCareMentalHealth", "Ahmed St. George (you)");
-		testPage.clickContinue("Time needed for mental health & child care");
+		// skipCondition for the whoNeedsChildCareMentalHealth page is true.  Applicant is only adult.
+		testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed for mental health & child care");
 		testPage.enter("childCareMentalHealthHours", "20");
 		testPage.clickContinue("Preparing meals together");
 		

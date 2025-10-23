@@ -84,4 +84,9 @@ public class DocumentField {
   public String getValue(int i) {
     return getValue().get(i);
   }
+  
+  public void setValueToBlank() {
+	  this.value.clear();
+	  this.value.add("");
+  }
 }

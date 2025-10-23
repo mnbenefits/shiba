@@ -216,6 +216,7 @@ xml:
     ASSOCIATION_FEES: Association Fees
     ROOM_AND_BOARD: Room and/or Board
     EVERY_WEEK: Weekly
+    EVERY_DAY: Daily
     EVERY_TWO_WEEKS: Every two weeks
     TWICE_A_MONTH: Twice a month
     EVERY_MONTH: Monthly

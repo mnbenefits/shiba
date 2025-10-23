@@ -28,6 +28,7 @@ public class NonHourlyJobIncomeInformation implements JobIncomeInformation {
   @Override
   public Money grossMonthlyIncome() {
     return switch (payPeriod) {
+      case EVERY_DAY -> incomePerPayPeriod;
       case EVERY_WEEK -> incomePerPayPeriod.multiply(Money.parse("4"));
       case EVERY_TWO_WEEKS, TWICE_A_MONTH -> incomePerPayPeriod.multiply(Money.parse("2"));
       case EVERY_MONTH, IT_VARIES -> incomePerPayPeriod;
@@ -35,6 +36,7 @@ public class NonHourlyJobIncomeInformation implements JobIncomeInformation {
   }
 
   enum PayPeriod {
+	EVERY_DAY,
     EVERY_WEEK,
     EVERY_TWO_WEEKS,
     TWICE_A_MONTH,
