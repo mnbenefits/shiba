@@ -1804,6 +1804,9 @@ pageConfigurations:
       - name: citizenshipStatus
         type: CUSTOM
         customInputFragment: citizenshipStatusInput
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:
             - value: BIRTH_RIGHT
@@ -6116,27 +6119,7 @@ workflow:
     pageConfiguration: *usCitizen
     nextPages:
       - pageName: disability
-        condition: 
-          logicalOperator: OR
-          conditions:
-            - pageName: usCitizen
-              input: citizenshipStatus
-              value: BIRTH_RIGHT
-            - pageName: usCitizen
-              input: citizenshipStatus	
-              value: NATURALIZED
-            - pageName:  usCitizen
-              input: citizenshipStatus
-              value: DERIVED
-            - pageName:  usCitizen
-              input: citizenshipStatus
-              value: NOT_CITIZEN
-      - pageName: whoIsNonCitizen
-        condition:
-          pageName: usCitizen
-          input: isUsCitizen
-          value: "false"
-      - pageName: usCitizen
+ #TODO Need condition for CCAP
     datasources:
       - pageName: addHouseholdMembers
       - pageName: personalInfo 

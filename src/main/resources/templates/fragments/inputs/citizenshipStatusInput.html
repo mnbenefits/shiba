@@ -15,12 +15,15 @@ It displays citizenship status options for each household member using radio but
         hasHelpMessage=${input.helpMessageKey != null},
         selectedListSize=${selectedStatuses.value != null ? #lists.size(selectedStatuses.value) : 0},
         isLivingAlone=${householdSubFlow == null || householdSubFlow.isEmpty()},
-        idList=${T(org.codeforamerica.shiba.pages.PageUtils).buildCitizenshipIdList(householdSubFlow)}
+        idList=${T(org.codeforamerica.shiba.pages.PageUtils).buildCitizenshipIdList(householdSubFlow)},
+		inputData=${data.get(input.name)}
     ">
-
+<!--	INPUT:<p th:text="${input}"> test</p>
+	DATA:<p th:text="${data}"> test</p>-->
+	
 	<div class="spacing-below-35 spacing-above-35" th:lang="${#locale.language}">
 
-		<div class="form-group">
+		<div class="form-group" th:classappend="${!inputData.valid(data)} ? 'form-group--error' : ''">
 			<th:block th:each="id, iter : ${idList}" th:with="
                     index=${iter.index},
                     isApplicant=${id == 'applicant'},
@@ -59,7 +62,8 @@ It displays citizenship status options for each household member using radio but
 				<!-- Hidden person ID mapping -->
 				<input type="hidden" th:id="${'citizenshipIdMap-' + index}" th:name="citizenshipIdMap[]"
 					th:value="${id}" />
-
+					ERROR:
+					<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
 			</th:block>
 
 		</div>
