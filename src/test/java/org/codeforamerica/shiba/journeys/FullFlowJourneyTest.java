@@ -42,7 +42,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
 		assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
 		// Assert that the EBT Scam Alert is displayed on the landing page.
-		assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
+		assertThat(driver.findElement(By.id("banner-alert"))).isNotNull();
 
 		// Verify that the "Learn more here." link works
 		String landingPageWindowHandle = driver.getWindowHandle();
