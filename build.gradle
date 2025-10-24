@@ -1,5 +1,5 @@
 plugins {
-    id("org.springframework.boot") version "3.5.6"
+    id("org.springframework.boot") version "3.5.7"
     id("io.spring.dependency-management") version "1.1.7"
     id("java")
     id("com.github.jk1.dependency-license-report") version "2.9"
@@ -115,14 +115,14 @@ dependencies {
     implementation("org.springframework.retry:spring-retry")
     implementation("org.springframework.ws:spring-ws-core")
 
-    implementation("org.springframework.session:spring-session-core:3.5.2")
-    implementation("org.springframework.session:spring-session-jdbc:3.5.2")
+    implementation("org.springframework.session:spring-session-core:3.5.3")
+    implementation("org.springframework.session:spring-session-jdbc:3.5.3")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web:3.5.6")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.5.6")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.5.7")
     //webflux is needed even though it is reactive, not servlet. Used by MailGun and SmartyStreet
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -132,8 +132,8 @@ dependencies {
     
      //logging -->
     implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("io.sentry:sentry-spring-boot-starter-jakarta:8.23.0")
-    implementation("io.sentry:sentry-logback:8.23.0")
+    implementation("io.sentry:sentry-spring-boot-starter-jakarta:8.24.0")
+    implementation("io.sentry:sentry-logback:8.24.0")
     implementation("net.logstash.logback:logstash-logback-encoder:8.1")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
@@ -141,13 +141,13 @@ dependencies {
     implementation("ch.qos.logback:logback-core:1.5.20")
     implementation("ch.qos.logback:logback-parent:1.5.20")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
-    implementation("com.google.crypto.tink:tink:1.18.0")
-    implementation("com.azure:azure-storage-blob:12.31.3")
+    implementation("com.google.crypto.tink:tink:1.19.0")
+    implementation("com.azure:azure-storage-blob:12.32.0")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2-1")
     implementation("commons-validator:commons-validator:1.10.0")
-    implementation("org.flywaydb:flyway-core:11.14.1")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.14.1")
+    implementation("org.flywaydb:flyway-core:11.15.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.15.0")
     implementation("com.mixpanel:mixpanel-java:1.5.4")
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.10.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.10.0")
