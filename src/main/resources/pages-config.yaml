@@ -1805,7 +1805,7 @@ pageConfigurations:
         type: CUSTOM
         customInputFragment: citizenshipStatusInput
         validators:
-          - validation: NOT_BLANK
+          - validation: ALL_NON_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:

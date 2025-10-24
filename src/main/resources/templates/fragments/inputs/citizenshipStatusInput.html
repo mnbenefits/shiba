@@ -62,10 +62,10 @@ It displays citizenship status options for each household member using radio but
 				<!-- Hidden person ID mapping -->
 				<input type="hidden" th:id="${'citizenshipIdMap-' + index}" th:name="citizenshipIdMap[]"
 					th:value="${id}" />
-					ERROR:
-					<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+					
 			</th:block>
-
+			<!--ERROR -->
+			<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
 		</div>
 	</div>
 
