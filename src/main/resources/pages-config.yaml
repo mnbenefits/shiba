@@ -273,6 +273,28 @@ conditionDefinitions:
         input: programs
         matcher: CONTAINS
         value: SNAP
+  - &someoneChoseEA?
+    name: someoneChoseEA
+    logicalOperator: OR
+    conditions:
+      - pageName: choosePrograms
+        name: applicantChooseEA
+        input: programs
+        matcher: CONTAINS
+        value: EA
+      - pageName: householdMemberInfo
+        name: hhMemberChooseEA
+        input: programs
+        matcher: CONTAINS
+        value: EA
+  - &someoneChoseCAFProgram?
+    name: someoneChoseCAFProgram
+    logicalOperator: OR
+    conditions:
+      - *someoneChoseSNAP?
+      - *someoneChoseEA?
+      - *someoneChoseCASH?
+      - *applicantChoseGRH?
   - &noOneChoseCASH?
     name: noOneChoseCASH
     logicalOperator: AND
@@ -4707,6 +4729,13 @@ pageConfigurations:
           errorMessageKey: general.validation.make-sure-you-answer-this-question
       options:
         selectableOptions:
+          - value: CASH
+            messageKey: assets.cash
+  #          condition: *someoneChoseCAFProgram?
+          - value: BANK_ACCOUNT
+            messageKey: assets.bank-account
+            helpMessageKey: assets.like-a-savings-account
+  #          condition: *someoneChoseCAFProgram?
           - value: VEHICLE
             messageKey: assets.a-vehicle
           - value: STOCK_BOND
