@@ -6,7 +6,7 @@
 					childrenNeedingCare = ${whoNeeds != null && !whoNeeds.value.isEmpty() ? whoNeeds.value : {}}">
 
 	<div class="spacing-above-35 form-group" th:classappend="${!inputData.valid(data)} ? 'form-group--error' : ''">
-		<div class="spacing-below-60 word-wrap-break-word">
+		<div class="word-wrap-break-word">
 			<div role="group" aria-labelledby="page-header">
 				<fieldset>
 					<!-- Always add a checkbox for the applicant -->
@@ -38,6 +38,8 @@
 				</fieldset>
 			</div>
 		</div>
-		<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+		<div th:if="${!data.isValid() && !inputData.valid(data) && input.validationIcon}" class="spacing-above-minus-10">
+			<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>			
+		</div>
 	</div>
 </th:block>

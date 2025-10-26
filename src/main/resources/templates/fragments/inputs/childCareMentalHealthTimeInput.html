@@ -25,7 +25,15 @@
 		childCareHours=${childCareHoursExists? data.get('childCareMentalHealthHours').value[0] : ''}">
 
 			<div class="text-input-group" >
-			<input type="number"
+				<!-- We use the oninput event to perform validation
+					The match(/(\d{0,2}\.\d{0,2})|\d{0,2}/)[0] explained:
+					/.../ : Delimits the start and end of the regular expression
+					(...) : Delimits what we are trying to match and capture
+					\d{0,2}\.\d{0,2}) : Means a pattern of 0-2 digits followed by a . (period) followed by 0-2 digits
+					|\d{0,2} : OR a pattern of 0-2 digits
+					[0] : Returns the first match
+				-->	
+				<input type="text" oninput="this.value=this.value.match(/(\d{0,2}\.\d{0,2})|\d{0,2}/)[0];" inputmode="numeric"
 			       class="text-input form-width--medium spacing-below-30"
 			       th:readonly="${input.readOnly}"
 			       th:id="childCareMentalHealthHours"
@@ -54,8 +62,8 @@
 		               th:id="${'label-'+index}">
 		        </label>
 		        <p  class="text--help spacing-below-15" th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
-				<div class="text-input-group" >
-		        <input type="number"
+				<div class="text-input-group spacing-below-35" >
+					<input type="text" oninput="this.value=this.value.match(/(\d{0,2}\.\d{0,2})|\d{0,2}/)[0];" inputmode="numeric"
 		               class="text-input form-width--medium spacing-below-30"
 		               th:readonly="${input.readOnly}"
 		               th:id="|childCareMentalHealthHours-${index}|"
