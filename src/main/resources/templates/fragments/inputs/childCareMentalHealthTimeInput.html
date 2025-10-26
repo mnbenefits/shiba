@@ -33,7 +33,7 @@
 					|\d{0,2} : OR a pattern of 0-2 digits
 					[0] : Returns the first match
 				-->	
-				<input type="text" oninput="this.value=this.value.match(/(\d{0,2}\.\d{0,2})|\d{0,2}/)[0];" inputmode="numeric"
+				<input type="text" oninput="this.value=this.value.match(/(\d{0,2}\.\d{0,2})|\d{0,2}/)[0];" inputmode="decimal"
 			       class="text-input form-width--medium spacing-below-30"
 			       th:readonly="${input.readOnly}"
 			       th:id="childCareMentalHealthHours"
@@ -63,7 +63,7 @@
 		        </label>
 		        <p  class="text--help spacing-below-15" th:id="${'help-message-'+index}" th:text="#{${input.promptMessage.promptMessageKey}}"></p>
 				<div class="text-input-group spacing-below-35" >
-					<input type="text" oninput="this.value=this.value.match(/(\d{0,2}\.\d{0,2})|\d{0,2}/)[0];" inputmode="numeric"
+					<input type="text" oninput="this.value=this.value.match(/(\d{0,2}\.\d{0,2})|\d{0,2}/)[0];" inputmode="decimal"
 		               class="text-input form-width--medium spacing-below-30"
 		               th:readonly="${input.readOnly}"
 		               th:id="|childCareMentalHealthHours-${index}|"
