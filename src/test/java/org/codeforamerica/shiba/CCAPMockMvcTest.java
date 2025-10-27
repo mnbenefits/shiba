@@ -462,7 +462,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     // We added one household member and then we put one child in the "whoNeedsChildCare" list so all thats left is the applicant.
     postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "true",
             "childCareMentalHealthTimes");
-    assertCorrectPageTitle("childCareMentalHealthTimes", "Time needed for mental health & child care");
+    assertCorrectPageTitle("childCareMentalHealthTimes", "Time needed each week");
     postExpectingRedirect("childCareMentalHealthTimes", "childCareMentalHealthHours", "8",
             "housingSubsidy");
     assertCorrectPageTitle("housingSubsidy", "Housing subsidy");   
