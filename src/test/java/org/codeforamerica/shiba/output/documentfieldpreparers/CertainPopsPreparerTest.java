@@ -596,9 +596,9 @@ public class CertainPopsPreparerTest {
 				.withPageData("personalInfo", "firstName", List.of("David"))
 				.withPageData("personalInfo", "lastName", List.of("Smith"))
 				// New Citizenship flow data
-			    .withPageData("usCitizen", "citizenshipStatus", 
+			    .withPageData("citizenship", "citizenshipStatus", 
 			        List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN"))
-			    .withPageData("usCitizen", "citizenshipIdMap", 
+			    .withPageData("citizenship", "citizenshipIdMap", 
 			        List.of("applicant", "22345678-1234-1234-1234-123456789012", "32345678-1234-1234-1234-223456789013", "42345678-1234-1234-1234-223456789014"))
 				.withSubworkflow("household",
 						new PagesData(Map.of("householdMemberInfo",

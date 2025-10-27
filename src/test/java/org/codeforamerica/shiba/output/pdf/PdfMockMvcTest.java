@@ -419,7 +419,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("goingToSchool", "goingToSchool", "false");
 		postExpectingSuccess("pregnant", "isPregnant", "false");
 		postExpectingSuccess("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false");
-		postExpectingSuccess("usCitizen", "isUsCitizen", "true");
+		postExpectingSuccess("citizenship", "citizenshipStatus", "BIRTH_RIGHT");
 		postExpectingSuccess("workChanges", "workChanges", "GO_ON_STRIKE");
 		postExpectingSuccess("tribalNationMember", "isTribalNationMember", "false");
 		postExpectingSuccess("employmentStatus", "areYouWorking", "false");
@@ -1367,7 +1367,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 					"certainPopsConfirm");
 			fillInPersonalInfoAndContactInfoAndAddress();
 			postExpectingSuccess("livingSituation", "livingSituation", "LIVING_IN_A_PLACE_NOT_MEANT_FOR_HOUSING");
-			postExpectingSuccess("usCitizen", "citizenshipStatus", "true");
+			postExpectingSuccess("citizenship", "citizenshipStatus", "true");
 			postExpectingSuccess("healthcareCoverage", "healthcareCoverage", "true");
 			postExpectingSuccess("employmentStatus", "areYouWorking", "true");
 			postExpectingSuccess("longTermCare", "doYouNeedLongTermCare", "true");
@@ -1504,7 +1504,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingRedirect("basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER"),
 					"certainPopsConfirm");
 			fillInPersonalInfoAndContactInfoAndAddress();
-			postExpectingSuccess("usCitizen", "citizenshipStatus", "false");
+			postExpectingSuccess("citizenship", "citizenshipStatus", "false");
 			submitApplication();
 
 			var pdf = downloadCertainPopsCaseWorkerPDF(applicationData.getId());
@@ -1529,8 +1529,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			applicationData.getSubworkflows().get("household").get(1)
 					.setId(UUID.fromString("11111111-1234-1234-1234-123456789012"));
 
-			postExpectingSuccess("usCitizen", "citizenshipStatus", "false");
-			postExpectingSuccess("usCitizen", 
+			postExpectingSuccess("citizenship", "citizenshipStatus", "false");
+			postExpectingSuccess("citizenship", 
 			        Map.of(
 			            "citizenshipStatus", List.of("NOT_CITIZEN","NOT_CITIZEN", "NOT_CITIZEN"),
 			            "citizenshipIdMap", List.of("applicant","00000000-1234-1234-1234-123456789012", "11111111-1234-1234-1234-123456789012")));
@@ -1767,7 +1767,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 					"certainPopsConfirm");
 			addHouseholdMembersWithProgram("CCAP");
 			String jimHalpertId = getFirstHouseholdMemberId();
-			postExpectingSuccess("usCitizen", 
+			postExpectingSuccess("citizenship", 
 			        Map.of(
 			            "citizenshipStatus", List.of("NOT_CITIZEN", "NOT_CITIZEN"),
 			            "citizenshipIdMap", List.of("applicant", jimHalpertId) ));

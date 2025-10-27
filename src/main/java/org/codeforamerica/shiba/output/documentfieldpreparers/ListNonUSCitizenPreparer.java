@@ -44,33 +44,8 @@ public class ListNonUSCitizenPreparer implements DocumentFieldPreparer {
 		List<NonUSCitizen> allApplicantsNonCitizen = new ArrayList<NonUSCitizen>();
 		PagesData pagesData = application.getApplicationData().getPagesData();
 
-		/*boolean allApplicantsAreCitizens = getBooleanValue(pagesData, EVERYONE_US_CITIZENS);
-		if (allApplicantsAreCitizens) {
-			return List.of();
-		} else {
-			List<String> nonCitizens = getValues(pagesData, WHO_ARE_NON_US_CITIZENS).stream().toList();
-
-			if (nonCitizens.size() == 0) {// For Individual flow 
-				String alienId =
-				getFirstValue(pagesData, ALIEN_ID);
-				allApplicantsNonCitizen.add(new NonUSCitizen(getFullName(application),
-						alienId == null ? "" : alienId));
-			} else {
-				nonCitizens.stream().forEach(name -> {
-					List<String> nameList = Arrays.stream(name.split(" ")).collect(Collectors.toList());
-					String id = nameList.get(nameList.size() - 1);
-					String alienNumber = getAlienNumber(pagesData, id);
-					nameList.remove(id);
-					String fullName = String.join(" ", nameList);
-					allApplicantsNonCitizen.add(new NonUSCitizen(fullName, alienNumber));
-				});
-			}
-		}
-		return allApplicantsNonCitizen;
-	}*/
-		
 		// Get citizenship data from NEW flow
-		PageData usCitizenPage = pagesData.getPage("usCitizen");
+		PageData usCitizenPage = pagesData.getPage("citizenship");
 		if (usCitizenPage == null) {
 			return List.of();
 		}

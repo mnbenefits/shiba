@@ -1784,18 +1784,18 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
-  - &usCitizen
-    name: usCitizen
-    pageTitle: us-citizen.title
+  - &citizenship
+    name: citizenship
+    pageTitle: citizenship.title
     headerKey:
-      defaultValue: us-citizen.please-confirm-the-citizenship-status-of-your-househould
+      defaultValue: citizenship.please-confirm-the-citizenship-status-of-your-househould
       conditionalValues:
-        - value: us-citizen.please-confirm-your-citizenship-status
+        - value: citizenship.please-confirm-your-citizenship-status
           condition: *livesAlone?  
     headerHelpMessageKey: 
-      defaultValue: us-citizen.members-of-your-household-may-still-be-eligible
+      defaultValue: citizenship.members-of-your-household-may-still-be-eligible
       conditionalValues:
-        - value: us-citizen.you-may-still-be-eligible-for-food-and-cash-benefits-if-you-are-not-a-us-citizen
+        - value: citizenship.you-may-still-be-eligible-for-food-and-cash-benefits-if-you-are-not-a-us-citizen
           condition: *livesAlone? 
     hasPrimaryButton: true
     contextFragment: passportContextFragment
@@ -1810,13 +1810,13 @@ pageConfigurations:
         options:
           selectableOptions:
             - value: BIRTH_RIGHT
-              messageKey: us-citizen.birthright-us-citizen-or-us-national
+              messageKey: citizenship.birthright-us-citizen-or-us-national
             - value: NATURALIZED
-              messageKey: us-citizen.naturalized-us-citizen
+              messageKey: citizenship.naturalized-us-citizen
             - value: DERIVED
-              messageKey: us-citizen.derived-us-citizen
+              messageKey: citizenship.derived-us-citizen
             - value: NOT_CITIZEN
-              messageKey: us-citizen.not-a-us-citizen
+              messageKey: citizenship.not-a-us-citizen
           datasources:
             - pageName: personalInfo
             - pageName: householdMemberInfo
@@ -6112,11 +6112,11 @@ workflow:
   migrantFarmWorker:
     pageConfiguration: *migrantFarmWorker
     nextPages:
-      - pageName: usCitizen
+      - pageName: citizenship
     datasources:
       - pageName: addHouseholdMembers
-  usCitizen:
-    pageConfiguration: *usCitizen
+  citizenship:
+    pageConfiguration: *citizenship
     nextPages:
       - pageName: disability
  #TODO Need condition for CCAP
@@ -6130,7 +6130,7 @@ workflow:
       - pageName: alienIdNumber
     datasources:
       - pageName: addHouseholdMembers
-      - pageName: usCitizen
+      - pageName: citizenship
     skipCondition: *livesAlone?
   alienIdNumber:
     pageConfiguration: *alienIdNumber

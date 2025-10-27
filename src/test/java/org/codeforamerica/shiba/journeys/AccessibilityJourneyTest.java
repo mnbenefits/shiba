@@ -5,15 +5,11 @@ import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.codeforamerica.shiba.documents.DocumentRepository;
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.AccessibilityTestPage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -353,7 +349,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("isPregnant", YES.getDisplayValue(), "Household: pregnant");
     testPage.enter("whoIsPregnant", "Me");
     testPage.clickContinue("Expedited Migrant Farm Worker, Household");
-    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
+    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
     testPage.clickElementById("citizenshipStatus[]-1-NOT_CITIZEN");
     testPage.clickContinue("Disability");
     testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");

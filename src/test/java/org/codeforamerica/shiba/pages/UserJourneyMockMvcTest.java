@@ -460,8 +460,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  // navigation from goingToSchool to introIncome
 	  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
 	  postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
-	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
-	  postExpectingRedirect("usCitizen", "citizenshipStatus", "DERIVED", "disability");
+	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
+	  postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");
 	  postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
 	  postExpectingRedirect("workChanges", "workChanges", "GO_ON_STRIKE", "tribalNationMember");
 	  postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
@@ -481,8 +481,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
     postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
-    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
-    postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
+    postExpectingRedirect("citizenship", "citizenshipStatus", "BIRTH_RIGHT", "disability");
     postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
   }
 }

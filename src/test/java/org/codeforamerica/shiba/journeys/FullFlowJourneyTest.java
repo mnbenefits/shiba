@@ -167,7 +167,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Expedited Migrant Farm Worker, Household");
 
 		// Is anyone in your household a migrant or seasonal farm worker?
-		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
+		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
 
 		// Please confirm the citizenship status of your household
 		testPage.clickElementById("citizenshipStatus[]-0-NOT_CITIZEN");
@@ -990,7 +990,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 
 		// Is anyone in your household a migrant or seasonal farm worker?
-		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
+		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
 
 		// Please confirm the citizenship status of your household
 		testPage.clickElementById("citizenshipStatus[]-0-BIRTH_RIGHT");

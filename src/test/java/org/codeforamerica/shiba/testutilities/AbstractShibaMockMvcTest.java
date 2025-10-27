@@ -846,14 +846,14 @@ public class AbstractShibaMockMvcTest {
   protected void completeFlowFromIsPregnantThroughTribalNations(boolean hasHousehold, String... programs)
       throws Exception {
     postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
-    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
+    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
     
     if (containsOnly(Arrays.asList(programs), "CCAP")) {
-    	postExpectingRedirect("usCitizen", "citizenshipStatus", "BIRTH_RIGHT", "tribalNationMember");
+    	postExpectingRedirect("citizenship", "citizenshipStatus", "BIRTH_RIGHT", "tribalNationMember");
     	postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
     else {
-    	postExpectingRedirect("usCitizen", "citizenshipStatus", "NATURALIZED", "disability");
+    	postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
     	postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
         postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
         postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
@@ -944,15 +944,15 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
     }
 
-    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
+    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
 
     if (hasHousehold) {
-    	postExpectingRedirect("usCitizen", Map.of(
+    	postExpectingRedirect("citizenship", Map.of(
     		    	    "citizenshipStatus", List.of("NATURALIZED", "BIRTH_RIGHT", "NOT_CITIZEN"),
     	                "citizenshipIdMap", List.of("applicant", "uuid-1", "uuid-2") ),
     		    "disability");
     } else {
-      postExpectingRedirect("usCitizen", "citizenshipStatus", "NATURALIZED", "disability");
+      postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
     }
 
     postExpectingRedirect("disability", "hasDisability", "false", "workChanges");

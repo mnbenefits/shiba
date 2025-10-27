@@ -41,7 +41,7 @@ class ListNonUSCitizenPreparerTest {
 		PageData usCitizenPage = new PageData();
 		usCitizenPage.put("citizenshipStatus", new InputData(List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN")));
 		usCitizenPage.put("citizenshipIdMap", new InputData(List.of("applicant", dariaId, otherPersonId)));
-		applicationData.getPagesData().put("usCitizen", usCitizenPage);
+		applicationData.getPagesData().put("citizenship", usCitizenPage);
 
 		List<DocumentField> result = preparer.prepareDocumentFields(
 				Application.builder().applicationData(applicationData).build(), null, Recipient.CASEWORKER);
@@ -63,8 +63,8 @@ class ListNonUSCitizenPreparerTest {
 	void preparesFieldsForApplicantOnlyNotUSCitizen() {
 		ApplicationData applicationData = applicationDataTest
 				.withPersonalInfo()
-				.withPageData("usCitizen", "citizenshipStatus", List.of("NOT_CITIZEN"))
-				.withPageData("usCitizen", "citizenshipIdMap", List.of("applicant")).build();
+				.withPageData("citizenship", "citizenshipStatus", List.of("NOT_CITIZEN"))
+				.withPageData("citizenship", "citizenshipIdMap", List.of("applicant")).build();
 
 		List<DocumentField> result = preparer.prepareDocumentFields(
 				Application.builder().applicationData(applicationData).build(), null, Recipient.CASEWORKER);
@@ -84,9 +84,9 @@ class ListNonUSCitizenPreparerTest {
 		        .withPersonalInfo()
 		        .withMultipleHouseholdMembers()
 		        // Everyone is a citizen (no NOT_CITIZEN)
-		        .withPageData("usCitizen", "citizenshipStatus", 
+		        .withPageData("citizenship", "citizenshipStatus", 
 		            List.of("BIRTH_RIGHT", "NATURALIZED", "DERIVED"))
-		        .withPageData("usCitizen", "citizenshipIdMap", 
+		        .withPageData("citizenship", "citizenshipIdMap", 
 		            List.of("applicant", member1Id, member2Id))
 		        .build();
 		    
@@ -107,8 +107,8 @@ class ListNonUSCitizenPreparerTest {
 	@Test
 	void preparesFieldsForAlienId() {
 		ApplicationData applicationData = applicationDataTest.withPersonalInfo().withMultipleHouseholdMembers()
-				.withPageData("usCitizen", "citizenshipStatus", List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN"))
-				.withPageData("usCitizen", "citizenshipIdMap", List.of("someGuid", "applicant", "notSpouse"))
+				.withPageData("citizenship", "citizenshipStatus", List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN"))
+				.withPageData("citizenship", "citizenshipIdMap", List.of("someGuid", "applicant", "notSpouse"))
 
 				.withPageData("alienIdNumbers", "alienIdMap", List.of("someGuid", "applicant", "notSpouse"))
 				.withPageData("alienIdNumbers", "alienIdNumber", List.of("SpouseAlienId", "AppAlienId", "")).build();
