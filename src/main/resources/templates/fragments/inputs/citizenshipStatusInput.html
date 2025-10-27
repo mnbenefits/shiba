@@ -18,12 +18,11 @@ It displays citizenship status options for each household member using radio but
         idList=${T(org.codeforamerica.shiba.pages.PageUtils).buildCitizenshipIdList(householdSubFlow)},
 		inputData=${data.get(input.name)}
     ">
-<!--	INPUT:<p th:text="${input}"> test</p>
-	DATA:<p th:text="${data}"> test</p>-->
+
 	
 	<div class="spacing-below-35 spacing-above-35" th:lang="${#locale.language}">
 
-		<div class="form-group" th:classappend="${!inputData.valid(data)} ? 'form-group--error' : ''">
+		<div class="form-group">
 			<th:block th:each="id, iter : ${idList}" th:with="
                     index=${iter.index},
                     isApplicant=${id == 'applicant'},
@@ -38,7 +37,8 @@ It displays citizenship status options for each household member using radio but
                     radioGroupName=${'citizenshipGroup-' + index},
                     hiddenFieldId=${'citizenshipHidden-' + index}
                 ">
-
+			<!-- ERROR - The vertical error bar will span this div (for one person) when no citizenship status is chosen for the person -->
+            <div class="form-group" th:classappend="${!inputData.valid(data) && preselected==''} ? 'form-group--error' : ''">   
 				<!-- Person name label -->
 				<label class="form-question spacing-below-15 spacing-above-30" th:for="|citizenshipGroup-${index}|"
 					th:text="${personName}" th:id="${'label-' + index}">
@@ -63,13 +63,17 @@ It displays citizenship status options for each household member using radio but
 				<input type="hidden" th:id="${'citizenshipIdMap-' + index}" th:name="citizenshipIdMap[]"
 					th:value="${id}" />
 					
+			    <!--ERROR the error message is displayed (for one person) when no citizenship status is chosen for the person -->
+			    <div th:if="${preselected==''}">
+			      <div  th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+			    </div>
+			</div>
 			</th:block>
-			<!--ERROR -->
-			<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
 		</div>
 	</div>
 
 	<!-- JavaScript to handle radio button changes -->
+	<!-- listens for physical button change and then changes hidden input citizenshipIdMap to reflect choice-->
 	<script>
 		(function () {
 			// Wait for DOM to be ready
