@@ -42,7 +42,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
 		assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
 		// Assert that the EBT Scam Alert is displayed on the landing page.
-		assertThat(driver.findElement(By.id("ebt-scam-alert"))).isNotNull();
+		assertThat(driver.findElement(By.id("banner-alert"))).isNotNull();
 
 		// Verify that the "Learn more here." link works
 		String landingPageWindowHandle = driver.getWindowHandle();
@@ -123,7 +123,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		//Child care mental health section
 		testPage.clickContinue("Mental health needs & child care");
 		// skipCondition for the whoNeedsChildCareMentalHealth page is true.  Applicant is only adult.
-		testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed for mental health & child care");
+		testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed each week");
 		testPage.enter("childCareMentalHealthHours", "20");
 		testPage.clickContinue("Preparing meals together");
 		

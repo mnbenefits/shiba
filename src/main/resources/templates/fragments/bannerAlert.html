@@ -1,0 +1,8 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<div id="banner-alert" th:if="${@environment.getProperty('banner.alert.displayed')}" th:fragment="bannerAlert" class="alert-banner" 
+th:utext="	${#locale.language == 'en' ?
+	           @environment.getProperty('banner.alert.en') : 
+	           @environment.getProperty('banner.alert.es')}">
+		   </div>
+</html> 
