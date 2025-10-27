@@ -1,13 +1,8 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getValues;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ALIEN_ID;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ALIEN_IDS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ALIEN_ID_MAP;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.EVERYONE_US_CITIZENS;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.WHO_ARE_NON_US_CITIZENS;
 import static org.codeforamerica.shiba.output.FullNameFormatter.getFullName;
 import java.util.ArrayList;
 import java.util.List;

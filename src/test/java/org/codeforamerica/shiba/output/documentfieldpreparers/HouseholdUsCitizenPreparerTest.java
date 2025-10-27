@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 class HouseholdUsCitizenPreparerTest {
 
-	 /*HouseholdUsCitizenPreparer preparer = new HouseholdUsCitizenPreparer();
+	 HouseholdUsCitizenPreparer preparer = new HouseholdUsCitizenPreparer();
 
 	  @Test
 	  void shouldParseOffWhenUsCitizenshipNotAsked() {
@@ -69,5 +69,5 @@ class HouseholdUsCitizenPreparerTest {
 	              0
 	          )
 	      ));
-	  }*/
+	  }
 	}

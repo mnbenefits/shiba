@@ -1823,7 +1823,21 @@ pageConfigurations:
               groupName: household
               optional: "true"
       - type: HIDDEN
-        name: citizenshipIdMap			
+        name: citizenshipIdMap	
+  - &usCitizen
+    name: usCitizen
+    pageTitle: us-citizen.title
+    headerKey:
+      defaultValue: us-citizen.is-everyone-us-citizen
+      conditionalValues:
+        - value: us-citizen.are-you-a-us-citizen
+          condition: *livesAlone?
+    headerHelpMessageKey: us-citizen.most-immigrants-are-still-eligible-for-food-and-cash-benefits
+    hasPrimaryButton: false
+    contextFragment: passportContextFragment
+    inputs:
+      - name: isUsCitizen
+        type: YES_NO		
   - &whoIsNonCitizen
     name: whoIsNonCitizen
     pageTitle: who-is-non-citizen.title
