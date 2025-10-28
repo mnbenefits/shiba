@@ -4718,7 +4718,11 @@ pageConfigurations:
   - &assets
     name: assets
     pageTitle: assets.title
-    headerKey: assets.does-any-one-in-your
+    headerKey:
+      defaultValue: assets.does-any-one-in-your
+      conditionalValues:
+        - value: assets.do-you-have-any
+          condition: *livesAlone?
     headerHelpMessageKey: assets.select-all-that-apply
     contextFragment: assetsContextFragment
     inputs:
@@ -7109,6 +7113,8 @@ workflow:
       - pageName: assets
   assets:
     pageConfiguration: *assets
+    datasources:
+      - pageName: addHouseholdMembers
     nextPages:
       - pageName: vehicleAssetSource
   vehicleAssetSource:
