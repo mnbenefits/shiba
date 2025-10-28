@@ -1940,6 +1940,7 @@ pageConfigurations:
       conditionalValues:
         - value: liquid-assets-prompt.title-one-person
           condition: *livesAlone?
+    contextFragment: liquidAssetsSingleContextFragment
     headerKey:
       defaultValue: thirty-day-income.how-much-money-is-available
       conditionalValues:
