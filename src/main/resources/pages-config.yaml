@@ -4740,6 +4740,9 @@ pageConfigurations:
             messageKey: assets.bank-account
             helpMessageKey: assets.like-a-savings-account
   #          condition: *someoneChoseCAFProgram?
+          - value: ELECTRONIC_PAYMENT_CARD
+            messageKey: assets.electronic-payment
+            helpMessageKey: assets.like-debit-card
           - value: VEHICLE
             messageKey: assets.a-vehicle
           - value: STOCK_BOND
