@@ -45,6 +45,13 @@
               <div th:replace="~{fragments/alertBox :: alertBox(${page})}"></div>
             </th:block>
           </form>
+		  
+		  <th:block th:if="${page.hasAdditionalContentFragment()}">
+			<div class="spacing-above-35">
+			<div th:replace="~{|fragments/${page.additionalContentFragment}| :: ${page.additionalContentFragment}}"></div>
+			</div>
+
+		  </th:block>
 
           <!--Static page-->
           <div th:if="${page.inputs == null || page.inputs.isEmpty()}">

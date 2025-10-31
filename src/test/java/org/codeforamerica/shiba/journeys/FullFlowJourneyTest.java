@@ -166,16 +166,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Expedited Migrant Farm Worker, Household");
 
 		// Is anyone in your household a migrant or seasonal farm worker?
-		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
+		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
 
-		// Is everyone in your household a U.S. Citizen?
-		testPage.chooseYesOrNo("isUsCitizen", NO.getDisplayValue(), "Non Citizen");
-
-		// Who is not a U.S Citizen?
-		testPage.enter("whoIsNonCitizen", "me");
-		testPage.clickContinue("Alien ID Number");
-
-		testPage.enter("alienIdNumber", "A12345678");
+		// Please confirm the citizenship status of your household
+		testPage.clickElementById("citizenshipStatus[]-0-NOT_CITIZEN");
+		testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT");
 		testPage.clickContinue("Disability");
 
 		// Does anyone in your household have a physical or mental disability that
@@ -750,8 +745,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "ONE_SELECTED");
 		assertCafFieldEquals("EMPLOYEE_FULL_NAME_0", householdMemberFullName);
 		assertCafFieldEquals("WHO_IS_PREGNANT", "Ahmed St. George");
-		assertCafFieldEquals("APPLICANT_IS_US_CITIZEN", "No");
-		assertCafFieldEquals("IS_US_CITIZEN_0", "Yes");
+		assertCafFieldEquals("IS_US_CITIZEN_0", "Not_Citizen");
+		assertCafFieldEquals("IS_US_CITIZEN_1", "Citizen");
 		assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
 		assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
 		assertCafFieldEquals("NEED_INTERPRETER", "Yes"); 
@@ -774,7 +769,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("PREPARING_MEALS_TOGETHER", "Yes");
 		assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
 		assertCafFieldEquals("IS_PREGNANT", "Yes");
-		assertCafFieldEquals("APPLICANT_IS_US_CITIZEN", "No");
+		assertCafFieldEquals("IS_US_CITIZEN_0", "Not_Citizen");
 		assertCafFieldEquals("EXPEDITED_QUESTION_2", "2468.00");
 		assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
 		assertCafFieldEquals("HEAT", "Yes");
@@ -889,7 +884,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCertainPopsFieldEquals("SSN_0", "XXX-XX-XXXX");
 		assertCertainPopsFieldEquals("IS_US_CITIZEN", "No");
 		assertCertainPopsFieldEquals("NAME_OF_NON_US_CITIZEN_0", "Ahmed St. George");
-		assertCertainPopsFieldEquals("ALIEN_ID_0", "A12345678");
+		//assertCertainPopsFieldEquals("ALIEN_ID_0", "A12345678");
 		assertCertainPopsFieldEquals("WANT_AUTHORIZED_REP", "Yes");
 		assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_HELP", "Off");
 		assertCertainPopsFieldEquals("RETROACTIVE_APPLICANT_FULLNAME_0", "");
@@ -995,11 +990,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 
 		// Is anyone in your household a migrant or seasonal farm worker?
-		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
+		testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
 
-		// Is everyone in your household a U.S. Citizen?
-		testPage.chooseYesOrNo("isUsCitizen", YES.getDisplayValue(), "Disability");
-
+		// Please confirm the citizenship status of your household
+		testPage.clickElementById("citizenshipStatus[]-0-BIRTH_RIGHT");
+		testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT");
+		testPage.clickContinue("Disability");
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
 		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");

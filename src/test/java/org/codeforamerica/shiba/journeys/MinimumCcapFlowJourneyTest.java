@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
+
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -115,10 +115,12 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 
     // Is anyone in your household a migrant or seasonal farm worker?
-    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
+    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
 
-    // Is everyone in your household a U.S. Citizen?
-    testPage.chooseYesOrNo("isUsCitizen", YES.getDisplayValue(), "Tribal Nation member");
+    // Please confirm the citizenship status of your household
+    testPage.clickElementById("citizenshipStatus[]-0-BIRTH_RIGHT"); //Applicant status
+    testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT"); //person 2 status
+	testPage.clickContinue("Tribal Nation member");
 
     // Is anyone in your household a member of a tribal nation?
     testPage.chooseYesOrNo("isTribalNationMember", NO.getDisplayValue(), "Intro: Income");

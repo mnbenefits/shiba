@@ -589,17 +589,17 @@ public class CertainPopsPreparerTest {
 	// QUESTION 6 continued:
 	// Person 3: John Smith, Alien ID: C33333333C
 	// Person 4: Jill Smith, Alien ID:
+	//@Disabled("Alien ID collection not in new citizenship flow")
 	@Test
 	public void shouldMapQuestion6SupplementText() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
 				.withPageData("personalInfo", "firstName", List.of("David"))
 				.withPageData("personalInfo", "lastName", List.of("Smith"))
-				.withPageData("whoIsNonCitizen", "whoIsNonCitizen", List.of("David Smith applicant", "Jane Smith 22345678-1234-1234-1234-123456789012",
-						"John Smith 32345678-1234-1234-1234-223456789013", "Jill Smith 42345678-1234-1234-1234-223456789014"))
-				.withPageData("alienIdNumbers", "alienIdNumber", List.of("A11111111A", "B22222222B", "C33333333C", ""))
-				.withPageData("alienIdNumbers", "alienIdMap", List.of("applicant", "22345678-1234-1234-1234-123456789012",
-						"32345678-1234-1234-1234-223456789013", "42345678-1234-1234-1234-223456789014"))
-
+				// New Citizenship flow data
+			    .withPageData("citizenship", "citizenshipStatus", 
+			        List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN"))
+			    .withPageData("citizenship", "citizenshipIdMap", 
+			        List.of("applicant", "22345678-1234-1234-1234-123456789012", "32345678-1234-1234-1234-223456789013", "42345678-1234-1234-1234-223456789014"))
 				.withSubworkflow("household",
 						new PagesData(Map.of("householdMemberInfo",
 								new PageData(Map.of("firstName", new InputData(List.of("Jane")), "lastName",
@@ -617,16 +617,15 @@ public class CertainPopsPreparerTest {
 		subworkflow.get(0).setId(UUID.fromString("22345678-1234-1234-1234-123456789012"));
 		subworkflow.get(1).setId(UUID.fromString("32345678-1234-1234-1234-223456789013"));
 		subworkflow.get(2).setId(UUID.fromString("42345678-1234-1234-1234-223456789014"));
-
 		List<DocumentField> result = preparer
 				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
 
 		DocumentField supplementDocumentField = findAndVerifyCertainPopsSupplement(result);
 		String supplementText = supplementDocumentField.getValue(0);
 		assertThat(supplementText).contains(
-				"QUESTION 6 continued:\nPerson 3: John Smith, Alien ID: C33333333C\nPerson 4: Jill Smith, Alien ID:");
+				"QUESTION 6 continued:\nPerson 3: John Smith\nPerson 4: Jill Smith");
 	}
-	
+
 	//QUESTION 15
 	@Test
     public void shouldMapQuestion15SupplementText() {

@@ -207,7 +207,8 @@ public class PagesData extends HashMap<String, PageData> {
         pageConfiguration.getHasPrimaryButton(),
         pageConfiguration.getExcludeGoBack(),
         pageConfiguration.getContextFragment(),
-        pageConfiguration.getAlertBox()
+        pageConfiguration.getAlertBox(),
+        pageConfiguration.getAdditionalContentFragment()       
     );
   }
   
