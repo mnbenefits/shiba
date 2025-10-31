@@ -4329,8 +4329,6 @@ pageConfigurations:
         validators:
           - validation: MONEY
             errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
   - &savings
     name: savings
     pageTitle: savings.title
