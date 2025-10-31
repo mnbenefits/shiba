@@ -38,6 +38,7 @@ import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -1357,6 +1358,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		@Test
 		void allFieldsDoGetWrittenToPDF() throws Exception {
+			when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 			fillInRequiredPages();
 			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
 		    postExpectingSuccess("spokenLanguage", "spokenLanguage", List.of("ENGLISH"));
@@ -1517,6 +1519,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		// The 3rd person is written to the supplement.
 		@Test
 		void shouldMapFieldsForNonUsCitizens() throws Exception {
+			when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 			fillInRequiredPages();
 			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
 			selectPrograms("CERTAIN_POPS");
@@ -1614,6 +1617,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		// This test just verifies that the unearned income Yes/No radio button is set
 		@Test
 		void shouldMapNoCpUnearnedIncomeToFalseWhenAnyUnearnedIncomeSelected() throws Exception {
+			when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 			fillInRequiredPages();
 			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
 			selectPrograms("CERTAIN_POPS");
@@ -1681,6 +1685,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		// have unearned income.
 		@Test
 		void shouldMapFieldsForHouseholdMemberUnearnedIncomeSelections() throws Exception {
+			when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 			fillInRequiredPages();
 			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
 			selectPrograms("CERTAIN_POPS");
@@ -1726,6 +1731,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		@Test
 		void shouldMapFieldsForApplicantOnlyBankAccountsSelections() throws Exception {
+			when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 			fillInRequiredPages();
 			fillOutPersonalInfo();
 			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
@@ -1757,6 +1763,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		@Test
 		void shouldMapFieldsForHouseholdRelatedSelections() throws Exception {
+			when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 			fillInRequiredPages();
 			fillOutPersonalInfo();
 			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
@@ -1978,6 +1985,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		@Test
 		void shouldMapHHMemberHealthcareCoverageChoice() throws Exception {
+			when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 			fillInRequiredPages();
 			selectPrograms("CERTAIN_POPS");
 			postExpectingRedirect(

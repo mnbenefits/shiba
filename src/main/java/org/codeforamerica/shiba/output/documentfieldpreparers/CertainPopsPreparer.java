@@ -28,6 +28,8 @@ import org.codeforamerica.shiba.output.caf.JobIncomeInformation;
 import org.codeforamerica.shiba.output.documentfieldpreparers.InvestmentOwnerPreparer.Investment;
 import org.codeforamerica.shiba.output.documentfieldpreparers.ListNonUSCitizenPreparer.NonUSCitizen;
 import org.codeforamerica.shiba.output.documentfieldpreparers.ListRetroCoveragePreparer.RetroCoverageMember;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.Iteration;
@@ -35,6 +37,7 @@ import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.data.Subworkflow;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -46,6 +49,9 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	boolean needsSupplementPage = false;
 	Set<String> cpAccountTypes = null;
 	
+	@Autowired
+	FeatureFlagConfiguration featureFlagConfiguration;
+	
 
 	// Question 11, unearned income
 	ArrayList<Person> persons = null;
@@ -54,7 +60,13 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 	@Override
 	public List<DocumentField> prepareDocumentFields(Application application, Document document, Recipient recipient) {
 		// No need to prepare fields if the document isn't Certain Pops.
-		//if (document != Document.CERTAIN_POPS) return new ArrayList<DocumentField>();
+		
+		FeatureFlag certainPopsFeatureFlag = featureFlagConfiguration.get("certain-pops"); 
+		boolean isNotCertainPopsApplication = !(document.name().equalsIgnoreCase("CERTAIN_POPS"));
+
+		if (certainPopsFeatureFlag.isOff() || isNotCertainPopsApplication) {//if certain pops feature flag is OFF -OR- is NOT a CP application
+			return new ArrayList<DocumentField>();
+		}
 		
 		cpAccountTypes = Stream.of("SAVINGS", "CHECKING", "MONEY_MARKET", "CERTIFICATE_OF_DEPOSIT").collect(Collectors.toCollection(HashSet::new));
 		applicationData = application.getApplicationData();
@@ -64,7 +76,6 @@ public class CertainPopsPreparer implements DocumentFieldPreparer {
 		needsSupplementPage = false;
 		persons = null;
 		lookup = null;
-		
 		return map(application, document, recipient);
 	}
 
