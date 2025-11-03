@@ -7107,6 +7107,8 @@ workflow:
       - pageName: choosePrograms
   supportAndCare:
     pageConfiguration: *supportAndCare
+    datasources:
+      - pageName: addHouseholdMembers
     nextPages:
       - pageName: assets
   assets:
