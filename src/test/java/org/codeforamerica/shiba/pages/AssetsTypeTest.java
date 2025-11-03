@@ -99,7 +99,7 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     var page = new FormPage(getPage("assets"));
     assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE", "STOCK_BOND", "REAL_ESTATE",
         "LIFE_INSURANCE", "BURIAL_ACCOUNT", "OWNERSHIP_BUSINESS", "ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS", "NONE");
-    postExpectingRedirect("assets", "assets", List.of("None"), "savings");
+    postExpectingRedirect("assets", "assets", List.of("None"), "soldAssets");
   }
 
   private void completeFlowAssetsTypeAsPerProgram(String... programs) throws Exception {

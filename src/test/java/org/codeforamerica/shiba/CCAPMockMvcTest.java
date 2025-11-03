@@ -137,9 +137,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
-    assertNavigationRedirectsToCorrectNextPage("assets", "savings");
-    postExpectingRedirect("savings", "haveSavings", "true", "liquidAssetsSingle");
-    postExpectingNextPageTitle("liquidAssetsSingle", "liquidAssets", "1234", "Sold assets");
+    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
 
@@ -160,9 +158,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
-    assertNavigationRedirectsToCorrectNextPage("assets", "savings");
-    postExpectingRedirect("savings", "haveSavings", "true", "liquidAssetsSingle");
-    postExpectingNextPageTitle("liquidAssetsSingle", "liquidAssets", "1234", "Sold assets");
+    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
 
@@ -391,11 +387,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillAdditionalIncomeInfo(Programs);
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
     postExpectingSuccess("assets", "assets", "NONE");
-    assertNavigationRedirectsToCorrectNextPage("assets", "savings");
-    postExpectingRedirect("savings", "haveSavings", "false", "soldAssets");
-    // Go back and enter true for savings
-    postExpectingRedirect("savings", "haveSavings", "true", "liquidAssetsSingle");
-    postExpectingRedirect("liquidAssetsSingle", "liquidAssets", "1234", "soldAssets");
+    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageHasElementWithId("legalStuff", "ccap-legal");
   }
   
