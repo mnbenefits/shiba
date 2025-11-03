@@ -1,13 +1,17 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.codeforamerica.shiba.Program.CERTAIN_POPS;
 import static org.codeforamerica.shiba.testutilities.TestUtils.createApplicationInput;
 import static org.codeforamerica.shiba.testutilities.TestUtils.createApplicationInputEnumeratedSingleValue;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.codeforamerica.shiba.application.Application;
+import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.DocumentFieldType;
 import org.codeforamerica.shiba.output.Recipient;
@@ -16,26 +20,39 @@ import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.data.PageData;
 import org.codeforamerica.shiba.pages.data.PagesData;
 import org.codeforamerica.shiba.pages.data.Subworkflow;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.testutilities.PagesDataBuilder;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 // Test cases for the CertainPopsPreparer class
 public class CertainPopsPreparerTest {
 
 	private final CertainPopsPreparer preparer = new CertainPopsPreparer();
-
+	
+	@BeforeEach
+	public void setUp() {
+		Map<String, FeatureFlag> featureFlags = new  HashMap<String, FeatureFlag>();
+		featureFlags.put("certain-pops", FeatureFlag.ON);
+		FeatureFlagConfiguration ffc = new FeatureFlagConfiguration(featureFlags);
+		preparer.featureFlagConfiguration = ffc;
+	}
+	
 	// Neither unearned income nor other unearned income types are selected.
 	@Test
 	public void shouldMapNoUnearndIncomeAndNoOtherUnearnedIncomeToFalse() {
+		
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("unearnedIncome", "unearnedIncome", List.of("NO_UNEARNED_INCOME_SELECTED"))
 				.withPageData("otherUnearnedIncome", "otherUnearnedIncome",
 						List.of("NO_OTHER_UNEARNED_INCOME_SELECTED"))
 				.build();
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome",
 				"false");
 		assertThat(result).contains(documentField);
@@ -46,13 +63,14 @@ public class CertainPopsPreparerTest {
 	@Test
 	public void shouldMapUnearndIncomeAndNoOtherUnearnedIncomeToTrue() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("unearnedIncome", "unearnedIncome", List.of("SOCIAL_SECURITY"))
 				.withPageData("otherUnearnedIncome", "otherUnearnedIncome",
 						List.of("NO_OTHER_UNEARNED_INCOME_SELECTED"))
 				.build();
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome",
 				"true");
 		assertThat(result).contains(documentField);
@@ -63,11 +81,12 @@ public class CertainPopsPreparerTest {
 	@Test
 	public void shouldMapNoUnearndIncomeAndOtherUnearnedIncomeToTrue() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("unearnedIncome", "unearnedIncome", List.of("NO_UNEARNED_INCOME_SELECTED"))
 				.withPageData("otherUnearnedIncome", "otherUnearnedIncome", List.of("TRUST_MONEY")).build();
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome",
 				"true");
 		assertThat(result).contains(documentField);
@@ -78,11 +97,12 @@ public class CertainPopsPreparerTest {
 	@Test
 	public void shouldMapUnearndIncomeAndOtherUnearnedIncomeToTrue() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("unearnedIncome", "unearnedIncome", List.of("SOCIAL_SECURITY"))
 				.withPageData("otherUnearnedIncome", "otherUnearnedIncome", List.of("TRUST_MONEY")).build();
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome",
 				"true");
 		assertThat(result).contains(documentField);
@@ -93,6 +113,7 @@ public class CertainPopsPreparerTest {
 	@Test
 	public void shouldMapApplicantUnearndIncomeFields() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("personalInfo", "firstName", List.of("David"))
 				.withPageData("personalInfo", "lastName", List.of("Smith"))
 				.withPageData("unearnedIncome", "unearnedIncome", List.of("SOCIAL_SECURITY"))
@@ -119,7 +140,7 @@ public class CertainPopsPreparerTest {
 				.build();
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome",
 				"true");
 		assertThat(result).contains(documentField);
@@ -151,6 +172,7 @@ public class CertainPopsPreparerTest {
 	@Test
 	public void shouldMapHouseholdMemberUnearndIncomeFields() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("personalInfo", "firstName", List.of("David"))
 				.withPageData("personalInfo", "lastName", List.of("Smith"))
 				.withPageData("unearnedIncome", "unearnedIncome", List.of("SOCIAL_SECURITY"))
@@ -168,7 +190,7 @@ public class CertainPopsPreparerTest {
 				.setId(UUID.fromString("12345678-1234-1234-1234-123456789012"));
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome",
 				"true");
 		assertThat(result).contains(documentField);
@@ -204,6 +226,7 @@ public class CertainPopsPreparerTest {
 		List<String> otherUnearnedIncomeTypes = List.of("INSURANCE_PAYMENTS", "TRUST_MONEY", "RENTAL_INCOME",
 				"INTEREST_DIVIDENDS", "HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "OTHER_PAYMENTS");
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("personalInfo", "firstName", List.of("David"))
 				.withPageData("personalInfo", "lastName", List.of("Smith"))
 				.withPageData("unearnedIncome", "unearnedIncome", unearnedIncomeTypes)
@@ -230,7 +253,7 @@ public class CertainPopsPreparerTest {
 				.build();
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome",
 				"true");
 		assertThat(result).contains(documentField);
@@ -402,6 +425,7 @@ public class CertainPopsPreparerTest {
 	@Test
 	public void shouldMapBankAccountFieldsToFalse() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
+				.withPageData("choosePrograms", "programs", List.of(CERTAIN_POPS))
 				.withPageData("personalInfo", "firstName", List.of("David"))
 				.withPageData("personalInfo", "lastName", List.of("Smith"))
 				.withSubworkflow("household",
@@ -413,7 +437,7 @@ public class CertainPopsPreparerTest {
 				.build();
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsBankAccounts", "hasCertainPopsBankAccounts",
 				"false");
 		assertThat(result).contains(documentField);
@@ -439,7 +463,7 @@ public class CertainPopsPreparerTest {
 				.setId(UUID.fromString("12345678-1234-1234-1234-123456789012"));
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInput("certainPopsBankAccounts", "hasCertainPopsBankAccounts",
 				"true");
 		assertThat(result).contains(documentField);
@@ -499,7 +523,7 @@ public class CertainPopsPreparerTest {
 				.setId(UUID.fromString("12345678-1234-1234-1234-123456789012"));
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 		DocumentField documentField = createApplicationInputEnumeratedSingleValue("certainPopsHouseholdMemberInfo", "choseHealthcareCoverage",
 				"false", 0);
 		assertThat(result).contains(documentField);
@@ -573,7 +597,7 @@ public class CertainPopsPreparerTest {
 		subworkflow.get(1).setId(UUID.fromString("22345678-1234-1234-1234-223456789012"));
 
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 
 		DocumentField supplementDocumentField = findAndVerifyCertainPopsSupplement(result);
 		String supplementText = supplementDocumentField.getValue(0);
@@ -589,17 +613,17 @@ public class CertainPopsPreparerTest {
 	// QUESTION 6 continued:
 	// Person 3: John Smith, Alien ID: C33333333C
 	// Person 4: Jill Smith, Alien ID:
+	//@Disabled("Alien ID collection not in new citizenship flow")
 	@Test
 	public void shouldMapQuestion6SupplementText() {
 		ApplicationData applicationData = new TestApplicationDataBuilder()
 				.withPageData("personalInfo", "firstName", List.of("David"))
 				.withPageData("personalInfo", "lastName", List.of("Smith"))
-				.withPageData("whoIsNonCitizen", "whoIsNonCitizen", List.of("David Smith applicant", "Jane Smith 22345678-1234-1234-1234-123456789012",
-						"John Smith 32345678-1234-1234-1234-223456789013", "Jill Smith 42345678-1234-1234-1234-223456789014"))
-				.withPageData("alienIdNumbers", "alienIdNumber", List.of("A11111111A", "B22222222B", "C33333333C", ""))
-				.withPageData("alienIdNumbers", "alienIdMap", List.of("applicant", "22345678-1234-1234-1234-123456789012",
-						"32345678-1234-1234-1234-223456789013", "42345678-1234-1234-1234-223456789014"))
-
+				// New Citizenship flow data
+			    .withPageData("citizenship", "citizenshipStatus", 
+			        List.of("NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN", "NOT_CITIZEN"))
+			    .withPageData("citizenship", "citizenshipIdMap", 
+			        List.of("applicant", "22345678-1234-1234-1234-123456789012", "32345678-1234-1234-1234-223456789013", "42345678-1234-1234-1234-223456789014"))
 				.withSubworkflow("household",
 						new PagesData(Map.of("householdMemberInfo",
 								new PageData(Map.of("firstName", new InputData(List.of("Jane")), "lastName",
@@ -617,16 +641,15 @@ public class CertainPopsPreparerTest {
 		subworkflow.get(0).setId(UUID.fromString("22345678-1234-1234-1234-123456789012"));
 		subworkflow.get(1).setId(UUID.fromString("32345678-1234-1234-1234-223456789013"));
 		subworkflow.get(2).setId(UUID.fromString("42345678-1234-1234-1234-223456789014"));
-
 		List<DocumentField> result = preparer
-				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), null, null);
+				.prepareDocumentFields(Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS, null);
 
 		DocumentField supplementDocumentField = findAndVerifyCertainPopsSupplement(result);
 		String supplementText = supplementDocumentField.getValue(0);
 		assertThat(supplementText).contains(
-				"QUESTION 6 continued:\nPerson 3: John Smith, Alien ID: C33333333C\nPerson 4: Jill Smith, Alien ID:");
+				"QUESTION 6 continued:\nPerson 3: John Smith\nPerson 4: Jill Smith");
 	}
-	
+
 	//QUESTION 15
 	@Test
     public void shouldMapQuestion15SupplementText() {
@@ -657,7 +680,7 @@ public class CertainPopsPreparerTest {
                   "Jack Smith member2"))
           .build();
       List<DocumentField> result = preparer.prepareDocumentFields(
-          Application.builder().applicationData(applicationData).build(), null,
+          Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS,
           Recipient.CASEWORKER);
       assertThat(result).containsAll(List.of(
           new DocumentField("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome", "false", DocumentFieldType.ENUMERATED_SINGLE_VALUE),
@@ -695,7 +718,7 @@ public class CertainPopsPreparerTest {
               List.of("0", "1", "2", "3"))
           .build();
       List<DocumentField> result = preparer.prepareDocumentFields(
-          Application.builder().applicationData(applicationData).build(), null,
+          Application.builder().applicationData(applicationData).build(), Document.CERTAIN_POPS,
           Recipient.CASEWORKER);
       assertThat(result).containsAll(List.of(
           new DocumentField("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome", "false", DocumentFieldType.ENUMERATED_SINGLE_VALUE),

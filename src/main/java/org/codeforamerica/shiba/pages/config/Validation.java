@@ -27,6 +27,7 @@ public enum Validation {
   SHOULD_BE_BLANK(strings -> String.join("", strings).isBlank()),
   NOT_BLANK(strings -> !String.join("", strings).isBlank()),
   NONE_BLANK(strings -> strings.stream().noneMatch(String::isBlank)),
+  ALL_NON_BLANK(strings -> strings != null && !strings.isEmpty() && strings.stream().allMatch(s -> s != null && !s.isBlank())),
   SELECT_AT_LEAST_ONE(strings -> strings.size() > 0),
   SELECTED(strings -> strings.size() == 0),
   SSN(strings -> String.join("", strings).replace("-", "").matches("\\d{9}")),

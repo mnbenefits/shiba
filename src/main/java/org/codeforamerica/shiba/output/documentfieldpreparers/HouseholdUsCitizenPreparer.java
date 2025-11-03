@@ -47,7 +47,7 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 			if (!whoIsNonCitizenAsked) {
 				result.add(new DocumentField("usCitizen", "applicantIsUsCitizen",
 						isApplicantUsCitizen ? "true" : "false", DocumentFieldType.SINGLE_VALUE, null));
-			} else {
+			}  else {
 				result.add(new DocumentField("usCitizen", "applicantIsUsCitizen",
 						List.of(householdMemberIDs.contains("applicant") ? "false" : "true"),
 						DocumentFieldType.SINGLE_VALUE, null));
@@ -61,10 +61,11 @@ public class HouseholdUsCitizenPreparer implements DocumentFieldPreparer {
 											householdMemberSubworkflow.get(i).getId().toString()) ? "false" : "true"),
 									DocumentFieldType.SINGLE_VALUE, i));
 				}
-
+	
 			}
+				
 		}
-	    return result;
 		
+		return result;
 	}
 }

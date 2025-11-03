@@ -20,7 +20,8 @@ public class PageTemplate {
   Boolean excludeGoBack;
   String contextFragment;
   AlertBox alertBox;
-
+  String additionalContentFragment;
+  
   @SuppressWarnings("unused")
   public boolean hasHeader() {
     return StringUtils.isNotBlank(headerKey);
@@ -29,6 +30,11 @@ public class PageTemplate {
   @SuppressWarnings("unused")
   public boolean hasHeaderHelpMessageKey() {
     return StringUtils.isNotBlank(headerHelpMessageKey);
+  }
+  
+  @SuppressWarnings("unused")
+  public boolean hasAdditionalContentFragment() {
+    return StringUtils.isNotBlank(additionalContentFragment);
   }
 
   public boolean hasAlertBox() {
