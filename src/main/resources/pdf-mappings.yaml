@@ -130,6 +130,8 @@ mappings:
   usCitizen:
     isUsCitizen: IS_US_CITIZEN
     applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN
+  citizenship:
+    citizenshipStatus: IS_US_CITIZEN
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:

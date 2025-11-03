@@ -85,6 +85,12 @@ public class PageConfiguration {
    * Warning or notice message for page.
    */
   private AlertBox alertBox;
+  
+  /**
+   * additional content fragment display after primary action
+   * help text, or other informational content
+   */
+  private String additionalContentFragment;
 
   /**
    * Get all inputs including the followUp inputs which may be contained within other inputs.

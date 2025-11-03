@@ -47,7 +47,7 @@ public abstract class AbstractBasePageTest {
 
 	protected static final String PROGRAM_SNAP = "Food (SNAP)";
 	protected static final String PROGRAM_CASH = "Cash programs";
-	protected static final String PROGRAM_GRH = "Housing Support (GRH)";
+	protected static final String PROGRAM_GRH = "Housing Support Program (GRH)";
 	protected static final String PROGRAM_CCAP = "Child Care Assistance";
 	protected static final String PROGRAM_EA = "Emergency Assistance";
 	protected static final String PROGRAM_CERTAIN_POPS = "Healthcare for Seniors and People with Disabilities";

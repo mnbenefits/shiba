@@ -1836,6 +1836,46 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+  - &citizenship
+    name: citizenship
+    pageTitle: citizenship.title
+    headerKey:
+      defaultValue: citizenship.please-confirm-the-citizenship-status-of-your-househould
+      conditionalValues:
+        - value: citizenship.please-confirm-your-citizenship-status
+          condition: *livesAlone?  
+    headerHelpMessageKey: 
+      defaultValue: citizenship.members-of-your-household-may-still-be-eligible
+      conditionalValues:
+        - value: citizenship.you-may-still-be-eligible-for-food-and-cash-benefits-if-you-are-not-a-us-citizen
+          condition: *livesAlone? 
+    hasPrimaryButton: true
+    contextFragment: passportContextFragment
+    additionalContentFragment: citizenshipAccordions
+    inputs:
+      - name: citizenshipStatus
+        type: CUSTOM
+        customInputFragment: citizenshipStatusInput
+        validators:
+          - validation: ALL_NON_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        options:
+          selectableOptions:
+            - value: BIRTH_RIGHT
+              messageKey: citizenship.birthright-us-citizen-or-us-national
+            - value: NATURALIZED
+              messageKey: citizenship.naturalized-us-citizen
+            - value: DERIVED
+              messageKey: citizenship.derived-us-citizen
+            - value: NOT_CITIZEN
+              messageKey: citizenship.not-a-us-citizen
+          datasources:
+            - pageName: personalInfo
+            - pageName: householdMemberInfo
+              groupName: household
+              optional: "true"
+      - type: HIDDEN
+        name: citizenshipIdMap	
   - &usCitizen
     name: usCitizen
     pageTitle: us-citizen.title
@@ -1849,7 +1889,7 @@ pageConfigurations:
     contextFragment: passportContextFragment
     inputs:
       - name: isUsCitizen
-        type: YES_NO
+        type: YES_NO		
   - &whoIsNonCitizen
     name: whoIsNonCitizen
     pageTitle: who-is-non-citizen.title
@@ -4342,8 +4382,6 @@ pageConfigurations:
         validators:
           - validation: MONEY
             errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
   - &savings
     name: savings
     pageTitle: savings.title
@@ -6151,32 +6189,25 @@ workflow:
   migrantFarmWorker:
     pageConfiguration: *migrantFarmWorker
     nextPages:
-      - pageName: usCitizen
+      - pageName: citizenship
     datasources:
       - pageName: addHouseholdMembers
-  usCitizen:
-    pageConfiguration: *usCitizen
+  citizenship:
+    pageConfiguration: *citizenship
     nextPages:
       - pageName: disability
-        condition: 
-          pageName: usCitizen
-          input: isUsCitizen
-          value: "true"
-      - pageName: whoIsNonCitizen
-        condition:
-          pageName: usCitizen
-          input: isUsCitizen
-          value: "false"
-      - pageName: usCitizen
+ #TODO Need condition for CCAP
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: personalInfo 
+      - groupName: household
   whoIsNonCitizen:
     pageConfiguration: *whoIsNonCitizen
     nextPages:
       - pageName: alienIdNumber
     datasources:
       - pageName: addHouseholdMembers
-      - pageName: usCitizen
+      - pageName: citizenship
     skipCondition: *livesAlone?
   alienIdNumber:
     pageConfiguration: *alienIdNumber
@@ -7141,6 +7172,8 @@ workflow:
       - pageName: choosePrograms
   supportAndCare:
     pageConfiguration: *supportAndCare
+    datasources:
+      - pageName: addHouseholdMembers
     nextPages:
       - pageName: assets
   assets:

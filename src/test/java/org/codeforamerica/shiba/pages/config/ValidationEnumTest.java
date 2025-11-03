@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -283,4 +284,42 @@ public class ValidationEnumTest {
 		  assertTrue(Validation.COUNTY.apply(value));
 	  }
 	  
+	  
+	  @Test
+	  public void testAllNonBlank() {
+ 
+	        // Create 3 inner lists
+	        List<String> list1 = new ArrayList<>();
+	        List<String> list2 = new ArrayList<>();
+	        List<String> list3 = new ArrayList<>();
+
+	        List<List<String>> nestedList = Arrays.asList(list1, list2, list3);
+
+	        // ---- CASE 1: All empty ----
+	        assertFalse(Validation.ALL_NON_BLANK.apply(list1), "Empty list should fail ALL_NON_BLANK");
+	        assertFalse(Validation.ALL_NON_BLANK.apply(list2), "Empty list should fail ALL_NON_BLANK");
+	        assertFalse(Validation.ALL_NON_BLANK.apply(list3), "Empty list should fail ALL_NON_BLANK");
+
+	        // ---- CASE 2: One full, two empty ----
+	        list1.addAll(Arrays.asList("A", "B", "C"));
+	        assertTrue(Validation.ALL_NON_BLANK.apply(list1), "Full list should pass ALL_NON_BLANK");
+	        assertFalse(Validation.ALL_NON_BLANK.apply(list2), "Empty list should fail ALL_NON_BLANK");
+	        assertFalse(Validation.ALL_NON_BLANK.apply(list3), "Empty list should fail ALL_NON_BLANK");
+
+	        // ---- CASE 3: Two full, one empty ----
+	        list2.addAll(Arrays.asList("X", "Y", "Z"));
+	        assertTrue(Validation.ALL_NON_BLANK.apply(list1));
+	        assertTrue(Validation.ALL_NON_BLANK.apply(list2));
+	        assertFalse(Validation.ALL_NON_BLANK.apply(list3), "Still one empty list should fail");
+
+	        // ---- CASE 4: All full ----
+	        list3.addAll(Arrays.asList("L", "M", "N"));
+	        assertTrue(Validation.ALL_NON_BLANK.apply(list1));
+	        assertTrue(Validation.ALL_NON_BLANK.apply(list2));
+	        assertTrue(Validation.ALL_NON_BLANK.apply(list3), "All full lists should pass");
+
+	        // ---- Optional: Check all together ----
+	        assertTrue(nestedList.stream().allMatch(Validation.ALL_NON_BLANK::apply),
+	                "All lists should pass once all are full");
+	  }
 }

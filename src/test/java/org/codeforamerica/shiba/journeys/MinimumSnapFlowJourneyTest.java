@@ -388,7 +388,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
             This application was submitted to Hennepin County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
             For more support, you can call Hennepin County (612-596-1300).""");
-    assertCafFieldEquals("APPLICANT_IS_US_CITIZEN", "Off");
+    assertCafFieldEquals("IS_US_CITIZEN_0", "Off");
     assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "Off");
     assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
     assertCafFieldEquals("DRUG_FELONY", "Yes");

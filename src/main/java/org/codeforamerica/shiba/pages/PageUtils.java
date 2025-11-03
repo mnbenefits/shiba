@@ -1,5 +1,6 @@
 package org.codeforamerica.shiba.pages;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -129,6 +130,28 @@ public class PageUtils {
 		final AtomicInteger counter = new AtomicInteger(0);
 		return inputList.stream().collect(Collectors.groupingBy(s -> counter.getAndIncrement() / 3)).values();
 	}
+	
+	/**
+	 * Builds a list of person IDs for the citizenship page
+	 * Always includes "applicant" first, then adds household member IDs
+	 * creates a predictable, ordered list of all people who need to answer the citizenship question, 
+	 * which the HTML then uses to display each person's name and collect their citizenship status in the correct order.
+	 */
+	public static List<String> buildCitizenshipIdList(Subworkflow householdSubworkflow) {
+	    List<String> idList = new ArrayList<>();
+	    
+	    // Always add applicant first
+	    idList.add("applicant");
+	    
+	    // Add household members if they exist
+	    if (householdSubworkflow != null && !householdSubworkflow.isEmpty()) {
+	        for (int i = 0; i < householdSubworkflow.size(); i++) {
+	            idList.add(householdSubworkflow.get(i).getId().toString());
+	        }
+	    }
+	    
+	    return idList;
+	}	
 	
   
 }
