@@ -52,7 +52,7 @@ It displays citizenship status options for each household member using radio but
 							th:value="${option.value}"
 							th:checked="${!#strings.isEmpty(preselected) && option.value.equals(preselected)}" th:attr="aria-labelledby=${labelledById},
                                         data-hidden-target=${hiddenFieldId}" />
-						<span th:text="#{${option.messageKey}}"></span>
+						<span th:utext="#{${option.messageKey}}"></span>
 					</label>
 				</th:block>
 
