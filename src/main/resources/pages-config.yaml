@@ -6824,17 +6824,17 @@ workflow:
       - pageName: choosePrograms
   otherUnearnedIncome:
     pageConfiguration: *otherUnearnedIncome
-    skipCondition:
-      logicalOperator: OR
-      conditions:
-        - logicalOperator: AND
-          conditions:
-            - *applicantDidNotChooseCCAP?
-            - *livesAlone?
-        - logicalOperator: AND
-          conditions:
-            - *applicantDidNotChooseCCAP?
-            - *householdMemberDidNotChooseCCAP?
+#    skipCondition:
+#      logicalOperator: OR
+#     conditions:
+#        - logicalOperator: AND
+#          conditions:
+#           - *applicantDidNotChooseCCAP?
+#            - *livesAlone?
+#        - logicalOperator: AND
+#          conditions:
+#            - *applicantDidNotChooseCCAP?
+#            - *householdMemberDidNotChooseCCAP?
     nextPages:
       - pageName: otherUnearnedIncomeSources
         condition:
