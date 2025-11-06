@@ -229,6 +229,11 @@ mappings:
     HEALTH_CARE_REIMBURSEMENT: HEALTH_CARE_REIMBURSEMENT
     INTEREST_DIVIDENDS: INTEREST_DIVIDENDS
     OTHER_PAYMENTS: OTHER_PAYMENTS
+    ANNUITIES: ANNUITIES
+    RENTAL_INCOME: RENTAL_INCOME
+    DAY_TRADING: DAY_TRADING
+    GIFTS: GIFTS
+    LOTTERY_WINNINGS: LOTTERY_WINNINGS
   unearnedIncomeSource:
     socialSecurityAmount: SOCIAL_SECURITY_AMOUNT
     supplementalSecurityIncomeAmount: SUPPLEMENTAL_SECURITY_INCOME_AMOUNT
@@ -246,6 +251,10 @@ mappings:
     interestDividendsAmount: INTEREST_DIVIDENDS_AMOUNT
     rentalIncomeAmount: RENTAL_INCOME_AMOUNT
     otherPaymentsAmount: OTHER_PAYMENTS_AMOUNT
+    annuitiesAmount: ANNUITIES_AMOUNT
+    dayTradingAmount: DAY_TRADING_AMOUNT
+    giftsAmount: GIFTS_AMOUNT
+    lotteryWinningsAmount: LOTTERY_WINNINGS_AMOUNT
     socialSecurityFrequency: SOCIAL_SECURITY_FREQUENCY
     supplementalSecurityIncomeFrequency: SUPPLEMENTAL_SECURITY_INCOME_FREQUENCY
     veteransBenefitsFrequency: VETERANS_BENEFITS_FREQUENCY
@@ -262,6 +271,10 @@ mappings:
     interestDividendsFrequency: INTEREST_DIVIDENDS_FREQUENCY
     rentalIncomeFrequency: RENTAL_INCOME_FREQUENCY
     otherPaymentsFrequency: OTHER_PAYMENTS_FREQUENCY
+    annuitiesFrequency: ANNUITIES_FREQUENCY
+    dayTradingFrequency: DAY_TRADING_FREQUENCY
+    giftsFrequency: GIFTS_FREQUENCY
+    lotteryWinningsFrequency: LOTTERY_WINNINGS_FREQUENCY
   socialSecurityIncomeSource:
     socialSecurityAmount: SOCIAL_SECURITY_AMOUNT_HH
     socialSecurityFrequency: SOCIAL_SECURITY_FREQUENCY
@@ -310,6 +323,18 @@ mappings:
   otherPaymentsIncomeSource:
     otherPaymentsAmount: OTHER_PAYMENTS_AMOUNT_HH
     otherPaymentsFrequency: OTHER_PAYMENTS_FREQUENCY
+  annuitiesIncomeSource:
+    annuitiesAmount: ANNUITIES_AMOUNT_HH
+    annuitiesFrequency: ANNUITIES_FREQUENCY
+  dayTradingIncomeSource:
+    dayTradingAmount: DAY_TRADING_AMOUNT_HH
+    dayTradingFrequency: DAY_TRADING_FREQUENCY
+  giftsIncomeSource:
+    giftsAmount: GIFTS_AMOUNT_HH
+    giftsFrequency: GIFTS_FREQUENCY
+  lotteryIncomeSource:
+    lotteryIncomeAmount: LOTTERY_INCOME_AMOUNT_HH
+    lotteryIncomeFrequency: LOTTERY_INCOME_FREQUENCY
   livingSituation:
     derivedLivingSituation: LIVING_SITUATION
     county: LIVING_SITUATION_COUNTY
