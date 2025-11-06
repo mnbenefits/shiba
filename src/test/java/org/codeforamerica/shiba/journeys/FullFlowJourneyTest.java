@@ -1032,7 +1032,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Unearned income
 		testPage.enter("unearnedIncome", "None");
+		
+		//otherUnearnedIncome page
+		testPage.clickContinue("Unearned Income");
+		
+		testPage.enter("otherUnearnedIncome", "None");
 		testPage.clickContinue("Future Income");
+		
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "No");
