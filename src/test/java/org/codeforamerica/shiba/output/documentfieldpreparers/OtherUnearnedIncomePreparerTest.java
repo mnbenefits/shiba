@@ -33,7 +33,11 @@ public class OtherUnearnedIncomePreparerTest {
         createApplicationInput("otherUnearnedIncome", "HEALTH_CARE_REIMBURSEMENT", "false"),
         createApplicationInput("otherUnearnedIncome", "INTEREST_DIVIDENDS", "false"),
         createApplicationInput("otherUnearnedIncome", "RENTAL_INCOME", "false"),
-        createApplicationInput("otherUnearnedIncome", "OTHER_PAYMENTS", "false")
+        createApplicationInput("otherUnearnedIncome", "OTHER_PAYMENTS", "false"),
+        createApplicationInput("otherUnearnedIncome", "ANNUITY_PAYMENTS", "false"),
+        createApplicationInput("otherUnearnedIncome", "GIFTS", "false"),
+        createApplicationInput("otherUnearnedIncome", "LOTTERY_GAMBLING", "false"),
+        createApplicationInput("otherUnearnedIncome", "DAY_TRADING_PROCEEDS", "false")
     );
   }
 
@@ -49,14 +53,18 @@ public class OtherUnearnedIncomePreparerTest {
         .build(), null, null);
 
     assertThat(result).containsOnly(
-        createApplicationInput("otherUnearnedIncome", "BENEFITS", "false"),
-        createApplicationInput("otherUnearnedIncome", "INSURANCE_PAYMENTS", "true"),
-        createApplicationInput("otherUnearnedIncome", "CONTRACT_FOR_DEED", "false"),
-        createApplicationInput("otherUnearnedIncome", "TRUST_MONEY", "true"),
-        createApplicationInput("otherUnearnedIncome", "HEALTH_CARE_REIMBURSEMENT", "false"),
-        createApplicationInput("otherUnearnedIncome", "INTEREST_DIVIDENDS", "false"),
-        createApplicationInput("otherUnearnedIncome", "RENTAL_INCOME", "true"),
-        createApplicationInput("otherUnearnedIncome", "OTHER_PAYMENTS", "false")
+            createApplicationInput("otherUnearnedIncome", "BENEFITS", "false"),
+            createApplicationInput("otherUnearnedIncome", "INSURANCE_PAYMENTS", "true"),
+            createApplicationInput("otherUnearnedIncome", "CONTRACT_FOR_DEED", "false"),
+            createApplicationInput("otherUnearnedIncome", "TRUST_MONEY", "true"),
+            createApplicationInput("otherUnearnedIncome", "HEALTH_CARE_REIMBURSEMENT", "false"),
+            createApplicationInput("otherUnearnedIncome", "INTEREST_DIVIDENDS", "false"),
+            createApplicationInput("otherUnearnedIncome", "RENTAL_INCOME", "true"),
+            createApplicationInput("otherUnearnedIncome", "OTHER_PAYMENTS", "false"),
+            createApplicationInput("otherUnearnedIncome", "ANNUITY_PAYMENTS", "false"),
+            createApplicationInput("otherUnearnedIncome", "GIFTS", "false"),
+            createApplicationInput("otherUnearnedIncome", "LOTTERY_GAMBLING", "false"),
+            createApplicationInput("otherUnearnedIncome", "DAY_TRADING_PROCEEDS", "false")
     );
   }
 

@@ -724,7 +724,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_INCOME_TYPE_6", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_6", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_6", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Other (lottery or gambling winnings, inheritance, capital gains, etc.)");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Other Payments (inheritance, capital gains, etc.)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_7", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_7", "100.00");
 		assertCafFieldEquals("HOMEOWNERS_INSURANCE", "No");
