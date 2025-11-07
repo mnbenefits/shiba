@@ -49,7 +49,12 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 	private static final String HEALTHCARE_REIMBURSEMENT = "Health care reimbursement";
 	private static final String CONTRACT_FOR_DEED = "Contract for deed";
 	private static final String BENEFITS_PROGRAMS = "Public assistance (MFIP, DWP, GA, Tribal TANF)";
-	private static final String OTHER_PAYMENTS = "Other (lottery or gambling winnings, inheritance, capital gains, etc.)";
+	private static final String OTHER_PAYMENTS = "Other Payments (inheritance, capital gains, etc.)";
+	private static final String RENTAL_INCOME = "Rental income";
+	private static final String ANNUITY_PAYMENTS = "Annuity payments";
+	private static final String GIFTS = "Gifts";
+	private static final String LOTTERY_GAMBLING = "Lottery or gambling winnings";
+	private static final String DAY_TRADING_PROCEEDS = "Day trading proceeds";
 
 	
 	ApplicationData applicationData = null;
@@ -103,6 +108,12 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 		processUnearnedIncomeSource("contractForDeedIncomeSource", "monthlyIncomeContractForDeed", "contractForDeedAmount", CONTRACT_FOR_DEED);
 		processUnearnedIncomeSource("benefitsProgramsIncomeSource", "monthlyIncomeBenefitsPrograms", "benefitsAmount", BENEFITS_PROGRAMS);
 		processUnearnedIncomeSource("otherPaymentsIncomeSource", "monthlyIncomeOtherPayments", "otherPaymentsAmount", OTHER_PAYMENTS);
+		processUnearnedIncomeSource("rentalIncomeSource", "monthlyIncomeRental", "rentalIncomeAmount", RENTAL_INCOME);
+		processUnearnedIncomeSource("annuityIncomeSource", "monthlyIncomeAnnuityPayments", "annuityPaymentsAmount", ANNUITY_PAYMENTS);
+		processUnearnedIncomeSource("giftsIncomeSource", "monthlyIncomeGifts", "giftsAmount", GIFTS);
+		processUnearnedIncomeSource("lotteryIncomeSource", "monthlyIncomeLotteryGambling", "lotteryGamblingAmount", LOTTERY_GAMBLING);
+		processUnearnedIncomeSource("dayTradingIncomeSource", "monthlyIncomeDayTradingProceeds", "dayTradingProceedsAmount", DAY_TRADING_PROCEEDS);
+
 		
 	}
 	
@@ -138,6 +149,12 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 			processUnearnedIncomeSource(pageData.get("contractForDeedAmount"), applicantId, CONTRACT_FOR_DEED);
 			processUnearnedIncomeSource(pageData.get("benefitsAmount"), applicantId, BENEFITS_PROGRAMS);
 			processUnearnedIncomeSource(pageData.get("otherPaymentsAmount"), applicantId, OTHER_PAYMENTS);
+			processUnearnedIncomeSource(pageData.get("rentalIncomeAmount"), applicantId, RENTAL_INCOME);
+			processUnearnedIncomeSource(pageData.get("annuityPaymentsAmount"), applicantId, ANNUITY_PAYMENTS);
+			processUnearnedIncomeSource(pageData.get("giftsAmount"), applicantId, GIFTS);
+			processUnearnedIncomeSource(pageData.get("lotteryGamblingAmount"), applicantId, LOTTERY_GAMBLING);
+			processUnearnedIncomeSource(pageData.get("dayTradingProceedsAmount"), applicantId, DAY_TRADING_PROCEEDS);
+
 		}
 	}
 
