@@ -6,7 +6,6 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.TRIBAL_NATION;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLYING_FOR_TRIBAL_TANF;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.APPLYING_FOR_MFIP;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.BASIC_CRITERIA_CERTAIN_POPS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_FIRST_NAME;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_INFO_RELATIONSHIP;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSEHOLD_PROGRAMS;
@@ -153,10 +152,6 @@ public class ApplicationData implements Serializable {
              || getBooleanValue(pagesData, APPLYING_FOR_MFIP)));
   }
 
-  public boolean isCertainPopsApplication() {
-    return isApplicationWith(List.of("CERTAIN_POPS")) &&
-        !getValues(pagesData, BASIC_CRITERIA_CERTAIN_POPS).contains("NONE");
-  }
 
   public boolean isApplicationWith(List<String> programs) {
     return getApplicantAndHouseholdMemberPrograms().stream().anyMatch(programs::contains);

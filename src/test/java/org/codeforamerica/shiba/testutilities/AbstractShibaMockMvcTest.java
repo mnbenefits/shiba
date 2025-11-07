@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.codeforamerica.shiba.testutilities.TestUtils.getAbsoluteFilepathString;
 import static org.codeforamerica.shiba.testutilities.TestUtils.resetApplicationData;
@@ -301,11 +300,11 @@ public class AbstractShibaMockMvcTest {
     submitApplication();
     return downloadCcapClientPDF();
   }
-  
-  protected PDAcroForm submitAndDownloadCertainPops() throws Exception {
-    submitApplication();
-    return downloadCertainPopsClientPDF();
-  }
+  //TODO delete certain pops
+//  protected PDAcroForm submitAndDownloadCertainPops() throws Exception {
+//    submitApplication();
+//    return downloadCertainPopsClientPDF();
+//  }
 
   protected PDAcroForm downloadCafClientPDF() throws Exception {
     var zipBytes = mockMvc.perform(get("/download")
@@ -327,12 +326,12 @@ public class AbstractShibaMockMvcTest {
     File ccapFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CCAP)).toList().get(0);
     return Loader.loadPDF(FileUtils.readFileToByteArray(ccapFile)).getDocumentCatalog().getAcroForm();
   }
-  
-  protected PDAcroForm downloadCertainPopsClientPDF() throws Exception {
-    List<File> zippedFiles = getZippedFiles();
-    File certainPopsFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CERTAIN_POPS)).toList().get(0);
-    return Loader.loadPDF(FileUtils.readFileToByteArray(certainPopsFile)).getDocumentCatalog().getAcroForm();
-  }
+  //TODO delete certain pops
+//  protected PDAcroForm downloadCertainPopsClientPDF() throws Exception {
+//    List<File> zippedFiles = getZippedFiles();
+//    File certainPopsFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CERTAIN_POPS)).toList().get(0);
+//    return Loader.loadPDF(FileUtils.readFileToByteArray(certainPopsFile)).getDocumentCatalog().getAcroForm();
+//  }
 
   private List<File> getZippedFiles() throws Exception {
     var zipBytes = mockMvc.perform(get("/download")
@@ -359,10 +358,10 @@ public class AbstractShibaMockMvcTest {
     ZipInputStream zipFile = new ZipInputStream(byteArrayInputStream);
     return unzip(zipFile);
   }
-
-  protected PDAcroForm downloadCertainPopsCaseWorkerPDF(String applicationId) throws Exception {
-	  return downloadCaseWorkerPDF(applicationId, Document.CERTAIN_POPS);
-  }
+//TODO remove certain pops
+//  protected PDAcroForm downloadCertainPopsCaseWorkerPDF(String applicationId) throws Exception {
+//	  return downloadCaseWorkerPDF(applicationId, Document.CERTAIN_POPS);
+//  }
   
   protected PDAcroForm downloadCaseWorkerPDF(String applicationId, Document document) throws Exception {
     var zipBytes = mockMvc.perform(get("/download/" + applicationId)
@@ -384,8 +383,6 @@ public class AbstractShibaMockMvcTest {
       return Document.CAF;
     } else if (fileName.contains("_CCAP")) {
       return Document.CCAP;
-    } else if (fileName.contains("_CERTAIN_POPS")) {
-      return Document.CERTAIN_POPS;
     } else {
       return Document.CAF;
     }

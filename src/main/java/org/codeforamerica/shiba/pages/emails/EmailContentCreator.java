@@ -303,7 +303,6 @@ public class EmailContentCreator {
     String documentType = switch (document) {
       case CAF -> "a CAF application.";
       case CCAP -> "a CCAP application.";
-      case CERTAIN_POPS -> "a Certain Populations application.";
       case UPLOADED_DOC -> "an uploaded document.";
       default -> throw new IllegalStateException("Unexpected value: " + document);
     };

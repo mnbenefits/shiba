@@ -40,17 +40,17 @@ public class HourlyJobPreparer implements DocumentFieldPreparer {
       if (jobs.get(i) instanceof HourlyJobIncomeInformation hourlyJob) {
         result.add(new DocumentField("payPeriod", "payPeriod", "Hourly",
             SINGLE_VALUE, i));
-
+//TODO remove Certain Pops
         // Add non-self-employment scope for certain-pops only
-        if (document == Document.CERTAIN_POPS && isNonSelfEmployment) {
-          result.add(new DocumentField(
-              "nonSelfEmployment_payPeriod",
-              "payPeriod",
-              "Hourly",
-              SINGLE_VALUE,
-              nonSelfEmploymentIndex
-          ));
-        }
+//        if (document == Document.CERTAIN_POPS && isNonSelfEmployment) {
+//          result.add(new DocumentField(
+//              "nonSelfEmployment_payPeriod",
+//              "payPeriod",
+//              "Hourly",
+//              SINGLE_VALUE,
+//              nonSelfEmploymentIndex
+//          ));
+//        }
       }
       if (isNonSelfEmployment) {
         nonSelfEmploymentIndex++;

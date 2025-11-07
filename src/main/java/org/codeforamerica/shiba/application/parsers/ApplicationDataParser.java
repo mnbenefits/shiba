@@ -31,8 +31,6 @@ public class ApplicationDataParser {
             new ParsingCoordinate("writtenLanguage", "otherWrittenLanguage"));
     coordinatesMap.put(Field.OTHER_SPOKEN_LANGUAGE_PREFERENCES,
             new ParsingCoordinate("spokenLanguage", "otherSpokenLanguage"));
-    coordinatesMap.put(Field.BASIC_CRITERIA_CERTAIN_POPS,
-        new ParsingCoordinate("basicCriteria", "basicCriteria"));
     coordinatesMap.put(Field.MEDICAL_EXPENSES,
         new ParsingCoordinate("medicalExpenses", "medicalExpenses"));
     coordinatesMap
@@ -223,14 +221,12 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.UNEARNED_TRIBAL_PAYMENTS_AMOUNT,
         new ParsingCoordinate("tribalPaymentIncomeSource", "tribalPaymentsAmount"));
     
-  //TODO emj existing fields for other unearned income listed here in order in pages-config
-    // these will be used to find the values entered
     coordinatesMap.put(Field.UNEARNED_INSURANCE_PAYMENTS_AMOUNT,
             new ParsingCoordinate("insurancePaymentsIncomeSource", "insurancePaymentsAmount"));
     coordinatesMap.put(Field.UNEARNED_TRUST_MONEY_AMOUNT,
             new ParsingCoordinate("trustMoneyIncomeSource", "trustMoneyAmount"));
     coordinatesMap.put(Field.UNEARNED_RENTAL_AMOUNT,
-            new ParsingCoordinate("rentalIncomeSource", "rentalIncomeAmount")); //CP only
+            new ParsingCoordinate("rentalIncomeSource", "rentalIncomeAmount")); 
     coordinatesMap.put(Field.UNEARNED_INTEREST_DIVIDENDS_AMOUNT,
             new ParsingCoordinate("interestDividendsIncomeSource", "interestDividendsAmount"));
     coordinatesMap.put(Field.UNEARNED_HEALTHCARE_REIMBURSEMENT_AMOUNT,
@@ -273,79 +269,7 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.OTHER_INCOME_FREQUENCY,
     	new ParsingCoordinate("otherIncome", "otherIncomeFrequency"));
 
-    coordinatesMap.put(Field.NO_CP_UNEARNED_INCOME,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "noCertainPopsUnearnedIncome"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_PERSON_1,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomePerson1"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_PERSON_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomePerson2"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_1,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_1"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_2"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_3,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_3"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_1_4,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_1_4"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_1,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_1"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_2"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_3,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_3"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_TYPE_2_4,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeType_2_4"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_1,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_1"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_2"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_3,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_3"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_1_4,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_1_4"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_1,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_1"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_2"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_3,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_3"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_AMOUNT_2_4,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeAmount_2_4"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_1,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_1"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_2"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_3"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_1_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_1_4"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_1,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_1"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_2,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_2"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_3,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_3"));
-    coordinatesMap.put(Field.CP_UNEARNED_INCOME_FREQUENCY_2_4,
-            new ParsingCoordinate("certainPopsUnearnedIncome", "certainPopsUnearnedIncomeFrequency_2_4"));
-
-    coordinatesMap.put(Field.CP_HAS_BANK_ACCOUNTS,
-            new ParsingCoordinate("certainPopsBankAccounts", "hasCertainPopsBankAccounts"));
-    coordinatesMap.put(Field.CP_BANK_ACCOUNT_OWNER_LINE_1,
-            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountOwnerLine_1"));
-    coordinatesMap.put(Field.CP_BANK_ACCOUNT_OWNER_LINE_2,
-            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountOwnerLine_2"));
-    coordinatesMap.put(Field.CP_BANK_ACCOUNT_OWNER_LINE_3,
-            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountOwnerLine_3"));
-    coordinatesMap.put(Field.CP_BANK_ACCOUNT_TYPE_LINE_1,
-            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountTypeLine_1"));
-    coordinatesMap.put(Field.CP_BANK_ACCOUNT_TYPE_LINE_2,
-            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountTypeLine_2"));
-    coordinatesMap.put(Field.CP_BANK_ACCOUNT_TYPE_LINE_3,
-            new ParsingCoordinate("certainPopsBankAccounts", "certainPopsBankAccountTypeLine_3"));
-
-    coordinatesMap.put(Field.CP_SUPPLEMENT,
-            new ParsingCoordinate("certainPops", "certainPopsSupplement"));
-
+ 
     coordinatesMap.put(Field.CHILDCARE_CHILD_NAME,
     		new ParsingCoordinate("childNeedsChildcare", "childName"));
     coordinatesMap.put(Field.CHILDCARE_PROVIDER1_NAME,
@@ -516,8 +440,6 @@ public class ApplicationDataParser {
     OTHER_WRITTEN_LANGUAGE_PREFERENCES,
     OTHER_SPOKEN_LANGUAGE_PREFERENCES,
 
-    BASIC_CRITERIA_CERTAIN_POPS,
-
     HAS_DISABILITY,
 
     MEDICAL_EXPENSES,
@@ -635,45 +557,6 @@ public class ApplicationDataParser {
     OTHER_INCOME_FULL_NAME,
     OTHER_INCOME_AMOUNT,
     OTHER_INCOME_FREQUENCY,
-
-    CP_SUPPLEMENT,
-
-    // Certain Pops section 11 fields
-    NO_CP_UNEARNED_INCOME,
-    CP_UNEARNED_INCOME_PERSON_1,
-    CP_UNEARNED_INCOME_PERSON_2,
-    CP_UNEARNED_INCOME_TYPE_1_1,
-    CP_UNEARNED_INCOME_TYPE_1_2,
-    CP_UNEARNED_INCOME_TYPE_1_3,
-    CP_UNEARNED_INCOME_TYPE_1_4,
-    CP_UNEARNED_INCOME_AMOUNT_1_1,
-    CP_UNEARNED_INCOME_AMOUNT_1_2,
-    CP_UNEARNED_INCOME_AMOUNT_1_3,
-    CP_UNEARNED_INCOME_AMOUNT_1_4,
-    CP_UNEARNED_INCOME_FREQUENCY_1_1,
-    CP_UNEARNED_INCOME_FREQUENCY_1_2,
-    CP_UNEARNED_INCOME_FREQUENCY_1_3,
-    CP_UNEARNED_INCOME_FREQUENCY_1_4,
-    CP_UNEARNED_INCOME_TYPE_2_1,
-    CP_UNEARNED_INCOME_TYPE_2_2,
-    CP_UNEARNED_INCOME_TYPE_2_3,
-    CP_UNEARNED_INCOME_TYPE_2_4,
-    CP_UNEARNED_INCOME_AMOUNT_2_1,
-    CP_UNEARNED_INCOME_AMOUNT_2_2,
-    CP_UNEARNED_INCOME_AMOUNT_2_3,
-    CP_UNEARNED_INCOME_AMOUNT_2_4,
-    CP_UNEARNED_INCOME_FREQUENCY_2_1,
-    CP_UNEARNED_INCOME_FREQUENCY_2_2,
-    CP_UNEARNED_INCOME_FREQUENCY_2_3,
-    CP_UNEARNED_INCOME_FREQUENCY_2_4,
-
-    CP_HAS_BANK_ACCOUNTS,
-    CP_BANK_ACCOUNT_OWNER_LINE_1,
-    CP_BANK_ACCOUNT_OWNER_LINE_2,
-    CP_BANK_ACCOUNT_OWNER_LINE_3,
-    CP_BANK_ACCOUNT_TYPE_LINE_1,
-    CP_BANK_ACCOUNT_TYPE_LINE_2,
-    CP_BANK_ACCOUNT_TYPE_LINE_3,
 
     // CCAP #9, Child care needs fields
     CHILDCARE_CHILD_NAME,

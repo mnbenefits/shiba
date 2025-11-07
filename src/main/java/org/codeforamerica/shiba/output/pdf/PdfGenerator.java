@@ -136,44 +136,44 @@ public class PdfGenerator implements FileGenerator {
     if (document.equals(Document.CAF) && householdSize > 10) {
       pdfFiller = pdfFieldWithCAFHHSuppFillersMap2.get(recipient).get(document);
     }    
-    
-    if(document.equals(Document.CERTAIN_POPS)) {
-    List<Resource> pdfResource = new ArrayList<Resource>(); 
-    pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("default"));
-    //For non-self employment more than two
-    if (documentFields.stream().anyMatch(
-        field -> (field.getGroupName().contains("nonSelfEmployment_householdSelectionForIncome")
-            && field.getIteration() > 1))) {
-      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addIncome"));
-    }
-    // Compute the number of household members that will need to be accounted for on supplemental
-    // pages. The first two are recorded on the Certain Pops PDF, the remainder (a max of 14) are handled on
-    // supplemental pages. (Note: The -3 accounts for the applicant and the first two household members)
-    var householdSupplementCount = Math.min(application.getApplicationData().getApplicantAndHouseholdMemberSize()-3, 14);
-    if (householdSupplementCount > 0) {
-      String name = "addHousehold"+String.valueOf(Math.ceil((householdSupplementCount+1)/2)); // round up
-      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get(name));
-    }
-    //for Disability more than two
-    if (documentFields.stream().anyMatch(
-        field -> (field.getGroupName().contains("whoHasDisability")
-            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
-      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
-    }
-  //For section 8 Retroactive coverage
-    /* Keep this code till supplement page display is finalized as general supp. page.
-    if (documentFields.stream().anyMatch(
-        field -> (field.getGroupName().contains("retroactiveCoverage")
-            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
-      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addRetroactiveCoverageSupp"));
-    }
-    */
-    // for the general supplement
-    if (documentFields.stream().anyMatch(field -> (field.getName().contains("certainPopsSupplement")))) {
-      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addCertainPopsSupplement"));
-    }
-      pdfFiller = new PDFBoxFieldFiller(pdfResource);
-    }
+    //TODO remove certain pops
+//    if(document.equals(Document.CERTAIN_POPS)) {
+//    List<Resource> pdfResource = new ArrayList<Resource>(); 
+//    pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("default"));
+//    //For non-self employment more than two
+//    if (documentFields.stream().anyMatch(
+//        field -> (field.getGroupName().contains("nonSelfEmployment_householdSelectionForIncome")
+//            && field.getIteration() > 1))) {
+//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addIncome"));
+//    }
+//    // Compute the number of household members that will need to be accounted for on supplemental
+//    // pages. The first two are recorded on the Certain Pops PDF, the remainder (a max of 14) are handled on
+//    // supplemental pages. (Note: The -3 accounts for the applicant and the first two household members)
+//    var householdSupplementCount = Math.min(application.getApplicationData().getApplicantAndHouseholdMemberSize()-3, 14);
+//    if (householdSupplementCount > 0) {
+//      String name = "addHousehold"+String.valueOf(Math.ceil((householdSupplementCount+1)/2)); // round up
+//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get(name));
+//    }
+//    //for Disability more than two
+//    if (documentFields.stream().anyMatch(
+//        field -> (field.getGroupName().contains("whoHasDisability")
+//            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
+//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
+//    }
+//  //For section 8 Retroactive coverage
+//    /* Keep this code till supplement page display is finalized as general supp. page.
+//    if (documentFields.stream().anyMatch(
+//        field -> (field.getGroupName().contains("retroactiveCoverage")
+//            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
+//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addRetroactiveCoverageSupp"));
+//    }
+//    */
+//    // for the general supplement
+//    if (documentFields.stream().anyMatch(field -> (field.getName().contains("certainPopsSupplement")))) {
+//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addCertainPopsSupplement"));
+//    }
+//      pdfFiller = new PDFBoxFieldFiller(pdfResource);
+//    }
 
     List<PdfField> fields = pdfFieldMapper.map(documentFields);
     return pdfFiller.fill(fields, application.getId(), filename);

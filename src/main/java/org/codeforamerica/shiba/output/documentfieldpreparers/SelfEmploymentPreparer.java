@@ -47,34 +47,34 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
 	} else {
 		results.add(new DocumentField("employee", "selfEmployed", "true", SINGLE_VALUE));
 	}
- 
+ //TODO removed certain pops
     // generate self-employment DocumentFields for the Certain Pops document.
-    if (document == Document.CERTAIN_POPS) {
-    	Subworkflow jobsWorkflow = getGroup(applicationData, ApplicationDataParser.Group.JOBS);
-
-    	// iterate jobs, add a pair of document fields for each self-employment job
-		int selfEmploymentJobNo = 0;
-		for (Iteration job : selfEmploymentJobs) {
-			PagesData pagesData = job.getPagesData();
-			PageData pageData = pagesData.getPage("householdSelectionForIncome");
-			String employee = "";
-			if (pageData != null) {
-				employee = pageData.get("whoseJobIsItFormatted").getValue(0);
-			} else { // when there is no whoseJobIsItFormatted then it has to be the applicant's job
-				employee = applicantName(applicationData);
-			}
-			GrossMonthlyIncomeParser grossMonthlyIncomeParser = new GrossMonthlyIncomeParser();
-			JobIncomeInformation jobIncomeInformation = grossMonthlyIncomeParser.parse(jobsWorkflow, job);
-			String grossMonthly = jobIncomeInformation.grossMonthlyIncome().toPlainString();
-			
-			results.add(new DocumentField("selfEmployment_employee", "name", employee, SINGLE_VALUE, selfEmploymentJobNo));
-			results.add(new DocumentField("selfEmployment_employee", "grossMonthlyIncome", grossMonthly, SINGLE_VALUE, selfEmploymentJobNo));
-			selfEmploymentJobNo++;
-			}
-    } else { 
+//    if (document == Document.CERTAIN_POPS) {
+//    	Subworkflow jobsWorkflow = getGroup(applicationData, ApplicationDataParser.Group.JOBS);
+//
+//    	// iterate jobs, add a pair of document fields for each self-employment job
+//		int selfEmploymentJobNo = 0;
+//		for (Iteration job : selfEmploymentJobs) {
+//			PagesData pagesData = job.getPagesData();
+//			PageData pageData = pagesData.getPage("householdSelectionForIncome");
+//			String employee = "";
+//			if (pageData != null) {
+//				employee = pageData.get("whoseJobIsItFormatted").getValue(0);
+//			} else { // when there is no whoseJobIsItFormatted then it has to be the applicant's job
+//				employee = applicantName(applicationData);
+//			}
+//			GrossMonthlyIncomeParser grossMonthlyIncomeParser = new GrossMonthlyIncomeParser();
+//			JobIncomeInformation jobIncomeInformation = grossMonthlyIncomeParser.parse(jobsWorkflow, job);
+//			String grossMonthly = jobIncomeInformation.grossMonthlyIncome().toPlainString();
+//			
+//			results.add(new DocumentField("selfEmployment_employee", "name", employee, SINGLE_VALUE, selfEmploymentJobNo));
+//			results.add(new DocumentField("selfEmployment_employee", "grossMonthlyIncome", grossMonthly, SINGLE_VALUE, selfEmploymentJobNo));
+//			selfEmploymentJobNo++;
+//			}
+//    } else { 
       results.add(new DocumentField("employee", "selfEmployedGrossMonthlyEarnings",
     		  !selfEmploymentJobs.isEmpty() ? "see question 9" : "", SINGLE_VALUE));
-    }
+//    }
     return results;
   }
   

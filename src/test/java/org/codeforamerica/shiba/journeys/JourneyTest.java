@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -51,7 +50,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
   protected PDAcroForm caf;
   protected PDAcroForm ccap;
-  protected PDAcroForm certainPops;
   protected String applicationId;
 
   @MockitoBean
@@ -79,7 +77,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
     caf = null;
     ccap = null;
-    certainPops = null;
   }
 
   @AfterEach
@@ -99,10 +96,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     TestUtils.assertPdfFieldEquals(fieldName, expectedVal, ccap);
   }
   
-  protected void assertCertainPopsFieldEquals(String fieldName, String expectedVal) {
-	    TestUtils.assertPdfFieldEquals(fieldName, expectedVal, certainPops);
-  }
-
   protected String signApplicationAndDownloadApplicationZipFiles(String signature,List<String> expectedMessages) {
     testPage.enter("applicantSignature", signature);
     testPage.clickContinue("Submit application");
@@ -138,8 +131,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
      var pdfs = getAllFiles(); 
      caf = pdfs.getOrDefault(CAF, null); 
      ccap = pdfs.getOrDefault(CCAP,null);
-     certainPops = pdfs.getOrDefault(CERTAIN_POPS,null);
-     
+    
     return getApplicationId();
   }
 

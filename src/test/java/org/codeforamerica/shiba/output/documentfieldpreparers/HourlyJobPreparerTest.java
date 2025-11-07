@@ -7,9 +7,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Map;
+
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.parsers.GrossMonthlyIncomeParser;
-import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.pages.config.ApplicationConfiguration;
 import org.codeforamerica.shiba.pages.config.PageGroupConfiguration;
@@ -48,27 +48,6 @@ public class HourlyJobPreparerTest {
     );
   }
 
-  @Test
-  public void shouldCreateMultipleInputsForHourlyForCertainPops() {
-    ApplicationData applicationData = new TestApplicationDataBuilder()
-        .withSubworkflow("jobs",
-            // Hourly payPeriod iteration 0, nonSelfEmployed hourly pay period N/A
-            new PagesDataBuilder().withHourlyJob("true", "11", "13"),
-            // Hourly payPeriod N/A, nonSelfEmployed pay period 0
-            new PagesDataBuilder().withNonHourlyJob("false", "1.1", "EVERY_WEEK"),
-            // Hourly payPeriod 1, nonSelfEmployed pay period 1
-            new PagesDataBuilder().withHourlyJob("false", "10", "12"))
-        .build();
-    List<DocumentField> result = preparer.prepareDocumentFields(Application.builder()
-        .applicationData(applicationData)
-        .build(), Document.CERTAIN_POPS, null);
-
-    assertThat(result).containsOnly(
-        new DocumentField("payPeriod", "payPeriod", "Hourly", SINGLE_VALUE, 0),
-        new DocumentField("payPeriod", "payPeriod", "Hourly", SINGLE_VALUE, 2),
-        new DocumentField("nonSelfEmployment_payPeriod", "payPeriod", "Hourly", SINGLE_VALUE, 1)
-    );
-  }
 
   @Test
   public void shouldReturnEmptyForMissingData() {

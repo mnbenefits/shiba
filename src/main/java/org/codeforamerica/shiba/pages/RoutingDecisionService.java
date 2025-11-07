@@ -72,7 +72,7 @@ public class RoutingDecisionService {
     if (document.equals(Document.CCAP)) {
     	return getCcapRoutingDestinations(applicationData, document);
     }
-    // This handles Document types: CAF, CERTAIN_POPS, UPLOADED_DOC, XML
+    // This handles Document types: CAF, UPLOADED_DOC, XML
     return getApplicationRoutingDestinations(applicationData, document);
   }
   

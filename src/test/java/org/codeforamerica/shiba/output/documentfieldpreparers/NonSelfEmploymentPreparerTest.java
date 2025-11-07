@@ -49,85 +49,7 @@ class NonSelfEmploymentPreparerTest {
     );
   }
 
-  @Test
-  public void shouldMapApplicantValuesIfNonSelfEmployedJobExistsForCertainPops() {
-    ApplicationData applicationData = new TestApplicationDataBuilder()
-        .withMultipleHouseholdMembers()
-        .withPageData("addHouseholdMembers", "addHouseholdMembers", "true")
-        .withSubworkflow("jobs",
-            // Don't add fields because this is a self-employed job
-            new PagesDataBuilder()
-                .withHourlyJob("true", "10", "10")
-                .withPageData("householdSelectionForIncome", "whoseJobIsIt", "me the applicant"),
-            // Don't add fields because this is not the applicant
-            new PagesDataBuilder()
-                .withNonHourlyJob("false", "11", "EVERY_WEEK")
-                .withPageData("householdSelectionForIncome", "whoseJobIsIt", "someone else 12356"),
-            // Add this
-            new PagesDataBuilder()
-                .withNonHourlyJob("false", "12", "EVERY_MONTH")
-                .withPageData("householdSelectionForIncome", "whoseJobIsIt", "me the applicant"))
-        .build();
-    Application application = Application.builder().applicationData(applicationData).build();
 
-    List<DocumentField> actual =
-        preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT);
-
-    assertThat(actual).containsExactlyInAnyOrder(
-        new DocumentField("nonSelfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "12",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_payPeriod", "payPeriod", "EVERY_MONTH",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_paidByTheHour", "paidByTheHour", "false",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_selfEmployment", "selfEmployment", "false",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_incomePerPayPeriod", "incomePerPayPeriod_EVERY_MONTH", "12",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_householdSelectionForIncome", "whoseJobIsIt",
-            "me the applicant", SINGLE_VALUE, 0)
-    );
-  }
-  
-  @Test
-  public void shouldMapSpouseValuesIfNonSelfEmployedJobExistsForCertainPops() {
-    ApplicationData applicationData = new TestApplicationDataBuilder()
-          .withPageData("addHouseholdMembers", "addHouseholdMembers", "true")
-        .withMultipleHouseholdMembers()
-        .withSubworkflow("jobs",
-            // Don't add fields because this is a self-employed job
-            new PagesDataBuilder()
-                .withHourlyJob("true", "10", "10")
-                .withPageData("householdSelectionForIncome", "whoseJobIsIt", "me the applicant"),
-            // Don't add fields because this is not the applicant
-            new PagesDataBuilder()
-                .withNonHourlyJob("false", "11", "EVERY_WEEK")
-                .withPageData("householdSelectionForIncome", "whoseJobIsIt", "someone else 12356"),
-            // Add this
-            new PagesDataBuilder()
-                .withNonHourlyJob("false", "21", "EVERY_MONTH")
-                .withPageData("householdSelectionForIncome", "whoseJobIsIt", "Daria Agàta someGuid"))
-        .build();
-    Application application = Application.builder().applicationData(applicationData).build();
-
-    List<DocumentField> actual =
-        preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT);
-
-    assertThat(actual).containsExactlyInAnyOrder(
-        new DocumentField("nonSelfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "21",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_incomePerPayPeriod", "incomePerPayPeriod_EVERY_MONTH", "21",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_payPeriod", "payPeriod", "EVERY_MONTH",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_paidByTheHour", "paidByTheHour", "false",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_selfEmployment", "selfEmployment", "false",
-            SINGLE_VALUE, 0),
-        new DocumentField("nonSelfEmployment_householdSelectionForIncome", "whoseJobIsIt",
-            "Daria Agàta someGuid", SINGLE_VALUE, 0)
-    );
-  }
   
   @Test
   public void shouldMapPayAmountWithPayFrequencyNonSelfEmployedJobExists() {
@@ -149,9 +71,9 @@ class NonSelfEmploymentPreparerTest {
                 .withPageData("householdSelectionForIncome", "whoseJobIsIt", "Daria Agàta someGuid"))
         .build();
     Application application = Application.builder().applicationData(applicationData).build();
-
+  //TODO test this replaced CP with CCAP
     List<DocumentField> actual =
-        preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT);
+        preparer.prepareDocumentFields(application, Document.CCAP, Recipient.CLIENT);
 
     assertThat(actual).containsExactlyInAnyOrder(
         new DocumentField("nonSelfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "1500",
@@ -192,9 +114,9 @@ class NonSelfEmploymentPreparerTest {
 	                  .withPageData("householdSelectionForIncome", "whoseJobIsIt", "Daria Agàta someGuid"))
 	          .build();
 	      Application application = Application.builder().applicationData(applicationData).build();
-
+	    //TODO test this replaced CP with CCAP
 	      List<DocumentField> actual =
-	          preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT);
+	          preparer.prepareDocumentFields(application, Document.CCAP, Recipient.CLIENT);
 
 	      assertThat(actual).containsExactlyInAnyOrder(
 	          new DocumentField("nonSelfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "21",
@@ -231,9 +153,9 @@ class NonSelfEmploymentPreparerTest {
                 .withPageData("householdSelectionForIncome", "whoseJobIsIt", "Daria Agàta someGuid"))
         .build();
     Application application = Application.builder().applicationData(applicationData).build();
-
+//TODO test this replaced CP with CCAP
     List<DocumentField> actual =
-        preparer.prepareDocumentFields(application, Document.CERTAIN_POPS, Recipient.CLIENT);
+        preparer.prepareDocumentFields(application, Document.CCAP, Recipient.CLIENT);
 
     assertThat(actual).containsExactlyInAnyOrder(
         new DocumentField("nonSelfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "1500",

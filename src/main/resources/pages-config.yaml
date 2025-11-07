@@ -145,11 +145,6 @@ conditionDefinitions:
     name: applicantChoseGRH
     value: GRH
     input: programs
-  - &applicantChoseCERTAINPOPS?
-    pageName: choosePrograms
-    name: applicantChoseCERTAINPOPS
-    value: CERTAIN_POPS
-    input: programs
   - &someoneChoseCASH?
     name: someoneChoseCASH
     logicalOperator: OR
@@ -175,18 +170,6 @@ conditionDefinitions:
     pageName: choosePrograms
     name: applicantOnlyChoseCCAP
     value: CCAP
-    input: programs
-    matcher: CONTAINS_ONLY
-  - &householdOnlyChoseCERTAINPOPS?
-    pageName: householdMemberInfo
-    name: householdOnlyChoseCERTAINPOPS
-    input: programs
-    value: CERTAIN_POPS
-    matcher: CONTAINS_ONLY
-  - &applicantOnlyChoseCERTAINPOPS?
-    pageName: choosePrograms
-    name: applicantOnlyChoseCERTAINPOPS
-    value: CERTAIN_POPS
     input: programs
     matcher: CONTAINS_ONLY
   - &householdOnlyChoseCCAP?
@@ -220,10 +203,6 @@ conditionDefinitions:
     name: applicantDidNotChooseGRH
     <<: *applicantDidNotChooseProgram?
     value: GRH
-  - &applicantDidNotChooseCERTAINPOPS?
-    name: applicantDidNotChooseCERTAINPOPS
-    <<: *applicantDidNotChooseProgram?
-    value: CERTAIN_POPS
   - &householdMemberDidNotChooseProgram?
     pageName: householdMemberInfo
     name: householdMemberDidNotChooseProgram
@@ -322,22 +301,6 @@ conditionDefinitions:
     value: CCAP
     input: programs
     matcher: CONTAINS
-  - &certainPopsPilot?
-    name: certainPopsPilot
-    logicalOperator: OR
-    conditions:
-      - pageName: identifyCounty
-        input: county
-        value: "Chisago"
-      - pageName: identifyCounty
-        input: county
-        value: "MilleLacs"
-      - pageName: identifyCounty
-        input: county
-        value: "Mower"
-      - pageName: identifyCounty
-        input: county
-        value: "Polk"
   - &WENCountySelected?
     name: WENCountySelected
     logicalOperator: OR
@@ -741,12 +704,6 @@ pageConfigurations:
               messageKey: choose-programs.housing-support-group-residential-housing
               helpMessageKey: choose-programs.housing-grh-help
               helpIcon: icon-apartment
-            - value: CERTAIN_POPS
-              messageKey: choose-programs.certain-pops
-              helpMessageKey: choose-programs.certain-pops-help
-              helpIcon: icon-medical-expenses
-              flag: certain-pops
-              condition: *certainPopsPilot?
             - value: NONE
               messageKey: choose-programs.none-of-the-above
               helpIcon: icon-people
@@ -793,14 +750,6 @@ pageConfigurations:
             - value: NONE
               messageKey: general.inputs.none-of-the-above
               isNone: true
-  - &certainPopsConfirm
-    name: certainPopsConfirm
-    pageTitle: certain-pops-confirm.title
-    hasPrimaryButton: false
-  - &certainPopsOffboarding
-    name: certainPopsOffboarding
-    pageTitle: certain-pops-offboarding.title
-    hasPrimaryButton: false
   - &addOtherPrograms
     name: addOtherPrograms
     pageTitle: add-other-programs.title
@@ -862,40 +811,6 @@ pageConfigurations:
         promptMessage:
           promptMessageKey: personal-info.whats-your-social-security-number
         helpMessageKey: personal-info.if-you-have-one-we-strongly-recommend-including-it-here
-      - name: noSSNCheck
-        type: CHECKBOX
-        condition: *applicantChoseCERTAINPOPS?
-        validators:
-          - validation: SELECTED
-            errorMessageKey: general.validation.SSN-is-provided
-            condition: *isNoSSN?
-        options:
-          selectableOptions:
-            - value: "dont-have-ssn"
-              messageKey: personal-info.dont-have-ssn
-              flag: certain-pops
-              condition: *certainPopsPilot?
-          datasources:
-            - pageName: identifyCounty
-        followUpValues:
-          - "dont-have-ssn"
-        followUps:
-          - name: appliedForSSN
-            type: RADIO
-            validators:
-              - validation: SELECT_AT_LEAST_ONE
-                errorMessageKey: general.validation.make-sure-to-choose-Yes-or-No
-                condition:
-                  input: noSSNCheck
-                  matcher: NOT_EMPTY
-            promptMessage:
-              promptMessageKey: personal-info.have-you-applied-for-ssn
-            options:
-              selectableOptions:
-                - value: "true"
-                  messageKey: general.inputs.yes
-                - value: "false"
-                  messageKey: general.inputs.no
       - name: maritalStatus
         type: RADIO
         promptMessage:
@@ -1345,7 +1260,6 @@ pageConfigurations:
           - CASH
           - EA
           - CCAP
-          - CERTAIN_POPS
         followUps:
           - name: ssn
             type: SSN
@@ -1371,9 +1285,6 @@ pageConfigurations:
               messageKey: choose-programs.emergency-assistance
             - value: CCAP
               messageKey: choose-programs.child-care-assistance
-            - value: CERTAIN_POPS
-              messageKey: choose-programs.certain-pops
-              condition: *applicantChoseCERTAINPOPS?
             - value: NONE
               messageKey: general.inputs.none-of-the-above
               isNone: true
@@ -1962,23 +1873,11 @@ pageConfigurations:
       defaultValue: thirty-day-income.how-much-money-is-available
       conditionalValues:
         - value: thirty-day-income.how-much-money-do-you-have-available
-          condition: 
-            logicalOperator: AND
-            conditions:
-              - *livesAlone?
-              - *applicantDidNotChooseCERTAINPOPS?
+          condition: *livesAlone?
         - value: thirty-day-income.how-much-money-do-you-have-available-in-these
-          condition: 
-            logicalOperator: AND
-            conditions:
-              - *livesAlone?
-              - *applicantChoseCERTAINPOPS?
+          condition: *livesAlone?
         - value: thirty-day-income.how-much-money-is-available-in-these
-          condition: 
-            logicalOperator: AND
-            conditions:
-              - *doesNotLiveAlone?
-              - *applicantChoseCERTAINPOPS?
+          condition: *livesAlone?
     inputs:
       - name: liquidAssets
         type: MONEY
@@ -2686,6 +2585,7 @@ pageConfigurations:
       - name: hasDisability
         type: YES_NO
   - &whoHasDisability
+#TODO remove certain pops whoHasDisability is only for certain pops, so it can probably be deleted
     name: whoHasDisability
     pageTitle: who-has-disability.title
     contextFragment: disabilityContextFragment
@@ -2885,106 +2785,6 @@ pageConfigurations:
     name: introIncome
     pageTitle: intro-income.title
     hasPrimaryButton: false
-  - &medicalCareMilestone
-    name: medicalCareMilestone
-    pageTitle: medical-care-milestone.title
-    hasPrimaryButton: false
-  - &longTermCare
-    name: longTermCare
-    pageTitle: long-term-care.title
-    headerKey: long-term-care.help-staying-in-your-home-or-help-paying-for-care-in-a-long-term-care-facility
-    contextFragment: homeCareContextFragment
-    hasPrimaryButton: false
-    inputs:
-      - name: doYouNeedLongTermCare
-        type: YES_NO
-  - &pastInjury
-    name: pastInjury
-    pageTitle: past-injury.title
-    headerKey: past-injury.are-you-getting-medical-care-for-an-accident-or-injury
-    contextFragment: pastInjuryFragment
-    hasPrimaryButton: false
-    inputs:
-      - name: didYouHaveAPastInjury
-        type: YES_NO
-  - &retroactiveCoverage
-    name: retroactiveCoverage
-    pageTitle: retroactive-coverage.title
-    headerKey: retroacvtive-coverage.help-paying-for-medical-bills-from-the-last-3-months
-    headerHelpMessageKey: retroactive-coverage.you-might-be-eligible-for-retroactive-coverage
-    contextFragment: retroactiveCoverageFragment
-    hasPrimaryButton: false
-    inputs:
-      - name: retroactiveCoverageQuestion
-        type: YES_NO
-  - &retroactiveCoverageSource
-    name: retroactiveCoverageSource
-    pageTitle: retroactive-coverage-source.title
-    headerKey: retroactive-coverage-source.who-wants-help
-    headerHelpMessageKey: retroactive-coverage-source.check-all
-    contextFragment: retroactiveCoverageFragment
-    inputs:
-      - type: CUSTOM
-        name: retroactiveCoverageSourceQuestion
-        customInputFragment: householdOptionsCheckboxes
-        validators:
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-you-answer-this-question
-        options:
-          datasources:
-            - pageName: personalInfo
-            - groupName: household
-  - &retroactiveCoverageTimePeriod
-    name: retroactiveCoverageTimePeriod
-    pageTitle: retroactive-coverage-time-period.title
-    headerKey: retroactive-coverage-time-period.how-many-months-do-they
-    headerHelpMessageKey: retroactive-coverage-time-period.you-might-be
-    contextFragment: retroactiveCoverageFragment
-    inputs:
-      - type: CUSTOM
-        name: retroactiveCoverageNumberMonths
-        customInputFragment: retroactiveCoverageTimePeriod
-        validators:
-          - validation: NONE_BLANK
-            errorMessageKey: general.validation.make-sure-to-answer-this-question
-        options:
-          datasources:
-            - pageName: retroactiveCoverageSource
-      - type: HIDDEN
-        name: retroactiveCoverageMap
-  - &retroactiveCoverageTimePeriodIndividual
-    name: retroactiveCoverageTimePeriodIndividual
-    pageTitle: retroactive-coverage-time-period.title
-    headerKey: retroactive-coverage-time-period.how-many-months-do-you
-    headerHelpMessageKey: retroactive-coverage-time-period.you-might-be
-    contextFragment: retroactiveCoverageFragment
-    inputs:
-      - type: SELECT
-        name: retroactiveCoverageNumberMonths
-        validators:
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-to-answer-this-question
-        options:
-          selectableOptions:
-            - value: ''
-              messageKey: retroactive-coverage-time-period.number-of-months
-            - value: 1
-              messageKey: retroactive-coverage-time-period.1
-            - value: 2
-              messageKey: retroactive-coverage-time-period.2
-            - value: 3
-              messageKey: retroactive-coverage-time-period.3
-      - type: HIDDEN
-        name: retroactiveCoverageMap
-  - &medicalInOtherState
-    name: medicalInOtherState
-    pageTitle: medical-in-other-state.title
-    headerKey: medical-in-other-state.do-you-currently-have-medical-benefits-in-another-state
-    contextFragment: medicalInOtherStateFragment
-    hasPrimaryButton: false
-    inputs:
-      - name: medicalInOtherState
-        type: YES_NO
   - &employmentStatus
     name: employmentStatus
     pageTitle: employment-status.title
@@ -3533,11 +3333,6 @@ pageConfigurations:
               messageKey: unearned-income-other.money-from-a-trust
             - value: RENTAL_INCOME
               messageKey: unearned-income-other.rental-income
-              condition:
-                pageName: choosePrograms
-                input: programs
-                matcher: CONTAINS
-                value: CERTAIN_POPS
             - value: INTEREST_DIVIDENDS
               messageKey: unearned-income-other.interest-dividends
             - value: HEALTH_CARE_REIMBURSEMENT
@@ -4751,38 +4546,17 @@ pageConfigurations:
             messageKey: assets.stocks-bonds-401k
           - value: LIFE_INSURANCE
             messageKey: assets.life-insurance
-            condition:
-              pageName: choosePrograms
-              input: programs
-              matcher: CONTAINS
-              value: CERTAIN_POPS
           - value: BURIAL_ACCOUNT
             messageKey: assets.a-prepaid-burial-account
-            condition:
-              pageName: choosePrograms
-              input: programs
-              matcher: CONTAINS
-              value: CERTAIN_POPS
           - value: OWNERSHIP_BUSINESS
             messageKey: assets.ownership-in-a-business
-            condition:
-              pageName: choosePrograms
-              input: programs
-              matcher: CONTAINS
-              value: CERTAIN_POPS
           - value: REAL_ESTATE
             messageKey: assets.real-estate
             condition:
-              logicalOperator: OR
-              conditions:
-                - pageName: choosePrograms
-                  input: programs
-                  matcher: CONTAINS
-                  value: CCAP
-                - pageName: choosePrograms
-                  input: programs
-                  matcher: CONTAINS
-                  value: CERTAIN_POPS
+              pageName: choosePrograms
+              input: programs
+              matcher: CONTAINS
+              value: CCAP
           - value: ONE_MILLION_ASSETS
             messageKey: assets.more-than-1-million-in-family-assets
             helpMessageKey: assets.assets-include-cash-bank-accounts
@@ -4793,25 +4567,10 @@ pageConfigurations:
               value: CCAP
           - value: CONTRACTS_NOTES_AGREEMENTS
             messageKey: assets.ownership-in-contracts-for-deed
-            condition:
-              pageName: choosePrograms
-              input: programs
-              matcher: CONTAINS
-              value: CERTAIN_POPS
           - value: TRUST_OR_ANNUITY
             messageKey: assets.trust-or-annuity
-            condition:
-              pageName: choosePrograms
-              input: programs
-              matcher: CONTAINS
-              value: CERTAIN_POPS
           - value: OTHER_ASSETS
             messageKey: assets.other-type-of-assets
-            condition:
-              pageName: choosePrograms
-              input: programs
-              matcher: CONTAINS
-              value: CERTAIN_POPS
           - value: NONE
             messageKey: assets.none-of-the-above
             isNone: true
@@ -5406,12 +5165,6 @@ workflow:
           input: programs
           matcher: CONTAINS
           value: EA
-      - pageName: basicCriteria
-        condition:
-          pageName: choosePrograms
-          input: programs
-          matcher: CONTAINS
-          value: CERTAIN_POPS
       - pageName: expeditedNotice
         condition:
           pageName: choosePrograms
@@ -5428,12 +5181,6 @@ workflow:
           input: emergencyType
           matcher: CONTAINS
           value: OTHER_EMERGENCY
-      - pageName: basicCriteria
-        condition:
-          pageName: choosePrograms
-          input: programs
-          matcher: CONTAINS
-          value: CERTAIN_POPS
       - pageName: expeditedNotice
         condition:
           pageName: choosePrograms
@@ -5447,12 +5194,6 @@ workflow:
   otherEmergency:
     pageConfiguration: *otherEmergency
     nextPages:
-      - pageName: basicCriteria
-        condition:
-          pageName: choosePrograms
-          input: programs
-          matcher: CONTAINS
-          value: CERTAIN_POPS
       - pageName: expeditedNotice
         condition:
           pageName: choosePrograms
@@ -5467,37 +5208,6 @@ workflow:
     pageConfiguration: *expeditedNotice
     nextPages:
       - pageName: introBasicInfo
-  basicCriteria:
-    pageConfiguration: *basicCriteria
-    nextPages:
-      - pageName: certainPopsOffboarding
-        condition:
-          pageName: basicCriteria
-          input: basicCriteria
-          matcher: CONTAINS
-          value: NONE
-      - pageName: certainPopsConfirm
-        condition:
-          pageName: basicCriteria
-          input: basicCriteria
-          matcher: DOES_NOT_CONTAIN
-          value: NONE
-  certainPopsConfirm:
-    pageConfiguration: *certainPopsConfirm
-    nextPages:
-      - pageName: expeditedNotice
-        condition:
-          pageName: choosePrograms
-          input: programs
-          matcher: CONTAINS
-          value: SNAP
-      - pageName: introBasicInfo
-    datasources:
-      - pageName: choosePrograms
-  certainPopsOffboarding:
-    pageConfiguration: *certainPopsOffboarding
-    nextPages:
-      - pageName: addOtherPrograms
   addOtherPrograms:
     pageConfiguration: *addOtherPrograms
     nextPages:
@@ -5991,20 +5701,13 @@ workflow:
     nextPages:
       - pageName: livingSituation
     skipCondition:
-        logicalOperator: OR
+        logicalOperator: AND
         conditions:
-          - logicalOperator: AND
-            conditions:
-              - *applicantOnlyChoseCERTAINPOPS?
-              - *noOneChoseSNAP?
-              - *noOneChoseCASH?
-              - *noOneChoseEA?
-              - *noOneChoseGRH?
-              - *noOneChoseCCAP?
-          - logicalOperator: AND
-            conditions:
-              - *applicantOnlyChoseCERTAINPOPS?
-              - *householdOnlyChoseCERTAINPOPS?
+          - *noOneChoseSNAP?
+          - *noOneChoseCASH?
+          - *noOneChoseEA?
+          - *noOneChoseGRH?
+          - *noOneChoseCCAP?
   livingSituation:
     pageConfiguration: *livingSituation
     nextPages:
@@ -6014,7 +5717,6 @@ workflow:
       conditions:
         - *applicantDidNotChooseGRH?
         - *noOneChoseCCAP?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
@@ -6151,11 +5853,7 @@ workflow:
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
-    skipCondition:
-      logicalOperator: OR
-      conditions:
-       - *applicantDidNotChooseCERTAINPOPS?
-       - *doesNotLiveAlone?  
+    skipCondition: *doesNotLiveAlone? 
   alienIdNumbers:
     pageConfiguration: *alienIdNumbers
     nextPages:
@@ -6163,11 +5861,7 @@ workflow:
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
-    skipCondition:
-      logicalOperator: OR
-      conditions:
-       - *applicantDidNotChooseCERTAINPOPS?
-       - *livesAlone?     
+    skipCondition: *livesAlone?   
   disability:
     pageConfiguration: *disability
     skipCondition:
@@ -6181,28 +5875,14 @@ workflow:
             conditions:
               - *livesAlone?
               - *applicantOnlyChoseCCAP?
+    nextPages:
+      - pageName: workChanges
     datasources:
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
       - pageName: choosePrograms
-    nextPages:
-      - pageName: whoHasDisability
-        condition:
-          logicalOperator: AND
-          conditions:
-            - pageName: disability
-              input: hasDisability
-              value: "true"
-            - *doesNotLiveAlone? 
       - pageName: workChanges
-  whoHasDisability:
-    pageConfiguration: *whoHasDisability
-    nextPages:
-      - pageName: workChanges
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
-    datasources:
-      - pageName: choosePrograms
   workChanges:
     pageConfiguration: *workChanges
     skipCondition:
@@ -6234,13 +5914,6 @@ workflow:
           value: "true"
       - pageName: howToAddDocuments
         condition: *laterDocsFlow?
-      - pageName: medicalCareMilestone
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - *applicantChoseCERTAINPOPS?
-            - *certainPopsPilot?
-        flag: certain-pops
       - pageName: linealDescendantWEN
         condition:
           conditions:
@@ -6296,16 +5969,6 @@ workflow:
         condition: *laterDocsFlow?
       - pageName: applyForTribalTANF
         condition: *isEligibleForTribalTANFonNationsBoundaryPage?
-      - pageName: medicalCareMilestone
-        condition:
-          conditions:
-            - *certainPopsPilot?
-            - *applicantChoseCERTAINPOPS?
-            - pageName: nationsBoundary
-              name: isLivingInNationBoundaryFalse
-              input: livingInNationBoundary
-              value: "false"
-        flag: certain-pops
       - pageName: introIncome
     datasources:
       - groupName: household
@@ -6344,13 +6007,6 @@ workflow:
           pageName: applyForTribalTANF
           input: applyForTribalTANF
           value: "true"
-      - pageName: medicalCareMilestone
-        condition:
-          logicalOperator: AND
-          conditions:
-            - *certainPopsPilot?
-            - *applicantChoseCERTAINPOPS?
-        flag: certain-pops
       - pageName: introIncome
     skipCondition:
       name: livesAloneAndIsNotPregnant
@@ -6369,82 +6025,9 @@ workflow:
   tribalTANFConfirmation:
     pageConfiguration: *tribalTANFConfirmation
     nextPages:
-      - pageName: medicalCareMilestone
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - *applicantChoseCERTAINPOPS?
-            - *certainPopsPilot?
-        flag: certain-pops
       - pageName: introIncome
     datasources:
       - pageName: identifyCounty
-      - pageName: choosePrograms
-  medicalCareMilestone:
-    pageConfiguration: *medicalCareMilestone
-    nextPages:
-      - pageName: longTermCare
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
-    datasources:
-      - pageName: choosePrograms
-  longTermCare:
-    pageConfiguration: *longTermCare
-    nextPages:
-      - pageName: pastInjury
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
-    datasources:
-      - pageName: choosePrograms
-  pastInjury:
-    pageConfiguration: *pastInjury
-    nextPages:
-      - pageName: retroactiveCoverage
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
-    datasources:
-      - pageName: choosePrograms
-  retroactiveCoverage:
-    pageConfiguration: *retroactiveCoverage
-    nextPages:
-      - pageName: retroactiveCoverageSource
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - pageName: retroactiveCoverage
-              input: retroactiveCoverageQuestion
-              value: "true"
-            - *doesNotLiveAlone?
-      - pageName: retroactiveCoverageTimePeriodIndividual
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - pageName: retroactiveCoverage
-              input: retroactiveCoverageQuestion
-              value: "true"
-            - *livesAlone?
-      - pageName: medicalInOtherState
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
-    datasources:
-      - pageName: choosePrograms
-      - pageName: addHouseholdMembers
-      - pageName: householdMemberInfo
-        groupName: household
-  retroactiveCoverageSource:
-    pageConfiguration: *retroactiveCoverageSource
-    nextPages:
-      - pageName: retroactiveCoverageTimePeriod
-  retroactiveCoverageTimePeriodIndividual:
-    pageConfiguration: *retroactiveCoverageTimePeriodIndividual
-    nextPages:
-      - pageName: medicalInOtherState
-  retroactiveCoverageTimePeriod:
-    pageConfiguration: *retroactiveCoverageTimePeriod
-    nextPages:
-      - pageName: medicalInOtherState
-  medicalInOtherState:
-    pageConfiguration: *medicalInOtherState
-    nextPages:
-      - pageName: introIncome
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
-    datasources:
       - pageName: choosePrograms
   introIncome:
     pageConfiguration: *introIncome
@@ -6854,7 +6437,6 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
@@ -6889,13 +6471,10 @@ workflow:
   rentalIncomeSource:
     pageConfiguration: *rentalIncomeSource
     skipCondition:
-      logicalOperator: OR
-      conditions:
-        - pageName: otherUnearnedIncome
-          input: otherUnearnedIncome
-          matcher: DOES_NOT_CONTAIN
-          value: RENTAL_INCOME
-        - *applicantDidNotChooseCERTAINPOPS?
+      pageName: otherUnearnedIncome
+      input: otherUnearnedIncome
+      matcher: DOES_NOT_CONTAIN
+      value: RENTAL_INCOME
     nextPages:
       - pageName: interestDividendsIncomeSource
     datasources:
@@ -7127,7 +6706,6 @@ workflow:
           value: VEHICLE
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7144,7 +6722,6 @@ workflow:
           value: STOCK_BOND
           matcher: DOES_NOT_CONTAIN
         - *doesNotLiveAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7161,7 +6738,6 @@ workflow:
           value: STOCK_BOND
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7178,7 +6754,6 @@ workflow:
           value: STOCKS
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
         - pageName: assets
           input: assets
           value: STOCK_BOND
@@ -7200,7 +6775,6 @@ workflow:
           value: BONDS
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
         - pageName: assets
           input: assets
           value: STOCK_BOND
@@ -7222,7 +6796,6 @@ workflow:
           value: RETIREMENT_ACCOUNTS
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
         - pageName: assets
           input: assets
           value: STOCK_BOND
@@ -7244,7 +6817,6 @@ workflow:
           value: LIFE_INSURANCE
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7261,7 +6833,6 @@ workflow:
           value: BURIAL_ACCOUNT
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7278,7 +6849,6 @@ workflow:
           value: OWNERSHIP_BUSINESS
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7295,7 +6865,6 @@ workflow:
           value: REAL_ESTATE
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7312,7 +6881,6 @@ workflow:
           value: ONE_MILLION_ASSETS
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: addHouseholdMembers
       - pageName: assets
@@ -7335,7 +6903,6 @@ workflow:
       - pageName: addHouseholdMembers
   cashAmount:
     pageConfiguration: *cashAmount
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
     nextPages:
       - pageName: bankAccountTypes
     datasources:
@@ -7343,7 +6910,6 @@ workflow:
       - pageName: addHouseholdMembers
   bankAccountTypes:
     pageConfiguration: *bankAccountTypes
-    skipCondition: *applicantDidNotChooseCERTAINPOPS?
     nextPages:
       - pageName: savingsAccountSource
     datasources:
@@ -7351,15 +6917,7 @@ workflow:
       - pageName: addHouseholdMembers
   savingsAccountSource:
     pageConfiguration: *savingsAccountSource
-    skipCondition:
-      logicalOperator: OR
-      conditions:
-        - pageName: bankAccountTypes
-          input: bankAccountTypes
-          value: SAVINGS
-          matcher: DOES_NOT_CONTAIN
-        - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
+    skipCondition: *livesAlone?
     nextPages:
       - pageName: checkingAccountSource
     datasources:
@@ -7368,7 +6926,7 @@ workflow:
       - pageName: bankAccountTypes
   checkingAccountSource:
     pageConfiguration: *checkingAccountSource
-    skipCondition:
+    skipCondition: 
       logicalOperator: OR
       conditions:
         - pageName: bankAccountTypes
@@ -7376,7 +6934,6 @@ workflow:
           value: CHECKING
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     nextPages:
       - pageName: moneyMarketSource
     datasources:
@@ -7393,7 +6950,6 @@ workflow:
           value: MONEY_MARKET
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     nextPages:
       - pageName: certOfDepositSource
     datasources:
@@ -7410,7 +6966,6 @@ workflow:
           value: CERTIFICATE_OF_DEPOSIT
           matcher: DOES_NOT_CONTAIN
         - *livesAlone?
-        - *applicantDidNotChooseCERTAINPOPS?
     nextPages:
       - pageName: liquidAssetsSingle
     datasources:
@@ -7795,36 +7350,22 @@ workflow:
     nextPages:
       - pageName: recommendations
         flow: EXPEDITED
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - *expeditedFlow?
-            - *applicantDidNotChooseCERTAINPOPS?
+        condition: *expeditedFlow?
       - pageName: recommendations
         flow: MINIMUM
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - *minimumFlow?
-            - *applicantDidNotChooseCERTAINPOPS?
+        condition: *minimumFlow?
       - pageName: recommendations
         condition:
           logicalOperator: OR
           conditions:
             - *someoneChoseCCAP?
-            - logicalOperator: AND
-              conditions:
-                - *doesNotHaveHealthcare?
-                - *applicantDidNotChooseCERTAINPOPS?
+            - *doesNotHaveHealthcare?
       - pageName: recommendations
         condition:
           logicalOperator: OR
           conditions:
             - *someoneChoseCCAP?
-            - logicalOperator: AND
-              conditions:
-                - *doesNotHaveHealthcare?
-                - *applicantDidNotChooseCERTAINPOPS?
+            - *doesNotHaveHealthcare?
             - logicalOperator: OR
               conditions:
                 - *isSomeonePregnant?

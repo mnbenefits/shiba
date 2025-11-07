@@ -2,7 +2,6 @@ package org.codeforamerica.shiba.output.pdf;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.output.caf.CoverPagePreparer.CHILDCARE_WAITING_LIST_UTM_SOURCE;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEquals;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldContains;
@@ -1207,7 +1206,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", ccap);
 			}
 		}
-		
+		/* TODO delete certain pops
 		@Nested
 		@Tag("pdf")
 		class RaceAndEthinicityCertainPops {
@@ -1283,7 +1282,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("APPLICANT_RACE_AND_ETHNICITY", "White, SomeOtherRaceOrEthnicity", certainPops);
 			}
 		}
-
+*/
 	}
 	@Nested
 	@Tag("pdf")
@@ -1351,10 +1350,12 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 
 	}
-
+/* TODO delete certain pops
 	@Nested
 	@Tag("pdf")
 	class CertainPops {
+
+	
 
 		@Test
 		void allFieldsDoGetWrittenToPDF() throws Exception {
@@ -1863,18 +1864,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("VEHICLE_OWNER_FULL_NAME_1", "Jim Halpert", pdf);
 		}
 
-		@Test
-		void shouldNotMapCertainPopsIfBasicCriteriaIsNoneOfTheAbove() throws Exception {
-			fillInRequiredPages();
-			postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Anoka"));
-			selectPrograms("CERTAIN_POPS", "SNAP");
-			postExpectingRedirect("basicCriteria", "basicCriteria", List.of("NONE"), "certainPopsOffboarding");
-			var caf = submitAndDownloadCaf();
-			var zippedFiles = downloadAllClientPDFs();
-			assertThat(zippedFiles.stream().noneMatch(file -> getDocumentType(file).equals(CERTAIN_POPS)))
-					.isEqualTo(true);
-			assertPdfFieldEquals("PROGRAMS", "SNAP", caf);
-		}
 
 		@Test
 		void shouldMapZeroLiquidAssetsAmountAsNoSavings() throws Exception {
@@ -2045,8 +2034,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
         }
         */
-	}
-	
+//	}
+		
 	@Nested
 	@Tag("pdf")
 	class ChildCareMentalHealthCCAP {

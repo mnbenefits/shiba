@@ -160,8 +160,6 @@ public abstract class AbstractBasePageTest {
 			return Document.CAF;
 		} else if (fileName.contains("_CCAP")) {
 			return Document.CCAP;
-		} else if (fileName.contains("_CERTAIN_POPS")) {
-			return Document.CERTAIN_POPS;
 		} else {
 			return Document.CAF;
 		}
