@@ -161,10 +161,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     // Does anyone in your household have any of these?
     testPage.enter("assets", "None of the above");
     driver.findElement(By.xpath("//*[contains(text(),\"Assets include your family's cash, bank accounts, vehicles, investments, and real estate\")]")).isDisplayed();
-    testPage.clickContinue("Savings");
-
-    // Does anyone in the household have money in a bank account or debit card?
-    testPage.chooseYesOrNo("haveSavings", NO.getDisplayValue(), "Sold assets");
+    testPage.clickContinue("Sold assets");
 
     // In the last 12 months, has anyone in the household given away or sold any
     // assets?

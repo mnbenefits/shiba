@@ -1805,13 +1805,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingRedirect("retirementAccountsHouseHoldSource", "retirementAccountsHouseHoldSource",
 					List.of("Dwight Schrute applicant", "Jim Halpert " + jimHalpertId), "realEstateAssetSource");
 			postExpectingRedirect("realEstateAssetSource", "realEstateAssetSource",
-					List.of("Jim Halpert " + jimHalpertId), "savings");
-			postExpectingSuccess("savingsAccountSource", "savingsAccountSource",
-					List.of("Jim Halpert " + jimHalpertId));
-			postExpectingSuccess("checkingAccountSource", "checkingAccountSource",
-					List.of("Jim Halpert " + jimHalpertId));
-			postExpectingSuccess("certOfDepositSource", "certOfDepositSource",
-					List.of("Jim Halpert " + jimHalpertId));
+					List.of("Jim Halpert " + jimHalpertId), "soldAssets");
 			completeHelperWorkflow(true);
 
 			submitApplication();
@@ -1839,16 +1833,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
             assertPdfFieldEquals("SELF_EMPLOYMENT_EMPLOYEE_NAME_1", "Jim Halpert", pdf);
             assertPdfFieldEquals("SELF_EMPLOYMENT_GROSS_MONTHLY_INCOME_1", "480.00", pdf);
             
-            // Section 14
-			assertPdfFieldEquals("CP_HAS_BANK_ACCOUNTS", "Yes", pdf);
-			assertPdfFieldEquals("CP_BANK_ACCOUNT_OWNER_LINE_1", "Jim Halpert", pdf);
-			assertPdfFieldEquals("CP_BANK_ACCOUNT_TYPE_LINE_1", "Savings account", pdf);
-			assertPdfFieldEquals("CP_BANK_ACCOUNT_OWNER_LINE_2", "Jim Halpert", pdf);
-			assertPdfFieldEquals("CP_BANK_ACCOUNT_TYPE_LINE_2", "Checking account", pdf);
-			assertPdfFieldEquals("CP_BANK_ACCOUNT_OWNER_LINE_3", "Jim Halpert", pdf);
-			assertPdfFieldEquals("CP_BANK_ACCOUNT_TYPE_LINE_3", "Certificate of deposit", pdf);
-            
-
 			// Section 15
 			assertPdfFieldEquals("INVESTMENT_OWNER_FULL_NAME_0", "Dwight Schrute", pdf);
 			assertPdfFieldEquals("INVESTMENT_OWNER_FULL_NAME_1", "Jim Halpert", pdf);

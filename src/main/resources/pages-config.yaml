@@ -273,6 +273,58 @@ conditionDefinitions:
         input: programs
         matcher: CONTAINS
         value: SNAP
+  - &someoneChoseEA?
+    name: someoneChoseEA
+    logicalOperator: OR
+    conditions:
+      - pageName: choosePrograms
+        name: applicantChooseEA
+        input: programs
+        matcher: CONTAINS
+        value: EA
+      - pageName: householdMemberInfo
+        name: hhMemberChooseEA
+        input: programs
+        matcher: CONTAINS
+        value: EA
+  - &someoneChoseCAFProgram?
+    name: someoneChoseCAFProgram
+    logicalOperator: OR
+    conditions:
+      - *someoneChoseSNAP?
+      - *someoneChoseEA?
+      - *someoneChoseCASH?
+      - *applicantChoseGRH?
+
+  - &noOneChoseCAF?
+    name: noOneChoseCAF
+    logicalOperator: AND
+    conditions:
+      # Applicant did not choose any CAF program (SNAP, EA, CASH, GRH)
+      - logicalOperator: AND
+        conditions:
+          - <<: *applicantDidNotChooseProgram?
+            value: SNAP
+          - <<: *applicantDidNotChooseProgram?
+            value: EA
+          - <<: *applicantDidNotChooseProgram?
+            value: CASH
+          - <<: *applicantDidNotChooseProgram?
+            value: GRH
+      # Either no household member chose them OR applicant lives alone
+      - logicalOperator: OR
+        conditions:
+          - logicalOperator: AND
+            conditions:
+              - <<: *householdMemberDidNotChooseProgram?
+                value: SNAP
+              - <<: *householdMemberDidNotChooseProgram?
+                value: EA
+              - <<: *householdMemberDidNotChooseProgram?
+                value: CASH
+              - <<: *householdMemberDidNotChooseProgram?
+                value: GRH
+          - *livesAlone?
   - &noOneChoseCASH?
     name: noOneChoseCASH
     logicalOperator: AND
@@ -1958,6 +2010,7 @@ pageConfigurations:
       conditionalValues:
         - value: liquid-assets-prompt.title-one-person
           condition: *livesAlone?
+    contextFragment: liquidAssetsSingleContextFragment
     headerKey:
       defaultValue: thirty-day-income.how-much-money-is-available
       conditionalValues:
@@ -4734,7 +4787,11 @@ pageConfigurations:
   - &assets
     name: assets
     pageTitle: assets.title
-    headerKey: assets.does-any-one-in-your
+    headerKey:
+      defaultValue: assets.does-any-one-in-your
+      conditionalValues:
+        - value: assets.do-you-have-any
+          condition: *livesAlone?
     headerHelpMessageKey: assets.select-all-that-apply
     contextFragment: assetsContextFragment
     inputs:
@@ -4745,6 +4802,14 @@ pageConfigurations:
           errorMessageKey: general.validation.make-sure-you-answer-this-question
       options:
         selectableOptions:
+          - value: CASH
+            messageKey: assets.cash
+  #          condition: *someoneChoseCAFProgram?
+          - value: BANK_ACCOUNT
+            messageKey: assets.bank-account
+  #          condition: *someoneChoseCAFProgram?
+          - value: ELECTRONIC_PAYMENT_CARD
+            messageKey: assets.electronic-payment
           - value: VEHICLE
             messageKey: assets.a-vehicle
           - value: STOCK_BOND
@@ -7113,8 +7178,126 @@ workflow:
       - pageName: assets
   assets:
     pageConfiguration: *assets
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+      - pageName: assets
     nextPages:
+      # CAF program selected and cash and or bank accounts → liquidAssetsSingle new revised page
+      - pageName: liquidAssetsSingle
+        condition:
+          name: CAFAndcashOrBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram? 
+                - *applicantDidNotChooseCERTAINPOPS?
+            - logicalOperator: OR
+              name: CashOrBankOrElectronic
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+      # CAF program selected electronic payment cards ONLY → soldAssets 
+      - pageName: soldAssets
+        condition:
+          name: CAFAndElectronicCardsOnly
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram? 
+                - *applicantDidNotChooseCERTAINPOPS?
+            - logicalOperator: AND
+              name: CashOrBankOrElectronic
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                  matcher: DOES_NOT_CONTAIN
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+                  matcher: DOES_NOT_CONTAIN
+                - pageName: assets
+                  input: assets
+                  value: "ELECTRONIC_PAYMENT_CARD"
+      # CCAP  only  → soldAssets
+      - pageName: soldAssets
+        condition:
+          name: CCAPAndcashOrBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCCAP?
+                - *noOneChoseCAF?  
+            - *applicantDidNotChooseCERTAINPOPS?
+      # Certain Pops and CAF and cash selected → cashAmount
+      - pageName: cashAmount
+        condition:
+          name: CPOPSAndCAFAndCash
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram?  
+                - *applicantChoseCERTAINPOPS?
+            - logicalOperator: AND
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+                  matcher: DOES_NOT_CONTAIN
+      # Certain Pops and CAF with cash and bank selected → cashAmount and then bankAccountTypes
+      - pageName: cashAmount
+        condition:
+          name: CPOPSAndCAFAndCashAndBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram?  ## IS THIS WORKING?
+                - *applicantChoseCERTAINPOPS?
+            - logicalOperator: AND
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+      # Certain Pops and CAF with just bank selected → bankAccountTypes
+      - pageName: bankAccountTypes
+        condition:
+          name: CPOPSAndCAFAndBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram?  ## IS THIS WORKING?
+                - *applicantChoseCERTAINPOPS?
+            - logicalOperator: AND
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                  matcher: DOES_NOT_CONTAIN
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+      # DEFAULT NEXT PAGE
       - pageName: vehicleAssetSource
+
   vehicleAssetSource:
     pageConfiguration: *vehicleAssetSource
     nextPages:
@@ -7303,7 +7486,7 @@ workflow:
   oneMillionDollarAssetSource:
     pageConfiguration: *oneMillionDollarAssetSource
     nextPages:
-      - pageName: savings
+      - pageName: soldAssets
     skipCondition:
       logicalOperator: OR
       conditions:
@@ -7337,10 +7520,19 @@ workflow:
     pageConfiguration: *cashAmount
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     nextPages:
+      - pageName: soldAssets
+        condition:
+          name: skipAllBankAccountsFlow
+          conditions:
+            - pageName: assets
+              input: assets
+              value: "BANK_ACCOUNT"
+              matcher: DOES_NOT_CONTAIN
       - pageName: bankAccountTypes
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
+      - pageName: assets
   bankAccountTypes:
     pageConfiguration: *bankAccountTypes
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
