@@ -67,7 +67,7 @@ jobs:
 
     - run: zip -r veracode-scan-target.zip ./
     - name: Veracode Upload And Scan
-      uses: veracode/veracode-uploadandscan-action@0.2.9
+      uses: veracode/veracode-uploadandscan-action@0.2.10
       with:
         appname: DCYF - mnbenefits/shiba # default is ${{ github.repository }}
     # createprofile
