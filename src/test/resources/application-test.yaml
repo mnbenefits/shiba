@@ -31,7 +31,6 @@ intercom-chat-app-id: mmxasuhx
 
 feature-flag:
   show-delayed-processing-time-notice: on
-  child-care: off
  
 mnit-filenet:
   enabled: true

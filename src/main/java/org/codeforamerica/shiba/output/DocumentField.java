@@ -38,7 +38,14 @@ public class DocumentField {
     this(groupName, name, value, type, null);
   }
 
-  // Make an application input with only a single value
+  /**
+   * (original comment: Make an application input with only a single value) 
+   * 
+   * @param groupName refers to the groups in pdf-mapping.yaml
+   * @param name  refers to the entries within each group, which maps to the PDF form field names.
+   * @param value actual value that gets entered in the PDF field
+   * @param type enum DocumentFieldType
+   */
   public DocumentField(String groupName, String name, String value, DocumentFieldType type) {
     this(groupName, name, value, type, null);
   }
@@ -76,5 +83,10 @@ public class DocumentField {
 
   public String getValue(int i) {
     return getValue().get(i);
+  }
+  
+  public void setValueToBlank() {
+	  this.value.clear();
+	  this.value.add("");
   }
 }

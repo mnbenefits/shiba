@@ -12,7 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.data.ApplicationData;
+import org.codeforamerica.shiba.pages.data.Iteration;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.FormPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,12 +35,35 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingSuccess("writtenLanguage", Map.of("writtenLanguage", List.of("ENGLISH")));
     postExpectingSuccess("spokenLanguage", Map.of("spokenLanguage", List.of("ENGLISH")));
   }
+  
+  @Test
+  void checkPayPeriodSelectionsData() throws Exception {
+	  
+	  List<String> payPeriods = List.of("EVERY_DAY", "EVERY_WEEK", "EVERY_TWO_WEEKS", "TWICE_A_MONTH", "EVERY_MONTH","IT_VARIES");
+	  String payPeriod;
+	  
+	  for(String period: payPeriods) {
+		  completeFlowFromLandingPageThroughReviewInfo("SNAP");
+		  postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+		  postExpectingSuccess("employmentStatus", "areYouWorking", "true");
+		  postExpectingSuccess("employersName", "employersName", "ABC");
+		  postExpectingSuccess("selfEmployment", "selfEmployment", "false");
+		  postExpectingSuccess("paidByTheHour", "paidByTheHour", "false");
+		  postExpectingSuccess("payPeriod", "payPeriod", period);
+		  assertNavigationRedirectsToCorrectNextPage("payPeriod", "incomePerPayPeriod");
+		  postExpectingSuccess("incomePerPayPeriod","incomePerPayPeriod", "1000");
+		  payPeriod = applicationData.getSubworkflows().get("jobs").get(0).getPagesData().safeGetPageInputValue("payPeriod", "payPeriod").get(0);
+		  assertThat(payPeriod).isEqualTo(period);
+		  applicationData.getSubworkflows().clear();
+	  }
+  }
+  
+  
 
   @Test
   void healthcareCoverageDoesNotDisplayOnSuccessPageWhenClientAlreadyHasHealthcare()
       throws Exception {
     var successPage = nonExpeditedFlowToSuccessPage(true, true, true, true);
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 	// We expect to see the WIC recommendation because the pregnancy question response was "YES"
 	when(wicRecommendationService.showWicMessage(any())).thenReturn(true);	  
     assertThat(successPage.getElementById("showRecommendationLink")).isNotNull();
@@ -54,7 +78,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
   @Test
   void healthcareCoverageDisplaysOnRecommendationsPageWhenClientDoesNotHaveHealthcare() throws Exception {
     var successPage = nonExpeditedFlowToSuccessPage(false, false, false, false);
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 	// We do not expect to see the WIC recommendation because hasHousehold is false thus
 	// the pregnancy question response was "NO" and no children under 5.
 	when(wicRecommendationService.showWicMessage(any())).thenReturn(false);	  
@@ -393,9 +416,10 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  case "CCAP": {
 					  assertNavigationRedirectsToCorrectNextPage("householdList", "childrenInNeedOfCare");
 					  postExpectingRedirect("childrenInNeedOfCare", "whoNeedsChildCare", "childFirstName childLastName",
-							  "whoHasParentNotAtHome");
+							  "doYouHaveChildCareProvider");
+					  postExpectingRedirect("doYouHaveChildCareProvider", "hasChildCareProvider", "false", "whoHasParentNotAtHome");
 					  postExpectingRedirect("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", "NONE_OF_THE_ABOVE",
-							  "housingSubsidy");
+							  "childCareMentalHealth");
 					  break;
 				  }
 				  case "SNAP": {
@@ -436,8 +460,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  // navigation from goingToSchool to introIncome
 	  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
 	  postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
-	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
-	  postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
+	  postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");
 	  postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
 	  postExpectingRedirect("workChanges", "workChanges", "GO_ON_STRIKE", "tribalNationMember");
 	  postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
@@ -457,8 +481,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
     postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
-    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
-    postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
+    postExpectingRedirect("citizenship", "citizenshipStatus", "BIRTH_RIGHT", "disability");
     postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
   }
 }

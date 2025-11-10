@@ -31,7 +31,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   
   @Test
   void nonExpeditedFlow() {
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     // No permanent address for this test
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
@@ -137,7 +136,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   //Test if no language is entered for other, OTHER is printed to PDF.
   @Test
 	void nonExpeditedFlowOtherLanguageTestBlankEntry() {
-		when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 		// Landing page
 		testPage.clickButtonLink("Apply now", "Identify County");
 
@@ -305,7 +303,6 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
   
   @Test
   void expeditedFlow() {
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     getToHomeAddress("Hennepin", List.of(PROGRAM_SNAP));
 
     // Where are you currently Living?
@@ -391,7 +388,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
             This application was submitted to Hennepin County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
 
             For more support, you can call Hennepin County (612-596-1300).""");
-    assertCafFieldEquals("APPLICANT_IS_US_CITIZEN", "Off");
+    assertCafFieldEquals("IS_US_CITIZEN_0", "Off");
     assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "Off");
     assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
     assertCafFieldEquals("DRUG_FELONY", "Yes");

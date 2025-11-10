@@ -50,4 +50,28 @@ public class Subworkflow extends ArrayList<Iteration> {
     return null;
   }
   
+  /**
+* Return the PagesData object associated with a given Iteration of this Subworkflow
+* Handles both UUID strings and the special "applicant" identifier
+* @param id - the string identifier (UUID string or "applicant")
+* @return - the PagesData object, or null
+*/
+public PagesData pagesDataForId(String id) {
+	 // Check if the ID is the special "applicant" string
+  if ("applicant".equals(id)) {
+      // The applicant is not in the household subworkflow
+	// Return null because the applicant's data is NOT stored in the household subworkflow - it's on the personalInfo page
+      return null;
+  }
+  
+  // If it's not "applicant", try to treat it as a UUID.Try to parse as UUID for household members
+  try {
+      UUID uuid = UUID.fromString(id);
+      return pagesDataForId(uuid);
+  } catch (IllegalArgumentException e) {
+      // Invalid UUID format
+      return null;
+  }
+} 
+  
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
+
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,8 +28,6 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     when(clock.instant()).thenReturn(
         LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
         LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
-    when(featureFlagConfiguration.get("child-care")).thenReturn(FeatureFlag.ON);
-    when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
 
     List<String> programSelections = List.of(PROGRAM_CCAP);
     getToHomeAddress("Hennepin", programSelections);
@@ -73,8 +71,12 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
     // Who are the children in need of child care
     // First, verify proper navigation when no children are selected
-    testPage.clickContinue("Housing subsidy");
+    testPage.clickContinue("Mental health needs & child care");
+    assertThat(testPage.getTitle()).contains("Mental health needs & child care");
+    testPage.chooseYesOrNo("childCareMentalHealth", NO.getDisplayValue(), "Housing subsidy");
+   
     assertThat(testPage.getTitle()).contains("Housing subsidy");
+    testPage.goBack();
     testPage.goBack();
     // Now pick the household member (i.e., child) from the childrenWhoNeedCare page.
     testPage.enter("whoNeedsChildCare", householdMemberFullName);
@@ -94,8 +96,10 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     
     //child support
     testPage.enter("whoReceivesChildSupportPayments", householdMemberFullName);
-    testPage.clickContinue("Housing subsidy");
-
+    testPage.clickContinue("Mental health needs & child care");
+    assertThat(testPage.getTitle()).contains("Mental health needs & child care");
+    testPage.chooseYesOrNo("childCareMentalHealth", NO.getDisplayValue(), "Housing subsidy");
+   
     // Do you receive housing subsidy
     testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
     
@@ -111,10 +115,12 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 
     // Is anyone in your household a migrant or seasonal farm worker?
-    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
+    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
 
-    // Is everyone in your household a U.S. Citizen?
-    testPage.chooseYesOrNo("isUsCitizen", YES.getDisplayValue(), "Tribal Nation member");
+    // Please confirm the citizenship status of your household
+    testPage.clickElementById("citizenshipStatus[]-0-BIRTH_RIGHT"); //Applicant status
+    testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT"); //person 2 status
+	testPage.clickContinue("Tribal Nation member");
 
     // Is anyone in your household a member of a tribal nation?
     testPage.chooseYesOrNo("isTribalNationMember", NO.getDisplayValue(), "Intro: Income");
@@ -155,10 +161,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     // Does anyone in your household have any of these?
     testPage.enter("assets", "None of the above");
     driver.findElement(By.xpath("//*[contains(text(),\"Assets include your family's cash, bank accounts, vehicles, investments, and real estate\")]")).isDisplayed();
-    testPage.clickContinue("Savings");
-
-    // Does anyone in the household have money in a bank account or debit card?
-    testPage.chooseYesOrNo("haveSavings", NO.getDisplayValue(), "Sold assets");
+    testPage.clickContinue("Sold assets");
 
     // In the last 12 months, has anyone in the household given away or sold any
     // assets?

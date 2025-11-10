@@ -3,6 +3,9 @@ package org.codeforamerica.shiba.pages.config;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -24,6 +27,7 @@ public enum Validation {
   SHOULD_BE_BLANK(strings -> String.join("", strings).isBlank()),
   NOT_BLANK(strings -> !String.join("", strings).isBlank()),
   NONE_BLANK(strings -> strings.stream().noneMatch(String::isBlank)),
+  ALL_NON_BLANK(strings -> strings != null && !strings.isEmpty() && strings.stream().allMatch(s -> s != null && !s.isBlank())),
   SELECT_AT_LEAST_ONE(strings -> strings.size() > 0),
   SELECTED(strings -> strings.size() == 0),
   SSN(strings -> String.join("", strings).replace("-", "").matches("\\d{9}")),
@@ -35,6 +39,7 @@ public enum Validation {
             || GenericValidator.isDate(String.join("/", strings), "MM/d/yyyy", true));
   }),
   MULTIPLE_DATES(strings -> {return validateMultipleDates(strings); }),
+  SCHOOL_START_DATES(strings -> {return checkSchoolStartDateRange(strings); }),
   DOB_VALID(strings -> {
     String dobString = String.join("/", strings);
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
@@ -124,5 +129,48 @@ public enum Validation {
 		}
 		return retVal;
 	}
+	private static boolean checkSchoolStartDateRange(List<String> stringList) {
+		//Collection<List<String>> stringList
+		Collection<List<String>> stringLists = partitionDateList(stringList);;
+		Iterator<List<String>> iterator = stringLists.iterator();
+	    boolean retVal = false;
 
+	    LocalDate today = LocalDate.now();
+	    LocalDate maxDate = today.plusYears(4);
+	    LocalDate minDate = today.minusYears(4);
+
+	    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+
+	    while (iterator.hasNext()) {
+	        List<String> date = iterator.next();
+
+	        boolean isEmpty = date.stream().allMatch(String::isEmpty);
+	        if (isEmpty) {
+	            retVal = true;
+	            continue;
+	        }
+
+	        if (!DATE.apply(date)) {
+	            return false;
+	        }
+
+	        if (date.size() >= 3) {
+	            String dateStr = String.join("/", date); 
+	            try {
+	                LocalDate parsedDate = LocalDate.parse(dateStr, formatter);
+	                if (parsedDate.isBefore(minDate) || parsedDate.isAfter(maxDate)) {
+	                    return false;
+	                }
+	            } catch (DateTimeParseException e) {
+	                return false;
+	            }
+	        } else {
+	            return false;
+	        }
+
+	        retVal = true;
+	    }
+
+	    return retVal;
+	}
 }

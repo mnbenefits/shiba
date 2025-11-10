@@ -4,6 +4,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -67,7 +68,7 @@ public class SubworkflowPreparer implements DocumentFieldPreparer {
               List<String> valuesForInput = getValuesForInput(recipient, inputName, inputData);
               FormInputType inputType = getFormInputType(formInputList, inputName);
               DocumentFieldType documentFieldType = DocumentFieldPreparer.formInputTypeToDocumentFieldType(inputType);
-
+     
               // Add DocumentField to our final result for the input
               fields.add(new DocumentField(
                   pageName,
@@ -78,7 +79,34 @@ public class SubworkflowPreparer implements DocumentFieldPreparer {
             });
           });
         }));
+    clearIncomeForDailyJobs(fields);
     return fields;
+  }
+  
+// If the job's payPeriod is EVERY_DAY then incomePerPayPeriod should be empty
+  private void clearIncomeForDailyJobs(List<DocumentField> fields) {
+	  Map<Integer, List<DocumentField>> map = new HashMap<>();
+	  
+	  for(DocumentField field : fields) {
+		  map.computeIfAbsent(field.getIteration(), k -> new ArrayList<>()).add(field);
+	  }
+	  
+	  map.forEach((iteration, fieldList) -> {
+		    boolean isEveryDay = false;
+		    for(DocumentField field: fieldList) {
+		    	if(field.getValue().contains("EVERY_DAY") && field.getGroupName().contains("payPeriod")) {
+		    		isEveryDay = true;
+		    	}
+		    }
+		    if(isEveryDay) {
+		    	for(DocumentField field: fieldList) {
+		    		if(field.getGroupName().contains("incomePerPayPeriod")) {
+		    			field.setValueToBlank();
+		    		}
+		    	}
+		    }
+		});
+
   }
   
   @NotNull

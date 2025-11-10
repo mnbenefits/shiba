@@ -28,4 +28,25 @@ class TotalIncomeCalculatorTest {
         		List.of(new NonHourlyJobIncomeInformation("EVERY_MONTH", "10", 0, null), new HourlyJobIncomeInformation("25", "1", 0, null)))))
         .isEqualTo(Money.parse("110"));
   }
+  
+  
+  // YUVA G how does new total income work, doesnt use existing income if there are jobs?
+  @Test
+  void calculateReturnsCorrectTotalWhenPaidEachDay() {
+    // Create a TotalIncome with one daily-paid non-hourly job and one hourly job
+    TotalIncome totalIncome = new TotalIncome(
+        Money.parse("100"), // existing income (e.g., other sources)
+        List.of(
+            new NonHourlyJobIncomeInformation("EVERY_DAY", "100", 0, null),
+            new HourlyJobIncomeInformation("25", "2", 0, null)
+        )
+    );
+
+    // For EACH_DAY, grossMonthlyIncome() = incomePerPayPeriod = 100 (no multiplier)
+    // For the hourly job: 25 * 2 * 4 = 200 (4 weeks per month assumption)
+    // So total should be 100 + 200 = 300
+    assertThat(totalIncomeCalculator.calculate(totalIncome))
+        .isEqualTo(Money.parse("300"));
+  }
+
 }

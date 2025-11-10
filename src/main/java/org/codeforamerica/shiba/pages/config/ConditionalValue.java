@@ -7,6 +7,7 @@ import org.codeforamerica.shiba.inputconditions.Condition;
 public class ConditionalValue {
 
   private Condition condition;
+  private Condition customCondition;
   private String flag;
   private String value;
 }

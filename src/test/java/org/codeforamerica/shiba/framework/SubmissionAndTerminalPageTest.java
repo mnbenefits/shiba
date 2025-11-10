@@ -57,7 +57,6 @@ public class SubmissionAndTerminalPageTest extends AbstractStaticMessageSourceFr
         "/pages/firstPage/navigation",
         Map.of("foo", List.of("some value")));
     
-    when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     var testTerminalPage = getNextPageAsFormPage("firstPage");
     assertThat(testTerminalPage.getElementTextById("submission-time"))
         .isEqualTo("2020-01-01T05:10-06:00[America/Chicago]");

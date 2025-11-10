@@ -36,6 +36,7 @@ conditionDefinitions:
     conditions:
       - *onlyApplyingForOthers?
       - pageName: addHouseholdMembers
+        name: addHouseholdMembersTrue
         input: addHouseholdMembers
         value: "true"
   - &isHomeless?
@@ -164,6 +165,7 @@ conditionDefinitions:
     logicalOperator: OR
     conditions:
       - pageName: choosePrograms
+        name: applicantChooseCCAP
         input: programs
         value: CCAP
       - pageName: householdMemberInfo
@@ -256,6 +258,72 @@ conditionDefinitions:
         conditions:
           - <<: *householdMemberDidNotChooseProgram?
             value: SNAP
+          - *livesAlone?
+  - &someoneChoseSNAP?
+    name: someoneChoseSnap
+    logicalOperator: OR
+    conditions:
+      - pageName: choosePrograms
+        name: applicantChooseSNAP
+        input: programs
+        matcher: CONTAINS
+        value: SNAP
+      - pageName: householdMemberInfo
+        name: hhMemberChooseSNAP
+        input: programs
+        matcher: CONTAINS
+        value: SNAP
+  - &someoneChoseEA?
+    name: someoneChoseEA
+    logicalOperator: OR
+    conditions:
+      - pageName: choosePrograms
+        name: applicantChooseEA
+        input: programs
+        matcher: CONTAINS
+        value: EA
+      - pageName: householdMemberInfo
+        name: hhMemberChooseEA
+        input: programs
+        matcher: CONTAINS
+        value: EA
+  - &someoneChoseCAFProgram?
+    name: someoneChoseCAFProgram
+    logicalOperator: OR
+    conditions:
+      - *someoneChoseSNAP?
+      - *someoneChoseEA?
+      - *someoneChoseCASH?
+      - *applicantChoseGRH?
+
+  - &noOneChoseCAF?
+    name: noOneChoseCAF
+    logicalOperator: AND
+    conditions:
+      # Applicant did not choose any CAF program (SNAP, EA, CASH, GRH)
+      - logicalOperator: AND
+        conditions:
+          - <<: *applicantDidNotChooseProgram?
+            value: SNAP
+          - <<: *applicantDidNotChooseProgram?
+            value: EA
+          - <<: *applicantDidNotChooseProgram?
+            value: CASH
+          - <<: *applicantDidNotChooseProgram?
+            value: GRH
+      # Either no household member chose them OR applicant lives alone
+      - logicalOperator: OR
+        conditions:
+          - logicalOperator: AND
+            conditions:
+              - <<: *householdMemberDidNotChooseProgram?
+                value: SNAP
+              - <<: *householdMemberDidNotChooseProgram?
+                value: EA
+              - <<: *householdMemberDidNotChooseProgram?
+                value: CASH
+              - <<: *householdMemberDidNotChooseProgram?
+                value: GRH
           - *livesAlone?
   - &noOneChoseCASH?
     name: noOneChoseCASH
@@ -1538,6 +1606,64 @@ pageConfigurations:
         datasources:
           - pageName: whoHasParentNotAtHome
             inputName: whoHasAParentNotLivingAtHome
+  - &childCareMentalHealth
+    name: childCareMentalHealth
+    pageTitle: child-care-mental-health.title
+    headerKey: 
+      defaultValue: child-care-mental-health.do-any-caregivers-need-help
+      conditionalValues:
+        - value: child-care-mental-health.do-you-need-help
+          customCondition: APPLICANT_IS_ONLY_ADULT
+    hasPrimaryButton: false
+    headerHelpMessageKey: child-care-mental-health.adults-and-caregivers
+    inputs:
+      - name: childCareMentalHealth
+        type: YES_NO
+        promptMessage:
+          promptMessageFragmentName: childCareMentalHealthPrompt
+  - &whoNeedsChildCareForMentalHealth
+    name: whoNeedsChildCareForMentalHealth
+    pageTitle: who-needs-child-care-mental-health.title
+    headerKey: who-needs-child-care-mental-health.who-needs-need-help
+    headerHelpMessageKey: who-needs-child-care-mental-health.check-all-that-apply
+    inputs:
+      - type: CUSTOM
+        name: whoNeedsChildCareMentalHealth
+        customInputFragment: mentalHealthCheckboxes
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+            - pageName: childrenInNeedOfCare
+  - &childCareMentalHealthTimes
+    name: childCareMentalHealthTimes
+    pageTitle: child-care-mental-health-time.title
+    headerKey: 
+      defaultValue: child-care-mental-health-time.tell-us-how-much-time-is-needed
+      conditionalValues:
+        - value: child-care-mental-health-time.tell-us-how-much-time-you-need
+          customCondition: APPLICANT_IS_ONLY_ADULT
+    headerHelpMessageKey: child-care-mental-health-time.you-can-request
+    inputs:
+      - type: CUSTOM
+        name: childCareMentalHealthHours
+        inputPostfix: general.input.postfix.hours-per-week
+        customInputFragment: childCareMentalHealthTimeInput
+        promptMessage:
+          promptMessageKey: child-care-mental-health-time.weekly-amount
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
+            - pageName: whoNeedsChildCareForMentalHealth
+      - type: HIDDEN
+        name: childCareMentalHealthPersonIdMap
   - &householdDeleteWarningPage
     name: householdDeleteWarningPage
     pageTitle: warning-page.delete-household-member-warning
@@ -1662,8 +1788,8 @@ pageConfigurations:
         name: schoolStartDate
         customInputFragment: schoolStartDateInput
         validators:
-          - validation: MULTIPLE_DATES
-            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+          - validation: SCHOOL_START_DATES
+            errorMessageKey: general.validation.please-enter-valid-school-start-date
         options:
           datasources:
             - pageName: schoolGrade
@@ -1710,6 +1836,46 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+  - &citizenship
+    name: citizenship
+    pageTitle: citizenship.title
+    headerKey:
+      defaultValue: citizenship.please-confirm-the-citizenship-status-of-your-househould
+      conditionalValues:
+        - value: citizenship.please-confirm-your-citizenship-status
+          condition: *livesAlone?  
+    headerHelpMessageKey: 
+      defaultValue: citizenship.members-of-your-household-may-still-be-eligible
+      conditionalValues:
+        - value: citizenship.you-may-still-be-eligible-for-food-and-cash-benefits-if-you-are-not-a-us-citizen
+          condition: *livesAlone? 
+    hasPrimaryButton: true
+    contextFragment: passportContextFragment
+    additionalContentFragment: citizenshipAccordions
+    inputs:
+      - name: citizenshipStatus
+        type: CUSTOM
+        customInputFragment: citizenshipStatusInput
+        validators:
+          - validation: ALL_NON_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        options:
+          selectableOptions:
+            - value: BIRTH_RIGHT
+              messageKey: citizenship.birthright-us-citizen-or-us-national
+            - value: NATURALIZED
+              messageKey: citizenship.naturalized-us-citizen
+            - value: DERIVED
+              messageKey: citizenship.derived-us-citizen
+            - value: NOT_CITIZEN
+              messageKey: citizenship.not-a-us-citizen
+          datasources:
+            - pageName: personalInfo
+            - pageName: householdMemberInfo
+              groupName: household
+              optional: "true"
+      - type: HIDDEN
+        name: citizenshipIdMap	
   - &usCitizen
     name: usCitizen
     pageTitle: us-citizen.title
@@ -1723,7 +1889,7 @@ pageConfigurations:
     contextFragment: passportContextFragment
     inputs:
       - name: isUsCitizen
-        type: YES_NO
+        type: YES_NO		
   - &whoIsNonCitizen
     name: whoIsNonCitizen
     pageTitle: who-is-non-citizen.title
@@ -1844,6 +2010,7 @@ pageConfigurations:
       conditionalValues:
         - value: liquid-assets-prompt.title-one-person
           condition: *livesAlone?
+    contextFragment: liquidAssetsSingleContextFragment
     headerKey:
       defaultValue: thirty-day-income.how-much-money-is-available
       conditionalValues:
@@ -3303,7 +3470,7 @@ pageConfigurations:
     name: retirementIncomeSource
     pageTitle: unearned-income-source.title
     headerKey: retirement-income-source.who-receives
-    headerHelpMessageKey: unearned-income-source.you-can-select-more
+    headerHelpMessageKey: retirement-income-source.additional-help
     contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
@@ -3398,6 +3565,7 @@ pageConfigurations:
   - &otherUnearnedIncome
     name: otherUnearnedIncome
     pageTitle: unearned-income.title
+    contextFragment: unearnedIncomeContextFragment
     headerKey:
       defaultValue: unearned-income-other.household-get-income-from-any-of-these-sources
       conditionalValues:
@@ -3581,6 +3749,7 @@ pageConfigurations:
     pageTitle: unearned-income-benefits-programs.title
     headerKey: unearned-income-benefits-programs.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeBenefitsPrograms
@@ -3612,6 +3781,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.insurance-payments
     headerKey: unearned-income-insurance-payments.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeInsurancePayments
@@ -3643,6 +3813,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.contract-for-deed
     headerKey: unearned-income-contract-for-deed.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeContractForDeed
@@ -3674,6 +3845,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.money-from-a-trust
     headerKey: unearned-income-money-from-a-trust.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeTrustMoney
@@ -3705,6 +3877,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.health-care-reimbursement
     headerKey: unearned-income-health-care-reimbursement.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeHealthcareReimbursement
@@ -3736,6 +3909,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.interest-dividends
     headerKey: unearned-income-interest-dividends.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeInterestDividends
@@ -3767,6 +3941,7 @@ pageConfigurations:
     pageTitle: unearned-income-other.rental-income
     headerKey: unearned-income-rental-income.header
     headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
     inputs:
       - type: CUSTOM
         name: monthlyIncomeRental
@@ -3797,7 +3972,7 @@ pageConfigurations:
     name: otherPaymentsIncomeSource
     pageTitle: unearned-income-other.other-payments
     headerKey: unearned-income-other.other-payments.header
-    headerHelpMessageKey: unearned-income-source.you-can-select-more
+    headerHelpMessageKey: unearned-income-other.other-additional-help
     inputs:
       - type: CUSTOM
         name: monthlyIncomeOtherPayments
@@ -3977,6 +4152,8 @@ pageConfigurations:
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:
+            - value: EVERY_DAY
+              messageKey: pay-period.every-day 
             - value: EVERY_WEEK
               messageKey: pay-period.every-week
             - value: EVERY_TWO_WEEKS
@@ -3993,6 +4170,11 @@ pageConfigurations:
     pageTitle: income-per-pay-period.title
     headerKey:
       conditionalValues:
+        - value: income-per-pay-period.every-day
+          condition:
+            pageName: payPeriod
+            input: payPeriod
+            value: EVERY_DAY
         - value: income-per-pay-period.every-week
           condition:
             pageName: payPeriod
@@ -4199,8 +4381,6 @@ pageConfigurations:
         type: MONEY
         validators:
           - validation: MONEY
-            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
-          - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
   - &savings
     name: savings
@@ -4607,7 +4787,11 @@ pageConfigurations:
   - &assets
     name: assets
     pageTitle: assets.title
-    headerKey: assets.does-any-one-in-your
+    headerKey:
+      defaultValue: assets.does-any-one-in-your
+      conditionalValues:
+        - value: assets.do-you-have-any
+          condition: *livesAlone?
     headerHelpMessageKey: assets.select-all-that-apply
     contextFragment: assetsContextFragment
     inputs:
@@ -4618,6 +4802,14 @@ pageConfigurations:
           errorMessageKey: general.validation.make-sure-you-answer-this-question
       options:
         selectableOptions:
+          - value: CASH
+            messageKey: assets.cash
+  #          condition: *someoneChoseCAFProgram?
+          - value: BANK_ACCOUNT
+            messageKey: assets.bank-account
+  #          condition: *someoneChoseCAFProgram?
+          - value: ELECTRONIC_PAYMENT_CARD
+            messageKey: assets.electronic-payment
           - value: VEHICLE
             messageKey: assets.a-vehicle
           - value: STOCK_BOND
@@ -5634,7 +5826,6 @@ workflow:
           pageName: childrenInNeedOfCare
           input: whoNeedsChildCare
           matcher: NOT_EMPTY
-        flag: child-care
       - pageName: whoHasParentNotAtHome
     datasources:
       - pageName: choosePrograms
@@ -5756,21 +5947,99 @@ workflow:
           value: NONE_OF_THE_ABOVE
     nextPages:
       - pageName: housingSubsidy
-        condition: *noOneChoseSNAP?
-      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *noOneChoseSNAP?
+            - *noOneChoseCCAP?
+      - pageName: childCareMentalHealth
     datasources:
       - pageName: choosePrograms
       - pageName: whoHasParentNotAtHome
-      - pageName: householdMemberInfo
-        groupName: household
+      - groupName: household
+        pageName: householdMemberInfo
       - pageName: childrenInNeedOfCare
+  childCareMentalHealth:
+    pageConfiguration: *childCareMentalHealth
+    skipCondition: *noOneChoseCCAP?
+    nextPages:
+      - pageName: whoNeedsChildCareForMentalHealth
+        condition: 
+          pageName: childCareMentalHealth
+          input: childCareMentalHealth
+          value: "true"
+      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseSNAP? 
+            - *doesNotLiveAlone?
+      - pageName: introPersonalDetails
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *applicantChoseCCAPProgram?
+            - *livesAlone?
+      - pageName: housingSubsidy
+    datasources:
+      - pageName: childrenInNeedOfCare
+      - pageName: childCareMentalHealth
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - groupName: household
+        pageName: householdMemberInfo
+  whoNeedsChildCareForMentalHealth:
+    pageConfiguration: *whoNeedsChildCareForMentalHealth
+    skipCondition:
+      customCondition: APPLICANT_IS_ONLY_ADULT
+      name: childCareMentalHealthSelectedNo
+    nextPages:
+      - pageName: childCareMentalHealthTimes
+    datasources:
+      - pageName: childCareMentalHealth
+      - pageName: childrenInNeedOfCare
+      - groupName: household
+        pageName: householdMemberInfo
+  childCareMentalHealthTimes:
+    pageConfiguration: *childCareMentalHealthTimes
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - *noOneChoseCCAP?
+        - name: childCareMentalHealthSelectedNo
+          pageName: childCareMentalHealth
+          input: childCareMentalHealth
+          matcher: CONTAINS
+          value: "false"
+    nextPages:
+      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseSNAP?
+      - pageName: introPersonalDetails
+        condition: *livesAlone?
+      - pageName: housingSubsidy
+    datasources:
+      - pageName: childrenInNeedOfCare
+      - pageName: childCareMentalHealth
+      - pageName: whoNeedsChildCareForMentalHealth
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo
   introPersonalDetails:
     pageConfiguration: *introPersonalDetails
     nextPages:
       - pageName: housingSubsidy
   preparingMealsTogether:
     pageConfiguration: *preparingMealsTogether
-    skipCondition: *noOneChoseSNAP?
+    skipCondition: 
+      logicalOperator: OR
+      conditions:
+        - *noOneChoseSNAP?
+        - *livesAlone?
     nextPages:
       - pageName: housingSubsidy 
     datasources:
@@ -5866,6 +6135,7 @@ workflow:
   schoolGrade:
     pageConfiguration: *schoolGrade
     datasources:
+      - pageName: personalInfo
       - pageName: schoolDetails
       - pageName: choosePrograms
       - pageName: childrenInNeedOfCare
@@ -5919,32 +6189,25 @@ workflow:
   migrantFarmWorker:
     pageConfiguration: *migrantFarmWorker
     nextPages:
-      - pageName: usCitizen
+      - pageName: citizenship
     datasources:
       - pageName: addHouseholdMembers
-  usCitizen:
-    pageConfiguration: *usCitizen
+  citizenship:
+    pageConfiguration: *citizenship
     nextPages:
       - pageName: disability
-        condition: 
-          pageName: usCitizen
-          input: isUsCitizen
-          value: "true"
-      - pageName: whoIsNonCitizen
-        condition:
-          pageName: usCitizen
-          input: isUsCitizen
-          value: "false"
-      - pageName: usCitizen
+ #TODO Need condition for CCAP
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: personalInfo 
+      - groupName: household
   whoIsNonCitizen:
     pageConfiguration: *whoIsNonCitizen
     nextPages:
       - pageName: alienIdNumber
     datasources:
       - pageName: addHouseholdMembers
-      - pageName: usCitizen
+      - pageName: citizenship
     skipCondition: *livesAlone?
   alienIdNumber:
     pageConfiguration: *alienIdNumber
@@ -6398,13 +6661,10 @@ workflow:
     pageConfiguration: *unearnedIncome
     nextPages:
       - pageName: unearnedIncomeSources 
-        condition: 
-          logicalOperator: OR
-          conditions:
-            - *applicantDidNotChooseCERTAINPOPS?
-            - *livesAlone? 
+        condition: *livesAlone? 
       - pageName: otherUnearnedIncome
         condition: 
+          name: doesNotLiveAloneANDnoUnearnedIncomeSelected
           logicalOperator: AND
           conditions:
             - *doesNotLiveAlone?
@@ -6417,7 +6677,6 @@ workflow:
               input: unearnedIncome
               value: SOCIAL_SECURITY
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: supplementalSecurityIncomeSource
         condition:
           logicalOperator: AND
@@ -6426,7 +6685,6 @@ workflow:
               input: unearnedIncome
               value: SSI
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: veteransBenefitsIncomeSource
         condition:
           logicalOperator: AND
@@ -6435,16 +6693,16 @@ workflow:
               input: unearnedIncome
               value: VETERANS_BENEFITS
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: unemploymentIncomeSource
         condition:
+          name: selectedUnemploymentANDdoesNotLiveAlone
           logicalOperator: AND
           conditions:
             - pageName: unearnedIncome
+              name: selectedUnemployment
               input: unearnedIncome
               value: UNEMPLOYMENT
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: workersCompIncomeSource
         condition:
           logicalOperator: AND
@@ -6453,7 +6711,6 @@ workflow:
               input: unearnedIncome
               value: WORKERS_COMPENSATION
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: retirementIncomeSource
         condition:
           logicalOperator: AND
@@ -6462,7 +6719,6 @@ workflow:
               input: unearnedIncome
               value: RETIREMENT
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: childOrSpousalSupportIncomeSource
         condition:
           logicalOperator: AND
@@ -6471,7 +6727,6 @@ workflow:
               input: unearnedIncome
               value: CHILD_OR_SPOUSAL_SUPPORT
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: tribalPaymentIncomeSource
         condition:
           logicalOperator: AND
@@ -6480,7 +6735,7 @@ workflow:
               input: unearnedIncome
               value: TRIBAL_PAYMENTS
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
+      - pageName: unearnedIncomeSources
     datasources:
       - pageName: addHouseholdMembers
       - pageName: choosePrograms
@@ -6511,7 +6766,6 @@ workflow:
       logicalOperator: OR
       conditions:
         - *noUnearnedIncomeSelected?
-        - *applicantDidNotChooseCERTAINPOPS?
         - pageName: unearnedIncome
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
@@ -6533,7 +6787,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: SSI
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6550,7 +6803,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: VETERANS_BENEFITS
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6567,7 +6819,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: UNEMPLOYMENT
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6584,7 +6835,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: WORKERS_COMPENSATION
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6601,7 +6851,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: RETIREMENT
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6618,7 +6867,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: CHILD_OR_SPOUSAL_SUPPORT
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6635,7 +6883,6 @@ workflow:
           input: unearnedIncome
           matcher: DOES_NOT_CONTAIN
           value: TRIBAL_PAYMENTS
-        - *applicantDidNotChooseCERTAINPOPS?
     datasources:
       - pageName: unearnedIncome
       - pageName: addHouseholdMembers
@@ -6647,12 +6894,10 @@ workflow:
       conditions:
         - logicalOperator: AND
           conditions:
-            - *applicantDidNotChooseCERTAINPOPS?
             - *applicantDidNotChooseCCAP?
             - *livesAlone?
         - logicalOperator: AND
           conditions:
-            - *applicantDidNotChooseCERTAINPOPS?
             - *applicantDidNotChooseCCAP?
             - *householdMemberDidNotChooseCCAP?
     nextPages:
@@ -6664,7 +6909,6 @@ workflow:
             - logicalOperator: OR
               conditions:
                 - *livesAlone?
-                - *applicantDidNotChooseCERTAINPOPS?
       - pageName: insurancePaymentsIncomeSource
         condition: *selectedOtherUnearnedIncome?
       - pageName: insurancePaymentsIncomeSource
@@ -6928,12 +7172,132 @@ workflow:
       - pageName: choosePrograms
   supportAndCare:
     pageConfiguration: *supportAndCare
+    datasources:
+      - pageName: addHouseholdMembers
     nextPages:
       - pageName: assets
   assets:
     pageConfiguration: *assets
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+      - pageName: assets
     nextPages:
+      # CAF program selected and cash and or bank accounts → liquidAssetsSingle new revised page
+      - pageName: liquidAssetsSingle
+        condition:
+          name: CAFAndcashOrBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram? 
+                - *applicantDidNotChooseCERTAINPOPS?
+            - logicalOperator: OR
+              name: CashOrBankOrElectronic
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+      # CAF program selected electronic payment cards ONLY → soldAssets 
+      - pageName: soldAssets
+        condition:
+          name: CAFAndElectronicCardsOnly
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram? 
+                - *applicantDidNotChooseCERTAINPOPS?
+            - logicalOperator: AND
+              name: CashOrBankOrElectronic
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                  matcher: DOES_NOT_CONTAIN
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+                  matcher: DOES_NOT_CONTAIN
+                - pageName: assets
+                  input: assets
+                  value: "ELECTRONIC_PAYMENT_CARD"
+      # CCAP  only  → soldAssets
+      - pageName: soldAssets
+        condition:
+          name: CCAPAndcashOrBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCCAP?
+                - *noOneChoseCAF?  
+            - *applicantDidNotChooseCERTAINPOPS?
+      # Certain Pops and CAF and cash selected → cashAmount
+      - pageName: cashAmount
+        condition:
+          name: CPOPSAndCAFAndCash
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram?  
+                - *applicantChoseCERTAINPOPS?
+            - logicalOperator: AND
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+                  matcher: DOES_NOT_CONTAIN
+      # Certain Pops and CAF with cash and bank selected → cashAmount and then bankAccountTypes
+      - pageName: cashAmount
+        condition:
+          name: CPOPSAndCAFAndCashAndBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram?  ## IS THIS WORKING?
+                - *applicantChoseCERTAINPOPS?
+            - logicalOperator: AND
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+      # Certain Pops and CAF with just bank selected → bankAccountTypes
+      - pageName: bankAccountTypes
+        condition:
+          name: CPOPSAndCAFAndBank
+          logicalOperator: AND
+          conditions:
+            - logicalOperator: AND
+              conditions:
+                - *someoneChoseCAFProgram?  ## IS THIS WORKING?
+                - *applicantChoseCERTAINPOPS?
+            - logicalOperator: AND
+              conditions:
+                - pageName: assets
+                  input: assets
+                  value: "CASH"
+                  matcher: DOES_NOT_CONTAIN
+                - pageName: assets
+                  input: assets
+                  value: "BANK_ACCOUNT"
+      # DEFAULT NEXT PAGE
       - pageName: vehicleAssetSource
+
   vehicleAssetSource:
     pageConfiguration: *vehicleAssetSource
     nextPages:
@@ -7122,7 +7486,7 @@ workflow:
   oneMillionDollarAssetSource:
     pageConfiguration: *oneMillionDollarAssetSource
     nextPages:
-      - pageName: savings
+      - pageName: soldAssets
     skipCondition:
       logicalOperator: OR
       conditions:
@@ -7156,10 +7520,19 @@ workflow:
     pageConfiguration: *cashAmount
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
     nextPages:
+      - pageName: soldAssets
+        condition:
+          name: skipAllBankAccountsFlow
+          conditions:
+            - pageName: assets
+              input: assets
+              value: "BANK_ACCOUNT"
+              matcher: DOES_NOT_CONTAIN
       - pageName: bankAccountTypes
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
+      - pageName: assets
   bankAccountTypes:
     pageConfiguration: *bankAccountTypes
     skipCondition: *applicantDidNotChooseCERTAINPOPS?
@@ -7454,7 +7827,6 @@ workflow:
     pageConfiguration: *signThisApplication
     nextPages:
       - pageName: secondSignatureNotification
-        flag: second-signature
         condition:
           logicalOperator: AND
           conditions:
@@ -7637,7 +8009,6 @@ workflow:
                 - *doesNotHaveHealthcare?
                 - *applicantDidNotChooseCERTAINPOPS?
       - pageName: recommendations
-        flag: show-wic-recommendation
         condition:
           logicalOperator: OR
           conditions:

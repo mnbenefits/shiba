@@ -8,6 +8,7 @@ import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.codeforamerica.shiba.testutilities.TestUtils.getAbsoluteFilepathString;
 import static org.codeforamerica.shiba.testutilities.TestUtils.resetApplicationData;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +20,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,6 +60,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
@@ -72,7 +75,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = MOCK)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(print = MockMvcPrint.NONE)
 @Import({SessionScopedApplicationDataTestConfiguration.class})
 public class AbstractShibaMockMvcTest {
 
@@ -219,6 +222,22 @@ public class AbstractShibaMockMvcTest {
     householdMemberInfo.put("moveToMnDate", List.of("02", "18", "1950"));
     householdMemberInfo.put("moveToMnPreviousState", List.of("Illinois"));
     postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+  }
+  
+  protected void fillOutSpouseInfo(String... programSelections) throws Exception{
+	  Map<String, List<String>> householdMemberInfo = new HashMap<>();
+	    householdMemberInfo.put("firstName", List.of("Sam"));
+	    householdMemberInfo.put("lastName", List.of("Altman"));
+	    householdMemberInfo.put("otherName", List.of("houseHoldyMcMemberson"));
+	    householdMemberInfo.put("programs", List.of(programSelections));
+	    householdMemberInfo.put("relationship", List.of("spouse"));
+	    householdMemberInfo.put("dateOfBirth", List.of("09", "14", "1950"));
+	    householdMemberInfo.put("ssn", List.of("987654321"));
+	    householdMemberInfo.put("maritalStatus", List.of("MARRIED_LIVING_WITH_SPOUSE"));
+	    householdMemberInfo.put("sex", List.of("MALE"));
+	    householdMemberInfo.put("livedInMnWholeLife", List.of("true"));
+	    
+	    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
   }
   
   protected void fillOutHousemateInfoMoreThanFiveLessThanTen(int HHCount) throws Exception {
@@ -500,6 +519,13 @@ public class AbstractShibaMockMvcTest {
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
     ).andExpect(redirectedUrl(redirectUrl));
   }
+  
+  protected void expectHeaderText(String getUrl, String expectedHeaderText) throws Exception {
+	    mockMvc.perform(get(getUrl).session(session))
+	        .andExpect(status().isOk())
+	        .andExpect(content().string(containsString(expectedHeaderText)));
+	}
+
 
   protected void postExpectingNextPageElementText(String pageName,
       String inputName,
@@ -829,14 +855,14 @@ public class AbstractShibaMockMvcTest {
   protected void completeFlowFromIsPregnantThroughTribalNations(boolean hasHousehold, String... programs)
       throws Exception {
     postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
-    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
+    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
     
     if (containsOnly(Arrays.asList(programs), "CCAP")) {
-    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "tribalNationMember");
+    	postExpectingRedirect("citizenship", "citizenshipStatus", "BIRTH_RIGHT", "tribalNationMember");
     	postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
     else {
-    	postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+    	postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
     	postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
         postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
         postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
@@ -902,12 +928,13 @@ public class AbstractShibaMockMvcTest {
       postExpectingNextPageTitle("childrenInNeedOfCare",
           "whoNeedsChildCare",
           "householdMemberFirstName householdMemberLastName" + getFirstHouseholdMemberId(),
-          "Who are the children that have a parent not living in the home?"
+          "Do you have a child care provider?"
       );
       postExpectingRedirect("whoHasParentNotAtHome",
           "whoHasAParentNotLivingAtHome",
           "NONE_OF_THE_ABOVE",
-          "housingSubsidy");
+          "childCareMentalHealth");
+      postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false", "housingSubsidy");
 
       postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
@@ -926,13 +953,15 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
     }
 
-    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "usCitizen");
+    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
 
     if (hasHousehold) {
-      postExpectingRedirect("usCitizen", "isUsCitizen", "false", "whoIsNonCitizen");
-      postExpectingRedirect("whoIsNonCitizen", "whoIsNonCitizen", me, "disability");
+    	postExpectingRedirect("citizenship", Map.of(
+    		    	    "citizenshipStatus", List.of("NATURALIZED", "BIRTH_RIGHT", "NOT_CITIZEN"),
+    	                "citizenshipIdMap", List.of("applicant", "uuid-1", "uuid-2") ),
+    		    "disability");
     } else {
-      postExpectingRedirect("usCitizen", "isUsCitizen", "true", "disability");
+      postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
     }
 
     postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
@@ -974,10 +1003,16 @@ public class AbstractShibaMockMvcTest {
       }
     }
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
-    postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
+    if (hasHousehold) {
+    	postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
+    	        "socialSecurityIncomeSource");
+    }
+    else {
+    	 postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
         "unearnedIncomeSources");
     postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
         "otherUnearnedIncome");
+    }      
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
         "futureIncome");
     postExpectingRedirect("futureIncome", "earnLessMoneyThisMonth", "true", "startExpenses");
@@ -993,10 +1028,7 @@ public class AbstractShibaMockMvcTest {
         "supportAndCare");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
     postExpectingSuccess("assets", "assets", "REAL_ESTATE");
-    assertNavigationRedirectsToCorrectNextPage("assets", "savings");
-    
-    postExpectingRedirect("savings", "haveSavings", "true", "liquidAssetsSingle");
-    postExpectingRedirect("liquidAssetsSingle", "liquidAssets", "1234", "soldAssets");
+    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");
     assertNavigationRedirectsToCorrectNextPage("submittingApplication", "registerToVote");
     postExpectingRedirect("registerToVote", "registerToVote", "YES", "healthcareCoverage");

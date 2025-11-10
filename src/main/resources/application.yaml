@@ -109,6 +109,12 @@ mnb-enable-google-analytics: false
 #PROD: 
 google-tag-manager-id: GTM-T7N8SWFD
 
+banner:
+   alert:
+      displayed: true
+      en: <strong>SNAP SCAM ALERT:</strong> Protect your EBT card and SNAP benefits from scams. MNbenefits will not contact you about your EBT card by text. <a class="link--alert-banner" href="https://dcyf.mn.gov/ebt-card" target="_blank">Learn more here.</a>
+      es: <strong>ALERTA DE FRAUDE DE SNAP:</strong> Proteja su tarjeta EBT y beneficios SNAP de los fraudes. MNbenefits no lo contactará  en relación con su tarjeta EBT por mensaje de texto.  <a class="link--alert-banner" href="https://dcyf.mn.gov/ebt-card " target="_blank">Obtenga más información aquí.</a>
+      
 general:
    notice:
       title-en: 'Important Update!'
@@ -126,9 +132,6 @@ feature-flag:
   WEN-lineal-descendant: on
   certain-pops: on
   enhanced-next-steps: on
-  second-signature: on
-  child-care: on
-  show-wic-recommendation: on
   
 document-upload:
   max-files-uploaded: 50

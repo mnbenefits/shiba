@@ -5,15 +5,11 @@ import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.codeforamerica.shiba.documents.DocumentRepository;
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.AccessibilityTestPage;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -173,7 +169,6 @@ public class AccessibilityJourneyTest extends JourneyTest {
   
   @Test
   void healthcareRenewalFlow() {
-	when(featureFlagConfiguration.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     navigateTo("healthcareRenewalUpload");
     assertThat(driver.getTitle()).isEqualTo("Health Care Renewal Document Upload");
 
@@ -336,10 +331,15 @@ public class AccessibilityJourneyTest extends JourneyTest {
     
     testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
     testPage.enter("whoNeedsChildCare", "householdMemberFirstName householdMemberLastName");
-    //TODO this test seems to skip the doYouHaveChildCareProvider page
-    testPage.clickContinue("Who are the children that have a parent not living in the home?");
+
+    testPage.clickContinue("Do you have a child care provider?");
+    testPage.chooseYesOrNo( "hasChildCareProvider", NO.getDisplayValue(), "Who are the children that have a parent not living in the home?");
+    
     testPage.enter("whoHasAParentNotLivingAtHome",
         "None of the children have parents living outside the home");
+    testPage.clickContinue("Mental health needs & child care");
+	testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed each week");
+	testPage.enter("childCareMentalHealthHours", "20");
     testPage.clickContinue("Preparing meals together");
     testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Housing subsidy");
     testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
@@ -349,13 +349,13 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("isPregnant", YES.getDisplayValue(), "Household: pregnant");
     testPage.enter("whoIsPregnant", "Me");
     testPage.clickContinue("Expedited Migrant Farm Worker, Household");
-    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "U.S. Citizen");
-    testPage.chooseYesOrNo("isUsCitizen", NO.getDisplayValue(), "Non Citizen");
-    testPage.enter("whoIsNonCitizen", "Me");
+    testPage.chooseYesOrNo("migrantOrSeasonalFarmWorker", NO.getDisplayValue(), "Citizenship");
+    testPage.clickElementById("citizenshipStatus[]-0-NOT_CITIZEN");
+    testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT");
     testPage.clickContinue("Disability");
     testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
-    testPage.enter("workChanges", "Went on strike");
-	testPage.clickContinue("Tribal Nation member");
+    testPage.enter("workChanges", "None of the above");
+    testPage.clickContinue("Tribal Nation member");
     testPage.chooseYesOrNo("isTribalNationMember", YES.getDisplayValue(), "Select a Tribal Nation");
     testPage.selectFromDropdown("selectedTribe[]", "Red Lake Nation");
     testPage.clickContinue("Nations Boundary");
@@ -423,20 +423,22 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("unearnedIncome", "Social Security");
 
     testPage.clickContinue("Unearned Income Source");
+    testPage.clickElementById("householdMember-me");
+    
     // Enter incorrect social security amount to trigger error and check aria properties
     testPage.enter("socialSecurityAmount", "-200");
-    testPage.clickContinue("Unearned Income Sources");
+    testPage.clickContinue("Unearned Income Source");
     testPage.hasInputError("socialSecurityAmount");
 
     assertThat(driver.findElements(By.className("socialSecurityAmount")).size()).isEqualTo(0);
     assertThat(testPage.getInputAriaDescribedBy("socialSecurityAmount")).isEqualTo(
-        "socialSecurityAmount-error-message-1 socialSecurityAmount-help-message");
+        "socialSecurityAmount-help-message");
     assertThat(testPage.getInputAriaLabelledBy("socialSecurityAmount")).isEqualTo(
-        "socialSecurityAmount-error-p socialSecurityAmount-label");
+        "socialSecurityAmount-label");
 
     testPage.enter("socialSecurityAmount", "200");
 	testPage.clickContinue("Unearned Income");
-
+	
     testPage.enter("otherUnearnedIncome", "None of the above");
     testPage.clickContinue("Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
@@ -458,9 +460,6 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Assets");
     testPage.enter("assets", "A vehicle");
     testPage.enter("assets", "Real estate (not including your own home)");
-    testPage.clickContinue("Savings");
-    testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Expedited Cash, Household");
-    testPage.enter("liquidAssets", "1234");
     testPage.clickContinue("Sold assets");
     testPage.chooseYesOrNo("haveSoldAssets", NO.getDisplayValue(), "Submitting Application");
     testPage.clickButtonLink("Continue", "Register to vote");

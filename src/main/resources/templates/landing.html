@@ -10,7 +10,7 @@
 <div class="page-wrapper">
   <div th:replace="~{fragments/toolbar :: toolbar}"></div>
   <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
-  <div th:replace="~{fragments/ebtScamAlert :: ebtScamAlert}"></div>
+  <div th:replace="~{fragments/bannerAlert :: bannerAlert}"></div>
   <main id="content" role="main">
     <section class="slab slab--white padding-top-1rem padding-bottom-3rem">
       <div class="grid">
@@ -155,7 +155,8 @@
             <h2 class="h3 spacing-below-10" th:text="#{landing.housing-support}"></h2>
             <p class="form-card__body-text"
                th:text="#{landing.the-housing-support-program}"></p>
-            <p class="form-card__body-text" th:utext="#{landing.housing-link}"></p>
+			   <p class="form-card__body-text" th:utext="#{landing.housing-link}"></p>
+		   	   <p class="form-card__body-text" th:utext="#{landing.other-housing-link}"></p>
           </div>
           <div class="grid__item spacing-below-35">
             <h2 class="h3 spacing-below-10" th:text="#{landing.child-care-assistance}"></h2>

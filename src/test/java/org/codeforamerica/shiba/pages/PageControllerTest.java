@@ -372,7 +372,6 @@ class PageControllerTest {
             "8675309", null)
     ));
     when(applicationRepository.find(applicationId)).thenReturn(application);
-    when(featureFlags.get("show-wic-recommendation")).thenReturn(FeatureFlag.ON);
     mockMvc.perform(get("/pages/terminalPage"));
 
     verify(applicationRepository).save(application);

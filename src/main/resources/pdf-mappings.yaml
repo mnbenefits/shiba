@@ -130,6 +130,8 @@ mappings:
   usCitizen:
     isUsCitizen: IS_US_CITIZEN
     applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN
+  citizenship:
+    citizenshipStatus: IS_US_CITIZEN
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:
@@ -162,6 +164,12 @@ mappings:
     
   medicalInOtherState:
     medicalInOtherState: MEDICAL_IN_OTHER_STATE
+
+  otherIncome:
+    otherIncomeType: OTHER_INCOME_TYPE
+    otherIncomeFullName: OTHER_INCOME_FULL_NAME
+    otherIncomeAmount: OTHER_INCOME_AMOUNT
+    otherIncomeFrequency: OTHER_INCOME_FREQUENCY
 
   certainPops:
     certainPopsSupplement: CP_SUPPLEMENT
@@ -354,6 +362,9 @@ mappings:
     haveNonZeroSavings: HAVE_SAVINGS
     cashAmount: CASH_AMOUNT
   assets:
+    ELECTRONIC_PAYMENT_CARD: HAVE_PAYMENT_CARD
+    CASH: HAVE_CASH
+    BANK_ACCOUNT: HAVE_SAVINGS
     STOCK_BOND: HAVE_INVESTMENTS
     VEHICLE: HAVE_VEHICLE
     ONE_MILLION_ASSETS: HAVE_MILLION_DOLLARS
@@ -422,6 +433,7 @@ mappings:
   incomePerPayPeriod:
     incomePerPayPeriod: INCOME_PER_PAY_PERIOD
   nonSelfEmployment_incomePerPayPeriod:
+    incomePerPayPeriod_EVERY_DAY: INCOME_PER_PAY_PERIOD_EVERY_DAY   # TODO new payperiod addition
     incomePerPayPeriod_EVERY_WEEK: INCOME_PER_PAY_PERIOD_EVERY_WEEK
     incomePerPayPeriod_EVERY_TWO_WEEKS: INCOME_PER_PAY_PERIOD_EVERY_TWO_WEEKS
     incomePerPayPeriod_TWICE_A_MONTH: INCOME_PER_PAY_PERIOD_TWICE_A_MONTH
@@ -473,6 +485,10 @@ mappings:
   adultRequestingChildcareWorking:
     fullName: ADULT_REQUESTING_CHILDCARE_WORKING_FULL_NAME
     employersName: ADULT_REQUESTING_CHILDCARE_WORKING_EMPLOYERS_NAME
+  whoNeedsChildCareForMentalHealth:
+    fullName: ADULT_REQUESTING_CHILDCARE_TO_SUPPORT_MENTAL_HEALTH_FULL_NAME
+  childCareMentalHealthTimes:
+    childCareMentalHealthHours: CHILDCARE_MENTAL_HEALTH_HOURS_A_WEEK	
   additionalInfo:
     additionalInfo: ADDITIONAL_APPLICATION_INFO
     caseNumber: ADDITIONAL_INFO_CASE_NUMBER
@@ -500,6 +516,7 @@ mappings:
     businessOwnershipOwners: BUSINESS_OWNERSHIP_OWNER_FULL_NAME
     realEstateOwners: REAL_ESTATE_OWNER_FULL_NAME
 enums:
+  EVERY_DAY: Daily
   EVERY_WEEK: Every week
   EVERY_TWO_WEEKS: Every two weeks
   TWICE_A_MONTH: Twice a month

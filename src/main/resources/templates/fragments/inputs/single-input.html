@@ -26,7 +26,7 @@
                    th:name="${formInputName}"
                    th:value="${(!inputData.value.isEmpty()) ? inputData.value[0] : ''}"
             >
-            <div class="text-input-group__postfix" style="width:35%;" 
+            <div class="text-input-group__postfix" 
 									 th:if="${input.inputPostfix != null}" th:text="#{${input.inputPostfix}}"></div>
         </div>
         <div class="text-input-group max-width--hourly-wage" th:case="${T(org.codeforamerica.shiba.pages.config.FormInputType).HOURLY_WAGE}">
@@ -81,7 +81,8 @@
                   th:text="${(!inputData.value.isEmpty()) ? inputData.value[0] : ''}"
                   th:name="${formInputName}"
         ></textarea>
-        <input th:case="${T(org.codeforamerica.shiba.pages.config.FormInputType).NUMBER}"
+		<div class="text-input-group" th:case="${T(org.codeforamerica.shiba.pages.config.FormInputType).NUMBER}">
+        <input 
                type="number"
                class="text-input form-width--medium"
                th:attr="aria-describedby=${hasHelpMessage ? input.name + '-help-message' : ''},
@@ -92,6 +93,9 @@
                th:value="${(!inputData.value.isEmpty()) ? inputData.value[0] : ''}"
                th:name="${formInputName}"
         >
+		<div class="text-input-group__postfix" 
+											 th:if="${input.inputPostfix != null}" th:text="#{${input.inputPostfix}}"></div>
+		</div>
         <input th:case="${T(org.codeforamerica.shiba.pages.config.FormInputType).PHONE}"
                type="tel"
                class="text-input form-width--medium phone-input"

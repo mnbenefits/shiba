@@ -18,10 +18,10 @@ jobs:
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@v2.3.0
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'adopt'
-        java-version: '17'
+        java-version: '21'
         cache: 'gradle'
     - name: Cache Gradle packages
       uses: actions/cache@v4
@@ -48,10 +48,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -78,10 +78,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -108,10 +108,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -138,10 +138,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -168,10 +168,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -198,10 +198,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -228,10 +228,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -258,10 +258,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -288,10 +288,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -318,10 +318,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4
@@ -348,10 +348,10 @@ jobs:
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2.3.0
       - name: Set up JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
           cache: 'gradle'
       - name: Cache Gradle packages
         uses: actions/cache@v4

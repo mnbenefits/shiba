@@ -46,10 +46,10 @@ jobs:
     - name: Set up ChromeDriver
       uses: nanasess/setup-chromedriver@v2.3.0
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'adopt'
-        java-version: '17'
+        java-version: '21'
         cache: 'gradle'
     - name: Cache Gradle packages
       uses: actions/cache@v4
@@ -67,7 +67,7 @@ jobs:
 
     - run: zip -r veracode-scan-target.zip ./
     - name: Veracode Upload And Scan
-      uses: veracode/veracode-uploadandscan-action@0.2.8
+      uses: veracode/veracode-uploadandscan-action@0.2.10
       with:
         appname: DCYF - mnbenefits/shiba # default is ${{ github.repository }}
     # createprofile
@@ -88,7 +88,7 @@ jobs:
     - run: curl --silent --show-error --fail -O https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
     - run: unzip -o pipeline-scan-LATEST.zip
 
-    - uses: actions/setup-java@v4
+    - uses: actions/setup-java@v5
       with:
         java-version: 8
         distribution: 'temurin'
@@ -99,7 +99,7 @@ jobs:
       uses: veracode/veracode-pipeline-scan-results-to-sarif@bbb92f8ccedc6c38e07d32c16cf2f690e7b4ba08
       with:
         pipeline-results-json: results.json
-    - uses: github/codeql-action/upload-sarif@v3
+    - uses: github/codeql-action/upload-sarif@v4
       with:
         # Path to SARIF file relative to the root of the repository
         sarif_file: veracode-results.sarif

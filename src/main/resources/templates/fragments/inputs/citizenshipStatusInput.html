@@ -1,0 +1,101 @@
+<!-- 
+This fragment implements the (custom) citizenshipStatus input for the usCitizen page.
+It displays citizenship status options for each household member using radio buttons.
+
+- Handles both single applicant and multi-household scenarios dynamically
+- Each person gets their own independent radio button group to prevent selection conflicts
+- Uses hidden fields to submit values as parallel arrays with person IDs
+- JavaScript synchronizes radio button selections with hidden fields for form submission -->
+
+<th:block th:fragment="citizenshipStatusInput(input, data)" th:with="
+        formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
+		householdSubFlow=${input.options.subworkflows.get('household')},
+        selectedStatuses=${data.get(input.name)},
+        personIdMap=${data.get('citizenshipIdMap')},
+        hasHelpMessage=${input.helpMessageKey != null},
+        selectedListSize=${selectedStatuses.value != null ? #lists.size(selectedStatuses.value) : 0},
+        isLivingAlone=${householdSubFlow == null || householdSubFlow.isEmpty()},
+        idList=${T(org.codeforamerica.shiba.pages.PageUtils).buildCitizenshipIdList(householdSubFlow)},
+		inputData=${data.get(input.name)}
+    ">
+
+	
+	<div class="spacing-below-35 spacing-above-35" th:lang="${#locale.language}">
+
+		<div class="form-group">
+			<th:block th:each="id, iter : ${idList}" th:with="
+                    index=${iter.index},
+                    isApplicant=${id == 'applicant'},
+                    householdMemberInfoPageData=${isApplicant ? 
+                    	pageDatasources.get('personalInfo') : 
+                    	householdSubFlow.pagesDataForId(id).getPage('householdMemberInfo')},
+                    hhName=${householdMemberInfoPageData.get('firstName').getValue(0) + ' ' + householdMemberInfoPageData.get('lastName').getValue(0)},
+                    you=#{general.you},
+                    personName=${isApplicant ? (hhName + ' ' + you) : hhName},
+                    preselected=${selectedStatuses.value != null && !selectedStatuses.value.isEmpty() && index < selectedListSize ? selectedStatuses.value.get(index) : ''},
+                    labelledById=${'citizenship-label-' + index},
+                    radioGroupName=${'citizenshipGroup-' + index},
+                    hiddenFieldId=${'citizenshipHidden-' + index}
+                ">
+			<!-- ERROR - The vertical error bar will span this div (for one person) when no citizenship status is chosen for the person -->
+            <div class="form-group" th:classappend="${!inputData.valid(data) && preselected==''} ? 'form-group--error' : ''">   
+				<!-- Person name label -->
+				<label class="form-question spacing-below-15 spacing-above-30" th:for="|citizenshipGroup-${index}|"
+					th:text="${personName}" th:id="${'label-' + index}">
+				</label>
+
+				<!-- Radio buttons for this person (using unique group name) -->
+				<th:block th:each="option : ${input.options.selectableOptions}">
+					<label class="radio-button">
+						<input type="radio" class="citizenship-radio"
+							th:id="${formInputName + '-' + index + '-' + option.value}" th:name="${radioGroupName}"
+							th:value="${option.value}"
+							th:checked="${!#strings.isEmpty(preselected) && option.value.equals(preselected)}" th:attr="aria-labelledby=${labelledById},
+                                        data-hidden-target=${hiddenFieldId}" />
+						<span th:utext="#{${option.messageKey}}"></span>
+					</label>
+				</th:block>
+
+				<!-- Hidden field to submit the actual value for this person -->
+				<input type="hidden" th:id="${hiddenFieldId}" th:name="${formInputName}" th:value="${preselected}" />
+
+				<!-- Hidden person ID mapping -->
+				<input type="hidden" th:id="${'citizenshipIdMap-' + index}" th:name="citizenshipIdMap[]"
+					th:value="${id}" />
+					
+			    <!--ERROR the error message is displayed (for one person) when no citizenship status is chosen for the person -->
+			    <div th:if="${preselected==''}">
+			      <div  th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+			    </div>
+			</div>
+			</th:block>
+		</div>
+	</div>
+
+	<!-- JavaScript to handle radio button changes -->
+	<!-- listens for physical button change and then changes hidden input citizenshipIdMap to reflect choice-->
+	<script>
+		(function () {
+			// Wait for DOM to be ready
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initCitizenshipRadios);
+			} else {
+				initCitizenshipRadios();
+			}
+			// This function finds all radio buttons with the 'citizenship-radio' class
+			//& attaches a change event listener to each one
+			function initCitizenshipRadios() {
+				var radios = document.querySelectorAll('.citizenship-radio');
+				radios.forEach(function (radio) {
+					radio.addEventListener('change', function () {
+						var hiddenFieldId = this.getAttribute('data-hidden-target');
+						var hiddenField = document.getElementById(hiddenFieldId);
+						if (hiddenField) {
+							hiddenField.value = this.value;
+						}
+					});
+				});
+			}
+		})();
+	</script>
+</th:block>
