@@ -373,25 +373,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Who has real estate (not including your own home)
 		assertThat(testPage.getTitle()).isEqualTo("Who has real estate (not including your own home)");
 		driver.findElement(By.id("householdMember-me")).click();
-		testPage.clickContinue("Savings");
 
-		// Does anyone in the household have money in a bank account or debit card?
-		testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Cash Amount, Household");
-
-		// How much cash does your household have available?
-		testPage.enter("cashAmount", "1234");
-		testPage.clickContinue("Bank Account Types");
-
-		// Does your household have any of these accounts?
-		driver.findElement(By.id("SAVINGS")).click();
-		testPage.clickContinue("Savings account source");
-
-		// who has money in a savings account?
-		driver.findElement(By.id("householdMember-me")).click();
-		testPage.clickContinue("Expedited Cash, Household");
-
-		// how much money is available in these accounts?
-		testPage.enter("liquidAssets", "1234");
 		testPage.clickContinue("Sold assets");
 
 		// In the last 12 months, has anyone in the household given away or sold any
@@ -769,7 +751,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
 		assertCafFieldEquals("IS_PREGNANT", "Yes");
 		assertCafFieldEquals("IS_US_CITIZEN_0", "Not_Citizen");
-		assertCafFieldEquals("EXPEDITED_QUESTION_2", "2468.00");
+		assertCafFieldEquals("EXPEDITED_QUESTION_2", "0.00");
 		assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
 		assertCafFieldEquals("HEAT", "Yes");
 		assertCafFieldEquals("SUPPORT_AND_CARE", "Yes");
@@ -783,7 +765,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("RENT", "Yes");
 		assertCafFieldEquals("MORTGAGE", "Yes");
 		assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
-		assertCafFieldEquals("HAVE_SAVINGS", "Yes");
+		assertCafFieldEquals("HAVE_SAVINGS", "No");
 		assertCafFieldEquals("HAVE_INVESTMENTS", "Yes");
 		assertCafFieldEquals("HAVE_VEHICLE", "Yes");
 		assertCafFieldEquals("HAVE_SOLD_ASSETS", "No");
@@ -906,7 +888,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_4", "Monthly");
 		assertCertainPopsFieldEquals("BLIND_OR_HAS_DISABILITY", "Yes");
 		assertCertainPopsFieldEquals("WHO_HAS_DISABILITY_0", "Ahmed St. George");
-		assertCertainPopsFieldEquals("CASH_AMOUNT", "1234");
+		assertCertainPopsFieldEquals("CASH_AMOUNT", "");
 		assertCertainPopsFieldEquals("HAVE_INVESTMENTS", "Yes");
 		assertCertainPopsFieldEquals("INVESTMENT_OWNER_FULL_NAME_0", "Ahmed St. George");
 		assertCertainPopsFieldEquals("INVESTMENT_TYPE_0", "stocks");
@@ -1059,10 +1041,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "None");
-		testPage.clickContinue("Savings");
-
-		// Does anyone in the household have money in a bank account or debit card?
-		testPage.chooseYesOrNo("haveSavings", NO.getDisplayValue(), "Sold assets");
+		testPage.clickContinue("Sold assets");
 
 		// In the last 12 months, has anyone in the household given away or sold any
 		// assets?

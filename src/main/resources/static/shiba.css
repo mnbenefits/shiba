@@ -2194,3 +2194,21 @@ legend.form-question {
 	    margin-top: 25px;
 	}
 }
+
+.job-row form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.job-name {
+  flex: 1;
+  word-break: break-word;
+  margin-right: 1rem;
+}
+
+.delete-btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}

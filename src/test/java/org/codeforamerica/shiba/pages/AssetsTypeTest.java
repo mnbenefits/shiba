@@ -9,6 +9,7 @@ import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.FormPage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEquals;
 
 public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 
@@ -24,35 +25,61 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
   void verifyAssetTypesForSNAP() throws Exception {
     completeFlowAssetsTypeAsPerProgram("SNAP","CASH","GRH");
     var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("VEHICLE","STOCK_BOND","NONE");
-    
+    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","NONE");
+  }
+  
+  @Test
+  void verifyAssetHeaderTextForHousehold() throws Exception {
+	  completeFlowAssetsTypeAsPerProgram("SNAP","CASH","GRH");
+	  expectHeaderText("/pages/assets", "Does anyone in your household have any of these?");
+  }
+  
+  @Test
+  void verifyAssetHeaderTextForSingleApplicant() throws Exception {
+	  completeFlowAssetsSingleApplicant("SNAP");
+	  expectHeaderText("/pages/assets", "Do you have any of these assets?");
+  }
+  
+  @Test
+  void verifyPDfAssetValues() throws Exception {
+	  completeFlowAssetsTypeAsPerProgram("SNAP","CASH","GRH");
+	  postExpectingSuccess("assets", "assets", List.of("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD"));
+	  var caf = submitAndDownloadCaf();
+	  assertPdfFieldEquals("HAVE_CASH", "Yes", caf);
+	  assertPdfFieldEquals("HAVE_SAVINGS", "Yes", caf);
+	  assertPdfFieldEquals("HAVE_PAYMENT_CARD", "Yes", caf);
+	  postExpectingSuccess("assets", "assets", List.of("NONE"));
+	  caf = submitAndDownloadCaf();
+	  assertPdfFieldEquals("HAVE_CASH", "No", caf);
+	  assertPdfFieldEquals("HAVE_SAVINGS", "No", caf);
+	  assertPdfFieldEquals("HAVE_PAYMENT_CARD", "No", caf);
   }
   @Test
   void verifyAssetTypesForCCAP() throws Exception {
     completeFlowAssetsTypeAsPerProgram("CCAP");
     var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("VEHICLE","STOCK_BOND","REAL_ESTATE","ONE_MILLION_ASSETS","NONE");
+    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","REAL_ESTATE","ONE_MILLION_ASSETS","NONE");
     
   }
   @Test
   void verifyAssetTypesForCERTAINPOPS() throws Exception {
     completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS");
     var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("VEHICLE","STOCK_BOND","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","REAL_ESTATE","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
+    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","REAL_ESTATE","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
     
   }
   @Test
   void verifyAssetTypesForCERTAINPOPSANDCCAP() throws Exception {
     completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS","CCAP");
     var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
+    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
     
   }
   @Test
   void verifyAssetSourcePagesForAll() throws Exception {
     completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS","CCAP");
     var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
+    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
     postExpectingRedirect("assets", "assets", List.of("VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS"), "vehicleAssetSource");
     assertNavigationRedirectsToCorrectNextPage("vehicleAssetSource", "investmentAssetType");
     postExpectingRedirect("investmentAssetType", "investmentAssetType", List.of("STOCKS","BONDS","RETIREMENT_ACCOUNTS"), "stocksHouseHoldSource");
@@ -70,9 +97,9 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
   void verifySavingsIfNoneForAssetsChose() throws Exception {
     completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS", "CCAP");
     var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("VEHICLE", "STOCK_BOND", "REAL_ESTATE",
+    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE", "STOCK_BOND", "REAL_ESTATE",
         "LIFE_INSURANCE", "BURIAL_ACCOUNT", "OWNERSHIP_BUSINESS", "ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS", "NONE");
-    postExpectingRedirect("assets", "assets", List.of("None"), "savings");
+    postExpectingRedirect("assets", "assets", List.of("None"), "soldAssets");
   }
 
   private void completeFlowAssetsTypeAsPerProgram(String... programs) throws Exception {
@@ -95,6 +122,20 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("jobSearch", "currentlyLookingForJob", "true",
         "Who is looking for a job");
     fillSupportAndCare(programs);
+  }
+  
+  private void completeFlowAssetsSingleApplicant(String... programs) throws Exception {
+	  completeFlowFromLandingPageThroughReviewInfo(programs);
+	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "introPersonalDetails");
+	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "goingToSchool");
+	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
+	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
+	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
+	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+	  assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+	  postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED", "futureIncome");
+	  fillAdditionalIncomeInfo(programs);
+	  postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
   }
 
   private void fillSupportAndCare(String... programs) throws Exception {

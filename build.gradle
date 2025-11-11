@@ -137,17 +137,17 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:9.0")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
-    implementation("ch.qos.logback:logback-classic:1.5.20")
-    implementation("ch.qos.logback:logback-core:1.5.20")
-    implementation("ch.qos.logback:logback-parent:1.5.20")
+    implementation("ch.qos.logback:logback-classic:1.5.21")
+    implementation("ch.qos.logback:logback-core:1.5.21")
+    implementation("ch.qos.logback:logback-parent:1.5.21")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.19.0")
     implementation("com.azure:azure-storage-blob:12.32.0")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2-1")
     implementation("commons-validator:commons-validator:1.10.0")
-    implementation("org.flywaydb:flyway-core:11.15.0")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.15.0")
+    implementation("org.flywaydb:flyway-core:11.16.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.16.0")
     implementation("com.mixpanel:mixpanel-java:1.5.4")
     implementation("net.javacrumbs.shedlock:shedlock-spring:6.10.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:6.10.0")
@@ -158,7 +158,7 @@ dependencies {
 
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
-    testImplementation("de.redsix:pdfcompare:1.2.5")
+    testImplementation("de.redsix:pdfcompare:1.2.6")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
         exclude group: "com.vaadin.external.google", module: "android-json"
@@ -167,7 +167,7 @@ dependencies {
     testImplementation("org.awaitility:awaitility:4.3.0")
     testImplementation("com.github.tomakehurst:wiremock-standalone:3.0.1")
     testImplementation("org.mockito:mockito-inline:5.2.0")
-    testImplementation("io.github.bonigarcia:webdrivermanager:6.3.2")
+    testImplementation("io.github.bonigarcia:webdrivermanager:6.3.3")
     testImplementation("org.springframework.ws:spring-ws-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.seleniumhq.selenium:selenium-api:4.38.0")
@@ -187,7 +187,7 @@ dependencies {
     testImplementation("org.seleniumhq.selenium:selenium-safari-driver:4.38.0")
     testImplementation("org.seleniumhq.selenium:selenium-support:4.38.0")
     testImplementation("io.percy:percy-java-selenium:2.1.1")
-    testImplementation("com.deque.html.axe-core:selenium:4.10.2")
+    testImplementation("com.deque.html.axe-core:selenium:4.11.0")
     testImplementation("org.jsoup:jsoup:1.21.2")
 }
 

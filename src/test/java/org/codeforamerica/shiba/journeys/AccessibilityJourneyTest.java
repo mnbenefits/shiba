@@ -460,9 +460,6 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Assets");
     testPage.enter("assets", "A vehicle");
     testPage.enter("assets", "Real estate (not including your own home)");
-    testPage.clickContinue("Savings");
-    testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Expedited Cash, Household");
-    testPage.enter("liquidAssets", "1234");
     testPage.clickContinue("Sold assets");
     testPage.chooseYesOrNo("haveSoldAssets", NO.getDisplayValue(), "Submitting Application");
     testPage.clickButtonLink("Continue", "Register to vote");
