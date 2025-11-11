@@ -8,6 +8,7 @@ import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.codeforamerica.shiba.testutilities.TestUtils.getAbsoluteFilepathString;
 import static org.codeforamerica.shiba.testutilities.TestUtils.resetApplicationData;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +20,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -517,6 +519,13 @@ public class AbstractShibaMockMvcTest {
             .params(new LinkedMultiValueMap<>(paramsWithProperInputNames))
     ).andExpect(redirectedUrl(redirectUrl));
   }
+  
+  protected void expectHeaderText(String getUrl, String expectedHeaderText) throws Exception {
+	    mockMvc.perform(get(getUrl).session(session))
+	        .andExpect(status().isOk())
+	        .andExpect(content().string(containsString(expectedHeaderText)));
+	}
+
 
   protected void postExpectingNextPageElementText(String pageName,
       String inputName,
@@ -1019,10 +1028,7 @@ public class AbstractShibaMockMvcTest {
         "supportAndCare");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
     postExpectingSuccess("assets", "assets", "REAL_ESTATE");
-    assertNavigationRedirectsToCorrectNextPage("assets", "savings");
-    
-    postExpectingRedirect("savings", "haveSavings", "true", "liquidAssetsSingle");
-    postExpectingRedirect("liquidAssetsSingle", "liquidAssets", "1234", "soldAssets");
+    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");
     assertNavigationRedirectsToCorrectNextPage("submittingApplication", "registerToVote");
     postExpectingRedirect("registerToVote", "registerToVote", "YES", "healthcareCoverage");

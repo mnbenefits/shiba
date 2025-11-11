@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AssetsTypePreparer extends OneToManyDocumentFieldPreparer {
 
-  private static final List<String> ASSETS_TYPE_OPTIONS = List.of("VEHICLE", "STOCK_BOND",
+  private static final List<String> ASSETS_TYPE_OPTIONS = List.of("ELECTRONIC_PAYMENT_CARD", "CASH", "BANK_ACCOUNT", "VEHICLE", "STOCK_BOND",
       "LIFE_INSURANCE",
       "BURIAL_ACCOUNT", "OWNERSHIP_BUSINESS", "REAL_ESTATE", "ONE_MILLION_ASSETS",
       "CONTRACTS_NOTES_AGREEMENTS", "TRUST_OR_ANNUITY", "OTHER_ASSETS");
