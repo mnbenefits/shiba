@@ -5421,6 +5421,12 @@ pageConfigurations:
     headerKey: hc-documentsSent.great-weve-received-your-docs
     hasPrimaryButton: false
     excludeGoBack: true
+	## add page configurations:
+  - &pastEBT
+    name: pastEBT
+    pageTitle: pastEBT.title
+    headerKey:
+    defaultValue: pastEBT.header
 workflow:
   landing:
     pageConfiguration: *landing
@@ -5742,7 +5748,7 @@ workflow:
       - pageName: contactInfo
       - pageName: choosePrograms
       - pageName: countyValidation
-      ## add stuff maybe here:
+
 
   addHouseholdMembers:
     pageConfiguration: *addHouseholdMembers
@@ -7785,6 +7791,7 @@ workflow:
       - pageName: expeditedMigrantFarmWorker
     datasources:
       - pageName: addHouseholdMembers
+#add page navigation here: 
   expeditedMigrantFarmWorker:
     pageConfiguration: *migrantFarmWorker
     nextPages:
