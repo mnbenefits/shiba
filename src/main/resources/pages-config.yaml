@@ -5422,6 +5422,38 @@ pageConfigurations:
     hasPrimaryButton: false
     excludeGoBack: true
     ## add page configurations:
+  - &considerHomeless
+    name: considerHomeless
+    pageTitle: is-considered-homeless.title
+    headerKey:
+      defaultValue: is-considered-homeless.header
+    headerHelpMessageKey: is-considered-homeless.helper
+    hasPrimaryButton: false
+    inputs:
+      - name: considerHomeless
+        type: YES_NO
+  - &temporarilyNotResiding
+    name: temporarilyNotResiding
+    pageTitle: temporarily-not-living-with-you.title
+    headerKey:
+      defaultValue: temporarily-not-living-with-you.header
+    hasPrimaryButton: false
+    inputs:
+      - name: temporarilyNotResiding
+        type: YES_NO
+  - &whoIsNotResiding
+    name: whoIsNotResiding
+    pageTitle: who-is-not-residing.title
+    headerKey: who-is-not-residing.header
+    headerHelpMessageKey: who-is-not-residing.helper
+    inputs:
+      - type: CUSTOM
+        name: whoIsNotResiding
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
   - &pastEBT
     name: pastEBT
     pageTitle: past-EBT.title
@@ -5452,6 +5484,7 @@ pageConfigurations:
             - pageName: personalInfo
             - groupName: household  
               pageName: householdMemberInfo
+
 workflow:
   landing:
     pageConfiguration: *landing
@@ -7657,7 +7690,7 @@ workflow:
   soldAssets:
     pageConfiguration: *soldAssets
     nextPages:
-      - pageName: pastEBT
+      - pageName: submittingApplication
     datasources:
       - pageName: addHouseholdMembers
   submittingApplication:
@@ -7675,7 +7708,7 @@ workflow:
   authorizedRep:
     pageConfiguration: *authorizedRep
     nextPages:
-      - pageName: additionalInfo
+      - pageName: considerHomeless
         condition:
           pageName: authorizedRep
           input: helpWithBenefits
@@ -7685,6 +7718,47 @@ workflow:
           pageName: authorizedRep
           input: helpWithBenefits
           value: "true"
+  #add page navigation here: 
+  considerHomeless:
+     pageConfiguration: *considerHomeless
+     nextPages:
+       - pageName: temporarilyNotResiding
+  temporarilyNotResiding:
+    pageConfiguration: *temporarilyNotResiding
+    nextPages:
+      - pageName: whoIsNotResiding
+        condition:
+          pageName: temporarilyNotResiding
+          name: temporarilyNotResiding
+          input: temporarilyNotResiding
+          value: "true"
+      - pageName: pastEBT
+    datasources:
+      - pageName: addHouseholdMembers
+  whoIsNotResiding:
+    pageConfiguration: *whoIsNotResiding
+    nextPages:
+      - pageName: pastEBT
+      
+  pastEBT:
+    pageConfiguration: *pastEBT
+    nextPages:
+      - pageName: anyoneOver60Disability
+  anyoneOver60Disability:
+    pageConfiguration: *anyoneOver60Disability
+    nextPages:
+      - pageName: whoIsOver60WithDisability
+        condition:
+          pageName: anyoneOver60Disability
+          input: anyoneOver60HasDisability
+          value: "true"
+      - pageName: additionalInfo
+  whoIsOver60WithDisability:
+    pageConfiguration: *whoIsOver60WithDisability
+    nextPages:
+      - pageName: additionalInfo 
+    datasources:
+      - pageName: addHouseHoldMembers
   authorizedRepCommunicate:
     pageConfiguration: *authorizedRepCommunicate
     nextPages:
@@ -7816,26 +7890,6 @@ workflow:
       - pageName: expeditedMigrantFarmWorker
     datasources:
       - pageName: addHouseholdMembers
-#add page navigation here: 
-  pastEBT:
-    pageConfiguration: *pastEBT
-    nextPages:
-      - pageName: anyoneOver60Disability
-  anyoneOver60Disability:
-    pageConfiguration: *anyoneOver60Disability
-    nextPages:
-      - pageName: whoIsOver60WithDisability
-        condition:
-          pageName: anyoneOver60Disability
-          input: anyoneOver60HasDisability
-          value: "true"
-      - pageName: submittingApplication
-  whoIsOver60WithDisability:
-    pageConfiguration: *whoIsOver60WithDisability
-    nextPages:
-      - pageName: submittingApplication 
-    datasources:
-      - pageName: addHouseHoldMembers
   expeditedMigrantFarmWorker:
     pageConfiguration: *migrantFarmWorker
     nextPages:
