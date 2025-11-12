@@ -5421,12 +5421,37 @@ pageConfigurations:
     headerKey: hc-documentsSent.great-weve-received-your-docs
     hasPrimaryButton: false
     excludeGoBack: true
-	## add page configurations:
+    ## add page configurations:
   - &pastEBT
     name: pastEBT
-    pageTitle: pastEBT.title
-    headerKey:
-    defaultValue: pastEBT.header
+    pageTitle: past-EBT.title
+    headerKey: past-EBT.header
+    hasPrimaryButton: false
+    #contextFragment: housingSubsidyContextFragment
+    inputs:
+      - name: hasPastEBT
+        type: YES_NO
+  - &anyoneOver60Disability
+    name: anyoneOver60Disability
+    pageTitle: anyone-over-60-disability.title
+    headerKey: anyone-over-60-disability.header
+    hasPrimaryButton: false
+    inputs:
+      - name: anyoneOver60HasDisability
+        type: YES_NO
+  - &whoIsOver60WithDisability
+    name: whoIsOver60WithDisability
+    pageTitle: who-is-over-60-with-disability.title
+    headerKey: who-is-over-60-with-disability.header
+    inputs:
+      - type: CUSTOM
+        name: whoIsOver60Disability
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household  
+              pageName: householdMemberInfo
 workflow:
   landing:
     pageConfiguration: *landing
@@ -7632,7 +7657,7 @@ workflow:
   soldAssets:
     pageConfiguration: *soldAssets
     nextPages:
-      - pageName: submittingApplication
+      - pageName: pastEBT
     datasources:
       - pageName: addHouseholdMembers
   submittingApplication:
@@ -7792,6 +7817,25 @@ workflow:
     datasources:
       - pageName: addHouseholdMembers
 #add page navigation here: 
+  pastEBT:
+    pageConfiguration: *pastEBT
+    nextPages:
+      - pageName: anyoneOver60Disability
+  anyoneOver60Disability:
+    pageConfiguration: *anyoneOver60Disability
+    nextPages:
+      - pageName: whoIsOver60WithDisability
+        condition:
+          pageName: anyoneOver60Disability
+          input: anyoneOver60HasDisability
+          value: "true"
+      - pageName: submittingApplication
+  whoIsOver60WithDisability:
+    pageConfiguration: *whoIsOver60WithDisability
+    nextPages:
+      - pageName: submittingApplication 
+    datasources:
+      - pageName: addHouseHoldMembers
   expeditedMigrantFarmWorker:
     pageConfiguration: *migrantFarmWorker
     nextPages:
