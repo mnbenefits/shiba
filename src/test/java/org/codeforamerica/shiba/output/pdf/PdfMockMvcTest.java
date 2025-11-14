@@ -211,6 +211,77 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("INTEREST_DIVIDENDS", "No", ccap);
 		assertPdfFieldEquals("OTHER_PAYMENTS", "No", ccap);
 	}
+	
+	@Disabled("I need to change this still")
+	@Test
+	void shouldMapOtherUnearnedIncomeCafSingleApplicant() throws Exception {
+		selectPrograms("SNAP");
+		fillInRequiredPages();
+		fillOutPersonalInfo();
+		postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS", "TRUST_MONEY","RENTAL_INCOME", "INTEREST_DIVIDENDS", 
+				"HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING", "OTHER_PAYMENTS"));
+		
+		Map<String, String> params = new HashMap<>();
+		params.put("insurancePaymentsAmount", "Insurance payments (settlements, short- or long-term disability, etc.)");
+		params.put("trustMoneyAmount", "Trusts");
+		params.put("rentalIncomeAmount", "Rental income");
+		params.put("interestDividendsAmount", "Interest or dividends");
+		params.put("healthCareReimbursementAmount", "Health care reimbursement");
+		params.put("contractForDeedAmount", "Contract for deed");
+		params.put("benefitsAmount", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
+		params.put("annuityPaymentsAmount", "Annuity payments");
+		params.put("giftsAmount", "Gifts");
+		params.put("lotteryGamblingAmount", "Lottery or gambling winnings");
+		params.put("dayTradingProceedsAmount", "Day trading proceeds");
+		params.put("otherPaymentsAmount", "Other Payments (inheritance, capital gains, etc.)");
+        
+		for(Map.Entry<String, String> entry : params.entrySet()) {
+			postExpectingSuccess("otherUnearnedIncomeSources", entry.getKey(), "1");
+			var caf = submitAndDownloadCaf();
+			assertPdfFieldEquals("OTHER_INCOME_TYPE_0", entry.getValue(), caf);
+			assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", caf);
+			assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "1", caf);
+			assertPdfFieldEquals("dummyFieldName1", "Dwight Schrute", caf);
+			assertPdfFieldEquals("dummyFieldName2", entry.getValue(), caf);
+			assertPdfFieldEquals("dummyFieldName3", "1", caf);
+		}
+		
+	}
+	
+	@Disabled("Test disabled for now")
+	@Test
+	void shouldMapOtherUnearnedIncomeCafHousehold() throws Exception {
+		selectPrograms("SNAP");
+		fillInRequiredPages();
+		fillOutPersonalInfo();
+		addHouseholdMembersWithProgram("SNAP");
+		
+		postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", List.of("RENTAL_INCOME", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING"));
+		
+		postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource/navigation", Map.of("monthlyIncomeRental", List.of(getApplicantFullNameAndId()), "rentalIncomeAmount", List.of("200")));
+		postToUrlExpectingSuccess("/pages/annuityIncomeSource", "/pages/annuityIncomeSource/navigation", Map.of("monthlyIncomeAnnuityPayments", List.of(getApplicantFullNameAndId()), "annuityPaymentsAmount", List.of("200")));
+		postToUrlExpectingSuccess("/pages/giftsIncomeSource", "/pages/giftsIncomeSource/navigation", Map.of("monthlyIncomeGifts", List.of(getApplicantFullNameAndId()), "giftsAmount", List.of("200")));
+		postToUrlExpectingSuccess("/pages/lotteryIncomeSource", "/pages/lotteryIncomeSource/navigation", Map.of("monthlyIncomeLotteryGambling", List.of(getApplicantFullNameAndId()), "lotteryGamblingAmount", List.of("200")));
+		postToUrlExpectingSuccess("/pages/dayTradingIncomeSource", "/pages/dayTradingIncomeSource/navigation", Map.of("monthlyIncomeDayTradingProceeds", List.of(getApplicantFullNameAndId()), "dayTradingProceedsAmount", List.of("200")));
+		
+		
+		var caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("OTHER_INCOME_TYPE_0", "Rental income", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "200", caf);
+
+		assertPdfFieldEquals("OTHER_INCOME_TYPE_1", "Annuity payments", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "200", caf);
+		
+		assertPdfFieldEquals("OTHER_INCOME_TYPE_2", "Gifts", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "200", caf);
+	
+		assertPdfFieldEquals("OTHER_INCOME_TYPE_3", "Lottery or gambling winnings", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_3", "200", caf);
+		
+		assertPdfFieldEquals("OTHER_INCOME_TYPE_4", "Day trading proceeds", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "200", caf);
+	}
 
 	@Test
 	void shouldMapAdultsInHouseholdRequestingChildcareAssistance() throws Exception {
