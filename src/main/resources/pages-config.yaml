@@ -2637,25 +2637,6 @@ pageConfigurations:
     inputs:
       - name: hasDisability
         type: YES_NO
-  - &whoHasDisability
-#TODO remove certain pops whoHasDisability is only for certain pops, so it can probably be deleted
-    name: whoHasDisability
-    pageTitle: who-has-disability.title
-    contextFragment: disabilityContextFragment
-    headerKey:
-      defaultValue: who-has-disability.who-has-a-physical-or-mental-disability-that-limits
-    hasPrimaryButton: true
-    inputs:
-      - type: CUSTOM
-        name: whoHasDisability
-        customInputFragment: householdOptionsCheckboxes
-        validators:
-          - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-you-answer-this-question
-        options:
-          datasources:
-            - pageName: personalInfo
-            - groupName: household
 # workSituation page is no longer used. However, we keep def. for data-pipelines compatibility
   - &workSituation
     name: workSituation
@@ -4609,12 +4590,6 @@ pageConfigurations:
             messageKey: assets.a-vehicle
           - value: STOCK_BOND
             messageKey: assets.stocks-bonds-401k
-          - value: LIFE_INSURANCE
-            messageKey: assets.life-insurance
-          - value: BURIAL_ACCOUNT
-            messageKey: assets.a-prepaid-burial-account
-          - value: OWNERSHIP_BUSINESS
-            messageKey: assets.ownership-in-a-business
           - value: REAL_ESTATE
             messageKey: assets.real-estate
             condition:
@@ -4630,12 +4605,6 @@ pageConfigurations:
               input: programs
               matcher: CONTAINS
               value: CCAP
-          - value: CONTRACTS_NOTES_AGREEMENTS
-            messageKey: assets.ownership-in-contracts-for-deed
-          - value: TRUST_OR_ANNUITY
-            messageKey: assets.trust-or-annuity
-          - value: OTHER_ASSETS
-            messageKey: assets.other-type-of-assets
           - value: NONE
             messageKey: assets.none-of-the-above
             isNone: true
@@ -6770,10 +6739,7 @@ workflow:
           name: CAFAndcashOrBank
           logicalOperator: AND
           conditions:
-            - logicalOperator: AND
-              conditions:
-                - *someoneChoseCAFProgram? 
-                - *applicantDidNotChooseCERTAINPOPS?
+            - *someoneChoseCAFProgram? 
             - logicalOperator: OR
               name: CashOrBankOrElectronic
               conditions:
@@ -6792,10 +6758,6 @@ workflow:
             - logicalOperator: AND
               conditions:
                 - *someoneChoseCAFProgram? 
-                - *applicantDidNotChooseCERTAINPOPS?
-            - logicalOperator: AND
-              name: CashOrBankOrElectronic
-              conditions:
                 - pageName: assets
                   input: assets
                   value: "CASH"
@@ -6813,67 +6775,50 @@ workflow:
           name: CCAPAndcashOrBank
           logicalOperator: AND
           conditions:
-            - logicalOperator: AND
-              conditions:
-                - *someoneChoseCCAP?
-                - *noOneChoseCAF?  
-            - *applicantDidNotChooseCERTAINPOPS?
-      # Certain Pops and CAF and cash selected → cashAmount
+            - *someoneChoseCCAP?
+            - *noOneChoseCAF?  
+      # CAF and cash selected → cashAmount
       - pageName: cashAmount
         condition:
-          name: CPOPSAndCAFAndCash
+          name: someOneChoseCAFAndCash
           logicalOperator: AND
           conditions:
             - logicalOperator: AND
-              conditions:
-                - *someoneChoseCAFProgram?  
-                - *applicantChoseCERTAINPOPS?
-            - logicalOperator: AND
-              conditions:
-                - pageName: assets
-                  input: assets
-                  value: "CASH"
-                - pageName: assets
-                  input: assets
-                  value: "BANK_ACCOUNT"
-                  matcher: DOES_NOT_CONTAIN
-      # Certain Pops and CAF with cash and bank selected → cashAmount and then bankAccountTypes
+            - *someoneChoseCAFProgram?  
+            - pageName: assets
+              input: assets
+              value: "CASH"
+            - pageName: assets
+              input: assets
+              value: "BANK_ACCOUNT"
+              matcher: DOES_NOT_CONTAIN
+      # CAF with cash and bank selected → cashAmount and then bankAccountTypes
       - pageName: cashAmount
         condition:
-          name: CPOPSAndCAFAndCashAndBank
+          name: someOneChoseCAFAndCashAndBank
           logicalOperator: AND
           conditions:
-            - logicalOperator: AND
-              conditions:
-                - *someoneChoseCAFProgram?  ## IS THIS WORKING?
-                - *applicantChoseCERTAINPOPS?
-            - logicalOperator: AND
-              conditions:
-                - pageName: assets
-                  input: assets
-                  value: "CASH"
-                - pageName: assets
-                  input: assets
-                  value: "BANK_ACCOUNT"
-      # Certain Pops and CAF with just bank selected → bankAccountTypes
+            - *someoneChoseCAFProgram?
+            - pageName: assets
+              input: assets
+              value: "CASH"
+            - pageName: assets
+              input: assets
+              value: "BANK_ACCOUNT"
+      # CAF with just bank selected → bankAccountTypes
       - pageName: bankAccountTypes
         condition:
-          name: CPOPSAndCAFAndBank
+          name: someOneChoseCAFAndBankAndCash
           logicalOperator: AND
           conditions:
-            - logicalOperator: AND
-              conditions:
-                - *someoneChoseCAFProgram?  ## IS THIS WORKING?
-                - *applicantChoseCERTAINPOPS?
-            - logicalOperator: AND
-              conditions:
-                - pageName: assets
-                  input: assets
-                  value: "CASH"
-                  matcher: DOES_NOT_CONTAIN
-                - pageName: assets
-                  input: assets
-                  value: "BANK_ACCOUNT"
+            - *someoneChoseCAFProgram?
+            - pageName: assets
+              input: assets
+              value: "CASH"
+              matcher: DOES_NOT_CONTAIN
+            - pageName: assets
+              input: assets
+              value: "BANK_ACCOUNT"
       # DEFAULT NEXT PAGE
       - pageName: vehicleAssetSource
 

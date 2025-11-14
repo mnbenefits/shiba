@@ -322,8 +322,6 @@ public class ApplicationDataParser {
     coordinatesMap
         .put(Field.PERSONAL_INFO_SSN, new ParsingCoordinate("personalInfo", "ssn"));
     coordinatesMap
-        .put(Field.PERSONAL_INFO_NO_SSN, new ParsingCoordinate("personalInfo", "noSSNCheck"));
-    coordinatesMap
         .put(Field.PERSONAL_INFO_FIRST_NAME, new ParsingCoordinate("personalInfo", "firstName"));
     coordinatesMap
         .put(Field.PERSONAL_INFO_LAST_NAME, new ParsingCoordinate("personalInfo", "lastName"));

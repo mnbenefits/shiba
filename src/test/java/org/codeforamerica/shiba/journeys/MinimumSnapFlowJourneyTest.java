@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.codeforamerica.shiba.pages.Sentiment;
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;

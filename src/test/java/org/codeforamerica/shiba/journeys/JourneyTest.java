@@ -204,33 +204,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     // Program Selection
     programSelections.forEach(program -> testPage.enter("programs", program));
 
-    if (programSelections.contains(PROGRAM_CERTAIN_POPS)) {
-    	// this is never used in current tests as of June 2025
-      testPage.clickContinue("Basic Criteria");
-      // Test Certain pops offboarding flow first by selecting None of the above
-      testPage.enter("basicCriteria", "None of the above");
-      testPage.clickContinue("Certain Pops Offboarding");
-      assertThat(testPage.getTitle()).isEqualTo("Certain Pops Offboarding");
-      testPage.clickButtonLink("Continue", "Add other programs");
-      assertThat(testPage.getTitle()).isEqualTo("Add other programs");
-      testPage.goBack();
-      testPage.goBack();
-
-      // Basic Criteria:
-      testPage.enter("basicCriteria", "I am 65 years old or older");
-      testPage.enter("basicCriteria", "I am blind");
-      testPage.enter("basicCriteria", "I currently receive SSI or RSDI for a disability");
-      testPage.enter("basicCriteria",
-          "I have a disability that has been certified by the Social Security Administration (SSA)");
-      testPage.enter("basicCriteria",
-          "I have a disability that has been certified by the State Medical Review Team (SMRT)");
-      testPage.enter("basicCriteria",
-          "I want to apply for Medical Assistance for Employed Persons with Disabilities (MA-EPD)");
-      testPage.enter("basicCriteria", "I have Medicare and need help with my costs");
-      testPage.clickContinue("Certain Pops Confirmation");
-      assertThat(testPage.getTitle()).isEqualTo("Certain Pops Confirmation");
-      testPage.clickButtonLink("Continue", "Intro: Basic Info");
-    }
     if(programSelections.contains(PROGRAM_SNAP)) {
       testPage.clickContinue("Expedited Notice");
       assertThat(testPage.getTitle()).isEqualTo("Expedited Notice");
@@ -249,16 +222,6 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("otherName", "defaultOtherName");
     //DOB is optional
     testPage.enter("ssn", "123456789");
-    if (programSelections.contains(PROGRAM_CERTAIN_POPS)) {
-    	// this is never used in current tests as of June 2025
-      testPage.enter("noSSNCheck", "I don't have a social security number.");
-      assertThat(testPage.getCheckboxValues("noSSNCheck")).contains("I don't have a social security number.", "I don't have a social security number.");
-      testPage.enter("appliedForSSN", "Yes");
-      testPage.clickContinue("Personal Info");
-      //SSN textbox is filled and Checkbox is checked, so page won't advance and error shows 
-      assertThat(testPage.getTitle()).contains("Personal Info");
-      testPage.enter("noSSNCheck", "I don't have a social security number.");//deselect the SSN checkbox
-    }
     testPage.enter("maritalStatus", "Never married");
     testPage.enter("sex", "Female");
     testPage.enter("livedInMnWholeLife", "Yes");

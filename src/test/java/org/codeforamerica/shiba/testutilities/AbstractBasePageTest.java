@@ -50,7 +50,6 @@ public abstract class AbstractBasePageTest {
 	protected static final String PROGRAM_GRH = "Housing Support Program (GRH)";
 	protected static final String PROGRAM_CCAP = "Child Care Assistance";
 	protected static final String PROGRAM_EA = "Emergency Assistance";
-	protected static final String PROGRAM_CERTAIN_POPS = "Healthcare for Seniors and People with Disabilities";
 	protected static final String PROGRAM_NONE = "None of the above";
 	private static final String UPLOADED_JPG_FILE_NAME = "shiba+file.jpg";
 	private static final String UPLOADED_PDF_NAME = "test-caf.pdf";
@@ -127,8 +126,7 @@ public abstract class AbstractBasePageTest {
 				ZipEntry zEntry;
 				String destination = path.toFile().getPath();
 				while ((zEntry = zipStream.getNextEntry()) != null) {
-					if (zEntry.getName().contains("_CAF") || zEntry.getName().contains("_CCAP")
-							|| zEntry.getName().contains("_CERTAIN_POPS")) {
+					if (zEntry.getName().contains("_CAF") || zEntry.getName().contains("_CCAP")) {
 						if (!zEntry.isDirectory()) {
 							File files = new File(destination, zEntry.getName());
 							FileOutputStream fout = new FileOutputStream(files);

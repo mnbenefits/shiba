@@ -136,7 +136,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "futureIncome");
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
-    postExpectingSuccess("assets", "assets", "VEHICLE");
+    postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }

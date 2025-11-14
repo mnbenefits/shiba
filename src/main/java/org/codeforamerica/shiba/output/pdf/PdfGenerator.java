@@ -40,7 +40,6 @@ import org.codeforamerica.shiba.output.caf.FilenameGenerator;
 import org.codeforamerica.shiba.output.documentfieldpreparers.DocumentFieldPreparers;
 import org.codeforamerica.shiba.output.xml.FileGenerator;
 import org.codeforamerica.shiba.pages.data.UploadedDocument;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +55,6 @@ public class PdfGenerator implements FileGenerator {
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillerMap;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap;
   private final Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillersMap2;
-  private final Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops;
   private final ApplicationRepository applicationRepository;
   private final DocumentRepository documentRepository;
   private final DocumentFieldPreparers preparers;
@@ -68,7 +66,6 @@ public class PdfGenerator implements FileGenerator {
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldFillers,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers,
       Map<Recipient, Map<Document, PdfFieldFiller>> pdfFieldWithCAFHHSuppFillers2,
-      Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops,
       ApplicationRepository applicationRepository,
       DocumentRepository documentRepository,
       DocumentFieldPreparers preparers,
@@ -83,7 +80,6 @@ public class PdfGenerator implements FileGenerator {
     this.fileNameGenerator = fileNameGenerator;
     this.pdfFieldWithCAFHHSuppFillersMap = pdfFieldWithCAFHHSuppFillers;
     this.pdfFieldWithCAFHHSuppFillersMap2 = pdfFieldWithCAFHHSuppFillers2;
-    this.pdfResourcesCertainPops = pdfResourcesCertainPops;
     this.countyMap = countyMap;
   }
 
@@ -136,44 +132,6 @@ public class PdfGenerator implements FileGenerator {
     if (document.equals(Document.CAF) && householdSize > 10) {
       pdfFiller = pdfFieldWithCAFHHSuppFillersMap2.get(recipient).get(document);
     }    
-    //TODO remove certain pops
-//    if(document.equals(Document.CERTAIN_POPS)) {
-//    List<Resource> pdfResource = new ArrayList<Resource>(); 
-//    pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("default"));
-//    //For non-self employment more than two
-//    if (documentFields.stream().anyMatch(
-//        field -> (field.getGroupName().contains("nonSelfEmployment_householdSelectionForIncome")
-//            && field.getIteration() > 1))) {
-//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addIncome"));
-//    }
-//    // Compute the number of household members that will need to be accounted for on supplemental
-//    // pages. The first two are recorded on the Certain Pops PDF, the remainder (a max of 14) are handled on
-//    // supplemental pages. (Note: The -3 accounts for the applicant and the first two household members)
-//    var householdSupplementCount = Math.min(application.getApplicationData().getApplicantAndHouseholdMemberSize()-3, 14);
-//    if (householdSupplementCount > 0) {
-//      String name = "addHousehold"+String.valueOf(Math.ceil((householdSupplementCount+1)/2)); // round up
-//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get(name));
-//    }
-//    //for Disability more than two
-//    if (documentFields.stream().anyMatch(
-//        field -> (field.getGroupName().contains("whoHasDisability")
-//            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
-//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addDisabilitySupp"));
-//    }
-//  //For section 8 Retroactive coverage
-//    /* Keep this code till supplement page display is finalized as general supp. page.
-//    if (documentFields.stream().anyMatch(
-//        field -> (field.getGroupName().contains("retroactiveCoverage")
-//            && (field.getIteration()!=null?field.getIteration():0) > 1))) {
-//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addRetroactiveCoverageSupp"));
-//    }
-//    */
-//    // for the general supplement
-//    if (documentFields.stream().anyMatch(field -> (field.getName().contains("certainPopsSupplement")))) {
-//      pdfResource.addAll(pdfResourcesCertainPops.get(recipient).get("addCertainPopsSupplement"));
-//    }
-//      pdfFiller = new PDFBoxFieldFiller(pdfResource);
-//    }
 
     List<PdfField> fields = pdfFieldMapper.map(documentFields);
     return pdfFiller.fill(fields, application.getId(), filename);

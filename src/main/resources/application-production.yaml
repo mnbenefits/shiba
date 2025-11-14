@@ -18,6 +18,3 @@ intercom-chat-app-id: dje5ebi4
  
 mnit-filenet:
   enabled: true
-
-feature-flag:
-  certain-pops: off
