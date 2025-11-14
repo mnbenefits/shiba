@@ -8,6 +8,7 @@ import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEqu
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldContains;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsEmpty;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsNull;
+import static org.codeforamerica.shiba.testutilities.TestUtils.resetApplicationData;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
@@ -39,6 +40,7 @@ import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -55,6 +57,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	@Override
 	@BeforeEach
 	protected void setUp() throws Exception {
+		
+		resetApplicationData(applicationData);
 		super.setUp();
 		mockMvc.perform(get("/pages/identifyCountyBeforeApplying").session(session)); // start timer
 		postExpectingSuccess("identifyCountyBeforeApplying", "county", "Hennepin");
@@ -62,7 +66,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	    postExpectingSuccess("spokenLanguage", Map.of("spokenLanguage", List.of("ENGLISH"), "needInterpreter", List.of("true")));
 
 		postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+		
 	}
+	
 
 	@Test
 	void shouldAnswerEnergyAssistanceQuestion() throws Exception {
@@ -1029,6 +1035,79 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("SELF_EMPLOYMENT_1", "Yes", ccap);
 			}
 
+			
+			@Disabled("Test disabled for now to be fixed at a later time")
+			@Test
+			void shouldMapCoverPageOtherUnearnedIncomeSingle() throws Exception{
+				
+				
+				selectPrograms("CCAP");
+			    fillInRequiredPages();
+
+			    // Post to the otherUnearnedIncome page with multiple income types selected
+			    postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", 
+			        List.of("RENTAL_INCOME","ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS"));//, "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS"
+				String me = getApplicantFullNameAndId();
+				//String pam = getPamFullNameAndId();
+
+			    // Post income source + amounts for each of the types selected
+			    postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource/navigation", Map.of("monthlyIncomeRental", List.of(me), "rentalIncomeAmount", List.of("100.00")));
+			    postToUrlExpectingSuccess("/pages/annuityIncomeSource", "/pages/annuityIncomeSource/navigation", Map.of("monthlyIncomeAnnuityPayments", List.of(me), "annuityPaymentsAmount", List.of("110.00")));
+			    postToUrlExpectingSuccess("/pages/giftsIncomeSource", "/pages/giftsIncomeSource/navigation", Map.of("monthlyIncomeGifts", List.of(me), "giftsAmount", List.of("120.00")));
+			    postToUrlExpectingSuccess("/pages/lotteryIncomeSource", "/pages/lotteryIncomeSource/navigation", Map.of("monthlyIncomeLotteryGambling", List.of(me), "lotteryGamblingAmount", List.of("100.00")));
+			    postToUrlExpectingSuccess("/pages/dayTradingIncomeSource", "/pages/dayTradingIncomeSource/navigation", Map.of("monthlyIncomeDayTradingProceeds", List.of(me), "dayTradingProceedsAmount", List.of("100.00")));
+
+			    var ccap = submitAndDownloadCcap();
+
+			    // Verify that each income type total is correctly reflected on the cover page
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "100.00", ccap); // rental
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "110.00", ccap); //annuity
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "120.00", ccap); //gifts
+			    assertPdfFieldEquals("LOTTERY_GAMBLING_AMOUNT", "25.00", ccap); //lottery or gambling
+			    assertPdfFieldEquals("DAY_TRADING_PROCEEDS_AMOUNT", "700.00", ccap); //day trading
+				resetApplicationData(applicationData);
+
+			}
+			
+			@Disabled("Test disabled for now to be fixed at a later time")			@Test
+			void shouldMapCoverPageOtherUnearnedIncomeMulti() throws Exception{
+				selectPrograms("CCAP");
+			    fillInRequiredPages();
+			    addHouseholdMembersWithProgram("CCAP");
+			    
+			    // Post to the otherUnearnedIncome page with multiple income types selected
+			    postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", 
+			        List.of("RENTAL_INCOME"));//, "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS"
+				String me = getApplicantFullNameAndId();
+				String pam = getPamFullNameAndId();
+
+			    // Post income source + amounts for each of the types selected
+//			    postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource/navigation", Map.of("monthlyIncomeRental", List.of(me,pam), "rentalIncomeAmount", List.of("100.00")));
+//			    postToUrlExpectingSuccess("/pages/annuityIncomeSource", "/pages/annuityIncomeSource/navigation", Map.of("monthlyIncomeAnnuityPayments", List.of(me,pam), "annuityPaymentsAmount", List.of("110.00")));
+//			    postToUrlExpectingSuccess("/pages/giftsIncomeSource", "/pages/giftsIncomeSource/navigation", Map.of("monthlyIncomeGifts", List.of(me,pam), "giftsAmount", List.of("120.00")));
+//			    postToUrlExpectingSuccess("/pages/lotteryIncomeSource", "/pages/lotteryIncomeSource/navigation", Map.of("monthlyIncomeLotteryGambling", List.of(me,pam), "lotteryGamblingAmount", List.of("100.00")));
+//			    postToUrlExpectingSuccess("/pages/dayTradingIncomeSource", "/pages/dayTradingIncomeSource/navigation", Map.of("monthlyIncomeDayTradingProceeds", List.of(me,pam), "dayTradingProceedsAmount", List.of("100.00")));
+
+				postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource",
+						Map.of("monthlyIncomeRental", List.of(me, pam), "rentalIncomeAmount",
+								List.of("50.00", "51.00")));
+			    var ccap = submitAndDownloadCcap();
+
+			    // Verify that each income type total is correctly reflected on the cover page
+				//assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "101.00", ccap);
+//			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "100.00", ccap); // rental
+//			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "110.00", ccap); //annuity
+//			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "120.00", ccap); //gifts
+//			    assertPdfFieldEquals("LOTTERY_GAMBLING_AMOUNT", "25.00", ccap); //lottery or gambling
+//			    assertPdfFieldEquals("DAY_TRADING_PROCEEDS_AMOUNT", "700.00", ccap); //day trading
+				resetApplicationData(applicationData);
+				
+				
+				
+			}
+				
+				
+				
 			@Test
 			void shouldMapEnrichedHomeAddressToMailingAddressIfSameMailingAddressIsTrueAndUseEnrichedAddressIsTrue()
 					throws Exception {
