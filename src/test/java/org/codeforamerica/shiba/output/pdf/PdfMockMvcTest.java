@@ -4,14 +4,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.output.Document.CCAP;
 import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.output.caf.CoverPagePreparer.CHILDCARE_WAITING_LIST_UTM_SOURCE;
-import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEquals;
+import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldContains;
+import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEquals;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsEmpty;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsNull;
-import static org.codeforamerica.shiba.testutilities.TestUtils.resetApplicationData;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
@@ -36,16 +35,17 @@ import org.codeforamerica.shiba.Program;
 import org.codeforamerica.shiba.output.ApplicationFile;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.Recipient;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.data.InputData;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -57,8 +57,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	@Override
 	@BeforeEach
 	protected void setUp() throws Exception {
-		
-		resetApplicationData(applicationData);
 		super.setUp();
 		mockMvc.perform(get("/pages/identifyCountyBeforeApplying").session(session)); // start timer
 		postExpectingSuccess("identifyCountyBeforeApplying", "county", "Hennepin");
@@ -217,76 +215,127 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("INTEREST_DIVIDENDS", "No", ccap);
 		assertPdfFieldEquals("OTHER_PAYMENTS", "No", ccap);
 	}
-	
-	@Disabled("I need to change this still")
-	@Test
+
+	/**
+	 * This test verifies the following for an applicant-only CAF application:
+	 *   - when multiple options are selected on the otherUnearnedIncome page, the next page is otherUnearnedIncomeSources
+	 *   - when inputs are provided on the otherUnearnedIncomeSources page:
+	 *       - the next page is futureIncome
+	 *       - the input type and value are written to the CAF cover page (first 10 entries only)
+	 *       - the applicant's full name, input type, value, and frequency are written to the CAF section 14 (first two entries)
+	 * @throws Exception
+	 */
+    @Test
 	void shouldMapOtherUnearnedIncomeCafSingleApplicant() throws Exception {
 		selectPrograms("SNAP");
-		fillInRequiredPages();
 		fillOutPersonalInfo();
-		postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS", "TRUST_MONEY","RENTAL_INCOME", "INTEREST_DIVIDENDS", 
-				"HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING", "OTHER_PAYMENTS"));
 		
-		Map<String, String> params = new HashMap<>();
-		params.put("insurancePaymentsAmount", "Insurance payments (settlements, short- or long-term disability, etc.)");
-		params.put("trustMoneyAmount", "Trusts");
-		params.put("rentalIncomeAmount", "Rental income");
-		params.put("interestDividendsAmount", "Interest or dividends");
-		params.put("healthCareReimbursementAmount", "Health care reimbursement");
-		params.put("contractForDeedAmount", "Contract for deed");
-		params.put("benefitsAmount", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
-		params.put("annuityPaymentsAmount", "Annuity payments");
-		params.put("giftsAmount", "Gifts");
-		params.put("lotteryGamblingAmount", "Lottery or gambling winnings");
-		params.put("dayTradingProceedsAmount", "Day trading proceeds");
-		params.put("otherPaymentsAmount", "Other Payments (inheritance, capital gains, etc.)");
-        
-		for(Map.Entry<String, String> entry : params.entrySet()) {
-			postExpectingSuccess("otherUnearnedIncomeSources", entry.getKey(), "1");
-			var caf = submitAndDownloadCaf();
-			assertPdfFieldEquals("OTHER_INCOME_TYPE_0", entry.getValue(), caf);
-			assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", caf);
-			assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "1", caf);
-			assertPdfFieldEquals("dummyFieldName1", "Dwight Schrute", caf);
-			assertPdfFieldEquals("dummyFieldName2", entry.getValue(), caf);
-			assertPdfFieldEquals("dummyFieldName3", "1", caf);
-		}
-		
+	    // Post to the otherUnearnedIncome page with multiple income types selected
+		// Since there is no household, the next page will be the "otherUnearnedIncomeSources" page.
+		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS", "TRUST_MONEY", "RENTAL_INCOME", "INTEREST_DIVIDENDS", 
+				"HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING", "OTHER_PAYMENTS"),
+				"otherUnearnedIncomeSources");
+
+		// Post the inputs for the 12 other unearned income options, the method we use here asserts the next page's title rather than page name
+		// Note: Map.of has a capacity of 10 entries so need to use Map.ofEntries rather than Map.of
+		postExpectingNextPageTitle("otherUnearnedIncomeSources", Map.ofEntries(
+				Map.entry("insurancePaymentsAmount", List.of("100.00")),
+				Map.entry("trustMoneyAmount", List.of("110.00")),
+				Map.entry("rentalIncomeAmount", List.of("120.00")),
+				Map.entry("interestDividendsAmount", List.of("130.00")),
+				Map.entry("healthCareReimbursementAmount", List.of("140.00")),
+				Map.entry("contractForDeedAmount", List.of("150.00")),
+				Map.entry("benefitsAmount", List.of("160.00")),
+				Map.entry("annuityPaymentsAmount", List.of("170.00")),
+				Map.entry("giftsAmount", List.of("180.00")),
+				Map.entry("lotteryGamblingAmount", List.of("190.00")),
+				Map.entry("dayTradingProceedsAmount", List.of("200.00")), 
+				Map.entry("otherPaymentsAmount", List.of("210.00"))), "Future Income");
+
+	    var caf = submitAndDownloadCaf();
+
+	    // Verify that each income type and its value is correctly reflected on the cover page
+	    // The first two are also used to write to the CAF section 14
+	    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_0", "Insurance payments (settlements, short- or long-term disability, etc.)", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "100.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_0", "Monthly", caf);
+	    
+	    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_1", "Dwight Schrute", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_1", "Trusts", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "110.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_1", "Monthly", caf);
+	    
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_2", "Rental income", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "120.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_3", "Interest or dividends", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_3", "130.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_4", "Health care reimbursement", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "140.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_5", "Contract for deed", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_5", "150.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_6", "Public assistance (MFIP, DWP, GA, Tribal TANF)", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_6", "160.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_7", "Annuity payments", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_7", "170.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_8", "Gifts", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_8", "180.00", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_TYPE_9", "Lottery or gambling winnings", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_9", "190.00", caf);
+	    
+	    // The cover page has space for 10 unearned income entries so 
+	    // these last two will not be written to the cover page or anywhere in the CAF
+	    assertPdfFieldIsNull("OTHER_INCOME_TYPE_10", caf);
+	    assertPdfFieldIsNull("OTHER_INCOME_AMOUNT_10", caf);
+	    assertPdfFieldIsNull("OTHER_INCOME_TYPE_11", caf);
+	    assertPdfFieldIsNull("OTHER_INCOME_AMOUNT_11", caf);
 	}
 	
-	@Disabled("Test disabled for now")
+	/**
+	 * This test verifies the following for an applicant+household CAF application:
+	 *   - when multiple options (5) are selected on the otherUnearnedIncome page:
+	 *       - it is followed by a sequence of xxIncomeSource pages
+	 *       - the next page after the last xxIncomeSoure page is the futureIncome page
+	 *       - the input type and value are written to the CAF cover page
+	 *       - the applicant's full name, input type, value, and frequency are written to the CAF section 14 (first two entries)
+	 * @throws Exception
+	 */
 	@Test
 	void shouldMapOtherUnearnedIncomeCafHousehold() throws Exception {
 		selectPrograms("SNAP");
-		fillInRequiredPages();
 		fillOutPersonalInfo();
 		addHouseholdMembersWithProgram("SNAP");
 		
-		postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", List.of("RENTAL_INCOME", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING"));
-		
-		postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource/navigation", Map.of("monthlyIncomeRental", List.of(getApplicantFullNameAndId()), "rentalIncomeAmount", List.of("200")));
-		postToUrlExpectingSuccess("/pages/annuityIncomeSource", "/pages/annuityIncomeSource/navigation", Map.of("monthlyIncomeAnnuityPayments", List.of(getApplicantFullNameAndId()), "annuityPaymentsAmount", List.of("200")));
-		postToUrlExpectingSuccess("/pages/giftsIncomeSource", "/pages/giftsIncomeSource/navigation", Map.of("monthlyIncomeGifts", List.of(getApplicantFullNameAndId()), "giftsAmount", List.of("200")));
-		postToUrlExpectingSuccess("/pages/lotteryIncomeSource", "/pages/lotteryIncomeSource/navigation", Map.of("monthlyIncomeLotteryGambling", List.of(getApplicantFullNameAndId()), "lotteryGamblingAmount", List.of("200")));
-		postToUrlExpectingSuccess("/pages/dayTradingIncomeSource", "/pages/dayTradingIncomeSource/navigation", Map.of("monthlyIncomeDayTradingProceeds", List.of(getApplicantFullNameAndId()), "dayTradingProceedsAmount", List.of("200")));
+		String applicant = getApplicantFullNameAndId();
+		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("RENTAL_INCOME", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING"),"rentalIncomeSource");
+		postExpectingRedirect("rentalIncomeSource", Map.of("monthlyIncomeRental", List.of(applicant), "rentalIncomeAmount", List.of("200")), "annuityIncomeSource");
+		postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments", List.of(applicant), "annuityPaymentsAmount", List.of("210")), "giftsIncomeSource");
+		postExpectingRedirect("giftsIncomeSource", Map.of("monthlyIncomeGifts", List.of(applicant), "giftsAmount", List.of("220")), "lotteryIncomeSource");
+		postExpectingRedirect("lotteryIncomeSource", Map.of("monthlyIncomeLotteryGambling", List.of(applicant), "lotteryGamblingAmount", List.of("230")), "dayTradingIncomeSource");
+		postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(applicant), "dayTradingProceedsAmount", List.of("240")), "futureIncome");
 		
 		
 		var caf = submitAndDownloadCaf();
-		
+	    // Verify that each income type and its value is correctly reflected on the cover page
+	    // The first two are also used to write to the CAF section 14
+	    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", caf);
 		assertPdfFieldEquals("OTHER_INCOME_TYPE_0", "Rental income", caf);
 		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "200", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_0", "Monthly", caf);
 
+	    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_1", "Dwight Schrute", caf);
 		assertPdfFieldEquals("OTHER_INCOME_TYPE_1", "Annuity payments", caf);
-		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "200", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "210", caf);
+	    assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_1", "Monthly", caf);
 		
 		assertPdfFieldEquals("OTHER_INCOME_TYPE_2", "Gifts", caf);
-		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "200", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "220", caf);
 	
 		assertPdfFieldEquals("OTHER_INCOME_TYPE_3", "Lottery or gambling winnings", caf);
-		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_3", "200", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_3", "230", caf);
 		
 		assertPdfFieldEquals("OTHER_INCOME_TYPE_4", "Day trading proceeds", caf);
-		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "200", caf);
+		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "240", caf);
 	}
 
 	@Test
@@ -1035,77 +1084,116 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("SELF_EMPLOYMENT_1", "Yes", ccap);
 			}
 
-			
-			@Disabled("Test disabled for now to be fixed at a later time")
+			/**
+			 * This test verifies the following for a CCAP application:
+			 *   - when multiple options are selected on the otherUnearnedIncome page, the next page is otherUnearnedIncomeSources
+			 *   - when inputs are provided on the otherUnearnedIncomeSources page:
+			 *       - the next page is futureIncome
+			 *       - the input type and value are written to the CCAP cover page
+			 * @throws Exception
+			 */
 			@Test
 			void shouldMapCoverPageOtherUnearnedIncomeSingle() throws Exception{
 				
-				
 				selectPrograms("CCAP");
-			    fillInRequiredPages();
 
 			    // Post to the otherUnearnedIncome page with multiple income types selected
-			    postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", 
-			        List.of("RENTAL_INCOME","ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS"));//, "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS"
-				String me = getApplicantFullNameAndId();
-				//String pam = getPamFullNameAndId();
-
-			    // Post income source + amounts for each of the types selected
-			    postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource/navigation", Map.of("monthlyIncomeRental", List.of(me), "rentalIncomeAmount", List.of("100.00")));
-			    postToUrlExpectingSuccess("/pages/annuityIncomeSource", "/pages/annuityIncomeSource/navigation", Map.of("monthlyIncomeAnnuityPayments", List.of(me), "annuityPaymentsAmount", List.of("110.00")));
-			    postToUrlExpectingSuccess("/pages/giftsIncomeSource", "/pages/giftsIncomeSource/navigation", Map.of("monthlyIncomeGifts", List.of(me), "giftsAmount", List.of("120.00")));
-			    postToUrlExpectingSuccess("/pages/lotteryIncomeSource", "/pages/lotteryIncomeSource/navigation", Map.of("monthlyIncomeLotteryGambling", List.of(me), "lotteryGamblingAmount", List.of("100.00")));
-			    postToUrlExpectingSuccess("/pages/dayTradingIncomeSource", "/pages/dayTradingIncomeSource/navigation", Map.of("monthlyIncomeDayTradingProceeds", List.of(me), "dayTradingProceedsAmount", List.of("100.00")));
+				// Since there is no household, the next page will be the "otherUnearnedIncomeSources" page.
+				postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", 
+						List.of("RENTAL_INCOME","ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS"), "otherUnearnedIncomeSources");
+				// Post the inputs for the 5 other unearned income options, note this method asserts the next page's title rather than page name
+				postExpectingNextPageTitle("otherUnearnedIncomeSources", Map.of("rentalIncomeAmount", List.of("100.00"), "annuityPaymentsAmount", List.of("110.00"), 
+						"giftsAmount", List.of("120.00"), "lotteryGamblingAmount", List.of("130.00"), "dayTradingProceedsAmount", List.of("140.00")), "Future Income");
 
 			    var ccap = submitAndDownloadCcap();
 
-			    // Verify that each income type total is correctly reflected on the cover page
-			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "100.00", ccap); // rental
-			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "110.00", ccap); //annuity
-			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "120.00", ccap); //gifts
-			    assertPdfFieldEquals("LOTTERY_GAMBLING_AMOUNT", "25.00", ccap); //lottery or gambling
-			    assertPdfFieldEquals("DAY_TRADING_PROCEEDS_AMOUNT", "700.00", ccap); //day trading
-				resetApplicationData(applicationData);
-
+			    // Verify that each income type and its value is correctly reflected on the cover page
+			    assertPdfFieldEquals("OTHER_INCOME_TYPE_0", "Rental income", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "100.00", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_TYPE_1", "Annuity payments", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "110.00", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_TYPE_2", "Gifts", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "120.00", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_TYPE_3", "Lottery or gambling winnings", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_3", "130.00", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_TYPE_4", "Day trading proceeds", ccap);
+			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "140.00", ccap);
 			}
-			
-			@Disabled("Test disabled for now to be fixed at a later time")			@Test
-			void shouldMapCoverPageOtherUnearnedIncomeMulti() throws Exception{
-				selectPrograms("CCAP");
-			    fillInRequiredPages();
-			    addHouseholdMembersWithProgram("CCAP");
-			    
-			    // Post to the otherUnearnedIncome page with multiple income types selected
-			    postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", 
-			        List.of("RENTAL_INCOME"));//, "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS"
+
+			/**
+			 * This test verifies the following for an applicant+household CAF application:
+			 *   - when multiple options (5) are selected on the otherUnearnedIncome page:
+			 *       - it is followed by a sequence of xxIncomeSource pages
+			 *       - the next page after the last xxIncomeSoure page is the futureIncome page
+			 *       - the input type and value are written to the CAF cover page
+			 *       - the applicant's full name, input type, value, and frequency are written to the CAF section 14 (first two entries)
+			 * @throws Exception
+			 */
+		    @ParameterizedTest
+		    @ValueSource(strings = {"SNAP", "CCAP"})
+			void shouldMapCoverPageOtherUnearnedIncomeMulti(String program) throws Exception {
+				selectPrograms(program);
+				fillOutPersonalInfo();
+				addHouseholdMembersWithProgram(program);
+				
 				String me = getApplicantFullNameAndId();
 				String pam = getPamFullNameAndId();
 
-			    // Post income source + amounts for each of the types selected
-//			    postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource/navigation", Map.of("monthlyIncomeRental", List.of(me,pam), "rentalIncomeAmount", List.of("100.00")));
-//			    postToUrlExpectingSuccess("/pages/annuityIncomeSource", "/pages/annuityIncomeSource/navigation", Map.of("monthlyIncomeAnnuityPayments", List.of(me,pam), "annuityPaymentsAmount", List.of("110.00")));
-//			    postToUrlExpectingSuccess("/pages/giftsIncomeSource", "/pages/giftsIncomeSource/navigation", Map.of("monthlyIncomeGifts", List.of(me,pam), "giftsAmount", List.of("120.00")));
-//			    postToUrlExpectingSuccess("/pages/lotteryIncomeSource", "/pages/lotteryIncomeSource/navigation", Map.of("monthlyIncomeLotteryGambling", List.of(me,pam), "lotteryGamblingAmount", List.of("100.00")));
-//			    postToUrlExpectingSuccess("/pages/dayTradingIncomeSource", "/pages/dayTradingIncomeSource/navigation", Map.of("monthlyIncomeDayTradingProceeds", List.of(me,pam), "dayTradingProceedsAmount", List.of("100.00")));
+				postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("RENTAL_INCOME", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING"), "rentalIncomeSource");
+				postExpectingRedirect("rentalIncomeSource", Map.of("monthlyIncomeRental", List.of(me, pam), "rentalIncomeAmount", List.of("200", "", "201")), "annuityIncomeSource");
+				postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments", List.of(me, pam), "annuityPaymentsAmount", List.of("210", "", "211")), "giftsIncomeSource");
+				postExpectingRedirect("giftsIncomeSource", Map.of("monthlyIncomeGifts", List.of(me, pam), "giftsAmount", List.of("220", "", "221")), "lotteryIncomeSource");
+				postExpectingRedirect("lotteryIncomeSource", Map.of("monthlyIncomeLotteryGambling", List.of(me, pam), "lotteryGamblingAmount", List.of("230", "", "231")), "dayTradingIncomeSource");
+				postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "futureIncome");
+				
+				PDAcroForm document;
+				if (program.equals("SNAP")) {
+					document = submitAndDownloadCaf();
+				} else {
+					document = submitAndDownloadCcap();
+				}
+			    // Verify that each income type and its value is correctly reflected on the cover page
+			    // The first two are also used to write to the CAF section 14
+			    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", document);
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_0", "Rental income", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "200", document);
+				// This will only exist on the CAF
+				if (program.equals("SNAP")) {
+					assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_0", "Monthly", document);
+				}
 
-				postToUrlExpectingSuccess("/pages/rentalIncomeSource", "/pages/rentalIncomeSource",
-						Map.of("monthlyIncomeRental", List.of(me, pam), "rentalIncomeAmount",
-								List.of("50.00", "51.00")));
-			    var ccap = submitAndDownloadCcap();
+			    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_1", "Pam Beesly", document);
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_1", "Rental income", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "201", document);
+				// This will only exist on the CAF
+				if (program.equals("SNAP")) {
+					assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_1", "Monthly", document);
+				}
 
-			    // Verify that each income type total is correctly reflected on the cover page
-				//assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "101.00", ccap);
-//			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "100.00", ccap); // rental
-//			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_1", "110.00", ccap); //annuity
-//			    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "120.00", ccap); //gifts
-//			    assertPdfFieldEquals("LOTTERY_GAMBLING_AMOUNT", "25.00", ccap); //lottery or gambling
-//			    assertPdfFieldEquals("DAY_TRADING_PROCEEDS_AMOUNT", "700.00", ccap); //day trading
-				resetApplicationData(applicationData);
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_2", "Annuity payments", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_2", "210", document);
+
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_3", "Annuity payments", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_3", "211", document);
 				
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_4", "Gifts", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "220", document);
 				
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_5", "Gifts", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_5", "221", document);
 				
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_6", "Lottery or gambling winnings", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_6", "230", document);
+			
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_7", "Lottery or gambling winnings", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_7", "231", document);
+				
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_8", "Day trading proceeds", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_8", "240", document);
+				
+				assertPdfFieldEquals("OTHER_INCOME_TYPE_9", "Day trading proceeds", document);
+				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_9", "241", document);
 			}
-				
 				
 				
 			@Test
