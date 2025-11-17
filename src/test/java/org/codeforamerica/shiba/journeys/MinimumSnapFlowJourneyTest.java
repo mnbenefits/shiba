@@ -330,7 +330,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.clickContinue("Savings");
 
     // Do you have savings?
-    testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Expedited Cash, Household");
+    testPage.chooseYesOrNo("haveSavings", YES.getDisplayValue(), "Available money");
     String liquidAssets = "1.00";
     testPage.enter("liquidAssets", liquidAssets);
     testPage.clickContinue("Expedited Expense, Household");
