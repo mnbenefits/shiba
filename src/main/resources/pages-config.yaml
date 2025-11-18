@@ -5734,14 +5734,6 @@ workflow:
         groupName: household
     nextPages:
       - pageName: livingSituation
-    skipCondition:
-        logicalOperator: AND
-        conditions:
-          - *noOneChoseSNAP?
-          - *noOneChoseCASH?
-          - *noOneChoseEA?
-          - *noOneChoseGRH?
-          - *noOneChoseCCAP?
   livingSituation:
     pageConfiguration: *livingSituation
     nextPages:
@@ -5867,7 +5859,6 @@ workflow:
     pageConfiguration: *citizenship
     nextPages:
       - pageName: disability
- #TODO Need condition for CCAP
     datasources:
       - pageName: addHouseholdMembers
       - pageName: personalInfo 
