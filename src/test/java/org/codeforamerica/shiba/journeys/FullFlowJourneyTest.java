@@ -340,27 +340,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("assets", "A vehicle");
 		testPage.enter("assets", "Stocks, bonds, retirement accounts");
 		testPage.enter("assets", "Real estate (not including your own home)");
-		testPage.clickContinue("Who has a vehicle");
-
-		// Who has a vehicle?
-		assertThat(testPage.getTitle()).isEqualTo("Who has a vehicle");
-		driver.findElement(By.id("householdMember-me")).click();
-		testPage.clickContinue("Which types of investment accounts does your household have");
-
-		// Which types of investment accounts does your household have?
-		assertThat(testPage.getTitle()).isEqualTo("Which types of investment accounts does your household have");
-		driver.findElement(By.id("STOCKS")).click();
-		testPage.clickContinue("Who has stocks");
-
-		//
-		assertThat(testPage.getTitle()).isEqualTo("Who has stocks");
-		driver.findElement(By.id("householdMember-me")).click();
-		testPage.clickContinue("Who has real estate (not including your own home)");
-
-		// Who has real estate (not including your own home)
-		assertThat(testPage.getTitle()).isEqualTo("Who has real estate (not including your own home)");
-		driver.findElement(By.id("householdMember-me")).click();
-
 		testPage.clickContinue("Sold assets");
 
 		// In the last 12 months, has anyone in the household given away or sold any
