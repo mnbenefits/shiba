@@ -3586,11 +3586,6 @@ pageConfigurations:
               messageKey: unearned-income-other.money-from-a-trust
             - value: RENTAL_INCOME
               messageKey: unearned-income-other.rental-income
-              condition:
-                pageName: choosePrograms
-                input: programs
-                matcher: CONTAINS
-                value: CERTAIN_POPS
             - value: INTEREST_DIVIDENDS
               messageKey: unearned-income-other.interest-dividends
             - value: HEALTH_CARE_REIMBURSEMENT
@@ -3599,6 +3594,14 @@ pageConfigurations:
               messageKey: unearned-income-other.contract-for-deed
             - value: BENEFITS
               messageKey: unearned-income-other.benefits-programs
+            - value: ANNUITY_PAYMENTS
+              messageKey: unearned-income-other.annuity-payments
+            - value: GIFTS
+              messageKey: unearned-income-other.gifts
+            - value: LOTTERY_GAMBLING
+              messageKey: unearned-income-other.lottery-gambling
+            - value: DAY_TRADING
+              messageKey: unearned-income-other.day-trading-proceeds
             - value: OTHER_PAYMENTS
               messageKey: unearned-income-other.other-payments
             - value: NO_OTHER_UNEARNED_INCOME_SELECTED
@@ -3728,6 +3731,70 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: BENEFITS
+      - name: annuityPaymentsAmount
+        type: MONEY
+        inputPostfix: general.input.postfix.per-month
+        promptMessage:
+          promptMessageKey: unearned-income-other.annuity-payments
+        helpMessageKey: general.monthly-amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: annuityPaymentsAmount
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: ANNUITY_PAYMENTS 
+      - name: giftsAmount
+        type: MONEY
+        inputPostfix: general.input.postfix.per-month
+        promptMessage:
+          promptMessageKey: unearned-income-other.gifts
+        helpMessageKey: general.monthly-amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: giftsAmount
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: GIFTS  
+      - name: lotteryGamblingAmount
+        type: MONEY
+        inputPostfix: general.input.postfix.per-month
+        promptMessage:
+          promptMessageKey: unearned-income-other.lottery-gambling
+        helpMessageKey: general.monthly-amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: lotteryGamblingAmount
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: LOTTERY_GAMBLING
+      - name: dayTradingProceedsAmount
+        type: MONEY
+        inputPostfix: general.input.postfix.per-month
+        promptMessage:
+          promptMessageKey: unearned-income-other.day-trading-proceeds
+        helpMessageKey: general.monthly-amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: dayTradingProceedsAmount
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: DAY_TRADING		  	  			  	  	  
       - name: otherPaymentsAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3968,6 +4035,134 @@ pageConfigurations:
             promptMessage:
               promptMessageKey: unearned-income-source.how-much-income-monthly
             helpMessageKey: general.if-you-dont-have
+  - &annuityIncomeSource
+    name: annuityIncomeSource
+    pageTitle: unearned-income-other.annuity-payments
+    headerKey: unearned-income-annuity-payments.header
+    headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
+    inputs:
+      - type: CUSTOM
+        name: monthlyIncomeAnnuityPayments
+        helpMessageKey: general.if-you-dont-have
+        customInputFragment: householdOptionsCheckboxesWithFollowup
+        customFollowUps: 'true'
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+        followUps:
+          - name: annuityPaymentsAmount
+            type: MONEY
+            inputPostfix: general.input.postfix.per-month
+            validators:
+              - validation: MONEY
+                errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+                condition:
+                  input: annuityPaymentsAmount
+                  matcher: NOT_EMPTY
+            promptMessage:
+              promptMessageKey: unearned-income-source.how-much-income-monthly
+            helpMessageKey: general.if-you-dont-have
+  - &giftsIncomeSource
+    name: giftsIncomeSource
+    pageTitle: unearned-income-other.gifts
+    headerKey: unearned-income-gifts-income.header
+    headerHelpMessageKey: unearned-income-gifts.other-additional-help
+    contextFragment: personIncomeContextFragment
+    inputs:
+      - type: CUSTOM
+        name: monthlyIncomeGifts
+        helpMessageKey: general.if-you-dont-have
+        customInputFragment: householdOptionsCheckboxesWithFollowup
+        customFollowUps: 'true'
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+        followUps:
+          - name: giftsAmount
+            type: MONEY
+            inputPostfix: general.input.postfix.per-month
+            validators:
+              - validation: MONEY
+                errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+                condition:
+                  input:  giftsAmount
+                  matcher: NOT_EMPTY
+            promptMessage:
+              promptMessageKey: unearned-income-source.how-much-income-monthly
+            helpMessageKey: general.if-you-dont-have
+  - &lotteryIncomeSource
+    name: lotteryIncomeSource
+    pageTitle: unearned-income-lottery-gambling.title
+    headerKey: unearned-income-lottery-gambling.header
+    headerHelpMessageKey: unearned-income-lottery-gambling.other-additional-help
+    contextFragment: personIncomeContextFragment
+    inputs:
+      - type: CUSTOM
+        name: monthlyIncomeLotteryGambling
+        helpMessageKey: general.if-you-dont-have
+        customInputFragment: householdOptionsCheckboxesWithFollowup
+        customFollowUps: 'true'
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+        followUps:
+          - name: lotteryGamblingAmount
+            type: MONEY
+            inputPostfix: general.input.postfix.per-month
+            validators:
+              - validation: MONEY
+                errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+                condition:
+                  input: lotteryGamblingAmount
+                  matcher: NOT_EMPTY
+            promptMessage:
+              promptMessageKey: unearned-income-source.how-much-income-monthly
+            helpMessageKey: general.if-you-dont-have
+  - &dayTradingIncomeSource
+    name: dayTradingIncomeSource
+    pageTitle: unearned-income-other.day-trading-proceeds
+    headerKey: unearned-income-day-trading-proceeds.header
+    headerHelpMessageKey: unearned-income-source.you-can-select-more
+    contextFragment: personIncomeContextFragment
+    inputs:
+      - type: CUSTOM
+        name: monthlyIncomeDayTradingProceeds
+        helpMessageKey: general.if-you-dont-have
+        customInputFragment: householdOptionsCheckboxesWithFollowup
+        customFollowUps: 'true'
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-to-select-a-person
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+        followUps:
+          - name: dayTradingProceedsAmount
+            type: MONEY
+            inputPostfix: general.input.postfix.per-month
+            validators:
+              - validation: MONEY
+                errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+                condition:
+                  input: dayTradingProceedsAmount
+                  matcher: NOT_EMPTY
+            promptMessage:
+              promptMessageKey: unearned-income-source.how-much-income-monthly
+            helpMessageKey: general.if-you-dont-have										
   - &otherPaymentsIncomeSource
     name: otherPaymentsIncomeSource
     pageTitle: unearned-income-other.other-payments
@@ -6889,17 +7084,6 @@ workflow:
       - pageName: choosePrograms
   otherUnearnedIncome:
     pageConfiguration: *otherUnearnedIncome
-    skipCondition:
-      logicalOperator: OR
-      conditions:
-        - logicalOperator: AND
-          conditions:
-            - *applicantDidNotChooseCCAP?
-            - *livesAlone?
-        - logicalOperator: AND
-          conditions:
-            - *applicantDidNotChooseCCAP?
-            - *householdMemberDidNotChooseCCAP?
     nextPages:
       - pageName: otherUnearnedIncomeSources
         condition:
@@ -6919,7 +7103,6 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
-            - *applicantChoseCERTAINPOPS?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
@@ -7006,9 +7189,53 @@ workflow:
       matcher: DOES_NOT_CONTAIN
       value: CONTRACT_FOR_DEED
     nextPages:
-      - pageName: otherPaymentsIncomeSource
+      - pageName: annuityIncomeSource
     datasources:
       - pageName: otherUnearnedIncome
+  annuityIncomeSource:
+    pageConfiguration: *annuityIncomeSource
+    skipCondition:
+      pageName: otherUnearnedIncome
+      input: otherUnearnedIncome
+      matcher: DOES_NOT_CONTAIN
+      value: ANNUITY_PAYMENTS
+    nextPages:
+      - pageName: giftsIncomeSource
+    datasources:
+      - pageName: otherUnearnedIncome
+  giftsIncomeSource:
+    pageConfiguration: *giftsIncomeSource
+    skipCondition:
+      pageName: otherUnearnedIncome
+      input: otherUnearnedIncome
+      matcher: DOES_NOT_CONTAIN
+      value: GIFTS
+    nextPages:
+      - pageName: lotteryIncomeSource
+    datasources:
+      - pageName: otherUnearnedIncome 
+  lotteryIncomeSource:
+    pageConfiguration: *lotteryIncomeSource
+    skipCondition:
+      pageName: otherUnearnedIncome
+      input: otherUnearnedIncome
+      matcher: DOES_NOT_CONTAIN
+      value: LOTTERY_GAMBLING
+    nextPages:
+      - pageName: dayTradingIncomeSource
+    datasources:
+      - pageName: otherUnearnedIncome 
+  dayTradingIncomeSource:
+    pageConfiguration: *dayTradingIncomeSource
+    skipCondition:
+      pageName: otherUnearnedIncome
+      input: otherUnearnedIncome
+      matcher: DOES_NOT_CONTAIN
+      value: DAY_TRADING
+    nextPages:
+      - pageName: otherPaymentsIncomeSource
+    datasources:
+      - pageName: otherUnearnedIncome		  	  		    	  
   otherPaymentsIncomeSource:
     pageConfiguration: *otherPaymentsIncomeSource
     skipCondition:

@@ -49,7 +49,12 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 	private static final String HEALTHCARE_REIMBURSEMENT = "Health care reimbursement";
 	private static final String CONTRACT_FOR_DEED = "Contract for deed";
 	private static final String BENEFITS_PROGRAMS = "Public assistance (MFIP, DWP, GA, Tribal TANF)";
-	private static final String OTHER_PAYMENTS = "Other (lottery or gambling winnings, inheritance, capital gains, etc.)";
+	private static final String OTHER_PAYMENTS = "Other Payments (inheritance, capital gains, etc.)";
+	private static final String RENTAL_INCOME = "Rental income";
+	private static final String ANNUITY_PAYMENTS = "Annuity payments";
+	private static final String GIFTS = "Gifts";
+	private static final String LOTTERY_GAMBLING = "Lottery or gambling winnings";
+	private static final String DAY_TRADING_PROCEEDS = "Day trading proceeds";
 
 	
 	ApplicationData applicationData = null;
@@ -86,6 +91,7 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 		processOtherUnearnedIncomeSourcesPage();
 		
 		// Applicant with household applications - income identified on the unearnedIncome page
+		// Note: Process these in the same order that they are presented on the unearnedIncome page
 		processUnearnedIncomeSource("socialSecurityIncomeSource", "monthlyIncomeSSorRSDI", "socialSecurityAmount", SOCIAL_SECURITY);
 		processUnearnedIncomeSource("supplementalSecurityIncomeSource", "monthlyIncomeSSI", "supplementalSecurityIncomeAmount", SSI);
 		processUnearnedIncomeSource("veteransBenefitsIncomeSource", "monthlyIncomeVeteransBenefits", "veteransBenefitsAmount", VETERANS_BENEFITS);
@@ -96,13 +102,20 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 		processUnearnedIncomeSource("tribalPaymentIncomeSource", "monthlyIncomeTribalPayment", "tribalPaymentsAmount", TRIBAL_PAYMENTS);
 		
 		// Applicant with household applications - income identified on the otherUnearnedIncome page
+		// Note: Process these in the same order that they are presented on the otherUnearnedIncome page
 		processUnearnedIncomeSource("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", "insurancePaymentsAmount", INSURANCE_PAYMENTS);
 		processUnearnedIncomeSource("trustMoneyIncomeSource", "monthlyIncomeTrustMoney", "trustMoneyAmount", TRUST_MONEY);
+		processUnearnedIncomeSource("rentalIncomeSource", "monthlyIncomeRental", "rentalIncomeAmount", RENTAL_INCOME);
 		processUnearnedIncomeSource("interestDividendsIncomeSource", "monthlyIncomeInterestDividends", "interestDividendsAmount", INTEREST_OR_DIVIDENDS);
 		processUnearnedIncomeSource("healthcareReimbursementIncomeSource", "monthlyIncomeHealthcareReimbursement", "healthCareReimbursementAmount", HEALTHCARE_REIMBURSEMENT);
 		processUnearnedIncomeSource("contractForDeedIncomeSource", "monthlyIncomeContractForDeed", "contractForDeedAmount", CONTRACT_FOR_DEED);
 		processUnearnedIncomeSource("benefitsProgramsIncomeSource", "monthlyIncomeBenefitsPrograms", "benefitsAmount", BENEFITS_PROGRAMS);
+		processUnearnedIncomeSource("annuityIncomeSource", "monthlyIncomeAnnuityPayments", "annuityPaymentsAmount", ANNUITY_PAYMENTS);
+		processUnearnedIncomeSource("giftsIncomeSource", "monthlyIncomeGifts", "giftsAmount", GIFTS);
+		processUnearnedIncomeSource("lotteryIncomeSource", "monthlyIncomeLotteryGambling", "lotteryGamblingAmount", LOTTERY_GAMBLING);
+		processUnearnedIncomeSource("dayTradingIncomeSource", "monthlyIncomeDayTradingProceeds", "dayTradingProceedsAmount", DAY_TRADING_PROCEEDS);
 		processUnearnedIncomeSource("otherPaymentsIncomeSource", "monthlyIncomeOtherPayments", "otherPaymentsAmount", OTHER_PAYMENTS);
+
 		
 	}
 	
@@ -112,6 +125,7 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 	private void processUnearnedIncomeSourcesPage() {
 		PageData pageData = pagesData.getPage("unearnedIncomeSources");
 		if (pageData != null) {
+			// Note: Process these in the same order that they are presented on the unearnedIncome page
 			String applicantId = String.format("%s %s", persons.get(0).fullName, persons.get(0).id); // will always be the applicant
 			processUnearnedIncomeSource(pageData.get("socialSecurityAmount"), applicantId, SOCIAL_SECURITY);
 			processUnearnedIncomeSource(pageData.get("supplementalSecurityIncomeAmount"), applicantId, SSI);
@@ -130,14 +144,21 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 	private void processOtherUnearnedIncomeSourcesPage() {
 		PageData pageData = pagesData.getPage("otherUnearnedIncomeSources");
 		if (pageData != null) {
+			// Note: Process these in the same order that they are presented on the otherUnearnedIncome page
 			String applicantId = String.format("%s %s", persons.get(0).fullName, persons.get(0).id); // will alway be the applicant
 			processUnearnedIncomeSource(pageData.get("insurancePaymentsAmount"), applicantId, INSURANCE_PAYMENTS);
 			processUnearnedIncomeSource(pageData.get("trustMoneyAmount"), applicantId, TRUST_MONEY);
+			processUnearnedIncomeSource(pageData.get("rentalIncomeAmount"), applicantId, RENTAL_INCOME);
 			processUnearnedIncomeSource(pageData.get("interestDividendsAmount"), applicantId, INTEREST_OR_DIVIDENDS);
 			processUnearnedIncomeSource(pageData.get("healthCareReimbursementAmount"), applicantId, HEALTHCARE_REIMBURSEMENT);
 			processUnearnedIncomeSource(pageData.get("contractForDeedAmount"), applicantId, CONTRACT_FOR_DEED);
 			processUnearnedIncomeSource(pageData.get("benefitsAmount"), applicantId, BENEFITS_PROGRAMS);
+			processUnearnedIncomeSource(pageData.get("annuityPaymentsAmount"), applicantId, ANNUITY_PAYMENTS);
+			processUnearnedIncomeSource(pageData.get("giftsAmount"), applicantId, GIFTS);
+			processUnearnedIncomeSource(pageData.get("lotteryGamblingAmount"), applicantId, LOTTERY_GAMBLING);
+			processUnearnedIncomeSource(pageData.get("dayTradingProceedsAmount"), applicantId, DAY_TRADING_PROCEEDS);
 			processUnearnedIncomeSource(pageData.get("otherPaymentsAmount"), applicantId, OTHER_PAYMENTS);
+
 		}
 	}
 
