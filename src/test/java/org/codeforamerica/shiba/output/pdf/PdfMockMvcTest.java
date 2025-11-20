@@ -159,7 +159,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldIsEmpty("PARENT_NOT_LIVING_AT_HOME_2", ccap);
 	}
 
-	@Test
+	@Test 
 	void shouldDefaultToNoForMillionDollarQuestionWhenQuestionPageIsNotShown() throws Exception {
 		selectPrograms("CCAP");
 
@@ -167,8 +167,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE");
 		postExpectingSuccess("supportAndCare", "supportAndCare", "false");
 		postExpectingSuccess("assets", "assets", "NONE");
-		postExpectingSuccess("savings", "haveSavings", "false");
-
+		postExpectingSuccess("soldAssets", "haveSoldAssets", "false"); 
+		
 		var ccap = submitAndDownloadCcap();
 		assertPdfFieldEquals("HAVE_MILLION_DOLLARS", "No", ccap);
 	}
@@ -181,8 +181,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE");
 		postExpectingSuccess("supportAndCare", "supportAndCare", "false");
 		postExpectingSuccess("assets", "assets", List.of("STOCK_BOND", "ONE_MILLION_ASSETS"));
-		postExpectingSuccess("savings", "haveSavings", "false");
-
+		postExpectingSuccess("soldAssets", "haveSoldAssets", "false"); 
+		
 		var ccap = submitAndDownloadCcap();
 		assertPdfFieldEquals("HAVE_MILLION_DOLLARS", "Yes", ccap);
 	}
@@ -395,7 +395,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("COUNTY_INSTRUCTIONS", expectedCountyInstructions, ccap);
 	}
 
-	@Test
+	@Test 
 	void ccapShouldHaveExpectedPage() throws Exception{
 		// Run a simple CCAP flow
 		fillOutPersonalInfo();
@@ -423,8 +423,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("medicalExpenses", "medicalExpenses", List.of("NONE_OF_THE_ABOVE"));
 		postExpectingSuccess("supportAndCare", "supportAndCare", "false");
 		postExpectingSuccess("assets", "assets", List.of("VEHICLE"));
-		postExpectingSuccess("savings", "haveSavings", "true");
-		postExpectingSuccess("liquidAssetsSingle", "liquidAssets", "500.00");
 		postExpectingSuccess("soldAssets", "haveSoldAssets", "false");
 		postExpectingSuccess("registerToVote", "registerToVote", "NO_ALREADY_REGISTERED");
 		postExpectingSuccess("healthcareCoverage", "healthcareCoverage", "YES");
@@ -443,7 +441,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	@Test
 	void ccapPdfForCaseWorkerShouldHaveExpectedPages() throws Exception {
 		// Run a simple CCAP flow
-		ccapShouldHaveExpectedPage();
+		ccapShouldHaveExpectedPage(); 
 
 		// Generate the CCAP PDF, caseworker version
 		ApplicationFile ccapFile = pdfGenerator.generate(applicationData.getId(), CCAP, Recipient.CASEWORKER);
@@ -468,7 +466,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		pdDocument.close();
 	}
 	// Verify that the CCAP PDF which is generated for the client has all of the
-		@Test
+		@Test 
 		void ccapPdfForClientShouldHaveExpectedPages() throws Exception {
 
 			ccapShouldHaveExpectedPage();
