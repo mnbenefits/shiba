@@ -10,7 +10,7 @@ public class OtherUnearnedIncomePreparer extends OneToManyDocumentFieldPreparer 
 
   private static final List<String> UNEARNED_INCOME_OTHER_OPTIONS = List.of("BENEFITS",
       "INSURANCE_PAYMENTS", "CONTRACT_FOR_DEED", "TRUST_MONEY", "HEALTH_CARE_REIMBURSEMENT",
-      "INTEREST_DIVIDENDS", "OTHER_PAYMENTS", "RENTAL_INCOME");
+      "INTEREST_DIVIDENDS", "OTHER_PAYMENTS", "RENTAL_INCOME", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING_PROCEEDS");
 
   @Override
   protected OneToManyParams getParams() {
