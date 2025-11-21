@@ -44,7 +44,7 @@ public class UnearnedIncomeCalculator {
       RETIREMENT_AMOUNT,
       CHILD_OR_SPOUSAL_SUPPORT_AMOUNT,
       TRIBAL_PAYMENTS_AMOUNT,
-      // Individual Amounts below only used in CCAP and CERTAIN_POPS
+      // Individual Amounts below only used in CCAP 
       BENEFITS_PROGRAMS_AMOUNT,
       INSURANCE_PAYMENTS_AMOUNT,
       CONTRACT_FOR_DEED_AMOUNT,

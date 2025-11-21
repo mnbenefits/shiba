@@ -140,7 +140,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillAdditionalIncomeInfo("SNAP");
    //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
-    postExpectingSuccess("assets", "assets", "VEHICLE");
+    postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
@@ -186,8 +186,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
-  
-  
 
   @Test
   void verifyFlowWhenLiveAloneApplicantHasNotSelectedCCAP() throws Exception {

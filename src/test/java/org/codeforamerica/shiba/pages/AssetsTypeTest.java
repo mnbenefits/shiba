@@ -61,44 +61,21 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","REAL_ESTATE","ONE_MILLION_ASSETS","NONE");
     
   }
-  @Test
-  void verifyAssetTypesForCERTAINPOPS() throws Exception {
-    completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS");
-    var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","REAL_ESTATE","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
-    
-  }
-  @Test
-  void verifyAssetTypesForCERTAINPOPSANDCCAP() throws Exception {
-    completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS","CCAP");
-    var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
-    
-  }
+
   @Test
   void verifyAssetSourcePagesForAll() throws Exception {
-    completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS","CCAP");
+    completeFlowAssetsTypeAsPerProgram("CCAP");
     var page = new FormPage(getPage("assets"));
-    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS","NONE");
-    postExpectingRedirect("assets", "assets", List.of("VEHICLE","STOCK_BOND","REAL_ESTATE","LIFE_INSURANCE","BURIAL_ACCOUNT","OWNERSHIP_BUSINESS","ONE_MILLION_ASSETS"), "vehicleAssetSource");
-    assertNavigationRedirectsToCorrectNextPage("vehicleAssetSource", "investmentAssetType");
-    postExpectingRedirect("investmentAssetType", "investmentAssetType", List.of("STOCKS","BONDS","RETIREMENT_ACCOUNTS"), "stocksHouseHoldSource");
-    assertNavigationRedirectsToCorrectNextPage("stocksHouseHoldSource", "bondsHouseHoldSource");
-    assertNavigationRedirectsToCorrectNextPage("bondsHouseHoldSource", "retirementAccountsHouseHoldSource");
-    assertNavigationRedirectsToCorrectNextPage("retirementAccountsHouseHoldSource", "lifeInsuranceAssetSource");
-    assertNavigationRedirectsToCorrectNextPage("lifeInsuranceAssetSource", "burialAccountAssetSource");
-    assertNavigationRedirectsToCorrectNextPage("burialAccountAssetSource", "businessOwnershipAssetSource");
-    assertNavigationRedirectsToCorrectNextPage("businessOwnershipAssetSource", "realEstateAssetSource");
-    assertNavigationRedirectsToCorrectNextPage("realEstateAssetSource", "oneMillionDollarAssetSource");
-    
+    assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE","STOCK_BOND","REAL_ESTATE", "ONE_MILLION_ASSETS","NONE");
+    postExpectingRedirect("assets", "assets", List.of("VEHICLE","STOCK_BOND","REAL_ESTATE", "ONE_MILLION_ASSETS"), "soldAssets");  
   }
 
   @Test
   void verifySavingsIfNoneForAssetsChose() throws Exception {
-    completeFlowAssetsTypeAsPerProgram("CERTAIN_POPS", "CCAP");
+    completeFlowAssetsTypeAsPerProgram("CCAP");
     var page = new FormPage(getPage("assets"));
     assertThat(page.getOptionValues("assets")).containsOnly("CASH", "BANK_ACCOUNT", "ELECTRONIC_PAYMENT_CARD", "VEHICLE", "STOCK_BOND", "REAL_ESTATE",
-        "LIFE_INSURANCE", "BURIAL_ACCOUNT", "OWNERSHIP_BUSINESS", "ONE_MILLION_ASSETS","CONTRACTS_NOTES_AGREEMENTS","TRUST_OR_ANNUITY","OTHER_ASSETS", "NONE");
+          "ONE_MILLION_ASSETS", "NONE");
     postExpectingRedirect("assets", "assets", List.of("None"), "soldAssets");
   }
 

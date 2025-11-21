@@ -71,7 +71,7 @@ public class ApplicationStatusRepositoryTest extends AbstractRepositoryTest {
   void createOrUpdateAllDocumentsShouldChangeAllDocumentStatuses() {
     ApplicationData applicationData = new TestApplicationDataBuilder()
         .base()
-        .withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"))
+        .withApplicantPrograms(List.of("SNAP"))
         .build();
     Application application = Application.builder()
         .id(applicationData.getId())
@@ -85,11 +85,8 @@ public class ApplicationStatusRepositoryTest extends AbstractRepositoryTest {
         applicationData.getId());
     assertThat(resultingStatuses).containsExactlyInAnyOrder(
         new ApplicationStatus(applicationData.getId(), CAF, routingDestination.getName(),
-            SENDING, applicationStatusRepository.getAndSetFileNames(application, CAF).get(0)),
-        new ApplicationStatus(applicationData.getId(), CERTAIN_POPS, routingDestination.getName(),
-            SENDING,
-            applicationStatusRepository.getAndSetFileNames(application, CERTAIN_POPS).get(0))
-    );
+					SENDING, applicationStatusRepository.getAndSetFileNames(application, CAF)
+							.get(0)));
 
     new TestApplicationDataBuilder(applicationData)
         .withApplicantPrograms(List.of("CCAP"));
@@ -108,7 +105,6 @@ public class ApplicationStatusRepositoryTest extends AbstractRepositoryTest {
 
     applicationStatusRepository.createOrUpdate("someId2", UPLOADED_DOC, "Olmsted", DELIVERY_FAILED,
         "fileName");
-    applicationStatusRepository.createOrUpdate("someId2", CERTAIN_POPS, "Olmsted", SENDING, "");
 
     applicationStatusRepository.createOrUpdate("someId3", CAF, "Olmsted", SENDING, "");
     applicationStatusRepository.createOrUpdate("someId3", UPLOADED_DOC, "Olmsted", SENDING,

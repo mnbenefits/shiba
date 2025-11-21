@@ -12,8 +12,5 @@ intercom-chat-app-id: mmxasuhx
          
 mnit-filenet:
   enabled: false
-          
-feature-flag:
-  certain-pops: off
 
 demo: true

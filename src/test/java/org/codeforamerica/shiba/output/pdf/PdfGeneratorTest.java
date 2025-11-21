@@ -106,15 +106,9 @@ class PdfGeneratorTest {
     
     resourceLoader = new DefaultResourceLoader(getClass().getClassLoader());
     Resource coverPages = resourceLoader.getResource("cover-pages.pdf");
-    Resource certainPops = resourceLoader.getResource("certain-pops.pdf");
+
     List<Resource> pdfResource = new ArrayList<Resource>();
     pdfResource.add(coverPages);
-    pdfResource.add(certainPops);
-    Map<Recipient, Map<String, List<Resource>>> pdfResourcesCertainPops = Map.of(
-        CASEWORKER, Map.of("default", pdfResource),
-        CLIENT, Map.of("default", pdfResource)
-    );
-  
 
     application = Application.builder()
         .id(applicationId)
@@ -128,7 +122,6 @@ class PdfGeneratorTest {
         pdfFieldFillers,
         pdfFieldWithCAFHHSuppFillers,
         pdfFieldWithCAFHHSuppFillers2,
-        pdfResourcesCertainPops,
         applicationRepository,
         documentRepository,
         preparers,
@@ -174,28 +167,6 @@ class PdfGeneratorTest {
     assertThat(actualApplicationFile.getFileName()).isEqualTo(expectedApplicationFile.getFileName());
   }
   
-  @Test
-  void shouldUseFillerForCertainPops() {
-    List<DocumentField> documentFields = List
-        .of(new DocumentField("someGroupName", "someName", List.of("someValue"),
-            DocumentFieldType.SINGLE_VALUE));
-    List<PdfField> pdfFields = List.of(new SimplePdfField("someName", "someValue"));
-    String fileName = "someFileName";
-    when(fileNameGenerator.generatePdfFilename(application, Document.CERTAIN_POPS)).thenReturn(fileName);
-    Recipient recipient = CASEWORKER;
-    when(preparers.prepareDocumentFields(application, Document.CERTAIN_POPS, recipient)).thenReturn(
-        documentFields);
-    when(pdfFieldMapper.map(documentFields)).thenReturn(pdfFields);
-    ApplicationFile expectedApplicationFile = new ApplicationFile("someContent".getBytes(),
-        "someFileName");
-    
-
-    ApplicationFile actualApplicationFile = pdfGenerator
-        .generate(applicationId, Document.CERTAIN_POPS, recipient);
-
-    assertThat(actualApplicationFile.getFileName()).isEqualTo(expectedApplicationFile.getFileName());
-   
-  }
 
   @ParameterizedTest
   @EnumSource(Recipient.class)

@@ -64,7 +64,7 @@ public class UnearnedIncomeCalculationPreparer implements DocumentFieldPreparer 
     put("childOrSpousalSupportAmount",
         List.of(CHILD_OR_SPOUSAL_SUPPORT_AMOUNT, UNEARNED_CHILD_OR_SPOUSAL_SUPPORT_AMOUNT));
     put("tribalPaymentsAmount", List.of(TRIBAL_PAYMENTS_AMOUNT, UNEARNED_TRIBAL_PAYMENTS_AMOUNT));
-    // Individual Amounts below only used in CCAP and CERTAIN_POPS
+    // Individual Amounts below only used in CCAP
     put("benefitsAmount", List.of(BENEFITS_PROGRAMS_AMOUNT, UNEARNED_BENEFITS_PROGRAMS_AMOUNT));
     put("insurancePaymentsAmount",
         List.of(INSURANCE_PAYMENTS_AMOUNT, UNEARNED_INSURANCE_PAYMENTS_AMOUNT));

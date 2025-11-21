@@ -2,7 +2,6 @@ package org.codeforamerica.shiba.journeys;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
-import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -11,7 +10,6 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;

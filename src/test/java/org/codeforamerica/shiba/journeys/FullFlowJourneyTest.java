@@ -6,13 +6,13 @@ import static org.codeforamerica.shiba.testutilities.TestUtils.getAbsoluteFilepa
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.NO;
 import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.mockito.Mockito.when;
+
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.testutilities.PercyTestPage;
 import org.codeforamerica.shiba.testutilities.SuccessPage;
 import org.junit.jupiter.api.Tag;
@@ -33,7 +33,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 	void fullApplicationWithDocumentUploads() {
 		when(clock.instant()).thenReturn(LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
 				LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
-		when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON); 
 
 		// Assert intercom button is present on landing page
 	    // TODO: Note: The check for Intercom is temporarily removed due to a timeout issue. This needs to be resolved and restored.
@@ -65,25 +64,16 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Assert presence and functionality of the SNAP non-discrimination link on the
 		// footer.
 		assertThat(driver.findElement(By.id("link-snap-nds"))).isNotNull();
-
 		goToPageBeforeSelectPrograms("Chisago");
-
-		selectProgramsWithoutCertainPopsAndEnterPersonalInfo();
+		selectProgramsAndEnterPersonalInfo();
 		fillOutHomeAndMailingAddressWithoutEnrich("12345", "someCity", "someStreetAddress", "someApartmentNumber");
-
 		fillOutContactAndReview(true, "Chisago");
-
 		testPage.clickLink("This looks correct", "Do you want to add household members?");
-		verifyHouseholdMemberCannotSelectCertainPops();
 		goBackToPage("Choose Programs");
-
-		selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops();
+		selectAllPrograms();
 		enterOutOfStateHomeAndMailingAddress();
-
 		goToContactAndReview();
-
-		addSpouseAndVerifySpouseCanSelectCertainPops();
-
+		addSpouse();
 		addHouseholdMemberToVerifySpouseCannotBeSelected();
 		removeSpouseAndVerifySpouseCanBeSelectedForNewHouseholdMember();
 
@@ -175,10 +165,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
-		testPage.chooseYesOrNo("hasDisability", YES.getDisplayValue(), "Who Has Disability");
-
-		// Who has Disability?
-		testPage.enter("whoHasDisability", "me");
+		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");	
 		testPage.clickContinue("Work changes");
 
 		// In the last 2 months, did anyone in your household do any of these things?
@@ -200,8 +187,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Intro: Income");
 
 		// Income & Employment
-		// Certain Pops will increment milestone steps
-		assertThat(testPage.getElementText("milestone-step")).isEqualTo("Step 4 of 7");
+		assertThat(testPage.getElementText("milestone-step")).isEqualTo("Step 3 of 6");
 		testPage.clickButtonLink("Continue", "Employment status");
 
 		// Is anyone in your household making money from a job?
@@ -262,13 +248,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("otherUnearnedIncome", "Insurance payments");
 		testPage.enter("otherUnearnedIncome", "Contract for deed");
 		testPage.enter("otherUnearnedIncome", "Money from a trust");
-		testPage.enter("otherUnearnedIncome", "Rental Income"); // Only Certain Pops
+		testPage.enter("otherUnearnedIncome", "Rental Income"); 
 		testPage.enter("otherUnearnedIncome", "Health care reimbursement");
 		testPage.enter("otherUnearnedIncome", "Interest or dividends");
 		testPage.enter("otherUnearnedIncome", "Other payments");
 		testPage.clickContinue("Insurance payments");
 
-		// Choose who receives that income (CCAP and CERTAIN_POPS only)
+		// Choose who receives that income (CCAP only)
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("insurancePaymentsAmount", "100.00");
 		testPage.clickContinue("Money from a trust");
@@ -354,27 +340,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("assets", "A vehicle");
 		testPage.enter("assets", "Stocks, bonds, retirement accounts");
 		testPage.enter("assets", "Real estate (not including your own home)");
-		testPage.clickContinue("Who has a vehicle");
-
-		// Who has a vehicle?
-		assertThat(testPage.getTitle()).isEqualTo("Who has a vehicle");
-		driver.findElement(By.id("householdMember-me")).click();
-		testPage.clickContinue("Which types of investment accounts does your household have");
-
-		// Which types of investment accounts does your household have?
-		assertThat(testPage.getTitle()).isEqualTo("Which types of investment accounts does your household have");
-		driver.findElement(By.id("STOCKS")).click();
-		testPage.clickContinue("Who has stocks");
-
-		//
-		assertThat(testPage.getTitle()).isEqualTo("Who has stocks");
-		driver.findElement(By.id("householdMember-me")).click();
-		testPage.clickContinue("Who has real estate (not including your own home)");
-
-		// Who has real estate (not including your own home)
-		assertThat(testPage.getTitle()).isEqualTo("Who has real estate (not including your own home)");
-		driver.findElement(By.id("householdMember-me")).click();
-
 		testPage.clickContinue("Sold assets");
 
 		// In the last 12 months, has anyone in the household given away or sold any
@@ -507,7 +472,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		SuccessPage successPage = new SuccessPage(driver);
 
 		// County: Chisago Tribe: Bois Forte Nation of Residence: Bois Forte Programs:
-		// SNAP, CCAP, EA, GRH, CERTAIN_POPS
+		// SNAP, CCAP, EA, GRH
 		// But NO Tribal TANF so application will only go to Chisago County.
 		assertThat(successPage.findElementById("submission-date").getText())
 				.contains("Your application was submitted to Chisago County (888-234-1246) on January 1, 2020.");
@@ -537,12 +502,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 						For more support, you can call Chisago County (888-234-1246).""");
 		assertCcapFieldEquals("EMERGENCY_TYPE", "Other emergency");
 		assertCcapFieldEquals("EA_COMMENTS", "my emergency!");
-		assertCcapFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS");
+		assertCcapFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH");
 		assertCcapFieldEquals("FULL_NAME", "Ahmed St. George");
 		assertCcapFieldEquals("UTM_SOURCE", "");
 		assertCcapFieldEquals("FULL_NAME_0", householdMemberFullName);
 		assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
-		assertCcapFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
+		assertCcapFieldEquals("PROGRAMS_0", "CCAP");
 		assertCcapFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
 		assertCcapFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
 		assertCcapFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
@@ -653,7 +618,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("DATE_OF_BIRTH_0", "09/14/2018");
 		assertCafFieldEquals("SSN_0", "XXX-XX-XXXX");
 		// County: Chisago Tribe: Bois Forte Nation of Residence: Bois Forte Programs:
-		// SNAP, CCAP, EA, GRH, CERTAIN_POPS
+		// SNAP, CCAP, EA, GRH
 		// But NO Tribal TANF so application will only go to Chisago County.
 		assertCafFieldEquals("COUNTY_INSTRUCTIONS",
 				"""
@@ -662,11 +627,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 						For more support, you can call Chisago County (888-234-1246).""");
 		assertCafFieldEquals("EMERGENCY_TYPE", "Other emergency");
 		assertCafFieldEquals("EA_COMMENTS", "my emergency!");
-		assertCafFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS");
+		assertCafFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH");
 		assertCafFieldEquals("FULL_NAME", "Ahmed St. George");
 		assertCcapFieldEquals("TRIBAL_NATION", "Bois Forte");
 		assertCafFieldEquals("FULL_NAME_0", householdMemberFullName);
-		assertCafFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
+		assertCafFieldEquals("PROGRAMS_0", "CCAP");
 		assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
 		assertCafFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
 		assertCafFieldEquals("HOURS_PER_WEEK_0", "30");
@@ -760,7 +725,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
-		assertCafFieldEquals("HAS_DISABILITY", "Yes");
+		assertCafFieldEquals("HAS_DISABILITY", "No");
 		assertCafFieldEquals("IS_WORKING", "No");
 		assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
 		assertCafFieldEquals("ADDITIONAL_INCOME_INFO", "I also make a small amount of money from my lemonade stand.");
@@ -799,124 +764,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
 
-		// CERTAIN POPS
-		assertCertainPopsFieldEquals("APPLICATION_ID", applicationId);
-		assertCertainPopsFieldEquals("SUBMISSION_DATETIME", "01/01/2020 at 04:15 AM");
-		assertCertainPopsFieldEquals("PAY_FREQUENCY_0", "Hourly");
-		assertCertainPopsFieldEquals("EMPLOYEE_FULL_NAME_0", householdMemberFullName);
-		assertCertainPopsFieldEquals("DATE_OF_BIRTH", "01/12/1928");
-		assertCertainPopsFieldEquals("APPLICANT_SSN", "XXX-XX-XXXX");
-		assertCertainPopsFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
-		assertCertainPopsFieldEquals("APPLICANT_EMAIL", "some@example.com");
-		assertCertainPopsFieldEquals("PHONE_OPTIN", "Yes");
-		assertCertainPopsFieldEquals("ADDITIONAL_INFO_CASE_NUMBER", "");
-		assertCertainPopsFieldEquals("EMPLOYERS_NAME_0", "some employer");
-		assertCertainPopsFieldEquals("INCOME_PER_PAY_PERIOD_0", "1.00");
-		assertCertainPopsFieldEquals("DATE_OF_BIRTH_0", "09/14/2018");
-		assertCertainPopsFieldEquals("SSN_0", "XXX-XX-XXXX");
-		// County: Chisago Tribe: Bois Forte Nation of Residence: Bois Forte Programs:
-		// SNAP, CCAP, EA, GRH, CERTAIN_POPS
-		// But NO Tribal TANF so application will only go to Chisago County.
-		assertCertainPopsFieldEquals("COUNTY_INSTRUCTIONS",
-				"""
-						This application was submitted to Chisago County with the information that you provided. Some parts of this application will be blank. A caseworker will follow up with you if additional information is needed.
-
-						For more support, you can call Chisago County (888-234-1246).""");
-		assertCertainPopsFieldEquals("EMERGENCY_TYPE", "Other emergency");
-		assertCertainPopsFieldEquals("EA_COMMENTS", "my emergency!");
-		assertCertainPopsFieldEquals("PROGRAMS", "SNAP, CCAP, EA, GRH, CERTAIN_POPS");
-		assertCertainPopsFieldEquals("FULL_NAME", "Ahmed St. George");
-		assertCertainPopsFieldEquals("TRIBAL_NATION", "Bois Forte");
-		assertCertainPopsFieldEquals("FULL_NAME_0", householdMemberFullName);
-		assertCertainPopsFieldEquals("PROGRAMS_0", "CCAP, CERTAIN_POPS");
-		assertCertainPopsFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
-		assertCertainPopsFieldEquals("CCAP_EXPEDITED_ELIGIBILITY", "CCAP");
-		assertCertainPopsFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
-		assertCertainPopsFieldEquals("APPLICANT_LAST_NAME", "St. George");
-		assertCertainPopsFieldEquals("DATE_OF_BIRTH", "01/12/1928");
-		assertCertainPopsFieldEquals("APPLICANT_SSN", "XXX-XX-XXXX");
-		assertCertainPopsFieldEquals("MARITAL_STATUS", "NEVER_MARRIED");
-		assertCertainPopsFieldEquals("APPLICANT_SEX", "FEMALE");
-		assertCertainPopsFieldEquals("BLIND", "Yes");
-		assertCertainPopsFieldEquals("APPLICANT_IS_PREGNANT", "Yes");
-		assertCertainPopsFieldEquals("HAS_PHYSICAL_MENTAL_HEALTH_CONDITION", "Yes");
-		assertCertainPopsFieldEquals("DISABILITY_DETERMINATION", "Yes");
-		assertCertainPopsFieldEquals("NEED_LONG_TERM_CARE", "Off");
-		assertCertainPopsFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
-		assertCertainPopsFieldEquals("NEED_INTERPRETER", "Yes"); 
-		assertCertainPopsFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
-		assertCertainPopsFieldEquals("APPLICANT_HOME_CITY", "OutOfState City");
-		assertCertainPopsFieldEquals("APPLICANT_HOME_STATE", "MN");
-		assertCertainPopsFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_ZIPCODE", "03104");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_CITY", "Cooltown");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_STATE", "MN");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", "smarty street");
-		assertCertainPopsFieldEquals("APPLICANT_MAILING_COUNTY", "Chisago");
-		assertCertainPopsFieldEquals("MEDICAL_IN_OTHER_STATE", "Off");
-		assertCertainPopsFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
-		assertCertainPopsFieldEquals("HH_HEALTHCARE_COVERAGE_0", "Yes");
-		assertCertainPopsFieldEquals("FIRST_NAME_0", "householdMemberFirstName");
-		assertCertainPopsFieldEquals("MI_0", "");
-		assertCertainPopsFieldEquals("LAST_NAME_0", "householdMemberLastName");
-		assertCertainPopsFieldEquals("DATE_OF_BIRTH_0", "09/14/2018");
-		assertCertainPopsFieldEquals("RELATIONSHIP_0", "child");
-		assertCertainPopsFieldEquals("SEX_0", "MALE");
-		assertCertainPopsFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED");
-		assertCertainPopsFieldEquals("SSN_YESNO_0", "Yes");
-		assertCertainPopsFieldEquals("SSN_0", "XXX-XX-XXXX");
-		assertCertainPopsFieldEquals("IS_US_CITIZEN", "No");
-		assertCertainPopsFieldEquals("NAME_OF_NON_US_CITIZEN_0", "Ahmed St. George");
-		//assertCertainPopsFieldEquals("ALIEN_ID_0", "A12345678");
-		assertCertainPopsFieldEquals("WANT_AUTHORIZED_REP", "Yes");
-		assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_HELP", "Off");
-		assertCertainPopsFieldEquals("RETROACTIVE_APPLICANT_FULLNAME_0", "");
-		assertCertainPopsFieldEquals("RETROACTIVE_COVERAGE_MONTH_0", "Off");
-		// assertCertainPopsFieldEquals("SELF_EMPLOYED", "Yes");
-		assertCertainPopsFieldEquals("IS_WORKING", "No");
-		// assertCertainPopsFieldEquals("NO_CP_UNEARNED_INCOME", "Yes");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_PERSON_1", "Ahmed St. George");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_1", "Social Security");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_1", "200.30");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_1", "Monthly");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_2", "Insurance payments");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_2", "100.00");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_2", "Monthly");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_3", "Trust money");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_3", "100.00");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_3", "Monthly");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_TYPE_1_4", "Rental income");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_AMOUNT_1_4", "100.00");
-		assertCertainPopsFieldEquals("CP_UNEARNED_INCOME_FREQUENCY_1_4", "Monthly");
-		assertCertainPopsFieldEquals("BLIND_OR_HAS_DISABILITY", "Yes");
-		assertCertainPopsFieldEquals("WHO_HAS_DISABILITY_0", "Ahmed St. George");
-		assertCertainPopsFieldEquals("CASH_AMOUNT", "");
-		assertCertainPopsFieldEquals("HAVE_INVESTMENTS", "Yes");
-		assertCertainPopsFieldEquals("INVESTMENT_OWNER_FULL_NAME_0", "Ahmed St. George");
-		assertCertainPopsFieldEquals("INVESTMENT_TYPE_0", "stocks");
-		assertCertainPopsFieldEquals("HAVE_REAL_ESTATE", "Yes");
-		assertCertainPopsFieldEquals("REAL_ESTATE_OWNER_FULL_NAME_0", "Ahmed St. George");
-		assertCertainPopsFieldEquals("HAVE_CONTRACTS_NOTES_AGREEMENTS", "No");
-		assertCertainPopsFieldEquals("HAVE_VEHICLE", "Yes");
-		assertCertainPopsFieldEquals("VEHICLE_OWNER_FULL_NAME_0", "Ahmed St. George");
-		assertCertainPopsFieldEquals("HAVE_TRUST_OR_ANNUITY", "No");
-		assertCertainPopsFieldEquals("HAVE_LIFE_INSURANCE", "No");
-		assertCertainPopsFieldEquals("HAVE_BURIAL_ACCOUNT", "No");
-		assertCertainPopsFieldEquals("HAVE_OWNERSHIP_BUSINESS", "No");
-		assertCertainPopsFieldEquals("HAVE_OTHER_ASSETS", "No");
-		assertCertainPopsFieldEquals("HAD_A_PAST_ACCIDENT_OR_INJURY", "Off");
-		assertCertainPopsFieldEquals("HAVE_HEALTHCARE_COVERAGE", "Yes");
-		assertCertainPopsFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
-		assertCertainPopsFieldEquals("CREATED_DATE", "2020-01-01");
-		assertCertainPopsFieldEquals("AUTHORIZED_REP_NAME", "defaultFirstName defaultLastName");
-		assertCertainPopsFieldEquals("AUTHORIZED_REP_ADDRESS", "someStreetAddress");
-		assertCertainPopsFieldEquals("AUTHORIZED_REP_CITY", "someCity");
-		assertCertainPopsFieldEquals("AUTHORIZED_REP_ZIP_CODE", "12345");
-		assertCertainPopsFieldEquals("AUTHORIZED_REP_PHONE_NUMBER", "(723) 456-7890");
-		assertCertainPopsFieldEquals("CP_SUPPLEMENT",
-				"\n\nQUESTION 11 continued:\nPerson 1, Ahmed St. George:\n  5) Interest or dividends, 100.00, Monthly\n  6) Healthcare reimbursement, 100.00, Monthly\n  7) Contract for Deed, 100.00, Monthly\n  8) Benefits programs, 100.00, Monthly\n  9) Other payments, 100.00, Monthly");
-
-		assertApplicationSubmittedEventWasPublished(applicationId, FULL, 8);
 	}
 
 	/**
@@ -927,7 +774,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 	void fullCashApplication() {
 		when(clock.instant()).thenReturn(LocalDateTime.of(2020, 1, 1, 10, 10).atOffset(ZoneOffset.UTC).toInstant(),
 				LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
-		when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
 
 		// Assert intercom button is present on landing page
 	    // TODO: Note: The check for Intercom is temporarily removed due to a timeout issue. This needs to be resolved and restored.
@@ -935,7 +781,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		goToPageBeforeSelectPrograms("Chisago");
 
-		selectProgramsWithoutCertainPopsAndEnterPersonalInfo(List.of(PROGRAM_CASH));
+		selectProgramsAndEnterPersonalInfo(List.of(PROGRAM_CASH));
 		fillOutHomeAndMailingAddressWithoutEnrich("03104", "Cooltown", "smarty street", "1b");
 
 		fillOutContactAndReview(true, "Chisago");
@@ -1169,12 +1015,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertApplicationSubmittedEventWasPublished(applicationId, FULL, 2);
 	}
 
-	private void selectProgramsWithoutCertainPopsAndEnterPersonalInfo() {
-		selectProgramsWithoutCertainPopsAndEnterPersonalInfo(
+	private void selectProgramsAndEnterPersonalInfo() {
+		selectProgramsAndEnterPersonalInfo(
 				List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH));
 	}
 
-	private void selectProgramsWithoutCertainPopsAndEnterPersonalInfo(List<String> programSelections) {
+	private void selectProgramsAndEnterPersonalInfo(List<String> programSelections) {
 		// Program Selection
 		programSelections.forEach(program -> testPage.enter("programs", program));
 
@@ -1208,51 +1054,18 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Home Address");
 	}
 
-	protected void verifyHouseholdMemberCannotSelectCertainPops() {
-		// Add 1 Household Member
-		assertThat(testPage.getElementText("page-form")).contains("Roommates that you buy and prepare food with");
-		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
-		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
-		assertThat(!(testPage.getElementText("page-form"))
-				.contains("Healthcare for Seniors and People with Disabilities"));
-	}
 
-	private void selectAllProgramsAndVerifyApplicantIsQualifiedForCertainPops() {
-		List<String> programSelectionsWithCP = List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH,
-				PROGRAM_CERTAIN_POPS);
+	private void selectAllPrograms() {
+		List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH);
 		testPage.enter("programs", PROGRAM_NONE);// reset programs
 		// Program Selection
-		programSelectionsWithCP.forEach(program -> testPage.enter("programs", program));
+		programSelections.forEach(program -> testPage.enter("programs", program));
 		testPage.clickContinue("Emergency Type");
 
 		// Emergency type page - already set to "other emergency"
 		testPage.clickContinue("Other emergency");
 		// Other emergency page
 		testPage.enter("otherEmergency", "my emergency!");
-		testPage.clickContinue("Basic Criteria");
-
-		// Test Certain pops offboarding flow first by selecting None of the above
-		testPage.enter("basicCriteria", "None of the above");
-		testPage.clickContinue("Certain Pops Offboarding");
-		assertThat(testPage.getTitle()).isEqualTo("Certain Pops Offboarding");
-		testPage.clickButtonLink("Continue", "Add other programs");
-		assertThat(testPage.getTitle()).isEqualTo("Add other programs");
-		testPage.goBack();
-		testPage.goBack();
-
-		// Basic Criteria:
-		testPage.enter("basicCriteria", "I am 65 years old or older");
-		testPage.enter("basicCriteria", "I am blind");
-		testPage.enter("basicCriteria", "I currently receive SSI or RSDI for a disability");
-		testPage.enter("basicCriteria",
-				"I have a disability that has been certified by the Social Security Administration (SSA)");
-		testPage.enter("basicCriteria",
-				"I have a disability that has been certified by the State Medical Review Team (SMRT)");
-		testPage.enter("basicCriteria",
-				"I want to apply for Medical Assistance for Employed Persons with Disabilities (MA-EPD)");
-		testPage.enter("basicCriteria", "I have Medicare and need help with my costs");
-		testPage.clickContinue("Certain Pops Confirmation");
-		assertThat(testPage.getTitle()).isEqualTo("Certain Pops Confirmation");
 		testPage.clickButtonLink("Continue", "Expedited Notice");
 		assertThat(testPage.getTitle()).isEqualTo("Expedited Notice");
 		testPage.clickButtonLink("Continue", "Intro: Basic Info");
@@ -1265,16 +1078,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("otherName", "defaultOtherName");
 		// DOB is optional
 		testPage.enter("ssn", "123456789");
-		// CP SSN check
-		testPage.enter("noSSNCheck", "I don't have a social security number.");
-		assertThat(testPage.getCheckboxValues("noSSNCheck")).contains("I don't have a social security number.",
-				"I don't have a social security number.");
-		testPage.enter("appliedForSSN", "Yes");
-		testPage.clickContinue("Personal Info");
-		// SSN textbox is filled and Checkbox is checked, so page won't advance and
-		// error shows
-		assertThat(testPage.getTitle()).contains("Personal Info");
-		testPage.enter("noSSNCheck", "I don't have a social security number.");// deselect the SSN checkbox
 		testPage.enter("maritalStatus", "Never married");
 		testPage.enter("sex", "Female");
 		testPage.enter("livedInMnWholeLife", "Yes");
@@ -1288,11 +1091,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 	}
 
-	private void addSpouseAndVerifySpouseCanSelectCertainPops() {
+	private void addSpouse() {
 		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
 		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
-		assertThat(testPage.getElementText("page-form"))
-				.contains("Healthcare for Seniors and People with Disabilities");
 		testPage.enter("firstName", "Celia");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("dateOfBirth", "10/15/1950");
@@ -1335,7 +1136,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("programs", PROGRAM_NONE);
 		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("none");
 		testPage.enter("programs", PROGRAM_CCAP);
-		testPage.enter("programs", PROGRAM_CERTAIN_POPS);
+
 		// Assert that the programs follow up shows again when a program is selected
 		// after having selected none
 		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");

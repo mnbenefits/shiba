@@ -4,7 +4,6 @@ import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.testutilities.TestUtils.ADMIN_EMAIL;
 import static org.codeforamerica.shiba.testutilities.TestUtils.getAbsoluteFilepathString;
 import static org.codeforamerica.shiba.testutilities.TestUtils.resetApplicationData;
@@ -303,11 +302,6 @@ public class AbstractShibaMockMvcTest {
     submitApplication();
     return downloadCcapClientPDF();
   }
-  
-  protected PDAcroForm submitAndDownloadCertainPops() throws Exception {
-    submitApplication();
-    return downloadCertainPopsClientPDF();
-  }
 
   protected PDAcroForm downloadCafClientPDF() throws Exception {
     var zipBytes = mockMvc.perform(get("/download")
@@ -328,12 +322,6 @@ public class AbstractShibaMockMvcTest {
     List<File> zippedFiles = getZippedFiles();
     File ccapFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CCAP)).toList().get(0);
     return Loader.loadPDF(FileUtils.readFileToByteArray(ccapFile)).getDocumentCatalog().getAcroForm();
-  }
-  
-  protected PDAcroForm downloadCertainPopsClientPDF() throws Exception {
-    List<File> zippedFiles = getZippedFiles();
-    File certainPopsFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(CERTAIN_POPS)).toList().get(0);
-    return Loader.loadPDF(FileUtils.readFileToByteArray(certainPopsFile)).getDocumentCatalog().getAcroForm();
   }
 
   private List<File> getZippedFiles() throws Exception {
@@ -361,10 +349,6 @@ public class AbstractShibaMockMvcTest {
     ZipInputStream zipFile = new ZipInputStream(byteArrayInputStream);
     return unzip(zipFile);
   }
-
-  protected PDAcroForm downloadCertainPopsCaseWorkerPDF(String applicationId) throws Exception {
-	  return downloadCaseWorkerPDF(applicationId, Document.CERTAIN_POPS);
-  }
   
   protected PDAcroForm downloadCaseWorkerPDF(String applicationId, Document document) throws Exception {
     var zipBytes = mockMvc.perform(get("/download/" + applicationId)
@@ -376,8 +360,8 @@ public class AbstractShibaMockMvcTest {
     ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(zipBytes);
     ZipInputStream zipFile = new ZipInputStream(byteArrayInputStream);
     List<File> zippedFiles = unzip(zipFile);
-    File certainPopsFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(document)).toList().get(0);
-    return Loader.loadPDF(FileUtils.readFileToByteArray(certainPopsFile)).getDocumentCatalog().getAcroForm();
+    File caseWorkerFile = zippedFiles.stream().filter(file -> getDocumentType(file).equals(document)).toList().get(0);
+    return Loader.loadPDF(FileUtils.readFileToByteArray(caseWorkerFile)).getDocumentCatalog().getAcroForm();
   }
 
   protected Document getDocumentType(File file) {
@@ -386,8 +370,6 @@ public class AbstractShibaMockMvcTest {
       return Document.CAF;
     } else if (fileName.contains("_CCAP")) {
       return Document.CCAP;
-    } else if (fileName.contains("_CERTAIN_POPS")) {
-      return Document.CERTAIN_POPS;
     } else {
       return Document.CAF;
     }
@@ -930,6 +912,11 @@ public class AbstractShibaMockMvcTest {
           "householdMemberFirstName householdMemberLastName" + getFirstHouseholdMemberId(),
           "Do you have a child care provider?"
       );
+      postExpectingNextPageTitle("doYouHaveChildCareProvider",
+              "hasChildCareProvider",
+              "false",
+              "Who are the children that have a parent not living in the home?"
+      );
       postExpectingRedirect("whoHasParentNotAtHome",
           "whoHasAParentNotLivingAtHome",
           "NONE_OF_THE_ABOVE",
@@ -966,7 +953,7 @@ public class AbstractShibaMockMvcTest {
 
     postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
     postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
-
+    postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     if (isWorking) {
       postExpectingRedirect("employmentStatus", "areYouWorking", "true", "incomeByJob");
@@ -1027,7 +1014,7 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
         "supportAndCare");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
-    postExpectingSuccess("assets", "assets", "REAL_ESTATE");
+    postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");
     assertNavigationRedirectsToCorrectNextPage("submittingApplication", "registerToVote");

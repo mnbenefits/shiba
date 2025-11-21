@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 /**
  * If anybody in the household(either single applicant or household members) has
  * a self employment job, and nobody works for others(a nonSelfEmployment job), then mark the
- * IS_WORKING radio button to No on the CCAP and Certain Pops PDF.
+ * IS_WORKING radio button to No on the CCAP PDF.
  *
  */
 @Component
