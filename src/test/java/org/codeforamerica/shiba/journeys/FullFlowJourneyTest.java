@@ -133,7 +133,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("hasHousingSubsidy", YES.getDisplayValue());
 
 		// What is your current living situation?
-		testPage.enter("livingSituation", "Staying in a hotel or motel");
+		testPage.enter("livingSituation", "Staying in a hotel or motel");	
+		testPage.clickContinue("Housing Provider");
+		
+		testPage.enter("housingProvider", YES.getDisplayValue());
+		
+		driver.findElement(By.name("housingProviderName[]")).sendKeys("Group Home Provider");
+		driver.findElement(By.name("housingProviderVendorNumber[]")).sendKeys("12345");
 		testPage.clickContinue("Going to school");
 
 		// Is anyone in your household going to school right now, either full or
@@ -694,21 +700,22 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_INCOME_TYPE_2", "Trusts");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_2", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_2", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_3", "Interest or dividends");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_3", "Rental income");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_3", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_3", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_4", "Health care reimbursement");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_4", "Interest or dividends");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_4", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_4", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_5", "Contract for deed");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_5", "Health care reimbursement");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_5", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_5", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_6", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_6", "Contract for deed");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_6", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_6", "100.00");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Other (lottery or gambling winnings, inheritance, capital gains, etc.)");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_7", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_7", "100.00");
+		
 		assertCafFieldEquals("HOMEOWNERS_INSURANCE", "No");
 		assertCafFieldEquals("REAL_ESTATE_TAXES", "No");
 		assertCafFieldEquals("ASSOCIATION_FEES", "No");
@@ -737,6 +744,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CCAP", "Yes");
 		assertCafFieldEquals("EMERGENCY", "Yes");
 		assertCafFieldEquals("MN_HOUSING_SUPPORT", "Yes");
+		//TODO emj enable this after preparer is completed
+		//assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Group Home Provider 123456");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
 		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
@@ -1014,7 +1023,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Unearned income
 		testPage.enter("unearnedIncome", "None");
+		
+		//otherUnearnedIncome page
+		testPage.clickContinue("Unearned Income");
+		
+		testPage.enter("otherUnearnedIncome", "None");
 		testPage.clickContinue("Future Income");
+		
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "No");

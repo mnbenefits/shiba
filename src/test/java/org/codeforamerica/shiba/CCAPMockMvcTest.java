@@ -1,5 +1,6 @@
 package org.codeforamerica.shiba;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -44,7 +45,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	  assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
 	  postExpectingNextPageTitle("unearnedIncome", "unearnedIncome", List.of("UNEMPLOYMENT", "WORKERS_COMPENSATION"), "Unearned Income Source");
 	  postExpectingRedirect("unemploymentIncomeSource", "monthlyIncomeUnemployment", List.of("Dwight Schrute applicant"), "workersCompIncomeSource");
-	  postExpectingRedirect("workersCompIncomeSource", "monthlyIncomeWorkersComp", List.of("Dwight Schrute applicant"), "futureIncome");
+	  postExpectingRedirect("workersCompIncomeSource", "monthlyIncomeWorkersComp", List.of("Dwight Schrute applicant"), "otherUnearnedIncome");
+	  postExpectingNextPageTitle("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS"), "Insurance payments");
+	  postExpectingRedirect("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", List.of("Dwight Schrute applicant"), "futureIncome");
   }
   
 	@Test
@@ -132,14 +135,59 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
-    postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
-        "futureIncome");
+    postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","futureIncome");
     fillAdditionalIncomeInfo("SNAP");
+   //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
+  
+  @Test
+  void verifyFlowWhenOtherUnearnedIncomeIsSelectedForSNAPHousehold() throws Exception {
+    completeFlowFromLandingPageThroughReviewInfo("SNAP");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
+    assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
+    fillOutHousemateInfo("EA");
+    finishAddingHouseholdMembers("preparingMealsTogether");
+    postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "false",
+        "Housing subsidy");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+            "Going to school");
+    postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
+    completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
+    assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
+    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+    assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+    postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("ANNUITY_PAYMENTS"),"annuityIncomeSource");
+    
+    postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments",  List.of("Dwight Schrute applicant"), "annuityPaymentsAmount", List.of("100", "")), "futureIncome");
+    
+	// Verify that annuity was selected on otherUnearnedIncome page
+	List<String> otherUnearnedIncomeSelections = (List<String>) applicationData.getPagesData()
+			.getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
+	assertThat(otherUnearnedIncomeSelections).contains("ANNUITY_PAYMENTS");
+
+	// Verify that the household member was selected
+	List<String> monthlyIncomeAnnuityPayment = (List<String>) applicationData.getPagesData()
+			.getPage("annuityIncomeSource").get("monthlyIncomeAnnuityPayments").getValue();
+	assertThat(monthlyIncomeAnnuityPayment).contains("Dwight Schrute applicant");
+	// Verify the annuity amount was saved correctly
+	List<String> annuityPaymentsAmount = (List<String>) applicationData.getPagesData().getPage("annuityIncomeSource")
+			.get("annuityPaymentsAmount").getValue();
+	assertThat(annuityPaymentsAmount).isEqualTo(List.of("100", ""));
+    fillAdditionalIncomeInfo("SNAP");
+   //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
+    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    postExpectingSuccess("assets", "assets", "VEHICLE");
+    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
+    assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
+  }
+  
+  
 
   @Test
   void verifyFlowWhenLiveAloneApplicantHasNotSelectedCCAP() throws Exception {
@@ -154,7 +202,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
-        "futureIncome");
+        "otherUnearnedIncome");
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
+            "futureIncome");
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
