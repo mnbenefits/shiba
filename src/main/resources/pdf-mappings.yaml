@@ -61,13 +61,6 @@ mappings:
       CCAP: CCAP
       NONE: PROGRAM_NONE
     programList: PROGRAMS
-  certainPopsHouseholdMemberInfo:
-    choseHealthcareCoverage: HH_HEALTHCARE_COVERAGE
-  basicCriteria:
-    BLIND: BLIND
-    HELP_WITH_MEDICARE: HELP_WITH_MEDICARE
-    blindOrHasDisability: [ BLIND_OR_HAS_DISABILITY, HAS_PHYSICAL_MENTAL_HEALTH_CONDITION ]
-    disabilityDetermination: DISABILITY_DETERMINATION
   preparingMealsTogether:
     isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
   contactInfo:
@@ -171,47 +164,6 @@ mappings:
     otherIncomeAmount: OTHER_INCOME_AMOUNT
     otherIncomeFrequency: OTHER_INCOME_FREQUENCY
 
-  certainPops:
-    certainPopsSupplement: CP_SUPPLEMENT
-  
-  certainPopsBankAccounts:
-    hasCertainPopsBankAccounts: CP_HAS_BANK_ACCOUNTS
-    certainPopsBankAccountOwnerLine_1: CP_BANK_ACCOUNT_OWNER_LINE_1
-    certainPopsBankAccountOwnerLine_2: CP_BANK_ACCOUNT_OWNER_LINE_2
-    certainPopsBankAccountOwnerLine_3: CP_BANK_ACCOUNT_OWNER_LINE_3
-    certainPopsBankAccountTypeLine_1: CP_BANK_ACCOUNT_TYPE_LINE_1
-    certainPopsBankAccountTypeLine_2: CP_BANK_ACCOUNT_TYPE_LINE_2
-    certainPopsBankAccountTypeLine_3: CP_BANK_ACCOUNT_TYPE_LINE_3
-     
-  certainPopsUnearnedIncome:
-    noCertainPopsUnearnedIncome: NO_CP_UNEARNED_INCOME
-    certainPopsUnearnedIncomePerson1: CP_UNEARNED_INCOME_PERSON_1
-    certainPopsUnearnedIncomePerson2: CP_UNEARNED_INCOME_PERSON_2
-    certainPopsUnearnedIncomeType_1_1: CP_UNEARNED_INCOME_TYPE_1_1
-    certainPopsUnearnedIncomeType_1_2: CP_UNEARNED_INCOME_TYPE_1_2
-    certainPopsUnearnedIncomeType_1_3: CP_UNEARNED_INCOME_TYPE_1_3
-    certainPopsUnearnedIncomeType_1_4: CP_UNEARNED_INCOME_TYPE_1_4
-    certainPopsUnearnedIncomeAmount_1_1: CP_UNEARNED_INCOME_AMOUNT_1_1
-    certainPopsUnearnedIncomeAmount_1_2: CP_UNEARNED_INCOME_AMOUNT_1_2
-    certainPopsUnearnedIncomeAmount_1_3: CP_UNEARNED_INCOME_AMOUNT_1_3
-    certainPopsUnearnedIncomeAmount_1_4: CP_UNEARNED_INCOME_AMOUNT_1_4
-    certainPopsUnearnedIncomeFrequency_1_1: CP_UNEARNED_INCOME_FREQUENCY_1_1
-    certainPopsUnearnedIncomeFrequency_1_2: CP_UNEARNED_INCOME_FREQUENCY_1_2
-    certainPopsUnearnedIncomeFrequency_1_3: CP_UNEARNED_INCOME_FREQUENCY_1_3
-    certainPopsUnearnedIncomeFrequency_1_4: CP_UNEARNED_INCOME_FREQUENCY_1_4
-    certainPopsUnearnedIncomeType_2_1: CP_UNEARNED_INCOME_TYPE_2_1
-    certainPopsUnearnedIncomeType_2_2: CP_UNEARNED_INCOME_TYPE_2_2
-    certainPopsUnearnedIncomeType_2_3: CP_UNEARNED_INCOME_TYPE_2_3
-    certainPopsUnearnedIncomeType_2_4: CP_UNEARNED_INCOME_TYPE_2_4
-    certainPopsUnearnedIncomeAmount_2_1: CP_UNEARNED_INCOME_AMOUNT_2_1
-    certainPopsUnearnedIncomeAmount_2_2: CP_UNEARNED_INCOME_AMOUNT_2_2
-    certainPopsUnearnedIncomeAmount_2_3: CP_UNEARNED_INCOME_AMOUNT_2_3
-    certainPopsUnearnedIncomeAmount_2_4: CP_UNEARNED_INCOME_AMOUNT_2_4
-    certainPopsUnearnedIncomeFrequency_2_1: CP_UNEARNED_INCOME_FREQUENCY_2_1
-    certainPopsUnearnedIncomeFrequency_2_2: CP_UNEARNED_INCOME_FREQUENCY_2_2
-    certainPopsUnearnedIncomeFrequency_2_3: CP_UNEARNED_INCOME_FREQUENCY_2_3
-    certainPopsUnearnedIncomeFrequency_2_4: CP_UNEARNED_INCOME_FREQUENCY_2_4
-    
   unearnedIncome:
     SOCIAL_SECURITY: SOCIAL_SECURITY
     SSI: SSI
@@ -458,7 +410,7 @@ mappings:
   incomePerPayPeriod:
     incomePerPayPeriod: INCOME_PER_PAY_PERIOD
   nonSelfEmployment_incomePerPayPeriod:
-    incomePerPayPeriod_EVERY_DAY: INCOME_PER_PAY_PERIOD_EVERY_DAY   # TODO new payperiod addition
+    incomePerPayPeriod_EVERY_DAY: INCOME_PER_PAY_PERIOD_EVERY_DAY
     incomePerPayPeriod_EVERY_WEEK: INCOME_PER_PAY_PERIOD_EVERY_WEEK
     incomePerPayPeriod_EVERY_TWO_WEEKS: INCOME_PER_PAY_PERIOD_EVERY_TWO_WEEKS
     incomePerPayPeriod_TWICE_A_MONTH: INCOME_PER_PAY_PERIOD_TWICE_A_MONTH

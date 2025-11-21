@@ -6,7 +6,6 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 
 import java.util.ArrayList;
 import java.util.List;
-import org.codeforamerica.shiba.Program;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
@@ -51,11 +50,6 @@ public class ApplicantProgramsPreparer implements DocumentFieldPreparer {
     boolean isTribalTanf =
         getValues(application.getApplicationData().getPagesData(), APPLYING_FOR_TRIBAL_TANF).contains("true");
 
-    boolean isCertainPops = application.getApplicationData().isCertainPopsApplication();
-
-    if (!isCertainPops) {
-      programs.remove(Program.CERTAIN_POPS);
-    }
 
     if (isTribalTanf) {
       programs.add("TRIBAL TANF");

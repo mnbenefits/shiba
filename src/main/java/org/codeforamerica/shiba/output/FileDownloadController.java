@@ -3,7 +3,6 @@ package org.codeforamerica.shiba.output;
 import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
 import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 
@@ -132,13 +131,6 @@ public class FileDownloadController {
       ApplicationFile applicationFileCCAP = pdfGenerator.generate(applicationId, CCAP, recipient);
       if (null != applicationFileCCAP && applicationFileCCAP.getFileBytes().length > 0) {
         applicationFiles.add(applicationFileCCAP);
-      }
-    }
-    if (application.getApplicationData().isCertainPopsApplication()) {
-      ApplicationFile applicationFileCP = pdfGenerator.generate(applicationId, CERTAIN_POPS,
-          recipient);
-      if (null != applicationFileCP && applicationFileCP.getFileBytes().length > 0) {
-        applicationFiles.add(applicationFileCP);
       }
     }
     applicationFiles.addAll(uploadedDocsPreparer.prepare(

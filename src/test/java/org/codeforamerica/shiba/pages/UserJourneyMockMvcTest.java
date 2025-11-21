@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codeforamerica.shiba.pages.data.ApplicationData;
-import org.codeforamerica.shiba.pages.data.Iteration;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.codeforamerica.shiba.testutilities.FormPage;
 import org.junit.jupiter.api.BeforeEach;
@@ -286,42 +284,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  }
   }
   
-  /**
-   * These test cases verify the page navigation within the Emergency Type section of MNbenefits.
-   * That is, it verifies the flow from the choosePrograms page to the introBasicInfo page based
-   * on the programs (EA, SNAP, CERTAIN_POPS) and emergencyType choice (either EVICTION_NOTICE or OTHER_EMERGENCY) that is made.
-   * 
-   * @param programs  - a list of programs, must include EA and CERTAIN_POPS, SNAP is optional
-   * @param emergencyType - can be either EVICTION_NOTICE or OTHER_EMERGENCY
-   * @throws Exception
-   */
-  @ParameterizedTest
-  @CsvSource(value = {
-		  "EA;CERTAIN_POPS, EVICTION_NOTICE",      // choosePrograms > emergencyType > basicCriteria > certainPopsConfirm > introBasicInfo
-		  "EA;CERTAIN_POPS, OTHER_EMERGENCY",      // choosePrograms > emergencyType > otherEmergency > basicCriteria > certainPopsConfirm > introBasicInfo
-		  "SNAP;EA;CERTAIN_POPS, EVICTION_NOTICE", // choosePrograms > emergnecyType > basicCriteria > certainPopsConfirm > expeditedNotice > introBasicInfo
-		  "SNAP;EA;CERTAIN_POPS, OTHER_EMERGENCY"  // choosePrograms > emergencyType > otherEmergency > basicCriteria > certainPopsConfirm > expeditedNotice > introBasicInfo
-		  })
-  void shouldNavigateEmergencyTypeFlowWithCertainPops(String programs, String emergencyType) throws Exception {
-	  List<String> programsList = new ArrayList<String>(Arrays.asList(programs.split(";")));
-	  // Use Chisago County to enable Certain Pops.
-	  postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Chisago"));
-	  postExpectingRedirect("choosePrograms", "programs", programsList, "emergencyType");
-	  if (emergencyType.equals("OTHER_EMERGENCY")) {
-		  postExpectingRedirect("emergencyType", "emergencyType", emergencyType, "otherEmergency");
-		  postExpectingRedirect("otherEmergency", "otherEmergency", "a different emergency", "basicCriteria");
-	  } else {
-		  postExpectingRedirect("emergencyType", "emergencyType", emergencyType, "basicCriteria");
-	  }
-	  // Certain Pops basic criteria needs to be something other than "NONE", use "SIXTY_FIVE_OR_OLDER"
-	  postExpectingRedirect("basicCriteria", "basicCriteria", "SIXTY_FIVE_OR_OLDER", "certainPopsConfirm");
-	  if (programsList.contains("SNAP")) {
-		  assertNavigationRedirectsToCorrectNextPage("certainPopsConfirm", "expeditedNotice");
-		  assertNavigationRedirectsToCorrectNextPage("expeditedNotice", "introBasicInfo");
-	  } else {
-		  assertNavigationRedirectsToCorrectNextPage("certainPopsConfirm", "introBasicInfo");
-	  }
-  }
 
   /**
    * These test cases verify the page navigation within the Personal Details
@@ -337,11 +299,9 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
    */
   @ParameterizedTest
   @CsvSource(value = { "SNAP, false", "SNAP, true", "CASH, false", "CASH, true", "EA, false", "EA, true",
-		  "GRH, false", "GRH, true", "CCAP, false", "CCAP, true", "CERTAIN_POPS, false", "CERTAIN_POPS, true" })
+		  "GRH, false", "GRH, true", "CCAP, false", "CCAP, true" })
   void shouldNavigatePersonalDetailsFlow(String program, String addChild) throws Exception {
 	  String[] programs = { program };
-
-	  // Use Chisago County to enable Certain Pops.
 	  postExpectingSuccess("identifyCountyBeforeApplying", "county", List.of("Chisago"));
 
 	  // navigation from choosePrograms to introBasicInfo
@@ -351,12 +311,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 			  assertNavigationRedirectsToCorrectNextPage("expeditedNotice", "introBasicInfo");
 			  break;
 		  }
-		  case "CERTAIN_POPS": {
-			  postExpectingRedirect("choosePrograms", "programs", Arrays.stream(programs).toList(), "basicCriteria");
-			  postExpectingRedirect("basicCriteria", "basicCriteria", "SIXTY_FIVE_OR_OLDER", "certainPopsConfirm");
-			  assertNavigationRedirectsToCorrectNextPage("certainPopsConfirm", "introBasicInfo");
-			  break;
-		  }
+
 		  case "EA": {  // choosePrograms > emergencyType > otherEmergency > introBasicInfo
 			  postExpectingRedirect("choosePrograms", "programs", Arrays.stream(programs).toList(), "emergencyType");
 			  postExpectingRedirect("emergencyType", "emergencyType", "OTHER_EMERGENCY", "otherEmergency");
@@ -383,16 +338,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  default: {
 					  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "introPersonalDetails");
 					  break;
-				  }
-			  }
-			  switch (program) {
-				  case "CERTAIN_POPS": {
-					  // will not navigate to housingSubsidy when only progam is Certain Pops
-					  assertNavigationRedirectsToCorrectNextPage("introPersonalDetails", "livingSituation");
-					  break;
-				  }
-				  default: {
-					  assertNavigationRedirectsToCorrectNextPage("introPersonalDetails", "housingSubsidy");
 				  }
 			  }
 		  }
@@ -427,10 +372,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "housingSubsidy");
 					  break;
 				  }
-				  case "CERTAIN_POPS": {
-					  assertNavigationRedirectsToCorrectNextPage("householdList", "livingSituation");
-					  break;
-				  }
 				  default: {
 					  assertNavigationRedirectsToCorrectNextPage("householdList", "housingSubsidy");
 					  break;
@@ -451,11 +392,6 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 		  }
 		  case "CCAP": {
 			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
-			  postExpectingRedirect("livingSituation", "livingSituation",
-					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "goingToSchool");
-			  break;
-		  }
-		  case "CERTAIN_POPS": {
 			  postExpectingRedirect("livingSituation", "livingSituation",
 					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "goingToSchool");
 			  break;

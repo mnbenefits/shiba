@@ -7,7 +7,6 @@ import static org.codeforamerica.shiba.application.Status.SENDING;
 import static org.codeforamerica.shiba.application.Status.UNDELIVERABLE;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.CERTAIN_POPS;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
 
@@ -213,13 +212,13 @@ public class ResubmissionService {
     // Resend sending applications (without verification docs)
     List<Document> documentTypesInSending = application.getApplicationStatuses().stream()
         .filter(documentStatus -> documentStatus.getStatus() == SENDING &&
-            List.of(CAF, CCAP, CERTAIN_POPS)
+            List.of(CAF, CCAP)
                 .contains(documentStatus.getDocumentType())).map(
             ApplicationStatus::getDocumentType
         ).toList();
 
     boolean shouldRefireAppSubmittedEvent = documentTypesInSending.stream()
-        .anyMatch(document -> List.of(CAF, CCAP, CERTAIN_POPS).contains(document));
+        .anyMatch(document -> List.of(CAF, CCAP).contains(document));
     if (shouldRefireAppSubmittedEvent) {
       log.info("Retriggering ApplicationSubmittedEvent for application with id " + id);
       pageEventPublisher.publish(new ApplicationSubmittedEvent("resubmission", id,

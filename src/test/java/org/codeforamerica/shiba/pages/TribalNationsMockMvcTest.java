@@ -738,39 +738,6 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 	
 	/**
-	 * When the county is a Certain_Pops pilot country (Chisago and Mille Lacs are also CP pilots, but exclude them from this test because
-	 * they are MLBO rural counties)
-	 * AND the Certain_Pops program is selected 
-	 * AND Certain_Pops feature flag is on 
-	 * AND Applicant is a member of Mille Lacs Band of Ojibwe
-	 * AND "No" is selected on nationsBoundary page
-	 * then the next page is medicalCareMilestone
-	 * @param county
-	 * @throws Exception
-	 */
-	@ParameterizedTest
-	@CsvSource(value = {
-			"Mower",
-			"Polk"
-	})
-	public void whenCertainPopsNextPageIsMedicalCareMilestone(String county) throws Exception {
-		when(featureFlagConfiguration.get("certain-pops")).thenReturn(FeatureFlag.ON);
-		postExpectingRedirect("identifyCountyBeforeApplying", "county", county, "prepareToApply");
-		postExpectingRedirect("choosePrograms", "programs", "CERTAIN_POPS", "basicCriteria");
-		postExpectingRedirect("basicCriteria", "basicCriteria", List.of("SIXTY_FIVE_OR_OLDER"),
-				"certainPopsConfirm");
-	    fillOutPersonalInfo();
-	    postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
-	    postExpectingRedirect("whoIsPregnant", "whoIsPregnant", "Dwight Schrute", "migrantFarmWorker");
-		var nextPage = postAndFollowRedirect("tribalNationMember", "isTribalNationMember", "true");
-		nextPage = postAndFollowRedirect("selectTheTribe", "selectedTribe", "Mille Lacs Band of Ojibwe");
-		assertThat(nextPage.getTitle()).isEqualTo("Nations Boundary");
-		nextPage = postAndFollowRedirect("nationsBoundary", "livingInNationBoundary", "false");
-		assertThat(nextPage.getTitle()).isEqualTo("Medical Care Milestone");
-		
-	}
-	
-	/**
 	 * When "No" is the response to the nationsBoundary page
 	 * AND the condition for applyForTribalTANF as the next page are not met
 	 * AND the condition for medicalCareMilestone as the next page is not met
@@ -778,7 +745,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void whenNotTribalTanfOrCertainPopsTheNextPageIsIntroIncome() throws Exception {
+	public void whenNotTribalTanfTheNextPageIsIntroIncome() throws Exception {
 		postExpectingRedirect("identifyCountyBeforeApplying", "county", "Norman", "prepareToApply");
 		postExpectingRedirect("choosePrograms", "programs", "SNAP", "expeditedNotice");
 	    fillOutPersonalInfo();

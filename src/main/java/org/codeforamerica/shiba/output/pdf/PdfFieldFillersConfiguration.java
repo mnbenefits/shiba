@@ -2,8 +2,8 @@ package org.codeforamerica.shiba.output.pdf;
 
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.CCAP;
-import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 import static org.codeforamerica.shiba.output.Document.HEALTHCARE_RENEWAL;
+import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
 import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 
@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.Recipient;
-import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

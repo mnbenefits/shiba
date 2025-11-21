@@ -18,7 +18,7 @@ public class LiquidAssetsCalculatorTest {
 	void liquidAssetsHouseholdShouldCalculateTo500WithSpace() {
 		applicationDataBuilder = new TestApplicationDataBuilder()
 				.withPageData("cashAmount", "cashAmount", List.of("500 "))// 500 space
-				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+				.withApplicantPrograms(List.of("SNAP"));
 		ApplicationData applicationData = applicationDataBuilder.build();
 		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
 		assertThat(totalLiquidAssetsString).isEqualTo("500");
@@ -28,7 +28,7 @@ public class LiquidAssetsCalculatorTest {
 	void liquidAssetsHouseholdShouldCalculateTo500WithManySpaces() {
 		applicationDataBuilder = new TestApplicationDataBuilder()
 				.withPageData("cashAmount", "cashAmount", List.of(" 50 0 "))//space 50 space 0 space
-				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+				.withApplicantPrograms(List.of("SNAP"));
 		ApplicationData applicationData = applicationDataBuilder.build();
 		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
 		assertThat(totalLiquidAssetsString).isEqualTo("500");
@@ -38,7 +38,7 @@ public class LiquidAssetsCalculatorTest {
 	void liquidAssetsHouseholdShouldCalculateTo500() {
 		applicationDataBuilder = new TestApplicationDataBuilder()
 				.withPageData("cashAmount", "cashAmount", List.of("5,00"))
-				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+				.withApplicantPrograms(List.of("SNAP"));
 		ApplicationData applicationData = applicationDataBuilder.build();
 		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
 		assertThat(totalLiquidAssetsString).isEqualTo("500");
@@ -48,7 +48,7 @@ public class LiquidAssetsCalculatorTest {
 	void liquidAssetsApplicantShouldCalculateTo300WithSpace() {
 		applicationDataBuilder = new TestApplicationDataBuilder()
 				.withPageData("liquidAssetsSingle", "liquidAssets", List.of("300 "))//300 space
-				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+				.withApplicantPrograms(List.of("SNAP"));
 		ApplicationData applicationData = applicationDataBuilder.build();
 		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
 		assertThat(totalLiquidAssetsString).isEqualTo("300");
@@ -58,7 +58,7 @@ public class LiquidAssetsCalculatorTest {
 	void liquidAssetsApplicantShouldCalculateTo300() {
 		applicationDataBuilder = new TestApplicationDataBuilder()
 				.withPageData("liquidAssetsSingle", "liquidAssets", List.of("300"))
-				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+				.withApplicantPrograms(List.of("SNAP"));
 		ApplicationData applicationData = applicationDataBuilder.build();
 		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
 		assertThat(totalLiquidAssetsString).isEqualTo("300");
@@ -68,7 +68,7 @@ public class LiquidAssetsCalculatorTest {
 	void liquidAssetsApplicantShouldCalculateTo3000WithComma() {
 		applicationDataBuilder = new TestApplicationDataBuilder()
 				.withPageData("liquidAssetsSingle", "liquidAssets", List.of("3,000"))
-				.withApplicantPrograms(List.of("SNAP", "CERTAIN_POPS"));
+				.withApplicantPrograms(List.of("SNAP"));
 		ApplicationData applicationData = applicationDataBuilder.build();
 		String totalLiquidAssetsString = liquidAssetsCalculator.findTotalLiquidAssets(applicationData);
 		assertThat(totalLiquidAssetsString).isEqualTo("3000");

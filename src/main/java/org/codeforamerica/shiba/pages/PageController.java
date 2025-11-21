@@ -57,7 +57,6 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.codeforamerica.shiba.Program;
 import org.codeforamerica.shiba.RoutingDestinationMessageService;
 import org.codeforamerica.shiba.UploadDocumentConfiguration;
 import org.codeforamerica.shiba.Utils;
@@ -535,7 +534,8 @@ public class PageController {
     if (!programs.isEmpty()) {
       model.put("programs", String.join(", ", programs));
     }
-    model.put("totalMilestones", programs.contains(Program.CERTAIN_POPS) ? "7" : "6");
+    
+    model.put("totalMilestones",  "6");
 
 	if (landmarkPagesConfiguration.isPostSubmitPage(pageName)) {
       model.put("docRecommendations", docRecommendationMessageService
@@ -570,14 +570,12 @@ public class PageController {
       String inputData = pagesData
           .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
       boolean doesNotHaveHealthcare = !"YES".equalsIgnoreCase(inputData);
-      boolean isNotCertainPops = !application.getApplicationData().isCertainPopsApplication();
-      boolean recommendHealthCare = doesNotHaveHealthcare && isNotCertainPops;
-      model.put("recommendHealthCare", recommendHealthCare);
+      model.put("recommendHealthCare", doesNotHaveHealthcare);
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
       model.put("recommendCC", isCCAP);
       boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
       model.put("recommendWIC", recommendWIC);    
-      boolean showRecommendationLink = recommendHealthCare || isCCAP || recommendWIC;
+      boolean showRecommendationLink = doesNotHaveHealthcare || isCCAP || recommendWIC;
       model.put("showRecommendationLink", showRecommendationLink);
       Sentiment sentiment = application.getSentiment();
       boolean showFeedback = sentiment == null ? true:false;
@@ -604,9 +602,7 @@ public class PageController {
         String inputData = pagesData
                 .getPageInputFirstValue("healthcareCoverage", "healthcareCoverage");
         boolean doesNotHaveHealthcare = !"YES".equalsIgnoreCase(inputData);
-        boolean isNotCertainPops = !application.getApplicationData().isCertainPopsApplication();
-        boolean recommendHealthCare = doesNotHaveHealthcare && isNotCertainPops;
-        model.put("recommendHealthCare", recommendHealthCare);
+        model.put("recommendHealthCare", doesNotHaveHealthcare);
         boolean isCCAP = application.getApplicationData().isCCAPApplication();
         model.put("recommendCC", isCCAP);
         boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
