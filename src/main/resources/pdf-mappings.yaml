@@ -159,7 +159,7 @@ mappings:
     medicalInOtherState: MEDICAL_IN_OTHER_STATE
 
   parentNotAtHome:
-    hasParentNotAtHome: PARENT_NOT_AT_HOME
+    hasParentNotAtHome: BOTH_PARENTS_AT_HOME
 
   otherIncome:
     otherIncomeType: OTHER_INCOME_TYPE
