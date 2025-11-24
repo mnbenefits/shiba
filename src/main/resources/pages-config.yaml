@@ -1364,6 +1364,20 @@ pageConfigurations:
     inputs:
       - name: hasParentNotAtHome
         type: YES_NO
+  - &temporaryAbsense
+    name: temporaryAbsense
+    pageTitle: temporary-absense.title
+    headerKey:
+      defaultValue: temporary-absense.header.household
+      conditionalValues:
+        - value: temporary-absense.header
+          condition: *livesAlone?
+    headerHelpMessageKey: temporary-absense.body
+    hasPrimaryButton: false
+    contextFragment: groceriesContextFragment
+    inputs:
+      - name: hasTemporaryAbsense
+        type: YES_NO
   - &noProgramsSelected
     name: noProgramsSelected
     pageTitle: no-programs-selected.title
@@ -5353,7 +5367,7 @@ workflow:
     nextPages:
       - pageName: startHousehold
         condition: *onlyApplyingForOthers?
-      - pageName: introPersonalDetails
+      - pageName: temporaryAbsense
         condition:
           logicalOperator: AND
           conditions:
@@ -5382,7 +5396,7 @@ workflow:
     pageConfiguration: *addChildrenConfirmation
     nextPages:
       - pageName: startHousehold
-      - pageName: introPersonalDetails
+      - pageName: temporaryAbsense
   startHousehold:
     pageConfiguration: *startHousehold
     nextPages:
@@ -5402,6 +5416,61 @@ workflow:
     datasources:
       - groupName: household
       - pageName: personalInfo
+  temporaryAbsense:
+    pageConfiguration: *temporaryAbsense
+    nextPages:
+      ## If CASH and CCAP 
+      - pageName: parentNotAtHome
+        condition:
+          name: CashAndCCAP
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *someoneChoseCCAP?
+      ## If CASH and NOT CCAP 
+      - pageName: childrenUnder19
+        condition:
+          name: CashAndNotCCAP
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+      ## If CCAP AND HOUSEHOLD
+      - pageName: childrenInNeedOfCare
+        condition:
+          name: CCAPAndHousehold
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseCCAP?            
+      ## If SNAP household
+      - pageName: preparingMealsTogether
+        condition:
+          name: SNAPAndHousehold
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseSNAP? 
+      ## If NOT CCAP and NOT SNAP 
+      - pageName: housingSubsidy
+        condition:
+          name: NotCCAPAndNOTSnap
+          logicalOperator: AND
+          conditions:
+            - *noOneChoseCCAP?
+            - *noOneChoseSNAP? 
+      ## If  YES OR NO is selected
+      - pageName: introPersonalDetails
+        skipCondition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCCAP?
+            - *noOneChoseCAF?
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
   householdDeleteWarningPage:
     pageConfiguration: *householdDeleteWarningPage
     appliesToGroup: household
@@ -5413,6 +5482,8 @@ workflow:
   noProgramsSelected:
     pageConfiguration: *noProgramsSelected
     nextPages:
+      - pageName: temporaryAbsense
+        condition: *someoneChoseCAFProgram?
       - pageName: childrenInNeedOfCare
     skipCondition:
       logicalOperator: OR
