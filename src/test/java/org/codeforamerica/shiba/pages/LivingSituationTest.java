@@ -24,8 +24,14 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("EA");
-    finishAddingHouseholdMembers("childrenInNeedOfCare");
+    finishAddingHouseholdMembers("temporaryAbsense");
+    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+            "Who are the children in need of care?");
     postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
+    postExpectingNextPageTitle("childCareMentalHealth", "childCareMentalHealth", "false",
+            "Housing subsidy");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+            "Living situation");
   }
 
   @Test
@@ -33,15 +39,21 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("GRH");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("EA");
-    finishAddingHouseholdMembers("housingSubsidy");
-  }
+    finishAddingHouseholdMembers("temporaryAbsense");
+    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+            "Housing subsidy");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+            "Living situation");  }
 
   @Test
   void shouldAskLivingSituationIfGRHApplicantLivingAlone() throws Exception {
     completeFlowFromLandingPageThroughReviewInfo("GRH");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
-        "introPersonalDetails");
-    assertNavigationRedirectsToCorrectNextPage("introPersonalDetails", "housingSubsidy");
+        "temporaryAbsense");
+    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+            "Housing subsidy");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+            "Living situation");
   }
 
   @Test
@@ -49,8 +61,14 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("EA");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("CCAP");
-    finishAddingHouseholdMembers("childrenInNeedOfCare");
+    finishAddingHouseholdMembers("temporaryAbsense");
+    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+            "Who are the children in need of care?");
     postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
+    postExpectingNextPageTitle("childCareMentalHealth", "childCareMentalHealth", "false",
+            "Housing subsidy");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+            "Living situation");
   }
 
   @Test
@@ -58,6 +76,10 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("EA");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("EA");
-    finishAddingHouseholdMembers("housingSubsidy");
+    finishAddingHouseholdMembers("temporaryAbsense");
+    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+            "Housing subsidy");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
+            "Going to school");
   }
 }
