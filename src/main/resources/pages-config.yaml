@@ -5461,11 +5461,11 @@ workflow:
             - *noOneChoseSNAP? 
       ## If  YES OR NO is selected
       - pageName: introPersonalDetails
-        skipCondition:
-          logicalOperator: AND
-          conditions:
-            - *someoneChoseCCAP?
-            - *noOneChoseCAF?
+    skipCondition:
+      logicalOperator: AND
+      conditions:
+        - *someoneChoseCCAP?
+        - *noOneChoseCAF?
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
@@ -5516,8 +5516,8 @@ workflow:
           conditions:
             - *someoneChoseCASH?
             - *noOneChoseCCAP?
-            - *noOneChoseSNAP?
-    skipCondition: 
+            - *noOneChoseSNAP? 
+      - pageName: housingSubsidy
     datasources:
       - groupName: household
         pageName: householdMemberInfo
@@ -5527,20 +5527,15 @@ workflow:
     nextPages:
       - pageName: preparingMealsTogether
         condition:
+          name: isCASHAndSNAP
           logicalOperator: AND
           conditions:
             - *someoneChoseCASH?
             - *noOneChoseCCAP?
             - *someoneChoseSNAP?
-      - pageName: housingSubsidy
-        condition:
-          logicalOperator: AND
-          conditions:
-            - *someoneChoseCASH?
-            - *noOneChoseCCAP?
-            - *noOneChoseSNAP?
       - pageName: childrenInNeedOfCare
-        condition: *someoneChoseCCAP?
+        condition: *someoneChoseCCAP?  
+      - pageName: housingSubsidy
     datasources:
       - groupName: household
         pageName: householdMemberInfo
