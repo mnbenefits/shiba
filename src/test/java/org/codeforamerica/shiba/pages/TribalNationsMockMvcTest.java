@@ -222,7 +222,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     // choosePrograms
     postExpectingRedirect("choosePrograms", "programs", "CASH", "introBasicInfo");
     // addHouseholdMembers
-    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "introPersonalDetails");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsense");
     // tribalNationMember
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "true", "selectTheTribe");
     // selectTheTribe
@@ -664,7 +664,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
 		if (Boolean.valueOf(pregnantOrChildUnderAge18)) {
 			// addHouseholdMember
 			nextPage = postAndFollowRedirect("addHouseholdMembers", "addHouseholdMembers", "false");
-			assertThat(nextPage.getTitle()).isEqualTo("Intro: Personal Details");
+			assertThat(nextPage.getTitle()).isEqualTo("Household members not living at home");
 			// pregnant
 			nextPage = postAndFollowRedirect("pregnant", "isPregnant", "true");
 			assertThat(nextPage.getTitle()).isEqualTo("Expedited Migrant Farm Worker, 1 person");
