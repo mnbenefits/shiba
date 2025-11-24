@@ -30,8 +30,9 @@ import org.codeforamerica.shiba.pages.data.Subworkflow;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-@Component
+/*@Component
 public class HasCostForChildcarePreparer implements DocumentFieldPreparer {
+	
 
   @Override
   public List<DocumentField> prepareDocumentFields(Application application, Document _document,
@@ -85,4 +86,5 @@ public class HasCostForChildcarePreparer implements DocumentFieldPreparer {
             "true",
             ENUMERATED_SINGLE_VALUE));
   }
-}
+  
+}*/
