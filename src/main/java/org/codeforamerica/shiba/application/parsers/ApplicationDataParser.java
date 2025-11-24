@@ -170,6 +170,8 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.EMERGENCY_TYPE, new ParsingCoordinate("emergencyType", "emergencyType"));
     coordinatesMap.put(Field.TEMPORARY_ABSENSE,
             new ParsingCoordinate("temporaryAbsense", "hasTemporaryAbsense"));
+    coordinatesMap.put(Field.PARENT_NOT_AT_HOME,
+            new ParsingCoordinate("parentNotAtHome", "hasParentNotAtHome"));
     coordinatesMap.put(Field.PREPARING_MEALS_TOGETHER,
         new ParsingCoordinate("preparingMealsTogether", "isPreparingMealsTogether"));
     coordinatesMap.put(Field.IS_GOING_TO_SCHOOL,
@@ -525,6 +527,7 @@ public class ApplicationDataParser {
     
     PREPARING_MEALS_TOGETHER,
     TEMPORARY_ABSENSE,
+    PARENT_NOT_AT_HOME,
     IS_GOING_TO_SCHOOL,
     WHO_IS_GOING_TO_SCHOOL,
     IS_PREGNANT,

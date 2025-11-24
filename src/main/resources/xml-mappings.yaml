@@ -53,6 +53,8 @@ xml:
         GRH: HOUSING_SUPPORT
     temporaryAbsense:
       hasTemporaryAbsense: ANYONE_TEMPORARILY_NOT_HOME
+    parentNotAtHome:
+      hasParentNotAtHome: BOTH_PARENTS_AT_HOME
     preparingMealsTogether:
       isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
     contactInfo:
