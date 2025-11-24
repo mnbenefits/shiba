@@ -1347,6 +1347,23 @@ pageConfigurations:
     pageTitle: household-list.title
     primaryButtonTextKey: household-list.yes-thats-everyone
     contextFragment: householdContextFragment
+  - &childrenUnder19
+    name: childrenUnder19
+    pageTitle: children-under-19.title
+    headerKey: children-under-19.header
+    hasPrimaryButton: false
+    contextFragment: householdContextFragment
+    inputs:
+      - name: hasChildrenUnder19
+        type: YES_NO
+  - &parentNotAtHome
+    name: parentNotAtHome
+    pageTitle: parent-not-at-home.title
+    headerKey: parent-not-at-home.header
+    hasPrimaryButton: false
+    inputs:
+      - name: hasParentNotAtHome
+        type: YES_NO
   - &noProgramsSelected
     name: noProgramsSelected
     pageTitle: no-programs-selected.title
@@ -5402,6 +5419,57 @@ workflow:
       conditions:
         - *applicantChoseAtLeastOneProgram?
         - *householdMemberChoseAtLeastOneProgram?
+    datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+      - pageName: choosePrograms
+  childrenUnder19:
+    pageConfiguration: *childrenUnder19
+    nextPages:
+      - pageName: parentNotAtHome
+        condition: 
+          pageName: childrenUnder19
+          name: hasChildrenUnder19
+          input: hasChildrenUnder19
+          value: "true"
+      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+            - *someoneChoseSNAP?
+      - pageName: housingSubsidy
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+            - *noOneChoseSNAP?
+    skipCondition: 
+    datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+      - pageName: choosePrograms
+  parentNotAtHome:
+    pageConfiguration: *parentNotAtHome
+    nextPages:
+      - pageName: preparingMealsTogether
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+            - *someoneChoseSNAP?
+      - pageName: housingSubsidy
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+            - *noOneChoseSNAP?
+      - pageName: childrenInNeedOfCare
+        condition: *someoneChoseCCAP?
     datasources:
       - groupName: household
         pageName: householdMemberInfo
