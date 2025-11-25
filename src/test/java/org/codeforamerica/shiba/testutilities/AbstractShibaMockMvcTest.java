@@ -1015,7 +1015,8 @@ public class AbstractShibaMockMvcTest {
         "medicalExpenses");
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
         "supportAndCare");
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets"); 
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");

@@ -335,7 +335,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
-		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Assets");
+		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
+		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "A vehicle");
@@ -761,7 +762,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED"); 
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
 		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
-		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.00");
+		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.30");
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
 
@@ -892,7 +893,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
-		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Assets");
+		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Child care costs"); 
+		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Assets"); 
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "None");

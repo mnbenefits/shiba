@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -139,7 +140,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","futureIncome");
     fillAdditionalIncomeInfo("SNAP");
    //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets"); 
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -181,7 +183,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	assertThat(annuityPaymentsAmount).isEqualTo(List.of("100", ""));
     fillAdditionalIncomeInfo("SNAP");
    //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -204,7 +207,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
             "futureIncome");
     fillAdditionalIncomeInfo("SNAP");
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -433,7 +437,13 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "NO_OTHER_UNEARNED_INCOME_SELECTED",
         "futureIncome");
     fillAdditionalIncomeInfo(Programs);
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    if (Arrays.stream(Programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
+    	    && Arrays.asList(Programs).contains("CCAP")) {
+		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+	} else {
+		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
+		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+	}
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageHasElementWithId("legalStuff", "ccap-legal");

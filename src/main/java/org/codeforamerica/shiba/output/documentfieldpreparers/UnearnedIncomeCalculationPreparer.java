@@ -15,6 +15,14 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.SSI_AMOUNT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.TRIBAL_PAYMENTS_AMOUNT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.TRUST_MONEY_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.ANNUITIES_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.DAY_TRADING_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.GIFTS_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.LOTTERY_GAMBLING_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEMPLOYMENT_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.VETERANS_BENEFITS_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.WORKERS_COMPENSATION_AMOUNT;
+
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_BENEFITS_PROGRAMS_AMOUNT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_CHILD_OR_SPOUSAL_SUPPORT_AMOUNT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_CONTRACT_FOR_DEED_AMOUNT;
@@ -31,9 +39,11 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_UNEMPLOYMENT_AMOUNT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_VETERANS_BENEFITS_AMOUNT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_WORKERS_COMPENSATION_AMOUNT;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEMPLOYMENT_AMOUNT;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.VETERANS_BENEFITS_AMOUNT;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.WORKERS_COMPENSATION_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_ANNUITIES_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_DAY_TRADING_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_GIFTS_AMOUNT;
+import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UNEARNED_LOTTERY_GAMBLING_AMOUNT;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +63,7 @@ public class UnearnedIncomeCalculationPreparer implements DocumentFieldPreparer 
   @SuppressWarnings("serial")
   public static final Map<String, List<Field>> UNEARNED_INCOME_FIELDS = new HashMap<String, List<Field>>(){
   {
+	// options from unearnedIncome page
     put("socialSecurityAmount", List.of(SOCIAL_SECURITY_AMOUNT, UNEARNED_SOCIAL_SECURITY_AMOUNT));
     put("supplementalSecurityIncomeAmount", List.of(SSI_AMOUNT, UNEARNED_SSI_AMOUNT));
     put("veteransBenefitsAmount",
@@ -64,7 +75,7 @@ public class UnearnedIncomeCalculationPreparer implements DocumentFieldPreparer 
     put("childOrSpousalSupportAmount",
         List.of(CHILD_OR_SPOUSAL_SUPPORT_AMOUNT, UNEARNED_CHILD_OR_SPOUSAL_SUPPORT_AMOUNT));
     put("tribalPaymentsAmount", List.of(TRIBAL_PAYMENTS_AMOUNT, UNEARNED_TRIBAL_PAYMENTS_AMOUNT));
-    // Individual Amounts below only used in CCAP
+    // options from otherUnearnedIncomePage
     put("benefitsAmount", List.of(BENEFITS_PROGRAMS_AMOUNT, UNEARNED_BENEFITS_PROGRAMS_AMOUNT));
     put("insurancePaymentsAmount",
         List.of(INSURANCE_PAYMENTS_AMOUNT, UNEARNED_INSURANCE_PAYMENTS_AMOUNT));
@@ -77,8 +88,15 @@ public class UnearnedIncomeCalculationPreparer implements DocumentFieldPreparer 
         List.of(INTEREST_DIVIDENDS_AMOUNT, UNEARNED_INTEREST_DIVIDENDS_AMOUNT));
     put("rentalIncomeAmount", List.of(RENTAL_AMOUNT, UNEARNED_RENTAL_AMOUNT));
     put("otherPaymentsAmount", List.of(OTHER_PAYMENTS_AMOUNT, UNEARNED_OTHER_PAYMENTS_AMOUNT));
+    put("annuityPaymentsAmount", List.of(ANNUITIES_AMOUNT, UNEARNED_ANNUITIES_AMOUNT));
+    put("dayTradingProceedsAmount", List.of(DAY_TRADING_AMOUNT, UNEARNED_DAY_TRADING_AMOUNT));
+    put("giftsAmount", List.of(GIFTS_AMOUNT, UNEARNED_GIFTS_AMOUNT));
+    put("lotteryGamblingAmount", List.of(LOTTERY_GAMBLING_AMOUNT, UNEARNED_LOTTERY_GAMBLING_AMOUNT));
 }};
  
+  /**
+   * This method creates all of the DocumentField objects associated with the unearnedIncomeSource group that is defined in pdf-mappings.yaml.
+   */
   @Override
   public List<DocumentField> prepareDocumentFields(Application application, Document document,
       Recipient recipient) {
