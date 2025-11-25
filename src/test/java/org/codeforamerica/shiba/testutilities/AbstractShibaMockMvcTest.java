@@ -845,7 +845,8 @@ public class AbstractShibaMockMvcTest {
     }
     else {
     	postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
-    	postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+    	postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+    	postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
         postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
         postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
@@ -951,7 +952,8 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
     }
 
-    postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+    postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+    postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
     postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
