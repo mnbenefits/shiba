@@ -53,7 +53,15 @@ public class ApplicationDataParser {
 
     coordinatesMap.put(Field.LIVING_SITUATION,
         new ParsingCoordinate("livingSituation", "livingSituation"));
-
+    coordinatesMap.put(Field.MN_HOUSING_SUPPORT,
+            new ParsingCoordinate("housingProvider", "housingProvider"));
+    coordinatesMap.put(Field.HOUSING_SUPPORT_VENDOR,
+            new ParsingCoordinate("housingSupportVendor", "housingSupportVendor"));
+    coordinatesMap.put(Field.HOUSING_PROVIDER_NAME,
+            new ParsingCoordinate("housingProviderInfo", "housingProviderName"));
+    coordinatesMap.put(Field.HOUSING_PROVIDER_NUMBER,
+            new ParsingCoordinate("housingProviderInfo", "housingProviderVendorNumber"));
+    
     coordinatesMap.put(Field.HAS_DISABILITY, new ParsingCoordinate("disability", "hasDisability"));
 
     coordinatesMap
@@ -454,6 +462,10 @@ public class ApplicationDataParser {
     ARE_YOU_WORKING,
 
     LIVING_SITUATION,
+    MN_HOUSING_SUPPORT,
+    HOUSING_SUPPORT_VENDOR,
+    HOUSING_PROVIDER_NAME,
+    HOUSING_PROVIDER_NUMBER,
 
     MAILING_STREET,
     MAILING_CITY,

@@ -41,6 +41,8 @@ mappings:
     NONE: PROGRAM_NONE
   housingSupport:
     mnHousingSupport: MN_HOUSING_SUPPORT
+  housingSupportVendor:
+    housingSupportVendor: HOUSING_SUPPORT_VENDOR
   householdMemberInfo:
     firstName: FIRST_NAME
     lastName: LAST_NAME

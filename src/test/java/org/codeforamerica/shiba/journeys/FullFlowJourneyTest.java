@@ -709,8 +709,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CCAP", "Yes");
 		assertCafFieldEquals("EMERGENCY", "Yes");
 		assertCafFieldEquals("MN_HOUSING_SUPPORT", "Yes");
-		//TODO emj enable this after preparer is completed
-		//assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Group Home Provider 123456");
+		assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Group Home Provider / 12345");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
 		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
@@ -1004,6 +1003,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CCAP", "Off");
 		assertCafFieldEquals("EMERGENCY", "Off");
 	    assertCafFieldEquals("MN_HOUSING_SUPPORT", "No");
+	    assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Does not have a provider.");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("CREATED_DATE", "2020-01-01");
