@@ -1358,8 +1358,8 @@ pageConfigurations:
         type: YES_NO
   - &parentNotAtHome
     name: parentNotAtHome
-    pageTitle: parent-not-at-home.title
-    headerKey: parent-not-at-home.header
+    pageTitle: parent-not-at-home-19.title
+    headerKey: parent-not-at-home-19.header
     hasPrimaryButton: false
     inputs:
       - name: hasParentNotAtHome
@@ -1507,6 +1507,7 @@ pageConfigurations:
     name: whoHasParentNotAtHome
     pageTitle: parent-not-at-home.title
     headerKey: parent-not-at-home.who-are-the-children-that-have-a-parent-not-living-at-home
+    headerHelpMessageKey: parent-not-at-home.help-text
     inputs:
       - type: PEOPLE_CHECKBOX_WITH_NONE
         noneCheckboxText: parent-not-at-home.none-of-the-children-have-parents-living-outside-the-home
@@ -5505,18 +5506,12 @@ workflow:
           value: "true"
       - pageName: preparingMealsTogether
         condition:
+          name: isCASHAndSNAPNoCCAP
           logicalOperator: AND
           conditions:
             - *someoneChoseCASH?
             - *noOneChoseCCAP?
             - *someoneChoseSNAP?
-      - pageName: housingSubsidy
-        condition:
-          logicalOperator: AND
-          conditions:
-            - *someoneChoseCASH?
-            - *noOneChoseCCAP?
-            - *noOneChoseSNAP? 
       - pageName: housingSubsidy
     datasources:
       - groupName: household

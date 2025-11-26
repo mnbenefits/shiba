@@ -372,8 +372,17 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "housingSubsidy");
 					  break;
 				  }
+				  case "CASH": {
+					  postExpectingRedirect("temporaryAbsense", "hasTemporaryAbsense", "true", "childrenUnder19");
+					  postExpectingRedirect("childrenUnder19", "hasChildrenUnder19", "true", "parentNotAtHome");
+					  postExpectingRedirect("parentNotAtHome", "hasParentNotAtHome", "true", "housingSubsidy");
+					  break;
+				  }
+				  		
+				  	
 				  default: {
 					  assertNavigationRedirectsToCorrectNextPage("householdList", "temporaryAbsense");
+					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsense", "housingSubsidy");
 					  break;
 				  }
 			  }
