@@ -248,7 +248,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("otherUnearnedIncome", "Insurance payments");
 		testPage.enter("otherUnearnedIncome", "Contract for deed");
 		testPage.enter("otherUnearnedIncome", "Money from a trust");
-		testPage.enter("otherUnearnedIncome", "Rental Income"); 
+		testPage.enter("otherUnearnedIncome", "Rental income"); 
 		testPage.enter("otherUnearnedIncome", "Health care reimbursement");
 		testPage.enter("otherUnearnedIncome", "Interest or dividends");
 		testPage.enter("otherUnearnedIncome", "Other payments");
@@ -260,7 +260,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Money from a trust");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("trustMoneyAmount", "100.00");
-		testPage.clickContinue("Rental Income");
+		testPage.clickContinue("Rental income");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("rentalIncomeAmount", "100.00");
 		testPage.clickContinue("Interest or dividends");
