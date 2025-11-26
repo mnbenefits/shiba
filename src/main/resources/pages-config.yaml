@@ -1592,6 +1592,15 @@ pageConfigurations:
     inputs:
       - name: isPreparingMealsTogether
         type: YES_NO
+  - &buyOrCookFood
+    name: buyOrCookFood
+    pageTitle: buy-or-cook-food.title
+    headerKey: buy-or-cook-food.header
+    hasPrimaryButton: false
+    contextFragment: groceriesContextFragment
+    inputs:
+      - name: isDisabledToBuyOrCookFood
+        type: YES_NO
   - &goingToSchool
     name: goingToSchool
     pageTitle: going-to-school.title
@@ -5642,11 +5651,23 @@ workflow:
         - *noOneChoseSNAP?
         - *livesAlone?
     nextPages:
+      - pageName: buyOrCookFood
+        condition:
+          name: hasHouseholdAndSomeoneChooseSNAP
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseSNAP?
       - pageName: housingSubsidy 
     datasources:
       - pageName: choosePrograms
       - groupName: household
         pageName: householdMemberInfo
+      - pageName: addHouseholdMembers
+  buyOrCookFood:
+    pageConfiguration: *buyOrCookFood
+    nextPages:
+      - pageName: housingSubsidy
   housingSubsidy:
     pageConfiguration: *housingSubsidy
     datasources:
