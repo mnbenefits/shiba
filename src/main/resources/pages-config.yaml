@@ -5420,7 +5420,7 @@ workflow:
   temporaryAbsense:
     pageConfiguration: *temporaryAbsense
     nextPages:
-      ## If CASH and CCAP 
+      ## If CASH and CCAP AND Not living alone 
       - pageName: parentNotAtHome
         condition:
           name: CashAndCCAP
@@ -5428,7 +5428,8 @@ workflow:
           conditions:
             - *someoneChoseCASH?
             - *someoneChoseCCAP?
-      ## If CASH and NOT CCAP 
+            - *doesNotLiveAlone?
+      ## If CASH and NOT CCAP AND Not living alone 
       - pageName: childrenUnder19
         condition:
           name: CashAndNotCCAP
@@ -5436,6 +5437,7 @@ workflow:
           conditions:
             - *someoneChoseCASH?
             - *noOneChoseCCAP?
+            - *doesNotLiveAlone?
       ## If CCAP AND HOUSEHOLD
       - pageName: childrenInNeedOfCare
         condition:
@@ -5460,6 +5462,7 @@ workflow:
           conditions:
             - *noOneChoseCCAP?
             - *noOneChoseSNAP? 
+            - *doesNotLiveAlone?
       ## If  YES OR NO is selected
       - pageName: introPersonalDetails
     skipCondition:
