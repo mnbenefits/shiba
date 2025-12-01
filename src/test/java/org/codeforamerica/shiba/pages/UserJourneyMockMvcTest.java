@@ -373,7 +373,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 					  break;
 				  }
 				  case "CASH": {
-					  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsense", "true", "childrenUnder19");
+					  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "true", "childrenUnder19");
 					  postExpectingRedirect("childrenUnder19", "hasChildrenUnder19", "true", "parentNotAtHome");
 					  postExpectingRedirect("parentNotAtHome", "hasParentNotAtHome", "true", "housingSubsidy");
 					  break;

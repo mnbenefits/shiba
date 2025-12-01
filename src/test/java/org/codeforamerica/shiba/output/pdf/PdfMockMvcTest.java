@@ -1529,5 +1529,34 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 	}
 	
+	
+	// This test verifies the yes button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceTrue() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes", caf);
 
+	}
+	
+	// This test verifies the no button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceFalse() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "false");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "No", caf);
+
+	}
 }
