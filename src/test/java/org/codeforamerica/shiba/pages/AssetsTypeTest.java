@@ -96,7 +96,13 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("whoIsGoingToSchool", "pregnant"); // no one is going to school
     completeFlowFromIsPregnantThroughTribalNations(true, programs);
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Job Search");
+    if (!Arrays.asList(programs).contains("CCAP")) {
+    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
+    postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Job Search");
+    }
+    else{
+        postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Job Search");
+    }    
     postExpectingNextPageTitle("jobSearch", "currentlyLookingForJob", "true",
         "Who is looking for a job");
     fillSupportAndCare(programs);
@@ -109,7 +115,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
+	  postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Income Up Next");
 	  // should navigate from the incomeUpNext page to the unearnedIncome page
 	  assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
 	  // enter "None" on the unearnedIncome page, should navigate to the otherUnearnedIncome page

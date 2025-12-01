@@ -1401,6 +1401,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Off", ccap);
 				assertPdfFieldEquals("CLIENT_REPORTED", "", ccap);
 			}
+			
+			@Test
+			void verifyPastEmployment() throws Exception {
+				selectPrograms("SNAP");
+				postExpectingSuccess("pastEmployment", "wereYouEmployed", "true");
+			    assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+
+				var caf = submitAndDownloadCaf();
+				assertPdfFieldEquals("HAS_WORKED_IN_PAST_36_MONTHS", "Yes", caf);
+			}
 
 			@Test
 			void shouldWriteClientReportedWhenOtherRaceOrEthnicitySelected() throws Exception {
