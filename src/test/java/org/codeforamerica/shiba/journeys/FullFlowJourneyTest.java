@@ -82,7 +82,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		String householdMemberFullName = householdMemberFirstName + " " + householdMemberLastName;
 
 		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
-		testPage.chooseYesOrNo("hasTemporaryAbsense",YES.getDisplayValue(), "Who are the children in need of care?");
+		testPage.chooseYesOrNo("hasTemporaryAbsence",YES.getDisplayValue(), "Who are the children in need of care?");
        
 		// Who are the children in need of childcare
 		testPage.enter("whoNeedsChildCare", householdMemberFullName);
@@ -809,7 +809,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Household members");
 
 		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
-		testPage.chooseYesOrNo("hasTemporaryAbsense", NO.getDisplayValue(), "Children in your household");
+		testPage.chooseYesOrNo("hasTemporaryAbsence", NO.getDisplayValue(), "Children in your household");
 		testPage.chooseYesOrNo("hasChildrenUnder19", NO.getDisplayValue(), "Housing subsidy");
 
 		// Are you getting a housing subsidy?

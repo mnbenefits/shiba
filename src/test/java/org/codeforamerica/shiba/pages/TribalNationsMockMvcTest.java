@@ -222,7 +222,7 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     // choosePrograms
     postExpectingRedirect("choosePrograms", "programs", "CASH", "introBasicInfo");
     // addHouseholdMembers
-    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsense");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsence");
     // tribalNationMember
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "true", "selectTheTribe");
     // selectTheTribe

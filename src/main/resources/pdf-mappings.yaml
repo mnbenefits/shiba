@@ -63,8 +63,8 @@ mappings:
     programList: PROGRAMS
   preparingMealsTogether:
     isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
-  temporaryAbsense:
-   hasTemporaryAbsense: ANYONE_TEMPORARILY_NOT_HOME
+  temporaryAbsence:
+   hasTemporaryAbsence: ANYONE_TEMPORARILY_NOT_HOME
   contactInfo:
     phoneNumber: APPLICANT_PHONE_NUMBER
     email: APPLICANT_EMAIL

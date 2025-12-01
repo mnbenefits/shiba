@@ -1364,19 +1364,19 @@ pageConfigurations:
     inputs:
       - name: hasParentNotAtHome
         type: YES_NO
-  - &temporaryAbsense
-    name: temporaryAbsense
-    pageTitle: temporary-absense.title
+  - &temporaryAbsence
+    name: temporaryAbsence
+    pageTitle: temporary-absence.title
     headerKey:
-      defaultValue: temporary-absense.header.household
+      defaultValue: temporary-absence.header.household
       conditionalValues:
-        - value: temporary-absense.header
+        - value: temporary-absence.header
           condition: *livesAlone?
-    headerHelpMessageKey: temporary-absense.body
+    headerHelpMessageKey: temporary-absence.body
     hasPrimaryButton: false
-    contextFragment: groceriesContextFragment
+    contextFragment: houseFragment
     inputs:
-      - name: hasTemporaryAbsense
+      - name: hasTemporaryAbsence
         type: YES_NO
   - &noProgramsSelected
     name: noProgramsSelected
@@ -5368,7 +5368,7 @@ workflow:
     nextPages:
       - pageName: startHousehold
         condition: *onlyApplyingForOthers?
-      - pageName: temporaryAbsense
+      - pageName: temporaryAbsence
         condition:
           logicalOperator: AND
           conditions:
@@ -5397,7 +5397,7 @@ workflow:
     pageConfiguration: *addChildrenConfirmation
     nextPages:
       - pageName: startHousehold
-      - pageName: temporaryAbsense
+      - pageName: temporaryAbsence
   startHousehold:
     pageConfiguration: *startHousehold
     nextPages:
@@ -5417,8 +5417,8 @@ workflow:
     datasources:
       - groupName: household
       - pageName: personalInfo
-  temporaryAbsense:
-    pageConfiguration: *temporaryAbsense
+  temporaryAbsence:
+    pageConfiguration: *temporaryAbsence
     nextPages:
       ## If CASH and CCAP AND Not living alone 
       - pageName: parentNotAtHome
@@ -5486,7 +5486,7 @@ workflow:
   noProgramsSelected:
     pageConfiguration: *noProgramsSelected
     nextPages:
-      - pageName: temporaryAbsense
+      - pageName: temporaryAbsence
         condition: *someoneChoseCAFProgram?
       - pageName: childrenInNeedOfCare
     skipCondition:

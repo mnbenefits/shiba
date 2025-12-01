@@ -40,8 +40,8 @@ public class NoProgramSelectionsMockMvcTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("NONE");
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
     fillOutHousemateInfo("SNAP");
-    finishAddingHouseholdMembers("temporaryAbsense");
-    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+    finishAddingHouseholdMembers("temporaryAbsence");
+    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Preparing meals together");
   }
 
@@ -51,8 +51,8 @@ public class NoProgramSelectionsMockMvcTest extends AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("startHousehold", "householdMemberInfo");
     fillOutHousemateInfoWithNoProgramsSelected();
     fillOutHousemateInfo("SNAP");
-    finishAddingHouseholdMembers("temporaryAbsense");
-    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+    finishAddingHouseholdMembers("temporaryAbsence");
+    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Preparing meals together");
   }
 }

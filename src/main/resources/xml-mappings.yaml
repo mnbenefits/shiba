@@ -51,8 +51,8 @@ xml:
         EA: EMERGENCY
         CCAP: CHILD_CARE
         GRH: HOUSING_SUPPORT
-    temporaryAbsense:
-      hasTemporaryAbsense: ANYONE_TEMPORARILY_NOT_HOME
+    temporaryAbsence:
+      hasTemporaryAbsence: ANYONE_TEMPORARILY_NOT_HOME
     parentNotAtHome:
       hasParentNotAtHome: BOTH_PARENTS_AT_HOME
     preparingMealsTogether:

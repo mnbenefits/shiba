@@ -336,7 +336,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 					  break;
 				  }
 				  default: {
-					  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsense");
+					  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsence");
 					  break;
 				  }
 			  }
@@ -368,12 +368,12 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 					  break;
 				  }
 				  case "SNAP": {
-					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsense", "preparingMealsTogether");
+					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsence", "preparingMealsTogether");
 					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "housingSubsidy");
 					  break;
 				  }
 				  case "CASH": {
-					  postExpectingRedirect("temporaryAbsense", "hasTemporaryAbsense", "true", "childrenUnder19");
+					  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsense", "true", "childrenUnder19");
 					  postExpectingRedirect("childrenUnder19", "hasChildrenUnder19", "true", "parentNotAtHome");
 					  postExpectingRedirect("parentNotAtHome", "hasParentNotAtHome", "true", "housingSubsidy");
 					  break;
@@ -381,8 +381,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  		
 				  	
 				  default: {
-					  assertNavigationRedirectsToCorrectNextPage("householdList", "temporaryAbsense");
-					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsense", "housingSubsidy");
+					  assertNavigationRedirectsToCorrectNextPage("householdList", "temporaryAbsence");
+					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsence", "housingSubsidy");
 					  break;
 				  }
 			  }

@@ -932,7 +932,7 @@ public class AbstractShibaMockMvcTest {
     } else {
       postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
           "addChildrenConfirmation");
-      assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","temporaryAbsense");
+      assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","temporaryAbsence");
       assertNavigationRedirectsToCorrectNextPage("introPersonalDetails", "housingSubsidy");
       assertNavigationRedirectsToCorrectNextPage("housingSubsidy", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");

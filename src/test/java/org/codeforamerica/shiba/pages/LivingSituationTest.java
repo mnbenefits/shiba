@@ -24,8 +24,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("CCAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("EA");
-    finishAddingHouseholdMembers("temporaryAbsense");
-    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+    finishAddingHouseholdMembers("temporaryAbsence");
+    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Who are the children in need of care?");
     postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
     postExpectingNextPageTitle("childCareMentalHealth", "childCareMentalHealth", "false",
@@ -39,8 +39,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("GRH");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("EA");
-    finishAddingHouseholdMembers("temporaryAbsense");
-    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+    finishAddingHouseholdMembers("temporaryAbsence");
+    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Housing subsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Living situation");  }
@@ -49,9 +49,10 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
   void shouldAskLivingSituationIfGRHApplicantLivingAlone() throws Exception {
     completeFlowFromLandingPageThroughReviewInfo("GRH");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
-        "temporaryAbsense");
-    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
-            "Housing subsidy");
+        "temporaryAbsence");
+    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
+            "Intro: Personal Details");
+    postExpectingRedirect("introPersonalDetails", "housingSubsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Living situation");
   }
@@ -61,8 +62,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("EA");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("CCAP");
-    finishAddingHouseholdMembers("temporaryAbsense");
-    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+    finishAddingHouseholdMembers("temporaryAbsence");
+    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Who are the children in need of care?");
     postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
     postExpectingNextPageTitle("childCareMentalHealth", "childCareMentalHealth", "false",
@@ -76,8 +77,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     completeFlowFromLandingPageThroughReviewInfo("EA");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
     fillOutHousemateInfo("EA");
-    finishAddingHouseholdMembers("temporaryAbsense");
-    postExpectingNextPageTitle("temporaryAbsense", "hasTemporaryAbsense", "false",
+    finishAddingHouseholdMembers("temporaryAbsence");
+    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Housing subsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Going to school");
