@@ -242,6 +242,16 @@ public class ApplicationDataParser {
             new ParsingCoordinate("benefitsProgramsIncomeSource", "benefitsAmount"));
     coordinatesMap.put(Field.UNEARNED_OTHER_PAYMENTS_AMOUNT,
             new ParsingCoordinate("otherPaymentsIncomeSource", "otherPaymentsAmount"));
+    coordinatesMap.put(Field.UNEARNED_ANNUITIES_AMOUNT,
+            new ParsingCoordinate("annuityIncomeSource", "annuityPaymentsAmount"));
+    coordinatesMap.put(Field.UNEARNED_DAY_TRADING_AMOUNT,
+            new ParsingCoordinate("dayTradingIncomeSource", "dayTradingProceedsAmount"));
+    coordinatesMap.put(Field.UNEARNED_GIFTS_AMOUNT,
+            new ParsingCoordinate("giftsIncomeSource", "giftsAmount"));
+    coordinatesMap.put(Field.UNEARNED_LOTTERY_GAMBLING_AMOUNT,
+            new ParsingCoordinate("lotteryIncomeSource", "lotteryGamblingAmount"));
+
+    
     
     coordinatesMap.put(Field.UNEARNED_INCOME_OTHER,
         new ParsingCoordinate("otherUnearnedIncome", "otherUnearnedIncome"));
@@ -263,6 +273,14 @@ public class ApplicationDataParser {
         new ParsingCoordinate("otherUnearnedIncomeSources", "rentalIncomeAmount"));
     coordinatesMap.put(Field.OTHER_PAYMENTS_AMOUNT,
         new ParsingCoordinate("otherUnearnedIncomeSources", "otherPaymentsAmount"));
+    coordinatesMap.put(Field.ANNUITIES_AMOUNT,
+            new ParsingCoordinate("otherUnearnedIncomeSources", "annuityPaymentsAmount"));
+    coordinatesMap.put(Field.DAY_TRADING_AMOUNT,
+            new ParsingCoordinate("otherUnearnedIncomeSources", "dayTradingProceedsAmount"));
+    coordinatesMap.put(Field.GIFTS_AMOUNT,
+            new ParsingCoordinate("otherUnearnedIncomeSources", "giftsAmount"));
+    coordinatesMap.put(Field.LOTTERY_GAMBLING_AMOUNT,
+            new ParsingCoordinate("otherUnearnedIncomeSources", "lotteryGamblingAmount"));
     
     coordinatesMap.put(Field.OTHER_INCOME_TYPE,
     	new ParsingCoordinate("otherIncome", "otherIncomeType"));
@@ -381,16 +399,6 @@ public class ApplicationDataParser {
         new ParsingCoordinate("alienIdNumbers", "alienIdNumber"));
     coordinatesMap.put(Field.ALIEN_ID_MAP,
         new ParsingCoordinate("alienIdNumbers", "alienIdMap"));
-    coordinatesMap.put(Field.RETROACTIVE_COVERAGE,
-        new ParsingCoordinate("retroactiveCoverage", "retroactiveCoverageQuestion"));
-    coordinatesMap.put(Field.RETROACTIVE_COVERAGE_SOURCE,
-        new ParsingCoordinate("retroactiveCoverageSource", "retroactiveCoverageSourceQuestion"));
-    coordinatesMap.put(Field.RETROACTIVE_TIME_INDIVIDUAL,
-        new ParsingCoordinate("retroactiveCoverageTimePeriodIndividual", "retroactiveCoverageNumberMonths"));
-    coordinatesMap.put(Field.RETROACTIVE_COVERAGE_MAP,
-        new ParsingCoordinate("retroactiveCoverageTimePeriod", "retroactiveCoverageMap"));
-    coordinatesMap.put(Field.RETROACTIVE_COVERAGE_MONTH,
-        new ParsingCoordinate("retroactiveCoverageTimePeriod", "retroactiveCoverageNumberMonths"));
     
     coordinatesMap.put(Field.DOCUMENT_DESTINATIONS,
             new ParsingCoordinate("coverPage", "documentDestinations"));
@@ -556,6 +564,10 @@ public class ApplicationDataParser {
     INTEREST_DIVIDENDS_AMOUNT,
     RENTAL_AMOUNT,
     OTHER_PAYMENTS_AMOUNT,
+    ANNUITIES_AMOUNT,
+    DAY_TRADING_AMOUNT,
+    GIFTS_AMOUNT,
+    LOTTERY_GAMBLING_AMOUNT,
 
     OTHER_INCOME_TYPE,
     OTHER_INCOME_FULL_NAME,
@@ -585,6 +597,10 @@ public class ApplicationDataParser {
     UNEARNED_INTEREST_DIVIDENDS_AMOUNT,
     UNEARNED_RENTAL_AMOUNT,
     UNEARNED_OTHER_PAYMENTS_AMOUNT,
+    UNEARNED_ANNUITIES_AMOUNT,
+    UNEARNED_DAY_TRADING_AMOUNT,
+    UNEARNED_GIFTS_AMOUNT,
+    UNEARNED_LOTTERY_GAMBLING_AMOUNT,
 
     HOME_EXPENSES,
     WORK_SITUATION,//TODO do we need this? keep for compatibility.
@@ -639,11 +655,6 @@ public class ApplicationDataParser {
     ALIEN_ID,
     ALIEN_IDS,
     ALIEN_ID_MAP,
-    RETROACTIVE_COVERAGE,
-    RETROACTIVE_COVERAGE_SOURCE,
-    RETROACTIVE_TIME_INDIVIDUAL,
-    RETROACTIVE_COVERAGE_MAP,
-    RETROACTIVE_COVERAGE_MONTH,
 	DOCUMENT_DESTINATIONS;
     
     @Getter

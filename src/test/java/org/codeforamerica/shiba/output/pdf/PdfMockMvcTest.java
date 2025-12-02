@@ -1446,6 +1446,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", ccap);
 			}
 		}
+		
+		@Test
+		void verifyChildCareCost() throws Exception {
+			selectPrograms("SNAP");
+			postExpectingSuccess("childCareCosts", "childCareCosts", "true");
+			var caf = submitAndDownloadCaf();
+			assertPdfFieldEquals("CCAP_HAS_COSTS_FOR_CHILD_CARE", "Yes", caf);
+		}
 
 	}
 	@Nested

@@ -127,6 +127,8 @@ mappings:
     applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN
   citizenship:
     citizenshipStatus: IS_US_CITIZEN
+  childCareCosts:
+    childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:
@@ -148,17 +150,6 @@ mappings:
     snapExpeditedEligibility: SNAP_EXPEDITED_ELIGIBILITY
   ccapExpeditedEligibility:
     ccapExpeditedEligibility: CCAP_EXPEDITED_ELIGIBILITY
-  longTermCare:
-    doYouNeedLongTermCare: NEED_LONG_TERM_CARE
-  pastInjury:
-    didYouHaveAPastInjury: HAD_A_PAST_ACCIDENT_OR_INJURY
-  retroactiveCoverage:
-    retroactiveCoverageQuestion: RETROACTIVE_COVERAGE_HELP
-    applicantName: RETROACTIVE_APPLICANT_FULLNAME
-    month: RETROACTIVE_COVERAGE_MONTH
-    
-  medicalInOtherState:
-    medicalInOtherState: MEDICAL_IN_OTHER_STATE
 
   parentNotAtHome:
     hasParentNotAtHome: BOTH_PARENTS_AT_HOME

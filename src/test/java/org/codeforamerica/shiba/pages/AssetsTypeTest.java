@@ -3,6 +3,7 @@ package org.codeforamerica.shiba.pages;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
@@ -117,7 +118,13 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  // enter "None" on the otherUnearnedIncome page, should navigate to the futureIncome page.
 	  postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED", "futureIncome");
 	  fillAdditionalIncomeInfo(programs);
-	  postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+	  if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
+	    	    && Arrays.asList(programs).contains("CCAP")) {
+			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+		} else {
+			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
+			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+		}
   }
 
   private void fillSupportAndCare(String... programs) throws Exception {
@@ -129,6 +136,12 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
         "NO_OTHER_UNEARNED_INCOME_SELECTED",
         "futureIncome");
     fillAdditionalIncomeInfo(programs);
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+    if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
+    	    && Arrays.asList(programs).contains("CCAP")) {
+		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+	} else {
+		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
+		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+	}
   }
 }

@@ -2105,6 +2105,18 @@ pageConfigurations:
             - value: NONE_OF_THE_ABOVE
               messageKey: general.inputs.none-of-the-above
               isNone: true
+  - &childCareCosts
+    name: childCareCosts
+    pageTitle: child-care-costs.title
+    headerKey:
+      defaultValue: child-care-costs-household.header
+      conditionalValues:
+        - value: child-care-costs.header
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: childCareCosts
+        type: YES_NO
   - &medicalExpensesSources
     name: medicalExpensesSources
     pageTitle: medical-expenses-sources.title
@@ -6755,6 +6767,12 @@ workflow:
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
+  childCareCosts:
+    pageConfiguration: *childCareCosts
+    datasources:
+     - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: assets
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
@@ -6786,10 +6804,15 @@ workflow:
       - pageName: choosePrograms
   supportAndCare:
     pageConfiguration: *supportAndCare
+    nextPages:
+      - pageName: childCareCosts
+        condition: *someoneChoseCAFProgram?
+      - pageName: assets
     datasources:
       - pageName: addHouseholdMembers
-    nextPages:
-      - pageName: assets
+      - pageName: householdMemberInfo
+        groupName: household
+      - pageName: choosePrograms
   assets:
     pageConfiguration: *assets
     datasources:
