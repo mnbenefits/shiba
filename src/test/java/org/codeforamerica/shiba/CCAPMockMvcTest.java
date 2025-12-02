@@ -36,7 +36,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	  
 	  finishAddingHouseholdMembers("preparingMealsTogether");
 	  postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "true",
-		        "Housing subsidy");
+		        "Buying and cooking food");
+	   postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+	            "Housing subsidy");
 	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
 	            "Going to school");
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
@@ -128,7 +130,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillOutHousemateInfo("EA");
     finishAddingHouseholdMembers("preparingMealsTogether");
     postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "false",
-        "Housing subsidy");
+        "Buying and cooking food");
+    postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+            "Housing subsidy");   
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Going to school");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
@@ -155,7 +159,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillOutHousemateInfo("EA");
     finishAddingHouseholdMembers("preparingMealsTogether");
     postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "false",
-        "Housing subsidy");
+        "Buying and cooking food");
+    postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+            "Housing subsidy");    
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Going to school");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");

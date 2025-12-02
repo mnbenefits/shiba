@@ -369,7 +369,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  }
 				  case "SNAP": {
 					  assertNavigationRedirectsToCorrectNextPage("householdList", "preparingMealsTogether");
-					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "housingSubsidy");
+					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "buyOrCookFood");
+					  postExpectingRedirect("buyOrCookFood", "isDisabledToBuyOrCookFood", "true", "housingSubsidy");
 					  break;
 				  }
 				  default: {
