@@ -117,8 +117,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  // enter "None" on the otherUnearnedIncome page, should navigate to the futureIncome page.
 	  postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED", "futureIncome");
 	  fillAdditionalIncomeInfo(programs);
-	  if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE") || p.equals("CERTAIN_POPS"))
-	    	    && Arrays.asList(programs).contains("CCAP") || Arrays.asList(programs).contains("CERTAIN_POPS")) {
+	  if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
+	    	    && Arrays.asList(programs).contains("CCAP")) {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 		} else {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
@@ -135,8 +135,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
         "NO_OTHER_UNEARNED_INCOME_SELECTED",
         "futureIncome");
     fillAdditionalIncomeInfo(programs);
-    if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE") || p.equals("CERTAIN_POPS"))
-    	    && Arrays.asList(programs).contains("CCAP") ||  Arrays.asList(programs).contains("CERTAIN_POPS")) {
+    if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
+    	    && Arrays.asList(programs).contains("CCAP")) {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	} else {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
