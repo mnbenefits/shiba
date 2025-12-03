@@ -127,6 +127,8 @@ mappings:
     citizenshipStatus: IS_US_CITIZEN
   childCareCosts:
     childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
+  adultCareCosts:
+    adultCareCosts: COSTS_FOR_DISABLED_ADULT	
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:
