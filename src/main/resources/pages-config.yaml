@@ -2084,7 +2084,19 @@ pageConfigurations:
     hasPrimaryButton: false
     inputs:
       - name: childCareCosts
-        type: YES_NO
+        type: YES_NO	
+  - &adultCareCosts
+    name: adultCareCosts
+    pageTitle: adult-care-costs.title
+    headerKey:
+      defaultValue: adult-care-costs-household.header
+      conditionalValues:
+        - value: adult-care-costs.header
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: adultCareCosts
+        type: YES_NO	
   - &medicalExpensesSources
     name: medicalExpensesSources
     pageTitle: medical-expenses-sources.title
@@ -6640,7 +6652,13 @@ workflow:
     datasources:
      - pageName: addHouseholdMembers
     nextPages:
-      - pageName: assets
+      - pageName: adultCareCosts
+  adultCareCosts:
+    pageConfiguration: *adultCareCosts
+    datasources:
+      - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: assets	  
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
