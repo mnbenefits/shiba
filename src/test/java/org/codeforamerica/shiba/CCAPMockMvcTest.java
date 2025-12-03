@@ -141,7 +141,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillAdditionalIncomeInfo("SNAP");
    //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets"); 
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts"); 
+    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -184,7 +185,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     fillAdditionalIncomeInfo("SNAP");
    //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
+    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -208,7 +210,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
             "futureIncome");
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
+    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -442,7 +445,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	} else {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
+		postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
 	}
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
