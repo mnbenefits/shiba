@@ -4025,7 +4025,7 @@ pageConfigurations:
     headerHelpMessageKey: student-financial-aid.header-help-message
     hasPrimaryButton: false
     inputs:
-      - name: paidByTheHour
+      - name: studentFinancialAid
         type: YES_NO
   - &futureIncome
     name: futureIncome
