@@ -44,7 +44,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
+	  postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Income Up Next");
 	  assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
 	  postExpectingNextPageTitle("unearnedIncome", "unearnedIncome", List.of("UNEMPLOYMENT", "WORKERS_COMPENSATION"), "Unearned Income Source");
 	  postExpectingRedirect("unemploymentIncomeSource", "monthlyIncomeUnemployment", List.of("Dwight Schrute applicant"), "workersCompIncomeSource");
@@ -138,7 +139,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
+    postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","futureIncome");
@@ -167,7 +169,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
+    postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("ANNUITY_PAYMENTS"),"annuityIncomeSource");
@@ -208,7 +211,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
     completeFlowFromIsPregnantThroughTribalNations(false, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
-    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
+    postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
+    postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
         "otherUnearnedIncome");

@@ -2117,6 +2117,18 @@ pageConfigurations:
     inputs:
       - name: childCareCosts
         type: YES_NO
+  - &pastEmployment
+    name: pastEmployment
+    pageTitle: past-employment.title
+    headerKey:
+      defaultValue: past-employment-household.header
+      conditionalValues:
+        - value: past-employment.header
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: wereYouEmployed
+        type: YES_NO
   - &medicalExpensesSources
     name: medicalExpensesSources
     pageTitle: medical-expenses-sources.title
@@ -6116,7 +6128,18 @@ workflow:
     pageConfiguration: *employmentStatus
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
     nextPages:
+      - pageName: pastEmployment
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseSNAP?
+            - pageName: employmentStatus
+              input: areYouWorking
+              value: "false"
       - pageName: jobSearch
         condition:
           pageName: employmentStatus
@@ -6773,6 +6796,17 @@ workflow:
      - pageName: addHouseholdMembers
     nextPages:
       - pageName: assets
+  pastEmployment:
+    pageConfiguration: *pastEmployment
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+    nextPages:
+      - pageName: jobSearch
+        condition: *someoneChoseCCAP?
+      - pageName: incomeUpNext
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
