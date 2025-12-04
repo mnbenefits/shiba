@@ -6240,6 +6240,12 @@ workflow:
     nextPages:
       - pageName: advanceChildTaxCredit
         condition: *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - *noOneChoseSNAP?
+            - *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: otherUnearnedIncome
@@ -6405,6 +6411,15 @@ workflow:
               input: otherUnearnedIncome
               value: NO_OTHER_UNEARNED_INCOME_SELECTED
             - *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: 
+          logicalOperator: AND
+          conditions: 
+            - pageName: otherUnearnedIncome
+              input: otherUnearnedIncome
+              value: NO_OTHER_UNEARNED_INCOME_SELECTED
+            - *noOneChoseSNAP?
+            - *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
@@ -6532,8 +6547,6 @@ workflow:
       matcher: DOES_NOT_CONTAIN
       value: DAY_TRADING
     nextPages:
-      - pageName: advanceChildTaxCredit
-        condition: *someoneChoseSNAP?
       - pageName: otherPaymentsIncomeSource
     datasources:
       - pageName: otherUnearnedIncome
@@ -6549,9 +6562,21 @@ workflow:
       matcher: DOES_NOT_CONTAIN
       value: OTHER_PAYMENTS
     nextPages:
+      - pageName: advanceChildTaxCredit
+        condition: *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: 
+          logicalOperator: AND
+          conditions:
+            - *noOneChoseSNAP?
+            - *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
-      - pageName: otherUnearnedIncome    
+      - pageName: otherUnearnedIncome 
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo      
   advanceChildTaxCredit:
     pageConfiguration: *advanceChildTaxCredit
     nextPages:
