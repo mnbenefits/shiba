@@ -110,7 +110,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
   
   private void completeFlowAssetsSingleApplicant(String... programs) throws Exception {
 	  completeFlowFromLandingPageThroughReviewInfo(programs);
-	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "introPersonalDetails");
+	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsence");
+	  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "false", "introPersonalDetails");
 	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "goingToSchool");
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);

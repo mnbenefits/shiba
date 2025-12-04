@@ -63,6 +63,8 @@ mappings:
     programList: PROGRAMS
   preparingMealsTogether:
     isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
+  temporaryAbsence:
+   hasTemporaryAbsence: ANYONE_TEMPORARILY_NOT_HOME
   contactInfo:
     phoneNumber: APPLICANT_PHONE_NUMBER
     email: APPLICANT_EMAIL
@@ -150,6 +152,9 @@ mappings:
     snapExpeditedEligibility: SNAP_EXPEDITED_ELIGIBILITY
   ccapExpeditedEligibility:
     ccapExpeditedEligibility: CCAP_EXPEDITED_ELIGIBILITY
+
+  parentNotAtHome:
+    hasParentNotAtHome: BOTH_PARENTS_AT_HOME
 
   otherIncome:
     otherIncomeType: OTHER_INCOME_TYPE

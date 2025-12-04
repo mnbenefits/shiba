@@ -94,6 +94,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Off", caf);
 		assertPdfFieldEquals("GO_ON_STRIKE", "Off", caf);
 	}
+	
 
 
 	@Test
@@ -328,6 +329,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		assertPdfFieldEquals("OTHER_INCOME_TYPE_4", "Day trading proceeds", caf);
 		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "240", caf);
+	}
+	
+	@Test
+	void shouldMapParentNotAtHomeForChildUnder19() throws Exception {
+		selectPrograms("CASH");
+		addHouseholdMembersWithProgram("CCAP");
+		postExpectingSuccess("parentNotAtHome", "hasParentNotAtHome", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("BOTH_PARENTS_AT_HOME", "Yes", caf);
 	}
 
 	@Test
@@ -1536,5 +1547,34 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 	}
 	
+	
+	// This test verifies the yes button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceTrue() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes", caf);
 
+	}
+	
+	// This test verifies the no button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceFalse() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "false");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "No", caf);
+
+	}
 }
