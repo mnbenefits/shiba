@@ -3604,6 +3604,16 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: OTHER_PAYMENTS
+  - &advanceChildTaxCredit
+    name: advanceChildTaxCredit
+    pageTitle: advance-child-tax-credit.title
+    headerKey: advance-child-tax-credit.header
+    headerHelpMessageKey: advance-child-tax-credit
+    contextFragment: personIncomeContextFragment 
+    hasPrimaryButton: false
+    inputs:
+      - name: hasAdvanceChildTaxCredit
+        type: YES_NO
   - &benefitsProgramsIncomeSource
     name: benefitsProgramsIncomeSource
     pageTitle: unearned-income-benefits-programs.title
@@ -6223,15 +6233,20 @@ workflow:
       conditions:
         - *noUnearnedIncomeSelected?
     datasources:
-      - pageName: unearnedIncome
-      - pageName: addHouseholdMembers
+        - pageName: unearnedIncome
+        - pageName: addHouseholdMembers
   otherUnearnedIncomeSources:
     pageConfiguration: *otherUnearnedIncomeSources
     nextPages:
+      - pageName: advanceChildTaxCredit
+        condition: *someoneChoseSNAP?
       - pageName: futureIncome
     datasources:
       - pageName: otherUnearnedIncome
       - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
   socialSecurityIncomeSource:
     pageConfiguration: *socialSecurityIncomeSource
     nextPages:
@@ -6382,6 +6397,14 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
+      - pageName: advanceChildTaxCredit
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: otherUnearnedIncome
+              input: otherUnearnedIncome
+              value: NO_OTHER_UNEARNED_INCOME_SELECTED
+            - *someoneChoseSNAP?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
@@ -6509,9 +6532,15 @@ workflow:
       matcher: DOES_NOT_CONTAIN
       value: DAY_TRADING
     nextPages:
+      - pageName: advanceChildTaxCredit
+        condition: *someoneChoseSNAP?
       - pageName: otherPaymentsIncomeSource
     datasources:
-      - pageName: otherUnearnedIncome		  	  		    	  
+      - pageName: otherUnearnedIncome
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo		  	  		    	  
   otherPaymentsIncomeSource:
     pageConfiguration: *otherPaymentsIncomeSource
     skipCondition:
@@ -6522,7 +6551,12 @@ workflow:
     nextPages:
       - pageName: futureIncome
     datasources:
-      - pageName: otherUnearnedIncome
+      - pageName: otherUnearnedIncome    
+  advanceChildTaxCredit:
+    pageConfiguration: *advanceChildTaxCredit
+    nextPages:
+      - pageName: studentFinancialAid
+    skipCondition: *noOneChoseSNAP?
   studentFinancialAid:
     pageConfiguration: *studentFinancialAid
     nextPages:
