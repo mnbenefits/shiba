@@ -148,7 +148,11 @@ mappings:
     snapExpeditedEligibility: SNAP_EXPEDITED_ELIGIBILITY
   ccapExpeditedEligibility:
     ccapExpeditedEligibility: CCAP_EXPEDITED_ELIGIBILITY
-
+  specialCareExpenses:
+    representativePayeeFees: HAVE_PAYEE_FEES
+    guardianAndConservatorFees: HAVE_CONSERVATOR_FEES
+    specialDietPrescribedByDoctor: HAVE_SPECIAL_DIET
+    highHousingCosts: HAVE_HIGH_HOUSING_COSTS
   otherIncome:
     otherIncomeType: OTHER_INCOME_TYPE
     otherIncomeFullName: OTHER_INCOME_FULL_NAME

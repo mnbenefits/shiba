@@ -2896,6 +2896,35 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+  - &specialCareExpenses
+    name: specialCareExpenses
+    pageTitle: special-care-expenses.title
+    headerKey:
+      defaultValue: special-care-expenses-household-header
+      conditionalValues:
+        - value: special-care-expenses-header
+          condition: *livesAlone?
+    headerHelpMessageKey: special-care-expenses-assets.select-all-that-apply
+    inputs:
+      - name: specialCareExpenses
+        type: CHECKBOX
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
+        options:
+          selectableOptions:
+            - value: REPRESENTATIVE_PAYEE_FEES
+              messageKey: special-care-expenses-representative
+            - value: GUARDIAN_AND_CONSERVATOR_FEES
+              messageKey: special-care-expenses-guardian
+            - value: SPECIAL_DIET_PRESCRIBED_BY_DOCTOR
+              messageKey: special-care-expenses-special-diet
+            - value: HIGH_HOUSING_COSTS
+              messageKey: special-care-expenses-housing
+            - value: NONE
+              messageKey: general.inputs.none-of-the-above
+              isNone: true
+
   - &unearnedIncome
     name: unearnedIncome
     pageTitle: unearned-income.title
@@ -6629,12 +6658,20 @@ workflow:
         - *noOneChoseCCAP?
         - *noOneChoseSNAP?
     nextPages:
+      - pageName: specialCareExpenses
+        condition: *someoneChoseCASH?
       - pageName: medicalExpensesSources
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
+  specialCareExpenses:
+    pageConfiguration: *specialCareExpenses
+    datasources:
+     - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: supportAndCare
   childCareCosts:
     pageConfiguration: *childCareCosts
     datasources:

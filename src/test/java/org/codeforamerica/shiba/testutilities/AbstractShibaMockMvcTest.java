@@ -804,9 +804,13 @@ public class AbstractShibaMockMvcTest {
 	    postExpectingRedirect("utilities", "payForUtilities", "NONE_OF_THE_ABOVE", "energyAssistance");
 	    postExpectingRedirect("energyAssistance", "energyAssistance", "false", "medicalExpenses");
     }
-    
+    if(Arrays.asList(programs).contains("CASH")){
+    	postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
+    		        "specialCareExpenses");
+    } else{
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
-        "supportAndCare");
+        "supportAndCare");  
+    }
   }
 
   protected void completeFlowFromLandingPageThroughReviewInfo(String... programSelections)
@@ -1012,7 +1016,9 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("energyAssistanceMoreThan20", "energyAssistanceMoreThan20", "true",
         "medicalExpenses");
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
-        "supportAndCare");
+        "specialCareExpenses");
+    postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE",
+            "supportAndCare");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
     postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets"); 
     postExpectingSuccess("assets", "assets", "NONE");

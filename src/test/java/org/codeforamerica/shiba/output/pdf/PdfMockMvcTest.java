@@ -1526,5 +1526,28 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 	}
 	
+	
+	@Nested
+	@Tag("pdf")
+	class SpecialCareExpenses {
+		@Test
+		void shouldMapSpecialCareExpensesFieldToCAF() throws Exception {
+			selectPrograms("CASH");			
+			
+			postExpectingSuccess("medicalExpenses", "medicalExpenses", "true");
+			postExpectingSuccess("specialCareExpenses", "specialCareExpenses", List.of("REPRESENTATIVE_PAYEE_FEES", "SPECIAL_DIET_PRESCRIBED_BY_DOCTOR"));
+			postExpectingSuccess("supportAndCare", "supportAndCare", "true");
+
+			var caf = submitAndDownloadCaf();
+			
+			assertPdfFieldEquals("HAVE_PAYEE_FEES", "Yes", caf);
+			assertPdfFieldEquals("HAVE_CONSERVATOR_FEES", "No", caf);
+			assertPdfFieldEquals("HAVE_SPECIAL_DIET", "Yes", caf);
+			assertPdfFieldEquals("HAVE_HIGH_HOUSING_COSTS", "No", caf);
+		}
+		
+		
+	}
+	
 
 }
