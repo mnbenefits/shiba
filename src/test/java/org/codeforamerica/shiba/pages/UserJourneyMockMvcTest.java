@@ -336,7 +336,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 					  break;
 				  }
 				  default: {
-					  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "introPersonalDetails");
+					  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsence");
 					  break;
 				  }
 			  }
@@ -368,13 +368,22 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 					  break;
 				  }
 				  case "SNAP": {
-					  assertNavigationRedirectsToCorrectNextPage("householdList", "preparingMealsTogether");
+					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsence", "preparingMealsTogether");
 					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "buyOrCookFood");
 					  postExpectingRedirect("buyOrCookFood", "isDisabledToBuyOrCookFood", "true", "housingSubsidy");
 					  break;
 				  }
+				  case "CASH": {
+					  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "true", "childrenUnder19");
+					  postExpectingRedirect("childrenUnder19", "hasChildrenUnder19", "true", "parentNotAtHome");
+					  postExpectingRedirect("parentNotAtHome", "hasParentNotAtHome", "true", "housingSubsidy");
+					  break;
+				  }
+				  		
+				  	
 				  default: {
-					  assertNavigationRedirectsToCorrectNextPage("householdList", "housingSubsidy");
+					  assertNavigationRedirectsToCorrectNextPage("householdList", "temporaryAbsence");
+					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsence", "housingSubsidy");
 					  break;
 				  }
 			  }
@@ -383,7 +392,15 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 
 	  // navigation from housingSubsidy to goingToSchool
 	  switch (program) {
-		  case "GRH", "CCAP": {
+		  case "GRH": {
+			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+			  postExpectingRedirect("livingSituation", "livingSituation",
+					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "housingProvider");
+			  postExpectingRedirect("housingProvider", "housingProvider",
+					  "false", "goingToSchool");
+			  break;
+		  }
+		  case "CCAP": {
 			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
 			  postExpectingRedirect("livingSituation", "livingSituation",
 					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "goingToSchool");

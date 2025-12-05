@@ -1347,6 +1347,37 @@ pageConfigurations:
     pageTitle: household-list.title
     primaryButtonTextKey: household-list.yes-thats-everyone
     contextFragment: householdContextFragment
+  - &childrenUnder19
+    name: childrenUnder19
+    pageTitle: children-under-19.title
+    headerKey: children-under-19.header
+    hasPrimaryButton: false
+    contextFragment: householdContextFragment
+    inputs:
+      - name: hasChildrenUnder19
+        type: YES_NO
+  - &parentNotAtHome
+    name: parentNotAtHome
+    pageTitle: parent-not-at-home-19.title
+    headerKey: parent-not-at-home-19.header
+    hasPrimaryButton: false
+    inputs:
+      - name: hasParentNotAtHome
+        type: YES_NO
+  - &temporaryAbsence
+    name: temporaryAbsence
+    pageTitle: temporary-absence.title
+    headerKey:
+      defaultValue: temporary-absence.header.household
+      conditionalValues:
+        - value: temporary-absence.header
+          condition: *livesAlone?
+    headerHelpMessageKey: temporary-absence.body
+    hasPrimaryButton: false
+    contextFragment: houseFragment
+    inputs:
+      - name: hasTemporaryAbsence
+        type: YES_NO
   - &noProgramsSelected
     name: noProgramsSelected
     pageTitle: no-programs-selected.title
@@ -1476,6 +1507,7 @@ pageConfigurations:
     name: whoHasParentNotAtHome
     pageTitle: parent-not-at-home.title
     headerKey: parent-not-at-home.who-are-the-children-that-have-a-parent-not-living-at-home
+    headerHelpMessageKey: parent-not-at-home.help-text
     inputs:
       - type: PEOPLE_CHECKBOX_WITH_NONE
         noneCheckboxText: parent-not-at-home.none-of-the-children-have-parents-living-outside-the-home
@@ -2093,6 +2125,18 @@ pageConfigurations:
     hasPrimaryButton: false
     inputs:
       - name: childCareCosts
+        type: YES_NO
+  - &pastEmployment
+    name: pastEmployment
+    pageTitle: past-employment.title
+    headerKey:
+      defaultValue: past-employment-household.header
+      conditionalValues:
+        - value: past-employment.header
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: wereYouEmployed
         type: YES_NO
   - &medicalExpensesSources
     name: medicalExpensesSources
@@ -4027,6 +4071,36 @@ pageConfigurations:
               messageKey: living-situation.none-of-these
             - value: PREFER_NOT_TO_SAY
               messageKey: living-situation.i-prefer-not-to-say
+  - &housingProvider
+    name: housingProvider
+    pageTitle: housing-provider.title
+    headerKey:
+      defaultValue: housing-provider.is-your-household-already-working-with-a-provider
+      conditionalValues:
+      - value: housing-provider.are-you-already-working-with-a-provider
+        condition: *livesAlone?
+    headerHelpMessageKey: housing-provider.we-will-use-this-information
+    hasPrimaryButton: false
+    contextFragment: housingSupportsFragment
+    inputs:
+      - name: housingProvider
+        type: YES_NO
+  - &housingProviderInfo
+    name: housingProviderInfo
+    pageTitle: housing-provider-info.title
+    headerKey: housing-provider-info.tell-us-about-your-housing-provider
+    headerHelpMessageKey: housing-provider-info.include-any-information
+    inputs:
+      - name: housingProviderName
+        type: LONG_TEXT
+        promptMessage:
+          promptMessageKey: housing-provider-info.what-is-the-providers-name
+        helpMessageKey: 
+      - name: housingProviderVendorNumber
+        type: LONG_TEXT
+        promptMessage:
+          promptMessageKey: housing-provider-info.providers-vendor-number
+        helpMessageKey: housing-provider-info.if-you-are-not-sure
   - &futureIncome
     name: futureIncome
     pageTitle: future-income.title
@@ -5357,7 +5431,7 @@ workflow:
     nextPages:
       - pageName: startHousehold
         condition: *onlyApplyingForOthers?
-      - pageName: introPersonalDetails
+      - pageName: temporaryAbsence
         condition:
           logicalOperator: AND
           conditions:
@@ -5386,7 +5460,7 @@ workflow:
     pageConfiguration: *addChildrenConfirmation
     nextPages:
       - pageName: startHousehold
-      - pageName: introPersonalDetails
+      - pageName: temporaryAbsence
   startHousehold:
     pageConfiguration: *startHousehold
     nextPages:
@@ -5406,6 +5480,64 @@ workflow:
     datasources:
       - groupName: household
       - pageName: personalInfo
+  temporaryAbsence:
+    pageConfiguration: *temporaryAbsence
+    nextPages:
+      ## If CASH and CCAP AND Not living alone 
+      - pageName: parentNotAtHome
+        condition:
+          name: CashAndCCAP
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *someoneChoseCCAP?
+            - *doesNotLiveAlone?
+      ## If CASH and NOT CCAP AND Not living alone 
+      - pageName: childrenUnder19
+        condition:
+          name: CashAndNotCCAP
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+            - *doesNotLiveAlone?
+      ## If CCAP AND HOUSEHOLD
+      - pageName: childrenInNeedOfCare
+        condition:
+          name: CCAPAndHousehold
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseCCAP?            
+      ## If SNAP household
+      - pageName: preparingMealsTogether
+        condition:
+          name: SNAPAndHousehold
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseSNAP? 
+      ## If NOT CCAP and NOT SNAP 
+      - pageName: housingSubsidy
+        condition:
+          name: NotCCAPAndNOTSnap
+          logicalOperator: AND
+          conditions:
+            - *noOneChoseCCAP?
+            - *noOneChoseSNAP? 
+            - *doesNotLiveAlone?
+      ## If  YES OR NO is selected
+      - pageName: introPersonalDetails
+    skipCondition:
+      logicalOperator: AND
+      conditions:
+        - *someoneChoseCCAP?
+        - *noOneChoseCAF?
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
   householdDeleteWarningPage:
     pageConfiguration: *householdDeleteWarningPage
     appliesToGroup: household
@@ -5417,12 +5549,54 @@ workflow:
   noProgramsSelected:
     pageConfiguration: *noProgramsSelected
     nextPages:
+      - pageName: temporaryAbsence
+        condition: *someoneChoseCAFProgram?
       - pageName: childrenInNeedOfCare
     skipCondition:
       logicalOperator: OR
       conditions:
         - *applicantChoseAtLeastOneProgram?
         - *householdMemberChoseAtLeastOneProgram?
+    datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+      - pageName: choosePrograms
+  childrenUnder19:
+    pageConfiguration: *childrenUnder19
+    nextPages:
+      - pageName: parentNotAtHome
+        condition: 
+          pageName: childrenUnder19
+          name: hasChildrenUnder19
+          input: hasChildrenUnder19
+          value: "true"
+      - pageName: preparingMealsTogether
+        condition:
+          name: isCASHAndSNAPNoCCAP
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+            - *someoneChoseSNAP?
+      - pageName: housingSubsidy
+    datasources:
+      - groupName: household
+        pageName: householdMemberInfo
+      - pageName: choosePrograms
+  parentNotAtHome:
+    pageConfiguration: *parentNotAtHome
+    nextPages:
+      - pageName: preparingMealsTogether
+        condition:
+          name: isCASHAndSNAP
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseCASH?
+            - *noOneChoseCCAP?
+            - *someoneChoseSNAP?
+      - pageName: childrenInNeedOfCare
+        condition: *someoneChoseCCAP?  
+      - pageName: housingSubsidy
     datasources:
       - groupName: household
         pageName: householdMemberInfo
@@ -5680,7 +5854,7 @@ workflow:
   livingSituation:
     pageConfiguration: *livingSituation
     nextPages:
-      - pageName: goingToSchool
+      - pageName: housingProvider
     skipCondition:
       logicalOperator: AND
       conditions:
@@ -5691,6 +5865,28 @@ workflow:
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
+  housingProvider:
+    pageConfiguration: *housingProvider
+    skipCondition: *applicantDidNotChooseGRH?
+    nextPages:
+      - pageName: housingProviderInfo
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+  housingProviderInfo:
+    pageConfiguration: *housingProviderInfo
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - *applicantDidNotChooseGRH?
+        - pageName: housingProvider
+          value: "false"
+          input: housingProvider
+    nextPages:
+      - pageName: goingToSchool
+    datasources:
+      - pageName: choosePrograms
+      - pageName: housingProvider
   goingToSchool:
     pageConfiguration: *goingToSchool
     datasources:
@@ -6005,7 +6201,18 @@ workflow:
     pageConfiguration: *employmentStatus
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
     nextPages:
+      - pageName: pastEmployment
+        condition:
+          logicalOperator: AND
+          conditions:
+            - *someoneChoseSNAP?
+            - pageName: employmentStatus
+              input: areYouWorking
+              value: "false"
       - pageName: jobSearch
         condition:
           pageName: employmentStatus
@@ -6662,6 +6869,17 @@ workflow:
      - pageName: addHouseholdMembers
     nextPages:
       - pageName: assets
+  pastEmployment:
+    pageConfiguration: *pastEmployment
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+    nextPages:
+      - pageName: jobSearch
+        condition: *someoneChoseCCAP?
+      - pageName: incomeUpNext
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
