@@ -4062,6 +4062,36 @@ pageConfigurations:
               messageKey: living-situation.none-of-these
             - value: PREFER_NOT_TO_SAY
               messageKey: living-situation.i-prefer-not-to-say
+  - &housingProvider
+    name: housingProvider
+    pageTitle: housing-provider.title
+    headerKey:
+      defaultValue: housing-provider.is-your-household-already-working-with-a-provider
+      conditionalValues:
+      - value: housing-provider.are-you-already-working-with-a-provider
+        condition: *livesAlone?
+    headerHelpMessageKey: housing-provider.we-will-use-this-information
+    hasPrimaryButton: false
+    contextFragment: housingSupportsFragment
+    inputs:
+      - name: housingProvider
+        type: YES_NO
+  - &housingProviderInfo
+    name: housingProviderInfo
+    pageTitle: housing-provider-info.title
+    headerKey: housing-provider-info.tell-us-about-your-housing-provider
+    headerHelpMessageKey: housing-provider-info.include-any-information
+    inputs:
+      - name: housingProviderName
+        type: LONG_TEXT
+        promptMessage:
+          promptMessageKey: housing-provider-info.what-is-the-providers-name
+        helpMessageKey: 
+      - name: housingProviderVendorNumber
+        type: LONG_TEXT
+        promptMessage:
+          promptMessageKey: housing-provider-info.providers-vendor-number
+        helpMessageKey: housing-provider-info.if-you-are-not-sure
   - &futureIncome
     name: futureIncome
     pageTitle: future-income.title
@@ -5803,7 +5833,7 @@ workflow:
   livingSituation:
     pageConfiguration: *livingSituation
     nextPages:
-      - pageName: goingToSchool
+      - pageName: housingProvider
     skipCondition:
       logicalOperator: AND
       conditions:
@@ -5814,6 +5844,28 @@ workflow:
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
+  housingProvider:
+    pageConfiguration: *housingProvider
+    skipCondition: *applicantDidNotChooseGRH?
+    nextPages:
+      - pageName: housingProviderInfo
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+  housingProviderInfo:
+    pageConfiguration: *housingProviderInfo
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - *applicantDidNotChooseGRH?
+        - pageName: housingProvider
+          value: "false"
+          input: housingProvider
+    nextPages:
+      - pageName: goingToSchool
+    datasources:
+      - pageName: choosePrograms
+      - pageName: housingProvider
   goingToSchool:
     pageConfiguration: *goingToSchool
     datasources:

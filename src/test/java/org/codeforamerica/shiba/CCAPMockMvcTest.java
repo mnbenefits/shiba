@@ -198,6 +198,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
+  
+  
 
   @Test
   void verifyFlowWhenLiveAloneApplicantHasNotSelectedCCAP() throws Exception {
