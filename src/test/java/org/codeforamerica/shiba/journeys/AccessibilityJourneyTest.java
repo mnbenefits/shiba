@@ -411,7 +411,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickButton("Continue", "Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
     testPage.clickButton("Continue", "Advance Child Tax Credit");
-    testPage.chooseYesOrNo("hasAdvanceChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+    testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
     testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
     
@@ -454,7 +454,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
     testPage.clickButton("Continue", "Advance Child Tax Credit");
-    testPage.chooseYesOrNo("hasAdvanceChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+    testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
     testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
     
     testPage.enter("earnLessMoneyThisMonth", "Yes");

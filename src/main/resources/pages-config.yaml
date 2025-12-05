@@ -3648,8 +3648,8 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: OTHER_PAYMENTS
-  - &advanceChildTaxCredit
-    name: advanceChildTaxCredit
+  - &advancedChildTaxCredit
+    name: advancedChildTaxCredit
     pageTitle: advance-child-tax-credit.title
     headerKey:
       defaultValue: advance-child-tax-credit.household
@@ -3660,7 +3660,7 @@ pageConfigurations:
     contextFragment: personIncomeContextFragment 
     hasPrimaryButton: false
     inputs:
-      - name: hasAdvanceChildTaxCredit
+      - name: hasAdvancedChildTaxCredit
         type: YES_NO
   - &benefitsProgramsIncomeSource
     name: benefitsProgramsIncomeSource
@@ -6449,7 +6449,7 @@ workflow:
   otherUnearnedIncomeSources:
     pageConfiguration: *otherUnearnedIncomeSources
     nextPages:
-      - pageName: advanceChildTaxCredit
+      - pageName: advancedChildTaxCredit
         condition: *someoneChoseSNAP?
       - pageName: studentFinancialAid
         condition: *someoneChoseCAFProgram?
@@ -6610,7 +6610,7 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
-      - pageName: advanceChildTaxCredit
+      - pageName: advancedChildTaxCredit
         condition:
           logicalOperator: AND
           conditions:
@@ -6768,7 +6768,7 @@ workflow:
       matcher: DOES_NOT_CONTAIN
       value: OTHER_PAYMENTS
     nextPages:
-      - pageName: advanceChildTaxCredit
+      - pageName: advancedChildTaxCredit
         condition: *someoneChoseSNAP?
       - pageName: studentFinancialAid
         condition: *someoneChoseCAFProgram?
@@ -6779,8 +6779,8 @@ workflow:
       - pageName: choosePrograms
       - groupName: household
         pageName: householdMemberInfo      
-  advanceChildTaxCredit:
-    pageConfiguration: *advanceChildTaxCredit
+  advancedChildTaxCredit:
+    pageConfiguration: *advancedChildTaxCredit
     nextPages:
       - pageName: studentFinancialAid
   studentFinancialAid:

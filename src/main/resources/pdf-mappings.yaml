@@ -287,6 +287,8 @@ mappings:
   lotteryIncomeSource:
     lotteryIncomeAmount: LOTTERY_INCOME_AMOUNT_HH
     lotteryIncomeFrequency: LOTTERY_INCOME_FREQUENCY
+  advancedChildTaxCredit:
+    hasAdvancedChildTaxCredit: ADVANCED_CHILD_TAX_CREDIT
   livingSituation:
     derivedLivingSituation: LIVING_SITUATION
     county: LIVING_SITUATION_COUNTY

@@ -300,6 +300,8 @@ public class ApplicationDataParser {
     	new ParsingCoordinate("otherIncome", "otherIncomeFrequency"));
     coordinatesMap.put(Field.STUDENT_FINANCIAL_AID, 
     		new ParsingCoordinate("studentFinancialAid", "studentFinancialAid"));
+    coordinatesMap.put(Field.ADVANCED_CHILD_TAX_CREDIT,
+        	new ParsingCoordinate("advancedChildTaxCredit", "hasAdvancedChildTaxCredit"));
  
     coordinatesMap.put(Field.CHILDCARE_CHILD_NAME,
     		new ParsingCoordinate("childNeedsChildcare", "childName"));
@@ -582,6 +584,7 @@ public class ApplicationDataParser {
     GIFTS_AMOUNT,
     LOTTERY_GAMBLING_AMOUNT,
 
+    ADVANCED_CHILD_TAX_CREDIT,
     OTHER_INCOME_TYPE,
     OTHER_INCOME_FULL_NAME,
     OTHER_INCOME_AMOUNT,

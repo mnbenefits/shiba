@@ -51,8 +51,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("unemploymentIncomeSource", "monthlyIncomeUnemployment", List.of("Dwight Schrute applicant"), "workersCompIncomeSource");
 	  postExpectingRedirect("workersCompIncomeSource", "monthlyIncomeWorkersComp", List.of("Dwight Schrute applicant"), "otherUnearnedIncome");
 	  postExpectingNextPageTitle("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS"), "Insurance payments");
-	  postExpectingRedirect("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", List.of("Dwight Schrute applicant"), "advanceChildTaxCredit");
-	  postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false","studentFinancialAid");
+	  postExpectingRedirect("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", List.of("Dwight Schrute applicant"), "advancedChildTaxCredit");
+	  postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
 	  postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
   }
   
@@ -145,8 +145,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
-    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","advanceChildTaxCredit");
-    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false","studentFinancialAid");
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","advancedChildTaxCredit");
+    postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
     postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
@@ -178,8 +178,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("ANNUITY_PAYMENTS"),"annuityIncomeSource");
     
-    postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments",  List.of("Dwight Schrute applicant"), "annuityPaymentsAmount", List.of("100", "")), "advanceChildTaxCredit");
-    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false", "studentFinancialAid");
+    postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments",  List.of("Dwight Schrute applicant"), "annuityPaymentsAmount", List.of("100", "")), "advancedChildTaxCredit");
+    postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false", "studentFinancialAid");
     postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false", "futureIncome");
 	// Verify that annuity was selected on otherUnearnedIncome page
 	List<String> otherUnearnedIncomeSelections = (List<String>) applicationData.getPagesData()
@@ -223,8 +223,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
         "otherUnearnedIncome");
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
-            "advanceChildTaxCredit");
-    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false", "studentFinancialAid");
+            "advancedChildTaxCredit");
+    postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false", "studentFinancialAid");
     postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false", "futureIncome");
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
