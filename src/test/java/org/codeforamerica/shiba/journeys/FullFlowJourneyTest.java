@@ -278,7 +278,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Other payments");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("otherPaymentsAmount", "100.00");
-		testPage.clickContinue("Future Income");
+		testPage.clickContinue("Advance Child Tax Credit");
+		testPage.chooseYesOrNo("hasAdvanceChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "Yes");
@@ -867,7 +869,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Unearned Income");
 		
 		testPage.enter("otherUnearnedIncome", "None");
-		testPage.clickContinue("Future Income");
+		testPage.clickContinue("Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 		
 
 		// Do you think the household will earn less money this month than last month?

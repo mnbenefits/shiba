@@ -48,7 +48,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("unemploymentIncomeSource", "monthlyIncomeUnemployment", List.of("Dwight Schrute applicant"), "workersCompIncomeSource");
 	  postExpectingRedirect("workersCompIncomeSource", "monthlyIncomeWorkersComp", List.of("Dwight Schrute applicant"), "otherUnearnedIncome");
 	  postExpectingNextPageTitle("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS"), "Insurance payments");
-	  postExpectingRedirect("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", List.of("Dwight Schrute applicant"), "futureIncome");
+	  postExpectingRedirect("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", List.of("Dwight Schrute applicant"), "advanceChildTaxCredit");
+	  postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false","studentFinancialAid");
+	  postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
   }
   
 	@Test
@@ -137,9 +139,10 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Income Up Next");
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
-    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","futureIncome");
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","advanceChildTaxCredit");
+    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false","studentFinancialAid");
+    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
     fillAdditionalIncomeInfo("SNAP");
-   //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
     postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets"); 
     postExpectingSuccess("assets", "assets", "NONE");
@@ -166,8 +169,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED","otherUnearnedIncome");
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("ANNUITY_PAYMENTS"),"annuityIncomeSource");
     
-    postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments",  List.of("Dwight Schrute applicant"), "annuityPaymentsAmount", List.of("100", "")), "futureIncome");
-    
+    postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments",  List.of("Dwight Schrute applicant"), "annuityPaymentsAmount", List.of("100", "")), "advanceChildTaxCredit");
+    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false", "studentFinancialAid");
+    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false", "futureIncome");
 	// Verify that annuity was selected on otherUnearnedIncome page
 	List<String> otherUnearnedIncomeSelections = (List<String>) applicationData.getPagesData()
 			.getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
@@ -205,7 +209,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
         "otherUnearnedIncome");
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
-            "futureIncome");
+            "advanceChildTaxCredit");
+    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false", "studentFinancialAid");
+    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false", "futureIncome");
     fillAdditionalIncomeInfo("SNAP");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
     postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
@@ -323,7 +329,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Job Search");
     postExpectingNextPageTitle("jobSearch", "currentlyLookingForJob", "true",
         "Who is looking for a job");
-    fillUnearnedIncomeToLegalStuffCCAP("CCAP", "EA");
+    fillUnearnedIncomeToLegalStuffCCAPWithStudentFinancialAid("CCAP", "EA");
   }
   
   @Test
@@ -448,6 +454,28 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageHasElementWithId("legalStuff", "ccap-legal");
   }
+  
+  private void fillUnearnedIncomeToLegalStuffCCAPWithStudentFinancialAid(String... Programs) throws Exception {
+	    assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+	    postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
+	        "otherUnearnedIncome");
+	    postExpectingRedirect("otherUnearnedIncome",
+	        "otherUnearnedIncome",
+	        "NO_OTHER_UNEARNED_INCOME_SELECTED",
+	        "studentFinancialAid");
+	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "true", "futureIncome");
+	    fillAdditionalIncomeInfo(Programs);
+	    if (Arrays.stream(Programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
+	    	    && Arrays.asList(Programs).contains("CCAP")) {
+			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
+		} else {
+			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
+			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+		}
+	    postExpectingSuccess("assets", "assets", "NONE");
+	    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
+	    assertPageHasElementWithId("legalStuff", "ccap-legal");
+	  }
   
   private void fillOutProviderInformation() throws Exception {
 	    postExpectingSuccess("childCareProviderInfo", Map.of(
