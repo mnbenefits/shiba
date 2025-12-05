@@ -5846,10 +5846,10 @@ workflow:
       - pageName: workChanges			
   unableToWork:
     pageConfiguration: *unableToWork
-    nextPages:
-      - pageName: workChanges	
     datasources:
-      - pageName: addHouseholdMember
+      - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: workChanges			  
   workChanges:
     pageConfiguration: *workChanges
     skipCondition:
