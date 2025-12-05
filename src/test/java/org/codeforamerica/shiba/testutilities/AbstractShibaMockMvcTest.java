@@ -915,7 +915,7 @@ public class AbstractShibaMockMvcTest {
       postExpectingNextPageTitle("doYouHaveChildCareProvider",
               "hasChildCareProvider",
               "false",
-              "Who are the children that have a parent not living in the home?"
+              "Who has a parent not at home?"
       );
       postExpectingRedirect("whoHasParentNotAtHome",
           "whoHasAParentNotLivingAtHome",
@@ -932,7 +932,7 @@ public class AbstractShibaMockMvcTest {
     } else {
       postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
           "addChildrenConfirmation");
-      assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","introPersonalDetails");
+      assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","temporaryAbsence");
       assertNavigationRedirectsToCorrectNextPage("introPersonalDetails", "housingSubsidy");
       assertNavigationRedirectsToCorrectNextPage("housingSubsidy", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");

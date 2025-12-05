@@ -81,7 +81,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     testPage.clickContinue("Do you have a child care provider?");
     
     // Do you have a child care provider?
-    testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who are the children that have a parent not living in the home?");
+    testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who has a parent not at home?");
 
     // Who are the children that have a parent not living at home?
     testPage.enter("whoHasAParentNotLivingAtHome", householdMemberFullName);
