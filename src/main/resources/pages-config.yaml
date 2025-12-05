@@ -824,6 +824,11 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-first-name
+      - name: middleName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: personal-info.whats-your-middle-name
+        helpMessageKey: personal-info.legally-as-it-appears-on-your-id				
       - name: lastName
         type: TEXT
         promptMessage:
@@ -831,7 +836,7 @@ pageConfigurations:
         helpMessageKey: personal-info.legally-as-it-appears-on-your-id
         validators:
           - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-to-provide-a-last-name
+            errorMessageKey: general.validation.make-sure-to-provide-a-last-name		
       - name: otherName
         type: TEXT
         promptMessage:
@@ -1175,14 +1180,19 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-first-name
+      - name: middleName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: household-member-info.whats-their-middle-name
+        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id		  			
       - name: lastName
         type: TEXT
         promptMessage:
           promptMessageKey: household-member-info.whats-their-last-name
-        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-last-name
+        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id			
       - name: otherName
         type: TEXT
         promptMessage:
