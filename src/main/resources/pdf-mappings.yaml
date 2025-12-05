@@ -11,6 +11,7 @@ mappings:
   personalInfo:
     firstName: APPLICANT_FIRST_NAME
     lastName: APPLICANT_LAST_NAME
+    middleName: APPLICANT_MIDDLE_NAME
     maritalStatus: MARITAL_STATUS
     otherName: APPLICANT_OTHER_NAME
     dateOfBirth: DATE_OF_BIRTH
@@ -44,6 +45,7 @@ mappings:
   householdMemberInfo:
     firstName: FIRST_NAME
     lastName: LAST_NAME
+    middleName: MIDDLE_NAME
     maritalStatus: MARITAL_STATUS
     otherName: OTHER_NAME
     dateOfBirth: DATE_OF_BIRTH
