@@ -3607,7 +3607,11 @@ pageConfigurations:
   - &advanceChildTaxCredit
     name: advanceChildTaxCredit
     pageTitle: advance-child-tax-credit.title
-    headerKey: advance-child-tax-credit.header
+    headerKey:
+      defaultValue: advance-child-tax-credit.household
+      conditionalValues:
+        - value: advance-child-tax-credit.single
+          condition: *livesAlone?
     headerHelpMessageKey: advance-child-tax-credit
     contextFragment: personIncomeContextFragment 
     hasPrimaryButton: false
@@ -6241,11 +6245,7 @@ workflow:
       - pageName: advanceChildTaxCredit
         condition: *someoneChoseSNAP?
       - pageName: studentFinancialAid
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - *noOneChoseSNAP?
-            - *someoneChoseCAFProgram?
+        condition: *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: otherUnearnedIncome
@@ -6418,7 +6418,6 @@ workflow:
             - pageName: otherUnearnedIncome
               input: otherUnearnedIncome
               value: NO_OTHER_UNEARNED_INCOME_SELECTED
-            - *noOneChoseSNAP?
             - *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
@@ -6565,11 +6564,7 @@ workflow:
       - pageName: advanceChildTaxCredit
         condition: *someoneChoseSNAP?
       - pageName: studentFinancialAid
-        condition: 
-          logicalOperator: AND
-          conditions:
-            - *noOneChoseSNAP?
-            - *someoneChoseCAFProgram?
+        condition: *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: otherUnearnedIncome 
@@ -6581,7 +6576,6 @@ workflow:
     pageConfiguration: *advanceChildTaxCredit
     nextPages:
       - pageName: studentFinancialAid
-    skipCondition: *noOneChoseSNAP?
   studentFinancialAid:
     pageConfiguration: *studentFinancialAid
     nextPages:
