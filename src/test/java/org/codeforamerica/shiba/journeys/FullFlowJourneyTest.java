@@ -81,16 +81,17 @@ public class FullFlowJourneyTest extends JourneyTest {
 		String householdMemberLastName = "householdMemberLastName";
 		String householdMemberFullName = householdMemberFirstName + " " + householdMemberLastName;
 
-		testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
-
+		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
+		testPage.chooseYesOrNo("hasTemporaryAbsence",YES.getDisplayValue(), "Who are the children in need of care?");
+       
 		// Who are the children in need of childcare
 		testPage.enter("whoNeedsChildCare", householdMemberFullName);
 		testPage.clickButton("Continue", "Do you have a child care provider?");
 
-		testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who are the children that have a parent not living in the home?");
-
+		testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who has a parent not at home?");
+        
 		// Who are the children that have a parent not living at home?
-		testPage.enter("whoHasAParentNotLivingAtHome", "None of the children have parents living outside the home");
+		testPage.enter("whoHasAParentNotLivingAtHome", "None of these children have parents living outside the home");
 	   
 		
 		testPage.clickContinue("Mental health needs & child care");
@@ -771,6 +772,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.30");
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
+		assertCafFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes");
 
 	}
 
@@ -814,7 +816,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
 		testPage.clickContinue("Household members");
 
-		testPage.clickButtonLink("Yes, that's everyone", "Housing subsidy");
+		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
+		testPage.chooseYesOrNo("hasTemporaryAbsence", NO.getDisplayValue(), "Children in your household");
+		testPage.chooseYesOrNo("hasChildrenUnder19", NO.getDisplayValue(), "Housing subsidy");
 
 		// Are you getting a housing subsidy?
 		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Going to school");

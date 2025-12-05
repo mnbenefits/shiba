@@ -176,6 +176,10 @@ public class ApplicationDataParser {
         .put(Field.HOUSEHOLD_PROGRAMS, new ParsingCoordinate("householdMemberInfo", "programs"));
     coordinatesMap.put(Field.EA_COMMENTS, new ParsingCoordinate("otherEmergency", "otherEmergency"));
     coordinatesMap.put(Field.EMERGENCY_TYPE, new ParsingCoordinate("emergencyType", "emergencyType"));
+    coordinatesMap.put(Field.TEMPORARY_ABSENCE,
+            new ParsingCoordinate("temporaryAbsence", "hasTemporaryAbsence"));
+    coordinatesMap.put(Field.PARENT_NOT_AT_HOME,
+            new ParsingCoordinate("parentNotAtHome", "hasParentNotAtHome"));
     coordinatesMap.put(Field.PREPARING_MEALS_TOGETHER,
         new ParsingCoordinate("preparingMealsTogether", "isPreparingMealsTogether"));
     coordinatesMap.put(Field.IS_GOING_TO_SCHOOL,
@@ -542,6 +546,8 @@ public class ApplicationDataParser {
     EA_COMMENTS,
     
     PREPARING_MEALS_TOGETHER,
+    TEMPORARY_ABSENCE,
+    PARENT_NOT_AT_HOME,
     IS_GOING_TO_SCHOOL,
     WHO_IS_GOING_TO_SCHOOL,
     IS_PREGNANT,
