@@ -1000,8 +1000,10 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
         "otherUnearnedIncome");
     }      
-    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
-        "futureIncome");
+    
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","studentFinancialAid");
+    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+    
     postExpectingRedirect("futureIncome", "earnLessMoneyThisMonth", "true", "startExpenses");
     assertNavigationRedirectsToCorrectNextPage("startExpenses", "homeExpenses");
     postExpectingRedirect("homeExpenses", "homeExpenses", "RENT", "homeExpensesAmount");

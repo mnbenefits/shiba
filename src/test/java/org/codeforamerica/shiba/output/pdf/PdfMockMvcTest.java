@@ -242,7 +242,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				Map.entry("giftsAmount", List.of("180.00")),
 				Map.entry("lotteryGamblingAmount", List.of("190.00")),
 				Map.entry("dayTradingProceedsAmount", List.of("200.00")), 
-				Map.entry("otherPaymentsAmount", List.of("210.00"))), "Future Income");
+				Map.entry("otherPaymentsAmount", List.of("210.00"))), "Advance Child Tax Credit");
+	    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false","studentFinancialAid");
+	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
 
 	    var caf = submitAndDownloadCaf();
 
@@ -304,7 +306,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments", List.of(applicant), "annuityPaymentsAmount", List.of("210")), "giftsIncomeSource");
 		postExpectingRedirect("giftsIncomeSource", Map.of("monthlyIncomeGifts", List.of(applicant), "giftsAmount", List.of("220")), "lotteryIncomeSource");
 		postExpectingRedirect("lotteryIncomeSource", Map.of("monthlyIncomeLotteryGambling", List.of(applicant), "lotteryGamblingAmount", List.of("230")), "dayTradingIncomeSource");
-		postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(applicant), "dayTradingProceedsAmount", List.of("240")), "futureIncome");
+		postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(applicant), "dayTradingProceedsAmount", List.of("240")), "advanceChildTaxCredit");
+	    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false","studentFinancialAid");
+	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
 		
 		
 		var caf = submitAndDownloadCaf();
@@ -1026,7 +1030,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
 						"otherUnearnedIncome");
 				postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
-						"futureIncome");
+						"studentFinancialAid");
+			    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+
 
 				var additionalIncomeInfo = "Here's something else about my situation";
 				postExpectingRedirect("futureIncome", "additionalIncomeInfo", additionalIncomeInfo, "startExpenses");
@@ -1134,9 +1140,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments", List.of(me, pam), "annuityPaymentsAmount", List.of("210", "", "211")), "giftsIncomeSource");
 				postExpectingRedirect("giftsIncomeSource", Map.of("monthlyIncomeGifts", List.of(me, pam), "giftsAmount", List.of("220", "", "221")), "lotteryIncomeSource");
 				postExpectingRedirect("lotteryIncomeSource", Map.of("monthlyIncomeLotteryGambling", List.of(me, pam), "lotteryGamblingAmount", List.of("230", "", "231")), "dayTradingIncomeSource");
-				postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "futureIncome");
-				
 				PDAcroForm document;
+				if (program.equals("SNAP")) {
+					postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "advanceChildTaxCredit");
+				    postExpectingRedirect("advanceChildTaxCredit", "hasAdvanceChildTaxCredit", "false","studentFinancialAid");
+				    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+				} else {
+					postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "futureIncome");
+				}
 				if (program.equals("SNAP")) {
 					document = submitAndDownloadCaf();
 				} else {
