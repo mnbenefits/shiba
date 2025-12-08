@@ -41,6 +41,8 @@ mappings:
     NONE: PROGRAM_NONE
   housingSupport:
     mnHousingSupport: MN_HOUSING_SUPPORT
+  housingSupportVendor:
+    housingSupportVendor: HOUSING_SUPPORT_VENDOR
   householdMemberInfo:
     firstName: FIRST_NAME
     lastName: LAST_NAME
@@ -63,6 +65,8 @@ mappings:
     programList: PROGRAMS
   preparingMealsTogether:
     isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
+  temporaryAbsence:
+   hasTemporaryAbsence: ANYONE_TEMPORARILY_NOT_HOME
   contactInfo:
     phoneNumber: APPLICANT_PHONE_NUMBER
     email: APPLICANT_EMAIL
@@ -129,6 +133,8 @@ mappings:
     childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
   adultCareCosts:
     adultCareCosts: COSTS_FOR_DISABLED_ADULT	
+  pastEmployment:
+    wereYouEmployed: HAS_WORKED_IN_PAST_36_MONTHS
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:
@@ -150,6 +156,9 @@ mappings:
     snapExpeditedEligibility: SNAP_EXPEDITED_ELIGIBILITY
   ccapExpeditedEligibility:
     ccapExpeditedEligibility: CCAP_EXPEDITED_ELIGIBILITY
+
+  parentNotAtHome:
+    hasParentNotAtHome: BOTH_PARENTS_AT_HOME
 
   otherIncome:
     otherIncomeType: OTHER_INCOME_TYPE
