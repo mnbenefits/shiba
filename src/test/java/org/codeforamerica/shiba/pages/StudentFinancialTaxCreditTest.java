@@ -39,6 +39,8 @@ public class StudentFinancialTaxCreditTest extends AbstractShibaMockMvcTest {
 		  addHouseholdMembersWithProgram("CASH");
 		  postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("DAY_TRADING", "OTHER_PAYMENTS"), "dayTradingIncomeSource");
 		  postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of("Dwight Schrute applicant"), "dayTradingProceedsAmount", List.of("230", "")), "otherPaymentsIncomeSource");
+		  postExpectingRedirect("otherPaymentsIncomeSource", Map.of("monthlyIncomeOtherPayments", List.of("Dwight Schrute applicant"), "otherPaymentsAmount", List.of("230", "")), "studentFinancialAid");
+		  
 	  }
 
 }

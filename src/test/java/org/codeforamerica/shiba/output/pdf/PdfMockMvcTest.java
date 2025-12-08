@@ -496,6 +496,22 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		var caf = submitAndDownloadCaf();
 		assertPdfFieldIsEmpty("SNAP_EXPEDITED_ELIGIBILITY", caf);
 	}
+	
+	@Test
+	void shouldMapStudentFinancialAid() throws Exception {
+		selectPrograms("CASH");
+		postExpectingSuccess("studentFinancialAid", "studentFinancialAid", "true");
+		
+		var caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("STUDENT_FINANCIAL_AID", "Yes", caf);
+		
+		postExpectingSuccess("studentFinancialAid", "studentFinancialAid", "false");
+		
+		caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("STUDENT_FINANCIAL_AID", "No", caf);
+	}
 
 	@Test
 	void shouldNotAddAuthorizedRepFieldsIfNo() throws Exception {
