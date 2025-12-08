@@ -329,14 +329,16 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("moveToMnPreviousState", "Illinois");
     testPage.clickContinue("Household members");
     
-    testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
+    testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
+    testPage.chooseYesOrNo( "hasTemporaryAbsence", NO.getDisplayValue(), "Who are the children in need of care?");
     testPage.enter("whoNeedsChildCare", "householdMemberFirstName householdMemberLastName");
 
     testPage.clickContinue("Do you have a child care provider?");
-    testPage.chooseYesOrNo( "hasChildCareProvider", NO.getDisplayValue(), "Who are the children that have a parent not living in the home?");
-    
+    testPage.chooseYesOrNo( "hasChildCareProvider", NO.getDisplayValue(), "Who has a parent not at home?");
+
+
     testPage.enter("whoHasAParentNotLivingAtHome",
-        "None of the children have parents living outside the home");
+        "None of these children have parents living outside the home");
     testPage.clickContinue("Mental health needs & child care");
 	testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed each week");
 	testPage.enter("childCareMentalHealthHours", "20");

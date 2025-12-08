@@ -63,6 +63,8 @@ mappings:
     programList: PROGRAMS
   preparingMealsTogether:
     isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
+  temporaryAbsence:
+   hasTemporaryAbsence: ANYONE_TEMPORARILY_NOT_HOME
   contactInfo:
     phoneNumber: APPLICANT_PHONE_NUMBER
     email: APPLICANT_EMAIL
@@ -127,6 +129,8 @@ mappings:
     citizenshipStatus: IS_US_CITIZEN
   childCareCosts:
     childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
+  pastEmployment:
+    wereYouEmployed: HAS_WORKED_IN_PAST_36_MONTHS
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:
@@ -153,6 +157,8 @@ mappings:
     guardianAndConservatorFees: HAVE_CONSERVATOR_FEES
     specialDietPrescribedByDoctor: HAVE_SPECIAL_DIET
     highHousingCosts: HAVE_HIGH_HOUSING_COSTS
+  parentNotAtHome:
+    hasParentNotAtHome: BOTH_PARENTS_AT_HOME
   otherIncome:
     otherIncomeType: OTHER_INCOME_TYPE
     otherIncomeFullName: OTHER_INCOME_FULL_NAME
