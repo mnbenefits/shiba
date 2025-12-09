@@ -1352,7 +1352,7 @@ pageConfigurations:
     pageTitle: children-under-19.title
     headerKey: children-under-19.header
     hasPrimaryButton: false
-    contextFragment: householdContextFragment
+    contextFragment: LiveWithChildrenFragment
     inputs:
       - name: hasChildrenUnder19
         type: YES_NO
