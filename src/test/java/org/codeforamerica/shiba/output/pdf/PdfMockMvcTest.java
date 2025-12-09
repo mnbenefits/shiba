@@ -338,6 +338,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("parentNotAtHome", "hasParentNotAtHome", "true");
 		
 		var caf = submitAndDownloadCaf();
+		//Maps to No on PDF with Yes Field because the question is inverse
 		assertPdfFieldEquals("BOTH_PARENTS_AT_HOME", "Yes", caf);
 	}
 
@@ -1411,6 +1412,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Off", ccap);
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Off", ccap);
 				assertPdfFieldEquals("CLIENT_REPORTED", "", ccap);
+			}
+			
+			@Test
+			void verifyPastEmployment() throws Exception {
+				selectPrograms("SNAP");
+				postExpectingSuccess("pastEmployment", "wereYouEmployed", "true");
+			    assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
+
+				var caf = submitAndDownloadCaf();
+				assertPdfFieldEquals("HAS_WORKED_IN_PAST_36_MONTHS", "Yes", caf);
 			}
 
 			@Test

@@ -42,6 +42,8 @@ mappings:
     NONE: PROGRAM_NONE
   housingSupport:
     mnHousingSupport: MN_HOUSING_SUPPORT
+  housingSupportVendor:
+    housingSupportVendor: HOUSING_SUPPORT_VENDOR
   householdMemberInfo:
     firstName: FIRST_NAME
     lastName: LAST_NAME
@@ -131,6 +133,8 @@ mappings:
     citizenshipStatus: IS_US_CITIZEN
   childCareCosts:
     childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
+  pastEmployment:
+    wereYouEmployed: HAS_WORKED_IN_PAST_36_MONTHS
   disability:
     hasDisability: HAS_DISABILITY
   whoHasDisability:
