@@ -29,12 +29,9 @@ public class SpecialCareExpensesPreparer implements DocumentFieldPreparer {
 	@Override
 	public List<DocumentField> prepareDocumentFields(Application application, Document document, Recipient recipient) {
 		fields = new ArrayList<DocumentField>();
-
 		PageData specialCareExpenses = application.getApplicationData().getPageData("specialCareExpenses");
-		System.out.println("----Nullllllllll--->>>>>>");
 
 		if (specialCareExpenses != null) {
-			System.out.println("<<<<---nut nul----Nullllllllll--->>>>>>");
 
 			InputData specialCareExpensesInputData = specialCareExpenses.get("specialCareExpenses");
 			if (specialCareExpensesInputData != null && !specialCareExpensesInputData.getValue().isEmpty()) {
@@ -54,8 +51,6 @@ public class SpecialCareExpensesPreparer implements DocumentFieldPreparer {
 			}
 
 		}
-		System.out.println("special--->>>>>>");
-
 		return fields;
 	}
 }
