@@ -142,6 +142,61 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldIsEmpty("CHILD_FULL_NAME_2", ccap);
 		assertPdfFieldIsEmpty("PARENT_NOT_LIVING_AT_HOME_2", ccap);
 	}
+	
+	// This test verifies the yes button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceTrue() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes", caf);
+
+	}
+	
+	// This test verifies the no button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceFalse() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "false");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "No", caf);
+
+	}
+	
+	// This test verifies the yes button click on advancedChildTaxCredit gets written to the caf 
+	@Test
+	void shouldMapAdvancedChildTaxCreditTrue() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		postExpectingSuccess("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "true");
+		
+		var caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "Yes", caf);
+	
+	}
+	
+	// This test verifies the no button click on advancedChildTaxCredit gets written to the caf 
+	@Test
+	void shouldMapAdvancedChildTaxCreditFalse() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		postExpectingSuccess("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false");
+		
+		var caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "No", caf);
+	}
 
 	@Test
 	void shouldNotMapParentsLivingOutsideOfHomeIfNoneSelected() throws Exception {
@@ -1575,33 +1630,5 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 	
 	
-	// This test verifies the yes button click on temporaryAbsence gets written to the caf 
-	@Test
-	void shouldMapTemporaryAbsenceTrue() throws Exception {
-		fillOutPersonalInfo();
-		selectPrograms("SNAP");
-		addHouseholdMembersWithProgram("CCAP");
-		fillInRequiredPages();
-		
-		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "true");
-		
-		var caf = submitAndDownloadCaf();
-		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes", caf);
 
-	}
-	
-	// This test verifies the no button click on temporaryAbsence gets written to the caf 
-	@Test
-	void shouldMapTemporaryAbsenceFalse() throws Exception {
-		fillOutPersonalInfo();
-		selectPrograms("SNAP");
-		addHouseholdMembersWithProgram("CCAP");
-		fillInRequiredPages();
-		
-		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "false");
-		
-		var caf = submitAndDownloadCaf();
-		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "No", caf);
-
-	}
 }
