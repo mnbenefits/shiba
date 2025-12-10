@@ -4075,9 +4075,9 @@ pageConfigurations:
     name: housingProvider
     pageTitle: housing-provider.title
     headerKey:
-      defaultValue: housing-provider.is-your-household-already-working-with-a-provider
+      defaultValue: housing-provider.is-your-household-working-with-a-provider
       conditionalValues:
-      - value: housing-provider.are-you-already-working-with-a-provider
+      - value: housing-provider.are-you-working-with-a-provider
         condition: *livesAlone?
     headerHelpMessageKey: housing-provider.we-will-use-this-information
     hasPrimaryButton: false
