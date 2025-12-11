@@ -3650,14 +3650,15 @@ pageConfigurations:
           value: OTHER_PAYMENTS
   - &advancedChildTaxCredit
     name: advancedChildTaxCredit
-    pageTitle: advance-child-tax-credit.title
+    pageTitle: advanced-child-tax-credit.title
     headerKey:
-      defaultValue: advance-child-tax-credit.household
+      defaultValue:  advanced-child-tax-credit.single
       conditionalValues:
-        - value: advance-child-tax-credit.single
-          condition: *livesAlone?
-    headerHelpMessageKey: advance-child-tax-credit
-    contextFragment: personIncomeContextFragment 
+        - value: advanced-child-tax-credit.household
+          condition: *doesNotLiveAlone?
+    headerHelpMessageKey: advanced-child-tax-credit.body
+    contextFragment: cashBenefitsContextFragment 
+    additionalContentFragment: childTaxCreditInfo
     hasPrimaryButton: false
     inputs:
       - name: hasAdvancedChildTaxCredit
@@ -6783,6 +6784,8 @@ workflow:
     pageConfiguration: *advancedChildTaxCredit
     nextPages:
       - pageName: studentFinancialAid
+    datasources:
+      - pageName: addHouseholdMembers
   studentFinancialAid:
     pageConfiguration: *studentFinancialAid
     nextPages:

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<!-- Single wrapper fragment containing both reveal boxes  -->
+<div th:fragment="childTaxCreditInfo" >
+    
+    <!--Reveal box for Advanced Child Tax Credit page -->
+    <div class="reveal reveal-adjacent spacing-below-35 spacing-above-minus-25">
+        <button th:text="#{advanced-child-tax-credit.reveal-types.title}" type="button"
+            class="reveal__link reveal__link-adjacent reveal__link__header-adjacent" aria-expanded="false"
+            aria-controls="advanced-child-tax-credit.reveal-types-content">
+        </button>
+        <div class="reveal__content reveal__content-adjacent" id="advanced-child-tax-credit.reveal-types-content">
+            <p th:text="#{advanced-child-tax-credit.reveal-types.p1}"></p>
+            <p th:text="#{advanced-child-tax-credit.reveal-types.p2}"></p>
+        </div>
+    </div>
+</div>
+
+</html>
