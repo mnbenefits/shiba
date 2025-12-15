@@ -137,6 +137,8 @@ mappings:
     wereYouEmployed: HAS_WORKED_IN_PAST_36_MONTHS
   disability:
     hasDisability: HAS_DISABILITY
+  unableToWork:
+    unableToWork: UNABLE_TO_WORK	
   whoHasDisability:
     whoHasDisability: WHO_HAS_DISABILITY
   workSituation:

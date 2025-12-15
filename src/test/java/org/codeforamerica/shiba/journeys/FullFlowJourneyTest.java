@@ -169,11 +169,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickElementById("citizenshipStatus[]-0-NOT_CITIZEN");
 		testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT");
 		testPage.clickContinue("Disability");
-
+			
 		// Does anyone in your household have a physical or mental disability that
-		// prevents them from working?
-		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");	
-		testPage.clickContinue("Work changes");
+		// prevents them from working?	
+		testPage.chooseYesOrNo("hasDisability", YES.getDisplayValue(), "Not able to work");
+		
+		testPage.chooseYesOrNo("unableToWork", YES.getDisplayValue(), "Work changes");
 
 		// In the last 2 months, did anyone in your household do any of these things?
 		testPage.enter("workChanges", "Went on strike");
@@ -735,7 +736,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
-		assertCafFieldEquals("HAS_DISABILITY", "No");
+		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");
 		assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
 		assertCafFieldEquals("ADDITIONAL_INCOME_INFO", "I also make a small amount of money from my lemonade stand.");
@@ -840,7 +841,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Disability");
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
-		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
+		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Not able to work");
+		testPage.chooseYesOrNo("unableToWork", NO.getDisplayValue(), "Work changes");
 		testPage.clickContinue("Work changes");
 		assertThat(testPage.findElementById("workChanges-error-message-1").getText())
 		.contains("Make sure you choose 'None of the above' or another option.");

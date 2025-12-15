@@ -1352,7 +1352,7 @@ pageConfigurations:
     pageTitle: children-under-19.title
     headerKey: children-under-19.header
     hasPrimaryButton: false
-    contextFragment: householdContextFragment
+    contextFragment: LiveWithChildrenFragment
     inputs:
       - name: hasChildrenUnder19
         type: YES_NO
@@ -2704,7 +2704,20 @@ pageConfigurations:
     hasPrimaryButton: false
     inputs:
       - name: hasDisability
-        type: YES_NO
+        type: YES_NO	
+  - &unableToWork
+    name: unableToWork
+    pageTitle: unable-to-work.title
+    contextFragment: briefcaseContextFragment
+    headerKey:
+      defaultValue: unable-to-work.is-anyone-in-your-household-not-able-to-work-for-any-reason
+      conditionalValues:
+        - value: unable-to-work.are-you-not-able-to-work-for-any-reason
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: unableToWork
+        type: YES_NO		
 # workSituation page is no longer used. However, we keep def. for data-pipelines compatibility
   - &workSituation
     name: workSituation
@@ -4078,9 +4091,9 @@ pageConfigurations:
     name: housingProvider
     pageTitle: housing-provider.title
     headerKey:
-      defaultValue: housing-provider.is-your-household-already-working-with-a-provider
+      defaultValue: housing-provider.is-your-household-working-with-a-provider
       conditionalValues:
-      - value: housing-provider.are-you-already-working-with-a-provider
+      - value: housing-provider.are-you-working-with-a-provider
         condition: *livesAlone?
     headerHelpMessageKey: housing-provider.we-will-use-this-information
     hasPrimaryButton: false
@@ -6030,14 +6043,21 @@ workflow:
             conditions:
               - *livesAlone?
               - *applicantOnlyChoseCCAP?
-    nextPages:
-      - pageName: workChanges
     datasources:
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
-      - pageName: choosePrograms
-      - pageName: workChanges
+      - pageName: choosePrograms			  
+    nextPages:
+      - pageName: unableToWork
+        condition: *someoneChoseCAFProgram?
+      - pageName: workChanges			
+  unableToWork:
+    pageConfiguration: *unableToWork
+    datasources:
+      - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: workChanges			  
   workChanges:
     pageConfiguration: *workChanges
     skipCondition:

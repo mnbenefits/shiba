@@ -415,7 +415,18 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
 	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
 	  postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");
-	  postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+	  switch (program) {
+	    case "CCAP": {
+	        // CCAP skips unableToWork page, goes directly to workChanges
+	        postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+	        break;
+	    }
+	    default: {
+	        // All other programs go through unableToWork page
+	        postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+	        postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
+	    }
+	  }
 	  postExpectingRedirect("workChanges", "workChanges", "GO_ON_STRIKE", "tribalNationMember");
 	  postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }
