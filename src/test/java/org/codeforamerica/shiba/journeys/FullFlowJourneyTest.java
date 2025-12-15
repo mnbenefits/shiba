@@ -81,16 +81,17 @@ public class FullFlowJourneyTest extends JourneyTest {
 		String householdMemberLastName = "householdMemberLastName";
 		String householdMemberFullName = householdMemberFirstName + " " + householdMemberLastName;
 
-		testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
-
+		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
+		testPage.chooseYesOrNo("hasTemporaryAbsence",YES.getDisplayValue(), "Who are the children in need of care?");
+       
 		// Who are the children in need of childcare
 		testPage.enter("whoNeedsChildCare", householdMemberFullName);
 		testPage.clickButton("Continue", "Do you have a child care provider?");
 
-		testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who are the children that have a parent not living in the home?");
-
+		testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who has a parent not at home?");
+        
 		// Who are the children that have a parent not living at home?
-		testPage.enter("whoHasAParentNotLivingAtHome", "None of the children have parents living outside the home");
+		testPage.enter("whoHasAParentNotLivingAtHome", "None of these children have parents living outside the home");
 	   
 		
 		testPage.clickContinue("Mental health needs & child care");
@@ -123,7 +124,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("hasHousingSubsidy", YES.getDisplayValue());
 
 		// What is your current living situation?
-		testPage.enter("livingSituation", "Staying in a hotel or motel");
+		testPage.enter("livingSituation", "Staying in a hotel or motel");	
+		testPage.clickContinue("Housing Provider");
+		
+		testPage.enter("housingProvider", YES.getDisplayValue());
+		
+		driver.findElement(By.name("housingProviderName[]")).sendKeys("Group Home Provider");
+		driver.findElement(By.name("housingProviderVendorNumber[]")).sendKeys("12345");
 		testPage.clickContinue("Going to school");
 
 		// Is anyone in your household going to school right now, either full or
@@ -705,6 +712,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CCAP", "Yes");
 		assertCafFieldEquals("EMERGENCY", "Yes");
 		assertCafFieldEquals("MN_HOUSING_SUPPORT", "Yes");
+		assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Group Home Provider / 12345");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
 		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
@@ -765,6 +773,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.30");
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
+		assertCafFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes");
 
 	}
 
@@ -808,7 +817,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
 		testPage.clickContinue("Household members");
 
-		testPage.clickButtonLink("Yes, that's everyone", "Housing subsidy");
+		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
+		testPage.chooseYesOrNo("hasTemporaryAbsence", NO.getDisplayValue(), "Children in your household");
+		testPage.chooseYesOrNo("hasChildrenUnder19", NO.getDisplayValue(), "Housing subsidy");
 
 		// Are you getting a housing subsidy?
 		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Going to school");
@@ -1000,6 +1011,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CCAP", "Off");
 		assertCafFieldEquals("EMERGENCY", "Off");
 	    assertCafFieldEquals("MN_HOUSING_SUPPORT", "No");
+	    assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Does not have a provider.");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("CREATED_DATE", "2020-01-01");
