@@ -343,7 +343,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
 		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
-		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Assets");
+		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Adult care costs");
+		testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "A vehicle");
@@ -905,7 +906,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
 		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Child care costs"); 
-		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Assets"); 
+		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Adult care costs"); 
+		testPage.chooseYesOrNo("adultCareCosts", NO.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "None");
