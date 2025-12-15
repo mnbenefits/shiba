@@ -286,6 +286,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("otherPaymentsAmount", "100.00");
 		testPage.clickContinue("Advance Child Tax Credit");
+		testPage.clickElementById("childTaxRevealButton");
+		assertThat(driver.findElement(By.id("childTaxRevealBox")).getAttribute("class"))
+		.doesNotContain("is-hiding-content");
+		testPage.findElementById("advanced-child-tax-credit.reveal-types-content");
 		testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
 		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 

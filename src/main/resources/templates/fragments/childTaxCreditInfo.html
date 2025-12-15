@@ -4,8 +4,8 @@
 <div th:fragment="childTaxCreditInfo" >
     
     <!--Reveal box for Advanced Child Tax Credit page -->
-    <div class="reveal reveal-adjacent spacing-below-35 spacing-above-minus-25">
-        <button th:text="#{advanced-child-tax-credit.reveal-types.title}" type="button"
+    <div id=childTaxRevealBox class="reveal reveal-adjacent spacing-below-35 spacing-above-minus-25">
+        <button name=childTaxReveal[] id=childTaxRevealButton th:text="#{advanced-child-tax-credit.reveal-types.title}" type="button"
             class="reveal__link reveal__link-adjacent reveal__link__header-adjacent" aria-expanded="false"
             aria-controls="advanced-child-tax-credit.reveal-types-content">
         </button>
