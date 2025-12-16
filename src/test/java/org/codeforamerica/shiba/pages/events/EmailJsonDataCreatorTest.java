@@ -86,7 +86,7 @@ public class EmailJsonDataCreatorTest {
 
 		// Common test values
 		recepientEmail = "test@ex.com";
-		locale = new Locale("en");
+		locale = Locale.forLanguageTag("en");
 	}
 
 	/* HelperMethod1: Sets up document parser and routing destinations */

@@ -62,7 +62,7 @@ class CoverPagePreparerTest {
         "county-to-instructions.generic-caseworker", "Caseworker Instructions"), LocaleContextHolder.getLocale()
     );
     staticMessageSource.addMessage(
-        "county-to-instructions.generic-client", new Locale("es"), "Client Instructions En Español"
+        "county-to-instructions.generic-client", Locale.forLanguageTag("es"), "Client Instructions En Español"
     );
     applicationData = new ApplicationData();
     preparer = new CoverPagePreparer(staticMessageSource, routingDecisionService,
