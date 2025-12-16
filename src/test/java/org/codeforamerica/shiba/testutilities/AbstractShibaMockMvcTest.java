@@ -845,7 +845,8 @@ public class AbstractShibaMockMvcTest {
     }
     else {
     	postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
-    	postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+    	postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+    	postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
         postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
         postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
@@ -951,7 +952,8 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
     }
 
-    postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+    postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+    postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
     postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -1014,7 +1016,8 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
         "supportAndCare");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets"); 
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts"); 
+    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets"); 
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");

@@ -33,7 +33,7 @@ import com.google.gson.JsonObject;
 class UploadedDocumentsSubmittedListenerTest {
 
 	private final String applicationId = "some-application-id";
-	private final Locale locale = new Locale("en");
+	private final Locale locale = Locale.forLanguageTag("en");
 	@Mock
 	private MnitDocumentConsumer mnitDocumentConsumer;
 	@Mock
