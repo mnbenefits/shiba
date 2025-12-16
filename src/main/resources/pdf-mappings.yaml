@@ -65,6 +65,8 @@ mappings:
     programList: PROGRAMS
   preparingMealsTogether:
     isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
+  buyOrCookFood:
+    isDisabledToBuyOrCookFood: BUY_OR_FIX_FOOD
   temporaryAbsence:
    hasTemporaryAbsence: ANYONE_TEMPORARILY_NOT_HOME
   contactInfo:
@@ -131,10 +133,14 @@ mappings:
     citizenshipStatus: IS_US_CITIZEN
   childCareCosts:
     childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
+  adultCareCosts:
+    adultCareCosts: COSTS_FOR_DISABLED_ADULT	
   pastEmployment:
     wereYouEmployed: HAS_WORKED_IN_PAST_36_MONTHS
   disability:
     hasDisability: HAS_DISABILITY
+  unableToWork:
+    unableToWork: UNABLE_TO_WORK	
   whoHasDisability:
     whoHasDisability: WHO_HAS_DISABILITY
   workSituation:

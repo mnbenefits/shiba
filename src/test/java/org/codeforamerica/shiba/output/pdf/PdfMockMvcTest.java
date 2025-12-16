@@ -397,6 +397,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("parentNotAtHome", "hasParentNotAtHome", "true");
 		
 		var caf = submitAndDownloadCaf();
+		//Maps to No on PDF with Yes Field because the question is inverse
 		assertPdfFieldEquals("BOTH_PARENTS_AT_HOME", "Yes", caf);
 	}
 
@@ -1546,6 +1547,15 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			var caf = submitAndDownloadCaf();
 			assertPdfFieldEquals("CCAP_HAS_COSTS_FOR_CHILD_CARE", "Yes", caf);
 		}
+		
+		@Test
+		void verifyAdultCareCost() throws Exception {
+			selectPrograms("SNAP");
+			postExpectingSuccess("adultCareCosts", "adultCareCosts", "true");
+			var caf = submitAndDownloadCaf();
+			assertPdfFieldEquals("COSTS_FOR_DISABLED_ADULT", "Yes", caf);
+		}
+		
 
 	}
 	@Nested

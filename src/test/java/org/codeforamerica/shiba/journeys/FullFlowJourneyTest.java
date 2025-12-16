@@ -119,6 +119,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		
 		// Does everyone in your household buy and prepare food with you?
 		testPage.enter("isPreparingMealsTogether", YES.getDisplayValue());
+		
+		// Does anyone in your household who is 60 or older, or has a disability, need help shopping or cooking for themselves?
+		testPage.enter("isDisabledToBuyOrCookFood", NO.getDisplayValue());
 
 		// Are you getting a housing subsidy?
 		testPage.enter("hasHousingSubsidy", YES.getDisplayValue());
@@ -169,11 +172,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickElementById("citizenshipStatus[]-0-NOT_CITIZEN");
 		testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT");
 		testPage.clickContinue("Disability");
-
+			
 		// Does anyone in your household have a physical or mental disability that
-		// prevents them from working?
-		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");	
-		testPage.clickContinue("Work changes");
+		// prevents them from working?	
+		testPage.chooseYesOrNo("hasDisability", YES.getDisplayValue(), "Not able to work");
+		
+		testPage.chooseYesOrNo("unableToWork", YES.getDisplayValue(), "Work changes");
 
 		// In the last 2 months, did anyone in your household do any of these things?
 		testPage.enter("workChanges", "Went on strike");
@@ -348,7 +352,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
 		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
-		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Assets");
+		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Adult care costs");
+		testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "A vehicle");
@@ -730,6 +735,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("APPLICANT_PREVIOUS_STATE", "Chicago");
 		assertCafFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
 		assertCafFieldEquals("PREPARING_MEALS_TOGETHER", "Yes");
+		assertCafFieldEquals("BUY_OR_FIX_FOOD", "No");
 		assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
 		assertCafFieldEquals("IS_PREGNANT", "Yes");
 		assertCafFieldEquals("IS_US_CITIZEN_0", "Not_Citizen");
@@ -740,7 +746,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
-		assertCafFieldEquals("HAS_DISABILITY", "No");
+		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");
 		assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
 		assertCafFieldEquals("ADDITIONAL_INCOME_INFO", "I also make a small amount of money from my lemonade stand.");
@@ -846,7 +852,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Disability");
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
-		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
+		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Not able to work");
+		testPage.chooseYesOrNo("unableToWork", NO.getDisplayValue(), "Work changes");
 		testPage.clickContinue("Work changes");
 		assertThat(testPage.findElementById("workChanges-error-message-1").getText())
 		.contains("Make sure you choose 'None of the above' or another option.");
@@ -911,7 +918,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
 		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Child care costs"); 
-		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Assets"); 
+		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Adult care costs"); 
+		testPage.chooseYesOrNo("adultCareCosts", NO.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "None");

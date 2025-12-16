@@ -88,8 +88,15 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     fillOutHousemateInfo("CCAP");
     // Don't select any children in need of care, should get redirected to preparing meals together
     assertCorrectPageTitle("childrenInNeedOfCare", "Who are the children in need of care?");
-    postExpectingRedirect("preparingMealsTogether", "isPreparingMealsTogether", "false",
-        "housingSubsidy");
+    if(Arrays.stream(programs).anyMatch(p -> p.equals("SNAP"))) {
+        postExpectingRedirect("preparingMealsTogether", "isPreparingMealsTogether", "false",
+                "buyOrCookFood");
+        postExpectingRedirect("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+	            "housingSubsidy");   
+    }else {
+        postExpectingRedirect("preparingMealsTogether", "isPreparingMealsTogether", "false",
+                "housingSubsidy");
+    }
     postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
     if(Arrays.asList(programs).contains("GRH")) {
     	 postExpectingRedirect("housingProvider", "housingProvider", "false", "goingToSchool");
@@ -134,7 +141,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 		} else {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
+			postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
 		}
   }
 
@@ -153,7 +161,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	} else {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
+		postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
 	}
   }
 }
