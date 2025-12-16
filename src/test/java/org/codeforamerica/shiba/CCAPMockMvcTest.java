@@ -496,7 +496,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 		} else {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets");
+			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
+			postExpectingRedirect("adultCareCosts", "adultCareCosts","false", "assets");
 		}
 	    postExpectingSuccess("assets", "assets", "NONE");
 	    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
