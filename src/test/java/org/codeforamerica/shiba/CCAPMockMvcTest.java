@@ -38,7 +38,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	    postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
 	            "Preparing meals together");
 	  postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "true",
-		        "Housing subsidy");
+		        "Buying and cooking food");
+	   postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+	            "Housing subsidy");
 	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
 	            "Going to school");
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
@@ -133,7 +135,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Preparing meals together");
     postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "false",
-        "Housing subsidy");
+        "Buying and cooking food");
+    postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+            "Housing subsidy");   
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Going to school");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
@@ -164,7 +168,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Preparing meals together");
     postExpectingNextPageTitle("preparingMealsTogether", "isPreparingMealsTogether", "false",
-        "Housing subsidy");
+        "Buying and cooking food");
+    postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+            "Housing subsidy");    
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Going to school");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");

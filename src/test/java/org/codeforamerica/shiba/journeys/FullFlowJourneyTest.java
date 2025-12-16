@@ -119,6 +119,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		
 		// Does everyone in your household buy and prepare food with you?
 		testPage.enter("isPreparingMealsTogether", YES.getDisplayValue());
+		
+		// Does anyone in your household who is 60 or older, or has a disability, need help shopping or cooking for themselves?
+		testPage.enter("isDisabledToBuyOrCookFood", NO.getDisplayValue());
 
 		// Are you getting a housing subsidy?
 		testPage.enter("hasHousingSubsidy", YES.getDisplayValue());
@@ -726,6 +729,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("APPLICANT_PREVIOUS_STATE", "Chicago");
 		assertCafFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
 		assertCafFieldEquals("PREPARING_MEALS_TOGETHER", "Yes");
+		assertCafFieldEquals("BUY_OR_FIX_FOOD", "No");
 		assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
 		assertCafFieldEquals("IS_PREGNANT", "Yes");
 		assertCafFieldEquals("IS_US_CITIZEN_0", "Not_Citizen");

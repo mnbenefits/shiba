@@ -343,7 +343,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
 	testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed each week");
 	testPage.enter("childCareMentalHealthHours", "20");
     testPage.clickContinue("Preparing meals together");
-    testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Housing subsidy");
+    testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Buying and cooking food");
+    testPage.chooseYesOrNo("isDisabledToBuyOrCookFood", YES.getDisplayValue(), "Housing subsidy");
     testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
     testPage.enter("livingSituation", "None of these");
     testPage.clickContinue("Going to school");

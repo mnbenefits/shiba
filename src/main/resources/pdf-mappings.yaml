@@ -65,6 +65,8 @@ mappings:
     programList: PROGRAMS
   preparingMealsTogether:
     isPreparingMealsTogether: PREPARING_MEALS_TOGETHER
+  buyOrCookFood:
+    isDisabledToBuyOrCookFood: BUY_OR_FIX_FOOD
   temporaryAbsence:
    hasTemporaryAbsence: ANYONE_TEMPORARILY_NOT_HOME
   contactInfo:
