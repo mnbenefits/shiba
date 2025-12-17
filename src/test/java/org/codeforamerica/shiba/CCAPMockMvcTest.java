@@ -236,16 +236,19 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
-
+  
+  
   @Test
   void verifyDrugFelonyQuestionIsDisplayedWhenAnythingOtherThanCCAPOnlyIsSelected() throws Exception {
     completeFlowFromLandingPageThroughReviewInfo("CCAP", "SNAP");
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true",
             "startHousehold");
     fillOutHousemateInfo("EA");
+    //TODO Story 218405: Change this with new drug felony question implementation
     assertPageHasElementWithId("legalStuff", "drugFelony1");
   }
-
+  
+  
   @Test
   void verifyDrugFelonyQuestionIsNotDisplayedWhenCCAPOnlyIsSelected() throws Exception {
     completeFlowFromLandingPageThroughReviewInfo("CCAP");

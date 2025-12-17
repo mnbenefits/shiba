@@ -402,6 +402,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
+		//TODO Story 218405: Change this with new drug felony question implementation
 		testPage.enter("drugFelony", NO.getDisplayValue());
 		testPage.clickContinue("Sign this application");
 
@@ -738,6 +739,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("HEAT", "Yes");
 		assertCafFieldEquals("SUPPORT_AND_CARE", "Yes");
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
+		//TODO Story 218405: Change this with new drug felony question implementation
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("HAS_DISABILITY", "Yes");
@@ -947,6 +949,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
+		//TODO Story 218405: Change this with new drug felony question implementation
 		testPage.enter("drugFelony", NO.getDisplayValue());
 		testPage.clickContinue("Sign this application");
 

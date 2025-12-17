@@ -98,6 +98,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     // Legal Stuff
     assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
+    //TODO Story 218405: Change this with new drug felony question implementation
     testPage.enter("drugFelony", NO.getDisplayValue());
     testPage.clickContinue("Sign this application");
     List<String> expectedMessages = List.of(
@@ -233,6 +234,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		// Legal Stuff
 		assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
 		testPage.enter("agreeToTerms", "I agree");
+		//TODO Story 218405: Change this with new drug felony question implementation
 		testPage.enter("drugFelony", NO.getDisplayValue());
 		testPage.clickContinue("Sign this application");
 		List<String> expectedMessages = List.of("You did not upload documents with your application today.",
@@ -356,6 +358,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     // Legal Stuff
     assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
+    //TODO Story 218405: Change this with new drug felony question implementation
     testPage.enter("drugFelony", YES.getDisplayValue());
     testPage.clickContinue("Sign this application");
 
