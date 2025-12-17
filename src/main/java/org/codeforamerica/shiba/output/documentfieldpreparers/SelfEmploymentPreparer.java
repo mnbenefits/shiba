@@ -5,6 +5,7 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IS_SELF_EMPLOYMENT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Group.JOBS;
 import static org.codeforamerica.shiba.output.DocumentFieldType.SINGLE_VALUE;
+import static org.codeforamerica.shiba.output.FullNameFormatter.getFullName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +48,29 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
 	} else {
 		results.add(new DocumentField("employee", "selfEmployed", "true", SINGLE_VALUE));
 	}
+	String applicantName = getFullName(application);
+	
+
+	ScopedParams params = getParams(document, application);
+	Subworkflow subworkflow = getGroup(application.getApplicationData(), params.group());
+	
+	int index = 0;
+	for (Iteration iteration : subworkflow) {
+		if (params.scope().test(iteration.getPagesData())) {
+			PagesData pagesData = iteration.getPagesData();
+
+			
+			  boolean hasHousehold = pagesData.getPage("addHouseholdMembers")
+			  != null &&
+			  pagesData.getPage("addHouseholdMembers").get("addHouseholdMembers") != null;
+			 
+			if (!hasHousehold) {
+				results.add(new DocumentField("householdSelectionForIncome", "whoseJobIsItFormatted", applicantName,
+						SINGLE_VALUE, index));
+			}
+			index++;
+		}
+	}
 
       results.add(new DocumentField("employee", "selfEmployedGrossMonthlyEarnings",
     		  !selfEmploymentJobs.isEmpty() ? "see question 9" : "", SINGLE_VALUE));
@@ -57,6 +81,8 @@ public class SelfEmploymentPreparer extends SubworkflowScopePreparer {
   public List<Iteration> getSelfEmploymentJobs(ApplicationData applicationData) {
     List<Iteration> selfEmploymentJobs = new ArrayList<Iteration>();
 	Subworkflow jobsWorkflow = getGroup(applicationData, ApplicationDataParser.Group.JOBS);
+	
+
 	if (jobsWorkflow != null) {
 		for (Iteration job : jobsWorkflow) {
 			PagesData pagesData = job.getPagesData();
