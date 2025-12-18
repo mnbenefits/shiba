@@ -20,6 +20,7 @@ public class SelfEmploymentPreparerTest {
   @Test
   void shouldMapValuesIfSelfEmployedJobExists() {
     ApplicationData applicationData = new TestApplicationDataBuilder()
+    	.withPersonalInfo()
         .withSubworkflow("jobs",
             new PagesDataBuilder().withHourlyJob("false", "10", "10"),
             new PagesDataBuilder().withNonHourlyJob("true", "12", "EVERY_WEEK"))
@@ -34,6 +35,8 @@ public class SelfEmploymentPreparerTest {
         new DocumentField("employee", "selfEmployed", "true", SINGLE_VALUE),
         new DocumentField("employee", "selfEmployedGrossMonthlyEarnings", "see question 9",
             SINGLE_VALUE),
+        new DocumentField("householdSelectionForIncome", "whoseJobIsItFormatted", "Jane Doe",
+                SINGLE_VALUE, 0),
         new DocumentField("selfEmployment_incomePerPayPeriod", "incomePerPayPeriod_EVERY_WEEK", "12",
             SINGLE_VALUE, 0),
         new DocumentField("selfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "12",
@@ -97,6 +100,8 @@ public class SelfEmploymentPreparerTest {
         new DocumentField("employee", "selfEmployed", "true", SINGLE_VALUE),
         new DocumentField("employee", "selfEmployedGrossMonthlyEarnings", "see question 9",
             SINGLE_VALUE),
+        new DocumentField("householdSelectionForIncome", "whoseJobIsItFormatted", "Jane Doe",
+                SINGLE_VALUE, 0),
         new DocumentField("selfEmployment_incomePerPayPeriod", "incomePerPayPeriod_EVERY_DAY", "12",
             SINGLE_VALUE, 0),
         new DocumentField("selfEmployment_incomePerPayPeriod", "incomePerPayPeriod", "12",
