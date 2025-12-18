@@ -86,6 +86,7 @@ public class SelfEmploymentPreparerTest {
   @Test
   void shouldMapValuesIfSelfEmployedJobExistsDaily() {
     ApplicationData applicationData = new TestApplicationDataBuilder()
+    	.withPersonalInfo()
         .withSubworkflow("jobs",
             new PagesDataBuilder().withHourlyJob("false", "10", "10"),
             new PagesDataBuilder().withNonHourlyJob("true", "12", "EVERY_DAY"))
