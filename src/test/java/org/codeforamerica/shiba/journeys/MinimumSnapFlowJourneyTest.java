@@ -167,6 +167,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
 		// Personal Info
 		testPage.enter("firstName", "Ahmed");
+		testPage.enter("middleName", "Abdel");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("otherName", "defaultOtherName");
 		// DOB is optional
@@ -262,6 +263,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
 		// Page 5 and beyond
 		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
+		assertCafFieldEquals("APPLICANT_MIDDLE_NAME", "Abdel");
 		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
 		String otherName = "defaultOtherName";
 		assertCafFieldEquals("APPLICANT_OTHER_NAME", otherName);
@@ -767,6 +769,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 
     // Page 5 and beyond
     assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
+    assertCafFieldEquals("APPLICANT_MIDDLE_NAME", "Abdel");
     assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
     String otherName = "defaultOtherName";
     assertCafFieldEquals("APPLICANT_OTHER_NAME", otherName);
