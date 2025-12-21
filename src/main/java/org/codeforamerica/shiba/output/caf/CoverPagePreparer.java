@@ -240,7 +240,7 @@ public class CoverPagePreparer implements DocumentFieldPreparer {
       case CLIENT -> {
         var writtenLanguageSelection = application.getApplicationData().getPagesData()
             .safeGetPageInputValue("writtenLanguage", "writtenLanguage");
-        yield writtenLanguageSelection.contains("SPANISH") ? new Locale("es")
+        yield writtenLanguageSelection.contains("SPANISH") ? Locale.forLanguageTag("es")
             : LocaleContextHolder.getLocale();
       }
     };

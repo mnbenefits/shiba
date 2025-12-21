@@ -35,9 +35,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 				LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
 
 		// Assert intercom button is present on landing page
-	    // TODO: Note: The check for Intercom is temporarily removed due to a timeout issue. This needs to be resolved and restored.
-		//await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
-		//assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
+		// TODO: Note: The check for Intercom is temporarily removed due to a timeout
+		// issue. This needs to be resolved and restored.
+		// await().atMost(5, SECONDS).until(() ->
+		// !driver.findElements(By.id("intercom-frame")).isEmpty());
+		// assertThat(driver.findElement(By.id("intercom-frame"))).isNotNull();
 		assertThat(driver.findElement(By.id("generalNotice"))).isNotNull();
 		// Assert that the EBT Scam Alert is displayed on the landing page.
 		assertThat(driver.findElement(By.id("banner-alert"))).isNotNull();
@@ -47,7 +49,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickLinkToExternalWebsite("Learn more here.");
 		ArrayList<String> windowHandles = new ArrayList<String>(driver.getWindowHandles());
 		driver.switchTo().window(windowHandles.get(1));
-		// Temporarily commenting this out to workaround Radware Captcha issue when test run in GitHub, Story 144389
+		// Temporarily commenting this out to workaround Radware Captcha issue when test
+		// run in GitHub, Story 144389
 		// assertThat(driver.getTitle()).isEqualTo("Recent reports of card skimming
 		// affecting EBT card users");
 		driver.close(); // close the tab
@@ -82,23 +85,23 @@ public class FullFlowJourneyTest extends JourneyTest {
 		String householdMemberFullName = householdMemberFirstName + " " + householdMemberLastName;
 
 		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
-		testPage.chooseYesOrNo("hasTemporaryAbsence",YES.getDisplayValue(), "Who are the children in need of care?");
-       
+		testPage.chooseYesOrNo("hasTemporaryAbsence", YES.getDisplayValue(), "Who are the children in need of care?");
+
 		// Who are the children in need of childcare
 		testPage.enter("whoNeedsChildCare", householdMemberFullName);
 		testPage.clickButton("Continue", "Do you have a child care provider?");
 
 		testPage.chooseYesOrNo("hasChildCareProvider", NO.getDisplayValue(), "Who has a parent not at home?");
-        
+
 		// Who are the children that have a parent not living at home?
 		testPage.enter("whoHasAParentNotLivingAtHome", "None of these children have parents living outside the home");
-	   
+
 		
 		testPage.clickContinue("Mental health needs & child care");
 		// check it skips over child support, then go back
 		assertThat(testPage.getTitle()).isEqualTo("Mental health needs & child care");
 		testPage.goBack();
-		
+
 		testPage.enter("whoHasAParentNotLivingAtHome", householdMemberFullName);
 		testPage.clickContinue("Name of parent outside home");
 
@@ -109,22 +112,32 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// child support
 		testPage.enter("whoReceivesChildSupportPayments", householdMemberFullName);
-		
-		//Child care mental health section
+
+		// Child care mental health section
 		testPage.clickContinue("Mental health needs & child care");
-		// skipCondition for the whoNeedsChildCareMentalHealth page is true.  Applicant is only adult.
+		// skipCondition for the whoNeedsChildCareMentalHealth page is true. Applicant
+		// is only adult.
 		testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed each week");
 		testPage.enter("childCareMentalHealthHours", "20");
 		testPage.clickContinue("Preparing meals together");
-		
+
 		// Does everyone in your household buy and prepare food with you?
 		testPage.enter("isPreparingMealsTogether", YES.getDisplayValue());
+		
+		// Does anyone in your household who is 60 or older, or has a disability, need help shopping or cooking for themselves?
+		testPage.enter("isDisabledToBuyOrCookFood", NO.getDisplayValue());
 
 		// Are you getting a housing subsidy?
 		testPage.enter("hasHousingSubsidy", YES.getDisplayValue());
 
 		// What is your current living situation?
-		testPage.enter("livingSituation", "Staying in a hotel or motel");
+		testPage.enter("livingSituation", "Staying in a hotel or motel");	
+		testPage.clickContinue("Housing Provider");
+		
+		testPage.enter("housingProvider", YES.getDisplayValue());
+		
+		driver.findElement(By.name("housingProviderName[]")).sendKeys("Group Home Provider");
+		driver.findElement(By.name("housingProviderVendorNumber[]")).sendKeys("12345");
 		testPage.clickContinue("Going to school");
 
 		// Is anyone in your household going to school right now, either full or
@@ -163,11 +176,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickElementById("citizenshipStatus[]-0-NOT_CITIZEN");
 		testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT");
 		testPage.clickContinue("Disability");
-
+			
 		// Does anyone in your household have a physical or mental disability that
-		// prevents them from working?
-		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");	
-		testPage.clickContinue("Work changes");
+        // prevents them from working?	
+		testPage.chooseYesOrNo("hasDisability", YES.getDisplayValue(), "Not able to work");
+		
+		testPage.chooseYesOrNo("unableToWork", YES.getDisplayValue(), "Work changes");
 
 		// In the last 2 months, did anyone in your household do any of these things?
 		testPage.enter("workChanges", "Went on strike");
@@ -249,7 +263,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("otherUnearnedIncome", "Insurance payments");
 		testPage.enter("otherUnearnedIncome", "Contract for deed");
 		testPage.enter("otherUnearnedIncome", "Money from a trust");
-		testPage.enter("otherUnearnedIncome", "Rental income"); 
+		testPage.enter("otherUnearnedIncome", "Rental income");
 		testPage.enter("otherUnearnedIncome", "Health care reimbursement");
 		testPage.enter("otherUnearnedIncome", "Interest or dividends");
 		testPage.enter("otherUnearnedIncome", "Other payments");
@@ -279,7 +293,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Other payments");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("otherPaymentsAmount", "100.00");
-		testPage.clickContinue("Future Income");
+		testPage.clickContinue("Advance Child Tax Credit");
+		testPage.clickElementById("childTaxRevealButton");
+		assertThat(driver.findElement(By.id("childTaxRevealBox")).getAttribute("class"))
+		.doesNotContain("is-hiding-content");
+		testPage.findElementById("advanced-child-tax-credit.reveal-types-content");
+		testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "Yes");
@@ -336,7 +356,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
 		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
-		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Assets");
+		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Adult care costs");
+		testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "A vehicle");
@@ -350,8 +371,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Submitting your Application
 		testPage.clickButtonLink("Continue", "Register to vote");
-	
-		//Register to vote
+
+		// Register to vote
 		testPage.clickCustomButton("Yes, send me more info", 3, "Healthcare Coverage");
 
 		// Do you currently have healthcare coverage?
@@ -396,7 +417,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Upload documents
 		testPage.enter("applicantSignature", "this is my signature");
-		testPage.clickButtonLink("Continue",  "Submit application");
+		testPage.clickButtonLink("Continue", "Submit application");
 		testPage.clickButton("Submit application", "Submission Confirmation");
 		testPage.clickButtonLink("Continue", "Adding Documents");
 		testPage.clickButtonLink("Continue", "Document Recommendation");
@@ -522,10 +543,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_HOME_ZIPCODE", "88888");
 		assertCcapFieldEquals("HOUSING_SUBSIDY", "Yes");
 		assertCcapFieldEquals("LIVING_SITUATION", "HOTEL_OR_MOTEL");
-		assertCcapFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
-		assertCcapFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
-		assertCcapFieldEquals("NEED_INTERPRETER", "Yes"); 
+		assertCcapFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH");
+		assertCcapFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH");
+		assertCcapFieldEquals("NEED_INTERPRETER", "Yes");
 		assertCcapFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
+		assertCcapFieldEquals("APPLICANT_MIDDLE_NAME", "Abdel");
 		assertCcapFieldEquals("APPLICANT_LAST_NAME", "St. George");
 		assertCcapFieldEquals("APPLICANT_OTHER_NAME", "defaultOtherName");
 		assertCcapFieldEquals("DATE_OF_BIRTH", "01/12/1928");
@@ -654,7 +676,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_0", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_0", "200.30");
 		assertCafFieldEquals("OTHER_INCOME_FREQUENCY_0", "Monthly");
-		assertCafFieldEquals("OTHER_INCOME_TYPE_1", "Insurance payments (settlements, short- or long-term disability, etc.)");
+		assertCafFieldEquals("OTHER_INCOME_TYPE_1",
+				"Insurance payments (settlements, short- or long-term disability, etc.)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_1", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_1", "100.00");
 		assertCafFieldEquals("OTHER_INCOME_FREQUENCY_1", "Monthly");
@@ -676,7 +699,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_7", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_7", "100.00");
-		
+
 		assertCafFieldEquals("HOMEOWNERS_INSURANCE", "No");
 		assertCafFieldEquals("REAL_ESTATE_TAXES", "No");
 		assertCafFieldEquals("ASSOCIATION_FEES", "No");
@@ -697,16 +720,18 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("WHO_IS_PREGNANT", "Ahmed St. George");
 		assertCafFieldEquals("IS_US_CITIZEN_0", "Not_Citizen");
 		assertCafFieldEquals("IS_US_CITIZEN_1", "Citizen");
-		assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
-		assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
-		assertCafFieldEquals("NEED_INTERPRETER", "Yes"); 
+		assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "ENGLISH");
+		assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH");
+		assertCafFieldEquals("NEED_INTERPRETER", "Yes");
 		assertCafFieldEquals("FOOD", "Yes");
 		assertCafFieldEquals("CASH", "Off");
 		assertCafFieldEquals("CCAP", "Yes");
 		assertCafFieldEquals("EMERGENCY", "Yes");
 		assertCafFieldEquals("MN_HOUSING_SUPPORT", "Yes");
+		assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Group Home Provider / 12345");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
+		assertCafFieldEquals("APPLICANT_MIDDLE_NAME", "Abdel");
 		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
 		assertCafFieldEquals("APPLICANT_OTHER_NAME", "defaultOtherName");
 		assertCafFieldEquals("DATE_OF_BIRTH", "01/12/1928");
@@ -717,6 +742,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("APPLICANT_PREVIOUS_STATE", "Chicago");
 		assertCafFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
 		assertCafFieldEquals("PREPARING_MEALS_TOGETHER", "Yes");
+		assertCafFieldEquals("BUY_OR_FIX_FOOD", "No");
 		assertCafFieldEquals("GOING_TO_SCHOOL", "Yes");
 		assertCafFieldEquals("IS_PREGNANT", "Yes");
 		assertCafFieldEquals("IS_US_CITIZEN_0", "Not_Citizen");
@@ -727,7 +753,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
-		assertCafFieldEquals("HAS_DISABILITY", "No");
+		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");
 		assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
 		assertCafFieldEquals("ADDITIONAL_INCOME_INFO", "I also make a small amount of money from my lemonade stand.");
@@ -759,13 +785,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_NAME_0", "houseHoldyMcMemberson");
 		assertCafFieldEquals("CCAP_0", "Yes");
 		assertCafFieldEquals("RELATIONSHIP_0", "child");
-		assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED"); 
+		assertCafFieldEquals("MARITAL_STATUS_0", "NEVER_MARRIED");
 		assertCafFieldEquals("GROSS_MONTHLY_INCOME_0", "120.00");
 		assertCafFieldEquals("APPLICANT_HOME_STREET_ADDRESS", "123 Some Street");
 		assertCafFieldEquals("MONEY_MADE_LAST_MONTH", "920.30");
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
 		assertCafFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes");
+		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
 
 	}
 
@@ -779,8 +806,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 				LocalDateTime.of(2020, 1, 1, 10, 15, 30).atOffset(ZoneOffset.UTC).toInstant());
 
 		// Assert intercom button is present on landing page
-	    // TODO: Note: The check for Intercom is temporarily removed due to a timeout issue. This needs to be resolved and restored.
-		//await().atMost(5, SECONDS).until(() -> !driver.findElements(By.id("intercom-frame")).isEmpty());
+		// TODO: Note: The check for Intercom is temporarily removed due to a timeout
+		// issue. This needs to be resolved and restored.
+		// await().atMost(5, SECONDS).until(() ->
+		// !driver.findElements(By.id("intercom-frame")).isEmpty());
 
 		goToPageBeforeSelectPrograms("Chisago");
 
@@ -795,6 +824,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
 		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
 		testPage.enter("firstName", "Celia");
+		testPage.enter("middleName", "Anna");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("dateOfBirth", "10/15/1950");
 		testPage.enter("maritalStatus", "Married, living with spouse");
@@ -832,11 +862,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Disability");
 		// Does anyone in your household have a physical or mental disability that
 		// prevents them from working?
-		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
+		testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Not able to work");
+		testPage.chooseYesOrNo("unableToWork", NO.getDisplayValue(), "Work changes");
 		testPage.clickContinue("Work changes");
 		assertThat(testPage.findElementById("workChanges-error-message-1").getText())
-		.contains("Make sure you choose 'None of the above' or another option.");
-		
+				.contains("Make sure you choose 'None of the above' or another option.");
+
 		// In the last 2 months, did anyone in your household do any of these things?
 		testPage.enter("workChanges", "Stopped working, quit a job or ended self-employment");
 		testPage.enter("workChanges", "Refused a job offer");
@@ -866,13 +897,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Unearned income
 		testPage.enter("unearnedIncome", "None");
-		
-		//otherUnearnedIncome page
+
+		// otherUnearnedIncome page
 		testPage.clickContinue("Unearned Income");
-		
+
 		testPage.enter("otherUnearnedIncome", "None");
-		testPage.clickContinue("Future Income");
-		
+		testPage.clickContinue("Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "No");
@@ -898,7 +929,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
 		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Child care costs"); 
-		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Assets"); 
+		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Adult care costs"); 
+		testPage.chooseYesOrNo("adultCareCosts", NO.getDisplayValue(), "Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "None");
@@ -912,7 +944,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("Continue", "Register to vote");
 
 		// Register to vote
-		testPage.clickCustomButton("Yes, send me more info", 3,  "Healthcare Coverage");
+		testPage.clickCustomButton("Yes, send me more info", 3, "Healthcare Coverage");
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
@@ -1004,15 +1036,18 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("CCAP", "Off");
 		assertCafFieldEquals("EMERGENCY", "Off");
 	    assertCafFieldEquals("MN_HOUSING_SUPPORT", "No");
+	    assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Does not have a provider.");
+		assertCafFieldEquals("MN_HOUSING_SUPPORT", "No");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("CREATED_DATE", "2020-01-01");
 		// Household member fields
+		assertCafFieldEquals("MIDDLE_NAME_0", "Anna");
 		assertCafFieldEquals("PROGRAMS_0", "CASH");
 		assertCafFieldEquals("OTHER_ADULT_SIGNATURE", "second person signature");
 		assertCafFieldEquals("CREATED_DATE_SIGNATURE", "2020-01-01");
-		
-		// work status fields 
+
+		// work status fields
 		assertCafFieldEquals("GO_ON_STRIKE", "Yes");
 		assertCafFieldEquals("END_WORK", "Off");
 		assertCafFieldEquals("REFUSE_A_JOB_OFFER", "Off");
@@ -1024,8 +1059,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 	}
 
 	private void selectProgramsAndEnterPersonalInfo() {
-		selectProgramsAndEnterPersonalInfo(
-				List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH));
+		selectProgramsAndEnterPersonalInfo(List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH));
 	}
 
 	private void selectProgramsAndEnterPersonalInfo(List<String> programSelections) {
@@ -1047,6 +1081,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("Continue", "Personal Info");
 		// Personal Info
 		testPage.enter("firstName", "Ahmed");
+		testPage.enter("middleName", "Abdel");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("otherName", "defaultOtherName");
 		// DOB is optional
@@ -1061,7 +1096,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("dateOfBirth", "01/12/1928");
 		testPage.clickContinue("Home Address");
 	}
-
 
 	private void selectAllPrograms() {
 		List<String> programSelections = List.of(PROGRAM_SNAP, PROGRAM_CCAP, PROGRAM_EA, PROGRAM_GRH);
@@ -1082,6 +1116,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("Continue", "Personal Info");
 		// Personal Info
 		testPage.enter("firstName", "Ahmed");
+		testPage.enter("middleName", "Abdel");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("otherName", "defaultOtherName");
 		// DOB is optional
@@ -1103,6 +1138,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
 		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
 		testPage.enter("firstName", "Celia");
+		testPage.enter("middleName", "Anna");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("dateOfBirth", "10/15/1950");
 		testPage.enter("maritalStatus", "Married, living with spouse");
@@ -1203,16 +1239,17 @@ public class FullFlowJourneyTest extends JourneyTest {
 		waitForDocumentUploadToComplete();
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).isEqualTo("2 files added");
 		uploadFile(getAbsoluteFilepathString("pdf-without-acroform.pdf")); // Assert that we can still upload PDFs
-		waitForDocumentUploadToComplete();																	// without acroforms
+		waitForDocumentUploadToComplete(); // without acroforms
 		assertThat(driver.findElement(By.id("number-of-uploaded-files")).getText()).isEqualTo("3 files added");
-		//The delete link doesn't consistently show for the pdf-without-acroform.pdf.
-		//takeSnapShot shows the cancel link is usually present, so test for either of them here.
+		// The delete link doesn't consistently show for the pdf-without-acroform.pdf.
+		// takeSnapShot shows the cancel link is usually present, so test for either of
+		// them here.
 		int numberOfDeleteLinks = driver.findElements(By.linkText("delete")).size();
-		if(numberOfDeleteLinks == 2) {
+		if (numberOfDeleteLinks == 2) {
 			assertThat(driver.findElements(By.linkText("cancel")).size()).isEqualTo(1);
-		}else if(numberOfDeleteLinks == 1) {
+		} else if (numberOfDeleteLinks == 1) {
 			assertThat(driver.findElements(By.linkText("cancel")).size()).isEqualTo(2);
-		}else {
+		} else {
 			assertThat(driver.findElements(By.linkText("delete")).size()).isEqualTo(3);
 		}
 

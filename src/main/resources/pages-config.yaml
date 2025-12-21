@@ -824,6 +824,11 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-first-name
+      - name: middleName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: personal-info.whats-your-middle-name
+        helpMessageKey: personal-info.legally-as-it-appears-on-your-id				
       - name: lastName
         type: TEXT
         promptMessage:
@@ -831,7 +836,7 @@ pageConfigurations:
         helpMessageKey: personal-info.legally-as-it-appears-on-your-id
         validators:
           - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-to-provide-a-last-name
+            errorMessageKey: general.validation.make-sure-to-provide-a-last-name		
       - name: otherName
         type: TEXT
         promptMessage:
@@ -1175,14 +1180,19 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-first-name
+      - name: middleName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: household-member-info.whats-their-middle-name
+        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id		  			
       - name: lastName
         type: TEXT
         promptMessage:
           promptMessageKey: household-member-info.whats-their-last-name
-        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-last-name
+        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id			
       - name: otherName
         type: TEXT
         promptMessage:
@@ -1352,7 +1362,7 @@ pageConfigurations:
     pageTitle: children-under-19.title
     headerKey: children-under-19.header
     hasPrimaryButton: false
-    contextFragment: householdContextFragment
+    contextFragment: LiveWithChildrenFragment
     inputs:
       - name: hasChildrenUnder19
         type: YES_NO
@@ -1623,6 +1633,15 @@ pageConfigurations:
     contextFragment: groceriesContextFragment
     inputs:
       - name: isPreparingMealsTogether
+        type: YES_NO
+  - &buyOrCookFood
+    name: buyOrCookFood
+    pageTitle: buy-or-cook-food.title
+    headerKey: buy-or-cook-food.header
+    hasPrimaryButton: false
+    contextFragment: groceriesContextFragment
+    inputs:
+      - name: isDisabledToBuyOrCookFood
         type: YES_NO
   - &goingToSchool
     name: goingToSchool
@@ -2116,6 +2135,30 @@ pageConfigurations:
     hasPrimaryButton: false
     inputs:
       - name: childCareCosts
+        type: YES_NO	
+  - &adultCareCosts
+    name: adultCareCosts
+    pageTitle: adult-care-costs.title
+    headerKey:
+      defaultValue: adult-care-costs-household.header
+      conditionalValues:
+        - value: adult-care-costs.header
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: adultCareCosts
+        type: YES_NO	
+  - &pastEmployment
+    name: pastEmployment
+    pageTitle: past-employment.title
+    headerKey:
+      defaultValue: past-employment-household.header
+      conditionalValues:
+        - value: past-employment.header
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: wereYouEmployed
         type: YES_NO
   - &pastEmployment
     name: pastEmployment
@@ -2692,7 +2735,20 @@ pageConfigurations:
     hasPrimaryButton: false
     inputs:
       - name: hasDisability
-        type: YES_NO
+        type: YES_NO	
+  - &unableToWork
+    name: unableToWork
+    pageTitle: unable-to-work.title
+    contextFragment: briefcaseContextFragment
+    headerKey:
+      defaultValue: unable-to-work.is-anyone-in-your-household-not-able-to-work-for-any-reason
+      conditionalValues:
+        - value: unable-to-work.are-you-not-able-to-work-for-any-reason
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: unableToWork
+        type: YES_NO		
 # workSituation page is no longer used. However, we keep def. for data-pipelines compatibility
   - &workSituation
     name: workSituation
@@ -3677,6 +3733,21 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: OTHER_PAYMENTS
+  - &advancedChildTaxCredit
+    name: advancedChildTaxCredit
+    pageTitle: advanced-child-tax-credit.title
+    headerKey:
+      defaultValue:  advanced-child-tax-credit.single
+      conditionalValues:
+        - value: advanced-child-tax-credit.household
+          condition: *doesNotLiveAlone?
+    headerHelpMessageKey: advanced-child-tax-credit.body
+    contextFragment: cashBenefitsContextFragment 
+    additionalContentFragment: childTaxCreditInfo
+    hasPrimaryButton: false
+    inputs:
+      - name: hasAdvancedChildTaxCredit
+        type: YES_NO
   - &benefitsProgramsIncomeSource
     name: benefitsProgramsIncomeSource
     pageTitle: unearned-income-benefits-programs.title
@@ -4091,6 +4162,45 @@ pageConfigurations:
               messageKey: living-situation.none-of-these
             - value: PREFER_NOT_TO_SAY
               messageKey: living-situation.i-prefer-not-to-say
+  - &studentFinancialAid
+    name: studentFinancialAid
+    pageTitle: student-financial-aid.title
+    headerKey: student-financial-aid.header
+    headerHelpMessageKey: student-financial-aid.header-help-message
+    hasPrimaryButton: false
+    inputs:
+      - name: studentFinancialAid
+        type: YES_NO
+  - &housingProvider
+    name: housingProvider
+    pageTitle: housing-provider.title
+    headerKey:
+      defaultValue: housing-provider.is-your-household-working-with-a-provider
+      conditionalValues:
+      - value: housing-provider.are-you-working-with-a-provider
+        condition: *livesAlone?
+    headerHelpMessageKey: housing-provider.we-will-use-this-information
+    hasPrimaryButton: false
+    contextFragment: housingSupportsFragment
+    inputs:
+      - name: housingProvider
+        type: YES_NO
+  - &housingProviderInfo
+    name: housingProviderInfo
+    pageTitle: housing-provider-info.title
+    headerKey: housing-provider-info.tell-us-about-your-housing-provider
+    headerHelpMessageKey: housing-provider-info.include-any-information
+    inputs:
+      - name: housingProviderName
+        type: LONG_TEXT
+        promptMessage:
+          promptMessageKey: housing-provider-info.what-is-the-providers-name
+        helpMessageKey: 
+      - name: housingProviderVendorNumber
+        type: LONG_TEXT
+        promptMessage:
+          promptMessageKey: housing-provider-info.providers-vendor-number
+        helpMessageKey: housing-provider-info.if-you-are-not-sure
   - &futureIncome
     name: futureIncome
     pageTitle: future-income.title
@@ -5815,11 +5925,23 @@ workflow:
         - *noOneChoseSNAP?
         - *livesAlone?
     nextPages:
+      - pageName: buyOrCookFood
+        condition:
+          name: hasHouseholdAndSomeoneChooseSNAP
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseSNAP?
       - pageName: housingSubsidy 
     datasources:
       - pageName: choosePrograms
       - groupName: household
         pageName: householdMemberInfo
+      - pageName: addHouseholdMembers
+  buyOrCookFood:
+    pageConfiguration: *buyOrCookFood
+    nextPages:
+      - pageName: housingSubsidy
   housingSubsidy:
     pageConfiguration: *housingSubsidy
     datasources:
@@ -5832,7 +5954,7 @@ workflow:
   livingSituation:
     pageConfiguration: *livingSituation
     nextPages:
-      - pageName: goingToSchool
+      - pageName: housingProvider
     skipCondition:
       logicalOperator: AND
       conditions:
@@ -5843,6 +5965,28 @@ workflow:
       - pageName: addHouseholdMembers
       - groupName: household
         pageName: householdMemberInfo
+  housingProvider:
+    pageConfiguration: *housingProvider
+    skipCondition: *applicantDidNotChooseGRH?
+    nextPages:
+      - pageName: housingProviderInfo
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+  housingProviderInfo:
+    pageConfiguration: *housingProviderInfo
+    skipCondition:
+      logicalOperator: OR
+      conditions:
+        - *applicantDidNotChooseGRH?
+        - pageName: housingProvider
+          value: "false"
+          input: housingProvider
+    nextPages:
+      - pageName: goingToSchool
+    datasources:
+      - pageName: choosePrograms
+      - pageName: housingProvider
   goingToSchool:
     pageConfiguration: *goingToSchool
     datasources:
@@ -5995,14 +6139,21 @@ workflow:
             conditions:
               - *livesAlone?
               - *applicantOnlyChoseCCAP?
-    nextPages:
-      - pageName: workChanges
     datasources:
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
-      - pageName: choosePrograms
-      - pageName: workChanges
+      - pageName: choosePrograms			  
+    nextPages:
+      - pageName: unableToWork
+        condition: *someoneChoseCAFProgram?
+      - pageName: workChanges			
+  unableToWork:
+    pageConfiguration: *unableToWork
+    datasources:
+      - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: workChanges			  
   workChanges:
     pageConfiguration: *workChanges
     skipCondition:
@@ -6398,15 +6549,22 @@ workflow:
       conditions:
         - *noUnearnedIncomeSelected?
     datasources:
-      - pageName: unearnedIncome
-      - pageName: addHouseholdMembers
+        - pageName: unearnedIncome
+        - pageName: addHouseholdMembers
   otherUnearnedIncomeSources:
     pageConfiguration: *otherUnearnedIncomeSources
     nextPages:
+      - pageName: advancedChildTaxCredit
+        condition: *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: otherUnearnedIncome
       - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
   socialSecurityIncomeSource:
     pageConfiguration: *socialSecurityIncomeSource
     nextPages:
@@ -6557,6 +6715,22 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
+      - pageName: advancedChildTaxCredit
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: otherUnearnedIncome
+              input: otherUnearnedIncome
+              value: NO_OTHER_UNEARNED_INCOME_SELECTED
+            - *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: 
+          logicalOperator: AND
+          conditions: 
+            - pageName: otherUnearnedIncome
+              input: otherUnearnedIncome
+              value: NO_OTHER_UNEARNED_INCOME_SELECTED
+            - *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
@@ -6686,7 +6860,11 @@ workflow:
     nextPages:
       - pageName: otherPaymentsIncomeSource
     datasources:
-      - pageName: otherUnearnedIncome		  	  		    	  
+      - pageName: otherUnearnedIncome
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo		  	  		    	  
   otherPaymentsIncomeSource:
     pageConfiguration: *otherPaymentsIncomeSource
     skipCondition:
@@ -6695,9 +6873,27 @@ workflow:
       matcher: DOES_NOT_CONTAIN
       value: OTHER_PAYMENTS
     nextPages:
+      - pageName: advancedChildTaxCredit
+        condition: *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
-      - pageName: otherUnearnedIncome
+      - pageName: otherUnearnedIncome 
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo      
+  advancedChildTaxCredit:
+    pageConfiguration: *advancedChildTaxCredit
+    nextPages:
+      - pageName: studentFinancialAid
+    datasources:
+      - pageName: addHouseholdMembers
+  studentFinancialAid:
+    pageConfiguration: *studentFinancialAid
+    nextPages:
+      - pageName: futureIncome
   futureIncome:
     pageConfiguration: *futureIncome
     nextPages:
@@ -6832,7 +7028,13 @@ workflow:
     datasources:
      - pageName: addHouseholdMembers
     nextPages:
-      - pageName: assets
+      - pageName: adultCareCosts
+  adultCareCosts:
+    pageConfiguration: *adultCareCosts
+    datasources:
+      - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: assets	  
   pastEmployment:
     pageConfiguration: *pastEmployment
     datasources:

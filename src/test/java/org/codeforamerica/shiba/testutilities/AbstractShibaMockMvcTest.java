@@ -849,7 +849,8 @@ public class AbstractShibaMockMvcTest {
     }
     else {
     	postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
-    	postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+    	postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+    	postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
         postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
         postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     }
@@ -955,7 +956,8 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("citizenship", "citizenshipStatus", "NATURALIZED", "disability");
     }
 
-    postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+    postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+    postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
     postExpectingRedirect("workChanges", "workChanges", "STOP_WORKING", "tribalNationMember");
     postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -1004,8 +1006,10 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
         "otherUnearnedIncome");
     }      
-    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
-        "futureIncome");
+    
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","studentFinancialAid");
+    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+    
     postExpectingRedirect("futureIncome", "earnLessMoneyThisMonth", "true", "startExpenses");
     assertNavigationRedirectsToCorrectNextPage("startExpenses", "homeExpenses");
     postExpectingRedirect("homeExpenses", "homeExpenses", "RENT", "homeExpensesAmount");
@@ -1020,7 +1024,8 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE",
             "supportAndCare");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "assets"); 
+    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts"); 
+    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets"); 
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");

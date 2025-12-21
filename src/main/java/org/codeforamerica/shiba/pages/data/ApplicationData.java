@@ -275,7 +275,7 @@ public class ApplicationData implements Serializable {
 
   public Locale getLocale() {
     if (getValues(pagesData, WRITTEN_LANGUAGE_PREFERENCES).contains("SPANISH")) {
-      return new Locale("es");
+      return Locale.forLanguageTag("es");
     }
     return LocaleContextHolder.getLocale();
   }

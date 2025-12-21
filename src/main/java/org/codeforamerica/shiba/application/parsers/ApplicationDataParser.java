@@ -53,7 +53,15 @@ public class ApplicationDataParser {
 
     coordinatesMap.put(Field.LIVING_SITUATION,
         new ParsingCoordinate("livingSituation", "livingSituation"));
-
+    coordinatesMap.put(Field.MN_HOUSING_SUPPORT,
+            new ParsingCoordinate("housingProvider", "housingProvider"));
+    coordinatesMap.put(Field.HOUSING_SUPPORT_VENDOR,
+            new ParsingCoordinate("housingSupportVendor", "housingSupportVendor"));
+    coordinatesMap.put(Field.HOUSING_PROVIDER_NAME,
+            new ParsingCoordinate("housingProviderInfo", "housingProviderName"));
+    coordinatesMap.put(Field.HOUSING_PROVIDER_NUMBER,
+            new ParsingCoordinate("housingProviderInfo", "housingProviderVendorNumber"));
+    
     coordinatesMap.put(Field.HAS_DISABILITY, new ParsingCoordinate("disability", "hasDisability"));
 
     coordinatesMap
@@ -170,7 +178,7 @@ public class ApplicationDataParser {
     coordinatesMap.put(Field.EMERGENCY_TYPE, new ParsingCoordinate("emergencyType", "emergencyType"));
     coordinatesMap.put(Field.TEMPORARY_ABSENCE,
             new ParsingCoordinate("temporaryAbsence", "hasTemporaryAbsence"));
-    coordinatesMap.put(Field.PARENT_NOT_AT_HOME,
+    coordinatesMap.put(Field.BOTH_PARENTS_AT_HOME,
             new ParsingCoordinate("parentNotAtHome", "hasParentNotAtHome"));
     coordinatesMap.put(Field.PREPARING_MEALS_TOGETHER,
         new ParsingCoordinate("preparingMealsTogether", "isPreparingMealsTogether"));
@@ -290,7 +298,10 @@ public class ApplicationDataParser {
     	new ParsingCoordinate("otherIncome", "otherIncomeAmount"));
     coordinatesMap.put(Field.OTHER_INCOME_FREQUENCY,
     	new ParsingCoordinate("otherIncome", "otherIncomeFrequency"));
-
+    coordinatesMap.put(Field.STUDENT_FINANCIAL_AID, 
+    		new ParsingCoordinate("studentFinancialAid", "studentFinancialAid"));
+    coordinatesMap.put(Field.ADVANCED_CHILD_TAX_CREDIT,
+        	new ParsingCoordinate("advancedChildTaxCredit", "hasAdvancedChildTaxCredit"));
  
     coordinatesMap.put(Field.CHILDCARE_CHILD_NAME,
     		new ParsingCoordinate("childNeedsChildcare", "childName"));
@@ -466,6 +477,10 @@ public class ApplicationDataParser {
     ARE_YOU_WORKING,
 
     LIVING_SITUATION,
+    MN_HOUSING_SUPPORT,
+    HOUSING_SUPPORT_VENDOR,
+    HOUSING_PROVIDER_NAME,
+    HOUSING_PROVIDER_NUMBER,
 
     MAILING_STREET,
     MAILING_CITY,
@@ -535,7 +550,7 @@ public class ApplicationDataParser {
     
     PREPARING_MEALS_TOGETHER,
     TEMPORARY_ABSENCE,
-    PARENT_NOT_AT_HOME,
+    BOTH_PARENTS_AT_HOME,
     IS_GOING_TO_SCHOOL,
     WHO_IS_GOING_TO_SCHOOL,
     IS_PREGNANT,
@@ -569,6 +584,7 @@ public class ApplicationDataParser {
     GIFTS_AMOUNT,
     LOTTERY_GAMBLING_AMOUNT,
 
+    ADVANCED_CHILD_TAX_CREDIT,
     OTHER_INCOME_TYPE,
     OTHER_INCOME_FULL_NAME,
     OTHER_INCOME_AMOUNT,
@@ -601,6 +617,8 @@ public class ApplicationDataParser {
     UNEARNED_DAY_TRADING_AMOUNT,
     UNEARNED_GIFTS_AMOUNT,
     UNEARNED_LOTTERY_GAMBLING_AMOUNT,
+    
+    STUDENT_FINANCIAL_AID,
 
     HOME_EXPENSES,
     WORK_SITUATION,//TODO do we need this? keep for compatibility.

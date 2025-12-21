@@ -22,14 +22,14 @@ public class PDF {
       PDDocument document1 = getFirstDoc();
       PDDocument document2 = getSecondDoc();
    
-      Overlay overlay = new Overlay();
-      overlay.setOverlayPosition(Overlay.Position.FOREGROUND);
-      overlay.setInputPDF(document1);
-      overlay.setAllPagesOverlayPDF(document2);
+      try (Overlay overlay = new Overlay()) {
+    	  overlay.setOverlayPosition(Overlay.Position.FOREGROUND);
+		  overlay.setInputPDF(document1);
+		  overlay.setAllPagesOverlayPDF(document2);
    
-      Map<Integer, String> ovmap = new HashMap<Integer, String>();            
-      overlay.overlay(ovmap);
-   
+		  Map<Integer, String> ovmap = new HashMap<Integer, String>();            
+		  overlay.overlay(ovmap);
+	  }
       document1.save("here.pdf");
    
       document1.close();

@@ -369,7 +369,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 				  }
 				  case "SNAP": {
 					  assertNavigationRedirectsToCorrectNextPage("temporaryAbsence", "preparingMealsTogether");
-					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "housingSubsidy");
+					  postExpectingRedirect("preparingMealsTogether", "preparingMealsTogether", "true", "buyOrCookFood");
+					  postExpectingRedirect("buyOrCookFood", "isDisabledToBuyOrCookFood", "true", "housingSubsidy");
 					  break;
 				  }
 				  case "CASH": {
@@ -391,7 +392,15 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 
 	  // navigation from housingSubsidy to goingToSchool
 	  switch (program) {
-		  case "GRH", "CCAP": {
+		  case "GRH": {
+			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+			  postExpectingRedirect("livingSituation", "livingSituation",
+					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "housingProvider");
+			  postExpectingRedirect("housingProvider", "housingProvider",
+					  "false", "goingToSchool");
+			  break;
+		  }
+		  case "CCAP": {
 			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
 			  postExpectingRedirect("livingSituation", "livingSituation",
 					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "goingToSchool");
@@ -407,7 +416,18 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
 	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
 	  postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");
-	  postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+	  switch (program) {
+	    case "CCAP": {
+	        // CCAP skips unableToWork page, goes directly to workChanges
+	        postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
+	        break;
+	    }
+	    default: {
+	        // All other programs go through unableToWork page
+	        postExpectingRedirect("disability", "hasDisability", "false", "unableToWork");
+	        postExpectingRedirect("unableToWork", "unableToWork", "false", "workChanges");
+	    }
+	  }
 	  postExpectingRedirect("workChanges", "workChanges", "GO_ON_STRIKE", "tribalNationMember");
 	  postExpectingRedirect("tribalNationMember", "isTribalNationMember", "false", "introIncome");
   }

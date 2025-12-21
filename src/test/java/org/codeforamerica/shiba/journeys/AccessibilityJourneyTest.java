@@ -343,7 +343,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
 	testPage.chooseYesOrNo("childCareMentalHealth", YES.getDisplayValue(), "Time needed each week");
 	testPage.enter("childCareMentalHealthHours", "20");
     testPage.clickContinue("Preparing meals together");
-    testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Housing subsidy");
+    testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Buying and cooking food");
+    testPage.chooseYesOrNo("isDisabledToBuyOrCookFood", YES.getDisplayValue(), "Housing subsidy");
     testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
     testPage.enter("livingSituation", "None of these");
     testPage.clickContinue("Going to school");
@@ -355,7 +356,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickElementById("citizenshipStatus[]-0-NOT_CITIZEN");
     testPage.clickElementById("citizenshipStatus[]-1-BIRTH_RIGHT");
     testPage.clickContinue("Disability");
-    testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Work changes");
+    testPage.chooseYesOrNo("hasDisability", NO.getDisplayValue(), "Not able to work");
+    testPage.chooseYesOrNo("unableToWork", NO.getDisplayValue(), "Work changes");
     testPage.enter("workChanges", "None of the above");
     testPage.clickContinue("Tribal Nation member");
     testPage.chooseYesOrNo("isTribalNationMember", YES.getDisplayValue(), "Select a Tribal Nation");
@@ -410,7 +412,13 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("unearnedIncome", "None of the above");
     testPage.clickButton("Continue", "Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
-    testPage.clickButton("Continue", "Future Income");
+    testPage.clickButton("Continue", "Advance Child Tax Credit");
+    testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+    testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
+
+    
+
+    
     assertThat(testPage.getInputAriaLabelledBy("div", "earnLessMoneyThisMonth-div")).isEqualTo("page-header page-header-help-message");
     // now back up to jobBuilder page
     testPage.goBack();
@@ -418,6 +426,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.goBack();
     testPage.goBack();
     testPage.goBack();
+    testPage.goBack();
+    testPage.goBack();
+
     
     testPage.clickButtonLink("No, that's it.", "Job Search");
     testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
@@ -444,8 +455,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("otherUnearnedIncome", "None of the above");
     testPage.clickContinue("Unearned Income");
     testPage.enter("otherUnearnedIncome", "None of the above");
-    testPage.clickContinue("Future Income");
-
+    testPage.clickButton("Continue", "Advance Child Tax Credit");
+    testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+    testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
+    
     testPage.enter("earnLessMoneyThisMonth", "Yes");
     testPage.clickButtonLink("Continue", "Start Expenses");
     testPage.clickButtonLink("Continue", "Home Expenses");
@@ -460,7 +473,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("medicalExpenses", "None of the above");
     testPage.clickContinue("Support and Care");
     testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
-    testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Assets");
+    testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Adult care costs");
+    testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Assets");
     testPage.enter("assets", "A vehicle");
     testPage.enter("assets", "Real estate (not including your own home)");
     testPage.clickContinue("Sold assets");
