@@ -8,7 +8,6 @@ import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.HOUSING_COSTS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.INCOME;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.MIGRANT_WORKER;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PREPARING_MEALS_TOGETHER;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.UTILITY_EXPENSES_SELECTIONS;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Group.HOUSEHOLD;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
@@ -110,8 +109,6 @@ public class SnapExpeditedEligibilityDecider {
     List<String> householdPrograms = getValues(applicationData, HOUSEHOLD, HOUSEHOLD_PROGRAMS);
     boolean householdMemberApplyingForSnap =
         householdPrograms != null && householdPrograms.contains("SNAP");
-    boolean isPreparingMealsTogether = Boolean
-        .parseBoolean(getFirstValue(applicationData.getPagesData(), PREPARING_MEALS_TOGETHER));
 
     return applicantApplyingForSnap || householdMemberApplyingForSnap;
   }

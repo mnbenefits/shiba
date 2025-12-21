@@ -599,16 +599,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldIsEmpty("UTM_SOURCE", caf);
 	}
 
-	private void testThatCorrectCountyInstructionsAreDisplayed(String city, String zip,
-			String expectedCountyInstructions) throws Exception {
-		postExpectingSuccess("homeAddress", Map.of("streetAddress", List.of("2168 7th Ave"), "city", List.of(city),
-				"zipCode", List.of(zip), "state", List.of("MN"), "sameMailingAddress", List.of("true")));
-		postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
-
-		var ccap = submitAndDownloadCcap();
-		assertPdfFieldEquals("COUNTY_INSTRUCTIONS", expectedCountyInstructions, ccap);
-	}
-
 	@Test 
 	void ccapShouldHaveExpectedPage() throws Exception{
 		// Run a simple CCAP flow
@@ -1288,7 +1278,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String enrichedZipCodeValue = "testZipCode";
 				String enrichedApartmentNumber = "someApt";
 				String enrichedState = "someState";
-				String enrichedStreetValueCCAP = "testStreet someApt";
 
 				when(locationClient.validateAddress(any())).thenReturn(Optional.of(new Address(enrichedStreetValue,
 						enrichedCityValue, enrichedState, enrichedZipCodeValue, enrichedApartmentNumber, "Hennepin")));

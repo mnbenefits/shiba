@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.TribalNation;
@@ -48,9 +47,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 public class RoutingDecisionService {
 
-  private final List<String> TRIBES_WE_CAN_ROUTE_TO = Stream.of(MilleLacsBandOfOjibwe,
-      WhiteEarthNation, BoisForte, FondDuLac, GrandPortage, LeechLake, RedLakeNation,
-      OtherFederallyRecognizedTribe).map(Enum::toString).toList();
   private final ServicingAgencyMap<TribalNationRoutingDestination> tribalNations;
   private final ServicingAgencyMap<CountyRoutingDestination> countyRoutingDestinations;
   public RoutingDecisionService(ServicingAgencyMap<TribalNationRoutingDestination> tribalNations,
