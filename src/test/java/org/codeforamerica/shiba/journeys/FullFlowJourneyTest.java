@@ -293,7 +293,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Other payments");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("otherPaymentsAmount", "100.00");
-		testPage.clickContinue("Future Income");
+		testPage.clickContinue("Advance Child Tax Credit");
+		testPage.clickElementById("childTaxRevealButton");
+		assertThat(driver.findElement(By.id("childTaxRevealBox")).getAttribute("class"))
+		.doesNotContain("is-hiding-content");
+		testPage.findElementById("advanced-child-tax-credit.reveal-types-content");
+		testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "Yes");
@@ -786,6 +792,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
 		assertCafFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes");
+		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
 
 	}
 
@@ -895,7 +902,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Unearned Income");
 
 		testPage.enter("otherUnearnedIncome", "None");
-		testPage.clickContinue("Future Income");
+		testPage.clickContinue("Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "No");
