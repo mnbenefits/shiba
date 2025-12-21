@@ -139,11 +139,11 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
 	    	    && Arrays.asList(programs).contains("CCAP")) {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
-		} else {
+	  } else {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
 			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
 			postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
-		}
+	  }
   }
 
   private void fillSupportAndCare(String... programs) throws Exception {
@@ -160,6 +160,9 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     	    && Arrays.asList(programs).contains("CCAP")) {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	} else {
+		if (Arrays.asList(programs).contains("CASH")) {
+			postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE_OF_THE_ABOVE", "supportAndCare");
+		} 
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
 		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
 		postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
