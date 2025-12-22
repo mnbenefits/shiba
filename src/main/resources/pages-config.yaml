@@ -928,7 +928,7 @@ pageConfigurations:
     headerHelpMessageKey: penalty-warning-header-help-message-key
     contextFragment: legalReview1ContextFragment
     inputs:
-      - name: hasAdministrativeProcess
+      - name: disqualifiedPublicAssistance
         type: CUSTOM
         customInputFragment: yesNoRadio
         validators:
@@ -936,7 +936,7 @@ pageConfigurations:
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.has-court-or-any-other
-      - name: hasAnyoneBeenConvictedFraudulent
+      - name: fraudulentStatements
         type: CUSTOM
         customInputFragment: yesNoRadio
         validators:
@@ -944,7 +944,7 @@ pageConfigurations:
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.has-anyone-in-the-household
-      - name: isAnyoneRunningFromProsecution
+      - name: hidingFromLaw
         type: CUSTOM
         customInputFragment: yesNoRadio
         validators:
@@ -952,7 +952,7 @@ pageConfigurations:
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.is-anyone-in-your-household-hiding
-      - name: hasAnyoneBeenConvictedDrug
+      - name: drugFelony
         type: CUSTOM
         customInputFragment: yesNoRadio
         validators:
@@ -961,7 +961,7 @@ pageConfigurations:
         promptMessage:
           promptMessageKey: penalty-warning.has-anyone-in-your-household-convicted
         helpMessageKey: penalty-warning.has-anyone-in-your-household-convicted-if-yes
-      - name: isAnyoneViolatingConditionOfParole
+      - name: violatingParole
         type: CUSTOM
         customInputFragment: yesNoRadio
         validators:
