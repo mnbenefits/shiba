@@ -920,8 +920,55 @@ pageConfigurations:
           - name: moveToMnPreviousCity
             type: TEXT
             promptMessage:
-              promptMessageKey: personal-info.what-state-did-you-move-from
-      
+              promptMessageKey: personal-info.what-state-did-you-move-from		  
+  - &penaltyWarnings
+    name: penaltyWarnings
+    pageTitle: penalty-warning.title
+    headerKey: penalty-warning-header-key
+    headerHelpMessageKey: penalty-warning-header-help-message-key
+    contextFragment: legalReview1ContextFragment
+    inputs:
+      - name: hasAdministrativeProcess
+        type: CUSTOM
+        customInputFragment: yesNoRadio
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        promptMessage:
+          promptMessageKey: penalty-warning.has-court-or-any-other
+      - name: hasAnyoneBeenConvictedFraudulent
+        type: CUSTOM
+        customInputFragment: yesNoRadio
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        promptMessage:
+          promptMessageKey: penalty-warning.has-anyone-in-the-household
+      - name: isAnyoneRunningFromProsecution
+        type: CUSTOM
+        customInputFragment: yesNoRadio
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        promptMessage:
+          promptMessageKey: penalty-warning.is-anyone-in-your-household-hiding
+      - name: hasAnyoneBeenConvictedDrug
+        type: CUSTOM
+        customInputFragment: yesNoRadio
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        promptMessage:
+          promptMessageKey: penalty-warning.has-anyone-in-your-household-convicted
+        helpMessageKey: penalty-warning.has-anyone-in-your-household-convicted-if-yes
+      - name: isAnyoneViolatingConditionOfParole
+        type: CUSTOM
+        customInputFragment: yesNoRadio
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        promptMessage:
+          promptMessageKey: penalty-warning.is-anyone-in-your-household-violating
   - &contactInfo
     name: contactInfo
     pageTitle: contact-info.title
@@ -7176,7 +7223,7 @@ workflow:
   snapExpeditedDetermination:
     pageConfiguration: *snapExpeditedDetermination
     nextPages:
-      - pageName: legalStuff
+      - pageName: penaltyWarnings
   additionalInfo:
     pageConfiguration: *additionalInfo
     nextPages:
@@ -7185,11 +7232,25 @@ workflow:
     pageConfiguration: *canWeAsk
     nextPages:
       - pageName: raceAndEthnicity
-      - pageName: legalStuff
+      - pageName: penaltyWarnings
   raceAndEthnicity:
     pageConfiguration: *raceAndEthnicity
     nextPages:
+      - pageName: penaltyWarnings
+  penaltyWarnings:
+    pageConfiguration: *penaltyWarnings
+    nextPages:
       - pageName: legalStuff
+    skipCondition:
+      logicalOperator: AND
+      conditions:
+        - *someoneChoseCCAP?
+        - *noOneChoseCAF?
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household	
   legalStuff:
     pageConfiguration: *legalStuff
     nextPages:
