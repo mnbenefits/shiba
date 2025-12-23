@@ -34,16 +34,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.webservices.client.WebServiceTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.transport.http.HttpComponents5ClientFactory;
-import org.springframework.ws.transport.http.HttpComponents5MessageSender;
+import org.springframework.ws.transport.http.SimpleHttpComponents5MessageSender;
 
 @Configuration
 public class EsbWebServiceTemplateConfiguration {
-
-	private HttpComponents5MessageSender webServiceMessageSender;
 
 	@Bean
 	WebServiceTemplate filenetWebServiceTemplate(WebServiceTemplateBuilder webServiceTemplateBuilder,
@@ -96,9 +93,8 @@ public class EsbWebServiceTemplateConfiguration {
 						.build())
 				.build();
 
-		webServiceMessageSender = new HttpComponents5MessageSender();
-		webServiceMessageSender.setHttpClient(client);
-
+	    SimpleHttpComponents5MessageSender webServiceMessageSender = new SimpleHttpComponents5MessageSender(client);
+	    
 		return webServiceTemplateBuilder
 				.setDefaultUri(uploadUrl)
 				.setMarshaller(jaxb2Marshaller)

@@ -19,8 +19,6 @@ import org.springframework.security.web.session.SessionInformationExpiredStrateg
 import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
-
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,9 +37,6 @@ public class SecurityConfiguration {
 
 	@Autowired
 	private ShibaInvalidSessionStrategy shibaInvalidSessionStrategy;
-	
-	@Autowired 
-	private HandlerMappingIntrospector handlerMappingIntrospector;
 	
 
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfiguration) throws Exception {

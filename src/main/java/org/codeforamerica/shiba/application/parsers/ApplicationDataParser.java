@@ -298,7 +298,10 @@ public class ApplicationDataParser {
     	new ParsingCoordinate("otherIncome", "otherIncomeAmount"));
     coordinatesMap.put(Field.OTHER_INCOME_FREQUENCY,
     	new ParsingCoordinate("otherIncome", "otherIncomeFrequency"));
-
+    coordinatesMap.put(Field.STUDENT_FINANCIAL_AID, 
+    		new ParsingCoordinate("studentFinancialAid", "studentFinancialAid"));
+    coordinatesMap.put(Field.ADVANCED_CHILD_TAX_CREDIT,
+        	new ParsingCoordinate("advancedChildTaxCredit", "hasAdvancedChildTaxCredit"));
  
     coordinatesMap.put(Field.CHILDCARE_CHILD_NAME,
     		new ParsingCoordinate("childNeedsChildcare", "childName"));
@@ -581,6 +584,7 @@ public class ApplicationDataParser {
     GIFTS_AMOUNT,
     LOTTERY_GAMBLING_AMOUNT,
 
+    ADVANCED_CHILD_TAX_CREDIT,
     OTHER_INCOME_TYPE,
     OTHER_INCOME_FULL_NAME,
     OTHER_INCOME_AMOUNT,
@@ -613,6 +617,8 @@ public class ApplicationDataParser {
     UNEARNED_DAY_TRADING_AMOUNT,
     UNEARNED_GIFTS_AMOUNT,
     UNEARNED_LOTTERY_GAMBLING_AMOUNT,
+    
+    STUDENT_FINANCIAL_AID,
 
     HOME_EXPENSES,
     WORK_SITUATION,//TODO do we need this? keep for compatibility.

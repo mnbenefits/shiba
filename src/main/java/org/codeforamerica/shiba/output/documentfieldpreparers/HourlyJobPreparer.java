@@ -31,7 +31,7 @@ public class HourlyJobPreparer implements DocumentFieldPreparer {
     List<DocumentField> result = new ArrayList<>();
     for (int i = 0; i < jobs.size(); i++) {
       // ScopeTracker needs to track for every job iteration, even though we are only adding for hourly jobs
-      if (jobs.get(i) instanceof HourlyJobIncomeInformation hourlyJob) {
+      if (jobs.get(i) instanceof HourlyJobIncomeInformation) {
         result.add(new DocumentField("payPeriod", "payPeriod", "Hourly",
             SINGLE_VALUE, i));
       }

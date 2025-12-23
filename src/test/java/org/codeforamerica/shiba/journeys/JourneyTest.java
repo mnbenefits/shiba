@@ -218,6 +218,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
 
     // Personal Info
     testPage.enter("firstName", "Ahmed");
+    testPage.enter("middleName", "Abdel");
     testPage.enter("lastName", "St. George");
     testPage.enter("otherName", "defaultOtherName");
     //DOB is optional

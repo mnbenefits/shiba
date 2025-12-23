@@ -1,9 +1,7 @@
 package org.codeforamerica.shiba.output.caf;
 
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.IS_SELF_EMPLOYMENT;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.WHOSE_JOB_IS_IT;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getBooleanValue;
-import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.getFirstValue;
 import static org.codeforamerica.shiba.output.DocumentFieldType.SINGLE_VALUE;
 
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.output.documentfieldpreparers.DocumentFieldPreparer;
-import org.codeforamerica.shiba.pages.data.PagesData;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,19 +21,6 @@ public class GrossMonthlyIncomePreparer implements DocumentFieldPreparer {
 
   public GrossMonthlyIncomePreparer(GrossMonthlyIncomeParser grossMonthlyIncomeParser) {
     this.grossMonthlyIncomeParser = grossMonthlyIncomeParser;
-  }
-
-  /**
-   * WHOSE_JOB_IS_IT will find all household jobs. If there is a single applicant,
-   * there will be no household jobs and WHOSE_JOB_IS_IT will return nothing.
-   * @param jobIncomeInformation
-   * @return
-   */
-  private static boolean doesApplicantHaveIncomeFromAJob(JobIncomeInformation jobIncomeInformation) {
-    PagesData pagesData = jobIncomeInformation.getIteration().getPagesData();
-    boolean hasAJob =  (getFirstValue(pagesData, WHOSE_JOB_IS_IT).contains("applicant")  
-    		|| getFirstValue(pagesData, WHOSE_JOB_IS_IT).isEmpty());//will be empty for individual flow
-    return hasAJob;
   }
 
   @Override

@@ -90,7 +90,6 @@ import static org.codeforamerica.shiba.County.YellowMedicine;
 
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
-import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -296,13 +295,6 @@ public class CountyMapConfiguration {
     addCountyDefaults(Wright, "1124197249", "800-362-3667");
     addCountyDefaults(YellowMedicine, "A000087600", "320-564-2211");
     countyMap.setDefaultValue(countyMap.get(Hennepin));
-  }
-
-  private void addCountyDefaults(County county, String dhsProviderId, String phoneNumber,
-      Address address) {
-    countyMap.getAgencies().put(county,
-        new CountyRoutingDestination(county, dhsProviderId, DEV_EMAIL, phoneNumber,
-            address));
   }
 
   private void addCountyDefaults(County county, String dhsProviderId, String phoneNumber) {

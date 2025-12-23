@@ -22,9 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.codeforamerica.shiba.County;
-import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.application.FlowType;
-import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.pages.config.FeatureFlag;
@@ -43,8 +41,6 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
   @Autowired
   private RoutingDecisionService routingDecisionService;
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-  @Autowired
-  private ServicingAgencyMap<CountyRoutingDestination> countyMap;
 
   @BeforeEach
   protected void setUp() throws Exception {
@@ -250,12 +246,9 @@ public class TribalNationsMockMvcTest extends AbstractShibaMockMvcTest {
     addHouseholdMembersWithProgram(program);
     goThroughNationOfResidence(county, "White Earth Nation", new String[]{program});
 
-    Document expectedDocType;
     if (program.equals("CCAP")) {
-    	expectedDocType = Document.CCAP;
         assertRoutingDestinationIsCorrectForDocument(Document.CCAP, county);
     } else {
-    	expectedDocType = Document.CAF;
     	assertRoutingDestinationIsCorrectForDocument(CAF, county);
     }
     assertRoutingDestinationIsCorrectForDocument(UPLOADED_DOC, county);

@@ -11,6 +11,7 @@ mappings:
   personalInfo:
     firstName: APPLICANT_FIRST_NAME
     lastName: APPLICANT_LAST_NAME
+    middleName: APPLICANT_MIDDLE_NAME
     maritalStatus: MARITAL_STATUS
     otherName: APPLICANT_OTHER_NAME
     dateOfBirth: DATE_OF_BIRTH
@@ -46,6 +47,7 @@ mappings:
   householdMemberInfo:
     firstName: FIRST_NAME
     lastName: LAST_NAME
+    middleName: MIDDLE_NAME
     maritalStatus: MARITAL_STATUS
     otherName: OTHER_NAME
     dateOfBirth: DATE_OF_BIRTH
@@ -160,10 +162,13 @@ mappings:
     snapExpeditedEligibility: SNAP_EXPEDITED_ELIGIBILITY
   ccapExpeditedEligibility:
     ccapExpeditedEligibility: CCAP_EXPEDITED_ELIGIBILITY
-
+  specialCareExpenses:
+    representativePayeeFees: HAVE_PAYEE_FEES
+    guardianAndConservatorFees: HAVE_CONSERVATOR_FEES
+    specialDietPrescribedByDoctor: HAVE_SPECIAL_DIET
+    highHousingCosts: HAVE_HIGH_HOUSING_COSTS
   parentNotAtHome:
     hasParentNotAtHome: BOTH_PARENTS_AT_HOME
-
   otherIncome:
     otherIncomeType: OTHER_INCOME_TYPE
     otherIncomeFullName: OTHER_INCOME_FULL_NAME
@@ -293,6 +298,8 @@ mappings:
   lotteryIncomeSource:
     lotteryIncomeAmount: LOTTERY_INCOME_AMOUNT_HH
     lotteryIncomeFrequency: LOTTERY_INCOME_FREQUENCY
+  advancedChildTaxCredit:
+    hasAdvancedChildTaxCredit: ADVANCED_CHILD_TAX_CREDIT
   livingSituation:
     derivedLivingSituation: LIVING_SITUATION
     county: LIVING_SITUATION_COUNTY
@@ -301,6 +308,8 @@ mappings:
   futureIncome:
     earnLessMoneyThisMonth: EARN_LESS_MONEY_THIS_MONTH
     additionalIncomeInfo: ADDITIONAL_INCOME_INFO
+  studentFinancialAid:
+    studentFinancialAid: STUDENT_FINANCIAL_AID
   employersName:
     employersName: EMPLOYERS_NAME
   selfEmployment:
