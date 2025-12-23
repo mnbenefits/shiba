@@ -804,9 +804,13 @@ public class AbstractShibaMockMvcTest {
 	    postExpectingRedirect("utilities", "payForUtilities", "NONE_OF_THE_ABOVE", "energyAssistance");
 	    postExpectingRedirect("energyAssistance", "energyAssistance", "false", "medicalExpenses");
     }
-    
+    if(Arrays.asList(programs).contains("CASH")){
+    	postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
+    		        "specialCareExpenses");
+    } else{
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
-        "supportAndCare");
+        "supportAndCare");  
+    }
   }
 
   protected void completeFlowFromLandingPageThroughReviewInfo(String... programSelections)
@@ -1002,8 +1006,10 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
         "otherUnearnedIncome");
     }      
-    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
-        "futureIncome");
+    
+    postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","studentFinancialAid");
+    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+    
     postExpectingRedirect("futureIncome", "earnLessMoneyThisMonth", "true", "startExpenses");
     assertNavigationRedirectsToCorrectNextPage("startExpenses", "homeExpenses");
     postExpectingRedirect("homeExpenses", "homeExpenses", "RENT", "homeExpensesAmount");
@@ -1014,7 +1020,9 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("energyAssistanceMoreThan20", "energyAssistanceMoreThan20", "true",
         "medicalExpenses");
     postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
-        "supportAndCare");
+        "specialCareExpenses");
+    postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE",
+            "supportAndCare");
     postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
     postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts"); 
     postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets"); 

@@ -129,6 +129,8 @@ xml:
       retirementAmount: RETIREMENT_AMOUNT
       childOrSpousalSupportAmount: CHILD_OR_SPOUSAL_SUPPORT_AMOUNT
       tribalPaymentsAmount: TRIBAL_PAYMENTS_AMOUNT
+    advancedChildTaxCredit:
+      hasAdvancedChildTaxCredit: ADVANCED_CHILD_TAX_CREDIT
     homeExpenses:
       homeExpenses:
         RENT: RENT

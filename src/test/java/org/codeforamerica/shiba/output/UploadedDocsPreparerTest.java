@@ -25,18 +25,14 @@ class UploadedDocsPreparerTest {
   private Application application;
   private byte[] coverPage;
   private ApplicationFile imageFile;
-  private ApplicationFile wordDocFile;
   private ApplicationFile combinedPdfFile;
   private ApplicationFile testPdfFile;
   private UploadedDocument imageDoc;
   private UploadedDocument wordDocument;
   private UploadedDocument testPdfDoc;
-  private ApplicationFile uploadedWordDocWithoutCoverPage;
-  private ApplicationFile uploadedPdfWithoutCoverPage;
   private final String imageFilename = "shiba+file.jpg";
   private final String docxFilename = "testWord.docx";
   private final String combinedPdfFilename = "combined-pdf.pdf";
-  private final String fileWithoutCoverPageFilename = "fileWithoutCoverPage.doc";
   private final String testPdfFilename = "shiba+file.pdf";
   private RoutingDestination routDest;
   
@@ -50,11 +46,8 @@ class UploadedDocsPreparerTest {
     var combinePdf = getFileContentsAsByteArray(combinedPdfFilename);
     var testPdf = getFileContentsAsByteArray(testPdfFilename);
     imageFile = new ApplicationFile(image, imageFilename);
-    wordDocFile = new ApplicationFile(wordDoc, docxFilename);
     combinedPdfFile = new ApplicationFile(combinePdf, combinedPdfFilename);
     testPdfFile = new ApplicationFile(testPdf, testPdfFilename);
-    uploadedWordDocWithoutCoverPage = new ApplicationFile(wordDoc, fileWithoutCoverPageFilename);
-    uploadedPdfWithoutCoverPage = new ApplicationFile(testPdf, testPdfFilename);
     imageDoc = new UploadedDocument(imageFilename, "", "", "",
         image.length);
     wordDocument = new UploadedDocument(docxFilename, "", "", "",

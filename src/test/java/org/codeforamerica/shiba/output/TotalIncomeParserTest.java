@@ -11,7 +11,6 @@ import org.codeforamerica.shiba.application.parsers.GrossMonthlyIncomeParser;
 import org.codeforamerica.shiba.application.parsers.TotalIncomeParser;
 import org.codeforamerica.shiba.output.caf.JobIncomeInformation;
 import org.codeforamerica.shiba.output.caf.TotalIncome;
-import org.codeforamerica.shiba.output.caf.UnearnedIncomeCalculator;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +20,10 @@ class TotalIncomeParserTest {
 
   private TotalIncomeParser totalIncomeParser;
   private GrossMonthlyIncomeParser grossIncomeParser;
-  private UnearnedIncomeCalculator unearnedIncomeCalculator;
 
   @BeforeEach
   void setUp() {
     grossIncomeParser = mock(GrossMonthlyIncomeParser.class);
-    unearnedIncomeCalculator = mock(UnearnedIncomeCalculator.class);
     totalIncomeParser = new TotalIncomeParser(grossIncomeParser);
   }
 

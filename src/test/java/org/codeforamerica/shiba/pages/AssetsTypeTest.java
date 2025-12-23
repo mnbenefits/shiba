@@ -134,31 +134,35 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  // enter "None" on the unearnedIncome page, should navigate to the otherUnearnedIncome page
 	  postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED", "otherUnearnedIncome");
 	  // enter "None" on the otherUnearnedIncome page, should navigate to the futureIncome page.
-	  postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED", "futureIncome");
+	  postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED", "advancedChildTaxCredit");
 	  fillAdditionalIncomeInfo(programs);
 	  if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
 	    	    && Arrays.asList(programs).contains("CCAP")) {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
-		} else {
+	  } else {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
 			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
 			postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
-		}
+	  }
   }
 
   private void fillSupportAndCare(String... programs) throws Exception {
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
         "otherUnearnedIncome");
-    postExpectingRedirect("otherUnearnedIncome",
-        "otherUnearnedIncome",
-        "NO_OTHER_UNEARNED_INCOME_SELECTED",
-        "futureIncome");
+    if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP"))) {
+        postExpectingRedirect("otherUnearnedIncome","otherUnearnedIncome","NO_OTHER_UNEARNED_INCOME_SELECTED","futureIncome");
+	} else {
+	    postExpectingRedirect("otherUnearnedIncome","otherUnearnedIncome","NO_OTHER_UNEARNED_INCOME_SELECTED","advancedChildTaxCredit");
+	}
     fillAdditionalIncomeInfo(programs);
     if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
     	    && Arrays.asList(programs).contains("CCAP")) {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	} else {
+		if (Arrays.asList(programs).contains("CASH")) {
+			postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE_OF_THE_ABOVE", "supportAndCare");
+		} 
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
 		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
 		postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");

@@ -123,7 +123,6 @@ public class LaterDocsMockMvcTest extends AbstractShibaMockMvcTest {
 		byte[] coverPageBytes = pdfGenerator.generateCoverPageForUploadedDocs(application);
 		Path path = Files.createTempDirectory("");
 		File file = new File(path.toFile(), "testfile.pdf");
-		String absPath = file.getAbsolutePath();
 		Files.write(file.toPath(), coverPageBytes);
 
 		// use PdfBox to get extract the AcroForm

@@ -142,6 +142,61 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldIsEmpty("CHILD_FULL_NAME_2", ccap);
 		assertPdfFieldIsEmpty("PARENT_NOT_LIVING_AT_HOME_2", ccap);
 	}
+	
+	// This test verifies the yes button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceTrue() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes", caf);
+
+	}
+	
+	// This test verifies the no button click on temporaryAbsence gets written to the caf 
+	@Test
+	void shouldMapTemporaryAbsenceFalse() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		addHouseholdMembersWithProgram("CCAP");
+		fillInRequiredPages();
+		
+		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "false");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "No", caf);
+
+	}
+	
+	// This test verifies the yes button click on advancedChildTaxCredit gets written to the caf 
+	@Test
+	void shouldMapAdvancedChildTaxCreditTrue() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		postExpectingSuccess("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "true");
+		
+		var caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "Yes", caf);
+	
+	}
+	
+	// This test verifies the no button click on advancedChildTaxCredit gets written to the caf 
+	@Test
+	void shouldMapAdvancedChildTaxCreditFalse() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		postExpectingSuccess("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false");
+		
+		var caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "No", caf);
+	}
 
 	@Test
 	void shouldNotMapParentsLivingOutsideOfHomeIfNoneSelected() throws Exception {
@@ -243,7 +298,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				Map.entry("giftsAmount", List.of("180.00")),
 				Map.entry("lotteryGamblingAmount", List.of("190.00")),
 				Map.entry("dayTradingProceedsAmount", List.of("200.00")), 
-				Map.entry("otherPaymentsAmount", List.of("210.00"))), "Future Income");
+				Map.entry("otherPaymentsAmount", List.of("210.00"))), "Advance Child Tax Credit");
+	    postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
+	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
 
 	    var caf = submitAndDownloadCaf();
 
@@ -305,7 +362,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments", List.of(applicant), "annuityPaymentsAmount", List.of("210")), "giftsIncomeSource");
 		postExpectingRedirect("giftsIncomeSource", Map.of("monthlyIncomeGifts", List.of(applicant), "giftsAmount", List.of("220")), "lotteryIncomeSource");
 		postExpectingRedirect("lotteryIncomeSource", Map.of("monthlyIncomeLotteryGambling", List.of(applicant), "lotteryGamblingAmount", List.of("230")), "dayTradingIncomeSource");
-		postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(applicant), "dayTradingProceedsAmount", List.of("240")), "futureIncome");
+		postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(applicant), "dayTradingProceedsAmount", List.of("240")), "advancedChildTaxCredit");
+	    postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
+	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
 		
 		
 		var caf = submitAndDownloadCaf();
@@ -493,6 +552,22 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		var caf = submitAndDownloadCaf();
 		assertPdfFieldIsEmpty("SNAP_EXPEDITED_ELIGIBILITY", caf);
 	}
+	
+	@Test
+	void shouldMapStudentFinancialAid() throws Exception {
+		selectPrograms("CASH");
+		postExpectingSuccess("studentFinancialAid", "studentFinancialAid", "true");
+		
+		var caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("STUDENT_FINANCIAL_AID", "Yes", caf);
+		
+		postExpectingSuccess("studentFinancialAid", "studentFinancialAid", "false");
+		
+		caf = submitAndDownloadCaf();
+		
+		assertPdfFieldEquals("STUDENT_FINANCIAL_AID", "No", caf);
+	}
 
 	@Test
 	void shouldNotAddAuthorizedRepFieldsIfNo() throws Exception {
@@ -522,16 +597,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		getWithQueryParam("identifyCountyBeforeApplying", "utm_source", CHILDCARE_WAITING_LIST_UTM_SOURCE);
 		var caf = submitAndDownloadCaf();
 		assertPdfFieldIsEmpty("UTM_SOURCE", caf);
-	}
-
-	private void testThatCorrectCountyInstructionsAreDisplayed(String city, String zip,
-			String expectedCountyInstructions) throws Exception {
-		postExpectingSuccess("homeAddress", Map.of("streetAddress", List.of("2168 7th Ave"), "city", List.of(city),
-				"zipCode", List.of(zip), "state", List.of("MN"), "sameMailingAddress", List.of("true")));
-		postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
-
-		var ccap = submitAndDownloadCcap();
-		assertPdfFieldEquals("COUNTY_INSTRUCTIONS", expectedCountyInstructions, ccap);
 	}
 
 	@Test 
@@ -1038,7 +1103,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED",
 						"otherUnearnedIncome");
 				postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED",
-						"futureIncome");
+						"studentFinancialAid");
+			    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+
 
 				var additionalIncomeInfo = "Here's something else about my situation";
 				postExpectingRedirect("futureIncome", "additionalIncomeInfo", additionalIncomeInfo, "startExpenses");
@@ -1146,9 +1213,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments", List.of(me, pam), "annuityPaymentsAmount", List.of("210", "", "211")), "giftsIncomeSource");
 				postExpectingRedirect("giftsIncomeSource", Map.of("monthlyIncomeGifts", List.of(me, pam), "giftsAmount", List.of("220", "", "221")), "lotteryIncomeSource");
 				postExpectingRedirect("lotteryIncomeSource", Map.of("monthlyIncomeLotteryGambling", List.of(me, pam), "lotteryGamblingAmount", List.of("230", "", "231")), "dayTradingIncomeSource");
-				postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "futureIncome");
-				
 				PDAcroForm document;
+				if (program.equals("SNAP")) {
+					postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "advancedChildTaxCredit");
+				    postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
+				    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+				} else {
+					postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "futureIncome");
+				}
 				if (program.equals("SNAP")) {
 					document = submitAndDownloadCaf();
 				} else {
@@ -1206,7 +1278,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				String enrichedZipCodeValue = "testZipCode";
 				String enrichedApartmentNumber = "someApt";
 				String enrichedState = "someState";
-				String enrichedStreetValueCCAP = "testStreet someApt";
 
 				when(locationClient.validateAddress(any())).thenReturn(Optional.of(new Address(enrichedStreetValue,
 						enrichedCityValue, enrichedState, enrichedZipCodeValue, enrichedApartmentNumber, "Hennepin")));
@@ -1557,34 +1628,27 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 	}
 	
-	
-	// This test verifies the yes button click on temporaryAbsence gets written to the caf 
-	@Test
-	void shouldMapTemporaryAbsenceTrue() throws Exception {
-		fillOutPersonalInfo();
-		selectPrograms("SNAP");
-		addHouseholdMembersWithProgram("CCAP");
-		fillInRequiredPages();
-		
-		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "true");
-		
-		var caf = submitAndDownloadCaf();
-		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes", caf);
+	@Nested
+	@Tag("pdf")
+	class SpecialCareExpenses {
+		@Test
+		void shouldMapSpecialCareExpensesFieldToCAF() throws Exception {
+			selectPrograms("CASH");			
+			
+			postExpectingSuccess("medicalExpenses", "medicalExpenses", "true");
+			postExpectingSuccess("specialCareExpenses", "specialCareExpenses", List.of("REPRESENTATIVE_PAYEE_FEES", "SPECIAL_DIET_PRESCRIBED_BY_DOCTOR"));
+			postExpectingSuccess("supportAndCare", "supportAndCare", "true");
 
+			var caf = submitAndDownloadCaf();
+			
+			assertPdfFieldEquals("HAVE_PAYEE_FEES", "Yes", caf);
+			assertPdfFieldEquals("HAVE_CONSERVATOR_FEES", "No", caf);
+			assertPdfFieldEquals("HAVE_SPECIAL_DIET", "Yes", caf);
+			assertPdfFieldEquals("HAVE_HIGH_HOUSING_COSTS", "No", caf);
+		}
+		
+		
 	}
 	
-	// This test verifies the no button click on temporaryAbsence gets written to the caf 
-	@Test
-	void shouldMapTemporaryAbsenceFalse() throws Exception {
-		fillOutPersonalInfo();
-		selectPrograms("SNAP");
-		addHouseholdMembersWithProgram("CCAP");
-		fillInRequiredPages();
-		
-		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "false");
-		
-		var caf = submitAndDownloadCaf();
-		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "No", caf);
 
-	}
 }

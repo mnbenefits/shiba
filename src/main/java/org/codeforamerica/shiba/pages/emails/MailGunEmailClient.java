@@ -3,7 +3,6 @@ package org.codeforamerica.shiba.pages.emails;
 import static java.util.Collections.emptyList;
 import static java.util.Locale.ENGLISH;
 import static java.util.stream.Collectors.toList;
-import static org.springframework.web.reactive.function.BodyInserters.fromFormData;
 import static org.springframework.web.reactive.function.BodyInserters.fromMultipartData;
 
 import java.util.ArrayList;
@@ -214,24 +213,6 @@ public class MailGunEmailClient implements EmailClient {
     webClient.post()
         .headers(httpHeaders -> httpHeaders.setBasicAuth("api", mailGunApiKey))
         .body(fromMultipartData(form))
-        .retrieve()
-        .bodyToMono(Void.class)
-        .block();
-  }
-
-  private void sendEmailFromFormData(
-      String subject,
-      String senderEmail,
-      String recipientEmail,
-      String emailBody) {
-    MultiValueMap<String, String> form = new LinkedMultiValueMap<>();
-    form.put("from", List.of(senderEmail));
-    form.put("to", List.of(recipientEmail));
-    form.put("subject", List.of(subject));
-    form.put("html", List.of(emailBody));
-    webClient.post()
-        .headers(httpHeaders -> httpHeaders.setBasicAuth("api", mailGunApiKey))
-        .body(fromFormData(form))
         .retrieve()
         .bodyToMono(Void.class)
         .block();
