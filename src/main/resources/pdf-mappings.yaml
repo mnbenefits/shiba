@@ -495,6 +495,12 @@ mappings:
     HISPANIC_LATINO_OR_SPANISH_NO: HISPANIC_LATINO_OR_SPANISH_NO
     CLIENT_REPORTED: CLIENT_REPORTED
     UNABLE_TO_DETERMINE: UNABLE_TO_DETERMINE
+  penaltyWarnings:
+    disqualifiedPublicAssistance: DISQUALIFIED_PUBLIC_ASSISTANCE
+    fraudulentStatements: FRAUDULENT_STATEMENTS
+    hidingFromLaw: HIDING_FROM_LAW
+    drugFelony: DRUG_FELONY
+    violatingParole: VIOLATING_PAROLE		
   legalStuff:
     drugFelony: DRUG_FELONY
   applyForTribalTANF:
