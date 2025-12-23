@@ -4166,8 +4166,13 @@ pageConfigurations:
   - &studentFinancialAid
     name: studentFinancialAid
     pageTitle: student-financial-aid.title
-    headerKey: student-financial-aid.header
+    headerKey:
+      defaultValue: student-financial-aid.household-header
+      conditionalValues:
+        - value: student-financial-aid.header
+          condition: *livesAlone?
     headerHelpMessageKey: student-financial-aid.header-help-message
+    contextFragment: schoolContextFragment
     hasPrimaryButton: false
     inputs:
       - name: studentFinancialAid
@@ -6895,6 +6900,10 @@ workflow:
     pageConfiguration: *studentFinancialAid
     nextPages:
       - pageName: futureIncome
+    datasources:
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
   futureIncome:
     pageConfiguration: *futureIncome
     nextPages:
