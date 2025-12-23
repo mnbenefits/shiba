@@ -2232,6 +2232,7 @@ pageConfigurations:
       conditionalValues:
         - value: support-and-care.do-you-pay-for-court-ordered-child-support-spousal-support
           condition: *livesAlone?
+    headerHelpMessageKey: support-and-care.help
     hasPrimaryButton: false
     inputs:
       - name: supportAndCare
