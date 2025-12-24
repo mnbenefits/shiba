@@ -7020,7 +7020,17 @@ workflow:
         - *noOneChoseSNAP?
     nextPages:
       - pageName: specialCareExpenses
-        condition: *someoneChoseCASH?
+        condition:
+          name: noMedicalSources
+          logicalOperator: OR
+          conditions:
+            - pageName: medicalExpenses
+              input: medicalExpenses
+              value: NONE_OF_THE_ABOVE
+            - pageName: medicalExpenses
+              input: medicalExpenses
+              value: MEDICAL_BILLS_OR_COPAYS
+              matcher: CONTAINS_ONLY
       - pageName: medicalExpensesSources
     datasources:
       - pageName: choosePrograms
@@ -7029,8 +7039,12 @@ workflow:
         groupName: household
   specialCareExpenses:
     pageConfiguration: *specialCareExpenses
+    skipCondition: *noOneChoseCASH?
     datasources:
      - pageName: addHouseholdMembers
+     - pageName: householdMemberInfo
+       groupName: household
+     - pageName: choosePrograms
     nextPages:
       - pageName: supportAndCare
   childCareCosts:
@@ -7059,26 +7073,12 @@ workflow:
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
-      - pageName: supportAndCare
+      - pageName: specialCareExpenses
     skipCondition:
-      logicalOperator: OR
-      conditions:
-        - conditions:
-            - *noOneChoseCCAP?
-            - *noOneChoseSNAP?
-        - conditions:
-            - pageName: medicalExpenses
-              input: medicalExpenses
-              value: MEDICAL_INSURANCE_PREMIUMS
-              matcher: DOES_NOT_CONTAIN
-            - pageName: medicalExpenses
-              input: medicalExpenses
-              value: DENTAL_INSURANCE_PREMIUMS
-              matcher: DOES_NOT_CONTAIN
-            - pageName: medicalExpenses
-              input: medicalExpenses
-              value: VISION_INSURANCE_PREMIUMS
-              matcher: DOES_NOT_CONTAIN
+      logicalOperator: AND
+      conditions: 
+        - *noOneChoseCCAP?
+        - *noOneChoseSNAP?
     datasources:
       - pageName: medicalExpenses
       - pageName: addHouseholdMembers
