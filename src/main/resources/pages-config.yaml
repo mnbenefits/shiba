@@ -927,6 +927,7 @@ pageConfigurations:
     headerKey: penalty-warning-header-key
     headerHelpMessageKey: penalty-warning-header-help-message-key
     contextFragment: legalReview1ContextFragment
+    preFormContentFragment: penaltyWarningsAccordions
     inputs:
       - name: disqualifiedPublicAssistance
         type: CUSTOM
@@ -935,6 +936,7 @@ pageConfigurations:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
+         # promptMessageFragmentName: penaltyWarningsAccordions
           promptMessageKey: penalty-warning.has-court-or-any-other
       - name: fraudulentStatements
         type: CUSTOM

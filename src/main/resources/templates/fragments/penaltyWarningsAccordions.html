@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="penaltyWarningsAccordions">
+	<div class="accordion">
+		<button href="#" class="accordion__button" aria-expanded="true" aria-controls="pw-a1">
+			<span th:text="#{legal-stuff.snap-penalty-warnings}"></span>
+		</button>
+		<div class="accordion__content" id="pw-a1">
+			<div>
+				<div class="spacing-below-25" th:text="#{legal-stuff.if-you-get-cash-or-SNAP-benefits}"></div>
+				<ul class="list--bulleted-blue">
+					<li>
+					<b th:text="#{legal-stuff.do-not-give-false-information}|"></b>
+					<span th:text="#{legal-stuff.or-hide-information-to-get-or-continue-to-get-benefits}"></span>
+				</li>
+				<li>
+					<b th:text="#{legal-stuff.do-not-trade-or-sell-snap-benefits}|"></b>
+					<span th:text="#{legal-stuff.or-electronic-benefit-transfer}"></span>
+				</li>
+				<li>
+					<b th:text="#{legal-stuff.do-not-use-cash-or-snap-benefits-to-buy-ineligible-items}|"></b>
+					<span th:text="#{legal-stuff.such-as-alcohol-and-tobacco}"></span>
+				</li>
+				<li>
+					<b th:text="#{legal-stuff.do-not-use-someone-elses-ebt-access-card}|"></b>
+					<span th:text="#{legal-stuff.to-get-cash-or-snap-benefits}"></span>
+				</li>
+				</ul>
+				<div class="spacing-below-35" th:text="#{legal-stuff.the-state-may-bar-household-members-who-break}"></div>
+				
+				
+				
+					<b th:text="#{legal-stuff.special-snap-penalty-warning}"></b>
+					<span th:text="#{legal-stuff.if-a-federal-state-or-local-court-finds}"></span>
+				
+				
+				<ul class="list--bulleted-blue">
+				<li class="spacing-below-30">
+					<b th:text="#{legal-stuff.controlled-substances}|"></b>
+					<span th:text="#{legal-stuff.that-household-member-will-be-barred}"></span>
+				</li>
+				<li class="spacing-below-30">
+					<b th:text="#{legal-stuff.firearms-ammunition-or-explosives}|"></b>
+					<span th:text="#{legal-stuff.that-household-member-will-be-barred-from-getting-snap}"></span>
+				</li>
+				<li>
+					<b th:text=" #{legal-stuff.if-you-admit-committing-a-drug-felony-in-the-past-10-years}|"></b>
+					<span th:text="#{legal-stuff.the-agency-may-ask-you-to-take-random-drug-tests}"></span>
+				</li>
+				</ul>
+		</div>
+		</div>
+	</div>
+</div>
+
+</html>

@@ -29,6 +29,10 @@
 .max-width--hourly-wage {
   max-width: 9.5em;
 }
+.list--bulleted-blue{
+  list-style: disc;
+  padding-left: 2.5em;
+}
 
 .intro-section {
   max-width: 35rem;
