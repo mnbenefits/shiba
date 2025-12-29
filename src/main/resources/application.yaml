@@ -41,7 +41,7 @@ server:
     session:
       cookie:
         secure: true
-      timeout: 60000000m
+      timeout: 60m
       timeout-url : /errorTimeout
   error:
     whitelabel:

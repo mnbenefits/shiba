@@ -941,7 +941,6 @@ pageConfigurations:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
-         # promptMessageFragmentName: penaltyWarningsAccordions
           promptMessageKey: penalty-warning.has-court-or-any-other
       - name: fraudulentStatements
         type: CUSTOM
