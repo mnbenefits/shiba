@@ -824,6 +824,11 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-first-name
+      - name: middleName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: personal-info.whats-your-middle-name
+        helpMessageKey: personal-info.legally-as-it-appears-on-your-id				
       - name: lastName
         type: TEXT
         promptMessage:
@@ -1224,6 +1229,11 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-first-name
+      - name: middleName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: household-member-info.whats-their-middle-name
+        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id		  			
       - name: lastName
         type: TEXT
         promptMessage:
@@ -2271,6 +2281,7 @@ pageConfigurations:
       conditionalValues:
         - value: support-and-care.do-you-pay-for-court-ordered-child-support-spousal-support
           condition: *livesAlone?
+    headerHelpMessageKey: support-and-care.help
     hasPrimaryButton: false
     inputs:
       - name: supportAndCare
@@ -3023,6 +3034,35 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+  - &specialCareExpenses
+    name: specialCareExpenses
+    pageTitle: special-care-expenses.title
+    headerKey:
+      defaultValue: special-care-expenses-household-header
+      conditionalValues:
+        - value: special-care-expenses-header
+          condition: *livesAlone?
+    headerHelpMessageKey: special-care-expenses-assets.select-all-that-apply
+    inputs:
+      - name: specialCareExpenses
+        type: CHECKBOX
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-choose-none-of-the-above-or-another-option
+        options:
+          selectableOptions:
+            - value: REPRESENTATIVE_PAYEE_FEES
+              messageKey: special-care-expenses-representative
+            - value: GUARDIAN_AND_CONSERVATOR_FEES
+              messageKey: special-care-expenses-guardian
+            - value: SPECIAL_DIET_PRESCRIBED_BY_DOCTOR
+              messageKey: special-care-expenses-special-diet
+            - value: HIGH_HOUSING_COSTS
+              messageKey: special-care-expenses-housing
+            - value: NONE
+              messageKey: general.inputs.none-of-the-above
+              isNone: true
+
   - &unearnedIncome
     name: unearnedIncome
     pageTitle: unearned-income.title
@@ -3731,6 +3771,21 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: OTHER_PAYMENTS
+  - &advancedChildTaxCredit
+    name: advancedChildTaxCredit
+    pageTitle: advanced-child-tax-credit.title
+    headerKey:
+      defaultValue:  advanced-child-tax-credit.single
+      conditionalValues:
+        - value: advanced-child-tax-credit.household
+          condition: *doesNotLiveAlone?
+    headerHelpMessageKey: advanced-child-tax-credit.body
+    contextFragment: cashBenefitsContextFragment 
+    additionalContentFragment: childTaxCreditInfo
+    hasPrimaryButton: false
+    inputs:
+      - name: hasAdvancedChildTaxCredit
+        type: YES_NO
   - &benefitsProgramsIncomeSource
     name: benefitsProgramsIncomeSource
     pageTitle: unearned-income-benefits-programs.title
@@ -4145,6 +4200,20 @@ pageConfigurations:
               messageKey: living-situation.none-of-these
             - value: PREFER_NOT_TO_SAY
               messageKey: living-situation.i-prefer-not-to-say
+  - &studentFinancialAid
+    name: studentFinancialAid
+    pageTitle: student-financial-aid.title
+    headerKey:
+      defaultValue: student-financial-aid.household-header
+      conditionalValues:
+        - value: student-financial-aid.header
+          condition: *livesAlone?
+    headerHelpMessageKey: student-financial-aid.header-help-message
+    contextFragment: schoolContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: studentFinancialAid
+        type: YES_NO
   - &housingProvider
     name: housingProvider
     pageTitle: housing-provider.title
@@ -6528,10 +6597,17 @@ workflow:
   otherUnearnedIncomeSources:
     pageConfiguration: *otherUnearnedIncomeSources
     nextPages:
+      - pageName: advancedChildTaxCredit
+        condition: *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: otherUnearnedIncome
       - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
   socialSecurityIncomeSource:
     pageConfiguration: *socialSecurityIncomeSource
     nextPages:
@@ -6682,6 +6758,22 @@ workflow:
               input: otherUnearnedIncome
               value: INSURANCE_PAYMENTS
             - *doesNotLiveAlone?
+      - pageName: advancedChildTaxCredit
+        condition:
+          logicalOperator: AND
+          conditions:
+            - pageName: otherUnearnedIncome
+              input: otherUnearnedIncome
+              value: NO_OTHER_UNEARNED_INCOME_SELECTED
+            - *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: 
+          logicalOperator: AND
+          conditions: 
+            - pageName: otherUnearnedIncome
+              input: otherUnearnedIncome
+              value: NO_OTHER_UNEARNED_INCOME_SELECTED
+            - *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
       - pageName: choosePrograms
@@ -6811,7 +6903,11 @@ workflow:
     nextPages:
       - pageName: otherPaymentsIncomeSource
     datasources:
-      - pageName: otherUnearnedIncome		  	  		    	  
+      - pageName: otherUnearnedIncome
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo		  	  		    	  
   otherPaymentsIncomeSource:
     pageConfiguration: *otherPaymentsIncomeSource
     skipCondition:
@@ -6820,9 +6916,31 @@ workflow:
       matcher: DOES_NOT_CONTAIN
       value: OTHER_PAYMENTS
     nextPages:
+      - pageName: advancedChildTaxCredit
+        condition: *someoneChoseSNAP?
+      - pageName: studentFinancialAid
+        condition: *someoneChoseCAFProgram?
       - pageName: futureIncome
     datasources:
-      - pageName: otherUnearnedIncome
+      - pageName: otherUnearnedIncome 
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo      
+  advancedChildTaxCredit:
+    pageConfiguration: *advancedChildTaxCredit
+    nextPages:
+      - pageName: studentFinancialAid
+    datasources:
+      - pageName: addHouseholdMembers
+  studentFinancialAid:
+    pageConfiguration: *studentFinancialAid
+    nextPages:
+      - pageName: futureIncome
+    datasources:
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
   futureIncome:
     pageConfiguration: *futureIncome
     nextPages:
@@ -6938,12 +7056,34 @@ workflow:
         - *noOneChoseCCAP?
         - *noOneChoseSNAP?
     nextPages:
+      - pageName: specialCareExpenses
+        condition:
+          name: noMedicalSources
+          logicalOperator: OR
+          conditions:
+            - pageName: medicalExpenses
+              input: medicalExpenses
+              value: NONE_OF_THE_ABOVE
+            - pageName: medicalExpenses
+              input: medicalExpenses
+              value: MEDICAL_BILLS_OR_COPAYS
+              matcher: CONTAINS_ONLY
       - pageName: medicalExpensesSources
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
+  specialCareExpenses:
+    pageConfiguration: *specialCareExpenses
+    skipCondition: *noOneChoseCASH?
+    datasources:
+     - pageName: addHouseholdMembers
+     - pageName: householdMemberInfo
+       groupName: household
+     - pageName: choosePrograms
+    nextPages:
+      - pageName: supportAndCare
   childCareCosts:
     pageConfiguration: *childCareCosts
     datasources:
@@ -6970,26 +7110,12 @@ workflow:
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
-      - pageName: supportAndCare
+      - pageName: specialCareExpenses
     skipCondition:
-      logicalOperator: OR
-      conditions:
-        - conditions:
-            - *noOneChoseCCAP?
-            - *noOneChoseSNAP?
-        - conditions:
-            - pageName: medicalExpenses
-              input: medicalExpenses
-              value: MEDICAL_INSURANCE_PREMIUMS
-              matcher: DOES_NOT_CONTAIN
-            - pageName: medicalExpenses
-              input: medicalExpenses
-              value: DENTAL_INSURANCE_PREMIUMS
-              matcher: DOES_NOT_CONTAIN
-            - pageName: medicalExpenses
-              input: medicalExpenses
-              value: VISION_INSURANCE_PREMIUMS
-              matcher: DOES_NOT_CONTAIN
+      logicalOperator: AND
+      conditions: 
+        - *noOneChoseCCAP?
+        - *noOneChoseSNAP?
     datasources:
       - pageName: medicalExpenses
       - pageName: addHouseholdMembers
