@@ -289,7 +289,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Other payments");
 		testPage.clickElementById("householdMember-me");
 		testPage.enter("otherPaymentsAmount", "100.00");
-		testPage.clickContinue("Future Income");
+		testPage.clickContinue("Advance Child Tax Credit");
+		testPage.clickElementById("childTaxRevealButton");
+		assertThat(driver.findElement(By.id("childTaxRevealBox")).getAttribute("class"))
+		.doesNotContain("is-hiding-content");
+		testPage.findElementById("advanced-child-tax-credit.reveal-types-content");
+		testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
 		// Do you think the household will earn less money this month than last month?
 		testPage.enter("earnLessMoneyThisMonth", "Yes");
@@ -398,17 +404,21 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// What races or ethnicities do you identify with?
 		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
+		testPage.clickContinue("Penalty Warnings");
+		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+		testPage.enter("fraudulentStatements", NO.getDisplayValue());
+		testPage.enter("hidingFromLaw", NO.getDisplayValue());
+		testPage.enter("drugFelony", NO.getDisplayValue());
+		testPage.enter("violatingParole", NO.getDisplayValue());
 		testPage.clickContinue("Legal Stuff");
 
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
-		//TODO Story 218405: Change this with new drug felony question implementation
-		testPage.enter("drugFelony", NO.getDisplayValue());
 		testPage.clickContinue("Sign this application");
 
 		// Upload documents
 		testPage.enter("applicantSignature", "this is my signature");
-		testPage.clickButtonLink("Continue",  "Submit application");
+		testPage.clickButtonLink("Continue", "Submit application");
 		testPage.clickButton("Submit application", "Submission Confirmation");
 		testPage.clickButtonLink("Continue", "Adding Documents");
 		testPage.clickButtonLink("Continue", "Document Recommendation");
@@ -538,6 +548,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCcapFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "ENGLISH"); 
 		assertCcapFieldEquals("NEED_INTERPRETER", "Yes"); 
 		assertCcapFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
+		assertCcapFieldEquals("APPLICANT_MIDDLE_NAME", "Abdel");
 		assertCcapFieldEquals("APPLICANT_LAST_NAME", "St. George");
 		assertCcapFieldEquals("APPLICANT_OTHER_NAME", "defaultOtherName");
 		assertCcapFieldEquals("DATE_OF_BIRTH", "01/12/1928");
@@ -688,7 +699,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_7", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_7", "100.00");
-		
 		assertCafFieldEquals("HOMEOWNERS_INSURANCE", "No");
 		assertCafFieldEquals("REAL_ESTATE_TAXES", "No");
 		assertCafFieldEquals("ASSOCIATION_FEES", "No");
@@ -720,6 +730,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Group Home Provider / 12345");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_FIRST_NAME", "Ahmed");
+		assertCafFieldEquals("APPLICANT_MIDDLE_NAME", "Abdel");
 		assertCafFieldEquals("APPLICANT_LAST_NAME", "St. George");
 		assertCafFieldEquals("APPLICANT_OTHER_NAME", "defaultOtherName");
 		assertCafFieldEquals("DATE_OF_BIRTH", "01/12/1928");
@@ -739,8 +750,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("HEAT", "Yes");
 		assertCafFieldEquals("SUPPORT_AND_CARE", "Yes");
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
-		//TODO Story 218405: Change this with new drug felony question implementation
+		assertCafFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "No");
+		assertCafFieldEquals("FRAUDULENT_STATEMENTS", "No");
+		assertCafFieldEquals("HIDING_FROM_LAW", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
+		assertCafFieldEquals("VIOLATING_PAROLE", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");
@@ -781,6 +795,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("BLACK_OR_AFRICAN_AMERICAN", "Yes");
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
 		assertCafFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes");
+		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
 
 	}
 
@@ -810,6 +825,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
 		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
 		testPage.enter("firstName", "Celia");
+		testPage.enter("middleName", "Anna");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("dateOfBirth", "10/15/1950");
 		testPage.enter("maritalStatus", "Married, living with spouse");
@@ -887,7 +903,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Unearned Income");
 		
 		testPage.enter("otherUnearnedIncome", "None");
-		testPage.clickContinue("Future Income");
+		testPage.clickContinue("Student Financial Aid");
+		testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 		
 
 		// Do you think the household will earn less money this month than last month?
@@ -907,7 +924,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Has your household received money for energy assistance (LIHEAP) in the last
 		// 12 months?
-		testPage.chooseYesOrNo("energyAssistance", NO.getDisplayValue(), "Support and Care");
+		testPage.chooseYesOrNo("energyAssistance", NO.getDisplayValue(), "Special care costs");
+		testPage.enter("specialCareExpenses", "None");
+		testPage.clickContinue("Support and Care");
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
@@ -945,12 +964,17 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// What races or ethnicities do you identify with?
 		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
+		testPage.clickContinue("Penalty Warnings");
+		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+		testPage.enter("fraudulentStatements", NO.getDisplayValue());
+		testPage.enter("hidingFromLaw", NO.getDisplayValue());
+		testPage.enter("drugFelony", NO.getDisplayValue());
+		testPage.enter("violatingParole", NO.getDisplayValue());
 		testPage.clickContinue("Legal Stuff");
 
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
-		//TODO Story 218405: Change this with new drug felony question implementation
-		testPage.enter("drugFelony", NO.getDisplayValue());
+		
 		testPage.clickContinue("Sign this application");
 
 		// Sign this application (applicant)
@@ -1021,10 +1045,12 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("EMERGENCY", "Off");
 	    assertCafFieldEquals("MN_HOUSING_SUPPORT", "No");
 	    assertCafFieldEquals("HOUSING_SUPPORT_VENDOR", "Does not have a provider.");
+		assertCafFieldEquals("MN_HOUSING_SUPPORT", "No");
 		assertCafFieldEquals("TANF", "Off");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("CREATED_DATE", "2020-01-01");
 		// Household member fields
+		assertCafFieldEquals("MIDDLE_NAME_0", "Anna");
 		assertCafFieldEquals("PROGRAMS_0", "CASH");
 		assertCafFieldEquals("OTHER_ADULT_SIGNATURE", "second person signature");
 		assertCafFieldEquals("CREATED_DATE_SIGNATURE", "2020-01-01");
@@ -1064,6 +1090,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("Continue", "Personal Info");
 		// Personal Info
 		testPage.enter("firstName", "Ahmed");
+		testPage.enter("middleName", "Abdel");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("otherName", "defaultOtherName");
 		// DOB is optional
@@ -1099,6 +1126,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("Continue", "Personal Info");
 		// Personal Info
 		testPage.enter("firstName", "Ahmed");
+		testPage.enter("middleName", "Abdel");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("otherName", "defaultOtherName");
 		// DOB is optional
@@ -1120,6 +1148,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
 		testPage.clickButtonLink("Continue", "Housemate: Personal Info");
 		testPage.enter("firstName", "Celia");
+		testPage.enter("middleName", "Anna");
 		testPage.enter("lastName", "St. George");
 		testPage.enter("dateOfBirth", "10/15/1950");
 		testPage.enter("maritalStatus", "Married, living with spouse");
