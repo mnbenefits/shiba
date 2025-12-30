@@ -499,9 +499,14 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Can we ask");
     testPage.clickLink("Yes, continue", "Race and Ethnicity");
     testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
-    testPage.clickContinue("Legal Stuff");
+    testPage.clickContinue("Penalty Warnings");
+	testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+	testPage.enter("fraudulentStatements", NO.getDisplayValue());
+	testPage.enter("hidingFromLaw", NO.getDisplayValue());
+	testPage.enter("drugFelony", NO.getDisplayValue());
+	testPage.enter("violatingParole", NO.getDisplayValue());
+	testPage.clickContinue("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
-    testPage.enter("drugFelony", NO.getDisplayValue());
     testPage.clickContinue("Sign this application");
     testPage.enter("applicantSignature", "some name");
     testPage.clickButton("Continue", "Submit application");
