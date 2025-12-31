@@ -965,6 +965,22 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// What races or ethnicities do you identify with?
 		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
 		testPage.clickContinue("Penalty Warnings");
+		// Verify accordion exists
+	    assertThat(testPage.findElementById("pw-a1")).isNotNull();
+	    
+	    // Verify accordion is initially closed
+	    assertThat(driver.findElement(By.className("accordion")).getAttribute("class"))
+	        .contains("accordion--is-closed");
+	    
+	    // Click to expand accordion
+	    testPage.clickElementById("pw-a1");
+	    
+	    // Verify accordion is now open
+	    assertThat(driver.findElement(By.className("accordion")).getAttribute("class"))
+	        .doesNotContain("accordion--is-closed");
+	    // Verify content is accessible 
+	    assertThat(driver.findElement(By.className("accordion__content"))).isNotNull();
+	    
 		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 		testPage.enter("fraudulentStatements", NO.getDisplayValue());
 		testPage.enter("hidingFromLaw", NO.getDisplayValue());
