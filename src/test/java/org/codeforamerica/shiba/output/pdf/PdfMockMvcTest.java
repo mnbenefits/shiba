@@ -887,7 +887,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("LIVING_SITUATION", "TEMPORARILY_WITH_FRIENDS_OR_FAMILY", caf);
 			assertPdfFieldEquals("LIVING_WITH_FAMILY_OR_FRIENDS", "Yes", ccap);
 		}
-
+		
 		@Test
 		void shouldMapTribalNationMemberYesOrNoAndWhichTribalNationBoundary() throws Exception {
 			fillInRequiredPages();
@@ -1152,6 +1152,23 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("SELF_EMPLOYMENT_0", "No", ccap);
 				assertPdfFieldEquals("SELF_EMPLOYMENT_1", "Yes", ccap);
 			}
+			
+			@Test
+			void shouldMapAllPenaltyWarningQuestionsToCAF() throws Exception {
+			    fillInRequiredPages();
+			    fillOutPenaltyWarnings();
+			  
+
+			    var caf = submitAndDownloadCaf();
+			    
+			    // Verify all questions have responses in CAF
+			    assertPdfFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "No", caf);
+			    assertPdfFieldEquals("FRAUDULENT_STATEMENTS", "Yes", caf);
+			    assertPdfFieldEquals("HIDING_FROM_LAW", "No", caf);
+			    assertPdfFieldEquals("DRUG_FELONY", "Yes", caf);
+			    assertPdfFieldEquals("VIOLATING_PAROLE", "No", caf);
+			}
+
 
 			/**
 			 * This test verifies the following for a CCAP application:

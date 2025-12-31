@@ -423,7 +423,19 @@ public class AbstractShibaMockMvcTest {
         "moveToMnPreviousCity", List.of("Chicago")
     ));
   }
+  
+  protected void fillOutPenaltyWarnings() throws Exception {
+	    postExpectingSuccess("penaltyWarnings", Map.of(
+	        "disqualifiedPublicAssistance", List.of("No"),
+	        "fraudulentStatements", List.of("Yes"),
+	        "hidingFromLaw", List.of("No"),
+	        "drugFelony", List.of("Yes"),
+	        "violatingParole", List.of("No")
+	    ));
+	  }
 
+  
+  
   protected void fillOutContactInfo() throws Exception {
     postExpectingSuccess("contactInfo", Map.of(
         "phoneNumber", List.of("7234567890"),
