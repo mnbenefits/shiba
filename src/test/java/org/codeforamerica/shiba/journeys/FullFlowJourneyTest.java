@@ -351,7 +351,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("visionInsurancePremiumAmount", "56.35");
 		testPage.enter("medicalInsurancePremiumAmount", "10.90");
 
-		testPage.clickContinue("Support and Care");
+		testPage.clickContinue("Support and Care Expenses");
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
@@ -924,7 +924,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// 12 months?
 		testPage.chooseYesOrNo("energyAssistance", NO.getDisplayValue(), "Special care costs");
 		testPage.enter("specialCareExpenses", "None");
-		testPage.clickContinue("Support and Care");
+		testPage.clickContinue("Support and Care Expenses");
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
