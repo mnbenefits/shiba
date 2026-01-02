@@ -973,7 +973,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 	        .contains("accordion--is-closed");
 	    
 	    // Click to expand accordion
-	    testPage.clickElementById("pw-a1");
+	    //testPage.clickElementById("pw-a1");
+	    driver.findElement(By.className("accordion__button")).click();
 	    
 	    // Verify accordion is now open
 	    assertThat(driver.findElement(By.className("accordion")).getAttribute("class"))
