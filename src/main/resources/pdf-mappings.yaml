@@ -175,6 +175,7 @@ mappings:
     otherIncomeFullName: OTHER_INCOME_FULL_NAME
     otherIncomeAmount: OTHER_INCOME_AMOUNT
     otherIncomeFrequency: OTHER_INCOME_FREQUENCY
+    otherIncomeYesNo: OTHER_INCOME_YES_NO
 
   unearnedIncome:
     SOCIAL_SECURITY: SOCIAL_SECURITY
