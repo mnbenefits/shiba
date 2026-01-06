@@ -84,18 +84,17 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 	
 	@Test
-	void shouldMapForNoWorkChanges() throws Exception {
+	void shouldMapNoneOfTheAboveWorkChanges() throws Exception {
 		selectPrograms("CASH");
-		postExpectingSuccess("workChanges", "workChanges", "NONE");
+		postExpectingSuccess("workChanges", "workChanges", "NONE_OF_THE_ABOVE");
 		
 		var caf = submitAndDownloadCaf();
 		assertPdfFieldEquals("END_WORK", "Off", caf);
 		assertPdfFieldEquals("REFUSE_A_JOB_OFFER", "Off", caf);
 		assertPdfFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Off", caf);
 		assertPdfFieldEquals("GO_ON_STRIKE", "Off", caf);
+		assertPdfFieldEquals("WORK_CHANGES_NONE", "Yes", caf);
 	}
-	
-
 
 	@Test
 	void shouldMapEnergyAssistanceWhenUserReceivedNoAssistance() throws Exception {
