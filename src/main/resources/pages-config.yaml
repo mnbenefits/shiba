@@ -936,45 +936,75 @@ pageConfigurations:
     inputs:
       - name: disqualifiedPublicAssistance
         type: CUSTOM
-        customInputFragment: yesNoRadio
+        customInputFragment: yesNoRadioWithHouseholdFollowup
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.has-court-or-any-other
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true" 
       - name: fraudulentStatements
         type: CUSTOM
-        customInputFragment: yesNoRadio
+        customInputFragment: yesNoRadioWithHouseholdFollowup
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.has-anyone-in-the-household
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
       - name: hidingFromLaw
         type: CUSTOM
-        customInputFragment: yesNoRadio
+        customInputFragment: yesNoRadioWithHouseholdFollowup
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.is-anyone-in-your-household-hiding
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
       - name: drugFelony
         type: CUSTOM
-        customInputFragment: yesNoRadio
+        customInputFragment: yesNoRadioWithHouseholdFollowup
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.has-anyone-in-your-household-convicted
         helpMessageKey: penalty-warning.has-anyone-in-your-household-convicted-if-yes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
       - name: violatingParole
         type: CUSTOM
-        customInputFragment: yesNoRadio
+        customInputFragment: yesNoRadioWithHouseholdFollowup
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
         promptMessage:
           promptMessageKey: penalty-warning.is-anyone-in-your-household-violating
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
   - &contactInfo
     name: contactInfo
     pageTitle: contact-info.title
@@ -7377,7 +7407,7 @@ workflow:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
-        groupName: household	
+        groupName: household
   legalStuff:
     pageConfiguration: *legalStuff
     nextPages:
