@@ -106,8 +106,8 @@ dependencies {
     
     implementation("org.apache.commons:commons-lang3:3.20.0")
     implementation("org.apache.commons:commons-text:1.15.0")
-    implementation("org.apache.httpcomponents.core5:httpcore5:5.3.6")
-    implementation("org.apache.httpcomponents.client5:httpclient5:5.5.1")
+    implementation("org.apache.httpcomponents.core5:httpcore5:5.4")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.6")
     implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.6")
     implementation("org.apache.pdfbox:pdfbox:3.0.6")
 
@@ -137,8 +137,8 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:9.0")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
-    implementation("ch.qos.logback:logback-classic:1.5.22")
-    implementation("ch.qos.logback:logback-core:1.5.22")
+    implementation("ch.qos.logback:logback-classic:1.5.23")
+    implementation("ch.qos.logback:logback-core:1.5.23")
     implementation("ch.qos.logback:logback-parent:1.5.23")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.20.0")
@@ -147,7 +147,7 @@ dependencies {
     implementation("org.jetbrains:annotations:26.0.2-1")
     implementation("commons-validator:commons-validator:1.10.1")
     implementation("org.flywaydb:flyway-core:11.19.1")
-    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.19.0")
+    runtimeOnly("org.flywaydb:flyway-database-postgresql:11.20.0")
     implementation("com.mixpanel:mixpanel-java:1.6.1")
     implementation("net.javacrumbs.shedlock:shedlock-spring:7.4.0")
     implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.4.0")
@@ -188,7 +188,7 @@ dependencies {
     testImplementation("org.seleniumhq.selenium:selenium-support:4.39.0")
     testImplementation("io.percy:percy-java-selenium:2.1.1")
     testImplementation("com.deque.html.axe-core:selenium:4.11.0")
-    testImplementation("org.jsoup:jsoup:1.21.2")
+    testImplementation("org.jsoup:jsoup:1.22.1")
 }
 
 compileJava {
