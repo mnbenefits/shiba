@@ -13,6 +13,7 @@ import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.parsers.ApplicationDataParser;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.DocumentField;
+import org.codeforamerica.shiba.output.DocumentFieldType;
 import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.pages.data.InputData;
@@ -218,6 +219,56 @@ public class OtherIncomePreparer  implements DocumentFieldPreparer {
 			otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeFullName", unearnedIncomeItem.personFullName, ENUMERATED_SINGLE_VALUE, i));
 			otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeAmount", unearnedIncomeItem.amount, ENUMERATED_SINGLE_VALUE, i));
 			otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeFrequency", unearnedIncomeItem.frequency, ENUMERATED_SINGLE_VALUE, i));
+		}
+
+				
+	
+		// When the user selects "none of the above" on BOTH /unearnedIncome and
+		// /otherUnearnedIncome pages, the No radio button is populated on Q14.
+		// if the user selects any income types from either /unearnedIncome or
+		// /otherUnearnedIncome page, the Yes radio button is populated on Q14.
+
+		PageData unearnedIncomePage = pagesData.getPage("unearnedIncome");
+		PageData otherUnearnedIncomePage = pagesData.getPage("otherUnearnedIncome");
+
+		// Check if both pages are available
+		if (unearnedIncomePage != null && otherUnearnedIncomePage != null) {
+
+			InputData unearnedIncomeInput = unearnedIncomePage.get("unearnedIncome");
+			InputData otherUnearnedIncomeInput = otherUnearnedIncomePage.get("otherUnearnedIncome");
+
+			// Check if both inputs are available
+			if (unearnedIncomeInput != null && otherUnearnedIncomeInput != null) {
+
+				List<String> unearnedIncomeInputValue = unearnedIncomeInput.getValue();
+				List<String> otherUnearnedIncomeInputValue = otherUnearnedIncomeInput.getValue();
+
+				// If both income types are marked as "NO" (no income selected)
+				if (unearnedIncomeInputValue.contains("NO_UNEARNED_INCOME_SELECTED")
+						&& otherUnearnedIncomeInputValue.contains("NO_OTHER_UNEARNED_INCOME_SELECTED")) {
+					otherIncomeDocumentFields.add(
+							new DocumentField("otherIncome", "otherIncomeYesNo", "No", DocumentFieldType.SINGLE_VALUE));
+				} else {
+					otherIncomeDocumentFields.add(new DocumentField("otherIncome", "otherIncomeYesNo", "Yes",
+							DocumentFieldType.SINGLE_VALUE));
+				}
+
+			} // If one of the inputs is missing, no document field added
+
+		} else if (unearnedIncomePage != null || otherUnearnedIncomePage != null) {
+
+			// Handle the case where only one of the pages is available
+			InputData unearnedIncomeInput = unearnedIncomePage != null ? unearnedIncomePage.get("unearnedIncome")
+					: null;
+			InputData otherUnearnedIncomeInput = otherUnearnedIncomePage != null
+					? otherUnearnedIncomePage.get("otherUnearnedIncome")
+					: null;
+
+			// If either of the inputs is available, we mark the field as "Yes"
+			if (unearnedIncomeInput != null || otherUnearnedIncomeInput != null) {
+				otherIncomeDocumentFields.add(
+						new DocumentField("otherIncome", "otherIncomeYesNo", "Yes", DocumentFieldType.SINGLE_VALUE));
+			}
 		}
 
 		return otherIncomeDocumentFields;

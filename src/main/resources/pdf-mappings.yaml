@@ -152,7 +152,8 @@ mappings:
      STOP_WORK: END_WORK
      REFUSE_JOB: REFUSE_A_JOB_OFFER
      FEWER_HOURS: ASK_TO_WORK_FEWER_HOURS
-     ON_STRIKE: GO_ON_STRIKE	
+     ON_STRIKE: GO_ON_STRIKE
+     NONE_OF_THE_ABOVE: WORK_CHANGES_NONE
   nationsBoundary:
     selectedNationBoundaryTribe: TRIBAL_NATION_BOUNDARY
     boundaryMember: BOUNDARY_MEMBER
@@ -174,6 +175,7 @@ mappings:
     otherIncomeFullName: OTHER_INCOME_FULL_NAME
     otherIncomeAmount: OTHER_INCOME_AMOUNT
     otherIncomeFrequency: OTHER_INCOME_FREQUENCY
+    otherIncomeYesNo: OTHER_INCOME_YES_NO
 
   unearnedIncome:
     SOCIAL_SECURITY: SOCIAL_SECURITY
