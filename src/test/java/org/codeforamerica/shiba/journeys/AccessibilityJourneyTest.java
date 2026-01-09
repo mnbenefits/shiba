@@ -471,7 +471,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("energyAssistance", YES.getDisplayValue(), "Energy Assistance More Than 20");
     testPage.chooseYesOrNo("energyAssistanceMoreThan20", YES.getDisplayValue(), "Medical expenses");
     testPage.enter("medicalExpenses", "None of the above");
-    testPage.clickContinue("Support and Care");
+    testPage.clickContinue("Support and Care Expenses");
     testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
     testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Adult care costs");
     testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Assets");

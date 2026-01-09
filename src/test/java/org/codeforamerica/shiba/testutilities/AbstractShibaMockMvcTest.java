@@ -434,8 +434,6 @@ public class AbstractShibaMockMvcTest {
 	    ));
 	  }
 
-  
-  
   protected void fillOutContactInfo() throws Exception {
     postExpectingSuccess("contactInfo", Map.of(
         "phoneNumber", List.of("7234567890"),

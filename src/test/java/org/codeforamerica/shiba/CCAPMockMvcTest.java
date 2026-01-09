@@ -55,7 +55,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingNextPageTitle("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS"), "Insurance payments");
 	  postExpectingRedirect("insurancePaymentsIncomeSource", "monthlyIncomeInsurancePayments", List.of("Dwight Schrute applicant"), "advancedChildTaxCredit");
 	  postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
-	  postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");  }
+	  postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
+  }
   
 	@Test
 	void verifyotherUnearnedIncomeFlow() throws Exception {
@@ -186,7 +187,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     
     postExpectingRedirect("annuityIncomeSource", Map.of("monthlyIncomeAnnuityPayments",  List.of("Dwight Schrute applicant"), "annuityPaymentsAmount", List.of("100", "")), "advancedChildTaxCredit");
     postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false", "studentFinancialAid");
-    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false", "futureIncome");    
+    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false", "futureIncome");
 	// Verify that annuity was selected on otherUnearnedIncome page
 	List<String> otherUnearnedIncomeSelections = (List<String>) applicationData.getPagesData()
 			.getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
@@ -241,8 +242,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
   }
-  
-  
+
   @Test
   void verifyDrugFelonyQuestionIsDisplayedWhenAnythingOtherThanCCAPOnlyIsSelected() throws Exception {
     completeFlowFromLandingPageThroughReviewInfo("CCAP", "SNAP");
@@ -252,8 +252,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     //TODO Story 218405: Change this with new drug felony question implementation
     assertPageHasElementWithId("penaltyWarnings", "drugFelony1");
   }
-  
-  
+
   @Test
   void verifyDrugFelonyQuestionIsNotDisplayedWhenCCAPOnlyIsSelected() throws Exception {
     completeFlowFromLandingPageThroughReviewInfo("CCAP");

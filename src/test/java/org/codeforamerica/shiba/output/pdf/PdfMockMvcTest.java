@@ -84,18 +84,17 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 	
 	@Test
-	void shouldMapForNoWorkChanges() throws Exception {
+	void shouldMapNoneOfTheAboveWorkChanges() throws Exception {
 		selectPrograms("CASH");
-		postExpectingSuccess("workChanges", "workChanges", "NONE");
+		postExpectingSuccess("workChanges", "workChanges", "NONE_OF_THE_ABOVE");
 		
 		var caf = submitAndDownloadCaf();
 		assertPdfFieldEquals("END_WORK", "Off", caf);
 		assertPdfFieldEquals("REFUSE_A_JOB_OFFER", "Off", caf);
 		assertPdfFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Off", caf);
 		assertPdfFieldEquals("GO_ON_STRIKE", "Off", caf);
+		assertPdfFieldEquals("WORK_CHANGES_NONE", "Yes", caf);
 	}
-	
-
 
 	@Test
 	void shouldMapEnergyAssistanceWhenUserReceivedNoAssistance() throws Exception {
@@ -116,7 +115,84 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		assertPdfFieldEquals("APPLICANT_SIGNATURE", "aЕкатерина", caf);
 	}
+	
+	@Nested
+	@Tag("pdf")
+	class IncomeAndOtherIncome {
+	
+		//The following tests are for CAF Q14 with the new addition of the yes/no radio button
+		
+		//should switch radio to YES if there are options on unearnedIncome page
+		@Test
+		void shouldMapYesOtherIncomeUnearnedIncomeOnly() throws Exception {
+		selectPrograms("CASH");
+		fillOutPersonalInfo();
+		postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+		postExpectingSuccess("unearnedIncome", "unearnedIncome", List.of("SOCIAL_SECURITY", "SSI", "VETERANS_BENEFITS", "UNEMPLOYMENT"));
+		
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
+		}
+		
+		//should switch radio to YES if there are options on otherUnearnedIncome page
+		@Test
+		void shouldMapYesOtherIncomeOtherUnearnedIncomeOnly() throws Exception {
+		selectPrograms("CASH");
+		fillOutPersonalInfo();
+		postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");	
+		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS", "TRUST_MONEY", "RENTAL_INCOME", "INTEREST_DIVIDENDS", 
+				"HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING", "OTHER_PAYMENTS"),
+				"otherUnearnedIncomeSources");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
+		}
+		
+		//should switch radio to YES if there are options on both unearnedIncome & otherUnearnedIncome pages
+		@Test
+		void shouldMapYesOtherIncomeBothIncome() throws Exception {
+		selectPrograms("CASH");
+		fillOutPersonalInfo();
+		postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+		postExpectingSuccess("unearnedIncome", "unearnedIncome", List.of("SOCIAL_SECURITY", "SSI", "VETERANS_BENEFITS", "UNEMPLOYMENT"));
+		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("INSURANCE_PAYMENTS", "TRUST_MONEY", "RENTAL_INCOME", "INTEREST_DIVIDENDS", 
+				"HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING", "OTHER_PAYMENTS"),
+				"otherUnearnedIncomeSources");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
+		}
+		
+		//should switch radio to NO if there are NONE selected on both unearnedIncome & otherUnearnedIncome pages
+		@Test
+		void shouldMapNoOtherIncomeNoIncome() throws Exception {
+		selectPrograms("CASH");
+		fillOutPersonalInfo();
+		postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+		postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+		postExpectingSuccess("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED");
+		postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED" );
 
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "No", caf);
+		}
+	}
+	
+	
+	@Test
+	void shouldMapNoOtherIncome() throws Exception {
+	selectPrograms("CASH");
+	fillOutPersonalInfo();
+	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+	postExpectingSuccess("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED");
+	postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED");
+
+	var caf = submitAndDownloadCaf();
+	assertPdfFieldEquals("OTHER_INCOME_YES_NO", "No", caf);
+	}
+	
 	@Test
 	void shouldMapChildrenNeedingChildcareFullNames() throws Exception {
 		fillOutPersonalInfo();
@@ -332,6 +408,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_8", "180.00", caf);
 	    assertPdfFieldEquals("OTHER_INCOME_TYPE_9", "Lottery or gambling winnings", caf);
 	    assertPdfFieldEquals("OTHER_INCOME_AMOUNT_9", "190.00", caf);
+		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
 	    
 	    // The cover page has space for 10 unearned income entries so 
 	    // these last two will not be written to the cover page or anywhere in the CAF
@@ -388,6 +465,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		assertPdfFieldEquals("OTHER_INCOME_TYPE_4", "Day trading proceeds", caf);
 		assertPdfFieldEquals("OTHER_INCOME_AMOUNT_4", "240", caf);
+		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
+
 	}
 	
 	@Test
@@ -887,7 +966,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("LIVING_SITUATION", "TEMPORARILY_WITH_FRIENDS_OR_FAMILY", caf);
 			assertPdfFieldEquals("LIVING_WITH_FAMILY_OR_FRIENDS", "Yes", ccap);
 		}
-		
+
 		@Test
 		void shouldMapTribalNationMemberYesOrNoAndWhichTribalNationBoundary() throws Exception {
 			fillInRequiredPages();
@@ -1248,9 +1327,12 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", document);
 				assertPdfFieldEquals("OTHER_INCOME_TYPE_0", "Rental income", document);
 				assertPdfFieldEquals("OTHER_INCOME_AMOUNT_0", "200", document);
+				
 				// This will only exist on the CAF
 				if (program.equals("SNAP")) {
 					assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_0", "Monthly", document);
+					assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", document);
+
 				}
 
 			    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_1", "Pam Beesly", document);
@@ -1259,6 +1341,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				// This will only exist on the CAF
 				if (program.equals("SNAP")) {
 					assertPdfFieldEquals("OTHER_INCOME_FREQUENCY_1", "Monthly", document);
+					assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", document);
+
 				}
 
 				assertPdfFieldEquals("OTHER_INCOME_TYPE_2", "Annuity payments", document);
