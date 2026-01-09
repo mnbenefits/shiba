@@ -4413,6 +4413,25 @@ pageConfigurations:
             matcher: DOES_NOT_CONTAIN_SUBSTRING
     pageTitle: warning-page.no-data-title
     usingPageTemplateFragment: false
+  - &principalWageEarner
+    name: principalWageEarner
+    pageTitle: principal-wage-earner.title
+    headerKey: principal-wage-earner.header
+    headerHelpMessageKey: principal-wage-earner.snap-households-must-designate
+    contextFragment: personMoneyCoinFragment
+    inputs:
+      - name: principalWageEarner
+        type: CUSTOM
+        customInputFragment: principalWageEarnerInput
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-answer-this-question			  
   - &startExpenses
     name: startExpenses
     pageTitle: start-expenses.title
@@ -6320,6 +6339,7 @@ workflow:
     nextPages:
       - pageName: pastEmployment
         condition:
+          name: someoneChoseSNAPandNotWorking
           logicalOperator: AND
           conditions:
             - *someoneChoseSNAP?
@@ -6328,6 +6348,7 @@ workflow:
               value: "false"
       - pageName: jobSearch
         condition:
+          name: notWorking
           pageName: employmentStatus
           input: areYouWorking
           value: "false"
@@ -6446,6 +6467,8 @@ workflow:
   thirtyDayIncome:
     pageConfiguration: *thirtyDayIncome
     nextPages:
+      - pageName: principalWageEarner
+        condition: *someoneChoseSNAP?
       - pageName: incomeUpNext
     datasources:
       - pageName: addHouseholdMembers
@@ -6459,6 +6482,29 @@ workflow:
       - pageName: householdSelectionForIncome
       - pageName: employersName
     groupName: jobs
+  pastEmployment:
+    pageConfiguration: *pastEmployment
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+    nextPages:
+      - pageName: principalWageEarner
+        condition: *someoneChoseSNAP?
+      - pageName: jobSearch
+        condition: *someoneChoseCCAP?
+      - pageName: incomeUpNext
+  principalWageEarner:
+    pageConfiguration: *principalWageEarner
+    datasources:
+     - pageName: addHouseholdMembers
+     - pageName: householdMemberInfo
+       groupName: household
+       optional: "true"
+     - pageName: choosePrograms
+    nextPages:
+      - pageName: incomeUpNext
   incomeUpNext:
     pageConfiguration: *incomeUpNext
     nextPages:
@@ -7059,17 +7105,6 @@ workflow:
       - pageName: addHouseholdMembers
     nextPages:
       - pageName: assets	  
-  pastEmployment:
-    pageConfiguration: *pastEmployment
-    datasources:
-      - pageName: choosePrograms
-      - pageName: addHouseholdMembers
-      - pageName: householdMemberInfo
-        groupName: household
-    nextPages:
-      - pageName: jobSearch
-        condition: *someoneChoseCCAP?
-      - pageName: incomeUpNext
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
@@ -7215,6 +7250,8 @@ workflow:
   whoIsLookingForAJob:
     pageConfiguration: *whoIsLookingForAJob
     nextPages:
+      - pageName: principalWageEarner
+        condition: *someoneChoseSNAP?
       - pageName: incomeUpNext
     datasources:
       - pageName: addHouseholdMembers

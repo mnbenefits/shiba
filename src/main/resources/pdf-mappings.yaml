@@ -330,6 +330,8 @@ mappings:
     payPeriod: [ NON_SELF_EMPLOYMENT_PAY_FREQUENCY, NON_SELF_EMPLOYMENT_PAY_FREQUENCY_TEXT ]
   employmentStatus:
     isAnyoneWorking: IS_WORKING
+  principalWageEarner:
+    principalWageEarner: PRINCIPLE_WAGE_EARNER
   homeExpenses:
     RENT: RENT
     MORTGAGE: MORTGAGE
