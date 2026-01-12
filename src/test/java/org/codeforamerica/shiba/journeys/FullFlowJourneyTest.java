@@ -409,11 +409,15 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// What races or ethnicities do you identify with?
 		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
 		testPage.clickContinue("Penalty Warnings");
-		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+		testPage.enter("disqualifiedPublicAssistance", YES.getDisplayValue());
+		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember-me")).click(); // Applicant
+		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember0")).click(); // First household member
 		testPage.enter("fraudulentStatements", NO.getDisplayValue());
 		testPage.enter("hidingFromLaw", NO.getDisplayValue());
 		testPage.enter("drugFelony", NO.getDisplayValue());
-		testPage.enter("violatingParole", NO.getDisplayValue());
+		testPage.enter("violatingParole", YES.getDisplayValue());
+		driver.findElement(By.id("violatingParole-householdMember-me")).click(); // Applicant
+		driver.findElement(By.id("violatingParole-householdMember0")).click(); // First household member
 		testPage.clickContinue("Legal Stuff");
 
 		// The legal stuff.
@@ -755,11 +759,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("HEAT", "Yes");
 		assertCafFieldEquals("SUPPORT_AND_CARE", "Yes");
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
-		assertCafFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "No");
+		assertCafFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "Yes");
 		assertCafFieldEquals("FRAUDULENT_STATEMENTS", "No");
 		assertCafFieldEquals("HIDING_FROM_LAW", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
-		assertCafFieldEquals("VIOLATING_PAROLE", "No");
+		assertCafFieldEquals("VIOLATING_PAROLE", "Yes");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");

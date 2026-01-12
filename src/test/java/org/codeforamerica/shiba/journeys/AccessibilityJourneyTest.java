@@ -504,7 +504,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
 	testPage.enter("fraudulentStatements", NO.getDisplayValue());
 	testPage.enter("hidingFromLaw", NO.getDisplayValue());
 	testPage.enter("drugFelony", NO.getDisplayValue());
-	testPage.enter("violatingParole", NO.getDisplayValue());
+	testPage.enter("violatingParole", YES.getDisplayValue());
+	driver.findElement(By.id("violatingParole-householdMember-me")).click(); // Applicant
+	driver.findElement(By.id("violatingParole-householdMember0")).click(); // First household member
 	testPage.clickContinue("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
     testPage.clickContinue("Sign this application");

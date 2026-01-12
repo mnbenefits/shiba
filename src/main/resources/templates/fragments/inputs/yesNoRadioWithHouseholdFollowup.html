@@ -44,6 +44,9 @@
 			</div>
 			
 			<!-- Follow-up: Household Member Checkboxes (ONLY shows if there are OTHER household members) -->
+			<!--Creates ID: e.g "disqualifiedPublicAssistance-household-followup"`
+			- This matches the `data-follow-up` attribute on the "Yes" button
+			- Honeycrisp uses this to know WHICH div to show/hide -->
 			<div class="question-with-follow-up__follow-up" 
 				th:id="${input.name + '-household-followup'}"
 				th:if="${hasHouseholdMembers}">
