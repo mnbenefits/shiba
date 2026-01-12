@@ -243,9 +243,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("No, that's it.", "Job Search");
 
 		// Is anyone in the household currently looking for a job?
-		testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
-
+		testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Principal Wage Earner");
+		testPage.clickElementById("talk-to-my-worker");
 		// Got it! You're almost done with the income section.
+		testPage.clickButtonLink("Continue", "Income Up Next");
+		
 		testPage.clickButtonLink("Continue", "Unearned Income");
 
 		// Does anyone in your household get income from these sources?

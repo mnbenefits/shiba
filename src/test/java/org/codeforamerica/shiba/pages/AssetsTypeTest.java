@@ -128,8 +128,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
 	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
-	  postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Income Up Next");
-	  // should navigate from the incomeUpNext page to the unearnedIncome page
+	  postExpectingNextPageTitle("pastEmployment", "wereYouEmployed", "false", "Principal Wage Earner");
+	  postExpectingNextPageTitle("principalWageEarner", "principalWageEarner", "I want to talk with my worker first.", "Income Up Next");
 	  assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
 	  // enter "None" on the unearnedIncome page, should navigate to the otherUnearnedIncome page
 	  postExpectingRedirect("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED", "otherUnearnedIncome");
