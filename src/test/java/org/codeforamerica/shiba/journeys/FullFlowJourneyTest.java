@@ -246,9 +246,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Principal Wage Earner");
 		
 		testPage.enter("principalWageEarner", householdMemberFullName);
-		testPage.clickContinue("Income Up Next");
 
 		// Got it! You're almost done with the income section.
+		testPage.clickButtonLink("Continue", "Income Up Next");
+		
 		testPage.clickButtonLink("Continue", "Unearned Income");
 
 		// Does anyone in your household get income from these sources?
