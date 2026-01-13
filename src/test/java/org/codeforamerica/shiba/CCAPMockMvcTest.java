@@ -249,8 +249,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true",
             "startHousehold");
     fillOutHousemateInfo("EA");
-    //TODO Story 218405: Change this with new drug felony question implementation
-    assertPageHasElementWithId("penaltyWarnings", "drugFelony1");
+    assertPageHasElementWithId("penaltyWarnings", "drugFelonyConviction1");
   }
 
   @Test

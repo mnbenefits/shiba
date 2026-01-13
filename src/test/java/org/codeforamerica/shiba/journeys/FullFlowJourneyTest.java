@@ -414,7 +414,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember0")).click(); // First household member
 		testPage.enter("fraudulentStatements", NO.getDisplayValue());
 		testPage.enter("hidingFromLaw", NO.getDisplayValue());
-		testPage.enter("drugFelony", NO.getDisplayValue());
+		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
 		testPage.enter("violatingParole", YES.getDisplayValue());
 		driver.findElement(By.id("violatingParole-householdMember-me")).click(); // Applicant
 		driver.findElement(By.id("violatingParole-householdMember0")).click(); // First household member
@@ -995,7 +995,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 		testPage.enter("fraudulentStatements", NO.getDisplayValue());
 		testPage.enter("hidingFromLaw", NO.getDisplayValue());
-		testPage.enter("drugFelony", NO.getDisplayValue());
+		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
 		testPage.enter("violatingParole", NO.getDisplayValue());
 		testPage.clickContinue("Legal Stuff");
 

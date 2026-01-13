@@ -97,7 +97,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 	testPage.enter("fraudulentStatements", NO.getDisplayValue());
 	testPage.enter("hidingFromLaw", NO.getDisplayValue());
-	testPage.enter("drugFelony", NO.getDisplayValue());
+	testPage.enter("drugFelonyConviction", NO.getDisplayValue());
 	testPage.enter("violatingParole", NO.getDisplayValue());
 	testPage.clickContinue("Legal Stuff");
 
@@ -238,7 +238,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 		testPage.enter("fraudulentStatements", NO.getDisplayValue());
 		testPage.enter("hidingFromLaw", NO.getDisplayValue());
-		testPage.enter("drugFelony", NO.getDisplayValue());
+		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
 		testPage.enter("violatingParole", NO.getDisplayValue());
 		testPage.clickContinue("Legal Stuff");
 
@@ -367,7 +367,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 	testPage.enter("fraudulentStatements", NO.getDisplayValue());
 	testPage.enter("hidingFromLaw", NO.getDisplayValue());
-	testPage.enter("drugFelony", NO.getDisplayValue());
+	testPage.enter("drugFelonyConviction", NO.getDisplayValue());
 	testPage.enter("violatingParole", NO.getDisplayValue());
 	testPage.clickContinue("Legal Stuff");
 

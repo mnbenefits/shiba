@@ -976,7 +976,7 @@ pageConfigurations:
             - groupName: household
               pageName: householdMemberInfo
               optional: "true"
-      - name: drugFelony
+      - name: drugFelonyConviction
         type: CUSTOM
         customInputFragment: yesNoRadioWithHouseholdFollowup
         validators:
@@ -2354,6 +2354,12 @@ pageConfigurations:
             - value: "true"
               messageKey: legal-stuff.i-agree
         helpMessageKeyBelow: legal-stuff.copies-of-the-full-agreements
+      - name: drugFelony
+        type: RADIO
+        condition:
+          pageName: legalStuff
+          input: showInput
+          value: never
   - &secondSignatureLegalStuff
     name: secondSignatureLegalStuff
     pageTitle: legal-stuff-second-signature.title

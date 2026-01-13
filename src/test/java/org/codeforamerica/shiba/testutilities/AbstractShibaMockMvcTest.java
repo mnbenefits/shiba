@@ -429,7 +429,7 @@ public class AbstractShibaMockMvcTest {
 	        "disqualifiedPublicAssistance", List.of("No"),
 	        "fraudulentStatements", List.of("Yes"),
 	        "hidingFromLaw", List.of("No"),
-	        "drugFelony", List.of("Yes"),
+	        "drugFelonyConviction", List.of("Yes"),
 	        "violatingParole", List.of("No")
 	    ));
 	  }
@@ -1052,9 +1052,9 @@ public class AbstractShibaMockMvcTest {
     postWithQueryParam("canWeAsk", "option", "0");
     postExpectingRedirect("raceAndEthnicity", "raceAndEthnicity",
         List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICANS"), "penaltyWarnings");
-    postExpectingRedirect("penaltyWarnings", Map.of("disqualifiedPublicAssistance", List.of("false"), "fraudulentStatements", List.of("false"), "hidingFromLaw", List.of("false"), "drugFelony", List.of("false"), "violatingParole", List.of("false")), "legalStuff");
+    postExpectingRedirect("penaltyWarnings", Map.of("disqualifiedPublicAssistance", List.of("false"), "fraudulentStatements", List.of("false"), "hidingFromLaw", List.of("false"), "drugFelonyConviction", List.of("false"), "violatingParole", List.of("false")), "legalStuff");
     postExpectingRedirect("legalStuff",
-        Map.of("agreeToTerms", List.of("true"), "drugFelony", List.of("false")),
+        Map.of("agreeToTerms", List.of("true"), "drugFelonyConviction", List.of("false")),
         "signThisApplication");
     submitApplication();
     return new FormPage(getPage("success"));
