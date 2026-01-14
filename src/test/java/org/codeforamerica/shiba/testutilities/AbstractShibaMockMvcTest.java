@@ -1032,8 +1032,8 @@ public class AbstractShibaMockMvcTest {
     assertNavigationRedirectsToCorrectNextPage("submittingApplication", "registerToVote");
     postExpectingRedirect("registerToVote", "registerToVote", "YES", "healthcareCoverage");
     postExpectingRedirect("healthcareCoverage", "healthcareCoverage",
-        hasHealthcareCoverage ? "YES" : "NO", "authorizedRep");
-
+        hasHealthcareCoverage ? "YES" : "NO", "socialWorker");
+    postExpectingRedirect("socialWorker", "hasSocialWorker", "false", "authorizedRep");
     completeHelperWorkflow(helpWithBenefits);
     postExpectingRedirect("additionalInfo",
         "additionalInfo",
