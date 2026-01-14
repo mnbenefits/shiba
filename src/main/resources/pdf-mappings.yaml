@@ -502,7 +502,9 @@ mappings:
     fraudulentStatements: FRAUDULENT_STATEMENTS
     hidingFromLaw: HIDING_FROM_LAW
     drugFelonyConviction: DRUG_FELONY
-    violatingParole: VIOLATING_PAROLE		
+    violatingParole: VIOLATING_PAROLE
+    questionNumber: PW_QUESTION_NO
+    householdMembers: PW_HH_MEMBER_NAME	
   legalStuff:
     drugFelony: DRUG_FELONY
   applyForTribalTANF:
