@@ -432,7 +432,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("SNAP");
 		fillOutPersonalInfo();
 		addHouseholdMembersWithProgram("SNAP");
-		
+		postExpectingRedirect("unearnedIncome", "unearnedIncome", List.of("NO_UNEARNED_INCOME_SELECTED"),"otherUnearnedIncome");
 		String applicant = getApplicantFullNameAndId();
 		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("RENTAL_INCOME", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING"),"rentalIncomeSource");
 		postExpectingRedirect("rentalIncomeSource", Map.of("monthlyIncomeRental", List.of(applicant), "rentalIncomeAmount", List.of("200")), "annuityIncomeSource");
@@ -444,7 +444,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
 		
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 	    // Verify that each income type and its value is correctly reflected on the cover page
 	    // The first two are also used to write to the CAF section 14
 	    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", caf);
@@ -1308,7 +1308,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 					postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "futureIncome");
 				}
 				if (program.equals("SNAP")) {
-					document = submitAndDownloadCaf();
+					document = downloadCafClientPDF();
 				} else {
 					document = submitAndDownloadCcap();
 				}
