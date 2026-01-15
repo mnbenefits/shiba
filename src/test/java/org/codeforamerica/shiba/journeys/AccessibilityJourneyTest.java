@@ -407,7 +407,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Job Builder");
     testPage.clickButtonLink("No, that's it.", "Job Search");
     // drill down to futureIncome page
-    testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
+    testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Principal Wage Earner");
+    testPage.enter("principalWageEarner", "defaultFirstName defaultLastName");
+    testPage.clickButton("Continue", "Income Up Next");
     testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "None of the above");
     testPage.clickButton("Continue", "Unearned Income");
@@ -416,22 +418,22 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("hasAdvancedChildTaxCredit", NO.getDisplayValue(), "Student Financial Aid");
     testPage.chooseYesOrNo("studentFinancialAid", NO.getDisplayValue(), "Future Income");
 
-    
-
-    
     assertThat(testPage.getInputAriaLabelledBy("div", "earnLessMoneyThisMonth-div")).isEqualTo("page-header page-header-help-message");
     // now back up to jobBuilder page
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-    testPage.goBack();
-
+    testPage.goBack();//1
+    testPage.goBack();//2
+    testPage.goBack();//3
+    testPage.goBack();//4
+    testPage.goBack();//5
+    testPage.goBack();//6
+    testPage.goBack();//7
+    testPage.goBack();//8
     
     testPage.clickButtonLink("No, that's it.", "Job Search");
-    testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
+    testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Principal Wage Earner");
+    testPage.enter("principalWageEarner", "defaultFirstName defaultLastName");
+    testPage.clickButtonLink("Continue", "Income Up Next");
+        
     testPage.clickButtonLink("Continue", "Unearned Income");
     testPage.enter("unearnedIncome", "Social Security");
 

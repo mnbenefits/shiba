@@ -194,7 +194,8 @@ public class ApplicationDataParser {
         new ParsingCoordinate("jobSearch", "currentlyLookingForJob"));
     coordinatesMap.put(Field.WHO_IS_LOOKING_FOR_A_JOB,
         new ParsingCoordinate("whoIsLookingForAJob", "whoIsLookingForAJob"));
-
+    coordinatesMap.put(Field.PRINCIPLE_WAGE_EARNER,
+            new ParsingCoordinate("principalWageEarner", "principalWageEarner"));
     coordinatesMap.put(Field.UNEARNED_INCOME,
         new ParsingCoordinate("unearnedIncome", "unearnedIncome"));
     coordinatesMap.put(Field.SOCIAL_SECURITY_AMOUNT,
@@ -558,6 +559,7 @@ public class ApplicationDataParser {
     WHO_IS_PREGNANT,
     IS_LOOKING_FOR_JOB,
     WHO_IS_LOOKING_FOR_A_JOB,
+    PRINCIPLE_WAGE_EARNER,
 
     UNEARNED_INCOME,
     SOCIAL_SECURITY_AMOUNT,

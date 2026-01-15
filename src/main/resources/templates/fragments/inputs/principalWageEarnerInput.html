@@ -1,0 +1,78 @@
+<!-- Custom input for Principal Wage Earner. 
+	We need to display all household members with radio buttons since only one person can be selected. 
+Parameters:
+  input - the inputs as described in pages-config.yaml
+  data - the PageData for this page (used when returning\navigating back to this page) -->
+<th:block th:fragment="principalWageEarnerInput (input, data)"
+          th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
+		           needsAriaLabel=${input.needsAriaLabel()},
+				   householdSubFlow=${input.options.subworkflows.get('household')},
+				   isLivingAlone=${householdSubFlow == null || householdSubFlow.isEmpty()},
+                   inputData=${data.get(input.name)}">
+			
+  <div class="form-group spacing-below-60 word-wrap-break-word"
+       th:classappend="${!inputData.valid(data)} ? 'form-group--error' : ''">
+	   <fieldset>
+	   <legend class="form-question"
+	           th:id="${input.name + '-legend'}"
+	           th:utext="#{principal-wage-earner.who-is-the-principal-wage-earner}">
+	    </legend>
+	    <p th:id="'principal-wage-earner-help-message'" th:text="#{principal-wage-earner.select-the-adult}"></p>
+        <div role="group" aria-labelledby="page-header">
+		<p th:id="${ariaDescribedbyId}" class="text--help"
+		   th:if="${input.helpMessageKey != null}"
+		   th:text="#{${input.helpMessageKey }}"></p>
+		<th:block th:if="${isLivingAlone}">
+				<label  class="radio-button" 
+				th:for="householdMember-me" 
+				th:with="fullName=${input.options.datasources.get('personalInfo').get('firstName').value[0] + ' ' + input.options.datasources.get('personalInfo').get('lastName').value[0]}">
+				    <input type="radio" th:name="${formInputName}" th:id="householdMember-me" 
+					th:value="${fullName}"
+					th:checked="${inputData.value.contains(fullName)}"
+				    th:attr="aria-describedby=${ariaDescribedbyId},
+				                    aria-invalid=${hasError},
+				                    aria-label=${needsAriaLabel ? input.name : ''}">
+				    <span th:utext="#{principal-wage-earner.i-am-the-principal-wage-earner}"></span>
+				</label>
+		</th:block>
+        <th:block th:if="${!isLivingAlone}" >
+			 <label th:for="householdMember-me" class="radio-button"
+			        th:with="fullName=${input.options.datasources.get('personalInfo').get('firstName').value[0] + ' ' + input.options.datasources.get('personalInfo').get('lastName').value[0]}">
+			   <input type="radio"
+			          th:id="householdMember-me"
+			          th:value="${fullName}"
+			          th:name="${formInputName}"
+			          th:checked="${inputData.value.contains(fullName)}">
+			   <span th:text="|${fullName} #{general.you}|"></span>
+			 </label>
+			 <th:block th:each="iteration, iterationStat: ${input.options.subworkflows.get('household')}">
+			   <label th:for="|householdMember${iterationStat.index}|"
+			          class="radio-button"
+			          th:with="fullName=${iteration.getPagesData().get('householdMemberInfo').get('firstName').value[0] + ' ' + iteration.getPagesData().get('householdMemberInfo').get('lastName').value[0]}">
+			     <input type="radio"
+			            th:id="|householdMember${iterationStat.index}|"
+			            th:value="${fullName}"
+			            th:name="${formInputName}"
+			            th:checked="${inputData.value.contains(fullName)}">
+			     <span
+			         th:text="|${iteration.getPagesData().get('householdMemberInfo').get('firstName').value[0]}&nbsp;${iteration.getPagesData().get('householdMemberInfo').get('lastName').value[0]}|"></span>
+			   </label>
+			 </th:block>
+		</th:block>
+		
+				<label class="radio-button" 
+				       th:for="talk-to-my-worker" >
+				    <input type="radio" th:name="${formInputName}" 
+					th:id="talk-to-my-worker" 
+					th:value="|I want to talk with my worker first.|"
+					th:checked="${inputData.value.contains('I want to talk with my worker first.')}"       
+				    th:attr="aria-describedby=${ariaDescribedbyId},
+				                    aria-invalid=${hasError},
+				                    aria-label=${needsAriaLabel ? input.name : ''}">
+				    <span th:utext="#{principal-wage-earner.im-not-sure}"></span>
+				</label>
+
+    <div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+	</fieldset>
+  </div>
+</th:block>
