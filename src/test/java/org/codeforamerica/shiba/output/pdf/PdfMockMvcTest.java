@@ -432,7 +432,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("SNAP");
 		fillOutPersonalInfo();
 		addHouseholdMembersWithProgram("SNAP");
-		
+		postExpectingRedirect("unearnedIncome", "unearnedIncome", List.of("NO_UNEARNED_INCOME_SELECTED"),"otherUnearnedIncome");
 		String applicant = getApplicantFullNameAndId();
 		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", List.of("RENTAL_INCOME", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING"),"rentalIncomeSource");
 		postExpectingRedirect("rentalIncomeSource", Map.of("monthlyIncomeRental", List.of(applicant), "rentalIncomeAmount", List.of("200")), "annuityIncomeSource");
@@ -444,7 +444,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
 		
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 	    // Verify that each income type and its value is correctly reflected on the cover page
 	    // The first two are also used to write to the CAF section 14
 	    assertPdfFieldEquals("OTHER_INCOME_FULL_NAME_0", "Dwight Schrute", caf);
@@ -554,6 +554,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("payPeriod", "payPeriod", "EVERY_DAY");
 		postExpectingSuccess("incomePerPayPeriod", "incomePerPayPeriod", "2000");
 		
+		postExpectingSuccess("principalWageEarner", "principalWageEarner", "I want to talk with my worker first.");
+		
         var caf = submitAndDownloadCaf();
         var ccap = submitAndDownloadCcap();
 		
@@ -580,6 +582,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("NON_SELF_EMPLOYMENT_PAY_FREQUENCY_TEXT_1", "Daily", ccap);
 		assertPdfFieldEquals("NON_SELF_EMPLOYMENT_GROSS_MONTHLY_INCOME_1", "2000.00", ccap);
 		
+		assertPdfFieldEquals("PRINCIPLE_WAGE_EARNER", "I want to talk with my worker first.", caf);
 		
 	}
 	
@@ -596,6 +599,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("incomePerPayPeriod", "incomePerPayPeriod", "1000");
 		postWithQueryParam("jobBuilder", "option", "0");
 		
+		postExpectingSuccess("principalWageEarner", "principalWageEarner", "Dwight Schrute");
+		
 		var caf = submitAndDownloadCaf();
 		
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_0", "", caf);
@@ -603,6 +608,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("GROSS_MONTHLY_INCOME_0", "1000.00", caf);
 		assertPdfFieldEquals("MONEY_MADE_LAST_MONTH", "1000.00", caf);
 		assertPdfFieldEquals("dummyFieldName20", "1000.00", caf);
+		
+		assertPdfFieldEquals("PRINCIPLE_WAGE_EARNER", "Dwight Schrute", caf);
 	}
 
 	@Test
@@ -1318,7 +1325,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 					postExpectingRedirect("dayTradingIncomeSource", Map.of("monthlyIncomeDayTradingProceeds", List.of(me, pam), "dayTradingProceedsAmount", List.of("240", "", "241")), "futureIncome");
 				}
 				if (program.equals("SNAP")) {
-					document = submitAndDownloadCaf();
+					document = downloadCafClientPDF();
 				} else {
 					document = submitAndDownloadCcap();
 				}
