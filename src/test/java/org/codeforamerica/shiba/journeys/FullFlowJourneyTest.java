@@ -243,9 +243,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickButtonLink("No, that's it.", "Job Search");
 
 		// Is anyone in the household currently looking for a job?
-		testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Income Up Next");
+		testPage.chooseYesOrNo("currentlyLookingForJob", NO.getDisplayValue(), "Principal Wage Earner");
+		
+		testPage.enter("principalWageEarner", householdMemberFullName);
 
 		// Got it! You're almost done with the income section.
+		testPage.clickButtonLink("Continue", "Income Up Next");
+		
 		testPage.clickButtonLink("Continue", "Unearned Income");
 
 		// Does anyone in your household get income from these sources?
@@ -631,6 +635,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("SUBMISSION_DATETIME", "01/01/2020 at 04:15 AM");
 		assertCafFieldEquals("PAY_FREQUENCY_0", "Hourly");
 		assertCafFieldEquals("EMPLOYEE_FULL_NAME_0", householdMemberFullName);
+		assertCafFieldEquals("PRINCIPLE_WAGE_EARNER", householdMemberFullName);
 		assertCafFieldEquals("DATE_OF_BIRTH", "01/12/1928");
 		assertCafFieldEquals("APPLICANT_SSN", "XXX-XX-XXXX");
 		assertCafFieldEquals("APPLICANT_PHONE_NUMBER", "(723) 456-7890");
