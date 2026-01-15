@@ -273,6 +273,17 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "No", caf);
 	}
+	
+	//This Test checks that the social worker question gets mapped right to the caf. 
+	@Test
+	void shouldMapsocialWorker() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		postExpectingSuccess("socialWorker", "hasSocialWorker", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("HAS_SOCIAL_WORKER", "Yes", caf);
+	}
 
 	@Test
 	void shouldNotMapParentsLivingOutsideOfHomeIfNoneSelected() throws Exception {

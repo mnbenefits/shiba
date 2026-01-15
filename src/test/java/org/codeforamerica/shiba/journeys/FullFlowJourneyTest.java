@@ -799,6 +799,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
 		assertCafFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes");
 		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
+		assertCafFieldEquals("HAS_SOCIAL_WORKER", "No");
 
 	}
 
