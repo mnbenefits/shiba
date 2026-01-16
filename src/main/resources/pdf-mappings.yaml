@@ -379,6 +379,8 @@ mappings:
     healthcareCoverage: HAVE_HEALTHCARE_COVERAGE
   socialWorker:
     hasSocialWorker: HAS_SOCIAL_WORKER
+  referrals:
+    needsReferrals: HELP_WITH_REFERRALS
   authorizedRep:
     helpWithBenefits: WANT_AUTHORIZED_REP
   authorizedRepCommunicate:

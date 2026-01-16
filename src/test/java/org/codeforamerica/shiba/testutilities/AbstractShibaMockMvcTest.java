@@ -1033,7 +1033,8 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("registerToVote", "registerToVote", "YES", "healthcareCoverage");
     postExpectingRedirect("healthcareCoverage", "healthcareCoverage",
         hasHealthcareCoverage ? "YES" : "NO", "socialWorker");
-    postExpectingRedirect("socialWorker", "hasSocialWorker", "false", "authorizedRep");
+    postExpectingRedirect("socialWorker", "hasSocialWorker", "false", "referrals");
+    postExpectingRedirect("referrals", "needsReferrals", "false", "authorizedRep");
     completeHelperWorkflow(helpWithBenefits);
     postExpectingRedirect("additionalInfo",
         "additionalInfo",

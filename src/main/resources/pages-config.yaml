@@ -4723,6 +4723,16 @@ pageConfigurations:
     inputs:
       - name: hasSocialWorker
         type: YES_NO
+  - &referrals
+    name: referrals
+    pageTitle: referrals.title
+    headerKey: referrals.header
+    headerHelpMessageKey: referrals.body
+    contextFragment: chooseProgramsContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: needsReferrals
+        type: YES_NO
   - &authorizedRep
     name: authorizedRep
     headerKey: authorized-rep.do-you-want-to
@@ -7213,6 +7223,10 @@ workflow:
         groupName: household
   socialWorker:
     pageConfiguration: *socialWorker
+    nextPages:
+      - pageName: referrals
+  referrals:
+    pageConfiguration: *referrals
     nextPages:
       - pageName: authorizedRep
   authorizedRep:
