@@ -2344,6 +2344,14 @@ pageConfigurations:
         helpMessageKeyBelow: legal-stuff.copies-of-the-full-agreements
       - name: drugFelony
         type: RADIO
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: general.inputs.yes
+            - value: "false"
+              messageKey: general.inputs.no
+# This condition is intended to prevent the input from ever being displayed on the page.
+# It allows us to keep the input defined on the page for data-pipelines backward compatibility.
         condition:
           pageName: legalStuff
           input: showInput
