@@ -21,13 +21,19 @@ public class SocialWorkerNavigationTest extends AbstractShibaMockMvcTest{
 	  @Test
 	  void shouldNavigateToSocialWorker() throws Exception {
 		  selectPrograms("SNAP");
-		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "NO", "socialWorker");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "socialWorker");
 		  
 	  }
 	  
 	  @Test
 	  void shouldNotNavigateToSocialWorker() throws Exception {
 		  selectPrograms("CCAP");
-		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "NO", "authorizedRep");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "authorizedRep");
+	  }
+	  
+	  @Test
+	  void shouldNavigateToReferrals() throws Exception {
+		  selectPrograms("SNAP");
+		  postExpectingRedirect("socialWorker", "hasSocialWorker", "false", "referrals");
 	  }
 }
