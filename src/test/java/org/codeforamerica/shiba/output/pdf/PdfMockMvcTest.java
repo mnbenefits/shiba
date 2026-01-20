@@ -1755,7 +1755,73 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("HAVE_HIGH_HOUSING_COSTS", "No", caf);
 		}
 		
-		
+			
+	}
+	@Nested
+	@Tag("pdf")
+	class penaltyWarnings {
+		@Test
+		void shouldWriteQuestionNumberWhenYesAndNoHouseholdMembers() throws Exception {
+			selectPrograms("SNAP");
+			fillOutPersonalInfo();
+			addHouseholdMembersWithProgram("SNAP");
+
+			postExpectingSuccess("penaltyWarnings",
+					Map.of("disqualifiedPublicAssistance", List.of("true"), "fraudulentStatements", List.of("true"),
+							"hidingFromLaw", List.of("true"), "drugFelonyConviction", List.of("true"),
+							"violatingParole", List.of("true")));
+
+			var caf = downloadCafClientPDF();
+
+			assertPdfFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "Yes", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_0", "1", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_0", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_1", "2", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_1", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_2", "3", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_2", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_3", "4", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_3", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_4", "5", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_4", "Dwight Schrute", caf);
+
+		}
+
+		@Test
+		void shouldWriteQuestionNumberWhenYesWithHouseholdMembers() throws Exception {
+			selectPrograms("SNAP");
+			fillOutPersonalInfo();
+			addHouseholdMembersWithProgram("SNAP");
+
+			String hhMember = getPamFullNameAndId();
+			String applicant = getApplicantFullNameAndId();
+
+			postExpectingSuccess("penaltyWarnings",
+					Map.of("disqualifiedPublicAssistance", List.of("false"), 
+							"fraudulentStatements",	List.of("true", applicant, hhMember), 
+							"hidingFromLaw", List.of("false"),
+							"drugFelonyConviction", List.of("false"), 
+							"violatingParole", List.of("false")));
+
+			var caf = downloadCafClientPDF();
+
+			assertPdfFieldEquals("FRAUDULENT_STATEMENTS", "Yes", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_0", "2", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_0", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_1", "2", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_1", "Pam Beesly", caf);
+			
+			assertPdfFieldEquals("PW_QUESTION_NO_2", "", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_2", "", caf);
+		}
+
 	}
 	
 
