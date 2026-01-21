@@ -2160,18 +2160,6 @@ pageConfigurations:
     inputs:
       - name: wereYouEmployed
         type: YES_NO
-  - &pastEmployment
-    name: pastEmployment
-    pageTitle: past-employment.title
-    headerKey:
-      defaultValue: past-employment-household.header
-      conditionalValues:
-        - value: past-employment.header
-          condition: *livesAlone?
-    hasPrimaryButton: false
-    inputs:
-      - name: wereYouEmployed
-        type: YES_NO
   - &medicalExpensesSources
     name: medicalExpensesSources
     pageTitle: medical-expenses-sources.title
