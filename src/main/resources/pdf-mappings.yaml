@@ -132,11 +132,7 @@ mappings:
     isUsCitizen: IS_US_CITIZEN
     applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN
   citizenship:
-    citizenshipStatus: IS_US_CITIZEN
-  childCareCosts:
-    childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
-  adultCareCosts:
-    adultCareCosts: COSTS_FOR_DISABLED_ADULT	
+    citizenshipStatus: IS_US_CITIZEN	
   pastEmployment:
     wereYouEmployed: HAS_WORKED_IN_PAST_36_MONTHS
   disability:
@@ -168,6 +164,21 @@ mappings:
     guardianAndConservatorFees: HAVE_CONSERVATOR_FEES
     specialDietPrescribedByDoctor: HAVE_SPECIAL_DIET
     highHousingCosts: HAVE_HIGH_HOUSING_COSTS
+  childCareCosts:
+    childCareCosts: CCAP_HAS_COSTS_FOR_CHILD_CARE
+  childCareCostsAmount:
+    childCareCostsAmount: CCAP_CHILD_CARE_COSTS_AMOUNT
+    childCareCostsFrequency: CCAP_CHILD_CARE_COSTS_FREQUENCY
+  adultCareCosts:
+    adultCareCosts: COSTS_FOR_DISABLED_ADULT
+  adultCareCostsAmount:
+    adultCareCostsAmount: COSTS_FOR_DISABLED_ADULTS_AMOUNT 
+    adultCareCostsFrequency: COSTS_FOR_DISABLED_ADULTS_FREQUENCY
+  supportAndCare:
+    supportAndCare: SUPPORT_AND_CARE
+  supportAndCareCostsAmount:
+    supportAndCareCostsAmount: SUPPORT_AND_CARE_AMOUNT
+    supportAndCareCostsFrequency: SUPPORT_AND_CARE_FREQUENCY
   parentNotAtHome:
     hasParentNotAtHome: BOTH_PARENTS_AT_HOME
   otherIncome:
@@ -176,7 +187,6 @@ mappings:
     otherIncomeAmount: OTHER_INCOME_AMOUNT
     otherIncomeFrequency: OTHER_INCOME_FREQUENCY
     otherIncomeYesNo: OTHER_INCOME_YES_NO
-
   unearnedIncome:
     SOCIAL_SECURITY: SOCIAL_SECURITY
     SSI: SSI
@@ -352,8 +362,6 @@ mappings:
     medicalInsurancePremiumFrequency: MEDICAL_INSURANCE_PREMIUM_FREQUENCY
     dentalInsurancePremiumFrequency: DENTAL_INSURANCE_PREMIUM_FREQUENCY
     visionInsurancePremiumFrequency: VISION_INSURANCE_PREMIUM_FREQUENCY
-  supportAndCare:
-    supportAndCare: SUPPORT_AND_CARE
   savings:
     haveNonZeroSavings: HAVE_SAVINGS
     cashAmount: CASH_AMOUNT
@@ -517,6 +525,9 @@ enums:
   EVERY_TWO_WEEKS: Every two weeks
   TWICE_A_MONTH: Twice a month
   EVERY_MONTH: Every month
+  MONTHLY: Monthly
+  WEEKLY: Weekly
+  OTHER: Other
   IT_VARIES: It varies
   true: "Yes"
   false: "No"
