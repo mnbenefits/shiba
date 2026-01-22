@@ -1,0 +1,111 @@
+<!--
+ this script Handles client-side validation for Yes/No questions with household follow-ups:
+  - Blocks form submission if "Yes" is selected without any household member checked
+  - Shows and clears error styling
+  - Re-enables the Continue button after Honeycrisp disables it
+Loaded via additionalContentFragment to avoid running on other pages.-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="penaltyWarningsScript">
+  <script>
+    (function () {
+      function onReady(fn) {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", fn);
+        } else {
+          fn();
+        }
+      }
+
+      onReady(function () {
+		//Find the main form on the page
+        const form = document.querySelector("form");
+        if (!form) return;
+
+		//does this fieldset have ANY checkbox selected?
+        function anyChecked(fieldset) {
+          return Array.from(
+            fieldset.querySelectorAll('input[type="checkbox"]')
+          ).some(cb => cb.checked);
+        }
+
+        function showError(fieldset) {
+          fieldset.classList.add("form-group--error");//Show error (orange bar + message)
+
+          const msg = fieldset.querySelector(".text--error");// Error text
+          if (msg) msg.style.display = "block";
+        }
+
+        function hideError(fieldset) {
+          fieldset.classList.remove("form-group--error");
+          const msg = fieldset.querySelector(".text--error");
+          if (msg) msg.style.display = "none";
+        }
+
+        // EVENT 1: User checks/unchecks a checkbox
+        form.addEventListener("change", function (e) {
+			// e.target → “theChangedElement” i.e only care about checkboxes 
+          if (e.target.type !== "checkbox") return;
+
+		  // Find the closest checkbox group this checkbox belongs to
+          const fieldset = e.target.closest(
+            "fieldset.checkbox-group[data-required='true']"
+          );
+          if (!fieldset) return;
+		  // If at least one checkbox is now selected → clear error
+          if (anyChecked(fieldset)) hideError(fieldset);
+        });
+			
+		//EVENT 2: User submits the form
+
+        // Validate ALL followups on submit
+        form.addEventListener("submit", function (e) {
+          let hasAnyError = false;
+		  
+		  // Find all YES radios that control follow-ups
+          const yesRadios = form.querySelectorAll(
+            'input[type="radio"][value="true"][data-follow-up]'
+          );
+		  // Only validate follow-up if YES is selected
+          yesRadios.forEach(function (yesRadio) {
+            if (!yesRadio.checked) return;
+
+            const followUpSelector = yesRadio.getAttribute("data-follow-up");
+            const followUpContainer = followUpSelector ? document.querySelector(followUpSelector) : null;
+            if (!followUpContainer) return;
+
+			// Find the required checkbox group inside the follow-up
+            const fieldset = followUpContainer.querySelector(
+              "fieldset.checkbox-group[data-required='true']"
+            );
+            if (!fieldset) return;
+			
+			// Validation rule: YES → must select at least one checkbox
+            if (!anyChecked(fieldset)) {
+              showError(fieldset);
+              hasAnyError = true;
+            } else {
+              hideError(fieldset);
+            }
+          });
+         // Block submit if any follow-up is invalid
+          if (hasAnyError) {
+            e.preventDefault();
+            e.stopPropagation();
+			
+			// Scroll to first error
+            const firstError = form.querySelector(
+              "fieldset.checkbox-group.form-group--error"
+            );
+            if (firstError) {
+              firstError.scrollIntoView({ behavior: "smooth", block: "center" });
+              const firstCb = firstError.querySelector("input[type='checkbox']");
+              if (firstCb) firstCb.focus();
+            }
+          }
+        }, true); // capture phase ensures this runs before framework submit logic
+      });
+    })();
+  </script>
+</th:block>
+</html>

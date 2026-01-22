@@ -7,9 +7,9 @@
                    hasHelpMessage=${input.helpMessageKey != null},
                    isYesSelected=${inputData.value.contains('true')},
 				   householdSubFlow=${input.options != null and input.options.subworkflows != null ? input.options.subworkflows.get('household') :null},
-				   hasHouseholdMembers=${householdSubFlow != null and !householdSubFlow.isEmpty()}"> 
-				   
-	<div class="form-group" th:classappend="${hasError} ? 'form-group--error' : ''">
+				   hasHouseholdMembers=${householdSubFlow != null and !householdSubFlow.isEmpty()},
+				   hasHouseholdMemberError=${isYesSelected and hasHouseholdMembers and inputData.value.size() == 1}"> 		   
+	<div class="form-group" th:classappend="${hasError } ? 'form-group--error' : ''">
 		<!-- Question with Follow-up wrapper/Honeycrisp container that enables the show/hide behavior for follow-ups.-->
 		<div class="question-with-follow-up">
 			<!-- Main Yes/No Question -->
@@ -52,7 +52,8 @@
 				th:if="${hasHouseholdMembers}">
 				
 				<div class="spacing-above-25 word-wrap-break-word">
-					<fieldset>
+					<fieldset class="checkbox-group" data-required="true"
+					th:classappend="${hasHouseholdMemberError} ? 'form-group--error' : ''">
 						<legend class="form-question" th:text="#{penalty-warning.which-household-member-applies}"></legend>
 						<p class="text--help" th:text="#{penalty-warning.select-all-that-apply}"></p>
 						
@@ -81,6 +82,12 @@
 								<span th:text="${fullName}"></span>
 							</label>
 						</th:block>
+						<!-- Household member validation error -->
+								<p class="text--error"  style="display:none" th:aria-label="#{error.title}">
+									<i class="icon-warning"></i>
+									<span th:text="#{penalty-warning.validation.select-household-member}"></span>
+								</p>
+						
 					</fieldset>
 				</div>
 			</div>
@@ -89,5 +96,6 @@
 		<!-- Error message -->
 		<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
 	</div>
-</th:block>
+	
+ </th:block>
 </html>

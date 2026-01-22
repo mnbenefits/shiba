@@ -933,6 +933,7 @@ pageConfigurations:
     headerHelpMessageKey: penalty-warning-header-help-message-key
     contextFragment: legalReview1ContextFragment
     preFormContentFragment: penaltyWarningsAccordions
+    additionalContentFragment: penaltyWarningsScript #Only inject this script on the Penalty Warnings page.”
     inputs:
       - name: disqualifiedPublicAssistance
         type: CUSTOM
