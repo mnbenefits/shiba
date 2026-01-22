@@ -7,6 +7,7 @@ import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldCon
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldEquals;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsEmpty;
 import static org.codeforamerica.shiba.testutilities.TestUtils.assertPdfFieldIsNull;
+import static org.codeforamerica.shiba.testutilities.YesNoAnswer.YES;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -1728,7 +1729,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			
 			postExpectingSuccess("medicalExpenses", "medicalExpenses", "true");
 			postExpectingSuccess("specialCareExpenses", "specialCareExpenses", List.of("REPRESENTATIVE_PAYEE_FEES", "SPECIAL_DIET_PRESCRIBED_BY_DOCTOR"));
-			postExpectingSuccess("supportAndCare", "supportAndCare", "true");
+			postExpectingSuccess("childCareCosts", "childCareCosts", "false");
+			postExpectingSuccess("adultCareCosts", "adultCareCosts", "false");
+			postExpectingSuccess("supportAndCare", "supportAndCare", "false");
 
 			var caf = submitAndDownloadCaf();
 			
@@ -1736,6 +1739,10 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("HAVE_CONSERVATOR_FEES", "No", caf);
 			assertPdfFieldEquals("HAVE_SPECIAL_DIET", "Yes", caf);
 			assertPdfFieldEquals("HAVE_HIGH_HOUSING_COSTS", "No", caf);
+			assertPdfFieldEquals("CCAP_HAS_COSTS_FOR_CHILD_CARE", "No", caf);
+			assertPdfFieldEquals("COSTS_FOR_DISABLED_ADULT", "No", caf);
+			assertPdfFieldEquals("SUPPORT_AND_CARE", "No", caf);
+			
 		}
 		
 		

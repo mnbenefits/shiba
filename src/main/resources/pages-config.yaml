@@ -2148,6 +2148,12 @@ pageConfigurations:
         type: MONEY
         promptMessage:
           promptMessageKey: costs-amount.amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: childCareCostsAmount
+              matcher: NOT_EMPTY
       - name: childCareCostsFrequency
         promptMessage:
           promptMessageKey: costs-frequency.how-often
@@ -2189,6 +2195,12 @@ pageConfigurations:
         type: MONEY
         promptMessage:
           promptMessageKey: costs-amount.amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: adultCareCostsAmount
+              matcher: NOT_EMPTY
       - name: adultCareCostsFrequency
         promptMessage:
           promptMessageKey: costs-frequency.how-often
@@ -2231,6 +2243,12 @@ pageConfigurations:
         type: MONEY
         promptMessage:
           promptMessageKey: costs-amount.amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: supportAndCareCostsAmount
+              matcher: NOT_EMPTY
       - name: supportAndCareCostsFrequency
         promptMessage:
           promptMessageKey: costs-frequency.how-often
@@ -7169,6 +7187,8 @@ workflow:
      - pageName: choosePrograms
     nextPages:
       - pageName: childCareCosts
+        condition: *someoneChoseCAFProgram?
+      - pageName: assets
   childCareCosts:
     pageConfiguration: *childCareCosts
     datasources:

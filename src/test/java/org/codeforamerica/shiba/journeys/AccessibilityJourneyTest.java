@@ -473,10 +473,23 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("energyAssistance", YES.getDisplayValue(), "Energy Assistance More Than 20");
     testPage.chooseYesOrNo("energyAssistanceMoreThan20", YES.getDisplayValue(), "Medical expenses");
     testPage.enter("medicalExpenses", "None of the above");
+    testPage.clickContinue("Child care costs");
+    
+    testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Child care amount");
+    testPage.enter("childCareCostsAmount", "20");
+    testPage.enter("childCareCostsFrequency", "Monthly");
+    testPage.clickContinue("Adult care costs");
+    
+    testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Adult care amount");
+    testPage.enter("adultCareCostsAmount", "20");
+    testPage.enter("adultCareCostsFrequency", "Monthly");
     testPage.clickContinue("Support and Care Expenses");
-    testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
-    testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Adult care costs");
-    testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Assets");
+    
+    testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Support and Care Amounts");
+    testPage.enter("supportAndCareCostsAmount", "20");
+    testPage.enter("supportAndCareCostsFrequency", "Monthly");
+    testPage.clickContinue("Assets");
+    
     testPage.enter("assets", "A vehicle");
     testPage.enter("assets", "Real estate (not including your own home)");
     testPage.clickContinue("Sold assets");
