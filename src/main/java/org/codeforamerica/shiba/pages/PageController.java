@@ -552,6 +552,8 @@ public class PageController {
               .getNextStepsCompleteAnInterview(new ArrayList<>(programs), snapExpeditedEligibility,
                   ccapExpeditedEligibility, locale));
       }
+	// TODO: remove this line of code after debug is finished
+	//Application applicationTest = applicationRepository.find(applicationData.getId());
     // the terminal page has always been the success page. The success page needs more items in the model to display correctly.
     if (landmarkPagesConfiguration.isTerminalPage(pageName) || landmarkPagesConfiguration.isHealthcareRenewalTerminalPage(pageName)) {
       Application application = applicationRepository.find(applicationData.getId());

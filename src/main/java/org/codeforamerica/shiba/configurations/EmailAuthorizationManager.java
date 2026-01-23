@@ -3,9 +3,11 @@ package org.codeforamerica.shiba.configurations;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authorization.AuthorizationResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
@@ -37,6 +39,7 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 		      
 		  );
 
+/*	  
 			@Override
 			public AuthorizationDecision check(Supplier<Authentication> authentication,
 					RequestAuthorizationContext object) {
@@ -56,6 +59,30 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 					log.warn(String.format("Admin login for %s is not authorized", email));
 				}
 				return new AuthorizationDecision(isAuthorized);
+			}
+*/
+			@Override
+			public @Nullable AuthorizationResult authorize(Supplier<? extends @Nullable Authentication> authentication,
+					RequestAuthorizationContext object) {
+				// TODO Auto-generated method stub
+				//return null;
+				Object authenicationObject = authentication.get();
+				if (!(authenicationObject instanceof OAuth2AuthenticationToken)) {
+					return new AuthorizationDecision(false);
+				}
+
+				var principal = ((OAuth2AuthenticationToken) authenicationObject).getPrincipal();
+				var email = principal.getAttribute("email");
+
+				boolean isAuthorized = email != null && ADMIN_EMAILS.contains(email.toString().toLowerCase());
+
+				if (isAuthorized) {
+					log.info(String.format("Admin login for %s is authorized", email));
+				} else {
+					log.warn(String.format("Admin login for %s is not authorized", email));
+				}
+				return new AuthorizationDecision(isAuthorized);
+				
 			}
 
 		}

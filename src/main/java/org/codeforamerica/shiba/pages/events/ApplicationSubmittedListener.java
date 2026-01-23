@@ -171,7 +171,8 @@ public class ApplicationSubmittedListener extends ApplicationEventListener {
 		appJsonObject.addProperty("expedited", applicationData.getExpeditedEligibility().toString());
 		appJsonObject.addProperty("firstName", ContactInfoParser.firstName(applicationData));
 		appJsonObject.addProperty("lastName", ContactInfoParser.lastName(applicationData));
-		appJsonObject.addProperty("phoneNumber", ContactInfoParser.phoneNumber(applicationData).replaceAll("[^0-9]", ""));
+		// TODO: put this back, comment out for short term to get past NullPointerException
+		//appJsonObject.addProperty("phoneNumber", ContactInfoParser.phoneNumber(applicationData).replaceAll("[^0-9]", ""));
 		appJsonObject.addProperty("email", ContactInfoParser.email(applicationData));
 		appJsonObject.addProperty("opt-status-sms", ContactInfoParser.optedIntoTEXT(applicationData));
 		appJsonObject.addProperty("wic-message", wicRecommendationService.showWicMessage(applicationData));

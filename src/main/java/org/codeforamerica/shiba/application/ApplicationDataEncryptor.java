@@ -1,8 +1,11 @@
 package org.codeforamerica.shiba.application;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+//import com.fasterxml.jackson.core.JsonProcessingException;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+
+//import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +34,7 @@ public class ApplicationDataEncryptor implements Encryptor<ApplicationData> {
     try {
       runCryptographicFunctionOnData(stringEncryptor::encrypt, applicationData);
       return objectMapper.writeValueAsString(applicationData);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       log.error("Unable to encrypt application data: applicationID=" + applicationData.getId());
       throw new RuntimeException(e);
     }
@@ -44,7 +47,7 @@ public class ApplicationDataEncryptor implements Encryptor<ApplicationData> {
           .readValue(encryptedData, ApplicationData.class);
       runCryptographicFunctionOnData(stringEncryptor::decrypt, applicationData);
       return applicationData;
-    } catch (IOException e) {
+    } catch (JacksonException e) {
       log.error("Error while deserializing application data");
       throw new RuntimeException(e);
     }
