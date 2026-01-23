@@ -381,8 +381,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue("Authorized Rep");
-
+		testPage.clickContinue("Help from a social worker");
+		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
+		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
 		// Do you want to assign someone to help with your benefits?
 		testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
 
@@ -798,7 +799,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO", "Yes");
 		assertCafFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes");
 		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
-
+		assertCafFieldEquals("HAS_SOCIAL_WORKER", "No");
+		assertCafFieldEquals("HELP_WITH_REFERRALS", "Yes");
 	}
 
 	/**
@@ -953,7 +955,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue("Authorized Rep");
+		testPage.clickContinue("Help from a social worker");
+		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
+		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
 
 		// Do you want to assign someone to help with your benefits?
 		testPage.chooseYesOrNo("helpWithBenefits", NO.getDisplayValue(), "Additional Info");

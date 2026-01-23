@@ -234,6 +234,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 	}
 	
+	
+	
 	// This test verifies the no button click on temporaryAbsence gets written to the caf 
 	@Test
 	void shouldMapTemporaryAbsenceFalse() throws Exception {
@@ -272,6 +274,26 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		var caf = downloadCafClientPDF();
 		
 		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "No", caf);
+	}
+	
+	//This Test checks that the social worker question gets mapped right to the caf. 
+	@Test
+	void shouldMapsocialWorker() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		postExpectingSuccess("socialWorker", "hasSocialWorker", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("HAS_SOCIAL_WORKER", "Yes", caf);
+	}
+	
+	@Test
+	void shouldMapReferrals() throws Exception {
+		selectPrograms("SNAP");
+		postExpectingSuccess("referrals", "needsReferrals", "true");
+		
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("HELP_WITH_REFERRALS", "Yes", caf);
 	}
 
 	@Test

@@ -4702,6 +4702,25 @@ pageConfigurations:
             - value: "NOT_SURE"
               messageKey: general.inputs.not-sure
     pageTitle: healthcareCoverage.title
+  - &socialWorker
+    name: socialWorker
+    pageTitle: social-worker.title
+    headerKey: social-worker.header
+    contextFragment: chooseProgramsContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: hasSocialWorker
+        type: YES_NO
+  - &referrals
+    name: referrals
+    pageTitle: referrals.title
+    headerKey: referrals.header
+    headerHelpMessageKey: referrals.body
+    contextFragment: chooseProgramsContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: needsReferrals
+        type: YES_NO
   - &authorizedRep
     name: authorizedRep
     headerKey: authorized-rep.do-you-want-to
@@ -7182,6 +7201,20 @@ workflow:
       - pageName: healthcareCoverage
   healthcareCoverage:
     pageConfiguration: *healthcareCoverage
+    nextPages:
+      - pageName: socialWorker
+        condition: *someoneChoseCAFProgram?
+      - pageName: authorizedRep
+    datasources:
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
+  socialWorker:
+    pageConfiguration: *socialWorker
+    nextPages:
+      - pageName: referrals
+  referrals:
+    pageConfiguration: *referrals
     nextPages:
       - pageName: authorizedRep
   authorizedRep:
