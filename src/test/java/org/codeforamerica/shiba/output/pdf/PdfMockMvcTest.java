@@ -68,7 +68,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("energyAssistance", "energyAssistance", "true");
 		postExpectingSuccess("energyAssistanceMoreThan20", "energyAssistanceMoreThan20", "false");
 
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("RECEIVED_LIHEAP", "No", caf);
 	}
 	
@@ -77,7 +77,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("CASH");
 		postExpectingSuccess("workChanges", "workChanges", List.of("STOP_WORK", "REFUSE_JOB", "FEWER_HOURS", "ON_STRIKE"));
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("END_WORK", "Yes", caf);
 		assertPdfFieldEquals("REFUSE_A_JOB_OFFER", "Yes", caf);
 		assertPdfFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Yes", caf);
@@ -89,7 +89,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("CASH");
 		postExpectingSuccess("workChanges", "workChanges", "NONE_OF_THE_ABOVE");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("END_WORK", "Off", caf);
 		assertPdfFieldEquals("REFUSE_A_JOB_OFFER", "Off", caf);
 		assertPdfFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Off", caf);
@@ -103,7 +103,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		postExpectingSuccess("energyAssistance", "energyAssistance", "false");
 
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("RECEIVED_LIHEAP", "No", caf);
 	}
 
@@ -132,7 +132,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("unearnedIncome", "unearnedIncome", List.of("SOCIAL_SECURITY", "SSI", "VETERANS_BENEFITS", "UNEMPLOYMENT"));
 		
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
 		}
 		
@@ -146,7 +146,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				"HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING", "OTHER_PAYMENTS"),
 				"otherUnearnedIncomeSources");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
 		}
 		
@@ -161,7 +161,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				"HEALTH_CARE_REIMBURSEMENT", "CONTRACT_FOR_DEED", "BENEFITS", "ANNUITY_PAYMENTS", "GIFTS", "LOTTERY_GAMBLING", "DAY_TRADING", "OTHER_PAYMENTS"),
 				"otherUnearnedIncomeSources");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "Yes", caf);
 		}
 		
@@ -176,7 +176,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED" );
 
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("OTHER_INCOME_YES_NO", "No", caf);
 		}
 	}
@@ -190,7 +190,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	postExpectingSuccess("unearnedIncome", "unearnedIncome", "NO_UNEARNED_INCOME_SELECTED");
 	postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED");
 
-	var caf = submitAndDownloadCaf();
+	var caf = downloadCafClientPDF();
 	assertPdfFieldEquals("OTHER_INCOME_YES_NO", "No", caf);
 	}
 	
@@ -209,7 +209,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("parentNotAtHomeNames", Map.of("whatAreTheParentsNames", List.of("", "Jim's Parent"),
 				"childIdMap", List.of("applicant", jimHalpertId)));
 
-		var ccap = submitAndDownloadCcap();
+		var ccap = downloadCcapClientPDF();
 		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_0", "Dwight Schrute", ccap);
 		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_1", "Jim Halpert", ccap);
 		assertPdfFieldEquals("CHILD_FULL_NAME_0", "Dwight Schrute", ccap);
@@ -230,10 +230,12 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "true");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "Yes", caf);
 
 	}
+	
+	
 	
 	// This test verifies the no button click on temporaryAbsence gets written to the caf 
 	@Test
@@ -245,7 +247,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		postExpectingSuccess("temporaryAbsence","hasTemporaryAbsence", "false");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("ANYONE_TEMPORARILY_NOT_HOME", "No", caf);
 
 	}
@@ -257,7 +259,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("SNAP");
 		postExpectingSuccess("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "true");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		
 		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "Yes", caf);
 	
@@ -270,9 +272,29 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("SNAP");
 		postExpectingSuccess("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		
 		assertPdfFieldEquals("ADVANCED_CHILD_TAX_CREDIT", "No", caf);
+	}
+	
+	//This Test checks that the social worker question gets mapped right to the caf. 
+	@Test
+	void shouldMapsocialWorker() throws Exception {
+		fillOutPersonalInfo();
+		selectPrograms("SNAP");
+		postExpectingSuccess("socialWorker", "hasSocialWorker", "true");
+		
+		var caf = submitAndDownloadCaf();
+		assertPdfFieldEquals("HAS_SOCIAL_WORKER", "Yes", caf);
+	}
+	
+	@Test
+	void shouldMapReferrals() throws Exception {
+		selectPrograms("SNAP");
+		postExpectingSuccess("referrals", "needsReferrals", "true");
+		
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("HELP_WITH_REFERRALS", "Yes", caf);
 	}
 
 	@Test
@@ -286,7 +308,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		postExpectingSuccess("whoHasParentNotAtHome", "whoHasAParentNotLivingAtHome", "NONE_OF_THE_ABOVE");
 
-		var ccap = submitAndDownloadCcap();
+		var ccap = downloadCcapClientPDF();
 		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_0", "Dwight Schrute", ccap);
 		assertPdfFieldEquals("CHILDCARE_CHILD_NAME_1", "Jim Halpert", ccap);
 		assertPdfFieldIsEmpty("CHILD_FULL_NAME_0", ccap);
@@ -307,7 +329,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("assets", "assets", "NONE");
 		postExpectingSuccess("soldAssets", "haveSoldAssets", "false"); 
 		
-		var ccap = submitAndDownloadCcap();
+		var ccap = downloadCcapClientPDF();
 		assertPdfFieldEquals("HAVE_MILLION_DOLLARS", "No", ccap);
 	}
 
@@ -321,7 +343,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("assets", "assets", List.of("STOCK_BOND", "ONE_MILLION_ASSETS"));
 		postExpectingSuccess("soldAssets", "haveSoldAssets", "false"); 
 		
-		var ccap = submitAndDownloadCcap();
+		var ccap = downloadCcapClientPDF();
 		assertPdfFieldEquals("HAVE_MILLION_DOLLARS", "Yes", ccap);
 	}
 
@@ -331,7 +353,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		fillInRequiredPages();
 		postExpectingSuccess("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED");
 
-		var ccap = submitAndDownloadCcap();
+		var ccap = downloadCcapClientPDF();
 		assertPdfFieldEquals("BENEFITS", "No", ccap);
 		assertPdfFieldEquals("INSURANCE_PAYMENTS", "No", ccap);
 		assertPdfFieldEquals("CONTRACT_FOR_DEED", "No", ccap);
@@ -379,7 +401,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	    postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
 	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
 
-	    var caf = submitAndDownloadCaf();
+	    var caf = downloadCafClientPDF();
 
 	    // Verify that each income type and its value is correctly reflected on the cover page
 	    // The first two are also used to write to the CAF section 14
@@ -476,7 +498,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		addHouseholdMembersWithProgram("CCAP");
 		postExpectingSuccess("parentNotAtHome", "hasParentNotAtHome", "true");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		//Maps to No on PDF with Yes Field because the question is inverse
 		assertPdfFieldEquals("BOTH_PARENTS_AT_HOME", "Yes", caf);
 	}
@@ -508,7 +530,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postWithQueryParam("jobBuilder", "option", "0");
 		addJob(pam, "Pam's Employer");
 
-		var ccap = submitAndDownloadCcap();
+		var ccap = downloadCcapClientPDF();
 		assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_LOOKING_FOR_JOB_FULL_NAME_0", "Pam Beesly", ccap);
 		assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_GOING_TO_SCHOOL_FULL_NAME_0", "Dwight Schrute", ccap);
 		assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_WORKING_FULL_NAME_0", "Pam Beesly", ccap);
@@ -557,8 +579,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		postExpectingSuccess("principalWageEarner", "principalWageEarner", "I want to talk with my worker first.");
 		
-        var caf = submitAndDownloadCaf();
-        var ccap = submitAndDownloadCcap();
+        var caf = downloadCafClientPDF();
+        var ccap = downloadCcapClientPDF();
 		
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_0", "", caf);
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_1", "", caf);
@@ -602,7 +624,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		postExpectingSuccess("principalWageEarner", "principalWageEarner", "Dwight Schrute");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_0", "", caf);
 		assertPdfFieldEquals("PAY_FREQUENCY_0", "Daily", caf);
@@ -636,7 +658,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("selfEmployment", "selfEmployment", "false");
 		postExpectingSuccess("lastThirtyDaysJobIncome", "lastThirtyDaysJobIncome", "");
 
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldIsEmpty("SNAP_EXPEDITED_ELIGIBILITY", caf);
 	}
 	
@@ -645,13 +667,13 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("CASH");
 		postExpectingSuccess("studentFinancialAid", "studentFinancialAid", "true");
 		
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		
 		assertPdfFieldEquals("STUDENT_FINANCIAL_AID", "Yes", caf);
 		
 		postExpectingSuccess("studentFinancialAid", "studentFinancialAid", "false");
 		
-		caf = submitAndDownloadCaf();
+		caf = downloadCafClientPDF();
 		
 		assertPdfFieldEquals("STUDENT_FINANCIAL_AID", "No", caf);
 	}
@@ -661,7 +683,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		selectPrograms("CASH");
 		postExpectingSuccess("authorizedRep", "communicateOnYourBehalf", "false");
 
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("AUTHORIZED_REP_FILL_OUT_FORM", "Off", caf);
 		assertPdfFieldEquals("AUTHORIZED_REP_GET_NOTICES", "Off", caf);
 		assertPdfFieldEquals("AUTHORIZED_REP_SPEND_ON_YOUR_BEHALF", "Off", caf);
@@ -674,7 +696,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		getWithQueryParam("identifyCountyBeforeApplying", "utm_source", CHILDCARE_WAITING_LIST_UTM_SOURCE);
 		fillInRequiredPages();
 
-		var ccap = submitAndDownloadCcap();
+		var ccap = downloadCcapClientPDF();
 		assertPdfFieldEquals("UTM_SOURCE", "FROM BSF WAITING LIST", ccap);
 	}
 
@@ -682,7 +704,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	void shouldNotMapRecognizedUtmSourceCAF() throws Exception {
 		selectPrograms("CASH");
 		getWithQueryParam("identifyCountyBeforeApplying", "utm_source", CHILDCARE_WAITING_LIST_UTM_SOURCE);
-		var caf = submitAndDownloadCaf();
+		var caf = downloadCafClientPDF();
 		assertPdfFieldIsEmpty("UTM_SOURCE", caf);
 	}
 
@@ -822,7 +844,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 							"sameMailingAddress", List.of("false")));
 			postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
 
-			var ccap = submitAndDownloadCcap();
+			var ccap = downloadCcapClientPDF();
 			assertPdfFieldEquals("APPLICANT_HOME_STREET_ADDRESS", acceptedAddress, ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_CITY", originalCity, ccap);
 			assertPdfFieldEquals("APPLICANT_HOME_STATE", "MN", ccap);
@@ -833,7 +855,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		void shouldMapNoForSelfEmployment() throws Exception {
 			addFirstJob(getApplicantFullNameAndId(), "someEmployerName");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("SELF_EMPLOYED", "No", caf);
 
 			var ccap = downloadCcapClientPDF();
@@ -860,7 +882,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 			postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "true");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			var ccap = downloadCcapClientPDF();
 
 			List.of(caf).forEach(pdf -> {
@@ -894,7 +916,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			String jim = getJimFullNameAndId();
 			addFirstJob(jim, "someEmployerName");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			var ccap = downloadCcapClientPDF();
 
 			assertPdfFieldEquals("EMPLOYEE_FULL_NAME_0", "Jim Halpert", caf);
@@ -924,7 +946,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("selfEmployment", "selfEmployment", "false");
 			postExpectingSuccess("lastThirtyDaysJobIncome", "lastThirtyDaysJobIncome", "");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			var ccap = downloadCcapClientPDF();
 
 			assertPdfFieldEquals("GROSS_MONTHLY_INCOME_0", "123.00", caf);
@@ -941,7 +963,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 			postExpectingSuccess("livingSituation", "livingSituation", "UNKNOWN");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			var ccap = downloadCcapClientPDF();
 
 			assertPdfFieldEquals("LIVING_SITUATION", "UNKNOWN", caf);
@@ -954,7 +976,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillInRequiredPages();
 			postWithoutData("livingSituation");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			var ccap = downloadCcapClientPDF();
 
 			assertPdfFieldEquals("LIVING_SITUATION", "UNKNOWN", caf);
@@ -967,7 +989,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("livingSituation", "livingSituation",
 					"TEMPORARILY_WITH_FRIENDS_OR_FAMILY_DUE_TO_ECONOMIC_HARDSHIP");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			var ccap = downloadCcapClientPDF();
 
 			assertPdfFieldEquals("LIVING_SITUATION", "TEMPORARILY_WITH_FRIENDS_OR_FAMILY", ccap);
@@ -982,7 +1004,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("selectTheTribe", "selectedTribe", "Prairie Island");
 			postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "true");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 
 			assertPdfFieldEquals("BOUNDARY_MEMBER", "Yes", caf);
 			assertPdfFieldEquals("TRIBAL_NATION_BOUNDARY", "Prairie Island", caf);
@@ -997,7 +1019,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("selectTheTribe", "selectedTribe", "Leech Lake");
 				postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "false");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 
 				assertPdfFieldEquals("BOUNDARY_MEMBER","No", caf);
 				assertPdfFieldIsEmpty("TRIBAL_NATION_BOUNDARY", caf);
@@ -1011,7 +1033,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("selectTheTribe", "selectedTribe", "Red Lake Nation");
 				postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "false");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 
 				assertPdfFieldEquals("BOUNDARY_MEMBER","No", caf);
 				assertPdfFieldIsEmpty("TRIBAL_NATION_BOUNDARY", caf);
@@ -1026,7 +1048,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("nationsBoundary", "livingInNationBoundary", "true");
 				postExpectingSuccess("nationOfResidence", "selectedNationOfResidence", "Red Lake Nation");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 
 				assertPdfFieldEquals("BOUNDARY_MEMBER","Yes", caf);
 				assertPdfFieldEquals("TRIBAL_NATION_BOUNDARY", "Red Lake Nation", caf);
@@ -1037,7 +1059,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillInRequiredPages();
 			postExpectingSuccess("applyForTribalTANF", "applyForTribalTANF", "true");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 
 			assertPdfFieldEquals("PROGRAMS", "SNAP, CCAP, CASH, TRIBAL TANF", caf);
 		}
@@ -1047,7 +1069,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillInRequiredPages();
 			selectPrograms("SNAP", "CASH", "EA");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 
 			assertPdfFieldEquals("FOOD", "Yes", caf);
 			assertPdfFieldEquals("CASH", "Yes", caf);
@@ -1062,7 +1084,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			selectPrograms("NONE");
 			fillOutHousemateInfo("SNAP");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 
 			assertPdfFieldEquals("FOOD", "Off", caf);
 			assertPdfFieldEquals("CASH", "Off", caf);
@@ -1076,7 +1098,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillInRequiredPages();
 			selectPrograms("SNAP");
 			fillOutHousemateInfoMoreThanFiveLessThanTen(9);
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("FIRST_NAME_4", "householdMemberFirstName4", caf);
 			assertPdfFieldEquals("LAST_NAME_4", "householdMemberLastName4", caf);
 			assertPdfFieldEquals("OTHER_NAME_4", "houseHoldyMcMemberson4", caf);
@@ -1095,7 +1117,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
             fillInRequiredPages();
             selectPrograms("SNAP");
             fillOutHousemateInfoMoreThanFiveLessThanTen(12);
-            var caf = submitAndDownloadCaf();
+            var caf = downloadCafClientPDF();
             assertPdfFieldEquals("FIRST_NAME_11", "householdMemberFirstName11", caf);
             assertPdfFieldEquals("LAST_NAME_11", "householdMemberLastName11", caf);
             assertPdfFieldEquals("OTHER_NAME_11", "houseHoldyMcMemberson11", caf);
@@ -1114,7 +1136,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillInRequiredPages();
 			selectPrograms("SNAP");
 			fillOutHousemateInfoMoreThanFiveLessThanTen(3);
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			assertNull(caf.getField("FIRST_NAME_4"));
 		}
 
@@ -1124,7 +1146,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("livingSituation", "livingSituation",
 					"TEMPORARILY_WITH_FRIENDS_OR_FAMILY_OTHER_REASONS");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			var ccap = downloadCcapClientPDF();
 
 			assertPdfFieldEquals("LIVING_SITUATION", "TEMPORARILY_WITH_FRIENDS_OR_FAMILY", ccap);
@@ -1137,7 +1159,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillInRequiredPages();
 			postExpectingSuccess("medicalExpenses", "medicalExpenses", List.of("NONE_OF_THE_ABOVE"));
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("MEDICAL_EXPENSES_SELECTION", "NONE_SELECTED", caf);
 		}
 
@@ -1146,7 +1168,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			fillInRequiredPages();
 			postExpectingSuccess("medicalExpenses", "medicalExpenses", List.of("MEDICAL_INSURANCE_PREMIUMS"));
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("MEDICAL_EXPENSES_SELECTION", "ONE_SELECTED", caf);
 		}
 
@@ -1197,7 +1219,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				var additionalIncomeInfo = "Here's something else about my situation";
 				postExpectingRedirect("futureIncome", "additionalIncomeInfo", additionalIncomeInfo, "startExpenses");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				var ccap = downloadCcapClientPDF();
 				List.of(caf, ccap).forEach(pdf -> { 
 					assertPdfFieldEquals("ADDITIONAL_INCOME_INFO", additionalIncomeInfo, pdf);
@@ -1220,7 +1242,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("mailingAddress", "sameMailingAddress", "true"); // THE KEY DIFFERENCE
 				postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "false");
 
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", originalStreetAddressCCAP, ccap);
 				assertPdfFieldEquals("APPLICANT_MAILING_CITY", originalCity, ccap);
 				assertPdfFieldEquals("APPLICANT_MAILING_STATE", "MN", ccap);
@@ -1235,7 +1257,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				addFirstJob(getApplicantFullNameAndId(), "someEmployerName");
 				addSelfEmployedJob(getApplicantFullNameAndId(), "My own boss");
 				completeHelperWorkflow(true);
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("SELF_EMPLOYMENT_0", "No", ccap);
 				assertPdfFieldEquals("SELF_EMPLOYMENT_1", "Yes", ccap);
 			}
@@ -1261,7 +1283,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingNextPageTitle("otherUnearnedIncomeSources", Map.of("rentalIncomeAmount", List.of("100.00"), "annuityPaymentsAmount", List.of("110.00"), 
 						"giftsAmount", List.of("120.00"), "lotteryGamblingAmount", List.of("130.00"), "dayTradingProceedsAmount", List.of("140.00")), "Future Income");
 
-			    var ccap = submitAndDownloadCcap();
+			    var ccap = downloadCcapClientPDF();
 
 			    // Verify that each income type and its value is correctly reflected on the cover page
 			    assertPdfFieldEquals("OTHER_INCOME_TYPE_0", "Rental income", ccap);
@@ -1311,7 +1333,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				if (program.equals("SNAP")) {
 					document = downloadCafClientPDF();
 				} else {
-					document = submitAndDownloadCcap();
+					document = downloadCcapClientPDF();
 				}
 			    // Verify that each income type and its value is correctly reflected on the cover page
 			    // The first two are also used to write to the CAF section 14
@@ -1380,7 +1402,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("mailingAddress", "sameMailingAddress", "true"); // THE KEY DIFFERENCE
 				postExpectingSuccess("verifyHomeAddress", "useEnrichedAddress", "true");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				var ccap = downloadCcapClientPDF();
 				List.of(caf,ccap).forEach(pdf -> {
 					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", enrichedStreetValue, pdf);
@@ -1417,7 +1439,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 						));
 				postExpectingSuccess("verifyMailingAddress", "useEnrichedAddress", "false");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				var ccap = downloadCcapClientPDF();
 				List.of(caf).forEach(pdf -> {
 					assertPdfFieldEquals("APPLICANT_MAILING_STREET_ADDRESS", originalStreetAddress, pdf);
@@ -1447,7 +1469,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "MIDDLE_EASTERN_OR_NORTH_AFRICAN");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("WHITE", "Yes", caf);
 				assertPdfFieldEquals("CLIENT_REPORTED", "Middle Eastern / N. African", caf);
 			}
@@ -1458,7 +1480,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Yes", caf);
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Yes", caf);
 			}
@@ -1469,7 +1491,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("ASIAN", "HISPANIC_LATINO_OR_SPANISH", "WHITE")));
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("ASIAN", "Yes", caf);
 				assertPdfFieldEquals("WHITE", "Yes", caf);
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Yes", caf);
@@ -1482,7 +1504,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("ASIAN", "WHITE", "MIDDLE_EASTERN_OR_NORTH_AFRICAN")));
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("WHITE", "Yes", caf);
 				assertPdfFieldEquals("ASIAN", "Yes", caf);
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Off", caf);
@@ -1496,7 +1518,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "ASIAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", caf);
 			}
 
@@ -1507,7 +1529,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 						Map.of("raceAndEthnicity",
 								List.of("SOME_OTHER_RACE_OR_ETHNICITY", "MIDDLE_EASTERN_OR_NORTH_AFRICAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("WHITE", "Off", caf);
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", caf);
 			}
@@ -1518,7 +1540,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "WHITE"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("WHITE", "Yes", caf);
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", caf);
 			}
@@ -1534,7 +1556,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "MIDDLE_EASTERN_OR_NORTH_AFRICAN");
 
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
 				assertPdfFieldEquals("CLIENT_REPORTED", "Middle Eastern / N. African", ccap);
 			}
@@ -1545,7 +1567,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH");
 
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Yes", ccap);
 				assertPdfFieldEquals("UNABLE_TO_DETERMINE", "Yes", ccap);
 			}
@@ -1556,7 +1578,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("ASIAN", "HISPANIC_LATINO_OR_SPANISH", "WHITE")));
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("ASIAN", "Yes", ccap);
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Yes", ccap);
@@ -1569,7 +1591,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("ASIAN", "WHITE", "MIDDLE_EASTERN_OR_NORTH_AFRICAN")));
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
 				assertPdfFieldEquals("ASIAN", "Yes", ccap);
 				assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH", "Off", ccap);
@@ -1583,7 +1605,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("pastEmployment", "wereYouEmployed", "true");
 			    assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
 
-				var caf = submitAndDownloadCaf();
+				var caf = downloadCafClientPDF();
 				assertPdfFieldEquals("HAS_WORKED_IN_PAST_36_MONTHS", "Yes", caf);
 			}
 
@@ -1593,7 +1615,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "ASIAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", ccap);
 			}
 
@@ -1604,7 +1626,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 						Map.of("raceAndEthnicity",
 								List.of("SOME_OTHER_RACE_OR_ETHNICITY", "MIDDLE_EASTERN_OR_NORTH_AFRICAN"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("WHITE", "Off", ccap);
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", ccap);
 			}
@@ -1615,7 +1637,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				postExpectingSuccess("raceAndEthnicity",
 						Map.of("raceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY", "WHITE"),
 								"otherRaceOrEthnicity", List.of("SomeOtherRaceOrEthnicity")));
-				var ccap = submitAndDownloadCcap();
+				var ccap = downloadCcapClientPDF();
 				assertPdfFieldEquals("WHITE", "Yes", ccap);
 				assertPdfFieldEquals("CLIENT_REPORTED", "SomeOtherRaceOrEthnicity", ccap);
 			}
@@ -1625,7 +1647,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		void verifyChildCareCost() throws Exception {
 			selectPrograms("SNAP");
 			postExpectingSuccess("childCareCosts", "childCareCosts", "true");
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("CCAP_HAS_COSTS_FOR_CHILD_CARE", "Yes", caf);
 		}
 		
@@ -1633,7 +1655,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		void verifyAdultCareCost() throws Exception {
 			selectPrograms("SNAP");
 			postExpectingSuccess("adultCareCosts", "adultCareCosts", "true");
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("COSTS_FOR_DISABLED_ADULT", "Yes", caf);
 		}
 		
@@ -1657,7 +1679,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("parentNotAtHomeNames", Map.of("whatAreTheParentsNames", List.of("", "Jim's Parent"),
 					"childIdMap", List.of("applicant", jimHalpertId)));
 			postExpectingSuccess("childCareChildSupport", Map.of("whoReceivesChildSupportPayments", List.of("", "Jim Halpert " + jimHalpertId)));
-			var ccap = submitAndDownloadCcap();
+			var ccap = downloadCcapClientPDF();
 			assertPdfFieldEquals("CHILDCARE_CHILD_NAME_0", "Dwight Schrute", ccap);
 			assertPdfFieldEquals("CHILDCARE_CHILD_NAME_1", "Jim Halpert", ccap);
 			assertPdfFieldEquals("CHILD_FULL_NAME_0", "Dwight Schrute", ccap);
@@ -1694,7 +1716,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("childCareMentalHealthTimes", "childCareMentalHealthHours", List.of("5", "9"));
 
 			fillInRequiredPages();
-			var ccap = submitAndDownloadCcap();
+			var ccap = downloadCcapClientPDF();
 			assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_TO_SUPPORT_MENTAL_HEALTH_FULL_NAME_0", "Dwight Schrute",
 					ccap);
 			assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_TO_SUPPORT_MENTAL_HEALTH_FULL_NAME_1", "Jim Halpert",
@@ -1714,7 +1736,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("childCareMentalHealthTimes", "childCareMentalHealthHours",  "10");
 
 			fillInRequiredPages();
-			var ccap = submitAndDownloadCcap();
+			var ccap = downloadCcapClientPDF();
 			assertPdfFieldEquals("ADULT_REQUESTING_CHILDCARE_TO_SUPPORT_MENTAL_HEALTH_FULL_NAME_0", "Dwight Schrute", ccap);
 			assertPdfFieldEquals("CHILDCARE_MENTAL_HEALTH_HOURS_A_WEEK_0", "10", ccap);
 		}
@@ -1733,7 +1755,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			postExpectingSuccess("adultCareCosts", "adultCareCosts", "false");
 			postExpectingSuccess("supportAndCare", "supportAndCare", "false");
 
-			var caf = submitAndDownloadCaf();
+			var caf = downloadCafClientPDF();
 			
 			assertPdfFieldEquals("HAVE_PAYEE_FEES", "Yes", caf);
 			assertPdfFieldEquals("HAVE_CONSERVATOR_FEES", "No", caf);

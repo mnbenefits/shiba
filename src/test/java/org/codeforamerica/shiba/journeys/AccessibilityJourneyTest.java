@@ -498,7 +498,9 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     testPage.clickCustomButton("Yes, send me more info", 10, "Healthcare Coverage");
     testPage.enter("healthcareCoverage", YES.getDisplayValue());
-    testPage.clickContinue("Authorized Rep");
+    testPage.clickContinue("Help from a social worker");
+    testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
+	testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
     testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
     testPage.chooseYesOrNo("communicateOnYourBehalf", YES.getDisplayValue(), "Authorized Rep mail and notices");
     testPage.chooseYesOrNo("getMailNotices", YES.getDisplayValue(), "Authorized Rep spend on your behalf");
