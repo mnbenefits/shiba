@@ -1,6 +1,9 @@
 package org.codeforamerica.shiba.pages.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +26,8 @@ public class InputData implements Serializable {
   @JsonIgnore
   List<Validator> validators;
 
-  InputData(List<String> value, @NotNull List<Validator> validators) {
+  @JsonCreator
+  InputData(@JsonProperty("value") List<String> value, @NotNull @JsonProperty("validator") List<Validator> validators) {
     this.value = Objects.requireNonNullElseGet(value, List::of);
     this.validators = Objects.requireNonNullElseGet(validators, List::of);
   }
