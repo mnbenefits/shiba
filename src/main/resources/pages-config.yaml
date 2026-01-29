@@ -4702,6 +4702,16 @@ pageConfigurations:
             - value: "NOT_SURE"
               messageKey: general.inputs.not-sure
     pageTitle: healthcareCoverage.title
+  - &directDeposit
+    name: directDeposit
+    pageTitle: direct-deposit.title
+    headerKey: direct-deposit.header
+    headerHelpMessageKey: direct-deposit.header-help
+    contextFragment: directDepositContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: hasDirectDeposit
+        type: YES_NO
   - &socialWorker
     name: socialWorker
     pageTitle: social-worker.title
@@ -7202,13 +7212,21 @@ workflow:
   healthcareCoverage:
     pageConfiguration: *healthcareCoverage
     nextPages:
-      - pageName: socialWorker
-        condition: *someoneChoseCAFProgram?
+      - pageName: directDeposit
+        condition: *someoneChoseCASH? 
       - pageName: authorizedRep
     datasources:
       - pageName: choosePrograms
       - pageName: householdMemberInfo
         groupName: household
+  directDeposit:
+    pageConfiguration: *directDeposit
+    nextPages:
+      - pageName: ebtInPast
+    datasources:
+      - pageName: addHouseholdMembers
+
+
   socialWorker:
     pageConfiguration: *socialWorker
     nextPages:
