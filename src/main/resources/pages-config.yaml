@@ -4712,6 +4712,15 @@ pageConfigurations:
     inputs:
       - name: hasDirectDeposit
         type: YES_NO
+  - &ebtInPast
+    name: ebtInPast
+    pageTitle: ebt-in-past.title
+    headerKey: ebt-in-past.header
+    contextFragment: ebtCardContextFragment
+    hasPrimaryButton: false
+    inputs: 
+      - name: hadEBTInPast
+        type: YES_NO
   - &socialWorker
     name: socialWorker
     pageTitle: social-worker.title
@@ -7213,7 +7222,11 @@ workflow:
     pageConfiguration: *healthcareCoverage
     nextPages:
       - pageName: directDeposit
-        condition: *someoneChoseCASH? 
+        condition: *someoneChoseCASH?
+      - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
+      - pageName: socialWorker
+        condition: *someoneChoseCAFProgram?
       - pageName: authorizedRep
     datasources:
       - pageName: choosePrograms
@@ -7225,8 +7238,10 @@ workflow:
       - pageName: ebtInPast
     datasources:
       - pageName: addHouseholdMembers
-
-
+  ebtInPast:
+    pageConfiguration: *ebtInPast
+    nextPages:
+      - pageName: socialWorker
   socialWorker:
     pageConfiguration: *socialWorker
     nextPages:
