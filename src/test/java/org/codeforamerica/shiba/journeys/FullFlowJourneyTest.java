@@ -355,13 +355,25 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("visionInsurancePremiumAmount", "56.35");
 		testPage.enter("medicalInsurancePremiumAmount", "10.90");
 
-		testPage.clickContinue("Support and Care Expenses");
+		testPage.clickContinue("Child care costs");
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
-		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Child care costs");
-		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Adult care costs");
-		testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Assets");
+		
+		testPage.chooseYesOrNo("childCareCosts", YES.getDisplayValue(), "Child care amount");
+		testPage.enter("childCareCostsAmount", "144");
+		testPage.enter("childCareCostsFrequency", "Weekly");
+		testPage.clickContinue("Adult care costs");
+		
+		testPage.chooseYesOrNo("adultCareCosts", YES.getDisplayValue(), "Adult care amount");
+		testPage.enter("adultCareCostsAmount", "288");
+		testPage.enter("adultCareCostsFrequency", "Other");
+		testPage.clickContinue("Support and Care Expenses");
+		
+		testPage.chooseYesOrNo("supportAndCare", YES.getDisplayValue(), "Support and Care Amount");
+		testPage.enter("supportAndCareCostsAmount", "77");
+		testPage.enter("supportAndCareCostsFrequency", "Twice a month");
+		testPage.clickContinue("Assets");
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "A vehicle");
@@ -756,7 +768,16 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("EXPEDITED_QUESTION_2", "0.00");
 		assertCafFieldEquals("HOUSING_EXPENSES", "123321.50");
 		assertCafFieldEquals("HEAT", "Yes");
+		assertCafFieldEquals("CCAP_HAS_COSTS_FOR_CHILD_CARE", "Yes");
+		assertCafFieldEquals("CCAP_CHILD_CARE_COSTS_AMOUNT", "144");
+		assertCafFieldEquals("CCAP_CHILD_CARE_COSTS_FREQUENCY", "Weekly");
+		assertCafFieldEquals("COSTS_FOR_DISABLED_ADULT", "Yes");
+		assertCafFieldEquals("COSTS_FOR_DISABLED_ADULTS_AMOUNT", "288");
+		assertCafFieldEquals("COSTS_FOR_DISABLED_ADULTS_FREQUENCY", "Other");
 		assertCafFieldEquals("SUPPORT_AND_CARE", "Yes");
+		assertCafFieldEquals("SUPPORT_AND_CARE_AMOUNT", "77");
+		assertCafFieldEquals("SUPPORT_AND_CARE_FREQUENCY", "Twice a month");
+		
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
@@ -932,13 +953,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// 12 months?
 		testPage.chooseYesOrNo("energyAssistance", NO.getDisplayValue(), "Special care costs");
 		testPage.enter("specialCareExpenses", "None");
-		testPage.clickContinue("Support and Care Expenses");
+		testPage.clickContinue("Child care costs");
 
 		// Does anyone in the household pay for court-ordered child support, spousal
 		// support, child care support or medical care?
-		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Child care costs"); 
+
 		testPage.chooseYesOrNo("childCareCosts", NO.getDisplayValue(), "Adult care costs"); 
-		testPage.chooseYesOrNo("adultCareCosts", NO.getDisplayValue(), "Assets");
+		testPage.chooseYesOrNo("adultCareCosts", NO.getDisplayValue(), "Support and Care Expenses");
+		testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Assets"); 
 
 		// Does anyone in your household have any of these?
 		testPage.enter("assets", "None");
@@ -1065,6 +1087,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("REFUSE_A_JOB_OFFER", "Off");
 		assertCafFieldEquals("ASK_TO_WORK_FEWER_HOURS", "Off");
 
+		assertCafFieldEquals("CCAP_HAS_COSTS_FOR_CHILD_CARE", "No");
+		assertCafFieldEquals("COSTS_FOR_DISABLED_ADULT", "No");
+		assertCafFieldEquals("SUPPORT_AND_CARE", "No");
 		// Expecting 2 events: 1.) SubworkflowCompletedEvent, 2.)
 		// ApplicationSubmittedEvent
 		assertApplicationSubmittedEventWasPublished(applicationId, FULL, 2);

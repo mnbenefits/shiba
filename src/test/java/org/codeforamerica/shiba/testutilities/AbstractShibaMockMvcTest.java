@@ -791,25 +791,31 @@ public class AbstractShibaMockMvcTest {
     assertThat(new FormPage(getPage(pageName)).getTitle()).isEqualTo(pageTitle);
   }
 
+  /**
+   * Start at futureIncome page (Do you think your household will earn less money this month than last month?)
+   * Go through expenses pages, end at assets page.
+   * @param programs
+   * @throws Exception
+   */
   protected void fillAdditionalIncomeInfo(String... programs) throws Exception {
     postExpectingRedirect("futureIncome", "additionalIncomeInfo",
         "one more thing you need to know is...", "startExpenses");
     
     if (containsOnly(Arrays.asList(programs), "CCAP")) {
     	assertNavigationRedirectsToCorrectNextPage("startExpenses", "medicalExpenses");
-    }
-    else {
+    }else{
     	assertNavigationRedirectsToCorrectNextPage("startExpenses", "homeExpenses");
 	    postExpectingRedirect("homeExpenses", "homeExpenses", "NONE_OF_THE_ABOVE", "utilities");
 	    postExpectingRedirect("utilities", "payForUtilities", "NONE_OF_THE_ABOVE", "energyAssistance");
 	    postExpectingRedirect("energyAssistance", "energyAssistance", "false", "medicalExpenses");
     }
-    if(Arrays.asList(programs).contains("CASH")){
-    	postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
-    		        "specialCareExpenses");
+    if(Arrays.asList(programs).contains("CASH") || Arrays.asList(programs).contains("SNAP") || Arrays.asList(programs).contains("EA") || Arrays.asList(programs).contains("GRH")){
+    	postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE_OF_THE_ABOVE",   "childCareCosts");
+    	postExpectingRedirect("childCareCosts", "childCareCosts", "NONE_OF_THE_ABOVE",   "adultCareCosts");
+    	postExpectingRedirect("adultCareCosts", "adultCareCosts", "NONE_OF_THE_ABOVE",   "supportAndCare");
+    	postExpectingRedirect("supportAndCare", "supportAndCare", "NONE_OF_THE_ABOVE",   "assets");
     } else{
-    postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
-        "supportAndCare");  
+    	postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",   "assets");  
     }
   }
 
@@ -997,14 +1003,10 @@ public class AbstractShibaMockMvcTest {
     }
     assertNavigationRedirectsToCorrectNextPage("incomeUpNext", "unearnedIncome");
     if (hasHousehold) {
-    	postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
-    	        "socialSecurityIncomeSource");
-    }
-    else {
-    	 postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY",
-        "unearnedIncomeSources");
-    postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",
-        "otherUnearnedIncome");
+    	postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY", "socialSecurityIncomeSource");
+    }else{
+    	postExpectingRedirect("unearnedIncome", "unearnedIncome", "SOCIAL_SECURITY", "unearnedIncomeSources");
+    	postExpectingRedirect("unearnedIncomeSources", "socialSecurityAmount", "200",  "otherUnearnedIncome");
     }      
     
     postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome", "NO_OTHER_UNEARNED_INCOME_SELECTED","studentFinancialAid");
@@ -1015,17 +1017,13 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("homeExpenses", "homeExpenses", "RENT", "homeExpensesAmount");
     postExpectingRedirect("homeExpensesAmount", "homeExpensesAmount", "123321", "utilities");
     postExpectingRedirect("utilities", "payForUtilities", "HEATING", "energyAssistance");
-    postExpectingRedirect("energyAssistance", "energyAssistance", "true",
-        "energyAssistanceMoreThan20");
-    postExpectingRedirect("energyAssistanceMoreThan20", "energyAssistanceMoreThan20", "true",
-        "medicalExpenses");
-    postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE",
-        "specialCareExpenses");
-    postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE",
-            "supportAndCare");
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
+    postExpectingRedirect("energyAssistance", "energyAssistance", "true", "energyAssistanceMoreThan20");
+    postExpectingRedirect("energyAssistanceMoreThan20", "energyAssistanceMoreThan20", "true", "medicalExpenses");
+    postExpectingRedirect("medicalExpenses", "medicalExpenses", "NONE_OF_THE_ABOVE", "specialCareExpenses");
+    postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE", "childCareCosts");
     postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts"); 
-    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets"); 
+    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "supportAndCare"); 
+    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets"); 
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     postExpectingRedirect("soldAssets", "haveSoldAssets", "false", "submittingApplication");

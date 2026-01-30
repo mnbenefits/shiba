@@ -2127,6 +2127,8 @@ pageConfigurations:
   - &childCareCosts
     name: childCareCosts
     pageTitle: child-care-costs.title
+    contextFragment: careExpensesFragment
+    headerHelpMessageKey: child-care-costs-household.the-child-care-assistance-program
     headerKey:
       defaultValue: child-care-costs-household.header
       conditionalValues:
@@ -2135,10 +2137,45 @@ pageConfigurations:
     hasPrimaryButton: false
     inputs:
       - name: childCareCosts
-        type: YES_NO	
+        type: YES_NO
+  - &childCareCostsAmount
+    name: childCareCostsAmount
+    pageTitle: child-care-costs-amount.title
+    headerKey: child-care-costs-amount.header
+    headerHelpMessageKey: child-care-costs-amount.if-you-dont-have-all-this
+    inputs:
+      - name: childCareCostsAmount
+        type: MONEY
+        promptMessage:
+          promptMessageKey: costs-amount.amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: childCareCostsAmount
+              matcher: NOT_EMPTY
+      - name: childCareCostsFrequency
+        promptMessage:
+          promptMessageKey: costs-frequency.how-often
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: cost-frequency.select-frequency
+            - value: MONTHLY
+              messageKey: cost-frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: cost-frequency.twice-a-month
+            - value: EVERY_TWO_WEEKS
+              messageKey: cost-frequency.every-two-weeks
+            - value: WEEKLY
+              messageKey: cost-frequency.weekly
+            - value: OTHER
+              messageKey: cost-frequency.other
   - &adultCareCosts
     name: adultCareCosts
     pageTitle: adult-care-costs.title
+    contextFragment: careExpensesFragment
     headerKey:
       defaultValue: adult-care-costs-household.header
       conditionalValues:
@@ -2147,7 +2184,89 @@ pageConfigurations:
     hasPrimaryButton: false
     inputs:
       - name: adultCareCosts
-        type: YES_NO	
+        type: YES_NO
+  - &adultCareCostsAmount
+    name: adultCareCostsAmount
+    pageTitle: adult-care-costs-amount.title
+    headerKey: adult-care-costs-amount.header
+    headerHelpMessageKey: adult-care-costs-amount.if-you-dont-have-all-this
+    inputs:
+      - name: adultCareCostsAmount
+        type: MONEY
+        promptMessage:
+          promptMessageKey: costs-amount.amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: adultCareCostsAmount
+              matcher: NOT_EMPTY
+      - name: adultCareCostsFrequency
+        promptMessage:
+          promptMessageKey: costs-frequency.how-often
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: cost-frequency.select-frequency
+            - value: MONTHLY
+              messageKey: cost-frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: cost-frequency.twice-a-month
+            - value: EVERY_TWO_WEEKS
+              messageKey: cost-frequency.every-two-weeks
+            - value: WEEKLY
+              messageKey: cost-frequency.weekly
+            - value: OTHER
+              messageKey: cost-frequency.other
+  - &supportAndCare
+    name: supportAndCare
+    pageTitle: support-and-care.title
+    contextFragment: careExpensesFragment
+    headerHelpMessageKey: support-and-care.help
+    headerKey:
+      defaultValue: support-and-care.household-support
+      conditionalValues:
+        - value: support-and-care.do-you-pay-for-court-ordered-child-support-spousal-support
+          condition: *livesAlone?
+    hasPrimaryButton: false
+    inputs:
+      - name: supportAndCare
+        type: YES_NO
+  - &supportAndCareCostsAmount
+    name: supportAndCareCostsAmount
+    pageTitle: support-and-care-costs-amount.title
+    headerKey: support-and-care-costs-amount.header
+    headerHelpMessageKey: support-and-care-costs-amount.payment-list
+    inputs:
+      - name: supportAndCareCostsAmount
+        type: MONEY
+        promptMessage:
+          promptMessageKey: costs-amount.amount
+        validators:
+          - validation: MONEY
+            errorMessageKey: general.validation.make-sure-you-enter-a-dollar-amount
+            condition:
+              input: supportAndCareCostsAmount
+              matcher: NOT_EMPTY
+      - name: supportAndCareCostsFrequency
+        promptMessage:
+          promptMessageKey: costs-frequency.how-often
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: cost-frequency.select-frequency
+            - value: MONTHLY
+              messageKey: cost-frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: cost-frequency.twice-a-month
+            - value: EVERY_TWO_WEEKS
+              messageKey: cost-frequency.every-two-weeks
+            - value: WEEKLY
+              messageKey: cost-frequency.weekly
+            - value: OTHER
+              messageKey: cost-frequency.other
   - &pastEmployment
     name: pastEmployment
     pageTitle: past-employment.title
@@ -2212,19 +2331,6 @@ pageConfigurations:
           pageName: medicalExpenses
           input: medicalExpenses
           value: VISION_INSURANCE_PREMIUMS
-  - &supportAndCare
-    name: supportAndCare
-    pageTitle: support-and-care.title
-    headerKey:
-      defaultValue: support-and-care.household-support
-      conditionalValues:
-        - value: support-and-care.do-you-pay-for-court-ordered-child-support-spousal-support
-          condition: *livesAlone?
-    headerHelpMessageKey: support-and-care.help
-    hasPrimaryButton: false
-    inputs:
-      - name: supportAndCare
-        type: YES_NO
   - &migrantFarmWorker
     name: migrantFarmWorker
     pageTitle:
@@ -7118,11 +7224,23 @@ workflow:
        groupName: household
      - pageName: choosePrograms
     nextPages:
-      - pageName: supportAndCare
+      - pageName: childCareCosts
+        condition: *someoneChoseCAFProgram?
+      - pageName: assets
   childCareCosts:
     pageConfiguration: *childCareCosts
     datasources:
      - pageName: addHouseholdMembers
+    nextPages:
+      - pageName: childCareCostsAmount
+        condition:
+          name: selectedYesForChildCareCosts
+          pageName: childCareCosts
+          input: childCareCosts
+          value: "true"
+      - pageName: adultCareCosts
+  childCareCostsAmount:
+    pageConfiguration: *childCareCostsAmount
     nextPages:
       - pageName: adultCareCosts
   adultCareCosts:
@@ -7130,7 +7248,36 @@ workflow:
     datasources:
       - pageName: addHouseholdMembers
     nextPages:
-      - pageName: assets	  
+      - pageName: adultCareCostsAmount
+        condition:
+          name: selectedYesForAdultCareCosts
+          pageName: adultCareCosts
+          input: adultCareCosts
+          value: "true"
+      - pageName: supportAndCare
+  adultCareCostsAmount:
+    pageConfiguration: *adultCareCostsAmount
+    nextPages:
+      - pageName: supportAndCare
+  supportAndCare:
+    pageConfiguration: *supportAndCare
+    nextPages:
+      - pageName: supportAndCareCostsAmount
+        condition:
+          name: selectedYesForSupportAndCareCosts
+          pageName: supportAndCare
+          input: supportAndCare
+          value: "true"
+      - pageName: assets
+    datasources:
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+      - pageName: choosePrograms
+  supportAndCareCostsAmount:
+    pageConfiguration: *supportAndCareCostsAmount
+    nextPages:
+      - pageName: assets
   medicalExpensesSources:
     pageConfiguration: *medicalExpensesSources
     nextPages:
@@ -7142,17 +7289,6 @@ workflow:
         - *noOneChoseSNAP?
     datasources:
       - pageName: medicalExpenses
-      - pageName: addHouseholdMembers
-      - pageName: householdMemberInfo
-        groupName: household
-      - pageName: choosePrograms
-  supportAndCare:
-    pageConfiguration: *supportAndCare
-    nextPages:
-      - pageName: childCareCosts
-        condition: *someoneChoseCAFProgram?
-      - pageName: assets
-    datasources:
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
