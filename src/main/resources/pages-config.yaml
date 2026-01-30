@@ -3515,6 +3515,37 @@ pageConfigurations:
             promptMessage:
               promptMessageKey: unearned-income-source.how-much-income-monthly
             helpMessageKey: general.if-you-dont-have
+          - name: retirementAmountFrequency
+            promptMessage:
+              promptMessageKey: general.frequency-of-income
+            type: SELECT
+#            validators:
+#             - validation: NOT_BLANK
+#               errorMessageKey: general.validation.make-sure-to-select-a-tribe
+            options:
+              selectableOptions:
+                - value: ''
+                  messageKey: general.select-frequency
+                - value: MONTHLY
+                  messageKey: general.monthly
+                - value: TWICE_A_MONTH
+                  messageKey: general.twice-a-month
+                - value: EVERY_TWO_WEEKS
+                  messageKey: general.every-two-weeks
+                - value: WEEKLY
+                  messageKey: general.weekly
+                - value: OTHER
+                  messageKey: general.other
+          - name: retirementAmountStartDate
+            type: DATE
+#            helpMessageKey: general.if-you-dont-have
+            promptMessage:
+              promptMessageKey: general.start-date
+          - name: retirementAmountEndDate
+            type: DATE
+#            helpMessageKey: general.if-you-dont-have
+            promptMessage:
+              promptMessageKey: general.end-date
   - &childOrSpousalSupportIncomeSource
     name: childOrSpousalSupportIncomeSource
     pageTitle: unearned-income-source.title
