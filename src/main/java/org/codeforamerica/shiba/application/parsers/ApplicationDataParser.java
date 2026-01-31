@@ -303,7 +303,28 @@ public class ApplicationDataParser {
     		new ParsingCoordinate("studentFinancialAid", "studentFinancialAid"));
     coordinatesMap.put(Field.ADVANCED_CHILD_TAX_CREDIT,
         	new ParsingCoordinate("advancedChildTaxCredit", "hasAdvancedChildTaxCredit"));
- 
+    coordinatesMap.put(Field.CCAP_HAS_COSTS_FOR_CHILD_CARE,
+        	new ParsingCoordinate("childCareCosts", "childCareCosts"));
+    
+    coordinatesMap.put(Field.CCAP_CHILD_CARE_COSTS_AMOUNT,
+        	new ParsingCoordinate("childCareCosts", "childCareCostsAmount"));
+    coordinatesMap.put(Field.CCAP_CHILD_CARE_COSTS_FREQUENCY,
+        	new ParsingCoordinate("childCareCosts", "childCareCostsFrequency"));
+    coordinatesMap.put(Field.COSTS_FOR_DISABLED_ADULT,
+        	new ParsingCoordinate("adultCareCosts", "adultCareCosts"));
+    
+    coordinatesMap.put(Field.COSTS_FOR_DISABLED_ADULTS_AMOUNT,
+        	new ParsingCoordinate("adultCareCosts", "adultCareCostsAmmount"));
+    coordinatesMap.put(Field.COSTS_FOR_DISABLED_ADULTS_FREQUENCY,
+        	new ParsingCoordinate("adultCareCosts", "adultCareCostsFrequency"));
+    coordinatesMap.put(Field.SUPPORT_AND_CARE,
+        	new ParsingCoordinate("supportAndCare", "supportAndCare"));
+    
+    coordinatesMap.put(Field.SUPPORT_AND_CARE_AMOUNT,
+        	new ParsingCoordinate("supportAndCare", "supportAndCareCostsAmount"));
+    coordinatesMap.put(Field.SUPPORT_AND_CARE_FREQUENCY,
+        	new ParsingCoordinate("supportAndCare", "supportAndCareCostsFrequency"));
+    
     coordinatesMap.put(Field.CHILDCARE_CHILD_NAME,
     		new ParsingCoordinate("childNeedsChildcare", "childName"));
     coordinatesMap.put(Field.CHILDCARE_PROVIDER1_NAME,
@@ -675,7 +696,16 @@ public class ApplicationDataParser {
     ALIEN_ID,
     ALIEN_IDS,
     ALIEN_ID_MAP,
-	DOCUMENT_DESTINATIONS;
+	DOCUMENT_DESTINATIONS, 
+	CCAP_HAS_COSTS_FOR_CHILD_CARE, 
+	CCAP_CHILD_CARE_COSTS_AMOUNT,
+	CCAP_CHILD_CARE_COSTS_FREQUENCY,
+	COSTS_FOR_DISABLED_ADULT,
+	COSTS_FOR_DISABLED_ADULTS_AMOUNT, 
+	COSTS_FOR_DISABLED_ADULTS_FREQUENCY, 
+	SUPPORT_AND_CARE, 
+	SUPPORT_AND_CARE_AMOUNT, 
+	SUPPORT_AND_CARE_FREQUENCY;
     
     @Getter
     private final String defaultValue;

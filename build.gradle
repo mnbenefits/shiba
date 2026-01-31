@@ -146,15 +146,15 @@ dependencies {
     implementation("ch.qos.logback:logback-parent:1.5.26")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.20.0")
-    implementation("com.azure:azure-storage-blob:12.33.0")
+    implementation("com.azure:azure-storage-blob:12.33.1")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2-1")
     implementation("commons-validator:commons-validator:1.10.1")
     implementation("org.flywaydb:flyway-core:11.20.3")
     runtimeOnly("org.flywaydb:flyway-database-postgresql:11.20.3")
     implementation("com.mixpanel:mixpanel-java:1.7.0")
-    implementation("net.javacrumbs.shedlock:shedlock-spring:7.5.0")
-    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.5.0")
+    implementation("net.javacrumbs.shedlock:shedlock-spring:7.6.0")
+    implementation("net.javacrumbs.shedlock:shedlock-provider-jdbc-template:7.6.0")
     implementation("net.coobird:thumbnailator:0.4.21")
     implementation("mobi.openddr.client:openddr-classifier-client:1.4.1")
     implementation("mobi.openddr:openddr-data:1.34")
@@ -162,8 +162,8 @@ dependencies {
 
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
-    testImplementation("de.redsix:pdfcompare:1.2.7")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc-test:4.0.1")
+    testImplementation("de.redsix:pdfcompare:1.2.8")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude group: "org.junit.vintage", module: "junit-vintage-engine"
         exclude group: "com.vaadin.external.google", module: "android-json"
@@ -215,6 +215,8 @@ def unitTest = tasks.register("unitTest", Test) {
 
 def documentUploadJourneyTest = tasks.register("documentUploadJourneyTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("documentUploadJourney")
@@ -223,6 +225,8 @@ def documentUploadJourneyTest = tasks.register("documentUploadJourneyTest", Test
 
 def fullFlowJourneyTest = tasks.register("fullFlowJourneyTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("fullFlowJourney")
@@ -231,6 +235,8 @@ def fullFlowJourneyTest = tasks.register("fullFlowJourneyTest", Test) {
 
 def laterDocsJourneyTest = tasks.register("laterDocsJourneyTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("laterDocsJourney")
@@ -239,6 +245,8 @@ def laterDocsJourneyTest = tasks.register("laterDocsJourneyTest", Test) {
 
 def healthcareRenewalJourneyTest = tasks.register("healthcareRenewalJourneyTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("healthcareRenewalJourney")
@@ -247,6 +255,8 @@ def healthcareRenewalJourneyTest = tasks.register("healthcareRenewalJourneyTest"
 
 def minimumFlowJourneyTest = tasks.register("minimumFlowJourneyTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("minimumFlowJourney")
@@ -255,6 +265,8 @@ def minimumFlowJourneyTest = tasks.register("minimumFlowJourneyTest", Test) {
 
 def frameworkTest = tasks.register("frameworkTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("framework")
@@ -263,6 +275,8 @@ def frameworkTest = tasks.register("frameworkTest", Test) {
 
 def pdfTest = tasks.register("pdfTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("pdf")
@@ -271,6 +285,8 @@ def pdfTest = tasks.register("pdfTest", Test) {
 
 def dbTest = tasks.register("dbTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("db")
@@ -279,6 +295,8 @@ def dbTest = tasks.register("dbTest", Test) {
 
 def ccapTest = tasks.register("ccapTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("ccap")
@@ -287,6 +305,8 @@ def ccapTest = tasks.register("ccapTest", Test) {
 
 def validationTest = tasks.register("validationTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("validation")
@@ -295,6 +315,8 @@ def validationTest = tasks.register("validationTest", Test) {
 
 def axeAccessibilityTest = tasks.register("accessibilityTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("a11y")
@@ -303,6 +325,8 @@ def axeAccessibilityTest = tasks.register("accessibilityTest", Test) {
 
 def virusUploadTest = tasks.register("virusUploadTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.includeTags("virusUploadJourney")
