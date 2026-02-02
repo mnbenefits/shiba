@@ -7375,7 +7375,10 @@ workflow:
         condition: *someoneChoseSNAP?
       - pageName: socialWorker
     datasources:
+      - pageName: choosePrograms
       - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
   ebtInPast:
     pageConfiguration: *ebtInPast
     nextPages:

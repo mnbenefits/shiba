@@ -1031,8 +1031,7 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("registerToVote", "registerToVote", "YES", "healthcareCoverage");
     postExpectingRedirect("healthcareCoverage", "healthcareCoverage",
         hasHealthcareCoverage ? "YES" : "NO", "directDeposit");
-    postExpectingRedirect("directDeposit", "hasDirectDeposit", "false", "ebtInPast");
-    postExpectingRedirect("ebtInPast", "hadEBTInPast", "false", "socialWorker");
+    postExpectingRedirect("directDeposit", "hasDirectDeposit", "false", "socialWorker");
     postExpectingRedirect("socialWorker", "hasSocialWorker", "false", "referrals");
     postExpectingRedirect("referrals", "needsReferrals", "false", "authorizedRep");
     completeHelperWorkflow(helpWithBenefits);
