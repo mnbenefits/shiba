@@ -933,7 +933,6 @@ pageConfigurations:
     headerHelpMessageKey: penalty-warning-header-help-message-key
     contextFragment: legalReview1ContextFragment
     preFormContentFragment: penaltyWarningsAccordions
-    additionalContentFragment: penaltyWarningsScript #Only inject this script on the Penalty Warnings page.”
     inputs:
       - name: disqualifiedPublicAssistance
         type: CUSTOM
@@ -941,6 +940,8 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
         promptMessage:
           promptMessageKey: penalty-warning.has-court-or-any-other
         options:
@@ -955,6 +956,8 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
         promptMessage:
           promptMessageKey: penalty-warning.has-anyone-in-the-household
         options:
@@ -969,6 +972,8 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
         promptMessage:
           promptMessageKey: penalty-warning.is-anyone-in-your-household-hiding
         options:
@@ -983,6 +988,8 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
         promptMessage:
           promptMessageKey: penalty-warning.has-anyone-in-your-household-convicted
         helpMessageKey: penalty-warning.has-anyone-in-your-household-convicted-if-yes
@@ -998,6 +1005,8 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
         promptMessage:
           promptMessageKey: penalty-warning.is-anyone-in-your-household-violating
         options:

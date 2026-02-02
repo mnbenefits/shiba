@@ -8,12 +8,16 @@
                    isYesSelected=${inputData.value.contains('true')},
 				   householdSubFlow=${input.options != null and input.options.subworkflows != null ? input.options.subworkflows.get('household') :null},
 				   hasHouseholdMembers=${householdSubFlow != null and !householdSubFlow.isEmpty()},
-				   hasHouseholdMemberError=${isYesSelected and hasHouseholdMembers and inputData.value.size() == 1}"> 		   
-	<div class="form-group" th:classappend="${hasError } ? 'form-group--error' : ''">
+				   isYesNoUnansweredError=${hasError and (inputData.value == null or inputData.value.isEmpty())},
+				   isHouseholdMemberNotSelectedError=${hasError and !isYesNoUnansweredError},
+				   applicantFullName=${input.options.datasources.get('personalInfo').get('firstName').value[0]
+				         + ' ' + input.options.datasources.get('personalInfo').get('lastName').value[0]} "> 		   
+
 		<!-- Question with Follow-up wrapper/Honeycrisp container that enables the show/hide behavior for follow-ups.-->
 		<div class="question-with-follow-up">
 			<!-- Main Yes/No Question -->
 			<div class="question-with-follow-up__question">
+			  <div class="form-group" th:classappend="${isYesNoUnansweredError} ? 'form-group--error' : ''">
 				<fieldset>
 					<div th:replace="~{fragments/form-question-prompt :: formQuestionPrompt(${input})}"></div>
 					<p class="text--help" th:if="${hasHelpMessage}" th:text="#{${input.helpMessageKey}}"></p>
@@ -39,7 +43,17 @@
 								th:checked="${inputData.value.contains('false')}">
 							<span th:text="#{general.inputs.no}"></span>
 						</label>
+			<!-- Hidden input for single applicants: auto-adds "applicant" when "Yes" selected -->
+						<input type="hidden" 
+						       th:if="${!hasHouseholdMembers  and isYesSelected}" 
+						       th:name="${formInputName}"
+							   th:value="${applicantFullName + ' applicant'}">
 					</div>
+			<!--NOT_BLANK error message (only shows when nothing selected) -->
+					<div th:if="${isYesNoUnansweredError}">
+					  <div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+					</div>
+				</div>
 				</fieldset>
 			</div>
 			
@@ -52,8 +66,7 @@
 				th:if="${hasHouseholdMembers}">
 				
 				<div class="spacing-above-25 word-wrap-break-word">
-					<fieldset class="checkbox-group" data-required="true"
-					th:classappend="${hasHouseholdMemberError} ? 'form-group--error' : ''">
+					<fieldset class="checkbox-group" th:classappend="${isHouseholdMemberNotSelectedError} ? 'form-group--error' : ''">
 						<legend class="form-question" th:text="#{penalty-warning.which-household-member-applies}"></legend>
 						<p class="text--help" th:text="#{penalty-warning.select-all-that-apply}"></p>
 						
@@ -87,15 +100,14 @@
 									<i class="icon-warning"></i>
 									<span th:text="#{penalty-warning.validation.select-household-member}"></span>
 								</p>
-						
 					</fieldset>
+				<!-- Household-member error -->
+					<div th:if="${isHouseholdMemberNotSelectedError}">
+					  <div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+					</div>
 				</div>
 			</div>
 		</div>
-		
-		<!-- Error message -->
-		<div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
-	</div>
 	
  </th:block>
 </html>
