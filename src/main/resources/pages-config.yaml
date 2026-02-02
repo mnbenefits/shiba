@@ -7372,6 +7372,8 @@ workflow:
     pageConfiguration: *directDeposit
     nextPages:
       - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
+      - pageName: socialWorker
     datasources:
       - pageName: addHouseholdMembers
   ebtInPast:

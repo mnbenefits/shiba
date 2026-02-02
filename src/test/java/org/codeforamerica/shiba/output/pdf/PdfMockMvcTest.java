@@ -318,6 +318,15 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("HELP_WITH_REFERRALS", "Yes", caf);
 	}
+	
+	@Test
+	void shouldMapEBTInPast() throws Exception {
+		selectPrograms("SNAP");
+		postExpectingSuccess("ebtInPast", "hadEBTInPast", "true");
+		
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("EBT_IN_PAST", "Yes", caf);
+	}
 
 	@Test
 	void shouldNotMapParentsLivingOutsideOfHomeIfNoneSelected() throws Exception {

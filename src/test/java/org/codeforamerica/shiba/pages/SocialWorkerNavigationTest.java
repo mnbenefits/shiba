@@ -36,4 +36,24 @@ public class SocialWorkerNavigationTest extends AbstractShibaMockMvcTest{
 		  selectPrograms("SNAP");
 		  postExpectingRedirect("socialWorker", "hasSocialWorker", "false", "referrals");
 	  }
+	  
+	  @Test
+	  void shouldNavigateToDirectDepositAndEBTInPast() throws Exception {
+		  selectPrograms("SNAP", "CASH");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "directDeposit");
+		  postExpectingRedirect("directDeposit", "hasDirectDeposit", "false", "ebtInPast");
+	  }
+	  
+	  @Test
+	  void shouldSkipEbtInPastToSocialWorker() throws Exception {
+		  selectPrograms("CASH");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "directDeposit");
+		  postExpectingRedirect("directDeposit", "hasDirectDeposit", "false", "socialWorker");
+	  }
+	  
+	  @Test 
+	  void shouldSkipDirectDepositToEBTInPast() throws Exception {
+		  selectPrograms("SNAP");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "ebtInPast");
+	  }
 }
