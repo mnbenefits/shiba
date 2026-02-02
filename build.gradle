@@ -199,6 +199,8 @@ compileJava {
 
 def unitTest = tasks.register("unitTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.excludeTags("db", "documentUploadJourney", "laterDocsJourney", "fullFlowJourney", "minimumFlowJourney", "framework", "pdf", "ccap", "validation", "a11y")
