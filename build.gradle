@@ -141,9 +141,9 @@ dependencies {
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
     //implementation("com.fasterxml.jackson.core:jackson-databind:2.20.1")
-    implementation("ch.qos.logback:logback-classic:1.5.26")
-    implementation("ch.qos.logback:logback-core:1.5.26")
-    implementation("ch.qos.logback:logback-parent:1.5.26")
+    implementation("ch.qos.logback:logback-classic:1.5.27")
+    implementation("ch.qos.logback:logback-core:1.5.27")
+    implementation("ch.qos.logback:logback-parent:1.5.27")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.20.0")
     implementation("com.azure:azure-storage-blob:12.33.1")
@@ -207,6 +207,8 @@ compileJava {
 
 def unitTest = tasks.register("unitTest", Test) {
     Test task ->
+        testClassesDirs = sourceSets.test.output.classesDirs
+        classpath = sourceSets.test.runtimeClasspath
         task.useJUnitPlatform {
             JUnitPlatformOptions options ->
                 options.excludeTags("db", "documentUploadJourney", "laterDocsJourney", "fullFlowJourney", "minimumFlowJourney", "framework", "pdf", "ccap", "validation", "a11y")
