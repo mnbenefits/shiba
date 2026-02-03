@@ -4808,6 +4808,25 @@ pageConfigurations:
             - value: "NOT_SURE"
               messageKey: general.inputs.not-sure
     pageTitle: healthcareCoverage.title
+  - &directDeposit
+    name: directDeposit
+    pageTitle: direct-deposit.title
+    headerKey: direct-deposit.header
+    headerHelpMessageKey: direct-deposit.header-help
+    contextFragment: directDepositContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: hasDirectDeposit
+        type: YES_NO
+  - &ebtInPast
+    name: ebtInPast
+    pageTitle: ebt-in-past.title
+    headerKey: ebt-in-past.header
+    contextFragment: ebtCardContextFragment
+    hasPrimaryButton: false
+    inputs: 
+      - name: hadEBTInPast
+        type: YES_NO
   - &socialWorker
     name: socialWorker
     pageTitle: social-worker.title
@@ -7338,6 +7357,10 @@ workflow:
   healthcareCoverage:
     pageConfiguration: *healthcareCoverage
     nextPages:
+      - pageName: directDeposit
+        condition: *someoneChoseCASH?
+      - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
       - pageName: socialWorker
         condition: *someoneChoseCAFProgram?
       - pageName: authorizedRep
@@ -7345,6 +7368,21 @@ workflow:
       - pageName: choosePrograms
       - pageName: householdMemberInfo
         groupName: household
+  directDeposit:
+    pageConfiguration: *directDeposit
+    nextPages:
+      - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
+      - pageName: socialWorker
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+  ebtInPast:
+    pageConfiguration: *ebtInPast
+    nextPages:
+      - pageName: socialWorker
   socialWorker:
     pageConfiguration: *socialWorker
     nextPages:

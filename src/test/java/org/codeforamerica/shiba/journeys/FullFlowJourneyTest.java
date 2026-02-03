@@ -393,7 +393,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue("Help from a social worker");
+		testPage.clickContinue("Previous EBT Card");
+		testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
 		// Do you want to assign someone to help with your benefits?
@@ -822,6 +823,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
 		assertCafFieldEquals("HAS_SOCIAL_WORKER", "No");
 		assertCafFieldEquals("HELP_WITH_REFERRALS", "Yes");
+		assertCafFieldEquals("EBT_IN_PAST", "Yes");
 	}
 
 	/**
@@ -977,7 +979,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue("Help from a social worker");
+		testPage.clickContinue("Getting benefits sent to your bank account");
+		testPage.chooseYesOrNo("hasDirectDeposit", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
 

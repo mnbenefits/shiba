@@ -385,6 +385,10 @@ mappings:
     registerToVoteSelection: REGISTER_TO_VOTE
   healthcareCoverage:
     healthcareCoverage: HAVE_HEALTHCARE_COVERAGE
+  directDeposit:
+    hasDirectDeposit: DIRECT_DEPOSIT
+  ebtInPast:
+    hadEBTInPast: EBT_IN_PAST
   socialWorker:
     hasSocialWorker: HAS_SOCIAL_WORKER
   referrals:
