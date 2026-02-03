@@ -1239,23 +1239,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("SELF_EMPLOYMENT_1", "Yes", ccap);
 			}
 			
-			@Test
-			void shouldMapAllPenaltyWarningQuestionsToCAF() throws Exception {
-			    fillInRequiredPages();
-			    fillOutPenaltyWarnings();
-			  
-
-			    var caf = submitAndDownloadCaf();
-			    
-			    // Verify all questions have responses in CAF
-			    assertPdfFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "No", caf);
-			    assertPdfFieldEquals("FRAUDULENT_STATEMENTS", "Yes", caf);
-			    assertPdfFieldEquals("HIDING_FROM_LAW", "No", caf);
-			    assertPdfFieldEquals("DRUG_FELONY", "Yes", caf);
-			    assertPdfFieldEquals("VIOLATING_PAROLE", "No", caf);
-			}
-
-
 			/**
 			 * This test verifies the following for a CCAP application:
 			 *   - when multiple options are selected on the otherUnearnedIncome page, the next page is otherUnearnedIncomeSources
@@ -1757,19 +1740,62 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 			
 	}
+	/* */
 	@Nested
 	@Tag("pdf")
-	class penaltyWarnings {
+	class penaltyWarnings {	
+		
+		/**
+		 * Verifies that all 5 penalty warning questions map correctly to CAF PDF fields.
+		 * Tests a single applicant with mixed Yes/No answers where:
+		 *   - "Yes" answers include "applicant" (simulates hidden input behavior)
+		 *   - "No" answers require no household member selection
+		 * Confirms each question's response appears in the correct PDF field.
+		 * @throws Exception
+		 */
+		@Test
+		void shouldMapAllPenaltyWarningQuestionsToCAF() throws Exception {
+			selectPrograms("SNAP");
+		    
+		    postExpectingSuccess("penaltyWarnings", Map.of(
+			        "disqualifiedPublicAssistance", List.of("false"),
+			        "fraudulentStatements", List.of("true","applicant"),
+			        "hidingFromLaw", List.of("false"),
+			        "drugFelonyConviction", List.of("true","applicant"),
+			        "violatingParole", List.of("false")
+			    ));
+		  
+		    var caf = downloadCafClientPDF();
+		    
+		    // Verify all questions have responses in CAF
+		    assertPdfFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "No", caf);
+		    assertPdfFieldEquals("FRAUDULENT_STATEMENTS", "Yes", caf);
+		    assertPdfFieldEquals("HIDING_FROM_LAW", "No", caf);
+		    assertPdfFieldEquals("DRUG_FELONY", "Yes", caf);
+		    assertPdfFieldEquals("VIOLATING_PAROLE", "No", caf);
+		}
+		
+		/**
+		 * This test verifies the following for a single applicant (no household members):
+		 *   - When "Yes" is selected on all 5 penalty warning questions
+		 *   - The hidden input automatically adds "applicant" to satisfy validation
+		 *   - Validation passes with data format: ["true", "applicant"] for each question
+		 *   - The CAF PDF is populated correctly:
+		 *       - Main checkbox shows "Yes" for each question
+		 *       - Question numbers (1-5) are written to PW_QUESTION_NO_0 through PW_QUESTION_NO_4
+		 *       - Applicant's name is written to PW_HH_MEMBER_NAME_0 through PW_HH_MEMBER_NAME_4
+		 * @throws Exception
+		 */
 		@Test
 		void shouldWriteQuestionNumberWhenYesAndNoHouseholdMembers() throws Exception {
 			selectPrograms("SNAP");
 			fillOutPersonalInfo();
-			addHouseholdMembersWithProgram("SNAP");
+			//addHouseholdMembersWithProgram("SNAP");
 
 			postExpectingSuccess("penaltyWarnings",
-					Map.of("disqualifiedPublicAssistance", List.of("true"), "fraudulentStatements", List.of("true"),
-							"hidingFromLaw", List.of("true"), "drugFelonyConviction", List.of("true"),
-							"violatingParole", List.of("true")));
+					Map.of("disqualifiedPublicAssistance", List.of("true","applicant"), "fraudulentStatements", List.of("true","applicant"),
+							"hidingFromLaw", List.of("true","applicant"), "drugFelonyConviction", List.of("true","applicant"),
+							"violatingParole", List.of("true","applicant")));
 
 			var caf = downloadCafClientPDF();
 
@@ -1792,6 +1818,18 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 		}
 
+		/**
+		 * This test verifies the following for a multi-person household:
+		 *   - When "Yes" is selected on penalty warning questions
+		 *   - User must select at least one household member from checkboxes
+		 *   - Validation passes with data format: ["true", "Full Name applicant", "Full Name householdId"]
+		 *   - The CAF PDF is populated correctly:
+		 *       - Main checkbox shows "Yes" for answered questions
+		 *       - Question numbers are written for each "Yes" answer
+		 *       - Selected household member names are written to the PDF
+		 *       - Multiple household members can be selected per question
+		 * @throws Exception
+		 */
 		@Test
 		void shouldWriteQuestionNumberWhenYesWithHouseholdMembers() throws Exception {
 			selectPrograms("SNAP");
@@ -1821,7 +1859,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("PW_QUESTION_NO_2", "", caf);
 			assertPdfFieldEquals("PW_HH_MEMBER_NAME_2", "", caf);
 		}
-
 	}
 	
 
