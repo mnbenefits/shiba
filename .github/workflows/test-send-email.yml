@@ -10,7 +10,7 @@ jobs:
       max-parallel: 1
     steps:
       - name: Send release mail
-        uses: dawidd6/action-send-mail@v7
+        uses: dawidd6/action-send-mail@v8
         with:
           server_address: edge.ead.state.mn.us
           server_port: 25
