@@ -3538,14 +3538,32 @@ pageConfigurations:
                   messageKey: general.other
           - name: retirementAmountStartDate
             type: DATE
-#            helpMessageKey: general.if-you-dont-have
+            validators:
+              - validation: DATE
+                errorMessageKey: general.validation.please-enter-the-date-in-this-format
+                condition:
+                  input: retirementAmountStartDate
+                  matcher: NOT_EMPTY
             promptMessage:
               promptMessageKey: general.start-date
           - name: retirementAmountEndDate
             type: DATE
-#            helpMessageKey: general.if-you-dont-have
+            validators:
+              - validation: DATE
+                errorMessageKey: general.validation.please-enter-the-date-in-this-format
+                condition:
+                  input: retirementAmountEndDate
+                  matcher: NOT_EMPTY
             promptMessage:
               promptMessageKey: general.end-date
+          - name: noEndDate
+            type: CHECKBOX
+ #           promptMessage:
+ #             promptMessageFragmentName: legal-terms-prompt
+            options:
+              selectableOptions:
+                - value: NO_END_DATE
+                  messageKey: general.no-end-date
   - &childOrSpousalSupportIncomeSource
     name: childOrSpousalSupportIncomeSource
     pageTitle: unearned-income-source.title
