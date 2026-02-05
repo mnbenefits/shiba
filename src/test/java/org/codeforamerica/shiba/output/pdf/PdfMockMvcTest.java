@@ -288,6 +288,28 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("HAS_SOCIAL_WORKER", "Yes", caf);
 	}
 	
+	//This Test checks that the direct deposit question gets mapped as YES to the caf. 
+		@Test
+		void shouldMapdirectDepositYes() throws Exception {
+			fillOutPersonalInfo();
+			selectPrograms("CASH");
+			postExpectingSuccess("directDeposit", "hasDirectDeposit", "true");
+			
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("DIRECT_DEPOSIT", "Yes", caf);
+	}
+
+	//This Test checks that the direct deposit question gets mapped as NO to the caf. 
+		@Test
+		void shouldMapdirectDepositNo() throws Exception {
+			fillOutPersonalInfo();
+			selectPrograms("CASH");
+			postExpectingSuccess("directDeposit", "hasDirectDeposit", "false");
+			
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("DIRECT_DEPOSIT", "No", caf);
+	}
+	
 	@Test
 	void shouldMapReferrals() throws Exception {
 		selectPrograms("SNAP");
@@ -295,6 +317,15 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("HELP_WITH_REFERRALS", "Yes", caf);
+	}
+	
+	@Test
+	void shouldMapEBTInPast() throws Exception {
+		selectPrograms("SNAP");
+		postExpectingSuccess("ebtInPast", "hadEBTInPast", "true");
+		
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("EBT_IN_PAST", "Yes", caf);
 	}
 
 	@Test
