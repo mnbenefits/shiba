@@ -150,12 +150,8 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     // Expenses & Deductions
     testPage.clickButtonLink("Continue", "Medical expenses");
     testPage.enter("medicalExpenses", "None of the above");
-    testPage.clickContinue("Support and Care Expenses");
-
-    // Does anyone in the household pay for court-ordered child support, spousal
-    // support, child care support or medical care?
-    testPage.chooseYesOrNo("supportAndCare", NO.getDisplayValue(), "Assets");
-   
+    testPage.clickContinue("Assets");
+  
     // Does anyone in your household have any of these?
     testPage.enter("assets", "None of the above");
     driver.findElement(By.xpath("//*[contains(text(),\"Assets include your family's cash, bank accounts, vehicles, investments, and real estate\")]")).isDisplayed();

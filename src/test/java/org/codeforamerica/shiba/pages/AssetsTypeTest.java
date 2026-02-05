@@ -141,9 +141,9 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	    	    && Arrays.asList(programs).contains("CCAP")) {
 			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	  } else {
-			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
 			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
-			postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
+			postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "supportAndCare");
+			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	  }
   }
 
@@ -164,16 +164,13 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	    postExpectingRedirect("otherUnearnedIncome","otherUnearnedIncome","NO_OTHER_UNEARNED_INCOME_SELECTED","advancedChildTaxCredit");
 	}
     fillAdditionalIncomeInfo(programs);
-    if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
-    	    && Arrays.asList(programs).contains("CCAP")) {
+    if (Arrays.stream(programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE")) && Arrays.asList(programs).contains("CCAP")) {
 		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	} else {
-		if (Arrays.asList(programs).contains("CASH")) {
-			postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE_OF_THE_ABOVE", "supportAndCare");
-		} 
-		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
+		postExpectingRedirect("specialCareExpenses", "specialCareExpenses", "NONE_OF_THE_ABOVE", "childCareCosts");
 		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
-		postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
+		postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "supportAndCare");
+		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
 	}
   }
 }
