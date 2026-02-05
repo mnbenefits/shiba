@@ -393,7 +393,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue("Help from a social worker");
+		testPage.clickContinue("Previous EBT Card");
+		testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
 		// Do you want to assign someone to help with your benefits?
@@ -425,11 +426,20 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// What races or ethnicities do you identify with?
 		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
+		testPage.clickContinue("Penalty Warnings");
+		testPage.enter("disqualifiedPublicAssistance", YES.getDisplayValue());
+		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember-me")).click(); // Applicant
+		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember0")).click(); // First household member
+		testPage.enter("fraudulentStatements", NO.getDisplayValue());
+		testPage.enter("hidingFromLaw", NO.getDisplayValue());
+		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
+		testPage.enter("violatingParole", YES.getDisplayValue());
+		driver.findElement(By.id("violatingParole-householdMember-me")).click(); // Applicant
+		driver.findElement(By.id("violatingParole-householdMember0")).click(); // First household member
 		testPage.clickContinue("Legal Stuff");
 
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
-		testPage.enter("drugFelony", NO.getDisplayValue());
 		testPage.clickContinue("Sign this application");
 
 		// Upload documents
@@ -717,7 +727,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("OTHER_INCOME_TYPE_7", "Public assistance (MFIP, DWP, GA, Tribal TANF)");
 		assertCafFieldEquals("OTHER_INCOME_FULL_NAME_7", "Ahmed St. George");
 		assertCafFieldEquals("OTHER_INCOME_AMOUNT_7", "100.00");
-
 		assertCafFieldEquals("HOMEOWNERS_INSURANCE", "No");
 		assertCafFieldEquals("REAL_ESTATE_TAXES", "No");
 		assertCafFieldEquals("ASSOCIATION_FEES", "No");
@@ -778,7 +787,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("SUPPORT_AND_CARE_FREQUENCY", "Twice a month");
 		
 		assertCafFieldEquals("MIGRANT_SEASONAL_FARM_WORKER", "No");
+		assertCafFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "Yes");
+		assertCafFieldEquals("FRAUDULENT_STATEMENTS", "No");
+		assertCafFieldEquals("HIDING_FROM_LAW", "No");
 		assertCafFieldEquals("DRUG_FELONY", "No");
+		assertCafFieldEquals("VIOLATING_PAROLE", "Yes");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
 		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");
@@ -822,6 +835,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
 		assertCafFieldEquals("HAS_SOCIAL_WORKER", "No");
 		assertCafFieldEquals("HELP_WITH_REFERRALS", "Yes");
+		assertCafFieldEquals("EBT_IN_PAST", "Yes");
 	}
 
 	/**
@@ -977,7 +991,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue("Help from a social worker");
+		testPage.clickContinue("Getting benefits sent to your bank account");
+		testPage.chooseYesOrNo("hasDirectDeposit", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
 
@@ -993,11 +1008,34 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// What races or ethnicities do you identify with?
 		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
+		testPage.clickContinue("Penalty Warnings");
+		// Verify accordion exists
+	    assertThat(testPage.findElementById("pw-a1")).isNotNull();
+	    
+	    // Verify accordion is initially closed
+	    assertThat(driver.findElement(By.className("accordion")).getAttribute("class"))
+	        .contains("accordion--is-closed");
+	    
+	    // Click to expand accordion
+	    //testPage.clickElementById("pw-a1");
+	    driver.findElement(By.className("accordion__button")).click();
+	    
+	    // Verify accordion is now open
+	    assertThat(driver.findElement(By.className("accordion")).getAttribute("class"))
+	        .doesNotContain("accordion--is-closed");
+	    // Verify content is accessible 
+	    assertThat(driver.findElement(By.className("accordion__content"))).isNotNull();
+	    
+		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+		testPage.enter("fraudulentStatements", NO.getDisplayValue());
+		testPage.enter("hidingFromLaw", NO.getDisplayValue());
+		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
+		testPage.enter("violatingParole", NO.getDisplayValue());
 		testPage.clickContinue("Legal Stuff");
 
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
-		testPage.enter("drugFelony", NO.getDisplayValue());
+		
 		testPage.clickContinue("Sign this application");
 
 		// Sign this application (applicant)

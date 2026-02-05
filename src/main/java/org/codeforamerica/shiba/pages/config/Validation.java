@@ -80,7 +80,28 @@ public enum Validation {
   EMAIL(strings -> String.join("", strings).trim().matches(
       "[a-zA-Z0-9!#$%&'*+=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?")),
   //Email con will check the that the final string of characters does contain con
-  EMAIL_DOES_NOT_END_WITH_CON(strings -> !String.join("", strings).endsWith(".con"));
+  EMAIL_DOES_NOT_END_WITH_CON(strings -> !String.join("", strings).endsWith(".con")),
+  SELECT_ATLEAST_ONE_IF_YES(strings -> {
+		  /**If the primary Yes/No question is unanswered,
+		     skip conditional validation entirely.
+		     Running follow-up validation with no answer
+		     causes session invalidation when household context exists.*/
+		    if (strings == null || strings.isEmpty()) {
+		        return true;
+		    }
+
+		    // Single applicant case 
+		    if (strings.contains("true") && strings.contains("applicant")) {
+		        return true;
+		    }
+
+		    // Multi-household case
+		    if (strings.contains("true")) {
+		        return strings.size() > 1;
+		    }
+		    // No selected or "No"
+		    return true;
+		});
 
   private final Predicate<List<String>> rule;
 

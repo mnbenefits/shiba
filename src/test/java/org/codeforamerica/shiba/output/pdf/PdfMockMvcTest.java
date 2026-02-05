@@ -288,6 +288,28 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("HAS_SOCIAL_WORKER", "Yes", caf);
 	}
 	
+	//This Test checks that the direct deposit question gets mapped as YES to the caf. 
+		@Test
+		void shouldMapdirectDepositYes() throws Exception {
+			fillOutPersonalInfo();
+			selectPrograms("CASH");
+			postExpectingSuccess("directDeposit", "hasDirectDeposit", "true");
+			
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("DIRECT_DEPOSIT", "Yes", caf);
+	}
+
+	//This Test checks that the direct deposit question gets mapped as NO to the caf. 
+		@Test
+		void shouldMapdirectDepositNo() throws Exception {
+			fillOutPersonalInfo();
+			selectPrograms("CASH");
+			postExpectingSuccess("directDeposit", "hasDirectDeposit", "false");
+			
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("DIRECT_DEPOSIT", "No", caf);
+	}
+	
 	@Test
 	void shouldMapReferrals() throws Exception {
 		selectPrograms("SNAP");
@@ -295,6 +317,15 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		
 		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("HELP_WITH_REFERRALS", "Yes", caf);
+	}
+	
+	@Test
+	void shouldMapEBTInPast() throws Exception {
+		selectPrograms("SNAP");
+		postExpectingSuccess("ebtInPast", "hadEBTInPast", "true");
+		
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("EBT_IN_PAST", "Yes", caf);
 	}
 
 	@Test
@@ -589,10 +620,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("GROSS_MONTHLY_INCOME_0", "1000.00", caf);
 		assertPdfFieldEquals("GROSS_MONTHLY_INCOME_1", "2000.00", caf);
 		assertPdfFieldEquals("MONEY_MADE_LAST_MONTH", "3000.00", caf);
-		assertPdfFieldEquals("dummyFieldName20", "1000.00", caf);
-		assertPdfFieldEquals("dummyFieldName21", "Daily", caf);
-		assertPdfFieldEquals("dummyFieldName24", "2000.00", caf);
-		assertPdfFieldEquals("dummyFieldName25", "Daily", caf);
 		
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_0", "", ccap);
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_1", "", caf);
@@ -630,7 +657,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("PAY_FREQUENCY_0", "Daily", caf);
 		assertPdfFieldEquals("GROSS_MONTHLY_INCOME_0", "1000.00", caf);
 		assertPdfFieldEquals("MONEY_MADE_LAST_MONTH", "1000.00", caf);
-		assertPdfFieldEquals("dummyFieldName20", "1000.00", caf);
 		
 		assertPdfFieldEquals("PRINCIPLE_WAGE_EARNER", "Dwight Schrute", caf);
 	}
@@ -1261,7 +1287,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 				assertPdfFieldEquals("SELF_EMPLOYMENT_0", "No", ccap);
 				assertPdfFieldEquals("SELF_EMPLOYMENT_1", "Yes", ccap);
 			}
-
+			
 			/**
 			 * This test verifies the following for a CCAP application:
 			 *   - when multiple options are selected on the otherUnearnedIncome page, the next page is otherUnearnedIncomeSources
@@ -1767,7 +1793,127 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			
 		}
 		
+			
+	}
+	/* */
+	@Nested
+	@Tag("pdf")
+	class penaltyWarnings {	
 		
+		/**
+		 * Verifies that all 5 penalty warning questions map correctly to CAF PDF fields.
+		 * Tests a single applicant with mixed Yes/No answers where:
+		 *   - "Yes" answers include "applicant" (simulates hidden input behavior)
+		 *   - "No" answers require no household member selection
+		 * Confirms each question's response appears in the correct PDF field.
+		 * @throws Exception
+		 */
+		@Test
+		void shouldMapAllPenaltyWarningQuestionsToCAF() throws Exception {
+			selectPrograms("SNAP");
+		    
+		    postExpectingSuccess("penaltyWarnings", Map.of(
+			        "disqualifiedPublicAssistance", List.of("false"),
+			        "fraudulentStatements", List.of("true","applicant"),
+			        "hidingFromLaw", List.of("false"),
+			        "drugFelonyConviction", List.of("true","applicant"),
+			        "violatingParole", List.of("false")
+			    ));
+		  
+		    var caf = downloadCafClientPDF();
+		    
+		    // Verify all questions have responses in CAF
+		    assertPdfFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "No", caf);
+		    assertPdfFieldEquals("FRAUDULENT_STATEMENTS", "Yes", caf);
+		    assertPdfFieldEquals("HIDING_FROM_LAW", "No", caf);
+		    assertPdfFieldEquals("DRUG_FELONY", "Yes", caf);
+		    assertPdfFieldEquals("VIOLATING_PAROLE", "No", caf);
+		}
+		
+		/**
+		 * This test verifies the following for a single applicant (no household members):
+		 *   - When "Yes" is selected on all 5 penalty warning questions
+		 *   - The hidden input automatically adds "applicant" to satisfy validation
+		 *   - Validation passes with data format: ["true", "applicant"] for each question
+		 *   - The CAF PDF is populated correctly:
+		 *       - Main checkbox shows "Yes" for each question
+		 *       - Question numbers (1-5) are written to PW_QUESTION_NO_0 through PW_QUESTION_NO_4
+		 *       - Applicant's name is written to PW_HH_MEMBER_NAME_0 through PW_HH_MEMBER_NAME_4
+		 * @throws Exception
+		 */
+		@Test
+		void shouldWriteQuestionNumberWhenYesAndNoHouseholdMembers() throws Exception {
+			selectPrograms("SNAP");
+			fillOutPersonalInfo();
+			//addHouseholdMembersWithProgram("SNAP");
+
+			postExpectingSuccess("penaltyWarnings",
+					Map.of("disqualifiedPublicAssistance", List.of("true","applicant"), "fraudulentStatements", List.of("true","applicant"),
+							"hidingFromLaw", List.of("true","applicant"), "drugFelonyConviction", List.of("true","applicant"),
+							"violatingParole", List.of("true","applicant")));
+
+			var caf = downloadCafClientPDF();
+
+			assertPdfFieldEquals("DISQUALIFIED_PUBLIC_ASSISTANCE", "Yes", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_0", "1", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_0", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_1", "2", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_1", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_2", "3", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_2", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_3", "4", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_3", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_4", "5", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_4", "Dwight Schrute", caf);
+
+		}
+
+		/**
+		 * This test verifies the following for a multi-person household:
+		 *   - When "Yes" is selected on penalty warning questions
+		 *   - User must select at least one household member from checkboxes
+		 *   - Validation passes with data format: ["true", "Full Name applicant", "Full Name householdId"]
+		 *   - The CAF PDF is populated correctly:
+		 *       - Main checkbox shows "Yes" for answered questions
+		 *       - Question numbers are written for each "Yes" answer
+		 *       - Selected household member names are written to the PDF
+		 *       - Multiple household members can be selected per question
+		 * @throws Exception
+		 */
+		@Test
+		void shouldWriteQuestionNumberWhenYesWithHouseholdMembers() throws Exception {
+			selectPrograms("SNAP");
+			fillOutPersonalInfo();
+			addHouseholdMembersWithProgram("SNAP");
+
+			String hhMember = getPamFullNameAndId();
+			String applicant = getApplicantFullNameAndId();
+
+			postExpectingSuccess("penaltyWarnings",
+					Map.of("disqualifiedPublicAssistance", List.of("false"), 
+							"fraudulentStatements",	List.of("true", applicant, hhMember), 
+							"hidingFromLaw", List.of("false"),
+							"drugFelonyConviction", List.of("false"), 
+							"violatingParole", List.of("false")));
+
+			var caf = downloadCafClientPDF();
+
+			assertPdfFieldEquals("FRAUDULENT_STATEMENTS", "Yes", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_0", "2", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_0", "Dwight Schrute", caf);
+
+			assertPdfFieldEquals("PW_QUESTION_NO_1", "2", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_1", "Pam Beesly", caf);
+			
+			assertPdfFieldEquals("PW_QUESTION_NO_2", "", caf);
+			assertPdfFieldEquals("PW_HH_MEMBER_NAME_2", "", caf);
+		}
 	}
 	
 

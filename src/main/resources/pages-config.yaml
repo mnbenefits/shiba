@@ -836,7 +836,7 @@ pageConfigurations:
         helpMessageKey: personal-info.legally-as-it-appears-on-your-id
         validators:
           - validation: NOT_BLANK
-            errorMessageKey: general.validation.make-sure-to-provide-a-last-name		
+            errorMessageKey: general.validation.make-sure-to-provide-a-last-name
       - name: otherName
         type: TEXT
         promptMessage:
@@ -925,8 +925,96 @@ pageConfigurations:
           - name: moveToMnPreviousCity
             type: TEXT
             promptMessage:
-              promptMessageKey: personal-info.what-state-did-you-move-from
-      
+              promptMessageKey: personal-info.what-state-did-you-move-from		  
+  - &penaltyWarnings
+    name: penaltyWarnings
+    pageTitle: penalty-warning.title
+    headerKey: penalty-warning-header-key
+    headerHelpMessageKey: penalty-warning-header-help-message-key
+    contextFragment: legalReview1ContextFragment
+    preFormContentFragment: penaltyWarningsAccordions
+    inputs:
+      - name: disqualifiedPublicAssistance
+        type: CUSTOM
+        customInputFragment: yesNoRadioWithHouseholdFollowup
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
+        promptMessage:
+          promptMessageKey: penalty-warning.has-court-or-any-other
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true" 
+      - name: fraudulentStatements
+        type: CUSTOM
+        customInputFragment: yesNoRadioWithHouseholdFollowup
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
+        promptMessage:
+          promptMessageKey: penalty-warning.has-anyone-in-the-household
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
+      - name: hidingFromLaw
+        type: CUSTOM
+        customInputFragment: yesNoRadioWithHouseholdFollowup
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
+        promptMessage:
+          promptMessageKey: penalty-warning.is-anyone-in-your-household-hiding
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
+      - name: drugFelonyConviction
+        type: CUSTOM
+        customInputFragment: yesNoRadioWithHouseholdFollowup
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
+        promptMessage:
+          promptMessageKey: penalty-warning.has-anyone-in-your-household-convicted
+        helpMessageKey: penalty-warning.has-anyone-in-your-household-convicted-if-yes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
+      - name: violatingParole
+        type: CUSTOM
+        customInputFragment: yesNoRadioWithHouseholdFollowup
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+          - validation: SELECT_ATLEAST_ONE_IF_YES
+            errorMessageKey: penalty-warning.validation.select-household-member
+        promptMessage:
+          promptMessageKey: penalty-warning.is-anyone-in-your-household-violating
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household
+              pageName: householdMemberInfo
+              optional: "true"
   - &contactInfo
     name: contactInfo
     pageTitle: contact-info.title
@@ -1189,10 +1277,10 @@ pageConfigurations:
         type: TEXT
         promptMessage:
           promptMessageKey: household-member-info.whats-their-last-name
+        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id
         validators:
           - validation: NOT_BLANK
             errorMessageKey: general.validation.make-sure-to-provide-a-last-name
-        helpMessageKey: household-member-info.legally-as-it-appears-on-their-id			
       - name: otherName
         type: TEXT
         promptMessage:
@@ -2372,16 +2460,18 @@ pageConfigurations:
         helpMessageKeyBelow: legal-stuff.copies-of-the-full-agreements
       - name: drugFelony
         type: RADIO
-        promptMessage:
-          promptMessageKey: legal-stuff.has-anyone-been-convicted-of-drug-felony
-        helpMessageKey: legal-stuff.if-yes-you-can-still-get-benefits
         options:
           selectableOptions:
             - value: "true"
               messageKey: general.inputs.yes
             - value: "false"
               messageKey: general.inputs.no
-        condition: *applicantDidNotChooseCCAPOnly?
+# This condition is intended to prevent the input from ever being displayed on the page.
+# It allows us to keep the input defined on the page for data-pipelines backward compatibility.
+        condition:
+          pageName: legalStuff
+          input: showInput
+          value: never
   - &secondSignatureLegalStuff
     name: secondSignatureLegalStuff
     pageTitle: legal-stuff-second-signature.title
@@ -4808,6 +4898,25 @@ pageConfigurations:
             - value: "NOT_SURE"
               messageKey: general.inputs.not-sure
     pageTitle: healthcareCoverage.title
+  - &directDeposit
+    name: directDeposit
+    pageTitle: direct-deposit.title
+    headerKey: direct-deposit.header
+    headerHelpMessageKey: direct-deposit.header-help
+    contextFragment: directDepositContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: hasDirectDeposit
+        type: YES_NO
+  - &ebtInPast
+    name: ebtInPast
+    pageTitle: ebt-in-past.title
+    headerKey: ebt-in-past.header
+    contextFragment: ebtCardContextFragment
+    hasPrimaryButton: false
+    inputs: 
+      - name: hadEBTInPast
+        type: YES_NO
   - &socialWorker
     name: socialWorker
     pageTitle: social-worker.title
@@ -6714,8 +6823,8 @@ workflow:
       conditions:
         - *noUnearnedIncomeSelected?
     datasources:
-        - pageName: unearnedIncome
-        - pageName: addHouseholdMembers
+      - pageName: unearnedIncome
+      - pageName: addHouseholdMembers
   otherUnearnedIncomeSources:
     pageConfiguration: *otherUnearnedIncomeSources
     nextPages:
@@ -7338,6 +7447,10 @@ workflow:
   healthcareCoverage:
     pageConfiguration: *healthcareCoverage
     nextPages:
+      - pageName: directDeposit
+        condition: *someoneChoseCASH?
+      - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
       - pageName: socialWorker
         condition: *someoneChoseCAFProgram?
       - pageName: authorizedRep
@@ -7345,6 +7458,21 @@ workflow:
       - pageName: choosePrograms
       - pageName: householdMemberInfo
         groupName: household
+  directDeposit:
+    pageConfiguration: *directDeposit
+    nextPages:
+      - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
+      - pageName: socialWorker
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+  ebtInPast:
+    pageConfiguration: *ebtInPast
+    nextPages:
+      - pageName: socialWorker
   socialWorker:
     pageConfiguration: *socialWorker
     nextPages:
@@ -7508,7 +7636,7 @@ workflow:
   snapExpeditedDetermination:
     pageConfiguration: *snapExpeditedDetermination
     nextPages:
-      - pageName: legalStuff
+      - pageName: penaltyWarnings
   additionalInfo:
     pageConfiguration: *additionalInfo
     nextPages:
@@ -7517,11 +7645,25 @@ workflow:
     pageConfiguration: *canWeAsk
     nextPages:
       - pageName: raceAndEthnicity
-      - pageName: legalStuff
+      - pageName: penaltyWarnings
   raceAndEthnicity:
     pageConfiguration: *raceAndEthnicity
     nextPages:
+      - pageName: penaltyWarnings
+  penaltyWarnings:
+    pageConfiguration: *penaltyWarnings
+    nextPages:
       - pageName: legalStuff
+    skipCondition:
+      logicalOperator: AND
+      conditions:
+        - *someoneChoseCCAP?
+        - *noOneChoseCAF?
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
   legalStuff:
     pageConfiguration: *legalStuff
     nextPages:

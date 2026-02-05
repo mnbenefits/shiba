@@ -25,7 +25,13 @@
         <th:block th:if="${pageNameContext != null}">
           <div th:replace="~{${pageNameContext} :: ${pageNameContext}}"></div>
         </th:block>
-
+		
+		<th:block th:if="${page.hasPreFormContentFragment()}">
+		          <div class="grid__item spacing-below-35">
+		            <div th:replace="~{|fragments/${page.preFormContentFragment}| :: ${page.preFormContentFragment}}"></div>
+		          </div>
+		  </th:block>
+				
         <div class="grid__item spacing-below-60">
           <!--Form page-->
           <form id="page-form" th:if="${page.inputs != null && !page.inputs.isEmpty()}"

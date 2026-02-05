@@ -208,7 +208,8 @@ public class PagesData extends HashMap<String, PageData> {
         pageConfiguration.getExcludeGoBack(),
         pageConfiguration.getContextFragment(),
         pageConfiguration.getAlertBox(),
-        pageConfiguration.getAdditionalContentFragment()       
+        pageConfiguration.getAdditionalContentFragment(),       
+        pageConfiguration.getPreFormContentFragment()       
     );
   }
   

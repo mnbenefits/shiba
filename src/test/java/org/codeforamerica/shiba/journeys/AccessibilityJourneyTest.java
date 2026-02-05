@@ -498,7 +498,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     testPage.clickCustomButton("Yes, send me more info", 10, "Healthcare Coverage");
     testPage.enter("healthcareCoverage", YES.getDisplayValue());
-    testPage.clickContinue("Help from a social worker");
+    testPage.clickContinue("Previous EBT Card");
+    testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
     testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 	testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
     testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
@@ -516,9 +517,16 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Can we ask");
     testPage.clickLink("Yes, continue", "Race and Ethnicity");
     testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
-    testPage.clickContinue("Legal Stuff");
+    testPage.clickContinue("Penalty Warnings");
+	testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+	testPage.enter("fraudulentStatements", NO.getDisplayValue());
+	testPage.enter("hidingFromLaw", NO.getDisplayValue());
+	testPage.enter("drugFelonyConviction", NO.getDisplayValue());
+	testPage.enter("violatingParole", YES.getDisplayValue());
+	driver.findElement(By.id("violatingParole-householdMember-me")).click(); // Applicant
+	driver.findElement(By.id("violatingParole-householdMember0")).click(); // First household member
+	testPage.clickContinue("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
-    testPage.enter("drugFelony", NO.getDisplayValue());
     testPage.clickContinue("Sign this application");
     testPage.enter("applicantSignature", "some name");
     testPage.clickButton("Continue", "Submit application");
