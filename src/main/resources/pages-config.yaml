@@ -3211,6 +3211,65 @@ pageConfigurations:
           pageName: unearnedIncome
           input: unearnedIncome
           value: SOCIAL_SECURITY
+      - name: socialSecurityFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SOCIAL_SECURITY
+      - name: socialSecurityStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: socialSecurityStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SOCIAL_SECURITY
+      - name: socialSecurityEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: socialSecurityEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SOCIAL_SECURITY
+      - name: socialSecurityNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SOCIAL_SECURITY
       - name: supplementalSecurityIncomeAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3223,6 +3282,65 @@ pageConfigurations:
             condition:
               input: supplementalSecurityIncomeAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SSI
+      - name: supplementalSecurityIncomeFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SSI
+      - name: supplementalSecurityIncomeStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: supplementalSecurityIncomeStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SSI
+      - name: supplementalSecurityIncomeEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: supplementalSecurityIncomeEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: SSI
+      - name: supplementalSecurityIncomeNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: unearnedIncome
           input: unearnedIncome
@@ -3243,6 +3361,65 @@ pageConfigurations:
           pageName: unearnedIncome
           input: unearnedIncome
           value: VETERANS_BENEFITS
+      - name: veteransBenefitsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: VETERANS_BENEFITS
+      - name: veteransBenefitsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: veteransBenefitsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: VETERANS_BENEFITS
+      - name: veteransBenefitsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: veteransBenefitsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: VETERANS_BENEFITS
+      - name: veteransBenefitsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: VETERANS_BENEFITS
       - name: unemploymentAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3255,6 +3432,65 @@ pageConfigurations:
             condition:
               input: unemploymentAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: UNEMPLOYMENT
+      - name: unemploymentFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: UNEMPLOYMENT
+      - name: unemploymentStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: unemploymentStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: UNEMPLOYMENT
+      - name: unemploymentEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: unemploymentEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: UNEMPLOYMENT
+      - name: unemploymentNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: unearnedIncome
           input: unearnedIncome
@@ -3275,6 +3511,65 @@ pageConfigurations:
           pageName: unearnedIncome
           input: unearnedIncome
           value: WORKERS_COMPENSATION
+      - name: workersCompensationFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: WORKERS_COMPENSATION
+      - name: workersCompensationStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: workersCompensationStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: WORKERS_COMPENSATION
+      - name: workersCompensationEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: workersCompensationEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: WORKERS_COMPENSATION
+      - name: workersCompensationNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: WORKERS_COMPENSATION
       - name: retirementAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3287,6 +3582,65 @@ pageConfigurations:
             condition:
               input: retirementAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: RETIREMENT
+      - name: retirementFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: RETIREMENT
+      - name: retirementStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: retirementStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: RETIREMENT
+      - name: retirementEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: retirementEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: RETIREMENT
+      - name: retirementNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: unearnedIncome
           input: unearnedIncome
@@ -3307,6 +3661,65 @@ pageConfigurations:
           pageName: unearnedIncome
           input: unearnedIncome
           value: CHILD_OR_SPOUSAL_SUPPORT
+      - name: childOrSpousalSupportFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: CHILD_OR_SPOUSAL_SUPPORT
+      - name: childOrSpousalSupportStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: childOrSpousalSupportStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: CHILD_OR_SPOUSAL_SUPPORT
+      - name: childOrSpousalSupportEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: childOrSpousalSupportEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: CHILD_OR_SPOUSAL_SUPPORT
+      - name: childOrSpousalSupportNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: CHILD_OR_SPOUSAL_SUPPORT
       - name: tribalPaymentsAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3319,6 +3732,65 @@ pageConfigurations:
             condition:
               input: tribalPaymentsAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: TRIBAL_PAYMENTS
+      - name: tribalPaymentsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: TRIBAL_PAYMENTS
+      - name: tribalPaymentsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: tribalPaymentsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: TRIBAL_PAYMENTS
+      - name: tribalPaymentsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: tribalPaymentsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: unearnedIncome
+          input: unearnedIncome
+          value: TRIBAL_PAYMENTS
+      - name: tribalPaymentsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: unearnedIncome
           input: unearnedIncome
@@ -3419,6 +3891,40 @@ pageConfigurations:
             promptMessage:
               promptMessageKey: unearned-income-source.how-much-income-monthly
             helpMessageKey: general.if-you-dont-have
+          - name: veteransBenefitsFrequency
+            type: SELECT
+            validators:
+              - validation: NOT_BLANK
+                errorMessageKey: general.validation.make-sure-you-answer-this-question
+            options:
+              selectableOptions:
+                - value: MONTHLY
+                  messageKey: unearned-income.frequency.monthly
+                - value: TWICE_A_MONTH
+                  messageKey: unearned-income.frequency.twice-a-month
+                - value: WEEKLY
+                  messageKey: unearned-income.frequency.weekly
+                - value: OTHER
+                  messageKey: unearned-income.frequency.other
+            promptMessage:
+              promptMessageKey: unearned-income-source.frequency-of-income
+          - name: veteransBenefitsStartDate
+            type: DATE
+            promptMessage:
+              promptMessageKey: unearned-income-source.start-date
+          - name: veteransBenefitsEndDate
+            type: DATE
+            promptMessage:
+              promptMessageKey: unearned-income-source.end-date
+            helpMessageKey: unearned-income-source.no-end-date-help
+          - name: veteransBenefitsNoEndDate
+            type: CHECKBOX
+            promptMessage:
+              promptMessageKey: unearned-income-source.no-end-date
+            options:
+              selectableOptions:
+                - value: "true"
+                  messageKey: unearned-income-source.no-end-date
   - &unemploymentIncomeSource
     name: unemploymentIncomeSource
     pageTitle: unearned-income-source.title
@@ -3701,6 +4207,65 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: INSURANCE_PAYMENTS
+      - name: insurancePaymentsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INSURANCE_PAYMENTS
+      - name: insurancePaymentsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: insurancePaymentsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INSURANCE_PAYMENTS
+      - name: insurancePaymentsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: insurancePaymentsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INSURANCE_PAYMENTS
+      - name: insurancePaymentsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INSURANCE_PAYMENTS
       - name: trustMoneyAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3713,6 +4278,65 @@ pageConfigurations:
             condition:
               input: trustMoneyAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: TRUST_MONEY
+      - name: trustMoneyFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: TRUST_MONEY
+      - name: trustMoneyStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: trustMoneyStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: TRUST_MONEY
+      - name: trustMoneyEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: trustMoneyEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: TRUST_MONEY
+      - name: trustMoneyNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
@@ -3733,6 +4357,65 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: RENTAL_INCOME
+      - name: rentalIncomeFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: RENTAL_INCOME
+      - name: rentalIncomeStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: rentalIncomeStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: RENTAL_INCOME
+      - name: rentalIncomeEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: rentalIncomeEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: RENTAL_INCOME
+      - name: rentalIncomeNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: RENTAL_INCOME
       - name: interestDividendsAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3745,6 +4428,65 @@ pageConfigurations:
             condition:
               input: interestDividendsAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INTEREST_DIVIDENDS
+      - name: interestDividendsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INTEREST_DIVIDENDS
+      - name: interestDividendsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: interestDividendsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INTEREST_DIVIDENDS
+      - name: interestDividendsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: interestDividendsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: INTEREST_DIVIDENDS
+      - name: interestDividendsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
@@ -3765,6 +4507,65 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: HEALTH_CARE_REIMBURSEMENT
+      - name: healthCareReimbursementFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: HEALTH_CARE_REIMBURSEMENT
+      - name: healthCareReimbursementStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: healthCareReimbursementStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: HEALTH_CARE_REIMBURSEMENT
+      - name: healthCareReimbursementEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: healthCareReimbursementEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: HEALTH_CARE_REIMBURSEMENT
+      - name: healthCareReimbursementNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: HEALTH_CARE_REIMBURSEMENT
       - name: contractForDeedAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3777,6 +4578,65 @@ pageConfigurations:
             condition:
               input: contractForDeedAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: CONTRACT_FOR_DEED
+      - name: contractForDeedFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: CONTRACT_FOR_DEED
+      - name: contractForDeedStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: contractForDeedStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: CONTRACT_FOR_DEED
+      - name: contractForDeedEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: contractForDeedEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: CONTRACT_FOR_DEED
+      - name: contractForDeedNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
@@ -3797,6 +4657,65 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: BENEFITS
+      - name: benefitsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: BENEFITS
+      - name: benefitsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: benefitsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: BENEFITS
+      - name: benefitsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: benefitsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: BENEFITS
+      - name: benefitsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: BENEFITS
       - name: annuityPaymentsAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3813,6 +4732,65 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: ANNUITY_PAYMENTS 
+      - name: annuityPaymentsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: ANNUITY_PAYMENTS
+      - name: annuityPaymentsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: annuityPaymentsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: ANNUITY_PAYMENTS
+      - name: annuityPaymentsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: annuityPaymentsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: ANNUITY_PAYMENTS
+      - name: annuityPaymentsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: ANNUITY_PAYMENTS
       - name: giftsAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3829,6 +4807,65 @@ pageConfigurations:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
           value: GIFTS  
+      - name: giftsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: GIFTS
+      - name: giftsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: giftsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: GIFTS
+      - name: giftsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: giftsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: GIFTS
+      - name: giftsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: GIFTS
       - name: lotteryGamblingAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3841,6 +4878,65 @@ pageConfigurations:
             condition:
               input: lotteryGamblingAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: LOTTERY_GAMBLING
+      - name: lotteryGamblingFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: LOTTERY_GAMBLING
+      - name: lotteryGamblingStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: lotteryGamblingStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: LOTTERY_GAMBLING
+      - name: lotteryGamblingEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: lotteryGamblingEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: LOTTERY_GAMBLING
+      - name: lotteryGamblingNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
@@ -3860,7 +4956,66 @@ pageConfigurations:
         condition:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
-          value: DAY_TRADING		  	  			  	  	  
+          value: DAY_TRADING
+      - name: dayTradingProceedsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: DAY_TRADING
+      - name: dayTradingProceedsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: dayTradingProceedsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: DAY_TRADING
+      - name: dayTradingProceedsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: dayTradingProceedsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: DAY_TRADING
+      - name: dayTradingProceedsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: DAY_TRADING
       - name: otherPaymentsAmount
         type: MONEY
         inputPostfix: general.input.postfix.per-month
@@ -3873,6 +5028,65 @@ pageConfigurations:
             condition:
               input: otherPaymentsAmount
               matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: OTHER_PAYMENTS
+      - name: otherPaymentsFrequency
+        type: SELECT
+        options:
+          selectableOptions:
+            - value: MONTHLY
+              messageKey: unearned-income.frequency.monthly
+            - value: TWICE_A_MONTH
+              messageKey: unearned-income.frequency.twice-a-month
+            - value: WEEKLY
+              messageKey: unearned-income.frequency.weekly
+            - value: OTHER
+              messageKey: unearned-income.frequency.other
+        promptMessage:
+          promptMessageKey: unearned-income-source.frequency-of-income
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: OTHER_PAYMENTS
+      - name: otherPaymentsStartDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.start-date
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: otherPaymentsStartDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: OTHER_PAYMENTS
+      - name: otherPaymentsEndDate
+        type: DATE
+        promptMessage:
+          promptMessageKey: unearned-income-source.end-date
+        helpMessageKey: unearned-income-source.no-end-date-help
+        validators:
+          - validation: DATE
+            errorMessageKey: general.validation.please-enter-the-date-in-this-format
+            condition:
+              input: otherPaymentsEndDate
+              matcher: NOT_EMPTY
+        condition:
+          pageName: otherUnearnedIncome
+          input: otherUnearnedIncome
+          value: OTHER_PAYMENTS
+      - name: otherPaymentsNoEndDate
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: unearned-income-source.no-end-date
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: unearned-income-source.no-end-date
         condition:
           pageName: otherUnearnedIncome
           input: otherUnearnedIncome
