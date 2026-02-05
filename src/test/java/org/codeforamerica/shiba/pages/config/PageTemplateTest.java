@@ -73,7 +73,8 @@ class PageTemplateTest {
         false,
         "context-frag",
         alertBox,
-        "additionalContentFragment"
+        "additionalContentFragment",
+        "preFormContentFragment"
     );
   }
 }
