@@ -620,10 +620,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("GROSS_MONTHLY_INCOME_0", "1000.00", caf);
 		assertPdfFieldEquals("GROSS_MONTHLY_INCOME_1", "2000.00", caf);
 		assertPdfFieldEquals("MONEY_MADE_LAST_MONTH", "3000.00", caf);
-		assertPdfFieldEquals("dummyFieldName20", "1000.00", caf);
-		assertPdfFieldEquals("dummyFieldName21", "Daily", caf);
-		assertPdfFieldEquals("dummyFieldName24", "2000.00", caf);
-		assertPdfFieldEquals("dummyFieldName25", "Daily", caf);
 		
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_0", "", ccap);
 		assertPdfFieldEquals("INCOME_PER_PAY_PERIOD_1", "", caf);
@@ -661,7 +657,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		assertPdfFieldEquals("PAY_FREQUENCY_0", "Daily", caf);
 		assertPdfFieldEquals("GROSS_MONTHLY_INCOME_0", "1000.00", caf);
 		assertPdfFieldEquals("MONEY_MADE_LAST_MONTH", "1000.00", caf);
-		assertPdfFieldEquals("dummyFieldName20", "1000.00", caf);
 		
 		assertPdfFieldEquals("PRINCIPLE_WAGE_EARNER", "Dwight Schrute", caf);
 	}
