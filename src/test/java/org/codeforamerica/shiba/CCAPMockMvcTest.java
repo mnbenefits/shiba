@@ -111,8 +111,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 
 		// Select 4 other unearned income sources
 		postExpectingRedirect("otherUnearnedIncome", "otherUnearnedIncome",
-				// List.of("INSURANCE_PAYMENTS", "TRUST_MONEY", "INTEREST_DIVIDENDS",
-				// "HEALTH_CARE_REIMBURSEMENT"),
 				List.of("INSURANCE_PAYMENTS"), "insurancePaymentsIncomeSource");
 
 		// Verify first income source page is reached
@@ -155,9 +153,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false","studentFinancialAid");
     postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false","futureIncome");
     fillAdditionalIncomeInfo("SNAP");
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts"); 
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts"); 
-    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -205,10 +200,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 			.get("annuityPaymentsAmount").getValue();
 	assertThat(annuityPaymentsAmount).isEqualTo(List.of("100", ""));
     fillAdditionalIncomeInfo("SNAP");
-   //applicationData.getPagesData().getPage("otherUnearnedIncome").get("otherUnearnedIncome").getValue();
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
-    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -239,9 +230,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("advancedChildTaxCredit", "hasAdvancedChildTaxCredit", "false", "studentFinancialAid");
     postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "false", "futureIncome");
     fillAdditionalIncomeInfo("SNAP");
-    postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-    postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
-    postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
     postExpectingSuccess("assets", "assets", "VEHICLE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageDoesNotHaveElementWithId("legalStuff", "ccap-legal");
@@ -452,7 +440,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "true", "livingSituation");
     postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
-    //postExpectingRedirect("whoIsGoingToSchool", "pregnant"); // no one is going to school
     completeFlowFromIsPregnantThroughTribalNations(true, "CCAP", "NONE");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Job Search");
@@ -472,14 +459,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "NO_OTHER_UNEARNED_INCOME_SELECTED",
         "futureIncome");
     fillAdditionalIncomeInfo(Programs);
-    if (Arrays.stream(Programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
-    	    && Arrays.asList(Programs).contains("CCAP")) {
-		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
-	} else {
-		postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-		postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
-		postExpectingRedirect("adultCareCosts", "adultCareCosts", "false", "assets");
-	}
     postExpectingSuccess("assets", "assets", "NONE");
     assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
     assertPageHasElementWithId("legalStuff", "ccap-legal");
@@ -495,14 +474,6 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	        "studentFinancialAid");
 	    postExpectingRedirect("studentFinancialAid", "studentFinancialAid", "true", "futureIncome");
 	    fillAdditionalIncomeInfo(Programs);
-	    if (Arrays.stream(Programs).allMatch(p -> p.equals("CCAP") || p.equals("NONE"))
-	    	    && Arrays.asList(Programs).contains("CCAP")) {
-			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "assets");
-		} else {
-			postExpectingRedirect("supportAndCare", "supportAndCare", "false", "childCareCosts");
-			postExpectingRedirect("childCareCosts", "childCareCosts", "false", "adultCareCosts");
-			postExpectingRedirect("adultCareCosts", "adultCareCosts","false", "assets");
-		}
 	    postExpectingSuccess("assets", "assets", "NONE");
 	    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
 	    assertPageHasElementWithId("legalStuff", "ccap-legal");

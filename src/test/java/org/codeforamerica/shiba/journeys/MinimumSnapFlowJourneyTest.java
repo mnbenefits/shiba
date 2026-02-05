@@ -282,9 +282,9 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("MARITAL_STATUS", "NEVER_MARRIED");
 		String needsInterpreter = "Yes";
 		assertCafFieldEquals("NEED_INTERPRETER", needsInterpreter);
-		assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "OTHER");// nothing was entered for language, so
+		assertCafFieldEquals("APPLICANT_SPOKEN_LANGUAGE_PREFERENCE", "Other");// nothing was entered for language, so
 																				// OTHER is printed on CAF
-		assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "OTHER");
+		assertCafFieldEquals("APPLICANT_WRITTEN_LANGUAGE_PREFERENCE", "Other");
 		String moveDate = "10/20/1993";
 		assertCafFieldEquals("DATE_OF_MOVING_TO_MN", moveDate);
 		String previousCity = "Chicago";
