@@ -98,6 +98,15 @@ public class PageData extends HashMap<String, InputData> {
     }
   }
 
+  /**
+   * This method is used for getting the invalid page data log text that can show 
+   * you what input is not valid. To use this method call it in PageController.java's
+   * postFormPage(...) method and in the last else before returning the modelAndView, paste the following lines:
+   * String invalidDataLog = pageData.invalidPageDataLogText();
+   * log.error("Invalid page data for page {}: {}", pageName, invalidDataLog);
+   * 
+   * @return string of current page, inputNames with their values if given
+   */
   public String invalidPageDataLogText() {
 
     if (isValid()) {
@@ -123,7 +132,7 @@ public class PageData extends HashMap<String, InputData> {
 
     StringBuffer buffer = new StringBuffer();
     for( Map.Entry<String, InputData> entry : invalidStore.entrySet() ) {
-      buffer.append(String.format("%s : %s", entry.getKey(), entry.getValue().toString()));
+      buffer.append(String.format("%s : %s", entry.getKey(), entry.getValue().getValue()));
       buffer.append(", ");
     }
 
