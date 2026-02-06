@@ -21,6 +21,7 @@ public class PageTemplate {
   String contextFragment;
   AlertBox alertBox;
   String additionalContentFragment;
+  String preFormContentFragment;
   
   @SuppressWarnings("unused")
   public boolean hasHeader() {
@@ -36,6 +37,10 @@ public class PageTemplate {
   public boolean hasAdditionalContentFragment() {
     return StringUtils.isNotBlank(additionalContentFragment);
   }
+  @SuppressWarnings("unused")
+  public boolean hasPreFormContentFragment() {
+	    return StringUtils.isNotBlank(preFormContentFragment);
+	  }
 
   public boolean hasAlertBox() {
     return alertBox != null;

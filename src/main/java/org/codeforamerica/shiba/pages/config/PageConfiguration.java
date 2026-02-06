@@ -91,6 +91,11 @@ public class PageConfiguration {
    * help text, or other informational content
    */
   private String additionalContentFragment;
+  
+  /* additional content fragment displayed before form inputs
+  * after header and before the form
+  */
+ private String preFormContentFragment;
 
   /**
    * Get all inputs including the followUp inputs which may be contained within other inputs.

@@ -270,6 +270,7 @@
                   "NONE",
                   "NOT_BLANK",
                   "SELECT_AT_LEAST_ONE",
+				  "SELECT_ATLEAST_ONE_IF_YES",
                   "SSN",
                   "DATE",
                   "ZIPCODE",

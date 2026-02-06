@@ -69,7 +69,7 @@
 					<p class="text--help" th:id="${youFollowUp.name + '-help-message'}" th:if="${youFollowUp.helpMessageKey != null}"
 						th:utext="#{${youFollowUp.helpMessageKey}}"></p>
 					<th:block th:switch="${youFollowUp.type}">
-						<div class="form-group" th:classappend="${inputFollowupsHasErrors && youIsChecked} ? 'form-group--error' : ''"><!-- hide this form-group if there are no errors class="form-group"-->
+						<div class="form-group" th:classappend="${inputFollowupsHasErrors && youIsChecked} ? 'form-group--error' : ''"><!-- hide this form-group if there are no errors? class="form-group"-->
 							<div class="text-input-group" 
 								th:case="${T(org.codeforamerica.shiba.pages.config.FormInputType).MONEY}">
 								<div class="text-input-group__prefix" style="background-color:#FFFFFF">$</div>

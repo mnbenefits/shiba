@@ -8,7 +8,7 @@
               hasError=${!data.isValid() && !inputData.valid(data)},
               hasHelpMessage=${input.helpMessageKey != null},
               needsAriaLabel=${input.needsAriaLabel()},
-              isEndDateField=${#strings.endsWith(input.name, 'EndDate')},//insuranceNoEndDate
+              isEndDateField=${#strings.endsWith(input.name, 'EndDate')},
 			  noEndDateInputName=${#strings.substring(input.name, 0, #strings.length(input.name) - 7) + 'NoEndDate'},
 			  noEndDateInpuData=${data.get(noEndDateInputName)},
 			  noEndDateChecked=${isEndDateField and noEndDateInpuData !=null and noEndDateInpuData.value.contains('true')}">

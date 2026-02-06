@@ -93,12 +93,17 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     driver.findElement(By.id("additionalInfo")).sendKeys(additionalInfo);
     testPage.enter("caseNumber", caseNumber);
     testPage.clickContinue("Can we ask");
-    testPage.clickButtonLink("No, skip this question", "Legal Stuff");
+    testPage.clickButtonLink("No, skip this question", "Penalty Warnings");
+    testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+	testPage.enter("fraudulentStatements", NO.getDisplayValue());
+	testPage.enter("hidingFromLaw", NO.getDisplayValue());
+	testPage.enter("drugFelonyConviction", NO.getDisplayValue());
+	testPage.enter("violatingParole", NO.getDisplayValue());
+	testPage.clickContinue("Legal Stuff");
 
     // Legal Stuff
     assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
-    testPage.enter("drugFelony", NO.getDisplayValue());
     testPage.clickContinue("Sign this application");
     List<String> expectedMessages = List.of(
     		"You did not upload documents with your application today.",
@@ -229,12 +234,17 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		driver.findElement(By.id("additionalInfo")).sendKeys(additionalInfo);
 		testPage.enter("caseNumber", caseNumber);
 		testPage.clickContinue("Can we ask");
-		testPage.clickButtonLink("No, skip this question", "Legal Stuff");
+		testPage.clickButtonLink("No, skip this question", "Penalty Warnings");
+		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+		testPage.enter("fraudulentStatements", NO.getDisplayValue());
+		testPage.enter("hidingFromLaw", NO.getDisplayValue());
+		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
+		testPage.enter("violatingParole", NO.getDisplayValue());
+		testPage.clickContinue("Legal Stuff");
 
 		// Legal Stuff
 		assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
 		testPage.enter("agreeToTerms", "I agree");
-		testPage.enter("drugFelony", NO.getDisplayValue());
 		testPage.clickContinue("Sign this application");
 		List<String> expectedMessages = List.of("You did not upload documents with your application today.",
 				"To upload documents later, you can return to our homepage and click on ‘Upload documents’ to get started.",
@@ -353,12 +363,17 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     // You are expedited!
     assertThat(driver.findElement(By.tagName("p")).getText()).contains(
         "Your county or Tribal Nation should reach out to you to discuss your application within 24 hours.");
-    testPage.clickButtonLink("Finish application", "Legal Stuff");
+    testPage.clickButtonLink("Finish application", "Penalty Warnings");
+    testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
+	testPage.enter("fraudulentStatements", NO.getDisplayValue());
+	testPage.enter("hidingFromLaw", NO.getDisplayValue());
+	testPage.enter("drugFelonyConviction", NO.getDisplayValue());
+	testPage.enter("violatingParole", NO.getDisplayValue());
+	testPage.clickContinue("Legal Stuff");
 
     // Legal Stuff
     assertThat(testPage.getTitle()).isEqualTo("Legal Stuff");
     testPage.enter("agreeToTerms", "I agree");
-    testPage.enter("drugFelony", YES.getDisplayValue());
     testPage.clickContinue("Sign this application");
 
     // Finish Application
@@ -392,7 +407,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     assertCafFieldEquals("IS_US_CITIZEN_0", "Off");
     assertCafFieldEquals("MEDICAL_EXPENSES_SELECTION", "Off");
     assertCafFieldEquals("SNAP_EXPEDITED_ELIGIBILITY", "SNAP");
-    assertCafFieldEquals("DRUG_FELONY", "Yes");
+    assertCafFieldEquals("DRUG_FELONY", "No");
     assertCafFieldEquals("MONEY_MADE_LAST_MONTH", moneyMadeLast30Days + ".00");
     assertCafFieldEquals("EXPEDITED_QUESTION_2", liquidAssets);
     assertCafFieldEquals("HOUSING_EXPENSES", homeExpensesAmount);

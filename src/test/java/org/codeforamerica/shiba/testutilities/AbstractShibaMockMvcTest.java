@@ -1041,9 +1041,10 @@ public class AbstractShibaMockMvcTest {
         "canWeAsk");
     postWithQueryParam("canWeAsk", "option", "0");
     postExpectingRedirect("raceAndEthnicity", "raceAndEthnicity",
-        List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICANS"), "legalStuff");
+        List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICANS"), "penaltyWarnings");
+    postExpectingRedirect("penaltyWarnings", Map.of("disqualifiedPublicAssistance", List.of("false"), "fraudulentStatements", List.of("false"), "hidingFromLaw", List.of("false"), "drugFelonyConviction", List.of("false"), "violatingParole", List.of("false")), "legalStuff");
     postExpectingRedirect("legalStuff",
-        Map.of("agreeToTerms", List.of("true"), "drugFelony", List.of("false")),
+        Map.of("agreeToTerms", List.of("true"), "drugFelonyConviction", List.of("false")),
         "signThisApplication");
     submitApplication();
     return new FormPage(getPage("success"));

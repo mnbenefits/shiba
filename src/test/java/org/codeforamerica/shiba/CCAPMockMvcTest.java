@@ -241,7 +241,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true",
             "startHousehold");
     fillOutHousemateInfo("EA");
-    assertPageHasElementWithId("legalStuff", "drugFelony1");
+    assertPageHasElementWithId("penaltyWarnings", "drugFelonyConviction1");
   }
 
   @Test
@@ -478,6 +478,7 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	    assertNavigationRedirectsToCorrectNextPage("assets", "soldAssets");
 	    assertPageHasElementWithId("legalStuff", "ccap-legal");
 	  }
+
   
   private void fillOutProviderInformation() throws Exception {
 	    postExpectingSuccess("childCareProviderInfo", Map.of(
