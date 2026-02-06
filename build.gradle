@@ -146,7 +146,7 @@ dependencies {
     implementation("ch.qos.logback:logback-parent:1.5.27")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.20.0")
-    implementation("com.azure:azure-storage-blob:12.33.1")
+    implementation("com.azure:azure-storage-blob:12.33.2")
     implementation("org.postgresql:postgresql")
     implementation("org.jetbrains:annotations:26.0.2-1")
     implementation("commons-validator:commons-validator:1.10.1")
