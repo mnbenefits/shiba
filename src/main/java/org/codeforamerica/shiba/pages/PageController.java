@@ -871,6 +871,7 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       applicationRepository.save(application);
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", pageName));
     } else {
+      // Look at javadoc in PageData.java invalidPageDataLogText for debug/log info
       return new ModelAndView("redirect:/pages/" + pageName);
     }
   }
