@@ -190,7 +190,7 @@ dependencies {
     testImplementation("io.percy:percy-java-selenium:2.1.1")
     testImplementation("com.deque.html.axe-core:selenium:4.11.1")
     testImplementation("org.jsoup:jsoup:1.22.1")
-    testImplementation "org.mockito:mockito-junit-jupiter:5.17.0"
+    testImplementation "org.mockito:mockito-junit-jupiter:5.21.0"
     mockitoAgent("net.bytebuddy:byte-buddy-agent:1.17.8")
 }
 
