@@ -28,6 +28,7 @@ import org.codeforamerica.shiba.RoutingDestinationMessageService;
 import org.codeforamerica.shiba.TribalNationRoutingDestination;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.application.ApplicationRepository;
+import org.codeforamerica.shiba.internationalization.LocaleSpecificMessageSource;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
@@ -66,7 +67,7 @@ class EmailContentCreatorTest {
   @Autowired
   private DocRecommendationMessageService docRecommendationMessageService;
   
-  @Mock
+  @MockitoBean
   private ApplicationRepository applicationRepository;
   
   @MockitoBean
@@ -74,7 +75,7 @@ class EmailContentCreatorTest {
 
   private Set<RoutingDestination> routingDestinations;
   
-  @Mock
+  @MockitoBean
   private RoutingDestinationMessageService routingDestinationMessageService;
 
   private List<String> programs;

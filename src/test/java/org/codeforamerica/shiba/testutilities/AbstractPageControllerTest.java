@@ -10,6 +10,7 @@ import org.codeforamerica.shiba.application.ApplicationRepository;
 import org.codeforamerica.shiba.application.ApplicationStatusRepository;
 import org.codeforamerica.shiba.configurations.CityInfoConfiguration;
 import org.codeforamerica.shiba.configurations.ClockConfiguration;
+import org.codeforamerica.shiba.configurations.SecurityConfiguration;
 import org.codeforamerica.shiba.documents.DocumentRepository;
 import org.codeforamerica.shiba.output.caf.CcapExpeditedEligibilityDecider;
 import org.codeforamerica.shiba.output.caf.EligibilityListBuilder;
@@ -42,7 +43,8 @@ import org.springframework.test.web.servlet.MockMvc;
     ClockConfiguration.class,
     ApplicationFactory.class,
     NextStepsContentService.class,
-    DocRecommendationMessageService.class
+    DocRecommendationMessageService.class,
+    SecurityConfiguration.class
 })
 public class AbstractPageControllerTest {
 

@@ -66,18 +66,18 @@ public class DocumentUploadEmailServiceUnitTest {
 	private MessageSource messageSource;
 
 	@Captor
-	private ArgumentCaptor<JsonObject> jsonCaptor;
+	private ArgumentCaptor<JsonObject> jsonCaptor = ArgumentCaptor.forClass(JsonObject.class);
 
 	@Captor
-	private ArgumentCaptor<String> applicationIdCaptor;
+	private ArgumentCaptor<String> applicationIdCaptor = ArgumentCaptor.forClass(String.class);
 
 	@Captor
-	private ArgumentCaptor<Status> statusCaptor;
+	private ArgumentCaptor<Status> statusCaptor = ArgumentCaptor.forClass(Status.class);
 
-	@Mock
+	@MockitoBean
 	private ApplicationData applicationData;
 
-	@Mock
+	@MockitoBean
 	private PagesData pagesData;
 	
 	private MockedStatic<ContactInfoParser> contactInfoParserMock;

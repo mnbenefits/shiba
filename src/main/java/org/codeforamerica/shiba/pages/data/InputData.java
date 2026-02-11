@@ -27,7 +27,7 @@ public class InputData implements Serializable {
   List<Validator> validators;
 
   @JsonCreator
-  InputData(@JsonProperty("value") List<String> value, @NotNull @JsonProperty("validator") List<Validator> validators) {
+  InputData(@JsonProperty("value") List<String> value, @NotNull List<Validator> validators) {
     this.value = Objects.requireNonNullElseGet(value, List::of);
     this.validators = Objects.requireNonNullElseGet(validators, List::of);
   }
