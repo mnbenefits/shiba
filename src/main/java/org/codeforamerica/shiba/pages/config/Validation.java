@@ -32,6 +32,7 @@ public enum Validation {
   SELECTED(strings -> strings.size() == 0),
   SSN(strings -> String.join("", strings).replace("-", "").matches("\\d{9}")),
   DATE(strings -> {
+	  System.out.println("DATE VALIDATION for " + strings + " joined: " + String.join("/", strings));
     return String.join("", strings).matches("^[0-9]*$") &&
         (GenericValidator.isDate(String.join("/", strings), "MM/dd/yyyy", true)
             || GenericValidator.isDate(String.join("/", strings), "M/dd/yyyy", true)
