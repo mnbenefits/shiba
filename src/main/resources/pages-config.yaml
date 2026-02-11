@@ -1470,11 +1470,21 @@ pageConfigurations:
               messageKey: race-and-ethnicity.white
             - value: SOME_OTHER_RACE_OR_ETHNICITY
               messageKey: race-and-ethnicity.some-other-race
+            - value: NONE
+              messageKey: general.inputs.none-of-the-above
+              isNone: true
         followUpValues:
           - SOME_OTHER_RACE_OR_ETHNICITY
         followUps:
           - name: otherRaceOrEthnicity
             type: TEXT
+            validators:
+              - validation: ALL_NON_BLANK
+                errorMessageKey: general.validation.enter-race-ethnicity
+                condition:
+                  input: householdRaceAndEthnicity
+                  matcher: CONTAINS
+                  value: SOME_OTHER_RACE_OR_ETHNICITY
             promptMessage:
               promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
   - &householdList
