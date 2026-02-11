@@ -218,7 +218,7 @@ public class PagesData extends HashMap<String, PageData> {
     List<String> errorMessageKeys = Optional.ofNullable(this.getPage(pageName))
         .map(pageData -> pageData.get(formInput.getName()).errorMessageKeys(pageData))
         .orElse(List.of());
-
+System.out.println(">>>>>>>> PagesData convert() for input " + formInput.getName() + ": " + errorMessageKeys.toString());//TODO emj delete
     return new FormInputTemplate(
         formInput.getType(),
         formInput.getName(),
@@ -229,7 +229,9 @@ public class PagesData extends HashMap<String, PageData> {
         errorMessageKeys,
         createOptionsWithDataSourceTemplate(formInput, applicationData),
         formInput.getFollowUps().stream()
+        .peek(x -> System.out.println("-------- followup BEFORE convert =|" + x + "|"))
             .map(followup -> convert(pageName, followup, applicationData))
+            .peek(x -> System.out.println("---------- followup AFTER convert =|" + x + "|"))
             .collect(Collectors.toList()),
         formInput.getFollowUpValues(),
         formInput.getReadOnly(),

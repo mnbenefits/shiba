@@ -4152,10 +4152,8 @@ pageConfigurations:
                   matcher: NOT_EMPTY
             promptMessage:
               promptMessageKey: general.end-date
-          - name: noEndDate
+          - name: retirementAmountNoEndDate
             type: CHECKBOX
- #           promptMessage:
- #             promptMessageFragmentName: legal-terms-prompt
             options:
               selectableOptions:
                 - value: NO_END_DATE

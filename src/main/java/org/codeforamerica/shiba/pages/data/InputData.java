@@ -37,10 +37,13 @@ public class InputData implements Serializable {
   }
 
   public Boolean valid(PageData pageData) {
-    return validators.stream().filter(
+	  
+	  Boolean x = validators.stream().filter(
             validator -> validator.getCondition() == null || validator.getCondition()
                 .satisfies(pageData)).map(Validator::getValidation)
         .allMatch(validation -> validation.apply(value));
+System.out.println("+++ InputData valid() is returning " + x + " for value " + value);//TODO emj delete	  
+    return x;
   }
   
   // This method is only called from schoolStartDateInput.html

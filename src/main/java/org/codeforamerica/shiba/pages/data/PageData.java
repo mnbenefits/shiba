@@ -80,8 +80,10 @@ public class PageData extends HashMap<String, InputData> {
     List<InputData> inputDataToValidate = values().stream().filter(
         inputData -> inputData.getValidators().stream().anyMatch(validatorForThisInputShouldRun)
     ).toList();
-
-    return inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
+String thisString = this.toString();
+Boolean x = inputDataToValidate.stream().allMatch(inputData -> inputData.valid(this));
+System.out.println("======= PageData isValid() returning " + x + " for this: " + thisString);//TODO emj delete
+    return x;
   }
 
   /**
