@@ -381,6 +381,12 @@ conditionDefinitions:
       - pageName: healthcareCoverage
         input: healthcareCoverage
         matcher: NONE_SELECTED
+  - &hasAuthorizedRep?
+    pageName: authorizedRep
+    name: hasAuthorizedRep
+    input: helpWithBenefits
+    matcher: CONTAINS
+    value: "true"
   - &householdMemberLessThanAge5?
     pageName: householdMemberInfo
     name: householdMemberLessThanAge5
@@ -2512,6 +2518,17 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: sign-this-application.make-sure-to-sign-the-application
+  - &authorizedRepSignature
+    name: authorizedRepSignature
+    pageTitle: authorized-rep-signature.title
+    headerKey: authorized-rep-signature.please-have-your-authorized-rep-sign
+    headerHelpMessageKey: authorized-rep-signature.they-can-sign-now
+    primaryButtonTextKey: general.continue
+    inputs:
+      - name: authorizedRepSignature
+        type: TEXT
+        promptMessage:
+          promptMessageKey: authorized-rep-signature.full-legal-name
   - &secondSignatureNotification
     name: secondSignatureNotification
     pageTitle: second-signature-notification.title
@@ -7684,6 +7701,8 @@ workflow:
   signThisApplication:
     pageConfiguration: *signThisApplication
     nextPages:
+      - pageName: authorizedRepSignature
+        condition: *hasAuthorizedRep?
       - pageName: secondSignatureNotification
         condition:
           logicalOperator: AND
@@ -7694,11 +7713,29 @@ workflow:
     datasources:
       - pageName: choosePrograms
       - pageName: addHouseholdMembers
+      - pageName: authorizedRep
+      - pageName: householdMemberInfo
+        groupName: household
+  authorizedRepSignature:
+    pageConfiguration: *authorizedRepSignature
+    nextPages:
+      - pageName: secondSignatureNotification
+        condition:
+          name: doesNotLiveAloneAndSomeoneChoseCASH
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseCASH?
+      - pageName: submit   
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
   secondSignatureNotification:
     pageConfiguration: *secondSignatureNotification
     skipCondition:
+      name: livesAloneOrMinimumFlow
       logicalOperator: OR
       conditions: 
         - *livesAlone?
@@ -7713,6 +7750,7 @@ workflow:
     pageConfiguration: *secondSignature
     subtleLinkTargetPage: submit
     skipCondition:
+      name: contWO2ndSigORlivesAloneORminFlow
       logicalOperator: OR
       conditions: 
         - *continueWithoutSecondSignature?
