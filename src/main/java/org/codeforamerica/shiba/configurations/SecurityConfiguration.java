@@ -153,6 +153,14 @@ public class SecurityConfiguration {
 					log.error("Invalid Session Redirect for " + pageName, e);
 				}
 
+			} else if (pageName.contains("supportServices")) {
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/supportServices");
+				try {
+					dispatcher.forward(request, response);
+				} catch (ServletException | IOException e) {
+					log.error("Invalid Session Redirect for " + pageName, e);
+				}
+			
 			} else {
 				//normal redirect to session expired page
 				errorRedirectInvalidSessionStrategy.onInvalidSessionDetected(request, response);

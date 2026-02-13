@@ -29,6 +29,12 @@
 						th:utext="#{language-and-accessibility.language-and-accessibility}">
 					</a>
 				</li>
+				<li class="nav-tab">
+					<a id="nav-accessibility" th:class="${currentPage== 'supportServices' ? ' nav-link grid_item active' : 'nav-link grid_item'}"
+						href="/supportServices"
+						th:utext="#{support-services.support-services}">
+					</a>
+				</li>
 			</ul>
 		</header>
 	</div>

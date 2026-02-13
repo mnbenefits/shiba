@@ -34,6 +34,7 @@ public class FooterTest extends AbstractBasePageTest {
 			"Frequently Asked Questions, /faq, true",
 			"SNAP NDS, /snapNDS, true",
 			"Privacy Policy, /privacy, true",
+			"Support Services, /supportServices, true",
 			"Language and Accessibility, /languageAndAccessibility, false",
 			"Identify County, /pages/identifyCountyBeforeApplying, false",
 		    "Ready to upload documents, /pages/readyToUploadDocuments, false"
@@ -126,7 +127,8 @@ public class FooterTest extends AbstractBasePageTest {
 			"nav-faq, Frequently Asked Questions",
 			"nav-snapnds, SNAP NDS",
 			"nav-privacy, Privacy Policy",
-			"nav-accessibility, Language and Accessibility"
+			"nav-accessibility, Language and Accessibility",
+			"nav-support-services, Support Services"
   })
   void navLinksToInfoPages(String anchorId, String title) {
 	    driver.navigate().to(baseUrl + "/languageAndAccessibility");

@@ -238,6 +238,11 @@ public class PageController {
   String getSnapNDS() {
     return "snapNDS";
   }
+  
+  @GetMapping("/supportServices")
+  String getSupportServices() {
+    return "supportServices";
+  }
 
   @GetMapping("/languageAndAccessibility")
   String getLanguageAndAccessibility() {

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="format-detection" content="telephone=no">
+  <title th:text="#{support-services.support-services}"></title>
+  <link href="/honeycrisp.min.css" rel="stylesheet"/>
+  <link href="/shiba.css" rel="stylesheet"/>
+  <script src="/honeycrisp.min.js"></script>
+  <!-- Google Tag Manager -->
+  <script th:if="${@environment.getProperty('mnb-enable-google-analytics')}">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','[[${@environment.getProperty("google-tag-manager-id")}]]');</script>
+  <!-- End Google Tag Manager -->
+
+</head>
+<body class="locale-en" id="top-nav">
+<div th:replace="~{fragments/google-analytics-body-snippet :: google-analytics-body-snippet}"></div>
+<div class="page-wrapper slab--shiba">
+  <div th:replace="~{fragments/toolbar :: toolbar}"></div>
+  <div th:replace="~{fragments/demoBanner :: demoBanner}"></div>
+  <div th:replace="~{fragments/info-pages-top-navigation :: info-pages-top-navigation('supportServices')}"></div>
+  <section class="slab">
+	<div class="grid">
+		<div class="grid__item">
+			<h1 class="spacing-below-35" th:text="#{support-services.support-services}"></h1>
+		</div>
+	</div>
+  </section>
+  <main id="content" role="main" class="slab slab--white">
+    <div class="grid">
+      <nav class="grid__item width-one-third">
+        <h2 class="h3" th:text="#{help-resources.table.of.contents}"></h2>
+
+        <div class="spacing-below-35"><a href="#mental-health-crisis"
+                                         th:utext="#{support-services.mental-health}"></a></div>
+        <div class="spacing-below-35"><a href="#housing-assistance"
+                                         th:utext="#{support-services.housing-assistance}"></a></div>
+        <div class="spacing-below-35"><a href="#food-support"
+                                         th:utext="#{support-services.food-support}"></a></div>
+        <div class="spacing-below-35"><a href="#child-care-assistance"
+                                         th:utext="#{support-services.child-care-assistance}"></a></div>
+        <div class="spacing-below-35"><a href="#alcohol-and-substance" 
+										 th:utext="#{support-services.alcohol-and-substance}"></a></div>
+      </nav>
+      <div class="grid__item shift-one-twelfth width-seven-twelfths">
+        <div class="grid">
+          <h1 class="h2 spacing-below-35" th:text="#{support-services.get-help}"></h1>
+          <div class="grid__item">
+            <div class="grid__item spacing-below-35">
+              <h2 class="h3" id="mental-health-crisis" th:utext="#{support-services.mental-health-1}"></h2>
+              <p th:utext="#{support-services.mental-health-2}"></p>
+              <h2 id="housing-assistance" class="h3 spacing-above-60"
+                  th:utext="#{support-services.looking-for-help-1}"></h2>
+              <p th:utext="#{support-services.looking-for-help-2}"></p>
+              <h2 id="food-support" class="h3 spacing-above-60"
+                  th:utext="#{support-services.find-food-1}"></h2>
+              <p th:utext="#{support-services.find-food-2}"></p>
+              <p th:utext="#{support-services.find-food-3}"></p>
+              <p th:utext="#{support-services.find-food-4}"></p>
+              <h2 id="child-care-assistance" class="h3 spacing-above-60"
+                  th:utext="#{support-services.child-care-assistance-1}"></h2>
+              <p th:utext="#{support-services.child-care-assistance-2}"></p>
+			  <h2 id="alcohol-and-substance" class="h3 spacing-above-60"
+                  th:utext="#{support-services.alcohol-and-substance-1}"></h2>
+              <p th:utext="#{support-services.alcohol-and-substance-2}"></p>
+              <p th:utext="#{support-services.alcohol-and-substance-3}"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div th:replace="~{fragments/footer :: footer(tagline='true')}"></div>
+</body>
+</html>
