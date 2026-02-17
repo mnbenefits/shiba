@@ -7,7 +7,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 
 import org.codeforamerica.shiba.testutilities.PercyTestPage;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -43,7 +42,6 @@ public class HealthcareRenewalJourneyTest extends JourneyTest {
     //assertThat(driver.getTitle()).isEqualTo("Renovar mi cobertura / Minnesota Department of Human Services");
   }
   
-  @Disabled
   @Test
   void healthcareRenewalFlow() {
     navigateTo("healthcareRenewalUpload");

@@ -30,11 +30,14 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+	//TODO: JMB remove commented lines after code review
+	//private static int environmentUrlLength;
 	
-	private static int environmentUrlLength;
-	
-	public SecurityConfiguration(@Value("${mnbenefits_env_url}") String environmentUrl) {
-		environmentUrlLength = environmentUrl.length();
+	//public SecurityConfiguration(@Value("${mnbenefits_env_url}") String environmentUrl) {
+	//	environmentUrlLength = environmentUrl.length();
+	//}
+	public SecurityConfiguration() {
 	}
 
 	@Autowired
@@ -103,8 +106,10 @@ public class SecurityConfiguration {
 		@Override
 		public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
 				throws IOException {
-			String pageNameFromRequest = request.getRequestURL().toString();
-			String pageName = pageNameFromRequest.substring(environmentUrlLength);
+			// TODO: JMB Remove these after code review
+			//String pageNameFromRequest = request.getRequestURL().toString();
+			//String pageName = pageNameFromRequest.substring(environmentUrlLength);
+			String pageName = request.getRequestURI();
 			log.info(StringEscapeUtils.escapeJava("User session invalid on page: " + pageName));
 			if (pageName.equalsIgnoreCase("/pages/landing/navigation")) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/identifyCountyBeforeApplying");
@@ -116,6 +121,14 @@ public class SecurityConfiguration {
 
 			} else if (pageName.equalsIgnoreCase("/pages/landing")) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/identifyCountyBeforeApplying");
+				try {
+					dispatcher.forward(request, response);
+				} catch (ServletException | IOException e) {
+					log.error("Invalid Session Redirect for " + pageName, e);
+				}
+
+			} else if (pageName.equalsIgnoreCase("/pages/healthcareRenewalUpload")) {
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/healthcareRenewalUpload");
 				try {
 					dispatcher.forward(request, response);
 				} catch (ServletException | IOException e) {
