@@ -128,7 +128,7 @@ public class FooterTest extends AbstractBasePageTest {
 			"nav-snapnds, SNAP NDS",
 			"nav-privacy, Privacy Policy",
 			"nav-accessibility, Language and Accessibility",
-			"nav-support-services, Support Services"
+			"nav-supportServices, Support Services"
   })
   void navLinksToInfoPages(String anchorId, String title) {
 	    driver.navigate().to(baseUrl + "/languageAndAccessibility");
