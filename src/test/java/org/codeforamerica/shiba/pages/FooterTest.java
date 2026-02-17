@@ -62,7 +62,8 @@ public class FooterTest extends AbstractBasePageTest {
 			"link-faq, Frequently Asked Questions",
 			"link-snap-nds, SNAP NDS",
 			"link-privacy-policy, Privacy Policy",
-			"link-language-and-accessibility, Language and Accessibility"
+			"link-language-and-accessibility, Language and Accessibility",
+			"link-support-services, Support Services"
   })
   void footerLinksToInfoPages(String anchorId, String title) {
 	    driver.navigate().to(baseUrl);
