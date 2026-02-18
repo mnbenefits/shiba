@@ -1469,9 +1469,6 @@ pageConfigurations:
               messageKey: race-and-ethnicity.white
             - value: SOME_OTHER_RACE_OR_ETHNICITY
               messageKey: race-and-ethnicity.some-other-race
-            - value: RATHER_NOT_SAY
-              messageKey: household-race-and-ethnicity.prefer-not-to-say
-              isNone: true
         followUpValues:
           - SOME_OTHER_RACE_OR_ETHNICITY
         followUps:
@@ -1486,6 +1483,13 @@ pageConfigurations:
                   value: SOME_OTHER_RACE_OR_ETHNICITY
             promptMessage:
               promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
+      - name: preferNotToSay
+        type: CUSTOM
+        customInputFragment: preferNotToSayFragment
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: household-race-and-ethnicity.prefer-not-to-say
   - &householdList
     name: householdList
     pageTitle: household-list.title
