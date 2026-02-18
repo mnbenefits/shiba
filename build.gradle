@@ -2,8 +2,8 @@ plugins {
     id("org.springframework.boot") version "3.5.7"
     id("io.spring.dependency-management") version "1.1.7"
     id("java")
-    id("com.github.jk1.dependency-license-report") version "3.0.1"
-    id("com.gorylenko.gradle-git-properties") version "2.5.6"
+    id("com.github.jk1.dependency-license-report") version "3.1.0"
+    id("com.gorylenko.gradle-git-properties") version "2.5.7"
 }
 
 group = "org.codeforamerica"
@@ -107,7 +107,7 @@ dependencies {
     
     implementation("org.apache.commons:commons-lang3:3.20.0")
     implementation("org.apache.commons:commons-text:1.15.0")
-    implementation("org.apache.httpcomponents.core5:httpcore5:5.4")
+    implementation("org.apache.httpcomponents.core5:httpcore5:5.4.1")
     implementation("org.apache.httpcomponents.client5:httpclient5:5.6")
     implementation("org.apache.httpcomponents.client5:httpclient5-fluent:5.6")
     implementation("org.apache.pdfbox:pdfbox:3.0.6")
@@ -138,9 +138,9 @@ dependencies {
     implementation("net.logstash.logback:logstash-logback-encoder:9.0")
     implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
     implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
-    implementation("ch.qos.logback:logback-classic:1.5.29")
-    implementation("ch.qos.logback:logback-core:1.5.29")
-    implementation("ch.qos.logback:logback-parent:1.5.29")
+    implementation("ch.qos.logback:logback-classic:1.5.32")
+    implementation("ch.qos.logback:logback-core:1.5.32")
+    implementation("ch.qos.logback:logback-parent:1.5.32")
     implementation("com.google.code.findbugs:jsr305:3.0.2")
     implementation("com.google.crypto.tink:tink:1.20.0")
     implementation("com.azure:azure-storage-blob:12.33.2")
@@ -191,7 +191,7 @@ dependencies {
     testImplementation("com.deque.html.axe-core:selenium:4.11.1")
     testImplementation("org.jsoup:jsoup:1.22.1")
     testImplementation "org.mockito:mockito-junit-jupiter:5.21.0"
-    mockitoAgent("net.bytebuddy:byte-buddy-agent:1.18.4")
+    mockitoAgent("net.bytebuddy:byte-buddy-agent:1.18.5")
 }
 
 compileJava {
