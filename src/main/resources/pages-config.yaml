@@ -1443,9 +1443,8 @@ pageConfigurations:
   - &householdRaceAndEthnicity
     name: householdRaceAndEthnicity
     pageTitle: race-and-ethnicity.title
-    headerKey: race-and-ethnicity.what-races-or-ethnicities-do-you-identify-with
     headerHelpMessageKey: race-and-ethnicity.select-all-that-apply
-    contextFragment: raceAndEthnicityFragment
+    contextFragment: householdRaceAndEthnicityFragment
     inputs:
       - name: householdRaceAndEthnicity
         type: CHECKBOX
@@ -1470,6 +1469,9 @@ pageConfigurations:
               messageKey: race-and-ethnicity.white
             - value: SOME_OTHER_RACE_OR_ETHNICITY
               messageKey: race-and-ethnicity.some-other-race
+            - value: RATHER_NOT_SAY
+              messageKey: household-race-and-ethnicity.prefer-not-to-say
+              isNone: true
         followUpValues:
           - SOME_OTHER_RACE_OR_ETHNICITY
         followUps:
@@ -5857,6 +5859,7 @@ workflow:
       - pageName: householdRaceAndEthnicity
   householdRaceAndEthnicity:
     pageConfiguration: *householdRaceAndEthnicity
+    groupName: household
     nextPages:
       - pageName: householdList
   householdList:
@@ -7976,8 +7979,10 @@ pageGroups:
   household:
     startPages:
       - householdMemberInfo
+      #- householdRaceAndEthnicity
     completePages:
-      - householdMemberInfo
+      #- householdMemberInfo
+      - householdRaceAndEthnicity
     reviewPage: householdList
     deleteWarningPage: householdDeleteWarningPage
     restartPage: addHouseholdMembers
