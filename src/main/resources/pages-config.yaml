@@ -1442,7 +1442,7 @@ pageConfigurations:
             - pageName: choosePrograms
   - &householdRaceAndEthnicity
     name: householdRaceAndEthnicity
-    pageTitle: race-and-ethnicity.title
+    pageTitle: household-race-and-ethnicity.title
     headerHelpMessageKey: race-and-ethnicity.select-all-that-apply
     contextFragment: householdRaceAndEthnicityFragment
     inputs:
