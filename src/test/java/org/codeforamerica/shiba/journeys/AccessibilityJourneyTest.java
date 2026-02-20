@@ -327,6 +327,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("livedInMnWholeLife", "Yes");
     testPage.enter("moveToMnDate", "02/18/1950");
     testPage.enter("moveToMnPreviousState", "Illinois");
+    testPage.clickContinue("Household Race and Ethnicity");
+    testPage.enter("preferNotToSay", "Rather not say");
     testPage.clickContinue("Household members");
     
     testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
