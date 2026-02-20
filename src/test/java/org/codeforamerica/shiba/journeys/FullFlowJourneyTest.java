@@ -441,9 +441,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
 		testPage.clickContinue("Sign this application");
-
-		// Upload documents
+		
+		//signatures
 		testPage.enter("applicantSignature", "this is my signature");
+		testPage.clickButtonLink("Continue", "Legal stuff - Authorized Representative");
+		testPage.enter("agreeToTerms", "I agree");
+		testPage.clickButtonLink("Continue", "Authorized representative signature");
+		testPage.enter("authorizedRepSignature", "this is the arep signature");
+		
 		testPage.clickButtonLink("Continue", "Submit application");
 		testPage.clickButton("Submit application", "Submission Confirmation");
 		testPage.clickButtonLink("Continue", "Adding Documents");
@@ -793,6 +798,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("VIOLATING_PAROLE", "Yes");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
+		assertCafFieldEquals("AUTHORIZED_REP_SIGNATURE", "this is the arep signature");
+		assertCafFieldEquals("AREP_SIGN_DATE", "2020-01-01");
 		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");
 		assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");

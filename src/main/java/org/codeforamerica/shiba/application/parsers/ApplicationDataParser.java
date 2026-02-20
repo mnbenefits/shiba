@@ -438,6 +438,10 @@ public class ApplicationDataParser {
     
     coordinatesMap.put(Field.OTHER_ADULT_SIGNATURE, 
     		new ParsingCoordinate("secondSignature", "secondSignature"));
+    
+    coordinatesMap.put(Field.AUTHORIZED_REP_SIGNATURE, 
+    		new ParsingCoordinate("authorizedRepSignature", "authorizedRepSignature"));
+    
   }
 
   public static List<String> getValues(PagesData pagesData, Field field) {
@@ -663,6 +667,7 @@ public class ApplicationDataParser {
     PERSONAL_INFO_FIRST_NAME(""),
     PERSONAL_INFO_LAST_NAME(""),
     
+    AUTHORIZED_REP_SIGNATURE,
     OTHER_ADULT_SIGNATURE,
 
     HOUSEHOLD_INFO_DOB,

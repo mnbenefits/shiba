@@ -118,6 +118,9 @@ mappings:
     migrantOrSeasonalFarmWorker: MIGRANT_SEASONAL_FARM_WORKER
   signThisApplication:
     applicantSignature: APPLICANT_SIGNATURE
+  authorizedRepSignature:
+    authorizedRepSignature: AUTHORIZED_REP_SIGNATURE
+    authorizedRepSignDate: AREP_SIGN_DATE
   secondSignature:
     secondSignature: OTHER_ADULT_SIGNATURE
     createdDateSignature: CREATED_DATE_SIGNATURE

@@ -529,6 +529,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("agreeToTerms", "I agree");
     testPage.clickContinue("Sign this application");
     testPage.enter("applicantSignature", "some name");
+    testPage.clickButton("Continue", "Legal stuff - Authorized Representative");
+    testPage.enter("agreeToTerms", "I agree");
+    driver.findElement(By.id("continue_to_signature")).click();
+    testPage.enter("authorizedRepSignature", "another name");
     testPage.clickButton("Continue", "Submit application");
     testPage.clickButton("Submit", "Submission Confirmation");
     
