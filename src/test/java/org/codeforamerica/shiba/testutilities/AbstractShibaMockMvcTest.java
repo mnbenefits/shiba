@@ -197,6 +197,7 @@ public class AbstractShibaMockMvcTest {
         "programs", List.of(program),
         "relationship", List.of("spouse")
     ));
+    postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
     postExpectingSuccess("householdMemberInfo", Map.of(
         "firstName", List.of("Pam"),
         "lastName", List.of("Beesly"),
@@ -257,7 +258,8 @@ public class AbstractShibaMockMvcTest {
       householdMemberInfo.put("livedInMnWholeLife", List.of("Yes"));
       householdMemberInfo.put("moveToMnDate", List.of("02", "18", "1950"));
       householdMemberInfo.put("moveToMnPreviousState", List.of("Illinois"));
-      postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+      postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+      postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
     }
   }
 
@@ -275,7 +277,8 @@ public class AbstractShibaMockMvcTest {
     householdMemberInfo.put("livedInMnWholeLife", List.of("Yes"));
     householdMemberInfo.put("moveToMnDate", List.of("02", "18", "1950"));
     householdMemberInfo.put("moveToMnPreviousState", List.of("Illinois"));
-    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+    postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
   }
 
   protected String getFirstHouseholdMemberId() throws Exception {
