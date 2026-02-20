@@ -1446,11 +1446,15 @@ pageConfigurations:
     headerHelpMessageKey: race-and-ethnicity.select-all-that-apply
     contextFragment: householdRaceAndEthnicityFragment
     inputs:
+      - name: preferNotToSay
+        type: CUSTOM
+        customInputFragment: preferNotToSayFragment
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: household-race-and-ethnicity.prefer-not-to-say
       - name: householdRaceAndEthnicity
         type: CHECKBOX
-        validators:
-          - validation: SELECT_AT_LEAST_ONE
-            errorMessageKey: general.validation.make-sure-you-answer-this-question
         options:
           selectableOptions:
             - value: AMERICAN_INDIAN_OR_ALASKA_NATIVE
@@ -1483,13 +1487,11 @@ pageConfigurations:
                   value: SOME_OTHER_RACE_OR_ETHNICITY
             promptMessage:
               promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
-      - name: preferNotToSay
-        type: CUSTOM
-        customInputFragment: preferNotToSayFragment
-        options:
-          selectableOptions:
-            - value: "true"
-              messageKey: household-race-and-ethnicity.prefer-not-to-say
+  - &householdRedirectPage
+    name: householdRedirectPage
+    headerKey: household-redirect-page.header
+    pageTitle: warning-page.go-back-title
+    usingPageTemplateFragment: false
   - &householdList
     name: householdList
     pageTitle: household-list.title
@@ -5873,6 +5875,10 @@ workflow:
     groupName: household
     nextPages:
       - pageName: householdList
+  householdRedirectPage:
+    pageConfiguration: *householdRedirectPage
+    nextPages:
+      - pageName: householdList
   householdList:
     pageConfiguration: *householdList
     dataMissingRedirect: reviewInfo
@@ -7993,6 +7999,7 @@ pageGroups:
     completePages:
       - householdRaceAndEthnicity
     reviewPage: householdList
+    redirectPage: householdRedirectPage
     deleteWarningPage: householdDeleteWarningPage
     restartPage: addHouseholdMembers
     startingCount: 1
