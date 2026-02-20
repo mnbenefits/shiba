@@ -879,6 +879,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// the scroll clickContinue doesn't seem to advance to the next page.
 		JavascriptExecutor js = ((JavascriptExecutor) driver);
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+		testPage.clickContinue("Household Race and Ethnicity");
+		testPage.enter("preferNotToSay", "Rather not say");
 		testPage.clickContinue("Household members");
 
 		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
@@ -1223,8 +1225,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// the scroll clickContinue doesn't seem to advance to the next page.
 		JavascriptExecutor js = ((JavascriptExecutor) driver);
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-		testPage.clickContinue("Household members");
-	}
+		testPage.clickContinue("Household Race and Ethnicity");
+		testPage.enter("preferNotToSay", "Rather not say");
+		testPage.clickContinue("Household members");	}
 
 	private void addHouseholdMemberToVerifySpouseCannotBeSelected() {
 		testPage.clickButtonLink("Add a person", "Housemate: Personal Info");
@@ -1257,8 +1260,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// after having selected none
 		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
 		testPage.enter("ssn", "987654321");
-		testPage.clickContinue("Household members");
-	}
+		testPage.clickContinue("Household Race and Ethnicity");
+		testPage.enter("preferNotToSay", "Rather not say");
+		testPage.clickContinue("Household members");	}
 
 	protected void removeSpouseAndVerifySpouseCanBeSelectedForNewHouseholdMember() {
 		// You are about to delete householdMember0 as a household member.

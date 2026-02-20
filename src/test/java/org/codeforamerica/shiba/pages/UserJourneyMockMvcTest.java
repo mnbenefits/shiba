@@ -354,7 +354,9 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 			  householdMemberInfo.put("maritalStatus", List.of("Never married"));
 			  householdMemberInfo.put("sex", List.of("Male"));
 			  householdMemberInfo.put("livedInMnWholeLife", List.of("Yes"));
-			  postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+			  postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+			  postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
+
 	
 			  // The flow to the introPersonalDetails page varies based on program selection
 			  switch (program) {
