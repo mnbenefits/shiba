@@ -42,8 +42,6 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 			@Override
 			public @Nullable AuthorizationResult authorize(Supplier<? extends @Nullable Authentication> authentication,
 					RequestAuthorizationContext object) {
-				// TODO Auto-generated method stub
-				//return null;
 				Object authenicationObject = authentication.get();
 				if (!(authenicationObject instanceof OAuth2AuthenticationToken)) {
 					return new AuthorizationDecision(false);
@@ -60,7 +58,6 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 					log.warn(String.format("Admin login for %s is not authorized", email));
 				}
 				return new AuthorizationDecision(isAuthorized);
-				
 			}
 
 		}
