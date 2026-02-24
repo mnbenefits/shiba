@@ -166,7 +166,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     assertThat(driver.getTitle()).isEqualTo("Documents Sent");
     
   }
-
+  
   @Test
   void healthcareRenewalFlow() {
     navigateTo("healthcareRenewalUpload");
