@@ -6,24 +6,19 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.time.Duration;
 
 import javax.net.ssl.SSLContext;
 
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
 import org.apache.hc.client5.http.ssl.HostnameVerificationPolicy;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.core5.ssl.SSLContextBuilder;
-import org.apache.hc.core5.util.Timeout;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
@@ -37,11 +32,11 @@ public class RestTemplateConfiguration {
   private String connectTimeout;
   @Value("${client.read-timeout}")
   private String readTimeout;
-  @Bean
-  public RestTemplate restTemplate() 
-	        throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
 
-	  // Configure SSL context with trust configs
+    @Bean
+    RestTemplate restTemplate()
+            throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
+
 	    SSLContext sslContext = SSLContextBuilder.create()
 	            .loadTrustMaterial(Paths.get(truststore).toFile(), truststorePassword.toCharArray())
 	            .build();
@@ -59,35 +54,10 @@ public class RestTemplateConfiguration {
 	    connectionManager.setDefaultMaxPerRoute(1);
 	    connectionManager.setMaxTotal(5);
 
-	    RequestConfig config = RequestConfig.custom()
-	    		.setConnectTimeout(Timeout.of(Duration.ofMillis(3000)))
-	            //.setResponseTimeout(Timeout.of(Duration.ofMillis(5000))) // This is the new "readTimeout"
-	            .build();
-
-	    // Build HTTP client with connection manager
-	    CloseableHttpClient httpClient = HttpClientBuilder.create()
-	    		.setDefaultRequestConfig(config)
-	            .setConnectionManager(connectionManager)
-	            .build();
-	    
-	    // Create request factory with our custom HTTP client
-	    HttpComponentsClientHttpRequestFactory requestFactory = 
-	            new HttpComponentsClientHttpRequestFactory(httpClient);
-	    
-	    //requestFactory.setConnectTimeout(Integer.valueOf(connectTimeout));
+	    SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+	    requestFactory.setConnectTimeout(Integer.valueOf(connectTimeout));
 	    requestFactory.setReadTimeout(Integer.valueOf(readTimeout));
 	    
 	    return new RestTemplate(requestFactory);
   }
 }
-
-/*
-RequestConfig config = RequestConfig.custom()
-            .setConnectTimeout(Duration.ofMillis(3000))
-            .setResponseTimeout(Duration.ofMillis(5000)) // This is the new "readTimeout"
-            .build();
-
-    CloseableHttpClient client = HttpClientBuilder.create()
-            .setDefaultRequestConfig(config)
-            .build();
-*/

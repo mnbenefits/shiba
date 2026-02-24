@@ -39,28 +39,6 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 		      
 		  );
 
-/*	  
-			@Override
-			public AuthorizationDecision check(Supplier<Authentication> authentication,
-					RequestAuthorizationContext object) {
-				Object authenicationObject = authentication.get();
-				if (!(authenicationObject instanceof OAuth2AuthenticationToken)) {
-					return new AuthorizationDecision(false);
-				}
-
-				var principal = ((OAuth2AuthenticationToken) authenicationObject).getPrincipal();
-				var email = principal.getAttribute("email");
-
-				boolean isAuthorized = email != null && ADMIN_EMAILS.contains(email.toString().toLowerCase());
-
-				if (isAuthorized) {
-					log.info(String.format("Admin login for %s is authorized", email));
-				} else {
-					log.warn(String.format("Admin login for %s is not authorized", email));
-				}
-				return new AuthorizationDecision(isAuthorized);
-			}
-*/
 			@Override
 			public @Nullable AuthorizationResult authorize(Supplier<? extends @Nullable Authentication> authentication,
 					RequestAuthorizationContext object) {
