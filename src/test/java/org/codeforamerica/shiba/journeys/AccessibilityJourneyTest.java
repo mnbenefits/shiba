@@ -328,6 +328,32 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("moveToMnDate", "02/18/1950");
     testPage.enter("moveToMnPreviousState", "Illinois");
     testPage.clickContinue("Household Race and Ethnicity");
+    //test going back on the race & eth page
+    testPage.goBack();
+    testPage.clickContinue("Household Race and Ethnicity");
+    testPage.enter("preferNotToSay", "Rather not say");
+    testPage.clickContinue("Household members");
+    
+    //go back (testing delete of HH members)
+    testPage.goBack();
+    testPage.clickButtonLink("Yes, go back to the start","Do you want to add household members?" );
+
+    testPage.chooseYesOrNo("addHouseholdMembers", YES.getDisplayValue(), "Start Household");
+    testPage.clickButtonLink("Continue", "Housemate: Personal Info");
+    
+    testPage.enter("relationship", "Other");
+    testPage.enter("programs", PROGRAM_CCAP);
+    testPage.enter("firstName", "householdMemberFirstName");
+    testPage.enter("lastName", "householdMemberLastName");
+    testPage.enter("otherName", "houseHoldyMcMemberson");
+    testPage.enter("dateOfBirth", "09/14/1950");
+    testPage.enter("ssn", "987654321");
+    testPage.enter("maritalStatus", "Never married");
+    testPage.enter("sex", "Male");
+    testPage.enter("livedInMnWholeLife", "Yes");
+    testPage.enter("moveToMnDate", "02/18/1950");
+    testPage.enter("moveToMnPreviousState", "Illinois");
+    testPage.clickContinue("Household Race and Ethnicity");
     testPage.enter("preferNotToSay", "Rather not say");
     testPage.clickContinue("Household members");
     

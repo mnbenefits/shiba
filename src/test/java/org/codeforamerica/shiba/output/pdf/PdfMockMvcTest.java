@@ -12,11 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -1914,6 +1918,346 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 			assertPdfFieldEquals("PW_QUESTION_NO_2", "", caf);
 			assertPdfFieldEquals("PW_HH_MEMBER_NAME_2", "", caf);
 		}
+	}
+	@Nested
+	@Tag("pdf")
+	class HouseholdRaceAndEthnicity {
+
+	    @BeforeEach
+	    void setUp() throws Exception {
+	        selectPrograms("CASH");
+	        fillOutPersonalInfo();
+	    }
+
+	    @Test
+	    void shouldMapAsianForHouseholdMember() throws Exception {
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "ASIAN");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Pam"),
+    	        "lastName", List.of("Beesly"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("child")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "ASIAN");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Yes", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        assertPdfFieldEquals("ASIAN_1", "Yes", caf);
+	        assertPdfFieldEquals("WHITE_1", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_1", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_1", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_1", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_1", "Off", caf);
+	    }
+
+	    @Test
+	    void shouldMapWhiteForHouseholdMember() throws Exception {
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "WHITE");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	    }
+
+	    @Test
+	    void shouldMapMiddleEasternOrNorthAfricanToWhiteForHouseholdMember() throws Exception {
+
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "MIDDLE_EASTERN_OR_NORTH_AFRICAN");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+;
+	    }
+
+	    @Test
+	    void shouldMapWhiteWhenBothWhiteAndMiddleEasternOrNorthAfricanSelected() throws Exception {
+	    	
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity",
+		            Map.of("householdRaceAndEthnicity", List.of("WHITE", "MIDDLE_EASTERN_OR_NORTH_AFRICAN")));
+	        
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+
+	    }
+
+	    @Test
+	    void shouldMapBlackOrAfricanAmericanForHouseholdMember() throws Exception {
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "BLACK_OR_AFRICAN_AMERICAN");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	    }
+
+	    @Test
+	    void shouldMapAmericanIndianOrAlaskaNativeForHouseholdMember() throws Exception {
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "AMERICAN_INDIAN_OR_ALASKA_NATIVE");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Yes", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	    }
+
+	    @Test
+	    void shouldMapNativeHawaiianOrPacificIslanderForHouseholdMember() throws Exception {
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+
+	    }
+
+	    @Test
+	    void shouldMapHispanicLatinoOrSpanishForHouseholdMember() throws Exception {
+	    	
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Yes", caf);
+	        
+	    }
+	    
+	    @Test
+	    void shouldMapRatherNotSayForHouseholdMember() throws Exception {
+	    	
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	    }
+
+
+	    @Test
+	    void shouldMapSomeOtherRaceForHouseholdMemberWithNoTextWritten() throws Exception {
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+	        postExpectingSuccess("householdRaceAndEthnicity", Map.of(
+	        	    "householdRaceAndEthnicity", List.of("SOME_OTHER_RACE_OR_ETHNICITY"),
+	        	    "otherRaceOrEthnicity", List.of("idk my race/ethnicity")
+	        	));
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	    }
+
+	    @Test
+	    void shouldMapMultipleRacesForHouseholdMember() throws Exception {
+	    	
+	    	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+    	    postExpectingSuccess("householdMemberInfo", Map.of(
+    	        "firstName", List.of("Jim"),
+    	        "lastName", List.of("Halpert"),
+    	        "programs", List.of("CASH"),
+    	        "relationship", List.of("spouse")
+    	    ));
+    	    postExpectingSuccess("householdRaceAndEthnicity",
+    	            Map.of("householdRaceAndEthnicity", List.of("ASIAN", "WHITE", "HISPANIC_LATINO_OR_SPANISH", 
+    	            		"MIDDLE_EASTERN_OR_NORTH_AFRICAN", "BLACK_OR_AFRICAN_AMERICAN", "AMERICAN_INDIAN_OR_ALASKA_NATIVE",
+    	            		"NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER" )));
+	        
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Yes", caf);
+	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Yes", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Yes", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Yes", caf);
+	    }
+
+	    @Test
+	    void shouldMapAllRacesNoForHouseholdMemberWhenPageSkipped() throws Exception {
+	        // Don't post to householdRaceAndEthnicity - other option or prefer not to say
+			addHouseholdMembersWithProgram("SNAP");
+
+	        var caf = downloadCafClientPDF();
+	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
+	        assertPdfFieldEquals("WHITE_0", "Off", caf);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	    }
+	    
+		@Test
+		void shouldAddAndVerifyRaceForFourteenHouseholdMembersIncludingDeleteFlow() throws Exception {
+		    completeFlowFromLandingPageThroughReviewInfo("SNAP");
+
+		    postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+		    
+
+		    //Add a member + race, then navigate to householdList
+		    postExpectingRedirect("householdMemberInfo",Map.of(
+	    	        "firstName", List.of("Jim"),
+	    	        "lastName", List.of("Halpert"),
+	    	        "programs", List.of("CASH"),
+	    	        "relationship", List.of("spouse")) , "householdRaceAndEthnicity");
+		    postExpectingSuccess("householdRaceAndEthnicity", "raceAndEthnicity", List.of("ASIAN"));
+
+		    //Delete iter0 (first added member) from householdList 
+		    mockMvc.perform(post("/groups/household/0/delete").with(csrf()).session(session))
+		        .andExpect(redirectedUrl("/pages/addHouseholdMembers"));
+		    
+		    postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+
+
+		   
+		    //Add 13 household members (, members = 0–13) 
+		    for (int i = 0; i <= 13; i++) {
+		        // Click "Add a person" from householdList
+		        getNavigationPageWithQueryParamAndExpectRedirect(
+		            "householdList", "option", "1", "householdMemberInfo");
+
+		        postExpectingRedirect(
+		            "householdMemberInfo",
+		            Map.of(
+			    	        "firstName", List.of("Jim"),
+			    	        "lastName", List.of("Halpert"),
+			    	        "programs", List.of("CASH"),
+			    	        "relationship", List.of("spouse")),
+		            "householdRaceAndEthnicity");
+
+		        
+		        postExpectingSuccess("householdRaceAndEthnicity",
+	    	            Map.of("householdRaceAndEthnicity", List.of("ASIAN", "WHITE", "HISPANIC_LATINO_OR_SPANISH", 
+	    	            		"MIDDLE_EASTERN_OR_NORTH_AFRICAN", "BLACK_OR_AFRICAN_AMERICAN", "AMERICAN_INDIAN_OR_ALASKA_NATIVE",
+	    	            		"NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER" )));
+		        
+		       
+		    }
+
+
+		    
+		    var caf = downloadCafClientPDF();
+
+		    for (int i = 0; i <= 13; i++) {
+		        assertPdfFieldEquals("ASIAN_0", "Yes", caf);
+		        assertPdfFieldEquals("WHITE_0", "Yes", caf);
+		        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Yes", caf);
+		        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", caf);
+		        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Yes", caf);
+		        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Yes", caf);
+		    }
+		}
+
+		
 	}
 	
 
