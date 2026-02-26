@@ -393,6 +393,8 @@ mappings:
     hasSocialWorker: HAS_SOCIAL_WORKER
   referrals:
     needsReferrals: HELP_WITH_REFERRALS
+  legalGuardian:
+    hasLegalGuardian: LEGAL_GUARDIAN	
   authorizedRep:
     helpWithBenefits: WANT_AUTHORIZED_REP
   authorizedRepCommunicate:
