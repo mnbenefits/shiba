@@ -4936,6 +4936,15 @@ pageConfigurations:
     inputs:
       - name: needsReferrals
         type: YES_NO
+  - &legalGuardian
+    name: legalGuardian
+    pageTitle: legalGuardian.title
+    headerKey: legalGuardian.header
+    contextFragment: authorizedRepContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: hasLegalGuardian
+        type: YES_NO
   - &authorizedRep
     name: authorizedRep
     headerKey: authorized-rep.do-you-want-to
@@ -7479,6 +7488,10 @@ workflow:
       - pageName: referrals
   referrals:
     pageConfiguration: *referrals
+    nextPages:
+      - pageName: legalGuardian
+  legalGuardian:
+    pageConfiguration: *legalGuardian
     nextPages:
       - pageName: authorizedRep
   authorizedRep:
