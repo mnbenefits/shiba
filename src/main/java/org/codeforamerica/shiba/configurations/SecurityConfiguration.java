@@ -118,14 +118,6 @@ public class SecurityConfiguration {
 					log.error("Invalid Session Redirect for " + pageName, e);
 				}
 
-			} else if (pageName.equalsIgnoreCase("/pages/healthcareRenewalUpload")) {
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/healthcareRenewalUpload");
-				try {
-					dispatcher.forward(request, response);
-				} catch (ServletException | IOException e) {
-					log.error("Invalid Session Redirect for " + pageName, e);
-				}
-
 			} else if (pageName.equalsIgnoreCase("/")) {
 				// language was changed on landing page so stay there
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/landing");
