@@ -393,7 +393,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  // navigation from housingSubsidy to goingToSchool
 	  switch (program) {
 		  case "GRH": {
-			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "homeless");
+			  postExpectingRedirect("homeless", "isHomeless", "false", "livingSituation");
 			  postExpectingRedirect("livingSituation", "livingSituation",
 					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "housingProvider");
 			  postExpectingRedirect("housingProvider", "housingProvider",
@@ -407,7 +408,9 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 			  break;
 		  }
 		  default: {
-			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "goingToSchool");
+			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "homeless");
+			  postExpectingRedirect("homeless", "isHomeless", "false", "goingToSchool");
+
 		  }
 	  }
 

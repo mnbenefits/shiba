@@ -41,8 +41,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 		        "Buying and cooking food");
 	   postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
 	            "Housing subsidy");
-	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-	            "Going to school");
+	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Homeless");
+	  postExpectingNextPageTitle("homeless", "isHomeless", "false", "Going to school");    
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -139,8 +139,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "Buying and cooking food");
     postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
             "Housing subsidy");   
-    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Going to school");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Homeless");
+    postExpectingNextPageTitle("homeless", "isHomeless", "false", "Going to school");    
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -171,8 +171,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "Buying and cooking food");
     postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
             "Housing subsidy");    
-    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Going to school");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Homeless");
+    postExpectingNextPageTitle("homeless", "isHomeless", "false", "Going to school");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -215,7 +215,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Intro: Personal Details");
     postExpectingRedirect("introPersonalDetails", "housingSubsidy");
-    postExpectingRedirect("housingSubsidy", "goingToSchool");
+    postExpectingRedirect("housingSubsidy", "homeless");
+    postExpectingRedirect("homeless", "isHomeless", "false", "goingToSchool");
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
     completeFlowFromIsPregnantThroughTribalNations(false, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -338,7 +339,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     
     postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false",
 			"housingSubsidy");
-    postExpectingRedirect("housingSubsidy", "livingSituation");
+    postExpectingRedirect("housingSubsidy", "homeless");
+    postExpectingRedirect("homeless", "isHomeless", "false", "livingSituation");
     postExpectingRedirect("livingSituation", "goingToSchool");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
     completeFlowFromIsPregnantThroughTribalNations(true, "CCAP", "EA");
