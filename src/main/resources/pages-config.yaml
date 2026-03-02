@@ -1859,6 +1859,15 @@ pageConfigurations:
     inputs:
       - name: hasHousingSubsidy
         type: YES_NO
+  - &homeless
+    name: homeless
+    pageTitle: homeless.title
+    headerKey: homeless.header
+    hasPrimaryButton: false
+    contextFragment: houseFragment
+    inputs:
+      - name: isHomeless
+        type: YES_NO  
   - &pregnant
     name: pregnant
     pageTitle: pregnant.title
@@ -6197,7 +6206,17 @@ workflow:
       - pageName: householdMemberInfo
         groupName: household
     nextPages:
+      - pageName: homeless
+  homeless:
+    pageConfiguration: *homeless
+    datasources:
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
+    nextPages:
       - pageName: livingSituation
+    skipCondition: *noOneChoseCAF?
   livingSituation:
     pageConfiguration: *livingSituation
     nextPages:
