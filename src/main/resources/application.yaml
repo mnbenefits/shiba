@@ -32,6 +32,10 @@ spring:
             token-uri: https://login.microsoftonline.com/${AZURE_AD_TENANT_ID}/oauth2/v2.0/token            
             user-info-uri: https://graph.microsoft.com/oidc/userinfo
             user-name-attribute: name
+  web:
+    error:
+      whitelabel:
+        enabled: true
 server:
   shutdown: graceful
   tomcat:
@@ -43,9 +47,6 @@ server:
         secure: true
       timeout: 60m
       timeout-url : /errorTimeout
-  error:
-    whitelabel:
-      enabled: true
 sentry:
   traces-sample-rate: 0.2
   send-default-pii: true
