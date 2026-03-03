@@ -502,7 +502,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Previous EBT Card");
     testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
     testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
-	testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
+    testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
+	testPage.chooseYesOrNo("hasLegalGuardian", NO.getDisplayValue(), "Authorized Rep");
     testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
     testPage.chooseYesOrNo("communicateOnYourBehalf", YES.getDisplayValue(), "Authorized Rep mail and notices");
     testPage.chooseYesOrNo("getMailNotices", YES.getDisplayValue(), "Authorized Rep spend on your behalf");
