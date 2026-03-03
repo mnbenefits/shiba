@@ -91,6 +91,8 @@ mappings:
     selectedCounty: APPLICANT_HOME_COUNTY
   housingSubsidy:
     hasHousingSubsidy: HOUSING_SUBSIDY
+  homeless:
+    isHomeless: HOMELESS
   mailingAddress:
     selectedZipCode: APPLICANT_MAILING_ZIPCODE
     selectedCity: APPLICANT_MAILING_CITY
