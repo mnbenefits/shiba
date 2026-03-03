@@ -890,7 +890,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("hasChildrenUnder19", NO.getDisplayValue(), "Housing subsidy");
 
 		// Are you getting a housing subsidy?
-		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Homeless");
+		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Housing situation");
 		
 		// Are you Homeless
 		testPage.chooseYesOrNo("isHomeless", NO.getDisplayValue(), "Going to school");
