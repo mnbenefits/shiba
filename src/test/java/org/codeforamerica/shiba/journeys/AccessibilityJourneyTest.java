@@ -345,7 +345,7 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Preparing meals together");
     testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Buying and cooking food");
     testPage.chooseYesOrNo("isDisabledToBuyOrCookFood", YES.getDisplayValue(), "Housing subsidy");
-    testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Homeless");
+    testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Housing situation");
     testPage.chooseYesOrNo("isHomeless", NO.getDisplayValue(), "Living situation");
     testPage.enter("livingSituation", "None of these");
     testPage.clickContinue("Going to school");

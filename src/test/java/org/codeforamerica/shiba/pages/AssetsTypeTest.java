@@ -103,8 +103,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 
     }
     else {
-	    postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "homeless");
-	    postExpectingRedirect("homeless", "isHomeless", "false", "livingSituation");
+	    postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+	    postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
     }
     
     if(Arrays.asList(programs).contains("GRH")) {
@@ -132,8 +132,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  completeFlowFromLandingPageThroughReviewInfo(programs);
 	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsence");
 	  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "false", "introPersonalDetails");
-	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "homeless");
-	  postExpectingRedirect("homeless", "isHomeless", "false", "goingToSchool");
+	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+	  postExpectingRedirect("housingSituation", "isHomeless", "false", "goingToSchool");
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");

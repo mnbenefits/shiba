@@ -1859,10 +1859,10 @@ pageConfigurations:
     inputs:
       - name: hasHousingSubsidy
         type: YES_NO
-  - &homeless
-    name: homeless
-    pageTitle: homeless.title
-    headerKey: homeless.header
+  - &housingSituation
+    name: housingSituation
+    pageTitle: housingSituation.title
+    headerKey: housingSituation.header
     hasPrimaryButton: false
     contextFragment: houseFragment
     inputs:
@@ -6215,9 +6215,9 @@ workflow:
       - pageName: householdMemberInfo
         groupName: household
     nextPages:
-      - pageName: homeless
-  homeless:
-    pageConfiguration: *homeless
+      - pageName: housingSituation
+  housingSituation:
+    pageConfiguration: *housingSituation
     datasources:
       - pageName: addHouseholdMembers
       - pageName: choosePrograms
