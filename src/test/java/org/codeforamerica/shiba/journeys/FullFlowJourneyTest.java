@@ -423,13 +423,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Is there anything else you want to share?
 		driver.findElement(By.id("additionalInfo")).sendKeys("I need you to contact my work for proof of termination");
-		testPage.clickContinue("Can we ask");
 
-		// Can we ask about your race and ethnicity?
-		testPage.clickButtonLink("Yes, continue", "Race and Ethnicity");
-
-		// What races or ethnicities do you identify with?
-		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
 		testPage.clickContinue("Penalty Warnings");
 		testPage.enter("disqualifiedPublicAssistance", YES.getDisplayValue());
 		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember-me")).click(); // Applicant
@@ -1010,13 +1004,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Is there anything else you want to share?
 		driver.findElement(By.id("additionalInfo")).sendKeys("I have nothing else to share");
-		testPage.clickContinue("Can we ask");
 
-		// Can we ask about your race and ethnicity?
-		testPage.clickButtonLink("Yes, continue", "Race and Ethnicity");
-
-		// What races or ethnicities do you identify with?
-		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
 		testPage.clickContinue("Penalty Warnings");
 		// Verify accordion exists
 	    assertThat(testPage.findElementById("pw-a1")).isNotNull();
@@ -1171,10 +1159,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("livedInMnWholeLife", "Yes");
 		testPage.enter("moveToMnDate", "10/20/1993");
 		testPage.enter("moveToMnPreviousCity", "Chicago");
+		testPage.clickContinue("Race and Ethnicity");
+		testPage.enter("raceAndEthnicity", List.of("Black or African American"));
 		testPage.clickContinue("Home Address");
 		assertThat(testPage.getTitle()).isEqualTo("Home Address");
 		testPage.goBack();
+		testPage.goBack();
 		testPage.enter("dateOfBirth", "01/12/1928");
+		testPage.clickContinue("Race and Ethnicity");
 		testPage.clickContinue("Home Address");
 	}
 
@@ -1207,10 +1199,15 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("livedInMnWholeLife", "Yes");
 		testPage.enter("moveToMnDate", "10/20/1993");
 		testPage.enter("moveToMnPreviousCity", "Chicago");
+		testPage.clickContinue("Race and Ethnicity");
+		testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
 		testPage.clickContinue("Home Address");
 		assertThat(testPage.getTitle()).isEqualTo("Home Address");
 		testPage.goBack();
+		testPage.goBack();
 		testPage.enter("dateOfBirth", "01/12/1928");
+		testPage.clickContinue("Race and Ethnicity");
+		testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
 		testPage.clickContinue("Home Address");
 
 	}

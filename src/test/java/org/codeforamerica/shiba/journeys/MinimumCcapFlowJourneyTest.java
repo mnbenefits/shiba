@@ -174,13 +174,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
     // Is there anything else you want to share?
     driver.findElement(By.id("additionalInfo")).sendKeys("No I don't");
-    testPage.clickContinue("Can we ask");
 
-    // Can we ask about your race and ethnicity?
-    testPage.clickButtonLink("Yes, continue", "Race and Ethnicity");
-
-    // What races or ethnicities do you identify with?
-    testPage.enter("raceAndEthnicity", List.of("Middle Eastern or North African"));
     testPage.clickContinue("Legal Stuff");
 
     // The legal stuff.
