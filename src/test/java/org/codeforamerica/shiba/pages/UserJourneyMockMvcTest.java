@@ -409,7 +409,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 		  }
 		  default: {
 			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
-			  postExpectingRedirect("housingSituation", "isHomeless", "false", "goingToSchool");
+			  postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
 
 		  }
 	  }

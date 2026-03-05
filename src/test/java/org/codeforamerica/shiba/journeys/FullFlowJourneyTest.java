@@ -893,8 +893,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Housing situation");
 		
 		// Are you Homeless
-		testPage.chooseYesOrNo("isHomeless", NO.getDisplayValue(), "Going to school");
-
+		testPage.chooseYesOrNo("isHomeless", NO.getDisplayValue(), "Living situation");
+		
+		// What is your current living situation?
+		testPage.clickElementById("livingSituation5");
+		testPage.clickContinue("Going to school");
 
 		// Is anyone in your household going to school right now, either full or
 		// part-time?
