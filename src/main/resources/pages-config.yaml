@@ -1446,6 +1446,98 @@ pageConfigurations:
               isNone: true
           datasources:
             - pageName: choosePrograms
+  - &householdRaceAndEthnicity
+    name: householdRaceAndEthnicity
+    pageTitle: household-race-and-ethnicity.title
+    headerHelpMessageKey: race-and-ethnicity.select-all-that-apply
+    contextFragment: householdRaceAndEthnicityFragment
+    inputs:
+      - name: preferNotToSay
+        type: CUSTOM
+        customInputFragment: preferNotToSayFragment
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: household-race-and-ethnicity.prefer-not-to-say
+      - name: householdRaceAndEthnicity
+        type: CHECKBOX
+        options:
+          selectableOptions:
+            - value: AMERICAN_INDIAN_OR_ALASKA_NATIVE
+              messageKey: race-and-ethnicity.native-american-or-alaska-native
+            - value: ASIAN
+              messageKey: race-and-ethnicity.asian
+            - value: BLACK_OR_AFRICAN_AMERICAN
+              messageKey: race-and-ethnicity.black-or-african-american
+            - value: HISPANIC_LATINO_OR_SPANISH
+              messageKey: race-and-ethnicity.hispanic-latino-or-spanish
+            - value: MIDDLE_EASTERN_OR_NORTH_AFRICAN
+              messageKey: race-and-ethnicity.middle-eastern-or-north-african
+            - value: NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER
+              messageKey: race-and-ethnicity.native-hawaiian-or-pacific-islander
+            - value: WHITE
+              messageKey: race-and-ethnicity.white
+            - value: SOME_OTHER_RACE_OR_ETHNICITY
+              messageKey: race-and-ethnicity.some-other-race
+        followUpValues:
+          - SOME_OTHER_RACE_OR_ETHNICITY
+        followUps:
+          - name: otherRaceOrEthnicity
+            type: TEXT
+            validators:
+              - validation: ALL_NON_BLANK
+                errorMessageKey: general.validation.enter-race-ethnicity
+                condition:
+                  input: householdRaceAndEthnicity
+                  matcher: CONTAINS
+                  value: SOME_OTHER_RACE_OR_ETHNICITY
+            promptMessage:
+              promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
+  - &householdRedirectPage
+    name: householdRedirectPage
+    headerKey: household-redirect-page.header
+    pageTitle: warning-page.go-back-title
+    usingPageTemplateFragment: false
+  - &raceAndEthnicity
+    name: raceAndEthnicity
+    pageTitle: race-and-ethnicity.title
+    contextFragment: raceAndEthnicityFragment
+    preFormContentFragment: raceAndEthnicity
+    inputs:
+      - name: preferNotToSay
+        type: CUSTOM
+        customInputFragment: applicantPreferNotToSayFragment
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: race-and-ethnicity.prefer-not-to-say
+      - name: raceAndEthnicity
+        type: CHECKBOX
+        options:
+          selectableOptions:
+            - value: AMERICAN_INDIAN_OR_ALASKA_NATIVE
+              messageKey: race-and-ethnicity.native-american-or-alaska-native
+            - value: ASIAN
+              messageKey: race-and-ethnicity.asian
+            - value: BLACK_OR_AFRICAN_AMERICAN
+              messageKey: race-and-ethnicity.black-or-african-american
+            - value: HISPANIC_LATINO_OR_SPANISH
+              messageKey: race-and-ethnicity.hispanic-latino-or-spanish
+            - value: MIDDLE_EASTERN_OR_NORTH_AFRICAN
+              messageKey: race-and-ethnicity.middle-eastern-or-north-african
+            - value: NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER
+              messageKey: race-and-ethnicity.native-hawaiian-or-pacific-islander
+            - value: WHITE
+              messageKey: race-and-ethnicity.white
+            - value: SOME_OTHER_RACE_OR_ETHNICITY
+              messageKey: race-and-ethnicity.some-other-race
+        followUpValues:
+          - SOME_OTHER_RACE_OR_ETHNICITY
+        followUps:
+          - name: otherRaceOrEthnicity
+            type: TEXT
+            promptMessage:
+              promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
   - &householdList
     name: householdList
     pageTitle: household-list.title
@@ -5100,49 +5192,6 @@ pageConfigurations:
         type: CUSTOM
         customInputFragment: caseNumberImages
     pageTitle: additional-info.title
-  - &canWeAsk
-    name: canWeAsk
-    pageTitle: can-we-ask.title
-    headerKey: can-we-ask.can-we-ask-about-your-race-and-ethnicity
-    contextFragment: raceAndEthnicityFragment
-    hasPrimaryButton: false
-  - &raceAndEthnicity
-    name: raceAndEthnicity
-    pageTitle: race-and-ethnicity.title
-    headerKey: race-and-ethnicity.what-races-or-ethnicities-do-you-identify-with
-    headerHelpMessageKey: race-and-ethnicity.select-all-that-apply
-    contextFragment: raceAndEthnicityFragment
-    inputs:
-      - name: raceAndEthnicity
-        type: CHECKBOX
-        validators:
-          - validation: SELECT_AT_LEAST_ONE
-            errorMessageKey: general.validation.make-sure-you-answer-this-question
-        options:
-          selectableOptions:
-            - value: AMERICAN_INDIAN_OR_ALASKA_NATIVE
-              messageKey: race-and-ethnicity.native-american-or-alaska-native
-            - value: ASIAN
-              messageKey: race-and-ethnicity.asian
-            - value: BLACK_OR_AFRICAN_AMERICAN
-              messageKey: race-and-ethnicity.black-or-african-american
-            - value: HISPANIC_LATINO_OR_SPANISH
-              messageKey: race-and-ethnicity.hispanic-latino-or-spanish
-            - value: MIDDLE_EASTERN_OR_NORTH_AFRICAN
-              messageKey: race-and-ethnicity.middle-eastern-or-north-african
-            - value: NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER
-              messageKey: race-and-ethnicity.native-hawaiian-or-pacific-islander
-            - value: WHITE
-              messageKey: race-and-ethnicity.white
-            - value: SOME_OTHER_RACE_OR_ETHNICITY
-              messageKey: race-and-ethnicity.some-other-race
-        followUpValues:
-          - SOME_OTHER_RACE_OR_ETHNICITY
-        followUps:
-          - name: otherRaceOrEthnicity
-            type: TEXT
-            promptMessage:
-              promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
   - &assets
     name: assets
     pageTitle: assets.title
@@ -5671,6 +5720,10 @@ workflow:
     pageConfiguration: *personalInfo
     enrichment: personalInfoDateOfBirthEnrichment
     nextPages:
+      - pageName: raceAndEthnicity
+  raceAndEthnicity:
+    pageConfiguration: *raceAndEthnicity
+    nextPages:
       - pageName: homeAddress
     datasources:
       - pageName: choosePrograms
@@ -5880,6 +5933,15 @@ workflow:
     pageConfiguration: *householdMemberInfo
     groupName: household
     enrichment: householdMemberDateOfBirthEnrichment
+    nextPages:
+      - pageName: householdRaceAndEthnicity
+  householdRaceAndEthnicity:
+    pageConfiguration: *householdRaceAndEthnicity
+    groupName: household
+    nextPages:
+      - pageName: householdList
+  householdRedirectPage:
+    pageConfiguration: *householdRedirectPage
     nextPages:
       - pageName: householdList
   householdList:
@@ -6276,16 +6338,6 @@ workflow:
     pageConfiguration: *livingSituation
     nextPages:
       - pageName: housingProvider
-    skipCondition:
-      logicalOperator: AND
-      conditions:
-        - *applicantDidNotChooseGRH?
-        - *noOneChoseCCAP?
-    datasources:
-      - pageName: choosePrograms
-      - pageName: addHouseholdMembers
-      - groupName: household
-        pageName: householdMemberInfo
   housingProvider:
     pageConfiguration: *housingProvider
     skipCondition: *applicantDidNotChooseGRH?
@@ -7718,15 +7770,6 @@ workflow:
   additionalInfo:
     pageConfiguration: *additionalInfo
     nextPages:
-      - pageName: canWeAsk
-  canWeAsk:
-    pageConfiguration: *canWeAsk
-    nextPages:
-      - pageName: raceAndEthnicity
-      - pageName: penaltyWarnings
-  raceAndEthnicity:
-    pageConfiguration: *raceAndEthnicity
-    nextPages:
       - pageName: penaltyWarnings
   penaltyWarnings:
     pageConfiguration: *penaltyWarnings
@@ -8052,8 +8095,9 @@ pageGroups:
     startPages:
       - householdMemberInfo
     completePages:
-      - householdMemberInfo
+      - householdRaceAndEthnicity
     reviewPage: householdList
+    redirectPage: householdRedirectPage
     deleteWarningPage: householdDeleteWarningPage
     restartPage: addHouseholdMembers
     startingCount: 1

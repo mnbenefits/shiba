@@ -63,8 +63,9 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     WebElement programsFollowUp = testPage.findElementById("programs-follow-up");
     assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
     testPage.enter("ssn", "987654321");
+    testPage.clickContinue("Household Race and Ethnicity");
+    testPage.enter("preferNotToSay", "Rather not say");
     testPage.clickContinue("Household members");
-
     testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
 
     // Who are the children in need of child care
@@ -174,13 +175,7 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
 
     // Is there anything else you want to share?
     driver.findElement(By.id("additionalInfo")).sendKeys("No I don't");
-    testPage.clickContinue("Can we ask");
 
-    // Can we ask about your race and ethnicity?
-    testPage.clickButtonLink("Yes, continue", "Race and Ethnicity");
-
-    // What races or ethnicities do you identify with?
-    testPage.enter("raceAndEthnicity", List.of("Middle Eastern or North African"));
     testPage.clickContinue("Legal Stuff");
 
     // The legal stuff.

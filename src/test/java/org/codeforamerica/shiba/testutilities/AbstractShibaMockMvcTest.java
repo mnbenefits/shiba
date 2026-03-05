@@ -197,12 +197,14 @@ public class AbstractShibaMockMvcTest {
         "programs", List.of(program),
         "relationship", List.of("spouse")
     ));
+    postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
     postExpectingSuccess("householdMemberInfo", Map.of(
         "firstName", List.of("Pam"),
         "lastName", List.of("Beesly"),
         "programs", List.of(program),
         "relationship", List.of("child")
     ));
+    postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
   }
 
 
@@ -220,7 +222,8 @@ public class AbstractShibaMockMvcTest {
     householdMemberInfo.put("livedInMnWholeLife", List.of("Yes"));
     householdMemberInfo.put("moveToMnDate", List.of("02", "18", "1950"));
     householdMemberInfo.put("moveToMnPreviousState", List.of("Illinois"));
-    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+    postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
   }
   
   protected void fillOutSpouseInfo(String... programSelections) throws Exception{
@@ -236,7 +239,8 @@ public class AbstractShibaMockMvcTest {
 	    householdMemberInfo.put("sex", List.of("MALE"));
 	    householdMemberInfo.put("livedInMnWholeLife", List.of("true"));
 	    
-	    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+	    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+	    postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
   }
   
   protected void fillOutHousemateInfoMoreThanFiveLessThanTen(int HHCount) throws Exception {
@@ -254,7 +258,8 @@ public class AbstractShibaMockMvcTest {
       householdMemberInfo.put("livedInMnWholeLife", List.of("Yes"));
       householdMemberInfo.put("moveToMnDate", List.of("02", "18", "1950"));
       householdMemberInfo.put("moveToMnPreviousState", List.of("Illinois"));
-      postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+      postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+      postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
     }
   }
 
@@ -272,7 +277,8 @@ public class AbstractShibaMockMvcTest {
     householdMemberInfo.put("livedInMnWholeLife", List.of("Yes"));
     householdMemberInfo.put("moveToMnDate", List.of("02", "18", "1950"));
     householdMemberInfo.put("moveToMnPreviousState", List.of("Illinois"));
-    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
+    postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+    postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
   }
 
   protected String getFirstHouseholdMemberId() throws Exception {
@@ -422,6 +428,8 @@ public class AbstractShibaMockMvcTest {
         "moveToMnDate", List.of("02", "18", "1776"),
         "moveToMnPreviousCity", List.of("Chicago")
     ));
+    postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN"));
+
   }
 
   protected void fillOutContactInfo() throws Exception {
@@ -1041,10 +1049,7 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("additionalInfo",
         "additionalInfo",
         "Some additional information about my application",
-        "canWeAsk");
-    postWithQueryParam("canWeAsk", "option", "0");
-    postExpectingRedirect("raceAndEthnicity", "raceAndEthnicity",
-        List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICANS"), "penaltyWarnings");
+        "penaltyWarnings");
     postExpectingRedirect("penaltyWarnings", Map.of("disqualifiedPublicAssistance", List.of("false"), "fraudulentStatements", List.of("false"), "hidingFromLaw", List.of("false"), "drugFelonyConviction", List.of("false"), "violatingParole", List.of("false")), "legalStuff");
     postExpectingRedirect("legalStuff",
         Map.of("agreeToTerms", List.of("true"), "drugFelonyConviction", List.of("false")),

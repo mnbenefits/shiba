@@ -90,7 +90,7 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
             "Housing subsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
             "Housing situation");
-    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Going to school");
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
 
   }
 }

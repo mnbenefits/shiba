@@ -133,7 +133,8 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsence");
 	  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "false", "introPersonalDetails");
 	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
-	  postExpectingRedirect("housingSituation", "isHomeless", "false", "goingToSchool");
+	  postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
+	  postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school");
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
