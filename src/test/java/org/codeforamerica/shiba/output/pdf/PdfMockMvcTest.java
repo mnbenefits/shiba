@@ -186,7 +186,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	selectPrograms("CASH");
 	fillOutPersonalInfo();
 	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
-	postExpectingSuccess("homeless", "isHomeless", "true");
+	postExpectingSuccess("housingSituation", "isHomeless", "true");
 
 	var caf = downloadCafClientPDF();
 	assertPdfFieldEquals("HOMELESS", "Yes", caf);
@@ -197,7 +197,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	selectPrograms("CASH");
 	fillOutPersonalInfo();
 	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
-	postExpectingSuccess("homeless", "isHomeless", "false");
+	postExpectingSuccess("housingSituation", "isHomeless", "false");
 
 	var caf = downloadCafClientPDF();
 	assertPdfFieldEquals("HOMELESS", "No", caf);

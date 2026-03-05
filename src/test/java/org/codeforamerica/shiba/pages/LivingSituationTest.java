@@ -31,8 +31,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("childCareMentalHealth", "childCareMentalHealth", "false",
             "Housing subsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Homeless");
-    postExpectingNextPageTitle("homeless", "isHomeless", "false", "Living situation");
+            "Housing situation");
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
 
   }
 
@@ -45,8 +45,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Housing subsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Homeless"); 
-    postExpectingNextPageTitle("homeless", "isHomeless", "false", "Living situation");
+            "Housing situation"); 
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
 
     }
 
@@ -59,8 +59,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
             "Intro: Personal Details");
     postExpectingRedirect("introPersonalDetails", "housingSubsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Homeless");
-    postExpectingNextPageTitle("homeless", "isHomeless", "false", "Living situation");
+            "Housing situation");
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
 
   }
 
@@ -75,8 +75,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("childrenInNeedOfCare", "Mental health needs & child care");
     postExpectingNextPageTitle("childCareMentalHealth", "childCareMentalHealth", "false",
             "Housing subsidy");
-    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Homeless");
-    postExpectingNextPageTitle("homeless", "isHomeless", "false", "Living situation");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Housing situation");
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
     
   }
 
@@ -89,8 +89,8 @@ public class LivingSituationTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Housing subsidy");
     postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Homeless");
-    postExpectingNextPageTitle("homeless", "isHomeless", "false", "Going to school");
+            "Housing situation");
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Going to school");
 
   }
 }

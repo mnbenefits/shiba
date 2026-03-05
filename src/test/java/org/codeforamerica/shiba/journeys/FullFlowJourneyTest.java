@@ -399,7 +399,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Previous EBT Card");
 		testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
-		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
+		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
+		testPage.chooseYesOrNo("hasLegalGuardian", NO.getDisplayValue(), "Authorized Rep");
 		// Do you want to assign someone to help with your benefits?
 		testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
 
@@ -896,7 +897,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("hasChildrenUnder19", NO.getDisplayValue(), "Housing subsidy");
 
 		// Are you getting a housing subsidy?
-		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Homeless");
+		testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Housing situation");
 		
 		// Are you Homeless
 		testPage.chooseYesOrNo("isHomeless", NO.getDisplayValue(), "Going to school");
@@ -1008,7 +1009,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.clickContinue("Getting benefits sent to your bank account");
 		testPage.chooseYesOrNo("hasDirectDeposit", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
-		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
+		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
+		testPage.chooseYesOrNo("hasLegalGuardian", NO.getDisplayValue(), "Authorized Rep");
 
 		// Do you want to assign someone to help with your benefits?
 		testPage.chooseYesOrNo("helpWithBenefits", NO.getDisplayValue(), "Additional Info");

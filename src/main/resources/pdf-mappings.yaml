@@ -91,7 +91,7 @@ mappings:
     selectedCounty: APPLICANT_HOME_COUNTY
   housingSubsidy:
     hasHousingSubsidy: HOUSING_SUBSIDY
-  homeless:
+  housingSituation:
     isHomeless: HOMELESS
   mailingAddress:
     selectedZipCode: APPLICANT_MAILING_ZIPCODE
@@ -398,6 +398,8 @@ mappings:
     hasSocialWorker: HAS_SOCIAL_WORKER
   referrals:
     needsReferrals: HELP_WITH_REFERRALS
+  legalGuardian:
+    hasLegalGuardian: LEGAL_GUARDIAN	
   authorizedRep:
     helpWithBenefits: WANT_AUTHORIZED_REP
   authorizedRepCommunicate:
