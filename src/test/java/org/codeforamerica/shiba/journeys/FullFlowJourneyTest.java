@@ -877,8 +877,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// the scroll clickContinue doesn't seem to advance to the next page.
 		JavascriptExecutor js = ((JavascriptExecutor) driver);
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+		testPage.clickContinue("Household Race and Ethnicity");
+		testPage.enter("preferNotToSay", "Rather not say");
 		testPage.clickContinue("Household members");
-
+		
 		testPage.clickButtonLink("Yes, that's everyone", "Household members not living at home");
 		testPage.chooseYesOrNo("hasTemporaryAbsence", NO.getDisplayValue(), "Children in your household");
 		testPage.chooseYesOrNo("hasChildrenUnder19", NO.getDisplayValue(), "Housing subsidy");
@@ -1232,6 +1234,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// the scroll clickContinue doesn't seem to advance to the next page.
 		JavascriptExecutor js = ((JavascriptExecutor) driver);
 		js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+		testPage.clickContinue("Household Race and Ethnicity");
+		testPage.enter("preferNotToSay", "Rather not say");
 		testPage.clickContinue("Household members");
 	}
 
@@ -1266,6 +1270,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// after having selected none
 		assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
 		testPage.enter("ssn", "987654321");
+		testPage.clickContinue("Household Race and Ethnicity");
+		testPage.enter("preferNotToSay", "Rather not say");
 		testPage.clickContinue("Household members");
 	}
 

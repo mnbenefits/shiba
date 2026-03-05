@@ -655,6 +655,11 @@ public class PageController {
       model.put("data", pagesData
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
     }
+    if(applicationData.getIncompleteIterations().get("household") != null && applicationData.getIncompleteIterations().get("household").get("householdMemberInfo") != null) {
+    	var householdMemberFullName = applicationData.getIncompleteIterations().get("household").get("householdMemberInfo").get("firstName").getValue(0) +
+    			" " + applicationData.getIncompleteIterations().get("household").get("householdMemberInfo").get("lastName").getValue(0);
+    	model.put("householdMemberFullName", householdMemberFullName);
+    }
     model.put("applicationData", applicationData);
 
     return model;

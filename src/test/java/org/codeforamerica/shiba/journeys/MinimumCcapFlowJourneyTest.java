@@ -63,8 +63,9 @@ public class MinimumCcapFlowJourneyTest extends JourneyTest {
     WebElement programsFollowUp = testPage.findElementById("programs-follow-up");
     assertThat(programsFollowUp.getCssValue("display")).isEqualTo("block");
     testPage.enter("ssn", "987654321");
+    testPage.clickContinue("Household Race and Ethnicity");
+    testPage.enter("preferNotToSay", "Rather not say");
     testPage.clickContinue("Household members");
-
     testPage.clickButtonLink("Yes, that's everyone", "Who are the children in need of care?");
 
     // Who are the children in need of child care

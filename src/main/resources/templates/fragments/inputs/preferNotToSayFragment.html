@@ -1,0 +1,50 @@
+<!--
+  This fragment implements the "prefer_not_to_say" checkbox for the householdRaceAndEthnicity page.
+  When checked, it deselects all other checkboxes and hides follow-ups.
+-->
+
+<div th:fragment="preferNotToSayFragment(input, data)"
+     th:with="
+       isChecked=${data.get(input.name) != null and data.get(input.name).value.size>0 and data.get(input.name).value[0]=='true' ? true : false}
+     ">
+
+  <!-- The prefer_not_to_say checkbox -->
+  <div th:replace="~{fragments/inputs/checkbox-input :: checkbox-input(input=${input}, data=${data})}"></div>
+
+  <script th:inline="javascript">
+	$(document).ready(function () {
+	  var checkbox = document.getElementsByName('preferNotToSay[]')[0];
+	  var checked = checkbox.parentElement.classList.contains('is-selected');
+
+	  // Target the question-with-follow-up wrapper that contains the race checkboxes
+	  var container = $('.question-with-follow-up');
+	  var followupDiv = $('div[id="householdRaceAndEthnicity-follow-up"]');
+
+	  if (checked) {
+	    container.hide();
+	    followupDiv.hide();
+	  }
+
+	  // Selectors fixed to match actual rendered HTML
+	  const checkboxLabels = document.querySelectorAll('label[for^="AMERICAN"], label[for^="ASIAN"], label[for^="BLACK"], label[for^="HISPANIC"], label[for^="MIDDLE"], label[for^="NATIVE"], label[for^="WHITE"], label[for^="SOME"]');
+	  const checkboxInputs = document.querySelectorAll('input[name="householdRaceAndEthnicity[]"]');
+
+	  // Add the missing change listener on preferNotToSay checkbox
+	  checkbox.addEventListener('change', function () {
+	    var isChecked = this.parentElement.classList.contains('is-selected');
+	    if (isChecked) {
+	      // Uncheck all race/ethnicity checkboxes
+	      checkboxInputs.forEach(function (input) {
+	        input.removeAttribute('checked');
+	        input.checked = false;
+	        input.closest('label').classList.remove('is-selected');
+	      });
+	      container.hide();
+	      followupDiv.hide();
+	    } else {
+	      container.show();
+	    }
+	  });
+	});
+  </script>
+</div>

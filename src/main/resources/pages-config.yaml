@@ -1440,6 +1440,58 @@ pageConfigurations:
               isNone: true
           datasources:
             - pageName: choosePrograms
+  - &householdRaceAndEthnicity
+    name: householdRaceAndEthnicity
+    pageTitle: household-race-and-ethnicity.title
+    headerHelpMessageKey: race-and-ethnicity.select-all-that-apply
+    contextFragment: householdRaceAndEthnicityFragment
+    inputs:
+      - name: preferNotToSay
+        type: CUSTOM
+        customInputFragment: preferNotToSayFragment
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: household-race-and-ethnicity.prefer-not-to-say
+      - name: householdRaceAndEthnicity
+        type: CHECKBOX
+        options:
+          selectableOptions:
+            - value: AMERICAN_INDIAN_OR_ALASKA_NATIVE
+              messageKey: race-and-ethnicity.native-american-or-alaska-native
+            - value: ASIAN
+              messageKey: race-and-ethnicity.asian
+            - value: BLACK_OR_AFRICAN_AMERICAN
+              messageKey: race-and-ethnicity.black-or-african-american
+            - value: HISPANIC_LATINO_OR_SPANISH
+              messageKey: race-and-ethnicity.hispanic-latino-or-spanish
+            - value: MIDDLE_EASTERN_OR_NORTH_AFRICAN
+              messageKey: race-and-ethnicity.middle-eastern-or-north-african
+            - value: NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER
+              messageKey: race-and-ethnicity.native-hawaiian-or-pacific-islander
+            - value: WHITE
+              messageKey: race-and-ethnicity.white
+            - value: SOME_OTHER_RACE_OR_ETHNICITY
+              messageKey: race-and-ethnicity.some-other-race
+        followUpValues:
+          - SOME_OTHER_RACE_OR_ETHNICITY
+        followUps:
+          - name: otherRaceOrEthnicity
+            type: TEXT
+            validators:
+              - validation: ALL_NON_BLANK
+                errorMessageKey: general.validation.enter-race-ethnicity
+                condition:
+                  input: householdRaceAndEthnicity
+                  matcher: CONTAINS
+                  value: SOME_OTHER_RACE_OR_ETHNICITY
+            promptMessage:
+              promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
+  - &householdRedirectPage
+    name: householdRedirectPage
+    headerKey: household-redirect-page.header
+    pageTitle: warning-page.go-back-title
+    usingPageTemplateFragment: false
   - &raceAndEthnicity
     name: raceAndEthnicity
     pageTitle: race-and-ethnicity.title
@@ -1480,7 +1532,6 @@ pageConfigurations:
             type: TEXT
             promptMessage:
               promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
-
   - &householdList
     name: householdList
     pageTitle: household-list.title
@@ -5837,6 +5888,15 @@ workflow:
     groupName: household
     enrichment: householdMemberDateOfBirthEnrichment
     nextPages:
+      - pageName: householdRaceAndEthnicity
+  householdRaceAndEthnicity:
+    pageConfiguration: *householdRaceAndEthnicity
+    groupName: household
+    nextPages:
+      - pageName: householdList
+  householdRedirectPage:
+    pageConfiguration: *householdRedirectPage
+    nextPages:
       - pageName: householdList
   householdList:
     pageConfiguration: *householdList
@@ -7951,8 +8011,9 @@ pageGroups:
     startPages:
       - householdMemberInfo
     completePages:
-      - householdMemberInfo
+      - householdRaceAndEthnicity
     reviewPage: householdList
+    redirectPage: householdRedirectPage
     deleteWarningPage: householdDeleteWarningPage
     restartPage: addHouseholdMembers
     startingCount: 1
