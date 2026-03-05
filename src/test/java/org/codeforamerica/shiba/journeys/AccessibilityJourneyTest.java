@@ -296,6 +296,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("livedInMnWholeLife", "Yes");
     testPage.enter("moveToMnDate", "02/18/1776");
     testPage.enter("moveToMnPreviousCity", "Chicago");
+	testPage.clickContinue("Race and Ethnicity");
+	testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
     testPage.clickContinue("Home Address");
     fillOutHomeAndMailingAddress("03104", "Cooltown", "smarty street", "1b", "MN"); 
     testPage.enter("phoneNumber", "134567890");
@@ -516,9 +518,6 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Additional Info");
     driver.findElement(By.id("additionalInfo"))
         .sendKeys("Some additional information about my application");
-    testPage.clickContinue("Can we ask");
-    testPage.clickLink("Yes, continue", "Race and Ethnicity");
-    testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
     testPage.clickContinue("Penalty Warnings");
 	testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 	testPage.enter("fraudulentStatements", NO.getDisplayValue());

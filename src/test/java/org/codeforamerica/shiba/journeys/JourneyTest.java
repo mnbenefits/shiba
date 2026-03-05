@@ -228,10 +228,15 @@ abstract class JourneyTest extends AbstractBasePageTest {
     testPage.enter("livedInMnWholeLife", "Yes");
     testPage.enter("moveToMnDate", "10/20/1993");
     testPage.enter("moveToMnPreviousCity", "Chicago");
+    testPage.clickContinue("Race and Ethnicity");
+	testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
     testPage.clickContinue("Home Address");
     assertThat(testPage.getTitle()).isEqualTo("Home Address");
     testPage.goBack();
+    testPage.goBack();
     testPage.enter("dateOfBirth", "01/12/1928");
+    testPage.clickContinue("Race and Ethnicity");
+	testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
     testPage.clickContinue("Home Address");
   }
   

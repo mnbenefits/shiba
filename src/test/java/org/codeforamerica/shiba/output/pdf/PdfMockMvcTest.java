@@ -789,7 +789,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("healthcareCoverage", "healthcareCoverage", "YES");
 		postExpectingSuccess("authorizedRep", "helpWithBenefits", "false");
 		postExpectingSuccess("additionalInfo", "caseNumber", "");
-		postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "WHITE");
 		postExpectingRedirect("legalStuff", Map.of("agreeToTerms", List.of("true"), "drugFelony", List.of()),
 				"signThisApplication");
 		postExpectingSuccess("signThisApplication", "applicantSignature", "Dwight Schrute");

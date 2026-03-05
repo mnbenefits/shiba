@@ -289,6 +289,8 @@ public abstract class AbstractBasePageTest {
 		testPage.clickButtonLink("Continue", "Personal Info");
 		// personalInfo
 		fillOutPersonalInfo();
+		testPage.clickContinue("Race and Ethnicity");
+		testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
 		testPage.clickContinue("Home Address");
 		// homeAddress
 		navigateTo("signThisApplication");

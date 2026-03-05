@@ -422,6 +422,8 @@ public class AbstractShibaMockMvcTest {
         "moveToMnDate", List.of("02", "18", "1776"),
         "moveToMnPreviousCity", List.of("Chicago")
     ));
+    postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN"));
+
   }
 
   protected void fillOutContactInfo() throws Exception {
@@ -1041,10 +1043,7 @@ public class AbstractShibaMockMvcTest {
     postExpectingRedirect("additionalInfo",
         "additionalInfo",
         "Some additional information about my application",
-        "canWeAsk");
-    postWithQueryParam("canWeAsk", "option", "0");
-    postExpectingRedirect("raceAndEthnicity", "raceAndEthnicity",
-        List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICANS"), "penaltyWarnings");
+        "penaltyWarnings");
     postExpectingRedirect("penaltyWarnings", Map.of("disqualifiedPublicAssistance", List.of("false"), "fraudulentStatements", List.of("false"), "hidingFromLaw", List.of("false"), "drugFelonyConviction", List.of("false"), "violatingParole", List.of("false")), "legalStuff");
     postExpectingRedirect("legalStuff",
         Map.of("agreeToTerms", List.of("true"), "drugFelonyConviction", List.of("false")),
