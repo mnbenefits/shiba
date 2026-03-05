@@ -6230,16 +6230,6 @@ workflow:
     pageConfiguration: *livingSituation
     nextPages:
       - pageName: housingProvider
-    skipCondition:
-      logicalOperator: AND
-      conditions:
-        - *applicantDidNotChooseGRH?
-        - *noOneChoseCCAP?
-    datasources:
-      - pageName: choosePrograms
-      - pageName: addHouseholdMembers
-      - groupName: household
-        pageName: householdMemberInfo
   housingProvider:
     pageConfiguration: *housingProvider
     skipCondition: *applicantDidNotChooseGRH?
