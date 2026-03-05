@@ -296,6 +296,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("livedInMnWholeLife", "Yes");
     testPage.enter("moveToMnDate", "02/18/1776");
     testPage.enter("moveToMnPreviousCity", "Chicago");
+	testPage.clickContinue("Race and Ethnicity");
+	testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
     testPage.clickContinue("Home Address");
     fillOutHomeAndMailingAddress("03104", "Cooltown", "smarty street", "1b", "MN"); 
     testPage.enter("phoneNumber", "134567890");
@@ -373,7 +375,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Preparing meals together");
     testPage.chooseYesOrNo("isPreparingMealsTogether", YES.getDisplayValue(), "Buying and cooking food");
     testPage.chooseYesOrNo("isDisabledToBuyOrCookFood", YES.getDisplayValue(), "Housing subsidy");
-    testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Living situation");
+    testPage.chooseYesOrNo("hasHousingSubsidy", NO.getDisplayValue(), "Housing situation");
+    testPage.chooseYesOrNo("isHomeless", NO.getDisplayValue(), "Living situation");
     testPage.enter("livingSituation", "None of these");
     testPage.clickContinue("Going to school");
     testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Pregnant");
@@ -529,7 +532,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Previous EBT Card");
     testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
     testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
-	testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Authorized Rep");
+    testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
+	testPage.chooseYesOrNo("hasLegalGuardian", NO.getDisplayValue(), "Authorized Rep");
     testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
     testPage.chooseYesOrNo("communicateOnYourBehalf", YES.getDisplayValue(), "Authorized Rep mail and notices");
     testPage.chooseYesOrNo("getMailNotices", YES.getDisplayValue(), "Authorized Rep spend on your behalf");
@@ -542,9 +546,6 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.clickContinue("Additional Info");
     driver.findElement(By.id("additionalInfo"))
         .sendKeys("Some additional information about my application");
-    testPage.clickContinue("Can we ask");
-    testPage.clickLink("Yes, continue", "Race and Ethnicity");
-    testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
     testPage.clickContinue("Penalty Warnings");
 	testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 	testPage.enter("fraudulentStatements", NO.getDisplayValue());

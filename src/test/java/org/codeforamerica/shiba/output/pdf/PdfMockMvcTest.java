@@ -185,6 +185,28 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		}
 	}
 	
+	@Test
+	void shouldMapHomelessYes() throws Exception {
+	selectPrograms("CASH");
+	fillOutPersonalInfo();
+	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+	postExpectingSuccess("housingSituation", "isHomeless", "true");
+
+	var caf = downloadCafClientPDF();
+	assertPdfFieldEquals("HOMELESS", "Yes", caf);
+	}
+	
+	@Test
+	void shouldMapHomelessNo() throws Exception {
+	selectPrograms("CASH");
+	fillOutPersonalInfo();
+	postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "false");
+	postExpectingSuccess("housingSituation", "isHomeless", "false");
+
+	var caf = downloadCafClientPDF();
+	assertPdfFieldEquals("HOMELESS", "No", caf);
+	}
+	
 	
 	@Test
 	void shouldMapNoOtherIncome() throws Exception {
@@ -771,7 +793,6 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		postExpectingSuccess("healthcareCoverage", "healthcareCoverage", "YES");
 		postExpectingSuccess("authorizedRep", "helpWithBenefits", "false");
 		postExpectingSuccess("additionalInfo", "caseNumber", "");
-		postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", "WHITE");
 		postExpectingRedirect("legalStuff", Map.of("agreeToTerms", List.of("true"), "drugFelony", List.of()),
 				"signThisApplication");
 		postExpectingSuccess("signThisApplication", "applicantSignature", "Dwight Schrute");

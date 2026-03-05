@@ -41,8 +41,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 		        "Buying and cooking food");
 	   postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
 	            "Housing subsidy");
-	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-	            "Going to school");
+	  postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Housing situation");
+	  postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
+	  postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school");  
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -139,8 +140,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "Buying and cooking food");
     postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
             "Housing subsidy");   
-    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Going to school");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Housing situation");
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");    
+    postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school"); 
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -171,8 +173,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
         "Buying and cooking food");
     postExpectingNextPageTitle("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
             "Housing subsidy");    
-    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false",
-            "Going to school");
+    postExpectingNextPageTitle("housingSubsidy", "hasHousingSubsidy", "false", "Housing situation");
+    postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
+    postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -215,7 +218,9 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("temporaryAbsence", "hasTemporaryAbsence", "false",
             "Intro: Personal Details");
     postExpectingRedirect("introPersonalDetails", "housingSubsidy");
-    postExpectingRedirect("housingSubsidy", "goingToSchool");
+    postExpectingRedirect("housingSubsidy", "housingSituation");
+    postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
+    postExpectingRedirect("livingSituation", "livingSituation", "false", "goingToSchool");
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "pregnant");
     completeFlowFromIsPregnantThroughTribalNations(false, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
@@ -338,7 +343,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     
     postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false",
 			"housingSubsidy");
-    postExpectingRedirect("housingSubsidy", "livingSituation");
+    postExpectingRedirect("housingSubsidy", "housingSituation");
+    postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
     postExpectingRedirect("livingSituation", "goingToSchool");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
     completeFlowFromIsPregnantThroughTribalNations(true, "CCAP", "EA");

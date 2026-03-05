@@ -428,6 +428,8 @@ public class AbstractShibaMockMvcTest {
         "moveToMnDate", List.of("02", "18", "1776"),
         "moveToMnPreviousCity", List.of("Chicago")
     ));
+    postExpectingSuccess("raceAndEthnicity", "raceAndEthnicity", List.of("ASIAN"));
+
   }
 
   protected void fillOutContactInfo() throws Exception {
@@ -940,7 +942,8 @@ public class AbstractShibaMockMvcTest {
           "childCareMentalHealth");
       postExpectingRedirect("childCareMentalHealth", "childCareMentalHealth", "false", "housingSubsidy");
 
-      postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+      postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+      postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
       postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
       postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
@@ -951,7 +954,8 @@ public class AbstractShibaMockMvcTest {
           "addChildrenConfirmation");
       assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation","false","temporaryAbsence");
       assertNavigationRedirectsToCorrectNextPage("introPersonalDetails", "housingSubsidy");
-      assertNavigationRedirectsToCorrectNextPage("housingSubsidy", "livingSituation");
+      assertNavigationRedirectsToCorrectNextPage("housingSubsidy", "housingSituation");
+      postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
       postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
       postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
@@ -1039,15 +1043,13 @@ public class AbstractShibaMockMvcTest {
         hasHealthcareCoverage ? "YES" : "NO", "directDeposit");
     postExpectingRedirect("directDeposit", "hasDirectDeposit", "false", "socialWorker");
     postExpectingRedirect("socialWorker", "hasSocialWorker", "false", "referrals");
-    postExpectingRedirect("referrals", "needsReferrals", "false", "authorizedRep");
+    postExpectingRedirect("referrals", "needsReferrals", "false", "legalGuardian");
+    postExpectingRedirect("legalGuardian", "hasLegalGuardian", "false", "authorizedRep");
     completeHelperWorkflow(helpWithBenefits);
     postExpectingRedirect("additionalInfo",
         "additionalInfo",
         "Some additional information about my application",
-        "canWeAsk");
-    postWithQueryParam("canWeAsk", "option", "0");
-    postExpectingRedirect("raceAndEthnicity", "raceAndEthnicity",
-        List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICANS"), "penaltyWarnings");
+        "penaltyWarnings");
     postExpectingRedirect("penaltyWarnings", Map.of("disqualifiedPublicAssistance", List.of("false"), "fraudulentStatements", List.of("false"), "hidingFromLaw", List.of("false"), "drugFelonyConviction", List.of("false"), "violatingParole", List.of("false")), "legalStuff");
     postExpectingRedirect("legalStuff",
         Map.of("agreeToTerms", List.of("true"), "drugFelonyConviction", List.of("false")),

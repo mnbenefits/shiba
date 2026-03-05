@@ -30,6 +30,7 @@ public class AbstractStaticMessageSourcePageTest extends AbstractBasePageTest {
     staticMessageSource.addMessage("general.mn-gov-portal", Locale.ENGLISH, "mngov");
     staticMessageSource.addMessage("general.privacy-policy", Locale.ENGLISH, "pp");
     staticMessageSource.addMessage("faq.faq", Locale.ENGLISH, "faq");
+    staticMessageSource.addMessage("support-services.title", Locale.ENGLISH, "Support Services");
     staticMessageSource
         .addMessage("language-preferences.title", Locale.ENGLISH, "Language Preferences");
     staticMessageSource.addMessage("language-preferences.english", Locale.ENGLISH, "english");
