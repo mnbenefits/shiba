@@ -238,6 +238,11 @@ public class PageController {
   String getSnapNDS() {
     return "snapNDS";
   }
+  
+  @GetMapping("/supportServices")
+  String getSupportServices() {
+    return "supportServices";
+  }
 
   @GetMapping("/languageAndAccessibility")
   String getLanguageAndAccessibility() {
@@ -649,6 +654,11 @@ public class PageController {
                       applicationData.getSubworkflows())));
       model.put("data", pagesData
           .getPageDataOrDefault(pageTemplate.getName(), pageWorkflow.getPageConfiguration()));
+    }
+    if(applicationData.getIncompleteIterations().get("household") != null && applicationData.getIncompleteIterations().get("household").get("householdMemberInfo") != null) {
+    	var householdMemberFullName = applicationData.getIncompleteIterations().get("household").get("householdMemberInfo").get("firstName").getValue(0) +
+    			" " + applicationData.getIncompleteIterations().get("household").get("householdMemberInfo").get("lastName").getValue(0);
+    	model.put("householdMemberFullName", householdMemberFullName);
     }
     model.put("applicationData", applicationData);
 

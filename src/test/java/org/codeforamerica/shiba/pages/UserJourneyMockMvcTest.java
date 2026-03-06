@@ -354,8 +354,9 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 			  householdMemberInfo.put("maritalStatus", List.of("Never married"));
 			  householdMemberInfo.put("sex", List.of("Male"));
 			  householdMemberInfo.put("livedInMnWholeLife", List.of("Yes"));
-			  postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdList");
-	
+			  postExpectingRedirect("householdMemberInfo", householdMemberInfo, "householdRaceAndEthnicity");
+			  postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
+			  
 			  // The flow to the introPersonalDetails page varies based on program selection
 			  switch (program) {
 				  case "CCAP": {
@@ -393,7 +394,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  // navigation from housingSubsidy to goingToSchool
 	  switch (program) {
 		  case "GRH": {
-			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+			  postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
 			  postExpectingRedirect("livingSituation", "livingSituation",
 					  "PAYING_FOR_HOUSING_WITH_RENT_LEASE_OR_MORTGAGE", "housingProvider");
 			  postExpectingRedirect("housingProvider", "housingProvider",
@@ -407,7 +409,9 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 			  break;
 		  }
 		  default: {
-			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "goingToSchool");
+			  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+			  postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
+
 		  }
 	  }
 

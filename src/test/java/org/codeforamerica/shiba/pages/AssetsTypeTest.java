@@ -97,7 +97,16 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
         postExpectingRedirect("preparingMealsTogether", "isPreparingMealsTogether", "false",
                 "housingSubsidy");
     }
-    postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+
+    if(Arrays.stream(programs).anyMatch(p -> p.equals("CCAP"))) {
+        postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "livingSituation");
+
+    }
+    else {
+	    postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+	    postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
+    }
+    
     if(Arrays.asList(programs).contains("GRH")) {
     	 postExpectingRedirect("housingProvider", "housingProvider", "false", "goingToSchool");
     }else {
@@ -123,7 +132,9 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  completeFlowFromLandingPageThroughReviewInfo(programs);
 	  postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false", "temporaryAbsence");
 	  postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "false", "introPersonalDetails");
-	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "goingToSchool");
+	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+	  postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
+	  postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school");
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");

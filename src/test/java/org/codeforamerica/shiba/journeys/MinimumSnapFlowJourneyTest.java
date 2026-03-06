@@ -92,8 +92,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
     String caseNumber = "654321";
     driver.findElement(By.id("additionalInfo")).sendKeys(additionalInfo);
     testPage.enter("caseNumber", caseNumber);
-    testPage.clickContinue("Can we ask");
-    testPage.clickButtonLink("No, skip this question", "Penalty Warnings");
+    testPage.clickContinue("Penalty Warnings");
     testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 	testPage.enter("fraudulentStatements", NO.getDisplayValue());
 	testPage.enter("hidingFromLaw", NO.getDisplayValue());
@@ -183,10 +182,15 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		testPage.enter("livedInMnWholeLife", "Yes");
 		testPage.enter("moveToMnDate", "10/20/1993");
 		testPage.enter("moveToMnPreviousCity", "Chicago");
+		testPage.clickContinue("Race and Ethnicity");
+		testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
 		testPage.clickContinue("Home Address");
 		assertThat(testPage.getTitle()).isEqualTo("Home Address");
 		testPage.goBack();
+		testPage.goBack();
 		testPage.enter("dateOfBirth", "01/12/1928");
+		testPage.clickContinue("Race and Ethnicity");
+		testPage.enter("raceAndEthnicity", List.of("Asian", "White"));
 		testPage.clickContinue("Home Address");
 
 		// Where are you currently Living? (with home address)
@@ -233,8 +237,7 @@ public class MinimumSnapFlowJourneyTest extends JourneyTest {
 		String caseNumber = "654321";
 		driver.findElement(By.id("additionalInfo")).sendKeys(additionalInfo);
 		testPage.enter("caseNumber", caseNumber);
-		testPage.clickContinue("Can we ask");
-		testPage.clickButtonLink("No, skip this question", "Penalty Warnings");
+		testPage.clickContinue("Penalty Warnings");
 		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
 		testPage.enter("fraudulentStatements", NO.getDisplayValue());
 		testPage.enter("hidingFromLaw", NO.getDisplayValue());
