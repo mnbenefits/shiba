@@ -111,16 +111,7 @@ public class HouseholdRaceAndEthnicityPreparer implements DocumentFieldPreparer 
                 ));
             }
 
-            // Handle Middle Eastern / N. African as CLIENT_REPORTED when it's the only selection
-            if (memberRaces.size() == 1 && memberRaces.contains("MIDDLE_EASTERN_OR_NORTH_AFRICAN")) {
-                result.add(new DocumentField(
-                    "raceAndEthnicity",
-                    "CLIENT_REPORTED",
-                    "Middle Eastern / N. African",
-                    DocumentFieldType.SINGLE_VALUE,
-                    i
-                ));
-            }
+           
         }
 
         return result;
