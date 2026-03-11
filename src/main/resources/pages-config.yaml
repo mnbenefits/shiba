@@ -1484,13 +1484,6 @@ pageConfigurations:
         followUps:
           - name: otherRaceOrEthnicity
             type: TEXT
-            validators:
-              - validation: ALL_NON_BLANK
-                errorMessageKey: general.validation.enter-race-ethnicity
-                condition:
-                  input: householdRaceAndEthnicity
-                  matcher: CONTAINS
-                  value: SOME_OTHER_RACE_OR_ETHNICITY
             promptMessage:
               promptMessageKey: race-and-ethnicity.write-your-race-or-ethnicity
   - &householdRedirectPage
