@@ -35,7 +35,7 @@ public class HispanicLatinoOrSpanishPreparer implements DocumentFieldPreparer {
         hispanicLatinoOrSpanishDocumentField.add(
             new DocumentField("raceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH", "true",
                 ENUMERATED_SINGLE_VALUE));
-      } else if (!raceAndEthnicityValues.contains("HISPANIC_LATINO_OR_SPANISH")) {
+      } else if (!raceAndEthnicityValues.contains("HISPANIC_LATINO_OR_SPANISH") && !raceAndEthnicityValues.isEmpty()) {
         hispanicLatinoOrSpanishDocumentField.add(
             new DocumentField("raceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH_NO", "true",
                 ENUMERATED_SINGLE_VALUE));
