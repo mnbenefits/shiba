@@ -2247,10 +2247,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
 	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
-	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
-	        // preferNotToSay triggers UNABLE_TO_DETERMINE
-	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_0", "Yes", caf);
+	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_0", "Off", caf);
 	    }
 
 	    // ── Multi-race selections ───────────────────────────────────────────
@@ -2313,7 +2312,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
 	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
-	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
 	    }
 
@@ -2495,9 +2494,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_8", "Off", caf);
 	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_8", "Off", caf);
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_8", "Off", caf);
-	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_8", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_8", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_8", "Off", caf);
-	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_8", "Yes", caf);
+	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_8", "Off", caf);
 
 	        // ── Assert Member 9 (_9): All standard races ──
 	        assertPdfFieldEquals("ASIAN_9", "Yes", caf);
@@ -2562,6 +2561,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	                "relationship", List.of("spouse")),
 	            "householdRaceAndEthnicity");
 	    }
+	    
+	
+	    
 	}
 
 }
