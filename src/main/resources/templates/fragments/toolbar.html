@@ -18,7 +18,6 @@
                 </a>
             </div>
             <select th:replace="~{fragments/localeSelect :: localeSelect}"></select>
-			<div th:replace="~{fragments/userProfile :: userProfile}"></div>
             <script th:inline="javascript" th:with="lang=${#locale.toString()}">
                 window.intercomSettings = {
                     app_id: [[${@environment.getProperty('intercom-chat-app-id')}]],
