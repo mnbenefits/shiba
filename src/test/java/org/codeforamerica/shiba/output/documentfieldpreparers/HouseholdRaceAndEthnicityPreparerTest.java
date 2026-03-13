@@ -17,7 +17,7 @@ import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class householdRaceAndEthnicityPreparerTest {
+public class HouseholdRaceAndEthnicityPreparerTest {
 	 private final HouseholdRaceAndEthnicityPreparer preparer = new HouseholdRaceAndEthnicityPreparer();
 	    private TestApplicationDataBuilder testApplicationDataBuilder;
 
