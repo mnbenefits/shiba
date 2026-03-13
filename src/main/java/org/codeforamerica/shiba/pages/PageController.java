@@ -880,7 +880,7 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", pageName));
     } else {
       // Look at javadoc in PageData.java invalidPageDataLogText for debug/log info
-    String invalidDataLog = pageData.invalidPageDataLogText();
+    String invalidDataLog = pageData.invalidPageDataLogText(); //TODO emj remove this log.error
     log.error("Invalid page data for page {}: {}", pageName, invalidDataLog);
       return new ModelAndView("redirect:/pages/" + pageName);
     }

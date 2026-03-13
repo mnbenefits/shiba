@@ -434,16 +434,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.enter("violatingParole", YES.getDisplayValue());
 		driver.findElement(By.id("violatingParole-householdMember-me")).click(); // Applicant
 		driver.findElement(By.id("violatingParole-householdMember0")).click(); // First household member
-		testPage.clickContinue("Penalty Warnings");
-		testPage.enter("disqualifiedPublicAssistance", YES.getDisplayValue());
-		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember-me")).click(); // Applicant
-		driver.findElement(By.id("disqualifiedPublicAssistance-householdMember0")).click(); // First household member
-		testPage.enter("fraudulentStatements", NO.getDisplayValue());
-		testPage.enter("hidingFromLaw", NO.getDisplayValue());
-		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
-		testPage.enter("violatingParole", YES.getDisplayValue());
-		driver.findElement(By.id("violatingParole-householdMember-me")).click(); // Applicant
-		driver.findElement(By.id("violatingParole-householdMember0")).click(); // First household member
 		testPage.clickContinue("Legal Stuff");
 
 		// The legal stuff.
@@ -1020,29 +1010,6 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// Is there anything else you want to share?
 		driver.findElement(By.id("additionalInfo")).sendKeys("I have nothing else to share");
 
-		testPage.clickContinue("Penalty Warnings");
-		// Verify accordion exists
-	    assertThat(testPage.findElementById("pw-a1")).isNotNull();
-	    
-	    // Verify accordion is initially closed
-	    assertThat(driver.findElement(By.className("accordion")).getAttribute("class"))
-	        .contains("accordion--is-closed");
-	    
-	    // Click to expand accordion
-	    //testPage.clickElementById("pw-a1");
-	    driver.findElement(By.className("accordion__button")).click();
-	    
-	    // Verify accordion is now open
-	    assertThat(driver.findElement(By.className("accordion")).getAttribute("class"))
-	        .doesNotContain("accordion--is-closed");
-	    // Verify content is accessible 
-	    assertThat(driver.findElement(By.className("accordion__content"))).isNotNull();
-	    
-		testPage.enter("disqualifiedPublicAssistance", NO.getDisplayValue());
-		testPage.enter("fraudulentStatements", NO.getDisplayValue());
-		testPage.enter("hidingFromLaw", NO.getDisplayValue());
-		testPage.enter("drugFelonyConviction", NO.getDisplayValue());
-		testPage.enter("violatingParole", NO.getDisplayValue());
 		testPage.clickContinue("Penalty Warnings");
 		// Verify accordion exists
 	    assertThat(testPage.findElementById("pw-a1")).isNotNull();

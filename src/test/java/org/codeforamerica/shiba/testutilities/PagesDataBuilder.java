@@ -31,7 +31,7 @@ public class PagesDataBuilder {
             result.putIfAbsent(page.pageName(), new PageData());
             PageData pageData = result.get(page.pageName());
             page.pageDataMap().forEach(
-                    (inputName, value) -> pageData.put(inputName, new InputData(value)));
+                    (inputName, value) -> pageData.put(inputName, new InputData(new ArrayList<>(value))));
         });
         return result;
     }
