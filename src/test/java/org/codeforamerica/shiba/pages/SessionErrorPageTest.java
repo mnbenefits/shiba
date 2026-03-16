@@ -10,7 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource(properties = { "server.servlet.session.timeout = 5s" }) // 5 second session timeout for the test
+// The Tomcat server in Spring Boot only supports a minute precision for session timeouts, with a minimum of one minute. 
+// Any value less than 60 seconds is effectively rounded up to one minute. 
+@TestPropertySource(properties = { "server.servlet.session.timeout = 60s"}) 
 public class SessionErrorPageTest extends AbstractBasePageTest {
 
     @Override
@@ -24,7 +26,7 @@ public class SessionErrorPageTest extends AbstractBasePageTest {
     void shouldDisplaySessionTimeoutPage() throws InterruptedException {
         testPage.clickButtonLink("Apply now", "Identify County");
         TimeUnit time = TimeUnit.SECONDS;
-        time.sleep(6); // Sleep for 5 seconds + a margin
+        time.sleep(61); // Sleep for 60 seconds + a margin
         testPage.clickButton("Continue", "Timeout");
         assertThat(driver.getTitle()).isEqualTo("Timeout");
     }
@@ -33,7 +35,7 @@ public class SessionErrorPageTest extends AbstractBasePageTest {
     void shouldDisplayErrorUploadTimeoutPage() throws InterruptedException {
         testPage.clickButtonLink("Upload documents", "Ready to upload documents");
         TimeUnit time = TimeUnit.SECONDS;
-        time.sleep(6); // Sleep for 5 seconds + a margin
+        time.sleep(61); // Sleep for 60 seconds + a margin
         testPage.clickButtonLink("Continue", "Doc Upload Timeout");
         assertThat(driver.getTitle()).isEqualTo("Doc Upload Timeout");
     }

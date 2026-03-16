@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 import org.springframework.security.web.session.SessionInformationExpiredEvent;
@@ -27,12 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
-	
-	private static int environmentUrlLength;
-	
-	public SecurityConfiguration(@Value("${mnbenefits_env_url}") String environmentUrl) {
-		environmentUrlLength = environmentUrl.length();
+
+	public SecurityConfiguration() {
 	}
 
 	@Autowired
@@ -101,8 +100,7 @@ public class SecurityConfiguration {
 		@Override
 		public void onInvalidSessionDetected(HttpServletRequest request, HttpServletResponse response)
 				throws IOException {
-			String pageNameFromRequest = request.getRequestURL().toString();
-			String pageName = pageNameFromRequest.substring(environmentUrlLength);
+			String pageName = request.getRequestURI();
 			log.info(StringEscapeUtils.escapeJava("User session invalid on page: " + pageName));
 			if (pageName.equalsIgnoreCase("/pages/landing/navigation")) {
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/pages/identifyCountyBeforeApplying");

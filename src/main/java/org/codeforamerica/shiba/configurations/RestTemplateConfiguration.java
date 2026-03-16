@@ -35,10 +35,10 @@ public class RestTemplateConfiguration {
   @Value("${client.read-timeout}")
   private String readTimeout;
   @Bean
-  public RestTemplate restTemplate() 
+  RestTemplate restTemplate() 
 	        throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
 
-	  // Configure SSL context with trust configs
+	    // Configure SSL context with trust configs
 	    SSLContext sslContext = SSLContextBuilder.create()
 	            .loadTrustMaterial(Paths.get(truststore).toFile(), truststorePassword.toCharArray())
 	            .build();
@@ -65,7 +65,7 @@ public class RestTemplateConfiguration {
 	    HttpComponentsClientHttpRequestFactory requestFactory = 
 	            new HttpComponentsClientHttpRequestFactory(httpClient);
 	    
-	    requestFactory.setConnectTimeout(Integer.valueOf(connectTimeout));
+	    requestFactory.setConnectionRequestTimeout(Integer.valueOf(connectTimeout));
 	    requestFactory.setReadTimeout(Integer.valueOf(readTimeout));
 	    
 	    return new RestTemplate(requestFactory);
