@@ -6416,9 +6416,14 @@ workflow:
     pageConfiguration: *schoolStartDate
     enrichment: schoolStartDateEnrichment
     nextPages:
+      - pageName: militaryService
+        condition: *someoneChoseCAFProgram?
       - pageName: pregnant
     datasources:
       - pageName: schoolGrade
+      - pageName : choosePrograms
+      - groupName: household
+        pageName: householdMemeberInfo
     skipCondition:
       conditions:
         - customCondition: SKIP_SCHOOL_START_DATE
