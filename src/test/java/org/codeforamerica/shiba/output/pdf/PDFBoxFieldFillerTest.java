@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.output.pdf;
 
 import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import java.io.File;

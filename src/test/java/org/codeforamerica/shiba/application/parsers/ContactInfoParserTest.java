@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.application.parsers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.List;
 import org.codeforamerica.shiba.pages.data.ApplicationData;

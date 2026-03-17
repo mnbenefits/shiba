@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.output.xml;
 
 import static java.util.stream.Collectors.toMap;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.codeforamerica.shiba.output.Recipient.CASEWORKER;
 

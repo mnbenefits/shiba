@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.output.caf;
 
 import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility.ELIGIBLE;
 import static org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility.NOT_ELIGIBLE;
 import static org.codeforamerica.shiba.output.caf.SnapExpeditedEligibility.UNDETERMINED;
