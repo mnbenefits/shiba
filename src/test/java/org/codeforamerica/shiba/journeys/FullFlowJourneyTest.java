@@ -163,7 +163,10 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// School Start Date?
 		testPage.enter("schoolStartDate", "01/01/2024");
-		testPage.clickContinue("Pregnant");
+		testPage.clickContinue("Military Service");
+		
+		// Has anyone in your household served in the U.S. Military ?
+		testPage.chooseYesOrNo("hasMilitaryService", NO.getDisplayValue(), "Pregnant");
 
 		// Is anyone in your household pregnant?
 		testPage.chooseYesOrNo("isPregnant", YES.getDisplayValue(), "Household: pregnant");
@@ -897,8 +900,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Is anyone in your household going to school right now, either full or
 		// part-time?
-		testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Pregnant");
+		testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Military Service");
 
+		//Has anyone in your household ever served in the U.S. Military?
+		testPage.chooseYesOrNo("hasMilitaryService",YES.getDisplayValue(), "Who Has Military Service");
+		testPage.enter("whoHasMilitaryService", "Celia St. George");
+		testPage.clickContinue("Pregnant");
+		
 		// Is anyone in your household pregnant?
 		testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 
