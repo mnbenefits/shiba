@@ -416,7 +416,13 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  }
 
 	  // navigation from goingToSchool to introIncome
-	  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
+	  if(List.of("GRH", "EA", "SNAP", "CASH").contains(program)) {
+		  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "lastSchoolGrade");
+		  postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "pregnant");
+	  }
+	  else {
+		  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
+	  }
 	  postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
 	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
 	  postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");

@@ -1930,7 +1930,49 @@ pageConfigurations:
             - pageName: schoolGrade
             - groupName: household
       - type: HIDDEN
-        name: schoolStartDatePersonIdMap                
+        name: schoolStartDatePersonIdMap
+  - &lastSchoolGrade
+    name: lastSchoolGrade
+    pageTitle: last-school-grade.title
+    headerKey:
+      defaultValue: last-school-grade.household-header
+      conditionalValues:
+        - value: last-school-grade.applicant-header
+          condition: *livesAlone?
+    contextFragment: schoolContextFragment
+    inputs:
+      - name: lastSchoolGrade
+        type: CUSTOM
+        customInputFragment: lastSchoolGradeInput
+        options:
+          selectableOptions:
+            - value: ''
+              messageKey: last-school-grade.select-grade
+            - value: NoSchool
+              messageKey: last-school-grade.select-no-school
+            - value: ElementarySchool
+              messageKey: last-school-grade.select-elementary-school
+            - value: MiddleSchool
+              messageKey: last-school-grade.select-middle-school
+            - value: HighSchool
+              messageKey: last-school-grade.select-high-school
+            - value: GED
+              messageKey: last-school-grade.select-ged
+            - value: SomeCollege
+              messageKey: last-school-grade.select-some-college
+            - value: CollegeDegree
+              messageKey: last-school-grade.select-college-degree
+            - value: GraduateDegree
+              messageKey: last-school-grade.select-graduate-degree
+            - value: OtherEducation
+              messageKey: last-school-grade.select-other
+          datasources:
+            - pageName: personalInfo
+            - pageName: addHouseholdMembers
+            - groupName: household
+              optional: "true"
+      - type: HIDDEN
+        name: lastSchoolGradePersonIdMap
   - &housingSubsidy
     name: housingSubsidy
     pageTitle: housing-subsidy.title
@@ -6311,10 +6353,13 @@ workflow:
     pageConfiguration: *goingToSchool
     datasources:
       - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
     nextPages:
       - pageName: whoIsGoingToSchool
         condition: *doesNotLiveAlone?
-      - pageName: pregnant
+      - pageName: lastSchoolGrade
   whoIsGoingToSchool:
     pageConfiguration: *whoIsGoingToSchool
     datasources:
@@ -6376,18 +6421,30 @@ workflow:
           input: goingToSchool
         - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
-      - pageName: schoolStartDate
-      - pageName: pregnant            
+      - pageName: schoolStartDate            
   schoolStartDate:
     pageConfiguration: *schoolStartDate
     enrichment: schoolStartDateEnrichment
     nextPages:
-      - pageName: pregnant
+      - pageName: lastSchoolGrade
     datasources:
       - pageName: schoolGrade
+      - groupName: household
+      - pageName: householdMemberInfo
     skipCondition:
       conditions:
         - customCondition: SKIP_SCHOOL_START_DATE
+  lastSchoolGrade:
+    pageConfiguration: *lastSchoolGrade
+    skipCondition: *noOneChoseCAF?
+    nextPages:
+      - pageName: pregnant
+    datasources:
+      - pageName: personalInfo
+      - pageName: addHouseholdMembers
+      - pageName: choosePrograms
+      - groupName: household
+        pageName: householdMemberInfo
   pregnant:
     pageConfiguration: *pregnant
     nextPages:

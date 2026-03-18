@@ -379,7 +379,12 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("isHomeless", NO.getDisplayValue(), "Living situation");
     testPage.enter("livingSituation", "None of these");
     testPage.clickContinue("Going to school");
-    testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Pregnant");
+    testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Last school grade");
+    assertThat(testPage.findElementById("lastSchoolGrade-0"));
+	assertThat(testPage.findElementById("lastSchoolGrade-1"));
+	testPage.enter("lastSchoolGrade", "GED or equivalent", 0);
+	testPage.enter("lastSchoolGrade", "Graduate Degree", 1);
+	testPage.clickContinue("Pregnant");
     testPage.chooseYesOrNo("isPregnant", YES.getDisplayValue(), "Household: pregnant");
     testPage.enter("whoIsPregnant", "Me");
     testPage.clickContinue("Expedited Migrant Farm Worker, Household");
