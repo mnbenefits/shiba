@@ -3,9 +3,11 @@ package org.codeforamerica.shiba.configurations;
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authorization.AuthorizationResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
@@ -38,7 +40,7 @@ public class EmailAuthorizationManager implements AuthorizationManager<RequestAu
 		  );
 
 			@Override
-			public AuthorizationDecision check(Supplier<Authentication> authentication,
+			public @Nullable AuthorizationResult authorize(Supplier<? extends @Nullable Authentication> authentication,
 					RequestAuthorizationContext object) {
 				Object authenicationObject = authentication.get();
 				if (!(authenicationObject instanceof OAuth2AuthenticationToken)) {

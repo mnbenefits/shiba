@@ -49,12 +49,25 @@ public class HouseholdRaceAndEthnicityPreparer implements DocumentFieldPreparer 
                 .map(page -> page.get("preferNotToSay"))
                 .map(InputData::getValue)
                 .orElse(List.of());
-
+            boolean prefersNotToSay = !preferNotToSay.isEmpty();
+            if (prefersNotToSay) {
+                continue; // skip this household member entirely
+            }
+            
             for (String race : RACE_VALUES) {
                 boolean selected;
 
                 if (race.equals("WHITE")) {
                     selected = memberRaces.contains("WHITE") || memberRaces.contains("MIDDLE_EASTERN_OR_NORTH_AFRICAN");
+                    if (memberRaces.contains("MIDDLE_EASTERN_OR_NORTH_AFRICAN") && !memberRaces.contains("WHITE")) {
+                        result.add(new DocumentField(
+                            "raceAndEthnicity",
+                            "CLIENT_REPORTED",
+                            "Middle Eastern / N. African",
+                            DocumentFieldType.SINGLE_VALUE,
+                            i
+                        ));
+                    }
                 } else if (race.equals("SOME_OTHER_RACE_OR_ETHNICITY")) {
                     selected = memberRaces.contains("SOME_OTHER_RACE_OR_ETHNICITY");
                     if (selected) {
@@ -96,12 +109,10 @@ public class HouseholdRaceAndEthnicityPreparer implements DocumentFieldPreparer 
                 ));
             }
 
-            // UNABLE_TO_DETERMINE: when Hispanic is the only race selected, or preferNotToSay
-            boolean hispanicOnly = memberRaces.size() == 1
-                && memberRaces.contains("HISPANIC_LATINO_OR_SPANISH");
-            boolean prefersNotToSay = !preferNotToSay.isEmpty();
+            // UNABLE_TO_DETERMINE: when Hispanic is the only race selected
+            boolean hispanicOnly = memberRaces.size() == 1 && memberRaces.contains("HISPANIC_LATINO_OR_SPANISH");
 
-            if (hispanicOnly || prefersNotToSay) {
+            if (hispanicOnly) {
                 result.add(new DocumentField(
                     "raceAndEthnicity",
                     "UNABLE_TO_DETERMINE",
@@ -110,7 +121,8 @@ public class HouseholdRaceAndEthnicityPreparer implements DocumentFieldPreparer 
                     i
                 ));
             }
-
+            
+   
            
         }
 

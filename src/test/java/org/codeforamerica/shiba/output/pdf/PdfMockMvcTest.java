@@ -1946,7 +1946,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 	    @BeforeEach
 	    void setUp() throws Exception {
-	        selectPrograms("CASH");
+	        selectPrograms("CASH", "CCAP");
 	        fillOutPersonalInfo();
 	    }
 
@@ -1971,6 +1971,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "ASIAN");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
 	        assertPdfFieldEquals("ASIAN_0", "Yes", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -1978,6 +1979,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Yes", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 
 	        assertPdfFieldEquals("ASIAN_1", "Yes", caf);
 	        assertPdfFieldEquals("WHITE_1", "Off", caf);
@@ -1986,6 +1995,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_1", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_1", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_1", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_1", "Yes", ccap);
+	        assertPdfFieldEquals("WHITE_1", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_1", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_1", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_1", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_1", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_1", "Off", ccap);
+	        
+	     
 	    }
 
 	    @Test
@@ -2000,6 +2019,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "WHITE");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2007,6 +2028,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Yes", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 	    }
 
 	    @Test
@@ -2021,6 +2050,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "BLACK_OR_AFRICAN_AMERICAN");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", caf);
@@ -2028,6 +2059,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 	    }
 
 	    @Test
@@ -2042,6 +2081,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "AMERICAN_INDIAN_OR_ALASKA_NATIVE");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2049,6 +2090,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Yes", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 	    }
 
 	    @Test
@@ -2063,6 +2112,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2070,6 +2121,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 	    }
 
 	    @Test
@@ -2084,6 +2143,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "HISPANIC_LATINO_OR_SPANISH");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2093,6 +2154,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Yes", caf);
 	        // Hispanic-only triggers UNABLE_TO_DETERMINE
 	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_0", "Yes", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Yes", ccap);
+	        // Hispanic-only triggers UNABLE_TO_DETERMINE
+	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_0", "Yes", ccap);
 	    }
 
 	    // ── Middle Eastern / North African mapping ──────────────────────────
@@ -2109,6 +2180,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "householdRaceAndEthnicity", "MIDDLE_EASTERN_OR_NORTH_AFRICAN");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2116,6 +2189,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Yes", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 	    }
 
 	    // Will not write to Client Reported if WHITE AND MIDDLE_EASTERN_OR_NORTH_AFRICAN selected
@@ -2133,6 +2214,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	            Map.of("householdRaceAndEthnicity", List.of("WHITE", "MIDDLE_EASTERN_OR_NORTH_AFRICAN")));
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2141,6 +2224,15 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
 	        assertPdfFieldEquals("CLIENT_REPORTED_0", "", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Yes", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
+	        assertPdfFieldEquals("CLIENT_REPORTED_0", "", ccap);
 
 	    }
 
@@ -2161,6 +2253,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        ));
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2170,6 +2264,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
 	        // The typed-in value is written to CLIENT_REPORTED
 	        assertPdfFieldEquals("CLIENT_REPORTED_0", "Somali", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
+	        // The typed-in value is written to CLIENT_REPORTED
+	        assertPdfFieldEquals("CLIENT_REPORTED_0", "Somali", ccap);
 	    }
 
 	    @Test
@@ -2187,6 +2291,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        ));
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
@@ -2196,6 +2302,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
 	        // Empty text still creates the CLIENT_REPORTED field, just empty
 	        assertPdfFieldEquals("CLIENT_REPORTED_0", "", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
+	        // Empty text still creates the CLIENT_REPORTED field, just empty
+	        assertPdfFieldEquals("CLIENT_REPORTED_0", "", ccap);
 	    }
 
 	    // ── MENA + Other: Other's text wins CLIENT_REPORTED, WHITE stays checked ──
@@ -2215,6 +2331,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        ));
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
 	        // WHITE is checked because MENA is selected
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
@@ -2226,6 +2343,17 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        // CLIENT_REPORTED comes from the "other" text field, NOT "Middle Eastern / N. African"
 	        // because MENA CLIENT_REPORTED only fires when MENA is the sole selection (size == 1)
 	        assertPdfFieldEquals("CLIENT_REPORTED_0", "Kurdish", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Yes", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
+	        // CLIENT_REPORTED comes from the "other" text field, NOT "Middle Eastern / N. African"
+	        // because MENA CLIENT_REPORTED only fires when MENA is the sole selection (size == 1)
+	        assertPdfFieldEquals("CLIENT_REPORTED_0", "Kurdish", ccap);
 	    }
 
 	    // ── Prefer not to say / UNABLE_TO_DETERMINE ─────────────────────────
@@ -2242,15 +2370,25 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
 	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
-	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
-	        // preferNotToSay triggers UNABLE_TO_DETERMINE
-	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_0", "Yes", caf);
+	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
+	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_0", "Off", ccap);
 	    }
 
 	    // ── Multi-race selections ───────────────────────────────────────────
@@ -2270,6 +2408,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	                "NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER")));
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Yes", caf);
 	        assertPdfFieldEquals("WHITE_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", caf);
@@ -2277,6 +2417,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", caf);
 	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Yes", caf);
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Yes", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Yes", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Yes", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Yes", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Yes", ccap);
 	    }
 
 	    @Test
@@ -2292,6 +2440,8 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	            Map.of("householdRaceAndEthnicity", List.of("ASIAN", "BLACK_OR_AFRICAN_AMERICAN")));
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        		
 	        assertPdfFieldEquals("ASIAN_0", "Yes", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", caf);
@@ -2299,6 +2449,14 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Yes", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Yes", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 	    }
 
 	    // ── Skipped page ────────────────────────────────────────────────────
@@ -2308,13 +2466,23 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        addHouseholdMembersWithProgram("SNAP");
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
+	        
 	        assertPdfFieldEquals("ASIAN_0", "Off", caf);
 	        assertPdfFieldEquals("WHITE_0", "Off", caf);
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", caf);
 	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", caf);
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", caf);
-	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", caf);
+	        
+	        assertPdfFieldEquals("ASIAN_0", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
 	    }
 
 	    // ── Comprehensive 14-member permutation test ────────────────────────
@@ -2336,7 +2504,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 
 	    @Test
 	    void shouldVerifyAllPermutationsAcrossFourteenHouseholdMembers() throws Exception {
-	        completeFlowFromLandingPageThroughReviewInfo("SNAP");
+	        completeFlowFromLandingPageThroughReviewInfo("SNAP", "CCAP");
 
 	        postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
 
@@ -2414,6 +2582,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        ));
 
 	        var caf = downloadCafClientPDF();
+	        var ccap = downloadCcapClientPDF();
 
 	        // ── Assert Member 0 (_0): ASIAN only ──
 	        assertPdfFieldEquals("ASIAN_0", "Yes", caf);
@@ -2495,9 +2664,9 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_8", "Off", caf);
 	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_8", "Off", caf);
 	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_8", "Off", caf);
-	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_8", "Yes", caf);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_8", "Off", caf);
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_8", "Off", caf);
-	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_8", "Yes", caf);
+	        assertPdfFieldEquals("UNABLE_TO_DETERMINE_8", "Off", caf);
 
 	        // ── Assert Member 9 (_9): All standard races ──
 	        assertPdfFieldEquals("ASIAN_9", "Yes", caf);
@@ -2548,6 +2717,51 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_13", "Yes", caf);
 	        // CLIENT_REPORTED = "Mixed" from OTHER text; MENA CLIENT_REPORTED doesn't fire (size > 1)
 	        assertPdfFieldEquals("CLIENT_REPORTED_13", "Mixed", caf);
+	        
+	        // ── Assert Member 0 (_0): ASIAN only ──
+	        assertPdfFieldEquals("ASIAN_0", "Yes", ccap);
+	        assertPdfFieldEquals("WHITE_0", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_0", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_0", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_0", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_0", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_0", "Off", ccap);
+
+	        // ── Assert Member 1 (_1): WHITE only ──
+	        assertPdfFieldEquals("ASIAN_1", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_1", "Yes", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_1", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_1", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_1", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_1", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_1", "Off", ccap);
+
+	        // ── Assert Member 2 (_2): BLACK_OR_AFRICAN_AMERICAN only ──
+	        assertPdfFieldEquals("ASIAN_2", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_2", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_2", "Yes", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_2", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_2", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_2", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_2", "Off", ccap);
+
+	        // ── Assert Member 3 (_3): AMERICAN_INDIAN_OR_ALASKA_NATIVE only ──
+	        assertPdfFieldEquals("ASIAN_3", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_3", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_3", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_3", "Yes", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_3", "Off", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_3", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_3", "Off", ccap);
+
+	        // ── Assert Member 4 (_4): NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER only ──
+	        assertPdfFieldEquals("ASIAN_4", "Off", ccap);
+	        assertPdfFieldEquals("WHITE_4", "Off", ccap);
+	        assertPdfFieldEquals("BLACK_OR_AFRICAN_AMERICAN_4", "Off", ccap);
+	        assertPdfFieldEquals("AMERICAN_INDIAN_OR_ALASKA_NATIVE_4", "Off", ccap);
+	        assertPdfFieldEquals("NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER_4", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_NO_4", "Yes", ccap);
+	        assertPdfFieldEquals("HISPANIC_LATINO_OR_SPANISH_4", "Off", ccap);
 	    }
 
 	    private void addHouseholdMemberFromList(String firstName, String lastName) throws Exception {

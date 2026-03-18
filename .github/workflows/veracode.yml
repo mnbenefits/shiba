@@ -44,7 +44,7 @@ jobs:
         repository: ''
     - uses: actions/checkout@v6
     - name: Set up ChromeDriver
-      uses: nanasess/setup-chromedriver@v2.3.0
+      uses: nanasess/setup-chromedriver@v2.4.0
     - name: Set up JDK
       uses: actions/setup-java@v5
       with:
