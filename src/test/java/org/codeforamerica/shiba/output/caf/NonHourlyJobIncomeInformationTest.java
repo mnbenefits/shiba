@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output.caf;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.codeforamerica.shiba.Money;
 import org.junit.jupiter.params.ParameterizedTest;

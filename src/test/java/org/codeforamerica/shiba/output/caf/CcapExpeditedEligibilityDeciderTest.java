@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output.caf;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.output.caf.CcapExpeditedEligibility.ELIGIBLE;
 
 import java.time.LocalDate;

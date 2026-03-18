@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.output.DocumentFieldType.SINGLE_VALUE;
 import java.util.List;
 import org.codeforamerica.shiba.application.Application;

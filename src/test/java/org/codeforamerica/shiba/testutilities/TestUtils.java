@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.testutilities;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.configurations.EmailAuthorizationManager.ADMIN_EMAILS;
 import static org.codeforamerica.shiba.output.DocumentFieldType.ENUMERATED_SINGLE_VALUE;
 import static org.codeforamerica.shiba.output.DocumentFieldType.SINGLE_VALUE;

@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.Program.CASH;
 import static org.codeforamerica.shiba.Program.SNAP;
 import static org.mockito.ArgumentMatchers.eq;
