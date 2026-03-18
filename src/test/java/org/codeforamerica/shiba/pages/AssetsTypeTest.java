@@ -113,7 +113,14 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     	postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
     }
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
-    postExpectingRedirect("whoIsGoingToSchool", "pregnant"); // no one is going to school
+    List<String> targetPrograms = List.of("GRH", "EA", "SNAP", "CASH");
+    if(Arrays.stream(programs).anyMatch(targetPrograms::contains)) {
+    	 postExpectingRedirect("whoIsGoingToSchool", "lastSchoolGrade");
+    	 postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "pregnant");
+    }
+    else {
+    	postExpectingRedirect("whoIsGoingToSchool", "pregnant");
+    }
     completeFlowFromIsPregnantThroughTribalNations(true, programs);
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     if (!Arrays.asList(programs).contains("CCAP")) {
@@ -135,7 +142,14 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
 	  postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
 	  postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school");
-	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
+	  List<String> targetPrograms = List.of("GRH", "EA", "SNAP", "CASH");
+	    if(Arrays.stream(programs).anyMatch(targetPrograms::contains)) {
+	    	 postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Last school grade");
+	    	 postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Pregnant");
+	    }
+	    else {
+	    	postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
+	    }
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
 	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");

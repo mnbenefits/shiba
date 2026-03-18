@@ -1,0 +1,87 @@
+<!-- This is a custom input for the lastSchoolGrade page.
+     This input is a custom input because it provides a variable number of grade inputs.
+     It displays last school grade data for the applicant and all household members.
+     Parameters:
+       input - the input (as described in pages-config.yaml)
+       data - the PageData for this page (useful when returning/navigating back to this page)
+-->
+<th:block th:fragment="lastSchoolGradeInput(input, data)"
+          th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
+                   householdSubFlow=${input.options.subworkflows.get('household')},
+                   lastSchoolGrade=${data.get(input.name)},
+                   lastSchoolGradeListSize=${#lists.size(lastSchoolGrade.value)}">
+  <div class="spacing-below-35" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
+    <div class="form-group">
+
+      
+      <th:block th:with="
+        personPageData=${pageDatasources.get('personalInfo')},
+        personName=${personPageData.get('firstName').getValue(0) + ' ' + personPageData.get('lastName').getValue(0)},
+        gradeInput=${!lastSchoolGrade.value.isEmpty() && 0 lt lastSchoolGradeListSize ? lastSchoolGrade.value.get(0) : ''}">
+
+        
+        <th:block th:if="${householdSubFlow != null}">
+          <label class="form-question spacing-above-30"
+                 th:for="|lastSchoolGrade-0|"
+                 th:text="${personName + ' ' + #messages.msg('general.you-cap')}"
+                 id="label-0">
+          </label>
+          <p class="text--help spacing-below-15" th:text="#{last-school-grade.highest-school-grade}"></p>
+        </th:block>
+        <th:block th:if="${householdSubFlow == null}">
+          <label class="form-question spacing-below-15 spacing-above-30"
+                 th:for="|lastSchoolGrade-0|"
+                 th:text="#{last-school-grade.highest-school-grade}"
+                 id="label-0">
+          </label>
+        </th:block>
+
+        <div class="select">
+          <select id="lastSchoolGrade-0"
+                  class="select__element"
+                  th:name="${formInputName}">
+            <th:block th:each="option : ${input.options.selectableOptions}">
+              <option th:value="${option.value}"
+                      th:text="#{${option.messageKey}}"
+                      th:selected="${option.value.equals(gradeInput)}">
+              </option>
+            </th:block>
+          </select>
+        </div>
+        <input type="hidden" value="applicant" name="lastSchoolGradePersonIdMap[]">
+      </th:block>
+
+     
+      <th:block th:if="${householdSubFlow != null}"
+                th:each="iteration, iterationStat : ${householdSubFlow}"
+                th:with="
+                index=${iterationStat.index + 1},
+                personPageData=${householdSubFlow.pagesDataForId(iteration.getId()).getPage('householdMemberInfo')},
+                personName=${personPageData.get('firstName').getValue(0) + ' ' + personPageData.get('lastName').getValue(0)},
+                gradeInput=${!lastSchoolGrade.value.isEmpty() && index lt lastSchoolGradeListSize ? lastSchoolGrade.value.get(index) : ''}">
+        <label class="form-question spacing-above-30"
+               th:for="|lastSchoolGrade-${index}|"
+               th:text="${personName}"
+               th:id="${'label-' + index}">
+        </label>
+        <p class="text--help spacing-below-15" th:text="#{last-school-grade.highest-school-grade}"></p>
+        <div class="select">
+          <select th:id="|lastSchoolGrade-${index}|"
+                  class="select__element"
+                  th:name="${formInputName}">
+            <th:block th:each="option : ${input.options.selectableOptions}">
+              <option th:value="${option.value}"
+                      th:text="#{${option.messageKey}}"
+                      th:selected="${option.value.equals(gradeInput)}">
+              </option>
+            </th:block>
+          </select>
+        </div>
+        <input type="hidden"
+               th:value="${iteration.id}"
+               name="lastSchoolGradePersonIdMap[]">
+      </th:block>
+
+    </div>
+  </div>
+</th:block>
