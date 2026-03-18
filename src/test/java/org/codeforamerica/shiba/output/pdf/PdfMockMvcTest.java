@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -2778,4 +2779,108 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	    }
 	}
 
+	@Nested
+	@Tag("pdf")
+	class lastSchoolGrade {
+		// ── Helper: add a household member with default values ──────────────
+	    private void addHouseholdMemberWithDefaults() throws Exception {
+	        getNavigationPageWithQueryParamAndExpectRedirect(
+	            "householdList", "option", "1", "householdMemberInfo");
+	        postExpectingRedirect(
+	            "householdMemberInfo",
+	            Map.of(
+	                "firstName", List.of("Jane"),
+	                "lastName", List.of("Doe"),
+	                "programs", List.of("SNAP"),
+	                "relationship", List.of("spouse")),
+	            "householdRaceAndEthnicity");
+	        postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
+	    }
+
+	    // ── Last School Grade: applicant + 14 household members ─────────────
+	    //
+	    // Person       Index       Grade              PDF Field
+	    // Applicant    (none)      NoSchool           LAST_SCHOOL_GRADE
+	    // Member 0     _0          ElementarySchool   LAST_SCHOOL_GRADE_0
+	    // Member 1     _1          MiddleSchool       LAST_SCHOOL_GRADE_1
+	    // Member 2     _2          HighSchool         LAST_SCHOOL_GRADE_2
+	    // Member 3     _3          GED                LAST_SCHOOL_GRADE_3
+	    // Member 4     _4          SomeCollege        LAST_SCHOOL_GRADE_4
+	    // Member 5     _5          CollegeDegree      LAST_SCHOOL_GRADE_5
+	    // Member 6     _6          GraduateDegree     LAST_SCHOOL_GRADE_6
+	    // Member 7     _7          OtherEducation     LAST_SCHOOL_GRADE_7
+	    // Member 8     _8          NoSchool           LAST_SCHOOL_GRADE_8
+	    // Member 9     _9          ElementarySchool   LAST_SCHOOL_GRADE_9
+	    // Member 10    _10         MiddleSchool       LAST_SCHOOL_GRADE_10
+	    // Member 11    _11         HighSchool         LAST_SCHOOL_GRADE_11
+	    // Member 12    _12         GED                LAST_SCHOOL_GRADE_12
+	    // Member 13    _13         SomeCollege        LAST_SCHOOL_GRADE_13
+
+	    @Test
+	    void shouldMapLastSchoolGradeForApplicantAndFourteenHouseholdMembers() throws Exception {
+	        completeFlowFromLandingPageThroughReviewInfo("SNAP");
+
+	        postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+
+	        // Add 14 household members with default names and preferNotToSay for race
+	        for (int i = 0; i < 14; i++) {
+	            addHouseholdMemberWithDefaults();
+	        }
+
+	        
+	        // 9 unique grade values, cycling for the remaining 6
+	        List<String> allGrades = List.of(
+	            "NoSchool",          // applicant
+	            "ElementarySchool",  // member 0
+	            "MiddleSchool",      // member 1
+	            "HighSchool",        // member 2
+	            "GED",               // member 3
+	            "SomeCollege",       // member 4
+	            "CollegeDegree",     // member 5
+	            "GraduateDegree",    // member 6
+	            "OtherEducation",    // member 7
+	            "NoSchool",          // member 8
+	            "ElementarySchool",  // member 9
+	            "MiddleSchool",      // member 10
+	            "HighSchool",        // member 11
+	            "GED",               // member 12
+	            "SomeCollege"        // member 13
+	        );
+
+	        // Build personIdMap: "applicant" first, then household member IDs
+	        // Build personIdMap: "applicant" first, then household member IDs
+	        List<String> personIds = new ArrayList<>();
+	        personIds.add("applicant");
+	        var householdSubworkflow = applicationData.getSubworkflows().get("household");
+	        for (int i = 0; i < 14; i++) {
+	            personIds.add(householdSubworkflow.get(i).getId().toString());
+	        }
+
+
+	        postExpectingSuccess("lastSchoolGrade", Map.of(
+	            "lastSchoolGrade", allGrades,
+	            "lastSchoolGradePersonIdMap", personIds
+	        ));
+
+	       
+	        var caf = downloadCafClientPDF();
+
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE", "No School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_0", "Elementary School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_1", "Middle School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_2", "High School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_3", "GED", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_4", "Some College", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_5", "College Degree", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_6", "Graduate Degree", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_7", "Other", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_8", "No School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_9", "Elementary School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_10", "Middle School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_11", "High School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_12", "GED", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_13", "Some College", caf);
+	    }
+	}
+	
 }
