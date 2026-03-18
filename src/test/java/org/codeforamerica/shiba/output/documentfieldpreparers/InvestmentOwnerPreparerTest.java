@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.List;
 

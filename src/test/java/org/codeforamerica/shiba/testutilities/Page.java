@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.testutilities;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

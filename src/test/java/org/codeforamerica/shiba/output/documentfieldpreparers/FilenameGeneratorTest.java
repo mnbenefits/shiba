@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.output.documentfieldpreparers;
 
 import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.County.*;
 import static org.codeforamerica.shiba.TribalNation.RedLakeNation;
 import static org.codeforamerica.shiba.TribalNation.UpperSioux;

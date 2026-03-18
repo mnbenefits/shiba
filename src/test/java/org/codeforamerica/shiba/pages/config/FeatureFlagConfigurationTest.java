@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.pages.config;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.Map;
 import org.junit.jupiter.api.Test;

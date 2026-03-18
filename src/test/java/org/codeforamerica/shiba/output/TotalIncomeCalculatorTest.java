@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.output;
 
 import static java.util.Collections.emptyList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.List;
 import org.codeforamerica.shiba.Money;
