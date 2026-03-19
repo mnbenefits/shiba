@@ -492,6 +492,8 @@ mappings:
      schoolName: SCHOOL_NAME
   schoolGrade:
      schoolGrade: SCHOOL_GRADE
+  lastSchoolGrade:
+    lastSchoolGrade: LAST_SCHOOL_GRADE
   schoolStartDate:
      schoolStartDate: SCHOOL_START_DATE
   adultRequestingChildcareLookingForJob:
@@ -551,3 +553,12 @@ enums:
   IT_VARIES: It varies
   true: "Yes"
   false: "No"
+  NoSchool: "No School"
+  ElementarySchool: "Elementary School"
+  MiddleSchool: "Middle School"
+  HighSchool: "High School"
+  GED: "GED"
+  SomeCollege: "Some College"
+  CollegeDegree: "College Degree"
+  GraduateDegree: "Graduate Degree"
+  OtherEducation: "Other"

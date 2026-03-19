@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.framework;
 
 import static java.util.Locale.ENGLISH;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.application.FlowType.UNDETERMINED;
 
 import org.codeforamerica.shiba.application.FlowType;

@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.output.xml;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.output.Recipient.CLIENT;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.mockito.ArgumentMatchers.any;

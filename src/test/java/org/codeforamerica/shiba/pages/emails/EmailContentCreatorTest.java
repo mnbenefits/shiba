@@ -1,7 +1,7 @@
 package org.codeforamerica.shiba.pages.emails;
 
 import static java.util.Locale.ENGLISH;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.County.Anoka;
 import static org.codeforamerica.shiba.Program.CASH;
 import static org.codeforamerica.shiba.Program.CCAP;

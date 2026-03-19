@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.application.parsers;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Field.PAID_BY_HOUR;
 import static org.codeforamerica.shiba.application.parsers.ApplicationDataParser.Group.JOBS;
 

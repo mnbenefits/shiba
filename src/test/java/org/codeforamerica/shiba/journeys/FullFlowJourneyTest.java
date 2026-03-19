@@ -163,6 +163,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// School Start Date?
 		testPage.enter("schoolStartDate", "01/01/2024");
+		testPage.clickContinue("Last school grade");
+		assertThat(testPage.findElementById("lastSchoolGrade-0"));
+		assertThat(testPage.findElementById("lastSchoolGrade-1"));
+		testPage.enter("lastSchoolGrade", "GED or equivalent", 0);
+		testPage.enter("lastSchoolGrade", "Graduate Degree", 1);
 		testPage.clickContinue("Pregnant");
 
 		// Is anyone in your household pregnant?
@@ -897,8 +902,13 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Is anyone in your household going to school right now, either full or
 		// part-time?
-		testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Pregnant");
-
+		testPage.chooseYesOrNo("goingToSchool", NO.getDisplayValue(), "Last school grade");
+		
+		assertThat(testPage.findElementById("lastSchoolGrade-0"));
+		assertThat(testPage.findElementById("lastSchoolGrade-1"));
+		testPage.enter("lastSchoolGrade", "GED or equivalent", 0);
+		testPage.enter("lastSchoolGrade", "Graduate Degree", 1);
+		testPage.clickContinue("Pregnant");
 		// Is anyone in your household pregnant?
 		testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 

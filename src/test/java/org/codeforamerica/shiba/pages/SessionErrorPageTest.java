@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.pages;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
