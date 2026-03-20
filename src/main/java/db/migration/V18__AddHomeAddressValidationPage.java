@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.crypto.tink.Aead;
 import com.google.crypto.tink.CleartextKeysetHandle;
 import com.google.crypto.tink.JsonKeysetReader;
+import com.google.crypto.tink.RegistryConfiguration;
 import com.google.crypto.tink.aead.AeadConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -180,7 +181,7 @@ public class V18__AddHomeAddressValidationPage extends BaseJavaMigration {
         public StringEncryptor(String encryptionKey) throws GeneralSecurityException, IOException {
             AeadConfig.register();
             aead = CleartextKeysetHandle.read(
-                    JsonKeysetReader.withString(encryptionKey)).getPrimitive(Aead.class);
+                    JsonKeysetReader.withString(encryptionKey)).getPrimitive(RegistryConfiguration.get(), Aead.class);
         }
 
         public byte[] encrypt(String data) {
