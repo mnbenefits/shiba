@@ -1,6 +1,6 @@
 package org.codeforamerica.shiba.testutilities;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -288,34 +288,37 @@ public class Page {
  
   
 	public void enter(String inputName, String value) {
-		checkForBadMessageKeys();
-		Duration duration = Duration.of(5, ChronoUnit.SECONDS);
-		WebDriverWait wait = new WebDriverWait(driver, duration);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
-		List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
-		WebElement firstElement = formInputElements.get(0);
-		FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(firstElement.getTagName());
-		switch (formInputHtmlTag) {
-		case select -> selectFromDropdown(firstElement, value);
-		case button -> choose(formInputElements, value);
-		case textarea -> enterInput(firstElement, value);
-		case input -> {
-			switch (InputTypeHtmlAttribute.valueOf(firstElement.getAttribute("type"))) {
-			case text -> {
-				if (firstElement.getAttribute("class").contains("dob-input")) {
-					enterDateInput(inputName, value);
-				} else {
-					enterInput(firstElement, value);
-				}
-			}
-			case radio, checkbox -> selectEnumeratedInput(formInputElements, value);
-			default -> enterInput(firstElement, value);
-			}
-		}
-		default -> throw new IllegalArgumentException("Cannot find element");
-		}
+		enter(inputName, value, 0);
 	}
-
+	
+	public void enter(String inputName, String value, int index) {
+	    checkForBadMessageKeys();
+	    Duration duration = Duration.of(5, ChronoUnit.SECONDS);
+	    WebDriverWait wait = new WebDriverWait(driver, duration);
+	    wait.until(ExpectedConditions.visibilityOfElementLocated(By.name(inputName + "[]")));
+	    List<WebElement> formInputElements = driver.findElements(By.name(inputName + "[]"));
+	    WebElement targetElement = formInputElements.get(index);
+	    FormInputHtmlTag formInputHtmlTag = FormInputHtmlTag.valueOf(targetElement.getTagName());
+	    switch (formInputHtmlTag) {
+	        case select -> selectFromDropdown(targetElement, value);
+	        case button -> choose(formInputElements, value);
+	        case textarea -> enterInput(targetElement, value);
+	        case input -> {
+	            switch (InputTypeHtmlAttribute.valueOf(targetElement.getAttribute("type"))) {
+	                case text -> {
+	                    if (targetElement.getAttribute("class").contains("dob-input")) {
+	                        enterDateInput(inputName, value);
+	                    } else {
+	                        enterInput(targetElement, value);
+	                    }
+	                }
+	                case radio, checkbox -> selectEnumeratedInput(formInputElements, value);
+	                default -> enterInput(targetElement, value);
+	            }
+	        }
+	        default -> throw new IllegalArgumentException("Cannot find element");
+	    }
+	}
 	/**
 	 * Yes and No buttons perform their own page submit action and need their own
 	 * wait period for the next page to load.

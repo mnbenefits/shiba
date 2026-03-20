@@ -416,22 +416,17 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  }
 
 	  // navigation from goingToSchool to introIncome
-	  switch (program) {
-	  //CCAP only skips militaryService page, goes directly to pregnant
-	    case "CCAP": {
-	    	postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
-	        break;
-	    }
-	    default: {
-	    	// All other programs go through militaryService page
-	        postExpectingRedirect("goingToSchool", "goingToSchool", "false", "militaryService");
-	        postExpectingRedirect("militaryService", "hasMilitaryService", "false", "pregnant");
-	        postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
-	  	    postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
-	  	    postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");
-	        break;
-	    }
+	  if(List.of("GRH", "EA", "SNAP", "CASH").contains(program)) {
+		  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "lastSchoolGrade");
+		  postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "militaryService");
+		  postExpectingRedirect("militaryService", "hasMilitaryService", "false", "pregnant");
 	  }
+	  else {
+		  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
+	  }
+	  postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
+	  postExpectingRedirect("migrantFarmWorker", "migrantOrSeasonalFarmWorker", "false", "citizenship");
+	  postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");
 	  switch (program) {
 	    case "CCAP": {
 	       // CCAP skips unableToWork page, goes directly to workChanges
