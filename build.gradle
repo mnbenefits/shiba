@@ -41,7 +41,7 @@ task genJaxbFilenet {
     outputs.dir classesDir
 
     doLast() {
-        project.ant {
+        ant {
             taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
                     classpath: configurations.jaxb.asPath
             mkdir(dir: sourcesDir)
