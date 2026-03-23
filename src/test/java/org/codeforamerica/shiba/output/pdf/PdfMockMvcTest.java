@@ -2833,24 +2833,25 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        postExpectingSuccess("householdRaceAndEthnicity", "preferNotToSay", "true");
 	    }
 
-	    // ── Last School Grade: applicant + 14 household members ─────────────
+	    // ── Test 1: First 15 grade values (applicant + 14 members) ──────────
 	    //
 	    // Person       Index       Grade              PDF Field
 	    // Applicant    (none)      NoSchool           LAST_SCHOOL_GRADE
-	    // Member 0     _0          ElementarySchool   LAST_SCHOOL_GRADE_0
-	    // Member 1     _1          MiddleSchool       LAST_SCHOOL_GRADE_1
-	    // Member 2     _2          HighSchool         LAST_SCHOOL_GRADE_2
-	    // Member 3     _3          GED                LAST_SCHOOL_GRADE_3
-	    // Member 4     _4          SomeCollege        LAST_SCHOOL_GRADE_4
-	    // Member 5     _5          CollegeDegree      LAST_SCHOOL_GRADE_5
-	    // Member 6     _6          GraduateDegree     LAST_SCHOOL_GRADE_6
-	    // Member 7     _7          OtherEducation     LAST_SCHOOL_GRADE_7
-	    // Member 8     _8          NoSchool           LAST_SCHOOL_GRADE_8
-	    // Member 9     _9          ElementarySchool   LAST_SCHOOL_GRADE_9
-	    // Member 10    _10         MiddleSchool       LAST_SCHOOL_GRADE_10
-	    // Member 11    _11         HighSchool         LAST_SCHOOL_GRADE_11
-	    // Member 12    _12         GED                LAST_SCHOOL_GRADE_12
-	    // Member 13    _13         SomeCollege        LAST_SCHOOL_GRADE_13
+	    // Member 0     _0          Preschool          LAST_SCHOOL_GRADE_0
+	    // Member 1     _1          Kindergarten       LAST_SCHOOL_GRADE_1
+	    // Member 2     _2          1stGrade           LAST_SCHOOL_GRADE_2
+	    // Member 3     _3          2ndGrade           LAST_SCHOOL_GRADE_3
+	    // Member 4     _4          3rdGrade           LAST_SCHOOL_GRADE_4
+	    // Member 5     _5          4thGrade           LAST_SCHOOL_GRADE_5
+	    // Member 6     _6          5thGrade           LAST_SCHOOL_GRADE_6
+	    // Member 7     _7          6thGrade           LAST_SCHOOL_GRADE_7
+	    // Member 8     _8          7thGrade           LAST_SCHOOL_GRADE_8
+	    // Member 9     _9          8thGrade           LAST_SCHOOL_GRADE_9
+	    // Member 10    _10         9thGrade           LAST_SCHOOL_GRADE_10
+	    // Member 11    _11         10thGrade          LAST_SCHOOL_GRADE_11
+	    // Member 12    _12         11thGrade          LAST_SCHOOL_GRADE_12
+	    // Member 13    _13         12thGrade          LAST_SCHOOL_GRADE_13
+
 
 	    @Test
 	    void shouldMapLastSchoolGradeForApplicantAndFourteenHouseholdMembers() throws Exception {
@@ -2864,24 +2865,25 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        }
 
 	        
-	        // 9 unique grade values, cycling for the remaining 6
+	        
 	        List<String> allGrades = List.of(
-	            "NoSchool",          // applicant
-	            "ElementarySchool",  // member 0
-	            "MiddleSchool",      // member 1
-	            "HighSchool",        // member 2
-	            "GED",               // member 3
-	            "SomeCollege",       // member 4
-	            "CollegeDegree",     // member 5
-	            "GraduateDegree",    // member 6
-	            "OtherEducation",    // member 7
-	            "NoSchool",          // member 8
-	            "ElementarySchool",  // member 9
-	            "MiddleSchool",      // member 10
-	            "HighSchool",        // member 11
-	            "GED",               // member 12
-	            "SomeCollege"        // member 13
-	        );
+		            "NoSchool",        // applicant
+		            "Preschool",       // member 0
+		            "Kindergarten",    // member 1
+		            "1stGrade",        // member 2
+		            "2ndGrade",        // member 3
+		            "3rdGrade",        // member 4
+		            "4thGrade",        // member 5
+		            "5thGrade",        // member 6
+		            "6thGrade",        // member 7
+		            "7thGrade",        // member 8
+		            "8thGrade",        // member 9
+		            "9thGrade",        // member 10
+		            "10thGrade",       // member 11
+		            "11thGrade",       // member 12
+		            "12thGrade"        // member 13
+		        );
+
 
 	        // Build personIdMap: "applicant" first, then household member IDs
 	        // Build personIdMap: "applicant" first, then household member IDs
@@ -2901,21 +2903,71 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	       
 	        var caf = downloadCafClientPDF();
 
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE", "No School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_0", "Elementary School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_1", "Middle School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_2", "High School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_3", "GED", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_4", "Some College", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_5", "College Degree", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_6", "Graduate Degree", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_7", "Other", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_8", "No School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_9", "Elementary School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_10", "Middle School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_11", "High School", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_12", "GED", caf);
-	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_13", "Some College", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE",    "No School", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_0",  "Preschool", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_1",  "Kindergarten", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_2",  "1st grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_3",  "2nd grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_4",  "3rd grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_5",  "4th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_6",  "5th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_7",  "6th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_8",  "7th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_9",  "8th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_10", "9th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_11", "10th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_12", "11th grade", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_13", "12th grade", caf);
+
+	    }
+	    
+	 // ── Test 2: Remaining 5 values (GED, SomeCollege, CollegeDegree,
+	    //            GraduateDegree, OtherEducation) ─────────────────────────
+	    //
+	    // Person       Index       Grade              PDF Field
+	    // Applicant    (none)      GED                LAST_SCHOOL_GRADE
+	    // Member 0     _0          SomeCollege        LAST_SCHOOL_GRADE_0
+	    // Member 1     _1          CollegeDegree      LAST_SCHOOL_GRADE_1
+	    // Member 2     _2          GraduateDegree     LAST_SCHOOL_GRADE_2
+	    // Member 3     _3          OtherEducation     LAST_SCHOOL_GRADE_3
+
+	    @Test
+	    void shouldMapLastSchoolGradeRemainingValues() throws Exception {
+	        completeFlowFromLandingPageThroughReviewInfo("SNAP");
+
+	        postExpectingSuccess("addHouseholdMembers", "addHouseholdMembers", "true");
+
+	        for (int i = 0; i < 4; i++) {
+	            addHouseholdMemberWithDefaults();
+	        }
+
+	        List<String> grades = List.of(
+	            "GED",             // applicant
+	            "SomeCollege",     // member 0
+	            "CollegeDegree",   // member 1
+	            "GraduateDegree",  // member 2
+	            "OtherEducation"   // member 3
+	        );
+
+	        List<String> personIds = new ArrayList<>();
+	        personIds.add("applicant");
+	        var householdSubworkflow = applicationData.getSubworkflows().get("household");
+	        for (int i = 0; i < 4; i++) {
+	            personIds.add(householdSubworkflow.get(i).getId().toString());
+	        }
+
+	        postExpectingSuccess("lastSchoolGrade", Map.of(
+	            "lastSchoolGrade", grades,
+	            "lastSchoolGradePersonIdMap", personIds
+	        ));
+
+	        var caf = downloadCafClientPDF();
+
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE",   "GED or equivalent", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_0", "Some College", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_1", "College Degree", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_2", "Graduate Degree", caf);
+	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_3", "Other", caf);
 	    }
 	}
 	

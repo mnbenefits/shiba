@@ -4,6 +4,7 @@ import com.google.crypto.tink.Aead;
 import com.google.crypto.tink.CleartextKeysetHandle;
 import com.google.crypto.tink.JsonKeysetReader;
 import com.google.crypto.tink.aead.AeadConfig;
+import com.google.crypto.tink.RegistryConfiguration;
 import com.google.crypto.tink.subtle.Hex;
 
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class StringEncryptor implements Encryptor<String> {
       throws GeneralSecurityException, IOException {
     AeadConfig.register();
     aead = CleartextKeysetHandle.read(
-        JsonKeysetReader.withString(encryptionKey)).getPrimitive(Aead.class);
+    JsonKeysetReader.withString(encryptionKey)).getPrimitive(RegistryConfiguration.get(), Aead.class);
   }
 
   public String encrypt(String data) {

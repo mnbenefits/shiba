@@ -93,7 +93,8 @@ public class CommunicationClient{
 			String name = t.getClass().getTypeName();
 			log.info("Comm Hub Client Error Exception name: " + name + " - Most Specific Cause: " + t.getLocalizedMessage());
 			log.error("Comm Hub Client Error: " + rce.getMessage() + " for JSON object: " + appJsonObject.toString(), rce);
-			if(Stream.of(t.getLocalizedMessage()).anyMatch(retryCodes::contains)) {
+			String localizedMessage = t.getLocalizedMessage();
+			if(retryCodes.stream().anyMatch(localizedMessage::contains)) {
 				throw rce;
 			}
 			
@@ -132,7 +133,8 @@ public class CommunicationClient{
 				String name = t.getClass().getTypeName();
 				log.info("Comm Hub Client Error Exception name: " + name + " - Most Specific Cause: " + t.getLocalizedMessage());
 				log.error("Comm Hub Client Error: " + rce.getMessage() + " for JSON object: " + appJsonObject.toString(), rce);
-				if(Stream.of(t.getLocalizedMessage()).anyMatch(retryCodes::contains)) {
+				String localizedMessage = t.getLocalizedMessage();
+				if(retryCodes.stream().anyMatch(localizedMessage::contains)) {
 					throw rce;
 				}
 				
