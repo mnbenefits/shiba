@@ -130,6 +130,9 @@ mappings:
   pregnant:
     isPregnant: IS_PREGNANT
     applicantIsPregnant: APPLICANT_IS_PREGNANT
+  militaryService:
+    hasMilitaryService: MILITARY_SERVICE
+    applicantHasMilitaryService: MILITARY_SERVICE_APPLICANT
   usCitizen:
     isUsCitizen: IS_US_CITIZEN
     applicantIsUsCitizen: APPLICANT_IS_US_CITIZEN

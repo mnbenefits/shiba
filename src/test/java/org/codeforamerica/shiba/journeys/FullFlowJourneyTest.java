@@ -168,7 +168,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertThat(testPage.findElementById("lastSchoolGrade-1"));
 		testPage.enter("lastSchoolGrade", "GED or equivalent", 0);
 		testPage.enter("lastSchoolGrade", "Graduate Degree", 1);
-		testPage.clickContinue("Pregnant");
+		testPage.clickContinue("Military Service");
+		// Has anyone in your household served in the U.S. Military ?
+		 testPage.chooseYesOrNo("hasMilitaryService", NO.getDisplayValue(), "Pregnant");
 
 		// Is anyone in your household pregnant?
 		testPage.chooseYesOrNo("isPregnant", YES.getDisplayValue(), "Household: pregnant");
@@ -908,7 +910,11 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertThat(testPage.findElementById("lastSchoolGrade-1"));
 		testPage.enter("lastSchoolGrade", "GED or equivalent", 0);
 		testPage.enter("lastSchoolGrade", "Graduate Degree", 1);
-		testPage.clickContinue("Pregnant");
+		testPage.clickContinue("Military Service");
+		//Has anyone in your household ever served in the U.S. Military?
+				testPage.chooseYesOrNo("hasMilitaryService",YES.getDisplayValue(), "Who Has Military Service");
+				testPage.enter("whoHasMilitaryService", "Celia St. George");
+				testPage.clickContinue("Pregnant");
 		// Is anyone in your household pregnant?
 		testPage.chooseYesOrNo("isPregnant", NO.getDisplayValue(), "Expedited Migrant Farm Worker, Household");
 

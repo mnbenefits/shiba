@@ -113,10 +113,15 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
     	postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
     }
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Who is going to school?");
+    
+    /*if(Arrays.stream(programs).anyMatch(p -> p.equals("CCAP"))) {
+        postExpectingRedirect("whoIsGoingToSchool", "pregnant");// no one is going to school
+    }*/
     List<String> targetPrograms = List.of("GRH", "EA", "SNAP", "CASH");
     if(Arrays.stream(programs).anyMatch(targetPrograms::contains)) {
     	 postExpectingRedirect("whoIsGoingToSchool", "lastSchoolGrade");
-    	 postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "pregnant");
+    	 postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "militaryService");
+    	 postExpectingRedirect("militaryService", "hasMilitaryService", "false", "pregnant");
     }
     else {
     	postExpectingRedirect("whoIsGoingToSchool", "pregnant");
@@ -145,11 +150,13 @@ public class AssetsTypeTest extends AbstractShibaMockMvcTest {
 	  List<String> targetPrograms = List.of("GRH", "EA", "SNAP", "CASH");
 	    if(Arrays.stream(programs).anyMatch(targetPrograms::contains)) {
 	    	 postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Last school grade");
-	    	 postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Pregnant");
+	    	 postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Military Service");
+	   	     postExpectingNextPageTitle("militaryService", "hasMilitaryService", "false", "Pregnant");
 	    }
 	    else {
 	    	postExpectingNextPageTitle("goingToSchool", "goingToSchool", "false", "Pregnant");
 	    }
+	    
 	  completeFlowFromIsPregnantThroughTribalNations(false, programs);
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
 	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");

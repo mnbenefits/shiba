@@ -2044,6 +2044,34 @@ pageConfigurations:
           datasources:
             - pageName: personalInfo
             - groupName: household
+  - &militaryService
+    name: militaryService
+    pageTitle: military-service.title
+    headerKey:
+      defaultValue: military-service.has-anyone-served
+      conditionalValues:
+        - value: military-service.have-you-served
+          condition: *livesAlone?
+    headerHelpMessageKey: military-service.message-key
+    hasPrimaryButton: false
+    contextFragment: militaryContextFragment
+    inputs:   
+      - name: hasMilitaryService
+        type: YES_NO
+  - &whoHasMilitaryService
+    name: whoHasMilitaryService
+    pageTitle: who-has-military-service.title
+    headerKey: who-has-military-service.header
+    headerHelpMessageKey: general.check-all-that-apply
+    contextFragment: militaryContextFragment
+    inputs:
+      - type: CUSTOM
+        name: whoHasMilitaryService
+        customInputFragment: householdOptionsCheckboxes
+        options:
+          datasources:
+            - pageName: personalInfo
+            - groupName: household			
   - &citizenship
     name: citizenship
     pageTitle: citizenship.title
@@ -6376,8 +6404,8 @@ workflow:
     datasources:
       - pageName: addHouseholdMembers
       - pageName: choosePrograms
-      - pageName: householdMemberInfo
-        groupName: household
+      - groupName: household
+        pageName: householdMemberInfo
     nextPages:
       - pageName: whoIsGoingToSchool
         condition: *doesNotLiveAlone?
@@ -6390,6 +6418,7 @@ workflow:
       - groupName: household
         pageName: householdMemberInfo
     skipCondition:
+      name: applicantDidNotChooseCCAP_AND_householdMemberDidNotChooseCCAP_ORgoingToSchoolIsFalse
       logicalOperator: OR
       conditions:
         - conditions:
@@ -6443,7 +6472,7 @@ workflow:
           input: goingToSchool
         - customCondition: SKIP_SCHOOL_DETAILS
     nextPages:
-      - pageName: schoolStartDate            
+      - pageName: schoolStartDate      
   schoolStartDate:
     pageConfiguration: *schoolStartDate
     enrichment: schoolStartDateEnrichment
@@ -6451,8 +6480,9 @@ workflow:
       - pageName: lastSchoolGrade
     datasources:
       - pageName: schoolGrade
+      - pageName : choosePrograms
       - groupName: household
-      - pageName: householdMemberInfo
+        pageName: householdMemeberInfo
     skipCondition:
       conditions:
         - customCondition: SKIP_SCHOOL_START_DATE
@@ -6460,13 +6490,46 @@ workflow:
     pageConfiguration: *lastSchoolGrade
     skipCondition: *noOneChoseCAF?
     nextPages:
+      - pageName: militaryService
+        condition: *someoneChoseCAFProgram?
       - pageName: pregnant
     datasources:
       - pageName: personalInfo
       - pageName: addHouseholdMembers
       - pageName: choosePrograms
       - groupName: household
-        pageName: householdMemberInfo
+        pageName: householdMemberInfo		
+  militaryService:
+    pageConfiguration: *militaryService
+    nextPages:
+      - pageName: whoHasMilitaryService
+        condition: *doesNotLiveAlone?
+      - pageName: pregnant
+    datasources:
+      - pageName : choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemeberInfo
+        groupName: household
+    skipCondition: *noOneChoseCAF?
+  whoHasMilitaryService:
+    pageConfiguration: *whoHasMilitaryService
+    nextPages:
+      - pageName: pregnant
+    datasources:
+      - pageName: householdMemeberInfo
+        groupName: household
+      - pageName: addHouseholdMembers
+      - pageName: militaryService
+    skipCondition:
+      name: LivesAlone&MilitaryServiceIsFalse
+      logicalOperator: OR
+      conditions:
+        - conditions:
+            - *livesAlone?
+            - *noOneChoseCAF?
+        - pageName: militaryService
+          input: hasMilitaryService
+          value: "false"
   pregnant:
     pageConfiguration: *pregnant
     nextPages:

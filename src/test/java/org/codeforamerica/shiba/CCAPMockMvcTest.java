@@ -45,7 +45,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
 	  postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school");  
 	  postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Last school grade");
-	  postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Pregnant");
+	  postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Military Service");
+	  postExpectingNextPageTitle("militaryService", "hasMilitaryService", "false", "Pregnant");
 	  completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
 	  assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
 	  postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
@@ -145,7 +146,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");    
     postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school"); 
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Last school grade");
-    postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Pregnant");
+	  postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Military Service");
+	  postExpectingNextPageTitle("militaryService", "hasMilitaryService", "false", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
@@ -179,7 +181,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingNextPageTitle("housingSituation", "isHomeless", "false", "Living situation");
     postExpectingNextPageTitle("livingSituation", "livingSituation", "false", "Going to school");
     postExpectingNextPageTitle("goingToSchool", "goingToSchool", "true", "Last school grade");
-    postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Pregnant");
+    postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Military Service");
+    postExpectingNextPageTitle("militaryService", "hasMilitaryService", "false", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(true, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
@@ -225,7 +228,8 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
     postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
     postExpectingRedirect("livingSituation", "livingSituation", "false", "goingToSchool");
     postExpectingRedirect("goingToSchool", "goingToSchool", "true", "lastSchoolGrade");
-    postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "pregnant");
+    postExpectingNextPageTitle("lastSchoolGrade", "lastSchoolGrade", "GED", "Military Service");
+    postExpectingNextPageTitle("militaryService", "hasMilitaryService", "false", "Pregnant");
     completeFlowFromIsPregnantThroughTribalNations(false, "SNAP");
     assertNavigationRedirectsToCorrectNextPage("introIncome", "employmentStatus");
     postExpectingNextPageTitle("employmentStatus", "areYouWorking", "false", "Employment in the past");
@@ -260,6 +264,61 @@ public class CCAPMockMvcTest extends AbstractShibaMockMvcTest {
             "startHousehold");
     fillOutHousemateInfo("EA");
     assertPageDoesNotHaveElementWithId("legalStuff", "drugFelony1");
+  }
+
+  @Test
+  void verifyMilitaryServiceSkippedForCCAPOnlyApplication() throws Exception {
+    completeFlowFromLandingPageThroughReviewInfo("CCAP");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
+        "addChildrenConfirmation");
+    assertNavigationRedirectsToCorrectNextPageWithOption("addChildrenConfirmation", "false",
+        "introPersonalDetails");
+    postExpectingRedirect("introPersonalDetails", "housingSubsidy");
+    postExpectingRedirect("housingSubsidy", "livingSituation");
+    postExpectingRedirect("livingSituation", "goingToSchool");
+    // CCAP-only: militaryService is skipped
+    postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
+  }
+
+  @Test
+  void verifyMilitaryServiceShownForCAFApplication() throws Exception {
+    completeFlowFromLandingPageThroughReviewInfo("SNAP");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
+        "temporaryAbsence");
+    postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "false",
+        "introPersonalDetails");
+    postExpectingRedirect("introPersonalDetails", "housingSubsidy");
+    postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+    postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
+    postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
+    postExpectingRedirect("goingToSchool", "goingToSchool", "false", "lastSchoolGrade");
+    postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "militaryService");
+    postExpectingRedirect("militaryService", "hasMilitaryService", "false", "pregnant");
+  }
+
+  @Test
+  void verifyWhoHasMilitaryServiceShownWhenHouseholdHasMembersAndMilitaryServiceYes() throws Exception {
+    completeFlowFromLandingPageThroughReviewInfo("SNAP");
+    postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "true", "startHousehold");
+    fillOutHousemateInfo("SNAP");
+    finishAddingHouseholdMembers("temporaryAbsence");
+    postExpectingRedirect("temporaryAbsence", "hasTemporaryAbsence", "false",
+        "preparingMealsTogether");
+    postExpectingRedirect("preparingMealsTogether", "isPreparingMealsTogether", "true",
+        "buyOrCookFood");
+    postExpectingRedirect("buyOrCookFood", "isDisabledToBuyOrCookFood", "false",
+        "housingSubsidy");
+    postExpectingRedirect("housingSubsidy", "hasHousingSubsidy", "false", "housingSituation");
+    postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
+    postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
+    postExpectingRedirect("goingToSchool", "goingToSchool", "false", "lastSchoolGrade");
+    postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "militaryService");
+    // With household: whoHasMilitaryService page shown when hasMilitaryService is Yes
+    postExpectingRedirect("militaryService", "hasMilitaryService", "true", "whoHasMilitaryService");
+    postExpectingRedirect("whoHasMilitaryService", "whoHasMilitaryService",
+        List.of(getApplicantFullNameAndId(), "householdMemberFirstName householdMemberLastName "
+            + getFirstHouseholdMemberId()),
+        "pregnant");
   }
 
   @Test

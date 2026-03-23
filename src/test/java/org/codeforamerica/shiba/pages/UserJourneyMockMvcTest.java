@@ -418,7 +418,8 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  // navigation from goingToSchool to introIncome
 	  if(List.of("GRH", "EA", "SNAP", "CASH").contains(program)) {
 		  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "lastSchoolGrade");
-		  postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "pregnant");
+		  postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "militaryService");
+		  postExpectingRedirect("militaryService", "hasMilitaryService", "false", "pregnant");
 	  }
 	  else {
 		  postExpectingRedirect("goingToSchool", "goingToSchool", "false", "pregnant");
@@ -428,7 +429,7 @@ public class UserJourneyMockMvcTest extends AbstractShibaMockMvcTest {
 	  postExpectingRedirect("citizenship", "citizenshipStatus", "DERIVED", "disability");
 	  switch (program) {
 	    case "CCAP": {
-	        // CCAP skips unableToWork page, goes directly to workChanges
+	       // CCAP skips unableToWork page, goes directly to workChanges
 	        postExpectingRedirect("disability", "hasDisability", "false", "workChanges");
 	        break;
 	    }

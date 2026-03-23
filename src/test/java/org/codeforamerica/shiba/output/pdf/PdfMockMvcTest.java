@@ -345,6 +345,42 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		var caf = downloadCafClientPDF();
 		assertPdfFieldEquals("HELP_WITH_REFERRALS", "Yes", caf);
 	}
+
+	@Test
+	void shouldMapMilitaryServiceNoToCAF() throws Exception {
+		selectPrograms("SNAP");
+		fillOutPersonalInfo();
+		postExpectingSuccess("militaryService", "hasMilitaryService", "false");
+
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("MILITARY_SERVICE_APPLICANT", "No", caf);
+	}
+
+	@Test
+	void shouldMapMilitaryServiceYesAndApplicantToCAFWhenLivingAlone() throws Exception {
+		selectPrograms("SNAP");
+		fillOutPersonalInfo();
+		postExpectingSuccess("militaryService", "hasMilitaryService", "true");
+
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("MILITARY_SERVICE_APPLICANT", "Yes", caf);
+
+	}
+
+	@Test
+	void shouldMapWhoHasMilitaryServiceToCAFWhenHouseholdHasMembers() throws Exception {
+		selectPrograms("SNAP");
+		fillOutPersonalInfo();
+		addHouseholdMembersWithProgram("SNAP");
+		postExpectingSuccess("militaryService", "hasMilitaryService", "true");
+		postExpectingSuccess("whoHasMilitaryService", "whoHasMilitaryService",
+			List.of(getApplicantFullNameAndId(), getPamFullNameAndId()));
+
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("MILITARY_SERVICE_APPLICANT", "Yes", caf);
+		assertPdfFieldContains("MILITARY_SERVICE_0", "No", caf);
+		assertPdfFieldContains("MILITARY_SERVICE_1", "Yes", caf);
+	}
 	
 	@Test
 	void shouldMapEBTInPast() throws Exception {

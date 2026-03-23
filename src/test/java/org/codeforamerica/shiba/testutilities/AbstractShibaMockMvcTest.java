@@ -946,9 +946,9 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
       postExpectingRedirect("goingToSchool", "goingToSchool", "false", "lastSchoolGrade");
-      postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "pregnant");
+      postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "militaryService");
+      postExpectingRedirect("militaryService", "hasMilitaryService", "false", "pregnant");
       postExpectingRedirect("pregnant", "isPregnant", "true", "whoIsPregnant");
-      postExpectingRedirect("whoIsPregnant", "whoIsPregnant", me, "migrantFarmWorker");
 
     } else {
       postExpectingRedirect("addHouseholdMembers", "addHouseholdMembers", "false",
@@ -959,7 +959,9 @@ public class AbstractShibaMockMvcTest {
       postExpectingRedirect("housingSituation", "isHomeless", "false", "livingSituation");
       postExpectingRedirect("livingSituation", "livingSituation", "UNKNOWN", "goingToSchool");
       postExpectingRedirect("goingToSchool", "goingToSchool", "false", "lastSchoolGrade");
-      postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "pregnant");
+      postExpectingRedirect("lastSchoolGrade", "lastSchoolGrade", "GED", "militaryService");
+      postExpectingRedirect("militaryService", "hasMilitaryService", "false", "pregnant");
+
       postExpectingRedirect("pregnant", "isPregnant", "false", "migrantFarmWorker");
     }
 

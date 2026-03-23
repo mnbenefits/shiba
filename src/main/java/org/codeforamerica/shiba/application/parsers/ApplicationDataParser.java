@@ -190,6 +190,8 @@ public class ApplicationDataParser {
             new ParsingCoordinate("pregnant", "isPregnant"));
     coordinatesMap.put(Field.WHO_IS_PREGNANT,
             new ParsingCoordinate("whoIsPregnant", "whoIsPregnant"));
+    coordinatesMap.put(Field.MILITARY_SERVICE,
+            new ParsingCoordinate("militaryService", "hasMilitaryService"));
     coordinatesMap.put(Field.IS_LOOKING_FOR_JOB,
         new ParsingCoordinate("jobSearch", "currentlyLookingForJob"));
     coordinatesMap.put(Field.WHO_IS_LOOKING_FOR_A_JOB,
@@ -577,6 +579,7 @@ public class ApplicationDataParser {
     WHO_IS_GOING_TO_SCHOOL,
     IS_PREGNANT,
     IS_US_CITIZEN,
+    MILITARY_SERVICE,
     WHO_IS_PREGNANT,
     IS_LOOKING_FOR_JOB,
     WHO_IS_LOOKING_FOR_A_JOB,
