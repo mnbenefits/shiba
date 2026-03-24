@@ -23,7 +23,7 @@
         <th:block th:if="${householdSubFlow != null}">
           <label class="form-question spacing-above-30"
                  th:for="|lastSchoolGrade-0|"
-                 th:text="${personName + ' ' + #messages.msg('general.you-cap')}"
+                 th:text="${personName + ' ' + #messages.msg('general.you')}"
                  id="label-0">
           </label>
           <p class="text--help spacing-below-15" th:text="#{last-school-grade.highest-school-grade}"></p>
