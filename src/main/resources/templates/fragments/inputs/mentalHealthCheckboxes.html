@@ -17,7 +17,7 @@
 							">
 						<input type="checkbox" th:id="householdMember-me" th:value="${fullNameWithId}"
 							th:name="${formInputName}" th:checked="${inputData.value.contains(fullNameWithId)}">
-						<span th:text="|${fullName} #{children-in-need-of-care.you}|"></span>
+						<span th:text="|${fullName} #{general.you}|"></span>
 					</label>
 					<!-- Add a checkbox for each household subworkflow member that was not selected on the childrenInNeedOfCare page -->
 					<th:block th:each="iteration, iterationStat: ${input.options.subworkflows.get('household')}">
