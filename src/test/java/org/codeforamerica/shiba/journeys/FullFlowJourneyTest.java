@@ -1015,7 +1015,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 
 		// Do you currently have healthcare coverage?
 		testPage.enter("healthcareCoverage", YES.getDisplayValue());
-		testPage.clickContinue("Getting benefits sent to your bank account");
+		testPage.clickContinue("Past benefits");
+		testPage.chooseYesOrNo("hasPastBenefits", NO.getDisplayValue(), "Getting benefits sent to your bank account");
 		testPage.chooseYesOrNo("hasDirectDeposit", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
