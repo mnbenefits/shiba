@@ -535,7 +535,8 @@ public class AccessibilityJourneyTest extends JourneyTest {
 
     testPage.clickCustomButton("Yes, send me more info", 10, "Healthcare Coverage");
     testPage.enter("healthcareCoverage", YES.getDisplayValue());
-    testPage.clickContinue("Previous EBT Card");
+    testPage.clickContinue("pastBenefit");
+    testPage.chooseYesOrNo("hasPastBenefits", NO.getDisplayValue(), "Previous EBT Card");
     testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
     testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
     testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");

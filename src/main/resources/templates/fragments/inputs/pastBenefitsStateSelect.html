@@ -1,0 +1,77 @@
+<div th:fragment="pastBenefitsStateSelect(input, data)"
+     th:classappend="${!data.isValid() && !inputData.valid(data)} ? 'form-group--error' : ''"
+     th:with="inputData=${data.get(input.name)},formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)}"
+     class="form-group">
+  <div th:replace="~{fragments/form-question-prompt :: formQuestionPrompt(${input})}"></div>
+  <div class="select">
+    <select th:id="${input.name}"
+            class="select__element"
+            th:name="${formInputName}"
+            th:attr="aria-labelledby=${input.name + '-label'},aria-invalid=${!data.isValid() && !inputData.valid(data)}">
+      <option value="" th:text="#{past-benefit-details.state.select-placeholder}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MN')}"
+              th:text="${#messages.msg('past-benefit-details.state.MN')}"
+              th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MN'))}"></option>
+      <option disabled value="" th:text="#{past-benefit-details.state.separator}"></option>
+      <!-- Alphabetical by jurisdiction name (Minnesota included again below) -->
+      <option th:value="${#messages.msg('past-benefit-details.state.AL')}" th:text="${#messages.msg('past-benefit-details.state.AL')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.AL'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.AK')}" th:text="${#messages.msg('past-benefit-details.state.AK')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.AK'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.AS')}" th:text="${#messages.msg('past-benefit-details.state.AS')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.AS'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.AZ')}" th:text="${#messages.msg('past-benefit-details.state.AZ')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.AZ'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.AR')}" th:text="${#messages.msg('past-benefit-details.state.AR')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.AR'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.CA')}" th:text="${#messages.msg('past-benefit-details.state.CA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.CA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.CO')}" th:text="${#messages.msg('past-benefit-details.state.CO')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.CO'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.CT')}" th:text="${#messages.msg('past-benefit-details.state.CT')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.CT'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.DE')}" th:text="${#messages.msg('past-benefit-details.state.DE')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.DE'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.DC')}" th:text="${#messages.msg('past-benefit-details.state.DC')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.DC'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.FL')}" th:text="${#messages.msg('past-benefit-details.state.FL')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.FL'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.GA')}" th:text="${#messages.msg('past-benefit-details.state.GA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.GA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.GU')}" th:text="${#messages.msg('past-benefit-details.state.GU')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.GU'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.HI')}" th:text="${#messages.msg('past-benefit-details.state.HI')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.HI'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.ID')}" th:text="${#messages.msg('past-benefit-details.state.ID')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.ID'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.IL')}" th:text="${#messages.msg('past-benefit-details.state.IL')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.IL'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.IN')}" th:text="${#messages.msg('past-benefit-details.state.IN')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.IN'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.IA')}" th:text="${#messages.msg('past-benefit-details.state.IA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.IA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.KS')}" th:text="${#messages.msg('past-benefit-details.state.KS')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.KS'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.KY')}" th:text="${#messages.msg('past-benefit-details.state.KY')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.KY'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.LA')}" th:text="${#messages.msg('past-benefit-details.state.LA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.LA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.ME')}" th:text="${#messages.msg('past-benefit-details.state.ME')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.ME'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MD')}" th:text="${#messages.msg('past-benefit-details.state.MD')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MD'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MA')}" th:text="${#messages.msg('past-benefit-details.state.MA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MI')}" th:text="${#messages.msg('past-benefit-details.state.MI')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MI'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MN')}" th:text="${#messages.msg('past-benefit-details.state.MN')}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MS')}" th:text="${#messages.msg('past-benefit-details.state.MS')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MS'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MO')}" th:text="${#messages.msg('past-benefit-details.state.MO')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MO'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MT')}" th:text="${#messages.msg('past-benefit-details.state.MT')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MT'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.NE')}" th:text="${#messages.msg('past-benefit-details.state.NE')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.NE'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.NV')}" th:text="${#messages.msg('past-benefit-details.state.NV')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.NV'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.NH')}" th:text="${#messages.msg('past-benefit-details.state.NH')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.NH'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.NJ')}" th:text="${#messages.msg('past-benefit-details.state.NJ')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.NJ'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.NM')}" th:text="${#messages.msg('past-benefit-details.state.NM')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.NM'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.NY')}" th:text="${#messages.msg('past-benefit-details.state.NY')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.NY'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.NC')}" th:text="${#messages.msg('past-benefit-details.state.NC')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.NC'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.ND')}" th:text="${#messages.msg('past-benefit-details.state.ND')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.ND'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.MP')}" th:text="${#messages.msg('past-benefit-details.state.MP')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.MP'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.OH')}" th:text="${#messages.msg('past-benefit-details.state.OH')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.OH'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.OK')}" th:text="${#messages.msg('past-benefit-details.state.OK')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.OK'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.OR')}" th:text="${#messages.msg('past-benefit-details.state.OR')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.OR'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.PA')}" th:text="${#messages.msg('past-benefit-details.state.PA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.PA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.PR')}" th:text="${#messages.msg('past-benefit-details.state.PR')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.PR'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.RI')}" th:text="${#messages.msg('past-benefit-details.state.RI')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.RI'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.SC')}" th:text="${#messages.msg('past-benefit-details.state.SC')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.SC'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.SD')}" th:text="${#messages.msg('past-benefit-details.state.SD')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.SD'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.TN')}" th:text="${#messages.msg('past-benefit-details.state.TN')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.TN'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.TX')}" th:text="${#messages.msg('past-benefit-details.state.TX')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.TX'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.UT')}" th:text="${#messages.msg('past-benefit-details.state.UT')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.UT'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.VT')}" th:text="${#messages.msg('past-benefit-details.state.VT')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.VT'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.VI')}" th:text="${#messages.msg('past-benefit-details.state.VI')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.VI'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.VA')}" th:text="${#messages.msg('past-benefit-details.state.VA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.VA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.WA')}" th:text="${#messages.msg('past-benefit-details.state.WA')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.WA'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.WV')}" th:text="${#messages.msg('past-benefit-details.state.WV')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.WV'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.WI')}" th:text="${#messages.msg('past-benefit-details.state.WI')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.WI'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.WY')}" th:text="${#messages.msg('past-benefit-details.state.WY')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.WY'))}"></option>
+      <option th:value="${#messages.msg('past-benefit-details.state.OTHER')}" th:text="${#messages.msg('past-benefit-details.state.OTHER')}" th:selected="${inputData.value.contains(#messages.msg('past-benefit-details.state.OTHER'))}"></option>
+    </select>
+  </div>
+  <div th:replace="~{fragments/inputErrorFragment :: validationError(${data}, ${input})}"></div>
+</div>

@@ -5084,6 +5084,71 @@ pageConfigurations:
             - value: "NOT_SURE"
               messageKey: general.inputs.not-sure
     pageTitle: healthcareCoverage.title
+  - &pastBenefit
+    name: pastBenefit
+    pageTitle: past-benefit.title
+    headerKey:
+      defaultValue: past-benefit.header.household
+      conditionalValues:
+        - value: past-benefit.header
+          condition: *livesAlone?
+    contextFragment: chooseProgramsContextFragment
+    hasPrimaryButton: false
+    inputs:
+      - name: hasPastBenefits
+        type: YES_NO
+        promptMessage:
+          promptMessageFragmentName: pastBenefitPrompt
+  - &pastBenefitDetails
+    name: pastBenefitDetails
+    pageTitle: past-benefit-details.title
+    headerKey:
+      defaultValue: past-benefit-details.header.household
+      conditionalValues:
+        - value: past-benefit-details.header
+          condition: *livesAlone?
+    hasPrimaryButton: true
+    primaryButtonTextKey: general.continue
+    inputs:
+      - name: whenPastBenefits
+        type: RADIO
+        promptMessage:
+          promptMessageKey: past-benefit-details.when.label
+        validators:
+          - validation: NOT_BLANK
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        options:
+          selectableOptions:
+            - value: NOW
+              messageKey: past-benefit-details.when.now
+            - value: WITHIN_LAST_YEAR
+              messageKey: past-benefit-details.when.within-last-year
+            - value: MORE_THAN_YEAR_AGO
+              messageKey: past-benefit-details.when.more-than-year-ago
+      - name: wherePastBenefitsState
+        type: CUSTOM
+        customInputFragment: pastBenefitsStateSelect
+        promptMessage:
+          promptMessageKey: past-benefit-details.where.label
+        validators:
+         - validation: NOT_BLANK
+           errorMessageKey: general.validation.make-sure-you-answer-this-question
+      - name: whichPastBenefits
+        type: CHECKBOX
+        promptMessage:
+          promptMessageKey: past-benefit-details.which.label
+        helpMessageKey: general.check-all-that-apply
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-you-answer-this-question
+        options:
+          selectableOptions:
+            - value: CASH_ASSISTANCE
+              messageKey: past-benefit-details.which.cash-assistance
+            - value: SNAP
+              messageKey: past-benefit-details.which.snap
+            - value: TRIBAL_COMMODITIES
+              messageKey: past-benefit-details.which.tribal-commodities
   - &directDeposit
     name: directDeposit
     pageTitle: direct-deposit.title
@@ -7662,6 +7727,8 @@ workflow:
   healthcareCoverage:
     pageConfiguration: *healthcareCoverage
     nextPages:
+      - pageName: pastBenefit
+        condition: *someoneChoseCAFProgram?
       - pageName: directDeposit
         condition: *someoneChoseCASH?
       - pageName: ebtInPast
@@ -7671,6 +7738,41 @@ workflow:
       - pageName: authorizedRep
     datasources:
       - pageName: choosePrograms
+      - pageName: householdMemberInfo
+        groupName: household
+  pastBenefit:
+    pageConfiguration: *pastBenefit
+    nextPages:
+      - pageName: pastBenefitDetails
+        condition:
+          pageName: pastBenefit
+          input: hasPastBenefits
+          value: "true"
+      - pageName: directDeposit
+        condition: *someoneChoseCASH?
+      - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
+      - pageName: socialWorker
+        condition: *someoneChoseCAFProgram?
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+    skipCondition: *noOneChoseCAF?
+  pastBenefitDetails:
+    pageConfiguration: *pastBenefitDetails
+    nextPages:
+      - pageName: directDeposit
+        condition: *someoneChoseCASH?
+      - pageName: ebtInPast
+        condition: *someoneChoseSNAP?
+      - pageName: socialWorker
+        condition: *someoneChoseCAFProgram?
+    datasources:
+      - pageName: choosePrograms
+      - pageName: pastBenefit
+      - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
   directDeposit:
