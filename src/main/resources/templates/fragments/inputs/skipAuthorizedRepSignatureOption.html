@@ -1,0 +1,30 @@
+<!--/*  
+skipAuthorizedRepSignatureOption.html needs logic to determine if there are HH members.
+If there are HH members, go to the 2nd signature page.
+If no HH members, go to the submit page.
+*/-->
+<th:block th:fragment="skipAuthorizedRepSignatureOption(input, data)"
+    th:with="formInputName=${T(org.codeforamerica.shiba.pages.PageUtils).getFormInputName(input.name)},
+    options=${input.getOptions()},
+    hasHouseholdMembers=${input.options.datasources.get('addHouseholdMembers').get('addHouseholdMembers').value},
+    linkTargetPage=${hasHouseholdMembers ? 'secondSignatureNotification' : 'submit'}
+    ">
+    <!-- options buttons -->
+    <div class="vertical-button-group" role="group" aria-labelledby="page-header">
+        <div class="grid">
+            <div class="grid__item width-auto-left">
+                <button th:name="${formInputName}" th:inline="text" th:append type="submit"
+                    th:value="${options.getSelectableOptions[0].value}"
+                    class="button button--primary"
+                    id="continue_to_signature">
+                    [[#{${options.getSelectableOptions[0].messageKey}}]]
+                </button>
+            </div>
+            <div class="grid__item width-auto-left">
+	            <a class="link--subtle" id="subtle-link"
+	             th:href="|/pages/${linkTargetPage}|"
+	             th:text="#{authorized-rep-legal-stuff.continue-without-representative-signature}"></a>
+            </div>
+        </div>
+    </div>
+</th:block>

@@ -1,0 +1,14 @@
+<!--/* 
+Copied from secondSignatureNotification
+ */-->
+<div th:fragment="authorizedRepNotification">
+  <div class="grid__item address-validation spacing-below-60">
+    <div class="spacing-above-60">
+      <a class="button button--primary" th:href="'/pages/'+${pageName}+'/navigation?option=0'"
+         th:text="#{authorized-rep-notification.add-representative-signature}"></a>
+    </div>
+    <div>
+      <a class="button button--secondary" th:href="'/pages/'+${pageName}+'/navigation?option=1'"
+         th:text="#{authorized-rep-notification.continue-without-it}"></a>
+    </div>
+</div>

@@ -120,6 +120,9 @@ mappings:
     migrantOrSeasonalFarmWorker: MIGRANT_SEASONAL_FARM_WORKER
   signThisApplication:
     applicantSignature: APPLICANT_SIGNATURE
+  authorizedRepSignature:
+    authorizedRepSignature: AUTHORIZED_REP_SIGNATURE
+    authorizedRepSignDate: AREP_SIGN_DATE
   secondSignature:
     secondSignature: OTHER_ADULT_SIGNATURE
     createdDateSignature: CREATED_DATE_SIGNATURE
@@ -524,6 +527,7 @@ mappings:
     HISPANIC_LATINO_OR_SPANISH_NO: HISPANIC_LATINO_OR_SPANISH_NO
     CLIENT_REPORTED: CLIENT_REPORTED
     UNABLE_TO_DETERMINE: UNABLE_TO_DETERMINE
+    preferNotToSay: UNABLE_TO_DETERMINE
   penaltyWarnings:
     disqualifiedPublicAssistance: DISQUALIFIED_PUBLIC_ASSISTANCE
     fraudulentStatements: FRAUDULENT_STATEMENTS
