@@ -2,8 +2,12 @@ name: Run tests
 
 on:
   push:
-    branches-ignore:
-      - staging
+# This is a change to only run this Action when changes are pushed to the main branch.
+# We do this because our repo is "private" thus we are limited to 2000 GitHub Action minutes per month.
+#    branches-ignore:
+#      - staging
+    branches:
+      - main
       
 env:
   mnbenefits_env_url: any_string_works_for_github_tests
