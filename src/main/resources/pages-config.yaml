@@ -381,6 +381,12 @@ conditionDefinitions:
       - pageName: healthcareCoverage
         input: healthcareCoverage
         matcher: NONE_SELECTED
+  - &hasAuthorizedRep?
+    pageName: authorizedRep
+    name: hasAuthorizedRep
+    input: helpWithBenefits
+    matcher: CONTAINS
+    value: "true"
   - &householdMemberLessThanAge5?
     pageName: householdMemberInfo
     name: householdMemberLessThanAge5
@@ -2698,6 +2704,54 @@ pageConfigurations:
         validators:
           - validation: NOT_BLANK
             errorMessageKey: sign-this-application.make-sure-to-sign-the-application
+  - &authorizedRepNotification
+    name: authorizedRepNotification
+    pageTitle: authorized-rep-notification.title
+    headerKey: authorized-rep-notification.your-auth-rep-will-need-to-sign
+    headerHelpMessageKey: authorized-rep-notification.if-they-cant-sign
+    primaryButtonTextKey: general.continue
+    contextFragment: authorizedRepNotificationContextFragment
+    hasPrimaryButton: false
+  - &authorizedRepLegalStuff
+    name: authorizedRepLegalStuff
+    pageTitle: authorized-rep-legal-stuff.title
+    headerKey: authorized-rep-legal-stuff.header
+    headerHelpMessageKey: authorized-rep-legal-stuff.help-message
+    hasPrimaryButton: false
+    usingPageTemplateFragment: true
+    inputs:
+      - name: agreeToTerms
+        type: CHECKBOX
+        promptMessage:
+          promptMessageFragmentName: legal-terms-prompt
+        validators:
+          - validation: SELECT_AT_LEAST_ONE
+            errorMessageKey: general.validation.make-sure-to-agree-to-the-terms
+        options:
+          selectableOptions:
+            - value: "true"
+              messageKey: legal-stuff.i-agree
+        helpMessageKeyBelow: authorized-rep-signature.copies-of-the-full-agreements
+      - name: authorizedRepSignatureOption
+        type: CUSTOM
+        customInputFragment: skipAuthorizedRepSignatureOption
+        options:
+          datasources:
+            - pageName: addHouseholdMembers
+          selectableOptions:
+            - value: "CONTINUE_TO_REPRESENTATIVE_SIGNATURE"
+              messageKey: general.continue
+  - &authorizedRepSignature
+    name: authorizedRepSignature
+    pageTitle: authorized-rep-signature.title
+    headerKey: authorized-rep-signature.please-have-your-authorized-rep-sign
+    headerHelpMessageKey: authorized-rep-signature.they-can-sign-now
+    primaryButtonTextKey: general.continue
+    inputs:
+      - name: authorizedRepSignature
+        type: TEXT
+        promptMessage:
+          promptMessageKey: authorized-rep-signature.full-legal-name
   - &secondSignatureNotification
     name: secondSignatureNotification
     pageTitle: second-signature-notification.title
@@ -5196,6 +5250,20 @@ pageConfigurations:
     inputs:
       - name: hasLegalGuardian
         type: YES_NO
+  - &legalGuardianName
+    name: legalGuardianName
+    pageTitle: legal-guardian-name.title
+    headerKey: legal-guardian-name.tell-us-about-your-legal-guardian
+    headerHelpMessageKey: legal-guardian-name.this-person-can-help-with-your-benefits
+    inputs:
+      - name: legalGuardianFullName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: legal-guardian-name.Their-full-name
+      - name: legalGuardianOrganizationName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: legal-guardian-name.organization-name
   - &authorizedRep
     name: authorizedRep
     headerKey: authorized-rep.do-you-want-to
@@ -7801,7 +7869,18 @@ workflow:
   legalGuardian:
     pageConfiguration: *legalGuardian
     nextPages:
+# page flow when response is "Yes"
+      - pageName: legalGuardianName
+        condition:
+          pageName: legalGuardian
+          name: LegalGuardianTrue
+          input: hasLegalGuardian
+          value: "true"        
       - pageName: authorizedRep
+  legalGuardianName:
+    pageConfiguration: *legalGuardianName
+    nextPages:
+      - pageName: authorizedRep     
   authorizedRep:
     pageConfiguration: *authorizedRep
     nextPages:
@@ -7967,6 +8046,7 @@ workflow:
     nextPages:
       - pageName: legalStuff
     skipCondition:
+      name: someoneChoseCcapANDnoOneChoseCAF
       logicalOperator: AND
       conditions:
         - *someoneChoseCCAP?
@@ -7976,6 +8056,7 @@ workflow:
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
+      - pageName: authorizedRep
   legalStuff:
     pageConfiguration: *legalStuff
     nextPages:
@@ -7984,20 +8065,45 @@ workflow:
       - pageName: choosePrograms
       - pageName: householdMemberInfo
         groupName: household
-  secondSignatureLegalStuff:
-    pageConfiguration: *secondSignatureLegalStuff
-    subtleLinkTargetPage: submit
-    nextPages:
-      - pageName: secondSignature
-    datasources:
-      - pageName: choosePrograms
-      - pageName: householdMemberInfo
-        groupName: household
   signThisApplication:
     pageConfiguration: *signThisApplication
     nextPages:
+      - pageName: authorizedRepNotification
+        condition: *hasAuthorizedRep?
       - pageName: secondSignatureNotification
         condition:
+          name: doesNotLiveAloneAndSomeoneChoseCASH
+          logicalOperator: AND
+          conditions:
+            - *doesNotLiveAlone?
+            - *someoneChoseCASH?
+      - pageName: submit
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: authorizedRep
+      - pageName: householdMemberInfo
+        groupName: household
+  authorizedRepNotification:
+    pageConfiguration: *authorizedRepNotification
+    nextPages:
+      - pageName: authorizedRepLegalStuff
+      - pageName: secondSignatureNotification
+  authorizedRepLegalStuff:
+    pageConfiguration: *authorizedRepLegalStuff
+    nextPages:
+      - pageName: authorizedRepSignature
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
+  authorizedRepSignature:
+    pageConfiguration: *authorizedRepSignature
+    nextPages:
+      - pageName: secondSignatureNotification
+        condition:
+          name: doesNotLiveAloneAndSomeoneChoseCASH
           logicalOperator: AND
           conditions:
             - *doesNotLiveAlone?
@@ -8011,6 +8117,7 @@ workflow:
   secondSignatureNotification:
     pageConfiguration: *secondSignatureNotification
     skipCondition:
+      name: livesAloneOrMinimumFlow
       logicalOperator: OR
       conditions: 
         - *livesAlone?
@@ -8021,10 +8128,27 @@ workflow:
     datasources:
       - pageName: addHouseholdMembers
       - pageName: doYouNeedHelpImmediately
+  secondSignatureLegalStuff:
+    pageConfiguration: *secondSignatureLegalStuff
+    skipCondition:
+      name: livesAloneOrMinimumFlow
+      logicalOperator: OR
+      conditions: 
+        - *livesAlone?
+        - *minimumFlow?
+    subtleLinkTargetPage: submit
+    nextPages:
+      - pageName: secondSignature
+    datasources:
+      - pageName: choosePrograms
+      - pageName: addHouseholdMembers
+      - pageName: householdMemberInfo
+        groupName: household
   secondSignature:
     pageConfiguration: *secondSignature
     subtleLinkTargetPage: submit
     skipCondition:
+      name: contWO2ndSigORlivesAloneORminFlow
       logicalOperator: OR
       conditions: 
         - *continueWithoutSecondSignature?

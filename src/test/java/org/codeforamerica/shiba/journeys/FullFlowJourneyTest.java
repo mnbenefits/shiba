@@ -408,7 +408,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
+		//Tell us about your legal guardian, conservator, or power of attorney.
 		testPage.chooseYesOrNo("hasLegalGuardian", NO.getDisplayValue(), "Authorized Rep");
+		//Answers No and then go back to change response to Yes
+		testPage.goBack();
+		testPage.chooseYesOrNo("hasLegalGuardian", YES.getDisplayValue(), "Legal Guardian Name");
+		testPage.enter("legalGuardianFullName", "defaultFirstName defaultLastName");
+	    testPage.enter("legalGuardianOrganizationName", "someOrganizationName");
+	    testPage.clickContinue("Authorized Rep");
 		// Do you want to assign someone to help with your benefits?
 		testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
 
@@ -447,9 +454,15 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// The legal stuff.
 		testPage.enter("agreeToTerms", "I agree");
 		testPage.clickContinue("Sign this application");
-
-		// Upload documents
+		
+		//signatures
 		testPage.enter("applicantSignature", "this is my signature");
+		testPage.clickButtonLink("Continue", "Authorized Representative Notification");
+		testPage.clickButtonLink("Add signature", "Legal stuff - Authorized Representative");
+		testPage.enter("agreeToTerms", "I agree");
+		testPage.clickButtonLink("Continue", "Authorized representative signature");
+		testPage.enter("authorizedRepSignature", "this is the arep signature");
+		
 		testPage.clickButtonLink("Continue", "Submit application");
 		testPage.clickButton("Submit application", "Submission Confirmation");
 		testPage.clickButtonLink("Continue", "Adding Documents");
@@ -799,6 +812,8 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("DRUG_FELONY", "No");
 		assertCafFieldEquals("VIOLATING_PAROLE", "Yes");
 		assertCafFieldEquals("APPLICANT_SIGNATURE", "this is my signature");
+		assertCafFieldEquals("AUTHORIZED_REP_SIGNATURE", "this is the arep signature");
+		assertCafFieldEquals("AREP_SIGN_DATE", "2020-01-01");
 		assertCafFieldEquals("HAS_DISABILITY", "Yes");
 		assertCafFieldEquals("IS_WORKING", "No");
 		assertCafFieldEquals("EARN_LESS_MONEY_THIS_MONTH", "Yes");
@@ -841,6 +856,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
 		assertCafFieldEquals("HAS_SOCIAL_WORKER", "No");
 		assertCafFieldEquals("HELP_WITH_REFERRALS", "Yes");
+		assertCafFieldEquals("LEGAL_GUARDIAN", "Yes");
+		assertCafFieldEquals("LEGAL_GUARDIAN_NAME", "defaultFirstName defaultLastName");
+		assertCafFieldEquals("LEGAL_GUARDIAN_ORGANIZATION", "someOrganizationName");
 		assertCafFieldEquals("EBT_IN_PAST", "Yes");
 	}
 
@@ -902,6 +920,7 @@ public class FullFlowJourneyTest extends JourneyTest {
 		// What is your current living situation?
 		testPage.clickElementById("livingSituation5");
 		testPage.clickContinue("Going to school");
+
 
 		// Is anyone in your household going to school right now, either full or
 		// part-time?

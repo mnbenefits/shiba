@@ -768,6 +768,16 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	}
 
 	@Test
+	void shouldNotAddLegalGuardianNameFieldsIfNo() throws Exception {
+		selectPrograms("CASH");
+		postExpectingSuccess("legalGuardian", "hasLegalGuardian", "false");
+
+		var caf = downloadCafClientPDF();
+		assertPdfFieldEquals("LEGAL_GUARDIAN_NAME", "", caf);
+		assertPdfFieldEquals("LEGAL_GUARDIAN_ORGANIZATION", "", caf);
+	}
+	
+	@Test
 	void shouldNotAddAuthorizedRepFieldsIfNo() throws Exception {
 		selectPrograms("CASH");
 		postExpectingSuccess("authorizedRep", "communicateOnYourBehalf", "false");

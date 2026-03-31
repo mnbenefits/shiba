@@ -540,7 +540,10 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
     testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
     testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
-	testPage.chooseYesOrNo("hasLegalGuardian", NO.getDisplayValue(), "Authorized Rep");
+	testPage.chooseYesOrNo("hasLegalGuardian", YES.getDisplayValue(), "Legal Guardian Name");
+	testPage.enter("legalGuardianFullName", "defaultFirstName defaultLastName");
+    testPage.enter("legalGuardianOrganizationName", "someOrganizationName");
+    testPage.clickContinue("Authorized Rep");
     testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
     testPage.chooseYesOrNo("communicateOnYourBehalf", YES.getDisplayValue(), "Authorized Rep mail and notices");
     testPage.chooseYesOrNo("getMailNotices", YES.getDisplayValue(), "Authorized Rep spend on your behalf");
@@ -565,6 +568,11 @@ public class AccessibilityJourneyTest extends JourneyTest {
     testPage.enter("agreeToTerms", "I agree");
     testPage.clickContinue("Sign this application");
     testPage.enter("applicantSignature", "some name");
+    testPage.clickButtonLink("Continue", "Authorized Representative Notification");
+    testPage.clickButtonLink("Add signature", "Legal stuff - Authorized Representative");
+    testPage.enter("agreeToTerms", "I agree");
+    driver.findElement(By.id("continue_to_signature")).click();
+    testPage.enter("authorizedRepSignature", "another name");
     testPage.clickButton("Continue", "Submit application");
     testPage.clickButton("Submit", "Submission Confirmation");
     
