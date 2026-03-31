@@ -407,7 +407,14 @@ public class FullFlowJourneyTest extends JourneyTest {
 		testPage.chooseYesOrNo("hadEBTInPast", YES.getDisplayValue(), "Help from a social worker");
 		testPage.chooseYesOrNo("hasSocialWorker", NO.getDisplayValue(), "Help with services");
 		testPage.chooseYesOrNo("needsReferrals", YES.getDisplayValue(), "Legal Guardian");
+		//Tell us about your legal guardian, conservator, or power of attorney.
 		testPage.chooseYesOrNo("hasLegalGuardian", NO.getDisplayValue(), "Authorized Rep");
+		//Answers No and then go back to change response to Yes
+		testPage.goBack();
+		testPage.chooseYesOrNo("hasLegalGuardian", YES.getDisplayValue(), "Legal Guardian Name");
+		testPage.enter("legalGuardianFullName", "defaultFirstName defaultLastName");
+	    testPage.enter("legalGuardianOrganizationName", "someOrganizationName");
+	    testPage.clickContinue("Authorized Rep");
 		// Do you want to assign someone to help with your benefits?
 		testPage.chooseYesOrNo("helpWithBenefits", YES.getDisplayValue(), "Authorized Rep Communicate");
 
@@ -848,6 +855,9 @@ public class FullFlowJourneyTest extends JourneyTest {
 		assertCafFieldEquals("STUDENT_FINANCIAL_AID", "No");
 		assertCafFieldEquals("HAS_SOCIAL_WORKER", "No");
 		assertCafFieldEquals("HELP_WITH_REFERRALS", "Yes");
+		assertCafFieldEquals("LEGAL_GUARDIAN", "Yes");
+		assertCafFieldEquals("LEGAL_GUARDIAN_NAME", "defaultFirstName defaultLastName");
+		assertCafFieldEquals("LEGAL_GUARDIAN_ORGANIZATION", "someOrganizationName");
 		assertCafFieldEquals("EBT_IN_PAST", "Yes");
 	}
 

@@ -5185,6 +5185,20 @@ pageConfigurations:
     inputs:
       - name: hasLegalGuardian
         type: YES_NO
+  - &legalGuardianName
+    name: legalGuardianName
+    pageTitle: legal-guardian-name.title
+    headerKey: legal-guardian-name.tell-us-about-your-legal-guardian
+    headerHelpMessageKey: legal-guardian-name.this-person-can-help-with-your-benefits
+    inputs:
+      - name: legalGuardianFullName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: legal-guardian-name.Their-full-name
+      - name: legalGuardianOrganizationName
+        type: TEXT
+        promptMessage:
+          promptMessageKey: legal-guardian-name.organization-name
   - &authorizedRep
     name: authorizedRep
     headerKey: authorized-rep.do-you-want-to
@@ -7753,7 +7767,18 @@ workflow:
   legalGuardian:
     pageConfiguration: *legalGuardian
     nextPages:
+# page flow when response is "Yes"
+      - pageName: legalGuardianName
+        condition:
+          pageName: legalGuardian
+          name: LegalGuardianTrue
+          input: hasLegalGuardian
+          value: "true"        
       - pageName: authorizedRep
+  legalGuardianName:
+    pageConfiguration: *legalGuardianName
+    nextPages:
+      - pageName: authorizedRep     
   authorizedRep:
     pageConfiguration: *authorizedRep
     nextPages:

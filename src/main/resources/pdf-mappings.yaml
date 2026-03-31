@@ -402,7 +402,10 @@ mappings:
   referrals:
     needsReferrals: HELP_WITH_REFERRALS
   legalGuardian:
-    hasLegalGuardian: LEGAL_GUARDIAN	
+    hasLegalGuardian: LEGAL_GUARDIAN
+  legalGuardianName:
+    legalGuardianFullName: LEGAL_GUARDIAN_NAME
+    legalGuardianOrganizationName: LEGAL_GUARDIAN_ORGANIZATION   
   authorizedRep:
     helpWithBenefits: WANT_AUTHORIZED_REP
   authorizedRepCommunicate:
