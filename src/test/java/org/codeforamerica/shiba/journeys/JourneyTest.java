@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.codeforamerica.shiba.application.FlowType;
 import org.codeforamerica.shiba.documents.DocumentRepository;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.emails.MailGunEmailClient;
 import org.codeforamerica.shiba.pages.enrichment.Address;
@@ -75,6 +76,7 @@ abstract class JourneyTest extends AbstractBasePageTest {
     when(clock.instant()).thenReturn(Instant.now());
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
     when(smartyStreetClient.validateAddress(any())).thenReturn(Optional.empty());
+    when(featureFlagConfiguration.get("dakota-filename")).thenReturn(FeatureFlag.ON);
     caf = null;
     ccap = null;
   }

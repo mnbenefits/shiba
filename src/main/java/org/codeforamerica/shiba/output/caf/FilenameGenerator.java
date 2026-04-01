@@ -1,8 +1,9 @@
 package org.codeforamerica.shiba.output.caf;
 
+import static org.codeforamerica.shiba.application.FlowType.HEALTHCARE_RENEWAL;
+import static org.codeforamerica.shiba.application.FlowType.LATER_DOCS;
 import static org.codeforamerica.shiba.output.Document.CAF;
 import static org.codeforamerica.shiba.output.Document.UPLOADED_DOC;
-import static org.codeforamerica.shiba.application.FlowType.HEALTHCARE_RENEWAL;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -11,12 +12,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.application.Application;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
 import org.codeforamerica.shiba.mnit.RoutingDestination;
 import org.codeforamerica.shiba.output.Document;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -34,11 +38,14 @@ public class FilenameGenerator {
   );
   private final ServicingAgencyMap<CountyRoutingDestination> countyMap;
   private final SnapExpeditedEligibilityDecider decider;
+  private final FeatureFlagConfiguration featureFlagConfiguration;
 
   @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-  public FilenameGenerator(ServicingAgencyMap<CountyRoutingDestination> countyMap, SnapExpeditedEligibilityDecider decider) {
+  public FilenameGenerator(ServicingAgencyMap<CountyRoutingDestination> countyMap, SnapExpeditedEligibilityDecider decider, 
+		  FeatureFlagConfiguration featureFlagConfiguration) {
     this.countyMap = countyMap;
     this.decider = decider;
+    this.featureFlagConfiguration = featureFlagConfiguration;
   }
 
   public String generatePdfFilename(Application application, Document document) {
@@ -98,6 +105,9 @@ public class FilenameGenerator {
   @NotNull
   private String getSharedApplicationPrefix(Application application, Document document,
       String dhsProviderId) {
+	
+	FeatureFlag dakotaFilenameFlag = featureFlagConfiguration.get("dakota-filename");
+	  
     boolean isHennepinUploadedDoc =
         document == UPLOADED_DOC && (application.getCounty() == County.Hennepin || application.getCounty() == County.Other);
     String fileSource = isHennepinUploadedDoc ? "DOC" : "MNB";
@@ -105,6 +115,7 @@ public class FilenameGenerator {
     if (application.getFlow() == HEALTHCARE_RENEWAL) {
       fileSource = "RENEWAL";      
     }
+    boolean isDakotaLaterDocs = (application.getFlow() ==  LATER_DOCS) && (application.getCounty() == County.Dakota);
 
     ZonedDateTime completedAt = application.getCompletedAt();
     ZonedDateTime completedAtCentralTime;
@@ -118,6 +129,9 @@ public class FilenameGenerator {
     String date = DateTimeFormatter.ofPattern("yyyyMMdd").format(completedAtCentralTime);
     String time = DateTimeFormatter.ofPattern("HHmmss").format(completedAtCentralTime);
     String id = application.getId();
+    if(isDakotaLaterDocs && dakotaFilenameFlag.isOn()) {
+		return "%s_%s_%s_%s_%s_LaterDocs_".formatted(dhsProviderId, fileSource, date, time, id);
+	}
     
     if (application.getFlow() == HEALTHCARE_RENEWAL) {
       return "%s_%s_%s_%s_%s_HCRenewal_".formatted(dhsProviderId, fileSource, date, time, id);      

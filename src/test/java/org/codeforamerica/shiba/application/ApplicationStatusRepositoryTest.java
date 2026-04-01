@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
 import org.codeforamerica.shiba.ServicingAgencyMap;
 import org.codeforamerica.shiba.mnit.CountyRoutingDestination;
@@ -21,6 +22,8 @@ import org.codeforamerica.shiba.output.caf.FilenameGenerator;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibilityDecider;
 import org.codeforamerica.shiba.output.pdf.PdfGenerator;
 import org.codeforamerica.shiba.pages.RoutingDecisionService;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.testutilities.AbstractRepositoryTest;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
@@ -41,6 +44,7 @@ public class ApplicationStatusRepositoryTest extends AbstractRepositoryTest {
   @MockitoBean
   private PdfGenerator pdfGenerator;
   private CountyRoutingDestination routingDestination;
+  private FeatureFlagConfiguration featureFlagConfiguration;
 
   @BeforeEach
   void setUp() {
@@ -48,7 +52,9 @@ public class ApplicationStatusRepositoryTest extends AbstractRepositoryTest {
     routingDestination = new CountyRoutingDestination(Olmsted, "dpi", "email", "phoneNumber");
     countyMap.setDefaultValue(routingDestination);
     SnapExpeditedEligibilityDecider decider = mock(SnapExpeditedEligibilityDecider.class);
-    filenameGenerator = new FilenameGenerator(countyMap, decider);
+    featureFlagConfiguration = new FeatureFlagConfiguration(new HashMap<>());
+    featureFlagConfiguration.put("dakota-filename", FeatureFlag.ON);
+    filenameGenerator = new FilenameGenerator(countyMap, decider, featureFlagConfiguration);
     applicationStatusRepository = new ApplicationStatusRepository(jdbcTemplate,
         routingDecisionService, filenameGenerator, pdfGenerator);
     when(routingDecisionService.getRoutingDestinations(any(ApplicationData.class),

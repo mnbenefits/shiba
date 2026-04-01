@@ -14,6 +14,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import org.codeforamerica.shiba.County;
 import org.codeforamerica.shiba.ServicingAgencyMap;
@@ -26,6 +27,8 @@ import org.codeforamerica.shiba.mnit.TribalNationConfiguration;
 import org.codeforamerica.shiba.output.Document;
 import org.codeforamerica.shiba.output.caf.FilenameGenerator;
 import org.codeforamerica.shiba.output.caf.SnapExpeditedEligibilityDecider;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
+import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.data.ApplicationData;
 import org.codeforamerica.shiba.testutilities.TestApplicationDataBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,6 +44,7 @@ class FilenameGeneratorTest {
   private Application.ApplicationBuilder defaultApplicationBuilder;
   private ServicingAgencyMap<TribalNationRoutingDestination> tribalNations;
   private CountyRoutingDestination defaultCountyRoutingDestination;
+  private FeatureFlagConfiguration featureFlagConfiguration;
 
   SnapExpeditedEligibilityDecider decider = mock(SnapExpeditedEligibilityDecider.class);
 
@@ -58,7 +62,9 @@ class FilenameGeneratorTest {
         .id("defaultId")
         .applicationData(applicationData)
         .completedAt(ZonedDateTime.now(ZoneOffset.UTC));
-    filenameGenerator = new FilenameGenerator(countyMap, decider);
+    featureFlagConfiguration = new FeatureFlagConfiguration(new HashMap<>());
+    featureFlagConfiguration.put("dakota-filename", FeatureFlag.ON);
+    filenameGenerator = new FilenameGenerator(countyMap, decider, featureFlagConfiguration);
   }
 
   @Test
@@ -369,5 +375,69 @@ class FilenameGeneratorTest {
     String fileName = filenameGenerator.generatePdfFilename(application, Document.CAF);
     assertThat(fileName).isEqualTo(String.format("%s_MNB_%s_%s_%s_%s_%s%s.pdf",
         countyNPI, "20070909", "235959", applicationId, "F", "CAF", "_EXPEDITED"));
+  }
+  
+  @Test
+  void dakotaLaterDocFilesNamedCorrectly() {
+	County dakotaCounty = Dakota;
+    ApplicationData applicationData = new TestApplicationDataBuilder().build();
+    String applicationId = "someId";
+
+    Application dakotaApplication = defaultApplicationBuilder
+        .id(applicationId)
+        .county(dakotaCounty)
+        .flow(FlowType.LATER_DOCS)
+        .completedAt(
+            ZonedDateTime.ofInstant(Instant.parse("2007-09-10T04:59:59.00Z"), ZoneOffset.UTC))
+        .applicationData(applicationData)
+        .build();
+
+    String fileName = filenameGenerator.generateUploadedDocumentName(dakotaApplication, 0, "pdf");
+    assertThat(fileName).contains("LaterDocs");
+    String xmlFileName = filenameGenerator.generateXmlFilename(dakotaApplication, null );
+    assertThat(xmlFileName).contains("LaterDocs");
+  }
+  
+  @Test
+  void hennepinLaterDocFileNamedCorrectly() {
+	County hennepinCounty = Hennepin;
+    ApplicationData applicationData = new TestApplicationDataBuilder().build();
+    String applicationId = "someId";
+
+    Application hennepinApplication = defaultApplicationBuilder
+        .id(applicationId)
+        .county(hennepinCounty)
+        .flow(FlowType.LATER_DOCS)
+        .completedAt(
+            ZonedDateTime.ofInstant(Instant.parse("2007-09-10T04:59:59.00Z"), ZoneOffset.UTC))
+        .applicationData(applicationData)
+        .build();
+
+    String fileName = filenameGenerator.generateUploadedDocumentName(hennepinApplication, 0, "pdf");
+    assertThat(fileName).doesNotContain("LaterDocs");
+    String xmlFileName = filenameGenerator.generateXmlFilename(hennepinApplication, null );
+    assertThat(xmlFileName).doesNotContain("LaterDocs");
+  }
+  
+  @Test
+  void dakotaLaterDocNamedCorrectlyWhenFeatureFlagIsOff() {
+	featureFlagConfiguration.put("dakota-filename", FeatureFlag.OFF);
+	County dakotaCounty = Dakota;
+    ApplicationData applicationData = new TestApplicationDataBuilder().build();
+    String applicationId = "someId";
+
+    Application dakotaApplication = defaultApplicationBuilder
+        .id(applicationId)
+        .county(dakotaCounty)
+        .flow(FlowType.LATER_DOCS)
+        .completedAt(
+            ZonedDateTime.ofInstant(Instant.parse("2007-09-10T04:59:59.00Z"), ZoneOffset.UTC))
+        .applicationData(applicationData)
+        .build();
+
+    String fileName = filenameGenerator.generateUploadedDocumentName(dakotaApplication, 0, "pdf");
+    assertThat(fileName).doesNotContain("LaterDocs");
+    String xmlFileName = filenameGenerator.generateXmlFilename(dakotaApplication, null );
+    assertThat(xmlFileName).doesNotContain("LaterDocs");
   }
 }

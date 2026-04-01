@@ -48,6 +48,7 @@ import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.assertj.core.api.Assertions;
 import org.codeforamerica.shiba.output.Document;
+import org.codeforamerica.shiba.pages.config.FeatureFlag;
 import org.codeforamerica.shiba.pages.config.FeatureFlagConfiguration;
 import org.codeforamerica.shiba.pages.config.PageTemplate;
 import org.codeforamerica.shiba.pages.config.ReferenceOptionsTemplate;
@@ -106,6 +107,7 @@ public class AbstractShibaMockMvcTest {
     );
     when(clock.getZone()).thenReturn(ZoneOffset.UTC);
     when(locationClient.validateAddress(any())).thenReturn(Optional.empty());
+    when(featureFlagConfiguration.get("dakota-filename")).thenReturn(FeatureFlag.ON);
   }
 
   @AfterEach
