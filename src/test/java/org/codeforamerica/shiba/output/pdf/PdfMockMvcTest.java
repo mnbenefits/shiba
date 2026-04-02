@@ -39,10 +39,12 @@ import org.codeforamerica.shiba.output.Recipient;
 import org.codeforamerica.shiba.pages.enrichment.Address;
 import org.codeforamerica.shiba.testutilities.AbstractShibaMockMvcTest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
@@ -2979,6 +2981,191 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_2", "Graduate Degree", caf);
 	        assertPdfFieldEquals("LAST_SCHOOL_GRADE_3", "Other", caf);
 	    }
+	}
+
+	@Nested
+	@Tag("pdf")
+	class PastBenefits {
+
+		// pastBenefit page: YES/NO 
+
+		@Test
+		void shouldMapPastBenefitsYes() throws Exception {
+			selectPrograms("SNAP");
+			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("HAS_PAST_BENEFITS", "Yes", caf);
+		}
+
+		@Test
+		void shouldMapPastBenefitsNo() throws Exception {
+			selectPrograms("SNAP");
+			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("false"));
+
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("HAS_PAST_BENEFITS", "No", caf);
+		}
+
+		
+		// Following Tests are for pastBenefitsDetails
+		
+		// tests when the benefits were received
+		@ParameterizedTest
+		@CsvSource({
+			"NOW,              Receiving now",
+			"WITHIN_LAST_YEAR, Within last year",
+			"MORE_THAN_YEAR_AGO, More than a year ago"
+		})
+		void shouldMapPastBenefitDetailsWhenOption(String formValue, String pdfValue) throws Exception {
+			selectPrograms("SNAP");
+			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+			postExpectingSuccess("pastBenefitDetails", Map.of(
+				"whenPastBenefits", List.of(formValue),
+				"wherePastBenefitsState", List.of("MN - Minnesota"),
+				"whichPastBenefits", List.of("SNAP")
+			));
+ 
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("PAST_BENEFITS_WHEN", pdfValue, caf);
+		}
+ 
+		
+		// tests the state where the benefits were received
+		@ParameterizedTest
+		@ValueSource(strings = {
+			"AL - Alabama", "AK - Alaska", "AS - American Samoa", "AZ - Arizona",
+			"AR - Arkansas", "CA - California", "CO - Colorado", "CT - Connecticut",
+			"DE - Delaware", "DC - District of Columbia", "FL - Florida", "GA - Georgia",
+			"GU - Guam", "HI - Hawaii", "ID - Idaho", "IL - Illinois",
+			"IN - Indiana", "IA - Iowa", "KS - Kansas", "KY - Kentucky",
+			"LA - Louisiana", "ME - Maine", "MD - Maryland", "MA - Massachusetts",
+			"MI - Michigan", "MN - Minnesota", "MS - Mississippi", "MO - Missouri",
+			"MT - Montana", "NE - Nebraska", "NV - Nevada", "NH - New Hampshire",
+			"NJ - New Jersey", "NM - New Mexico", "NY - New York", "NC - North Carolina",
+			"ND - North Dakota", "MP - Northern Mariana Islands", "OH - Ohio", "OK - Oklahoma",
+			"OR - Oregon", "PA - Pennsylvania", "PR - Puerto Rico", "RI - Rhode Island",
+			"SC - South Carolina", "SD - South Dakota", "TN - Tennessee", "TX - Texas",
+			"UT - Utah", "VT - Vermont", "VI - U.S. Virgin Islands", "VA - Virginia",
+			"WA - Washington", "WV - West Virginia", "WI - Wisconsin", "WY - Wyoming",
+			"OTHER - Other"
+		})
+		void shouldMapPastBenefitDetailsForState(String state) throws Exception {
+			selectPrograms("SNAP");
+			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+			postExpectingSuccess("pastBenefitDetails", Map.of(
+				"whenPastBenefits", List.of("NOW"),
+				"wherePastBenefitsState", List.of(state),
+				"whichPastBenefits", List.of("SNAP")
+			));
+ 
+			var caf = downloadCafClientPDF();
+			assertPdfFieldEquals("PAST_BENEFITS_STATE", state, caf);
+		}
+ 
+		
+		// tests which benefits were received
+		@ParameterizedTest
+		@CsvSource({
+			"CASH_ASSISTANCE,                              CASH",
+			"SNAP,                                         SNAP",
+			"TRIBAL_COMMODITIES,                           Food commodities",
+			"CASH_ASSISTANCE;SNAP,                         'CASH, SNAP'",
+			"CASH_ASSISTANCE;TRIBAL_COMMODITIES,           'CASH, Food commodities'",
+			"SNAP;TRIBAL_COMMODITIES,                      'SNAP, Food commodities'",
+			"CASH_ASSISTANCE;SNAP;TRIBAL_COMMODITIES,      'CASH, SNAP, Food commodities'"
+		})
+		void shouldMapPastBenefitDetailsWhichBenefits(String formValues, String expectedPdfValue) throws Exception {
+			selectPrograms("SNAP");
+			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+			postExpectingSuccess("pastBenefitDetails", Map.of(
+				"whenPastBenefits", List.of("NOW"),
+				"wherePastBenefitsState", List.of("MN - Minnesota"),
+				"whichPastBenefits", List.of(formValues.split(";"))
+			));
+ 
+			var caf = downloadCafClientPDF();
+			assertPdfFieldContains("PAST_BENEFITS_WHICH", expectedPdfValue, caf);
+		}
+		
+		
+		// all comb. Test, This can be used to determine what may 
+		// have gone wrong(if anything) with pastBenefitDetails Page
+		@Disabled("Test disabled as it takes 10 min to run and doesnt need to run on every build")
+		@Test
+		void shouldMapAllPastBenefitDetailsCombinations() throws Exception {
+			// Form values (what gets posted)
+			String[] whenOptions = { "NOW", "WITHIN_LAST_YEAR", "MORE_THAN_YEAR_AGO" };
+			// Corresponding PDF values (what appears in the PDF)
+			String[] whenOptionsPDF = { "Receiving now", "Within last year", "More than a year ago" };
+ 
+			String[] stateOptions = {
+				"AL - Alabama", "AK - Alaska", "AS - American Samoa", "AZ - Arizona",
+				"AR - Arkansas", "CA - California", "CO - Colorado", "CT - Connecticut",
+				"DE - Delaware", "DC - District of Columbia", "FL - Florida", "GA - Georgia",
+				"GU - Guam", "HI - Hawaii", "ID - Idaho", "IL - Illinois",
+				"IN - Indiana", "IA - Iowa", "KS - Kansas", "KY - Kentucky",
+				"LA - Louisiana", "ME - Maine", "MD - Maryland", "MA - Massachusetts",
+				"MI - Michigan", "MN - Minnesota", "MS - Mississippi", "MO - Missouri",
+				"MT - Montana", "NE - Nebraska", "NV - Nevada", "NH - New Hampshire",
+				"NJ - New Jersey", "NM - New Mexico", "NY - New York", "NC - North Carolina",
+				"ND - North Dakota", "MP - Northern Mariana Islands", "OH - Ohio", "OK - Oklahoma",
+				"OR - Oregon", "PA - Pennsylvania", "PR - Puerto Rico", "RI - Rhode Island",
+				"SC - South Carolina", "SD - South Dakota", "TN - Tennessee", "TX - Texas",
+				"UT - Utah", "VT - Vermont", "VI - U.S. Virgin Islands", "VA - Virginia",
+				"WA - Washington", "WV - West Virginia", "WI - Wisconsin", "WY - Wyoming",
+				"OTHER - Other"
+			};
+ 
+			// Form values (what gets posted)
+			List<List<String>> whichCombinations = List.of(
+				List.of("CASH_ASSISTANCE"),
+				List.of("SNAP"),
+				List.of("TRIBAL_COMMODITIES"),
+				List.of("CASH_ASSISTANCE", "SNAP"),
+				List.of("CASH_ASSISTANCE", "TRIBAL_COMMODITIES"),
+				List.of("SNAP", "TRIBAL_COMMODITIES"),
+				List.of("CASH_ASSISTANCE", "SNAP", "TRIBAL_COMMODITIES")
+			);
+ 
+			// Corresponding PDF values (what appears in the PDF)
+			List<List<String>> whichCombinationsPDF = List.of(
+				List.of("CASH"),
+				List.of("SNAP"),
+				List.of("Food commoditie"),
+				List.of("CASH", "SNAP"),
+				List.of("CASH", "Food commoditie"),
+				List.of("SNAP", "Food commoditie"),
+				List.of("CASH", "SNAP", "Food commoditie")
+			);
+ 
+			for (int w = 0; w < whenOptions.length; w++) {
+				for (String state : stateOptions) {
+					for (int b = 0; b < whichCombinations.size(); b++) {
+						setUp();
+						selectPrograms("SNAP");
+ 
+						postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+						postExpectingSuccess("pastBenefitDetails", Map.of(
+							"whenPastBenefits", List.of(whenOptions[w]),
+							"wherePastBenefitsState", List.of(state),
+							"whichPastBenefits", whichCombinations.get(b)
+						));
+ 
+						var caf = downloadCafClientPDF();
+ 
+						assertPdfFieldEquals("HAS_PAST_BENEFITS", "Yes", caf);
+						assertPdfFieldEquals("PAST_BENEFITS_WHEN", whenOptionsPDF[w], caf);
+						assertPdfFieldEquals("PAST_BENEFITS_STATE", state, caf);
+ 
+						for (String whichPdf : whichCombinationsPDF.get(b)) {
+							assertPdfFieldContains("PAST_BENEFITS_WHICH", whichPdf, caf);
+						}
+					}
+				}
+			}
+		}
+
 	}
 	
 }
