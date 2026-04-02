@@ -2745,13 +2745,14 @@ pageConfigurations:
     name: authorizedRepSignature
     pageTitle: authorized-rep-signature.title
     headerKey: authorized-rep-signature.please-have-your-authorized-rep-sign
-    headerHelpMessageKey: authorized-rep-signature.they-can-sign-now
     primaryButtonTextKey: general.continue
     inputs:
       - name: authorizedRepSignature
         type: TEXT
+        placeholder: general.optional
         promptMessage:
           promptMessageKey: authorized-rep-signature.full-legal-name
+        helpMessageKey: authorized-rep-signature.they-can-sign-now
   - &secondSignatureNotification
     name: secondSignatureNotification
     pageTitle: second-signature-notification.title
