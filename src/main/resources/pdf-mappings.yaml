@@ -393,7 +393,7 @@ mappings:
     registerToVoteSelection: REGISTER_TO_VOTE
   healthcareCoverage:
     healthcareCoverage: HAVE_HEALTHCARE_COVERAGE
-  pastBenefit:
+  pastBenefits:
     hasPastBenefits: HAS_PAST_BENEFITS
   pastBenefitDetails:
     whenPastBenefits: PAST_BENEFITS_WHEN

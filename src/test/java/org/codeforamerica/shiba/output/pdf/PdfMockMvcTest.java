@@ -2987,12 +2987,12 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 	@Tag("pdf")
 	class PastBenefits {
 
-		// pastBenefit page: YES/NO 
+		// pastBenefits page: YES/NO 
 
 		@Test
 		void shouldMapPastBenefitsYes() throws Exception {
 			selectPrograms("SNAP");
-			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+			postExpectingSuccess("pastBenefits", "hasPastBenefits", List.of("true"));
 
 			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("HAS_PAST_BENEFITS", "Yes", caf);
@@ -3001,7 +3001,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		@Test
 		void shouldMapPastBenefitsNo() throws Exception {
 			selectPrograms("SNAP");
-			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("false"));
+			postExpectingSuccess("pastBenefits", "hasPastBenefits", List.of("false"));
 
 			var caf = downloadCafClientPDF();
 			assertPdfFieldEquals("HAS_PAST_BENEFITS", "No", caf);
@@ -3019,7 +3019,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		})
 		void shouldMapPastBenefitDetailsWhenOption(String formValue, String pdfValue) throws Exception {
 			selectPrograms("SNAP");
-			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+			postExpectingSuccess("pastBenefits", "hasPastBenefits", List.of("true"));
 			postExpectingSuccess("pastBenefitDetails", Map.of(
 				"whenPastBenefits", List.of(formValue),
 				"wherePastBenefitsState", List.of("MN - Minnesota"),
@@ -3052,7 +3052,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		})
 		void shouldMapPastBenefitDetailsForState(String state) throws Exception {
 			selectPrograms("SNAP");
-			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+			postExpectingSuccess("pastBenefits", "hasPastBenefits", List.of("true"));
 			postExpectingSuccess("pastBenefitDetails", Map.of(
 				"whenPastBenefits", List.of("NOW"),
 				"wherePastBenefitsState", List.of(state),
@@ -3077,7 +3077,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 		})
 		void shouldMapPastBenefitDetailsWhichBenefits(String formValues, String expectedPdfValue) throws Exception {
 			selectPrograms("SNAP");
-			postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+			postExpectingSuccess("pastBenefits", "hasPastBenefits", List.of("true"));
 			postExpectingSuccess("pastBenefitDetails", Map.of(
 				"whenPastBenefits", List.of("NOW"),
 				"wherePastBenefitsState", List.of("MN - Minnesota"),
@@ -3145,7 +3145,7 @@ public class PdfMockMvcTest extends AbstractShibaMockMvcTest {
 						setUp();
 						selectPrograms("SNAP");
  
-						postExpectingSuccess("pastBenefit", "hasPastBenefits", List.of("true"));
+						postExpectingSuccess("pastBenefits", "hasPastBenefits", List.of("true"));
 						postExpectingSuccess("pastBenefitDetails", Map.of(
 							"whenPastBenefits", List.of(whenOptions[w]),
 							"wherePastBenefitsState", List.of(state),

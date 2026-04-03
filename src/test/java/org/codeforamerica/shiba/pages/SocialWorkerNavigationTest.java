@@ -21,8 +21,8 @@ public class SocialWorkerNavigationTest extends AbstractShibaMockMvcTest{
 	  @Test
 	  void shouldNavigateToSocialWorker() throws Exception {
 		  selectPrograms("SNAP");
-		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefit");
-		  postExpectingRedirect("pastBenefit", "hasPastBenefits", "false", "ebtInPast");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefits");
+		  postExpectingRedirect("pastBenefits", "hasPastBenefits", "false", "ebtInPast");
 		  postExpectingRedirect("ebtInPast", "hadEBTInPast", "false", "socialWorker");
 	  }
 	  
@@ -41,23 +41,23 @@ public class SocialWorkerNavigationTest extends AbstractShibaMockMvcTest{
 	  @Test
 	  void shouldNavigateToDirectDepositAndEBTInPast() throws Exception {
 		  selectPrograms("SNAP", "CASH");
-		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefit");
-		  postExpectingRedirect("pastBenefit", "hasPastBenefits", "false", "directDeposit");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefits");
+		  postExpectingRedirect("pastBenefits", "hasPastBenefits", "false", "directDeposit");
 		  postExpectingRedirect("directDeposit", "hasDirectDeposit", "false", "ebtInPast");
 	  }
 	  
 	  @Test
 	  void shouldSkipEbtInPastToSocialWorker() throws Exception {
 		  selectPrograms("CASH");
-		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefit");
-		  postExpectingRedirect("pastBenefit", "hasPastBenefits", "false", "directDeposit");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefits");
+		  postExpectingRedirect("pastBenefits", "hasPastBenefits", "false", "directDeposit");
 		  postExpectingRedirect("directDeposit", "hasDirectDeposit", "false", "socialWorker");
 	  }
 	  
 	  @Test 
 	  void shouldSkipDirectDepositToEBTInPast() throws Exception {
 		  selectPrograms("SNAP");
-		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefit");
-		  postExpectingRedirect("pastBenefit", "hasPastBenefits", "false", "ebtInPast");
+		  postExpectingRedirect("healthcareCoverage", "healthcareCoverage", "false", "pastBenefits");
+		  postExpectingRedirect("pastBenefits", "hasPastBenefits", "false", "ebtInPast");
 	  }
 }

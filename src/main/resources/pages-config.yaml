@@ -5139,8 +5139,8 @@ pageConfigurations:
             - value: "NOT_SURE"
               messageKey: general.inputs.not-sure
     pageTitle: healthcareCoverage.title
-  - &pastBenefit
-    name: pastBenefit
+  - &pastBenefits
+    name: pastBenefits
     pageTitle: past-benefit.title
     headerKey:
       defaultValue: past-benefit.header.household
@@ -7796,7 +7796,7 @@ workflow:
   healthcareCoverage:
     pageConfiguration: *healthcareCoverage
     nextPages:
-      - pageName: pastBenefit
+      - pageName: pastBenefits
         condition: *someoneChoseCAFProgram?
       - pageName: directDeposit
         condition: *someoneChoseCASH?
@@ -7809,12 +7809,12 @@ workflow:
       - pageName: choosePrograms
       - pageName: householdMemberInfo
         groupName: household
-  pastBenefit:
-    pageConfiguration: *pastBenefit
+  pastBenefits:
+    pageConfiguration: *pastBenefits
     nextPages:
       - pageName: pastBenefitDetails
         condition:
-          pageName: pastBenefit
+          pageName: pastBenefits
           input: hasPastBenefits
           value: "true"
       - pageName: directDeposit
@@ -7840,7 +7840,7 @@ workflow:
         condition: *someoneChoseCAFProgram?
     datasources:
       - pageName: choosePrograms
-      - pageName: pastBenefit
+      - pageName: pastBenefits
       - pageName: addHouseholdMembers
       - pageName: householdMemberInfo
         groupName: household
