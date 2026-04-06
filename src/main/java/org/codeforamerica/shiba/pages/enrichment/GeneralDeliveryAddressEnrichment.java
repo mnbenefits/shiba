@@ -55,8 +55,6 @@ public class GeneralDeliveryAddressEnrichment implements Enrichment {
     String addressFromCity = cityName + ", MN";
 
     List<String> enrichedAddressLines = new ArrayList<>();
-    String callYourCounty = "general-delivery-address.call-your-county-to-get-the-exact-street-address";
-    String tellCountyWorker = "general-delivery-address.tell-the-county-worker-you-submitted-an-application-on-MNbenefits";
 
     // This will show Hennepin specific post office information if the client selected Hennepin County
     // Even if the client selects a city outside of Hennepin from the city selection screen
@@ -68,8 +66,6 @@ public class GeneralDeliveryAddressEnrichment implements Enrichment {
       enrichedAddressLines.add("Main Post Office.");
       enrichedAddressLines.add(addressFromCity);
       enrichedAddressLines.add(postOfficeAddress.getCity() + ", MN " + zipcodeFromCity);
-      callYourCounty += "-" + county.toString().toLowerCase();
-      tellCountyWorker += "-" + county.toString().toLowerCase();
     } else {
       enrichedAddressLines.add(addressFromCity);
       enrichedAddressLines.add(zipcodeFromCity);
@@ -83,9 +79,8 @@ public class GeneralDeliveryAddressEnrichment implements Enrichment {
         "enrichedStreetAddress", new InputData(List.of(addressFromCity)),
 
         // For displaying information to client
-        "enrichedAddressLines", new InputData(enrichedAddressLines),
-        "callYourCounty", new InputData(List.of(callYourCounty)),
-        "tellCountyWorker", new InputData(List.of(tellCountyWorker))
+        "enrichedAddressLines", new InputData(enrichedAddressLines)
+        
     ));
   }
 }
