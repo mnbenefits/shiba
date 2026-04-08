@@ -189,6 +189,9 @@ no-status-applications-resubmission:
 
 demo: false
 
+# Override at runtime with SHIBA_BUILD_VERSION to match a GitHub release identifier when needed.
+shiba:
+  build-version: "${SHIBA_BUILD_VERSION: release}"
 image:
   quality: 0.25f
 
