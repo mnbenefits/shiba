@@ -153,6 +153,7 @@ public class PageController {
   private final NextStepsContentService nextStepsContentService;
   private final DocRecommendationMessageService docRecommendationMessageService;
   private final WicRecommendationService wicRecommendationService;
+  private final TapRecommendationService tapRecommendationService;
   private final RoutingDecisionService routingDecisionService;
   private final DocumentRepository documentRepository;
   private final RoutingDestinationMessageService routingDestinationMessageService;
@@ -182,6 +183,7 @@ public class PageController {
       NextStepsContentService nextStepsContentService,
       DocRecommendationMessageService docRecommendationMessageService,
       WicRecommendationService wicRecommendationService,
+      TapRecommendationService tapRecommendationService,
       RoutingDecisionService routingDecisionService,
       DocumentRepository documentRepository,
       ApplicationRepository applicationRepository,
@@ -206,6 +208,7 @@ public class PageController {
     this.nextStepsContentService = nextStepsContentService;
     this.docRecommendationMessageService = docRecommendationMessageService;
     this.wicRecommendationService = wicRecommendationService;
+    this.tapRecommendationService = tapRecommendationService;
     this.routingDecisionService = routingDecisionService;
     this.documentRepository = documentRepository;
     this.applicationRepository = applicationRepository;
@@ -579,8 +582,10 @@ public class PageController {
       boolean isCCAP = application.getApplicationData().isCCAPApplication();
       model.put("recommendCC", isCCAP);
       boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
-      model.put("recommendWIC", recommendWIC);    
-      boolean showRecommendationLink = doesNotHaveHealthcare || isCCAP || recommendWIC;
+      model.put("recommendWIC", recommendWIC);     
+      boolean recommendTAP = tapRecommendationService.showTapMessage(application.getApplicationData());
+      model.put("recommendTAP", recommendTAP); 
+      boolean showRecommendationLink = doesNotHaveHealthcare || isCCAP || recommendWIC ||recommendTAP; 
       model.put("showRecommendationLink", showRecommendationLink);
       Sentiment sentiment = application.getSentiment();
       boolean showFeedback = sentiment == null ? true:false;
@@ -611,14 +616,16 @@ public class PageController {
         boolean isCCAP = application.getApplicationData().isCCAPApplication();
         model.put("recommendCC", isCCAP);
         boolean recommendWIC = wicRecommendationService.showWicMessage(application.getApplicationData());
-        model.put("recommendWIC", recommendWIC);    
+        model.put("recommendWIC", recommendWIC); 
+        boolean recommendTAP = tapRecommendationService.showTapMessage(application.getApplicationData());
+        model.put("recommendTAP", recommendTAP); 
         Sentiment sentiment = application.getSentiment();
          boolean showFeedback = sentiment == null ? true:false;
          model.put("showFeedback", showFeedback); 
     }
     
-
-
+    
+    
     if (landmarkPagesConfiguration.isUploadDocumentsPage(pageName)) {
       record DocWithThumbnail(UploadedDocument doc, String thumbnail) {
 

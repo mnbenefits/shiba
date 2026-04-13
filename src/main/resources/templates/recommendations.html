@@ -71,6 +71,26 @@
 			</a>
             
 		</div>
+        
+        <div id="recommendTAP" class="grid__item spacing-above-35 bottom-horizontal-line-dark-grey" th:if="${recommendTAP}">
+             <h2 class="h3" th:text="#{recommendations.apply-for-tap}"></h2>
+             <div class="grid-ignore-mobile">
+                <div class="success-icons grid__item width-one-sixth spacing-above-0 spacing-below-15">
+                   <div th:replace="~{fragments/contextFragments :: icon-tap}"></div>
+                </div>
+                <div class="grid__item width-five-sixths">
+                    <div class="spacing-above-0 spacing-below-15">
+                        <p th:text="#{recommendations.tap}"></p>
+                    </div>
+               </div>
+             </div>
+             <div class="spacing-above-0 spacing-below-35" th:utext="#{recommendations.learn-about-tap}"></div>
+                  <a class="button button--secondary spacing-above-0 spacing-below-60" th:href="'https://www.metrotransit.org/tap-riders'" target="_blank" rel="noopener noreferrer">
+                      <span th:text="#{recommendations.apply-for-tap-program}"></span>
+                      <svg th:fragment="icon-arrow-black" class="icon-arrow_forward vertical-align-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+                  </a> 
+                  
+        </div> 
        
         <div id="healthcareCoverage"
              class="grid-ignore-mobile spacing-above-10 bottom-horizontal-line-dark-grey"
