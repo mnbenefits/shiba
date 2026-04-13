@@ -1319,6 +1319,11 @@ input[type=number] {
   background-color: #EEFFE6;
   border: 2px solid #008060;
 }
+.notice--success-no-border {
+  background-color: #EEFFE6;
+  border-radius: 10px;
+  padding: 1.25rem 1rem 1.5rem 2rem;
+}
 
 .next-steps {
   position: relative;
@@ -1876,7 +1881,12 @@ legend.form-question {
   .grid-ignore-mobile .width-eleven-twelfths:last-child {
     margin-right: 0;
   }
-
+  
+  .section-pink {  
+    border-radius: 10px;
+    background-color: #fff5ff;
+    padding: 1.25rem 1rem 1.5rem 2rem;
+  }
   .width-twelve-twelfths {
     float: left;
     display: block;

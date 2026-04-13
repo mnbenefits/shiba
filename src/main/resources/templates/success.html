@@ -59,38 +59,52 @@
             </div>
           </div>
 
-          <div th:if="${!showRecommendationLink}" class="grid-ignore-mobile" style="margin-bottom: 40px;">
-            <div class="success-icons grid__item width-one-sixth spacing-above-5">
-              <div th:replace="~{fragments/icons/icon-documents :: icon-documents}"></div>
-            </div>
-            <div class="grid__item width-five-sixths">
+          <div th:if="${!showRecommendationLink}" class="grid-ignore-mobile spacing-above-45 section-pink" style="margin-bottom: 40px;">
+			<div class="spacing-below-10" style="text-align: center;">
+				           <div th:replace="~{fragments/contextFragments :: add-documents-pink}"></div>
+				         </div>
+						 <h2 class="h2 spacing-above-0" th:text="#{success.add-documents}"></h2>
+						 
+            <div class="grid__item width-five-sixths spacing-below-35">
               <span th:utext="#{success.additional-documents}"></span>
             </div>
+			<div spacing-below-15 spacing-above-45>
+								<a class="button spacing-below-0" href="/pages/uploadDocuments"> <span>Upload documents</span>
+									<svg th:fragment="icon-arrow-black" class="icon-arrow_forward vertical-align-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+								</a>
+							</div>
           </div>
         </div>
 
-       <div th:if="${showRecommendationLink}" id="showRecommendationLink" class="grid__item top-horizontal-line-dark-grey">
-         <div class="grid__item" style="margin-top: 40px;">
-           <h2 class="h2" th:text="#{success.you-may-be-able-to-apply}"></h2>
+       <div th:if="${showRecommendationLink}" id="showRecommendationLink" class="grid__item">
+		
+		<div class="grid__item spacing-above-15 spacing-below-0 notice--success-no-border">
+		         <div class="spacing-below-10" style="text-align: center;">
+		           <div th:replace="~{fragments/contextFragments :: icon-bullhorn-green}"></div>
+		         </div>
+
+		          <h2 class="h2 spacing-above-0" th:text="#{success.you-may-be-able-to-apply}"></h2>
            <div class="grid-ignore-mobile">
-             <div class="success-icons grid__item width-one-sixth spacing-above-5 spacing-below-0">
-               <div th:replace="~{fragments/contextFragments :: icon-bullhorn}"></div>
-             </div>
+
              <div class="grid__item width-five-sixths">
                <div class="spacing-above-0 spacing-below-15" th:text="#{success.learn-more-about-programs}"></div>
              </div>
            </div>
-         </div>
+         
          <div class="grid-ignore-mobile">
-           <a class="button button--primary spacing-above-60 spacing-below-25"
+           <a class="button spacing-above-60 spacing-below-25"
                      th:href="'/pages/'+${pageName}+'/navigation'">
              <span th:text="#{success.view-more-programs}"></span>
+			 <svg th:fragment="icon-arrow-black" class="icon-arrow_forward vertical-align-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="18px" height="18px"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
            </a>
          </div>
        </div>
+	  </div>
        
        <div th:if="${!showRecommendationLink}">
         <div th:if="${showFeedback}" id="feedbackButton">
+			<h2 class="h3 spacing-above-0" th:text="#{recommendations.how-was-your-experience}"></h2>
+
           <a class="button button--secondary spacing-above-25 spacing-below-25"
              th:href="'/pages/'+${pageName}+'/navigation'">
             <span th:text="#{success.give-us-feedback}"></span>
