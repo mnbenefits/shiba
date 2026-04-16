@@ -176,7 +176,7 @@ dependencies {
     testImplementation("org.seleniumhq.selenium:selenium-firefox-driver:4.43.0")
     testImplementation("org.seleniumhq.selenium:selenium-http:4.43.0")
     testImplementation("org.seleniumhq.selenium:selenium-ie-driver:4.43.0")
-    testImplementation("org.seleniumhq.selenium:selenium-java:4.41.0")
+    testImplementation("org.seleniumhq.selenium:selenium-java:4.43.0")
     testImplementation("org.seleniumhq.selenium:selenium-json:4.43.0")
     testImplementation("org.seleniumhq.selenium:selenium-manager:4.43.0")
     testImplementation("org.seleniumhq.selenium:selenium-os:4.43.0")
