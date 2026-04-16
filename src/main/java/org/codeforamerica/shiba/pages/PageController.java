@@ -910,13 +910,15 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       applicationData.setOriginalCounty(CountyParser.parse(applicationData).name());
       if (parseBoolean(getFirstValue(pagesData, USE_ENRICHED_HOME_COUNTY))) {
         applicationData.getPageData("identifyCounty").get("county").setValue(CountyParser.parseEnrich(applicationData).name(), 0);
-      }
-      Application application = applicationFactory.newApplication(applicationData);
+      } 
+      
+      boolean wasSubmitted = applicationData.isSubmitted();//capture the Previous state before any changes
+      applicationData.setSubmitted(true);// change current applicationData  to mark it  flag as submitted
+      Application application = applicationFactory.newApplication(applicationData);// Create a NEW snapshot of the application using the updated data
       application.setCompletedAtTime(clock); // how we mark that the application is complete
       recordDeviceType(device, application);
       
-      
-      if(!applicationData.isSubmitted()) {
+      if(!wasSubmitted) {
         applicationRepository.save(application);
         applicationStatusRepository.createOrUpdateApplicationType(application, SENDING);
         log.info(StringEscapeUtils.escapeJava("Invoking pageEventPublisher for application submission: " + application.getId()));
@@ -932,7 +934,6 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
       submitCookie.setSecure(true);
       httpResponse.addCookie(submitCookie);
 
-      applicationData.setSubmitted(true);
       return new ModelAndView(String.format("redirect:/pages/%s/navigation", submitPage));
     } else {
       return new ModelAndView("redirect:/pages/" + submitPage);

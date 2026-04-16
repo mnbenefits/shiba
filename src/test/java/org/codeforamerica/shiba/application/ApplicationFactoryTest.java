@@ -73,4 +73,20 @@ class ApplicationFactoryTest {
 
     verify(monitoringService).setApplicationId("appId");
   }
+  
+  @Test
+  void shouldCopySubmittedFlag_whenTrue() {
+      applicationData.setSubmitted(true);
+      Application application = applicationFactory.newApplication(applicationData);
+
+      assertThat(application.getApplicationData().isSubmitted()).isTrue();
+  }
+  
+  @Test
+  void shouldCopySubmittedFlag_whenFalse() {
+      applicationData.setSubmitted(false);
+      Application application = applicationFactory.newApplication(applicationData);
+
+      assertThat(application.getApplicationData().isSubmitted()).isFalse();
+  }
 }

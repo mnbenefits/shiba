@@ -32,6 +32,7 @@ public class ApplicationFactory {
     copy.setLastPageViewed(applicationData.getLastPageViewed());
     copy.setExpeditedEligibility(applicationData.getExpeditedEligibility());
     copy.setOriginalCounty(applicationData.getOriginalCounty());
+    copy.setSubmitted(applicationData.isSubmitted());
     monitoringService.setApplicationId(applicationData.getId());
 
     return Application.builder()
