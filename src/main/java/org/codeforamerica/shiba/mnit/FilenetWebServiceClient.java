@@ -188,8 +188,12 @@ public class FilenetWebServiceClient {
 	if (!application.getFlow().equals(FlowType.HEALTHCARE_RENEWAL)) {
 		String routerRequest = String.format("%s/%s", sftpUploadUrl, filenetId);
 		log.info(StringEscapeUtils.escapeJava(String.format("Upload to SFTP request: %s", routerRequest)));
-		String routerResponse = restTemplate.getForObject(routerRequest, String.class);
-
+		String routerResponse = "no response";
+		try {
+		    routerResponse = restTemplate.getForObject(routerRequest, String.class);
+		} catch (Exception e) {
+			log.error("Router request error: " + e.getMessage());
+		}
 		log.info(StringEscapeUtils.escapeJava(String.format("Upload to SFTP response: %s", routerResponse)));
 		JsonObject jsonObject = new Gson().fromJson(routerResponse, JsonObject.class);
 
