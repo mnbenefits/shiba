@@ -26,6 +26,7 @@ public class AbstractStaticMessageSourcePageTest extends AbstractBasePageTest {
     staticMessageSource.addMessage("general.inputs.no", Locale.ENGLISH, "No");
     staticMessageSource.addMessage("dummy-page-title", Locale.ENGLISH, "Dummy page title");
     staticMessageSource.addMessage("generic.footer", Locale.ENGLISH, "footer");
+    staticMessageSource.addMessage("generic.footer.build-version", Locale.ENGLISH, "Version {0}");
     staticMessageSource.addMessage("general.privacy", Locale.ENGLISH, "privacy");
     staticMessageSource.addMessage("general.mn-gov-portal", Locale.ENGLISH, "mngov");
     staticMessageSource.addMessage("general.privacy-policy", Locale.ENGLISH, "pp");
