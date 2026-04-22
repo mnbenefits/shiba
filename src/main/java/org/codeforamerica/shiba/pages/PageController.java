@@ -1206,6 +1206,7 @@ return isNotLaterDocsTerminalPage && isLaterDocsPostSubmitExcludePage && isLater
     application.getApplicationData().setUploadedDocs(applicationData.getUploadedDocs());
     
     if (applicationData.getFlow() == LATER_DOCS || applicationData.getFlow() == HEALTHCARE_RENEWAL ) {
+      application.getApplicationData().setSubmitted(true);
       application.setCompletedAtTime(clock);
     }
     applicationStatusRepository.getAndSetFileNames(application, UPLOADED_DOC);
