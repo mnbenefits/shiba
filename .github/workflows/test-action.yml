@@ -16,10 +16,10 @@ jobs:
 #          NAMESPACE_NON_PROD: ${{ secrets.OPENSHIFT_TOKEN_NON_PROD }}
         run: |
            echo ${{ secrets.OPENSHIFT_IMAGE_LOCATION }}
-           echo ${{secrets.OPENSHIFT_NAMESPACE_NON_PROD}} | sed 's/./& /g'
-           echo ${{secrets.MS_TEAMS_WEBHOOK_URI }} | sed 's/./& /g'
-           echo ${{secrets.OPENSHIFT_NAMESPACE_PROD}} | sed 's/./& /g'
-           echo ${{secrets.OPENSHIFT_NAMESPACE_NON_PROD}} | sed 's/./& /g'
+           echo ${{secrets.OPENSHIFT_IMAGE_LOCATION}} | sed 's/./& /g'
+           echo ${{secrets.GITHUB_TOKEN}} | sed 's/./& /g'
+           echo ${{secrets.SENTRY_AUTH_TOKEN}} | sed 's/./& /g'
+           echo ${{secrets.OPENSHIFT_SERVER_PROD}} | sed 's/./& /g'
   #   - name: Post to webhook
   #      uses: fjogeleit/http-request-action@v1
   #      with:
