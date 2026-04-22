@@ -362,3 +362,10 @@ licenseReport {
 jar {
     enabled = false
 }
+
+springBoot {
+    buildInfo()
+}
+tasks.named('processResources') {
+    dependsOn 'bootBuildInfo', 'generateGitProperties'
+}
