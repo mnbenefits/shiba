@@ -12,11 +12,8 @@
             	<h2 class="footer-heading"
             		th:text="#{generic.footer.about}"></h2>
             	<div class="font-white footer-text">
-                <p th:text="#{generic.footer}"></p>
-				<p id="footer-build-version" class="font-white footer-text text--small spacing-above-25"
-						       th:if="${shibaBuildVersion != null && !#strings.isEmpty(#strings.trim(shibaBuildVersion))}"
-						       th:text="#{generic.footer.build-version(${shibaBuildVersion})}"></p>
-                <p th:text="#{generic.footer.mn-official-website}"></p>
+                <p th:text="#{generic.footer}"></p>			
+                <p th:text="#{generic.footer.mn-official-website}"></p>				
                 </div>
             </div>
             <div class="width-one-third grid__item footer-column">
@@ -37,6 +34,10 @@
                    th:text="#{general.mn-gov-portal}"></a>
             </div>
         </div>
+		
+		<p id="footer-build-version" class="footer-build-version"
+		         th:if="${shibaBuildVersion != null && !#strings.isEmpty(#strings.trim(shibaBuildVersion))}"
+		         th:text="#{generic.footer.build-version(${shibaBuildVersion})}"></p>
 			   
     </div>
 </footer>

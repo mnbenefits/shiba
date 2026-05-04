@@ -1335,6 +1335,14 @@ input[type=number] {
   background-color: #003865;
 }
 
+.footer-build-version {
+  clear: both;
+  color: #C7C7C7;
+  font-size: 12pt;
+  margin: -1.5rem 0 0;
+  text-align: right;
+}
+
 .notice--shiba {
   position: relative;
   background-color: #E9F6FF;
